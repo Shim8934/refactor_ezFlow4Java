@@ -503,7 +503,11 @@
 		                    var top = (parseInt(heigth) - 220) / 2;
 		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=270px,width=525px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                } else {
-		                    window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                	var heigth = window.screen.availHeight;
+				            var width = window.screen.availWidth;
+				            var left = (parseInt(width) - 600) / 2;
+				            var top = (parseInt(heigth) - 450) / 2;
+				            window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
 		                }
 		            } else if (jobState == "RECIPENT") {
 		                var heigth = window.screen.availHeight;
@@ -531,11 +535,15 @@
 	                        var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
 	                        var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
 	                        AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
-	                        
+	                     
 	                        if (AttachfilenameN1 < 0) {
 	                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
 	                        } else {
-	                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+	                        	if (AttachUrlA2 == ".mht") {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
+	                        	} else {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+	                        	}
 	                        }
 
 	                        if (AttachUrl != "null") {

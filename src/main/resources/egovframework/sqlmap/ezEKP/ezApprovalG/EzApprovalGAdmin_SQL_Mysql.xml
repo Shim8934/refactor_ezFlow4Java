@@ -743,6 +743,8 @@
 			WHERE
 				(functiontype IS NOT NULL)
 			AND
+				 functiontype != '010'
+			AND
 				(startdate IS NOT NULL)
 		]]>
 
@@ -2179,6 +2181,8 @@
 				TBL_APRDOCINFO.companyid = #companyID#
 			AND
 				(functiontype IS NOT NULL)
+			AND
+				 functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
 		]]>

@@ -73,7 +73,9 @@
 				document.getElementById("BtnBodyAttach").style.display  = "none";
 			  }
 			}
-			
+			/**
+			* 첨부파일의 History 관리
+			*/
 			function CheckHistory(pFlag)
 			{
 				var i, j;
@@ -137,7 +139,10 @@
 				}
 			}
 			
-			// 파일첨부UI 초기화
+			/** 
+			* 파일첨부UI 초기화
+			* InitAttach()에서 기존 첨부파일리스트 추출 후 ListView()로 화면에 출력
+			*/
 			window.onload = function()
 			{
 				var doc;
@@ -667,7 +672,7 @@
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

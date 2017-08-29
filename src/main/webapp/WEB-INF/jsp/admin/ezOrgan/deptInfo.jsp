@@ -15,6 +15,7 @@
 			var OldDeptName2 = "";
 			var ReturnFunction;
 			var RetValue;
+			var approvalFlag = "${approvalFlag}";
 			
 			$(document).ready(function(){
 				var RetValue;
@@ -61,11 +62,15 @@
 							DocManage.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE4").trim();
 					
 							if (SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE8") == "1"){
-								InsDept.checked = true;			
+								if(approvalFlag == 'G') {
+									InsDept.checked = true;	
+								}
 							}
 				            /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
 							if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE11") == "Y"){
-							    document.getElementById("ouDoumentReceiveYN").checked = true;
+								if(approvalFlag == 'G') {
+							    	document.getElementById("ouDoumentReceiveYN").checked = true;
+								}
 							}
 						}
 					});
@@ -140,11 +145,15 @@
 				if (OldDeptName == ""){
 					parentCn = ParentID.value;
 			    }				
-				if (InsDept.checked){
-					extensionattribute8 = "1";
-				}				
-				if (document.getElementById("ouDoumentReceiveYN").checked){
-					extensionattribute11 = "Y";
+				
+				if(approvalFlag == 'G') {
+					if (InsDept.checked){
+						extensionattribute8 = "1";
+					}	
+				
+					if (document.getElementById("ouDoumentReceiveYN").checked){
+						extensionattribute11 = "Y";
+					}
 				}
 				
 				$.ajax({
@@ -227,14 +236,18 @@
 		    	<th><spring:message code='ezOrgan.t226' /></th> 
 		    	<td><input type="text" id=SortNum style="width:97%" maxlength="10"></td> 
 		  	</tr> 
+		  	<c:if test="${approvalFlag == 'G'}">
 		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t227' /></th> 
 		    	<td><input type="checkbox" id=InsDept value="checkbox"></td> 
 		  	</tr> 
+		  	</c:if>
+		  	<c:if test="${approvalFlag == 'G'}">
 		    <tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t990' /></th> 
 		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
 		  	</tr> 
+		  	</c:if>
 		</table> 
 		<div class="btnposition">
 		    <a class="imgbtn" id=bt_OK  onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>

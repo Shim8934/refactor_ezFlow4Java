@@ -24,28 +24,39 @@
 		            window.focus();
 		        };
 		    }
+		    
+		    var flag = true;
 		    function btn_OpinionOK_onclick() {
-		        var rtnVal = "cancel";
-		
-		        if (trim(document.getElementById("inpPassword").value).length == 0) {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
-		            alert(pAlertContent);
-		            document.getElementById("inpPassword").focus();
-		            return;
-		        }
-		        else {
-		            rtnVal = chkPasswd();
-		        }
-		        if (ReturnFunction != null)
-		            ReturnFunction(rtnVal);
-		        else
-		            window.returnValue = rtnVal;
+		    	if (flag) {
+		    		flag = false;
+			        var rtnVal = "cancel";
+					
+			        if (trim(document.getElementById("inpPassword").value).length == 0) {
+			            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
+			            alert(pAlertContent);
+			            document.getElementById("inpPassword").focus();
+			            flag = true;
+			            return;
+			        }
+			        else {
+			            rtnVal = chkPasswd();
+			        }
+			        
+			        if (rtnVal != "") {
+				        if (ReturnFunction != null)
+				            ReturnFunction(rtnVal);
+				        else
+				            window.returnValue = rtnVal;
+			        } 
+		    	} 
 		    }
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null)
 		            ReturnFunction("cancel");
 		        else
 		            window.returnValue = "cancel";
+		        
+		        window.close();
 		    }
 		    var RetValue;
 		    var ReturnFunction;
@@ -107,7 +118,9 @@
 		
 		            return result;
 		        } catch (e) {
+		        	 flag = true;
 		            alert(e.description);
+		            return "";
 		        }
 		    }
 		    var ezapralert_cross_dialogArguments = new Array();
@@ -175,7 +188,7 @@
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

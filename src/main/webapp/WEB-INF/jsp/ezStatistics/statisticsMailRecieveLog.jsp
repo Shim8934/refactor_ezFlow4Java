@@ -99,16 +99,18 @@
 		});    	    	
 	});
 	
-	var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
-	var monthStr = monthMsg.split(";");
-	var dayMsg = "일;월;화;수;목;금;토";
+	
+	var dayMsg = "<spring:message code='main.kyj1'/>";
 	var dayStr = dayMsg.split(";");
+	var monthMsg = "<spring:message code='main.kyj2'/>";
+	var monthStr = monthMsg.split(";");
 	
 	$(function() {
-		$.datepicker.regional["ko"] = {
-				closeText: "닫기",
-				prevText: "이전달",
-				nextText: "다음달",
+		$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
+				closeText: "<spring:message code='main.t3'/>",
+				prevText: "<spring:message code='main.t0604'/>",
+				nextText: "<spring:message code='main.t0605'/>",
+				currentText: "<spring:message code='main.t0606' />",
 				monthNames: monthStr,
 				monthNamesShort: monthStr,
 				dayNames: dayStr,
@@ -123,7 +125,7 @@
 				showMonthAfterYear: true
 		};
 		
-		$.datepicker.setDefaults($.datepicker.regional["ko"]);	
+		$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);	
 			
 	});
 
@@ -401,7 +403,7 @@
 </script>
 </head>
 <body class="mainbody">
-<h1><spring:message code="ezStatistics.t1050"/><spring:message code='ezStatistics.t1052'/></h1>
+<h1><spring:message code="ezStatistics.kyj1"/></h1>
 	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
@@ -412,11 +414,11 @@
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
 					<select id="searchField"> 
-						<option value="recipientName"><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t1068'/></option>
-						<option value="recipientEmail"><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t1055'/></option>
-						<option value="recipientDeptName"><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t83'/></option>
-						<option value="senderName"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t1068'/></option>
-						<option value="senderEmail"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t1055'/></option>
+						<option value="recipientName"><spring:message code='ezStatistics.kyj6'/></option>
+						<option value="recipientEmail"><spring:message code='ezStatistics.kyj7'/></option>
+						<option value="recipientDeptName"><spring:message code='ezStatistics.kyj8'/></option>
+						<option value="senderName"><spring:message code='ezStatistics.kyj3'/></option>
+						<option value="senderEmail"><spring:message code='ezStatistics.kyj4'/></option>
 						<option value="subject"><spring:message code='ezStatistics.t1056'/></option>
 						<option value="attachedFileName"><spring:message code='ezStatistics.t1057'/></option>
 					</select>
@@ -441,15 +443,15 @@
 	</table>
 	<table style="margin: 10px 0px;">
 		<tr>
-			<td width="98%" style="font-weight: bold; color: gray;"> ※ <spring:message code='ezStatistics.t1065'/> ※  </td>
+			<td width="98%" style="font-weight: bold; color: gray;"> ※ ${mailLogKeepPeriodMessage} ※  </td>
 		</tr>
 	</table>
 	<table class="mainlist" style="width:100%;">
 		<thead>
 			<tr>
-				<th width='12%'><spring:message code='ezStatistics.t1050'/> <spring:message code='ezStatistics.t214'/></th>
+				<th width='12%'><spring:message code='ezStatistics.kyj10'/></th>
 				<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='8%'><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t83'/></th>
+				<th width='8%'><spring:message code='ezStatistics.kyj8'/></th>
 				<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
 				<th width='17%'><spring:message code='ezStatistics.t1056'/></th>
 				<th width='15%'><spring:message code='ezStatistics.t1057'/></th>

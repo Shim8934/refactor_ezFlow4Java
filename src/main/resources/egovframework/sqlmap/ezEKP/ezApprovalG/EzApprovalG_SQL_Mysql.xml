@@ -5593,18 +5593,27 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO">
 		SELECT 
-			APRSN ,
-            SIGNTYPE ,
-            SIGNNAME ,
-            CONTENT 
-        FROM 
-        	TBL_SIGNINFO 
-       	WHERE  
-       		DOCID = #v_DOCID#
-       	AND
-       		TENANT_ID = #v_TENANTID#
-       	AND
-       		COMPANYID = #companyID#
+			A.aprsn,
+			A.signtype,
+			A.signname,
+			A.content,
+			CASE #primary# WHEN '1' THEN B.aprmembername WHEN '2' THEN B.aprmembername2 END AS aprmembername
+		FROM 
+			TBL_SIGNINFO A
+        JOIN
+        	TBL_APRLINEINFO B
+        ON
+        	A.tenant_id = B.tenant_id
+        AND
+        	A.docid = B.docid
+        AND
+        	A.aprsn = B.aprmembersn - 1
+		WHERE
+			A.docid = #v_DOCID#
+		AND
+			A.tenant_id = #v_TENANTID#
+		AND
+			A.companyid = #companyID#
 	</select>
 <!-- 	<procedure id="EzApprovalG.getCallBackYNLineList" parameterClass="Map" resultClass="ApprGLineTempletVO"> -->
 <!-- 		{CALL EZSP_GETCALLBACKYN_LINELIST(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -6530,7 +6539,11 @@
 								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
 								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL
 							   	<isEqual property="approvalFlag" compareValue="S">
-								   		  , C.NAME as DOCSTATENAME ,
+								   		  ,CASE WHEN $v_PSTRLANG$ = '1' THEN C.NAME
+								   		  		WHEN $v_PSTRLANG$ = '2' THEN C.NAME2
+								   		  		WHEN $v_PSTRLANG$ = '3' THEN C.NAME3
+								   		  		WHEN $v_PSTRLANG$ = '4' THEN C.NAME4
+								   		  END as DOCSTATENAME,
 								   		  CASE WHEN processYN = 'H' THEN #v_H#
 							 				   WHEN processYN = 'I' THEN #v_I#
 							                   WHEN processYN = 'N' THEN #v_N#
@@ -7669,8 +7682,12 @@
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 
-					code2, 
-					name$v_LANGTYPE$ AS name
+					code2,
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 
@@ -7689,7 +7706,11 @@
 			<![CDATA[
 				SELECT 
 					code2, 
-					name$v_LANGTYPE$ AS name
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 
@@ -17553,7 +17574,7 @@
    			TBL_APRDOCINFO 
    		(   DocID,    FormID,  OrgDocID, DocType,   DocState,    FunctionType,  Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN,     StartDate,                               EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_APRSTATE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE# , NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+   			#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_APRSTATE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate , NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
    		 FROM 
    		 	TBL_APRDOCINFO 
    		 WHERE 
@@ -20977,7 +20998,7 @@
    			TBL_ENDAPRDOCINFO.HASATTACHYN, 
    			TBL_ENDAPRDOCINFO.HASOPINIONYN, 
    			TBL_ENDAPRDOCINFO.STARTDATE,   
-   			TBL_ENDAPRDOCINFO.ENDDATE, 
+   			DATE_ADD(DATE_FORMAT(TBL_ENDAPRDOCINFO.ENDDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) ENDDATE, 
    			TBL_ENDAPRDOCINFO.WRITERID, 
    			TBL_ENDAPRDOCINFO.WRITERNAME$v_PSTRMULTIDATA$ AS WRITERNAME, 
    			TBL_ENDAPRDOCINFO.WRITERJOBTITLE$v_PSTRMULTIDATA$ AS WRITERJOBTITLE, 

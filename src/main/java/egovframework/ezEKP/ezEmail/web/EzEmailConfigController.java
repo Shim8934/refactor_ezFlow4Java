@@ -1346,13 +1346,17 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		sb.append("</DATA>");
 		String infoXML = sb.toString();
 		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
 		model.addAttribute("infoXML", infoXML);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("infoXML=" + infoXML);
 		logger.debug("publicModulus=" + publicModulus);
 		logger.debug("publicExponent=" + publicExponent);
+		logger.debug("primaryLang=" + primaryLang);
 		logger.debug("mailPop3 ended.");
 		
 		return "ezEmail/mailPop3";

@@ -760,11 +760,11 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreH_subject").setAttribute("_contentclass", pContentClass);
                 document.getElementById("PreH_MailReceiverDetail_Rayer").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("PreH_sub_subject").innerText = pSubject;
+                document.getElementById("PreH_sub_subject").innerHTML = pSubject;
                 //kms
                 pSubject = pSubject.trim();
                 if(pSubject == ""){
-                	document.getElementById("PreH_sub_subject").innerText = strLang97;
+                	document.getElementById("PreH_sub_subject").innerHTML = strLang97;
                 }
                 document.getElementById("PreH_subject").style.display = "";
                 document.getElementById("PreH_date").innerHTML = pDate;
@@ -781,10 +781,10 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_subject").setAttribute("_contentclass", pContentClass);
                 document.getElementById("PreW_MailReceiverDetail_Rayer").style.display = "none";
                 document.getElementById("Preview_HeaderW").style.display = "";
-                document.getElementById("PreW_sub_subject").innerText = pSubject;
+                document.getElementById("PreW_sub_subject").innerHTML = pSubject;
                 pSubject = pSubject.trim();
                 if(pSubject == ""){
-                	document.getElementById("PreW_sub_subject").innerText = strLang97;
+                	document.getElementById("PreW_sub_subject").innerHTML = strLang97;
                 }
                 document.getElementById("PreW_subject").style.display = "";
                 document.getElementById("PreW_date").innerHTML = pDate;
@@ -821,11 +821,11 @@ function MailList_ChangeStatus(obj) {
 function prevShow_Clear() {
     if (pPreviewShow_HOW == "W") {
         document.getElementById("Preview_HeaderW").style.display = "none";
-        document.getElementById("ifrmPreViewW").src = "/blank.htm";
+        document.getElementById("ifrmPreViewW").src = strLangLHM18;
     }
     else {
         document.getElementById("Preview_HeaderH").style.display = "none";
-        document.getElementById("ifrmPreViewH").src = "/blank.htm";
+        document.getElementById("ifrmPreViewH").src = strLangLHM18;
     }
 }
 function ReceiverDetail_view(obj) {
@@ -929,7 +929,7 @@ function PreviewRayerChange(pGubun) {
                 if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
                     if (g_foldertype != "sent") {
                         if (p_HeaderViewXML.indexOf("viewXMLFile1_1.xml") > 0) {
-                            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+                            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
@@ -982,7 +982,7 @@ function PreviewRayerChange(pGubun) {
                 if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
                     if (g_foldertype != "sent") {
                         if (p_HeaderViewXML.indexOf("viewXMLFile1.xml") > 0) {
-                            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+                            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);

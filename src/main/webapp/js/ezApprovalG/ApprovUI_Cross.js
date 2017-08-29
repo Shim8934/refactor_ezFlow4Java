@@ -93,11 +93,11 @@ function AprrovMappingSign(ret) {
 
     var OpinionText = "";
     var PositionText = "";
-    
+    // 4 : 전결, 16 : 대결
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
         OpinionText = getSignDate() + "<br/>";
     }
-    
+    // 8 : 개인순차협조, 9 : 개인병렬협조, 11 : 부서순차협조, 12 : 부서병렬협조
     if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
@@ -194,10 +194,10 @@ function AprrovMappingSign(ret) {
             setNodeText(field , getNodeText(field) + PositionText);
         }
     }
-    else if (pAprLineType == strAprType2 || pAprLineType == strAprType7) {
+    else if (pAprLineType == strAprType2 || pAprLineType == strAprType7) { // 2 : 확인, 7 : 참조
 
     }
-    else if (pAprLineType == strAprType15) {
+    else if (pAprLineType == strAprType15) { // 15 : 후열
         signID = "gamsasign1";
 
         var field = message.GetListItem(fields, signID);
@@ -263,7 +263,7 @@ function AprrovMappingSign(ret) {
         }
 
     }
-    else if (approvalFlag == "S" && pAprLineType == strAprType4) {
+    else if (approvalFlag == "S" && pAprLineType == strAprType4) { // 4 : 전결
     	var pAprMemberSignSN = pAprMemberSN;
         var signID;
         var seumyungID;
@@ -527,7 +527,7 @@ function AprrovMappingSign(ret) {
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText);
         }
-
+        // 16 : 대결
         if (pAprLineType == strAprType16) {
             var field = message.GetListItem(fields, signID);
             if (field) {
@@ -545,7 +545,7 @@ function AprrovMappingSign(ret) {
 
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (signImageType = "NAME") {
+                    if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -650,7 +650,7 @@ function AprrovMappingSign(ret) {
 
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (signImageType = "NAME") {
+                    if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
@@ -672,7 +672,7 @@ function AprrovMappingSign(ret) {
                         contents = strLang7 + contents;
                     }
 
-                    field.innerHTML = strimg;
+                    field.innerHTML = strimg;           // 서명 field에 값 넣기
                     signInfo[signCnt] = signID;
                     SignName[signCnt] = signID;
                     SignType[signCnt] = "IMAGE";
@@ -1362,7 +1362,9 @@ function getCurApproverAprLine() {
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
         setMenuBar("btnJunKyul", false);
 }
-
+/**
+ * xmlpara에 결재관련 정보 저장
+ * */
 function SaveApproveInfo(pApproveFlag) {
     SaveFile();
     SignSave();
@@ -2417,7 +2419,7 @@ function ChangeHapYuiInfo() {
 var aprsign1_cross_dialogArguments = new Array();
 function openSingUI(parameter) { 
 	var result = "";
-	
+	// 결재 서명 존재유무 확인
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -2447,6 +2449,9 @@ function openSingUI(parameter) {
         Approv_Complete(ret);
     }
 }
+/**
+ * sentdate field가 존재하는 경우
+ * */
 function SetAutoPropFinal() {
     try {
         var fields = message.GetFieldsList();
@@ -2776,7 +2781,6 @@ function setMenuDisable(id, flag) {
 var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
-    	alert(1);
         var parameter = pDocID;
 
         aprcabinetattach_cross_dialogArguments[0] = parameter;
@@ -2794,6 +2798,9 @@ function openAaprDocAttachUI_Complete(ret) {
         setAttachInfo(pDocID, "APR", lstAttachLink);
     }
 }
+/**
+ * 결재 진행시 발생하는 서명 정보 업데이트
+ * */
 function SignSave() {
     if (SignContent.length > 0) {
         var xmlhttp = createXMLHttpRequest();
@@ -3076,6 +3083,9 @@ function UpdateDocHistory(pHtml) {
         OpenAlertUI(pAlertContent);
     }
 }
+/**
+ * 결재선의 이력관리
+ * */
 function UpdateLineHistory() {
 	var result = "";
     

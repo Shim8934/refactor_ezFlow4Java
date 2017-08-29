@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><c:out value='${title}' /></title>
+		<title>${title}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -466,7 +466,7 @@
 		                <tr>
 		                <th><spring:message code="ezEmail.t556" /></th>
 		                <td colspan="4"><div id="mailSubject" style="OVERFLOW-Y: auto;padding-left:5px;"> 
-		                <span id="LabelSubject"><c:out value='${subject}' /></span>
+		                <span id="LabelSubject">${subject}</span>
 		                </div></td>
 		                </tr>
 		            </table>
@@ -495,7 +495,7 @@
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

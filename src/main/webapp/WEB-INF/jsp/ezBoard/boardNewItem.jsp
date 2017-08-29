@@ -2035,13 +2035,14 @@
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">
-	                            <input type="text" id="txtTitle" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)"></td>
+	                            <input type="text" id="txtTitle" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)" ></td>
 	                    </tr>
 	                    <c:if test="${boardInfo.guBun == '2'}">
 		                    <tr>
 		                        <th><spring:message code='ezBoard.t438' /></th>
 		                        <td colspan="3">
-		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15">&nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
+		                        	<input type="password" id="txtPassWord_fake" style="WIDTH: 150px; display: none;" maxlength="15" autocomplete="new-password">
+		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15" autocomplete="new-password">&nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
 		                    </tr>
 	                    </c:if>
 	                </table>
@@ -2208,7 +2209,8 @@
 		                    <tr style="display: none">
 		                        <th><spring:message code='ezBoard.t438' /></th>
 		                        <td style="vertical-align: middle" colspan="2">
-		                            <input type="password" id="txtPassWord" style="WIDTH: 100px" maxlength="15">
+		                            <input type="password" id="txtPassWord_fake" style="WIDTH: 100px; display: none;" maxlength="15" autocomplete="new-password">
+		                            <input type="password" id="txtPassWord" style="WIDTH: 100px" maxlength="15" autocomplete="new-password">
 		                            &nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
 		                    </tr>
 	                    </c:if>
@@ -2294,7 +2296,7 @@
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 	<script type="text/javascript">

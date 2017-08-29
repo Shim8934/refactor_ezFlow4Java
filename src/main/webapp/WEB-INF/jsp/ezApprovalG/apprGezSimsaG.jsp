@@ -287,16 +287,20 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
+		        
+		        setMenuDisable("btnSend", true);
 		        var pInformationContent = "<spring:message code='ezApprovalG.t205'/>";
 		        OpenInformationUI(pInformationContent, Send_OpenUI);
 		    }
 		    function Send_OpenUI(Ans) {
 		        DivPopUpHidden();
-		        if (!Ans) return;
+		        if (!Ans) {
+		        	setMenuDisable("btnSend", false);
+		        	return;
+		        }
 		        if ("${approvalPWD}" != "N") {
 		            var chkpass = chk_Passwd(pUserID, Send_ChkPassword);
-		        }
-		        else {
+		        } else {
 		            btnSend_onclick_Complete();
 		        }
 		    }
@@ -305,10 +309,13 @@
 		        if (chkpass == "False") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
+		            setMenuDisable("btnSend", false);
 		            return;
 		        }
-		        else if (chkpass == "cancel")
+		        else if (chkpass == "cancel") {
+		        	setMenuDisable("btnSend", false);		        	
 		            return;
+		        }
 		
 		        btnSend_onclick_Complete();
 		    }
@@ -335,17 +342,28 @@
 		            var pAlertContent = "<spring:message code='ezApprovalG.t206'/>";
 		            OpenAlertUI(pAlertContent);
 		            setBtnDisable();
-		        }
-		        else {
+		        } else {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
 		            OpenAlertUI(pAlertContent);
+		            setMenuDisable("btnSend", false);
 		        }
 		    }
 		
 		    function OpenCheckUI_Complete(returnvalue) {
 		        DivPopUpHidden();
 		        is_Enc = returnvalue;
-		        sendExt();
+		        rtnVal = sendExt();
+		        
+		        if (rtnVal) {
+	                var pAlertContent = "<spring:message code='ezApprovalG.t206'/>";
+	                 OpenAlertUI(pAlertContent);
+	                 setBtnDisable();
+	             }
+	             else {
+	                 var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
+	                OpenAlertUI(pAlertContent);
+	                setMenuDisable("btnSend", false);
+	             }
 		    }
 		
 		    function DeleteLocalFiles() {
@@ -437,6 +455,11 @@
 		        DivPopUpHidden();
 		
 		        if (ret != "cancel") {
+		        	 var fields = message.GetFieldsList();
+		                field = message.GetListItem(fields, "sealsign");
+		                if (field) 
+		                    field.innerHTML = " ";
+		                
 		            SaveFile();
 		            
 			    	var result = "";
@@ -463,6 +486,10 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
 		                OpenAlertUI(pAlertContent);
 		                setBtnDisable();
+		            } else {
+		            	 var pAlertContent = "<spring:message code='ezApprovalG.t258'/>";
+		                    OpenAlertUI(pAlertContent);
+		                    setMenuDisable("btnSend", false);
 		            }
 		        }
 		    }
@@ -505,7 +532,10 @@
 		        var ResultXML = result;
 		        return getNodeText(GetChildNodes(ResultXML)[0]);
 		    }
+		    
 		    function setBtnDisable() {
+		    	setMenuDisable("btnSend", false);
+		    	
 		        btnOpinion.style.display = "none";
 		        btnSetReceivLine.style.display = "none";
 		        btnStamp.style.display = "none";
@@ -514,6 +544,7 @@
 		        btnBoard.style.display = "none";
 		        btnReject.style.display = "none";
 		    }
+		    
 		    function SaveFile() {
 		        var mhtBody = "";
 		        mhtBody = message.Get_EditorBodyHTML();
@@ -1339,7 +1370,7 @@
 		</table>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
