@@ -376,6 +376,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskDeleteComment started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
 		
 		String taskID = request.getParameter("taskID");
@@ -383,7 +385,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		ezTaskService.deleteComment(taskID, commentID, tenantID);
 		
-		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
+		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
 		
 		model.addAttribute("taskCommentList", taskCommentList);
 		

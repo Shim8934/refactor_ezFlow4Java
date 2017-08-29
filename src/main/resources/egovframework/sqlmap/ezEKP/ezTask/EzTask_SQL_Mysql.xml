@@ -290,7 +290,7 @@
 				AND
 					(taskid = #taskID# OR parentID = #taskID#)
 				AND
-					(SELECT
+					0 = (SELECT
 						COUNT(*)
 					FROM
 						TBL_TASKCOMMENT
@@ -298,7 +298,7 @@
 						tenantid = #tenantID#
 					AND
 						taskid = #taskID#
-					) IS NULL
+					)
 	        ]]>
 		</isEqual>
 		
