@@ -8461,7 +8461,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
-
+		// 진행 or 보류인 결재라인 정보 호출 TBL_APRDOCINFO
 		int aprCount = ezApprovalGDAO.doProcessCount(map);
 	
 		logger.debug("doProcess value : aprCount =" + aprCount);
@@ -11089,7 +11089,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
-		
+		// 결재선 정보 추출
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -11148,7 +11148,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map1.put("v_TENANTID", userInfo.getTenantId());
 			map1.put("v_APRTYPE", curAprType);
 			logger.debug("doApproveLineCnt started");
-
+			// APRSTATE가 진행, 보류인 결재관련 정보
 			int subCount = ezApprovalGDAO.doApproveLineCnt(map1);
 			logger.debug("doApproveLineCnt subCount = " +subCount);
 

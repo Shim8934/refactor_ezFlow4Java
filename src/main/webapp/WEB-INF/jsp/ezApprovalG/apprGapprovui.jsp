@@ -191,6 +191,9 @@
 		
 		        DivPopUpShow(326, 205, "/ezApprovalG/ezAprAllAlert.do");
 		    }
+		    /**
+		    * RtnVal -> 0 : 결재, 1 : 다음문서, 2 : 문서보기, 3 : 취소
+		    */
 		    function OpenAllApproveFlag_Complete(RtnVal) {
 		        DivPopUpHidden();
 		        AllApprove.style.display = "";
@@ -400,7 +403,10 @@
 		            OpenAllApproveFlag();
 		        }
 		    }
-		
+			/**
+			* 각 결재타입마다 나타나는 경고창 출력 함수
+			* 결재, 반송, 보류, 참조 등
+			*/
 		    function process_AfterApprove(mode)
 		    {
 		        if (FirstHtml != "")
@@ -605,7 +611,12 @@
 		            Approv_Complete(ret);
 		        }
 		    }
-		
+		    /**
+		    * ExcuteInfo()를 통한 연동관리
+		    * getDocNumber()를 통한 문서번호 채번
+		    * AprrovMappingSign()를 통한 결재정보 내용 출력
+		    * SaveApproveInfo()를 통한 xml 생성 및 Contoller 호출
+		    */
 		    function Approv_Complete(signtype) {
 		        DivPopUpHidden();
 		        UpdateLineHistory();
@@ -620,6 +631,7 @@
 		                }
 		            }
 		        }
+		        // getDocNumber를 이용한 문서번호 채번
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
@@ -683,7 +695,7 @@
 		            }
 		        }
 		        
-		        signInfo = AprrovMappingSign(signtype);
+		        signInfo = AprrovMappingSign(signtype); // 현재 양식에 결재 관련 정보 출력( ex. 서명 서명 날짜 등등)
 
 		        var rtnVal = true;
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
