@@ -10,7 +10,7 @@
 	<typeAlias  alias="MResourceScheGetHolidayVO" 	type="egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO"/>
 	
 		<resultMap class="MResourceScheGetHolidayVO" id="resScheGetHolidayVO">
-		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
+		<result property="holidayId"		column="HOLIDAYID"			columnIndex="1"/>
 		<result property="holidayName"		column="HOLIDAYNAME"		columnIndex="2"/>
 		<result property="holidayName2"		column="HOLIDAYNAME2"		columnIndex="3"/>
 		<result property="holidayDate"		column="HOLIDAYDATE"		columnIndex="4"/>
@@ -25,7 +25,7 @@
 		<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
-		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="ownerId"				column="OWNERID"				columnIndex="3"/>
 		<result property="title"						column="TITLE"						columnIndex="4"/>
 		<result property="location"				column="LOCATION"				columnIndex="5"/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
@@ -34,13 +34,13 @@
 		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="writerId"				column="WRITERId"					columnIndex="12"/>
 		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
 		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
 		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
+		<result property="characterId"			column="CHARACTERId"			columnIndex="18"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
 		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="21"/>
@@ -56,7 +56,7 @@
 	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
-		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="ownerId"				column="OWNERID"				columnIndex="3"/>
 		<result property="title"						column="TITLE"						columnIndex="4"/>
 		<result property="location"				column="LOCATION"				columnIndex="5"			nullValue=""/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
@@ -65,23 +65,23 @@
 		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"			nullValue=""/>
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="writerId"				column="WRITERID"					columnIndex="12"/>
 		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
 		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
 		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="18"		nullValue="0"/>
+		<result property="characterId"			column="CHARACTERID"			columnIndex="18"		nullValue="0"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
 		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="22"/>
+		<result property="companyId"			column="COMPANYID"			columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="MResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
-		<result property="ownerID"				column="OWNERID"				columnIndex="1" />
+		<result property="ownerId"				column="OWNERID"				columnIndex="1" />
 		<result property="num"					column="NUM"					columnIndex="2" />
-		<result property="companyID"			column="COMPANYID"				columnIndex="3" />
+		<result property="companyId"			column="COMPANYID"				columnIndex="3" />
 		<result property="startDateTime"		column="STARTDATETIME"			columnIndex="4" />
 		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5" />
 		<result property="reWay"				column="REWAY"					columnIndex="6" />
@@ -98,7 +98,7 @@
     	<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListRepetitionVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
-		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="ownerId"				column="OWNERID"				columnIndex="3"/>
 		<result property="title"						column="TITLE"						columnIndex="4"/>
 		<result property="location"				column="LOCATION"				columnIndex="5"/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
@@ -107,14 +107,14 @@
 		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="writerId"				column="WRITERID"					columnIndex="12"/>
 		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
 		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
 		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="17"/>
+		<result property="companyId"			column="COMPANYID"			columnIndex="17"/>
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
+		<result property="characterId"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
 		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="22"/>
@@ -128,7 +128,7 @@
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
-      <result property="brdID"          column="BRD_ID"         columnIndex="1"/>
+      <result property="brdId"          column="BRD_ID"         columnIndex="1"/>
       <result property="brdNm"          column="BRD_NM"         columnIndex="2"/>
       <result property="brdNm2"       column="BRD_NM2"        columnIndex="3"/>
       <result property="brdLevel"       column="BRD_LEVEL"        columnIndex="4"     nullValue="0"/>
@@ -147,7 +147,7 @@
     </resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceBrdVO">
-      <result property="brdID"          column="BRD_ID"         columnIndex="1"/>
+      <result property="brdId"          column="BRD_ID"         columnIndex="1"/>
       <result property="brdNm"          column="BRD_NM"         columnIndex="2"/>
       <result property="brdNm2"       column="BRD_NM2"        columnIndex="3"/>
       <result property="brdLevel"       column="BRD_LEVEL"        columnIndex="4"     nullValue="0"/>
@@ -162,7 +162,7 @@
     	<resultMap class="MResourceScheduleVO" 		id="mResourceScheduleVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
-		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="ownerId"				column="OWNERID"				columnIndex="3"/>
 		<result property="title"						column="TITLE"						columnIndex="4"/>
 		<result property="location"				column="LOCATION"				columnIndex="5"/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
@@ -171,13 +171,13 @@
 		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="writerId"				column="WRITERID"					columnIndex="12"/>
 		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
 		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
 		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
+		<result property="characterId"			column="CHARACTERID"			columnIndex="18"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
 		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="21"/>
@@ -189,6 +189,7 @@
 		<result property="userId"					column="USERID"					columnIndex="27"/>
 		<result property="tenantId"				column="TENANT_ID"				columnIndex="28"/>
 		<result property="brdNm"				column="BRDNM"				columnIndex="29"/>
+		<result property="content"				column="CONTENT"				columnIndex="30"		nullValue=""/>
 	</resultMap>
     
     <select id="MResourceDAO.getAdmSubClsTree" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
@@ -529,6 +530,7 @@
                 A.IMPORTANCE ,
                 A.ENTRYLIST ,
                 A.ALLDAY ,
+                A.CONTENT ,
                 DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
                 A.ATTACHFLAG ,
                 A.CHARACTERID ,
@@ -682,7 +684,68 @@
 		]]>
 	</delete>
 	
-		<select id="MResourceDAO.getResFavoriteList" parameterClass="Map" resultClass="MResourceScheduleVO">
+	<insert id="MResourceDAO.delResSch_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_SCHEDULE ( 
+				num, pnum, ownerID, writerID, deptNM, ownerNM, title, location, timeDisplay, startDate, endDate, 
+				alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, 
+				companyID, characterID, attachFlag, tenant_ID
+			)
+			SELECT
+				#v_PMAXNUM# num ,
+	        	#v_PNUM# pnum ,
+	        	OWNERID ,
+	        	WRITERID ,
+	        	DEPTNM ,
+	        	OWNERNM ,
+	        	TITLE ,
+	        	LOCATION ,
+	        	TIMEDISPLAY ,
+	        	STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T') startDate ,
+	        	STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') endDate ,
+	        	ALERTTIME ,
+	        	CONTENT ,
+	        	IMPORTANCE ,
+	        	'4' reFlag ,
+	         	GRESFLAG ,
+	        	ENTRYLIST ,
+	        	ALLDAY ,
+	        	STR_TO_DATE(#v_PNOWDATE#,'%Y-%m-%d %T') writeDay ,
+	        	#v_PCOMPANYID# companyID ,
+	         	CHARACTERID ,
+	         	ATTACHFLAG ,
+	         	tenant_ID
+	        FROM 
+	        	TBL_RS_SCHEDULE 
+			WHERE
+				COMPANYID = #v_PCOMPANYID#
+			AND
+				OWNERID = #v_POWNERID#
+			AND
+				NUM = #v_PNUM#
+			AND
+				REFLAG = '1'
+			AND
+				TENANT_ID = #tenantID# 
+		]]>							
+	</insert>
+	
+	<select id="EzResourceDAO.resScheMaxNum" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(num) , 0) + 1 
+			FROM
+				TBL_RS_SCHEDULE 
+			WHERE  
+				COMPANYID = #v_PCOMPANYID#
+			AND
+				OWNERID = #v_POWNERID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>			
+	</select>
+	
+	<select id="MResourceDAO.getResFavoriteList" parameterClass="Map" resultClass="MResourceScheduleVO">
 		<![CDATA[
 			SELECT
 				A.RESID,

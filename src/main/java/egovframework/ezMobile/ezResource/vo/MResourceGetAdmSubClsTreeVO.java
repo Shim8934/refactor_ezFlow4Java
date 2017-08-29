@@ -2,16 +2,10 @@ package egovframework.ezMobile.ezResource.vo;
 
 public class MResourceGetAdmSubClsTreeVO {
 	/** 자원 번호*/
-	private int brdID;
+	private int brdId;
 	/** 자원 이름*/
 	private String brdNm;
-	
-	public int getBrdID() {
-		return brdID;
-	}
-	public void setBrdID(int brdID) {
-		this.brdID = brdID;
-	}
+
 	/** 자원 번호 2*/
 	private String brdNm2;
 	/** 자원 레벨*/
@@ -48,10 +42,10 @@ public class MResourceGetAdmSubClsTreeVO {
 		this.accessLvl = accessLvl;
 	}
 	public int getBrdId() {
-		return brdID;
+		return brdId;
 	}
-	public void setBrdId(int brdID) {
-		this.brdID = brdID;
+	public void setBrdId(int brdId) {
+		this.brdId = brdId;
 	}
 	public String getBrdNm() {
 		return brdNm;

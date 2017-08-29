@@ -662,13 +662,20 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String reFlag = request.getParameter("reFlag");
+			String offset = info.getOffSet();
 			
 			LOGGER.debug("companyId: " + companyId);
 			LOGGER.debug("resourceId: " + resourceId);
 			LOGGER.debug("scheduleId: " + scheduleId);
 			LOGGER.debug("tenantId: " + tenantId);
+			LOGGER.debug("startDate: " + startDate);
+			LOGGER.debug("endDate: " + endDate); 
+			LOGGER.debug("reFlag: " + reFlag); 
 			
-			mResourceService.delResSch(companyId, resourceId, scheduleId, tenantId);
+			mResourceService.delResSch(companyId, resourceId, scheduleId, startDate, endDate, offset, reFlag, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

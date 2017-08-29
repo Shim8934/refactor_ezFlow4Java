@@ -86,7 +86,17 @@ public class MResourceDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public void delResSch(Map<String, Object> map){
-		delete("MResourceDAO.delResSchMod", map);
+		delete("MResourceDAO.delResSchRem", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void delResSch_I(Map<String, Object> map){
+		delete("MResourceDAO.delResSch_I", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public int getResSchMaxNum(Map<String, Object> map){
+		return (int)select("EzResourceDAO.resScheMaxNum", map);
 	}
 	
 	@SuppressWarnings("unchecked")
