@@ -44,15 +44,33 @@
 		    var primary = "${userInfo.primary}";
 		    document.onselectstart = function () { return false; };
 		    function select_row(elem) {
+		    	if (selectelem != null) { 		
+			    	if (selectelem != elem) {
+// 			    		selectelem.style.backgroundColor = "#ffffff";
+// 			        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
+						$("input[type=checkbox]").prop("checked", false);
+						$(".row_body").css("background", "#ffffff");
+						
+						strListInfo = $(elem).attr("taskID") + ";";
+			            strListIdInfo = $(elem).attr("creatorID") + "_;";
+						
+			        	selectelem = null;
+			    	}
+		    	}
+
 		        if (selectelem != null) {
-		            selectelem.style.backgroundColor = "#ffffff";
+		        	selectelem.style.backgroundColor = "#ffffff";
+		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
+
+		            selectelem = null;
+		            return;
 		        }
-	
+
 		        selectelem = elem;
-// 		        selectelem.style.backgroundColor = "#DBE1E7";#EDEDED
-		        selectelem.style.backgroundColor = "rgb(233, 241, 244)";
+		        elem.style.backgroundColor = "rgb(233, 241, 244)";
+		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 		    }
-	
+
 		    function ReadTask(elem) {
 		        var taskID = GetAttribute(elem.parentElement, "taskid");
 		        var parentid = GetAttribute(elem.parentElement, "parentid");
@@ -204,21 +222,24 @@
 			var strListInfo = "";
 			var strListIdInfo = "";
 			function chk_onselect(obj) {
-		        if (obj.checked) {
+				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
-		        } else {
+		            selectelem = null;
+		        } else {	        	
 		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
 		            strListIdInfo = ReplaceText(strListIdInfo, $(obj).attr("creatorID") + ";", "");
+		            selectelem = obj.parentNode.parentNode;
 		        }
 		    }
 
 			function ReplaceText(orgStr, findStr, replaceStr) {
-		        var re = new RegExp(findStr, "gi");
+		        var re = new RegExp(findStr, "gi");		        
 		        return (orgStr.replace(re, replaceStr));
 		    }
 
 			function show_page() {
+			    selectelem = null;
 			    makePageSelPage();
 
 			    var length = list_body.children[1].rows.length;
@@ -267,15 +288,15 @@
 			        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
 			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
 
-			        if (SelectSingleNode(node, "REPEATCOUNT") != null)
-			            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
+// 			        if (SelectSingleNode(node, "REPEATCOUNT") != null)
+// 			            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
 		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
 
 			        tr.setAttribute("startdate", startdate);
 
-			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -528,31 +549,55 @@
 		    var delparentid = "";
 		    var delrepeatcount = "";
 		    function DeleteTask() {
-		        if (selectelem == null) {
+// 		        if (selectelem == null) {
+// 		            alert("<spring:message code='ezTask.t104' />");
+// 		            return;
+// 		        }
+
+// 		        deltaskid = GetAttribute(selectelem, "taskid")
+// 		        delparentid = GetAttribute(selectelem, "parentid");
+// 		        delrepeatcount = GetAttribute(selectelem, "repeatcount");
+// 		        var creatorId = GetAttribute(selectelem, "creatorid");
+
+				var taskIdArr = new Array();
+				var idArr = new Array();
+				taskIdArr = strListInfo.split(";"); 
+				idArr = strListIdInfo.split(";");
+
+				if (idArr.length < 1) {
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
 		        }
 
-		        deltaskid = GetAttribute(selectelem, "taskid")
-		        delparentid = GetAttribute(selectelem, "parentid");
-// 		        delrepeatcount = GetAttribute(selectelem, "repeatcount");
-		        var creatorId = GetAttribute(selectelem, "creatorid");
+				var loc = "";
+				var idArrList = new Array();
+				for (var i = 0; i < idArr.length - 1; i++) {
+					loc = idArr[i].indexOf("_");
+					idArrList += idArr[i].substring(0, loc) + ";";
+				}
 
-				var idArr = new Array();
-				idArr = strListIdInfo.split(";");
+// 				idArr = null;
+				idArr = idArrList.split(";");
 
 				for (var i = 0; i < idArr.length - 1; i++) {
-			        if (idArr[i] != userid) {
+					if (idArr[i] != userid) {
 			            alert("<spring:message code='ezTask.t146' />");
 
 			            return;
 			        }
 				}
+				
+// 				for (var i = 0; i < taskIdArr.length - 1 ; i++) {
+// alert("@@ " + $("tr[taskid='" + taskIdArr[i] + "']").attr("parentid"));					
+// 					if ($("tr[taskid='" + taskIdArr[i] + "']").attr("parentid") != 0) {
+// 						alert("<spring:message code='ezTask.t105' />");
+// 			            return;	
+// 					}
+// 				}
 
-		        if (delparentid != "0") {
-		            alert("<spring:message code='ezTask.t105' />");
-		            return;
-		        }
+// 		        if (delparentid != "0") {
+		            
+// 		        }
 
 				if (confirm("<spring:message code='ezTask.t106' />")) {
 					$.ajax({
@@ -712,29 +757,33 @@
 				strListInfo = "";
 				strListIdInfo = "";
 		    }
-		
+
 		    function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
 	            totalcount = GetChildNodes(listdom.documentElement).length - 2;
 	            totalpage = Math.ceil(new Number(totalcount / pagesize));
 
-	            if (isrefresh)
-	                isrefresh = false;
-	            else
-	                currentpage = 1;
-	
-	            if (currentpage > totalpage)
-	                currentpage = totalpage;
-	
-	            if (currentpage == 0)
-	                currentpage = 1;
-	
-	            makePageSelPage();
-	            show_page();
+	            if (isrefresh) {
+	                isrefresh = false;	            	
+	            } else {
+	                currentpage = 1;	            	
+	            }
+
+	            if (currentpage > totalpage) {
+	                currentpage = totalpage;	            	
+	            }
+
+	            if (currentpage == 0) {
+	                currentpage = 1;	            	
+	            }
+
 	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
-	
+
+	            makePageSelPage();
+	            show_page();
+
 	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
 	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
 
@@ -754,6 +803,18 @@
 
 		        document.getElementById("list").style.height = height + "px";
 		        ChangeTab(document.getElementById("1tab1"));
+		        
+		     // 전체 체크박스 선택, 해제
+				$("#checkboxAll").on("click", function() {
+					if ($("#checkboxAll").is(":checked")) {
+						$(":checkbox").prop("checked", true);
+						$(".row_body td").css("background", "rgb(233, 241, 244)");
+					} else {
+						$(":checkbox").prop("checked", false);
+						$(".row_body td").css("background", "");
+						selectelem = null;
+					}
+				})
 		    }
 		    document.onselectstart = function () {
 		        event.cancelBubble = true;
@@ -800,7 +861,12 @@
 		    }
 		    function ChangeTab(obj) {
 		        var pSelectTab = GetAttribute(obj, "divname");
-		
+
+		        if ($("#checkboxAll").is(":checked")) {
+					$(":checkbox").prop("checked", false);
+					$(".row_body td").css("background", "#FFFFFF");
+				}
+
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
