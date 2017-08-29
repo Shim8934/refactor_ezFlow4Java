@@ -370,6 +370,55 @@
 	            }
 		        MailListRefresh();
 		    }
+// <<<<<<< Updated upstream
+// =======
+		    
+// 		    function mailbox_export() {
+// 		    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+// 		    		ShowMailProgress();
+			        
+// 		            $.ajax({
+// 		    			type : "POST",
+// 		    			dataType : "text",
+// 		    			async : true,
+// 		    			url : "/ezEmail/mailboxExportZip.do",
+// 		    			data : {folderPath: '${url}'},
+// 		    			complete: function(){
+// 		    				HiddenMailProgress();
+// 		    			},
+// 		    			success: function(result){
+// 		    				if (result != "") {
+// 		    			    	var fullpath = "/ezEmail/downloadMailboxZip.do?folderName=" + encodeURIComponent('${folderName}') + "&temp=" + result;
+// 		    			    	AttachDownFrame.location.href = fullpath;
+// 		    			        AttachDownFrame.target = "_blank";
+// 		    				} else {
+// 		    					alert("<spring:message code='ezEmail.lhm33' />");
+// 		    				}
+// 		    			}
+// 		    			,onprograss : function (e, total, loaded, per, computable) {
+// 		    				alert(e);
+// 		    				alert(total);
+// 		    				alert(loaded);
+// 		    				alert(per);
+// 		    				alert(computable);
+// 		    			}
+// 		    		});
+// 		    	}
+// 		    }
+		    
+// 		    function mailbox_import() {
+// 		    	document.getElementById("file1").click();
+// 		    }
+		    
+// 		    function mailbox_attach_import() {
+// 	            var tempname = document.importMailboxform.file1.value;
+// 	        	if (tempname == "") {
+// 		            return;
+// 	            }
+	        	
+// 	            var last = tempname.split(".").length;
+// 	            var extension = tempname.split(".")[last - 1];
+// >>>>>>> Stashed changes
 
 		    // 메일박스 내보내기
 			function mailbox_export() {

@@ -1278,7 +1278,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
         	e.printStackTrace();
         }
         
-        logger.info("[Websocket] UserKey="+ userkey + " sessionId=" + session.getId() + "sessionInfo=" + session.getBasicRemote() + "SessionMap Size=" + sessionMap.size());
+        logger.info("[Websocket] UserKey="+ userkey + " sessionId=" + session.getId() + " sessionInfo=" + session.getBasicRemote() + " SessionMap Size=" + sessionMap.size());
         logger.info("[Websocket] SessionMap Size=" + sessionMap.size() + " this=" + this);
         
     }
