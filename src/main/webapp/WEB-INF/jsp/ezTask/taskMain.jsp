@@ -576,7 +576,7 @@
 					idArrList += idArr[i].substring(0, loc) + ";";
 				}
 
-// 				idArr = null;
+				idArr = null;
 				idArr = idArrList.split(";");
 
 				for (var i = 0; i < idArr.length - 1; i++) {
@@ -613,7 +613,7 @@
 						error : function() {
 							alert("<spring:message code='ezTask.t107' />");
 						}
-					})					
+					})
 				}
 		    }
 		</script>
