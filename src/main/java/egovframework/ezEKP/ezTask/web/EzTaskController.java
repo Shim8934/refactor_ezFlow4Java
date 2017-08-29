@@ -33,6 +33,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
@@ -273,7 +274,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		//첨부파일목록조회
 		String taskWorkAttachList = null;
-		if (taskInfoVO.getHasAttach().equals("Y")) {
+		if (taskInfoVO.getPersonAttach().equals("Y")) {
 			taskWorkAttachList = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
 		}
 		
@@ -303,9 +304,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		String content = request.getParameter("content");
 		String attachList = request.getParameter("attachList");
+		String personAttach = request.getParameter("personAttach");
 		String contentPath = request.getParameter("contentPath");
 		
-		ezTaskService.taskWorkSave(taskID, content, attachList, contentPath, realPath, uploadTaskPath, tenantID);
+		ezTaskService.taskWorkSave(taskID, content, attachList, personAttach, contentPath, realPath, uploadTaskPath, tenantID);
 		
 		logger.debug("taskWorkSave ended.");
 		
@@ -450,7 +452,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 에디터 첨부파일 목록조회
 	 */
-	@RequestMapping(value = "/ezTask/getAttachList.do")
+	/*@RequestMapping(value = "/ezTask/getAttachList.do")
 	public String getAttachList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getAttachList started.");
 		
@@ -467,7 +469,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("getAttachList ended.");
 		
 		return "json";
-	}
+	}*/
 	
 	/* 정수현*/
 	
@@ -726,10 +728,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
 		
 		String taskID = request.getParameter("taskID");
 		TaskInfoVO taskInfoVO = null;
 		List<TaskShareVO> taskShareList = null;
+		List<TaskAttachVO> taskAttachList = null;
+		StringBuilder strAttach = new StringBuilder();
 		
 		if (taskID == null) {
 			/*업무작성*/
@@ -747,7 +752,19 @@ public class EzTaskController extends EgovFileMngUtil {
 			
 			//첨부파일목록조회
 			if (taskInfoVO.getHasAttach().equals("Y")) {
-//				getAttachList(taskID);
+				taskAttachList = ezTaskService.getAttachList(taskID, realPath, "1", tenantID);
+				
+				strAttach.append("<ROOT><NODES>");
+            	
+				for (TaskAttachVO vo : taskAttachList) {
+					strAttach.append("<DATA><![CDATA[" + vo.getFilePath().substring(vo.getTaskID().length() + 2) + "]]></DATA>");
+					strAttach.append("<DATA2><![CDATA[" + vo.getFileName() + "]]></DATA2>");
+					strAttach.append("<DATA3><![CDATA[" + vo.getFileSize() + "]]></DATA3>");
+					strAttach.append("<DATA4><![CDATA[" + vo.getAttachID() + "]]></DATA4>");
+					strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
+                }
+				
+				strAttach.append("</NODES></ROOT>");
 			}
 		}
 		
@@ -756,6 +773,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskShareList", taskShareList);
+		model.addAttribute("taskAttachList", strAttach.toString());
 		
 		logger.debug("taskWrite ended.");
 		

@@ -22,6 +22,7 @@
 	        var deptname = "${userInfo.deptName }";
 	        var deptname2 = "${userInfo.deptName1 }";
 	        var taskid = "${taskInfoVO.taskID }";
+	        var hasattach = "${taskInfoVO.personAttach }";
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var taskstatus = "${taskInfoVO.taskStatus }";
 	        var completerate = "${taskInfoVO.completeRate }";
@@ -48,6 +49,12 @@
 	        var FormProcSpelling = "FormProcSpelling";
 	        var personid = "${taskInfoVO.personID }"; */
 	        
+	        $(function () {
+	        	if (hasattach == "Y") {
+		            setAttachFileInfo("${taskWorkAttachList}");
+		        }
+	        });
+	        
 	        window.onresize = function () {
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
 	         }
@@ -68,7 +75,7 @@
 		                }
 	                });
 	                
-	               try {
+					try {
 	                    var objTags = document.getElementById('message').getElementsByTagName("a");
 	
 	                    for (var i = 0 ; i < objTags.length ; i++) {
@@ -77,8 +84,8 @@
 	                    }
 	                }
 	                catch (e) { }
-	            }
-	        }
+				}
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   }
 		</script>
 	</head>
 	<body class="popup">
@@ -108,7 +115,7 @@
 				<tr>
 					<td>
 						<br/>
-						<iframe id="dadiframe" name="dadiframe" style="width: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>   
+						<iframe id="dadiframe" name="dadiframe" style="width: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>
 					</td>
 	            </tr>
 			</table>

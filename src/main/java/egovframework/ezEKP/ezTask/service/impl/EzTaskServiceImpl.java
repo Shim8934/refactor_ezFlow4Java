@@ -202,6 +202,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			attachMap.put("taskType", 1);
 			attachMap.put("tenantID", tenantID);
 			
+			logger.debug("fileList = " + fileList);
+			
 			for(String fileStr : fileList.split(",")) {
 				String[] file = fileStr.split(";");
 				String filePath = file[0];
@@ -386,7 +388,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public void taskWorkSave(String taskID, String content, String attachList, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception {
+	public void taskWorkSave(String taskID, String content, String attachList, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception {
 		logger.debug("taskWorkSave started.");
 		logger.debug("taskID = " + taskID + " || content = " + content + " || attachList = " + attachList + " || contentPath = " + contentPath + " || realPath = " + realPath + " || uploadTaskPath = " + uploadTaskPath);
 		
@@ -420,7 +422,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
-		map.put("personAttach", "N");// 파일첨부이후 추가
+		map.put("personAttach", personAttach);// 파일첨부이후 추가
 		map.put("personContentPath", contentPath);
 		map.put("tenantID", tenantID);
 		
@@ -501,10 +503,14 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				fileImage = "/images/email/mail_006.gif";
 			}
 			
-			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' >");
-			sb.append("<img src='" + fileImage + "' >");
-			sb.append("<a href='/ezCommon/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
-			sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
+			if (type.equals("1")) {
+				sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' >");
+				sb.append("<img src='" + fileImage + "' >");
+				sb.append("<a href='/ezCommon/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
+				sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
+			} else if (type.equals("2")) {
+				
+			}
 		}
 		
 		logger.debug("getAttachListStr ended. listSize = " + list.size());
@@ -522,22 +528,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 		
 		List<TaskAttachVO> list = ezTaskDAO.getAttachList(map);
-		
-		String uploadFolder = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
-		String tempFolder = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "tempUploadFile";
-		
-		for (TaskAttachVO vo : list) {
-			String filePath = vo.getFilePath();
-			String tempFilePath = filePath.substring(vo.getTaskID().length() + 2);
-			
-			logger.debug("filePath = " + filePath);
-			logger.debug("tempFilePath = " + tempFilePath);
-			
-			File beforeFile = new File(realPath + uploadFolder + filePath);
-			File afterFile = new File(realPath + tempFolder + commonUtil.separator + tempFilePath);
-			
-			copy(beforeFile, afterFile);
-		}
 		
 		logger.debug("getAttachList ended");
 		

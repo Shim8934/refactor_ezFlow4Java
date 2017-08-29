@@ -912,6 +912,12 @@ function save_taskWork() {
 			fileList += "," + GetAttribute(filelist[i + 1], "data2");
 		}
 	}
+	
+	if (fileList.length > 0) {
+		personAttach = "Y";
+	} else {
+		personAttach = "N";
+	}
     
     $.ajax({
     	type : "POST",
@@ -921,6 +927,7 @@ function save_taskWork() {
 			taskID : taskid,
 			content : content,
 			attachList : fileList,
+			personAttach : personAttach,
 			contentPath : personContentpath
 		},
 		success : function(result) {

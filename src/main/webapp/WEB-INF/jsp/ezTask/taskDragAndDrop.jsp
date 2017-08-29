@@ -122,13 +122,7 @@
 		
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
-		        
-		        getAttachList();
 		    };
-		    
-		    function getAttachList() {
-		    	
-		    }
 		
 		    function uploadComplete(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
