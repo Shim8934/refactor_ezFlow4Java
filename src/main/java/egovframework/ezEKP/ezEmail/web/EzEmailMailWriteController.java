@@ -2956,26 +2956,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	
 		    		        	String tempFileName = UUID.randomUUID().toString();
 		    		        	
-		    		        	StringBuilder sb = new StringBuilder();
-		    		        	sb.append("<style>\n");
-		    		        	sb.append(".security_message{background:#d0e1ff;}\n");
-		    		        	sb.append(".security_message .security_img{max-width:780px; margin:0 auto; padding-left: 40px;}\n");
-		    		        	//TODO: 리소스
-		    		        	sb.append(".security_message .security_txt{margin:0px 0px 0px 300px; padding:54px 0px; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;position:relative;left:-50px;margin-top:-250px;}\n");
-		    		        	sb.append(".security_message .security_txt h4{margin:0px; padding:3px 0px 0px 0px; font-size:22px; letter-spacing:-1px; color:#333; border-bottom:2px solid #727985; line-height:44px;}\n");
-		    		        	sb.append(".security_message .security_txt h4 span{color:#304d7f;}\n");
-		    		        	sb.append(".security_message .security_txt p{margin:0px; padding:5px 0px 0px 0px; font-size:15px; color:#333; line-height:22px;}\n");
-		    		        	sb.append("</style>\n");
-		    		        	sb.append("<div class=\"security_message\">\n");
-		    		        	sb.append("    <div class=\"security_img\">\n");
-		    		        	sb.append("        <img src=\"cid:" + tempFileName + ".gif@12345678.87654321\">\n");
-		    		        	sb.append("        <section class=\"security_txt\">\n");
-		    		        	sb.append("            " + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "\n");
-		    		        	sb.append("            " + egovMessageSource.getMessage("ezEmail.lhm58", locale) + "\n");
-		    		        	sb.append("        </section>\n");
-		    		        	sb.append("    </div>\n");
-		    		        	sb.append("</div>\n");
-		    		        	secureBodyHtmlPart.setContent(sb.toString(), "text/html; charset=utf-8");
+		    		        	secureBodyHtmlPart.setContent(ezEmailUtil.getSecureBodyHtml(tempFileName, locale), "text/html; charset=utf-8");
 		    		        	
 		    		        	secureBodyImagePart.setHeader("Content-Disposition", "inline;\r\n\tfilename=\"" + tempFileName + ".gif\"");
 		    		        	secureBodyImagePart.setHeader("Content-ID", "<" + tempFileName + ".gif@12345678.87654321>");
@@ -2997,54 +2978,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	
 		    		        	String serverName = userInfo.getServerName();
 		    		        	
-		    		        	sb = new StringBuilder();
-		    		        	sb.append("<!DOCTYPE html>\n");
-		    		        	sb.append("<html style=\"height:100%;\">\n");
-		    		        	sb.append("    <head>\n");
-		    		        	sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
-		    		        	sb.append("        <title>SECURE MAIL</title>\n");
-		    		        	sb.append("        <style>\n");
-		    		        	sb.append("            .security_layerpopup{width:100%; height:100%; background:#f1f1f1;}\n");
-		    		        	sb.append("            .security_layerpopup .popup_img{margin:0px; padding:84px 0px 0px 0px; text-align:center;}\n");
-		    		        	//TODO: 리소스
-		    		        	sb.append("            .security_layerpopup .popup_txt{margin:0px; padding:0px; text-align:center; font-size:24px; color:#333; font-weight:600; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;}\n");
-		    		        	sb.append("            .security_layerpopup .popup_txt span{font-size:18px; font-weight:300; letter-spacing:-1px;}\n");
-		    		        	sb.append("            .security_layerpopup form{width:465px; margin: 35px auto;}\n");
-		    		        	sb.append("            .security_layerpopup form fieldset {margin:0; padding:0; border:0; clear:both;}\n");
-		    		        	sb.append("            .security_layerpopup legend {visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0}\n");
-		    		        	sb.append("            .security_layerpopup .password{float:left; width:380px; height:45px; margin:0px; padding::0px; background:url(http://" + serverName + "/images/email/secureMail/input_pw_bg.gif) no-repeat;}\n");
-		    		        	sb.append("            .security_layerpopup #TextPassword {background:url(http://" + serverName + "/images/email/secureMail/pw_txt.png) no-repeat 0px 3px; width:300px; height:43px;  margin:1px 0px 0px 46px; padding:0px 0px 0px 10px; line-height:21px; color:#777; font-size:18px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}\n");
-		    		        	sb.append("            .security_layerpopup .input_text.focus, .input_text.focusnot{background:#fff !important;}\n");
-		    		        	sb.append("            .security_layerpopup .btn{float:left; width:75px; height:45px; margin:0px 0px 0px 10px; padding:0px;}\n");
-		    		        	sb.append("            .security_layerpopup .btn_check{width:75px; height:45px; margin:0px; padding:0px;}\n");
-		    		        	sb.append("        </style>\n");
-		    		        	sb.append("        <script>\n");
-		    		        	sb.append("            function submitForm() {\n");
-		    		        	sb.append("                var f = document.secureForm;\n");
-		    		        	sb.append("                f.submit();\n");
-		    		        	sb.append("            }\n");
-		    		        	sb.append("        </script>\n");
-		    		        	sb.append("    </head>\n");
-		    		        	sb.append("    <body style=\"margin:0;height:100%;\">\n");
-		    		        	sb.append("        <div class=\"security_layerpopup\">\n");
-		    		        	sb.append("            <p class=\"popup_img\"><img src=\"http://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
-		    		        	sb.append("            <p class=\"popup_txt\">" + egovMessageSource.getMessage("ezEmail.lhm59", locale) + "</p>\n");
-		    		        	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"http://" + serverName + "/ezEmail/readSecureMail.do\">\n");
-		    		        	sb.append("                <fieldset>\n");
-		    		        	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" onchange=\"if(this.value.length!=0){this.className=&#39;input_text focus&#39;}\"\n");
-		    		        	sb.append("                                           onblur=\"if (this.value.length==0) {this.className=&#39;input_text&#39;}else {this.className=&#39;input_text focusnot&#39;};\" onfocus=\"this.className=&#39;input_text focus&#39;\" /></p>\n");
-		    		        	sb.append("                    <p class=\"btn\"><input src=\"http://" + serverName + "/images/email/secureMail/btn.gif\" name=\"Button\" type=\"image\" id=\"Button\" tabindex=\"3\" border=\"0\" class=\"btn_check\" /></p>\n");
-		    		        	sb.append("                </fieldset>\n");
-		    		        	sb.append("                <input type=\"hidden\" name=\"secureKey\" value=\"${X-JMocha-Secure-Mail-Key}\" />\n");
-		    		        	sb.append("            </form>\n");
-		    		        	sb.append("        </div>\n");
-		    		        	sb.append("    </body>\n");
-		    		        	sb.append("</html>\n");
-		    		        	
 		    		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
 		    		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
 		    		        	
-		    		        	secureAttachPart.setContent(sb.toString().replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
+		    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale);
+		    		        	secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureMixedPart.addBodyPart(secureAttachPart);
 		    		        	// make secureAttachPart and add to secureMixedPart - end
@@ -3109,7 +3047,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    			            
     				        	// 메일을 발송할 때에는 보낸사람의 secureMailKey를 다시 ${X-JMocha-Secure-Mail-Key}로 되돌려놓는다.
     				        	secureMixedPart.removeBodyPart(secureAttachPart);
-    				        	secureAttachPart.setContent(sb.toString(), "text/html; charset=utf-8");
+    				        	secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
     				        	secureMixedPart.addBodyPart(secureAttachPart);
     				        	
     				        	// 메일을 발송할 때에는 원본메일을 삭제한다.

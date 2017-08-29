@@ -2427,6 +2427,68 @@ public class EzEmailUtil {
     	return result;
     }
     
+    public String getSecureBodyHtml(String fileName, Locale locale) {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("<div class=\"security_message\" style=\"background:#d0e1ff\">\n");
+    	sb.append("    <div class=\"security_img\" style=\"max-width:780px;margin:0 auto;padding-left:40px;padding-bottom:20px\">\n");
+    	sb.append("        <img src=\"cid:" + fileName + ".gif@12345678.87654321\">\n");
+    	sb.append("        <section class=\"security_txt\" style=\"margin:0px 0px 0px 300px;padding:54px 0px;font-family:" + egovMessageSource.getMessage("main.t0620", locale) + ";position:relative;left:-50px;margin-top:-250px\">\n");
+    	sb.append("            <h4 style=\"margin:0px;padding:3px 0px 0px 0px;font-size:22px;letter-spacing:-1px;color:#333;border-bottom:2px solid #727985;line-height:44px\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "</h4>\n");
+    	sb.append("            <p style=\"margin:0px;padding:5px 0px 0px 0px;font-size:15px;color:#333;line-height:22px\">" + egovMessageSource.getMessage("ezEmail.lhm58", locale) + "</p>\n");
+    	sb.append("        </section>\n");
+    	sb.append("    </div>\n");
+    	sb.append("</div>\n");
+    	
+    	return sb.toString();
+    }
+    
+    public String getSecureAttachHtml(String serverName, Locale locale) {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("<!DOCTYPE html>\n");
+    	sb.append("<html style=\"height:100%;\">\n");
+    	sb.append("    <head>\n");
+    	sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
+    	sb.append("        <title>SECURE MAIL</title>\n");
+    	sb.append("        <style>\n");
+    	sb.append("            .security_layerpopup{width:100%; height:100%; background:#f1f1f1;}\n");
+    	sb.append("            .security_layerpopup .popup_img{margin:0px; padding:84px 0px 0px 0px; text-align:center;}\n");
+    	sb.append("            .security_layerpopup .popup_txt{margin:0px; padding:0px; text-align:center; font-size:24px; color:#333; font-weight:600; font-family:" + egovMessageSource.getMessage("main.t0620", locale) + ";}\n");
+    	sb.append("            .security_layerpopup .popup_txt span{font-size:18px; font-weight:300; letter-spacing:-1px;}\n");
+    	sb.append("            .security_layerpopup form{width:465px; margin: 35px auto;}\n");
+    	sb.append("            .security_layerpopup form fieldset {margin:0; padding:0; border:0; clear:both;}\n");
+    	sb.append("            .security_layerpopup legend {visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0}\n");
+    	sb.append("            .security_layerpopup .password{float:left; width:380px; height:45px; margin:0px; padding::0px; background:url(http://" + serverName + "/images/email/secureMail/input_pw_bg.gif) no-repeat;}\n");
+    	sb.append("            .security_layerpopup #TextPassword {background:url(http://" + serverName + "/images/email/secureMail/pw_txt.png) no-repeat 0px 3px; width:300px; height:43px; margin:1px 0px 0px 46px; padding:0px 0px 0px 10px; line-height:21px; color:#777; font-size:18px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}\n");
+    	sb.append("            .security_layerpopup .input_text.focus, .input_text.focusnot{background:#fff !important;}\n");
+    	sb.append("            .security_layerpopup .btn{float:left; width:75px; height:45px; margin:0px 0px 0px 10px; padding:0px;}\n");
+    	sb.append("            .security_layerpopup .btn_check{width:75px; height:45px; margin:0px; padding:0px;}\n");
+    	sb.append("        </style>\n");
+    	sb.append("        <script>\n");
+    	sb.append("            function submitForm() {\n");
+    	sb.append("                var f = document.secureForm;\n");
+    	sb.append("                f.submit();\n");
+    	sb.append("            }\n");
+    	sb.append("        </script>\n");
+    	sb.append("    </head>\n");
+    	sb.append("    <body style=\"margin:0;height:100%;\">\n");
+    	sb.append("        <div class=\"security_layerpopup\">\n");
+    	sb.append("            <p class=\"popup_img\"><img src=\"http://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
+    	sb.append("            <p class=\"popup_txt\">" + egovMessageSource.getMessage("ezEmail.lhm59", locale) + "</p>\n");
+    	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"http://" + serverName + "/ezEmail/readSecureMail.do\">\n");
+    	sb.append("                <fieldset>\n");
+    	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" onchange=\"if(this.value.length!=0){this.className=&#39;input_text focus&#39;}\"\n");
+    	sb.append("                                           onblur=\"if (this.value.length==0) {this.className=&#39;input_text&#39;}else {this.className=&#39;input_text focusnot&#39;};\" onfocus=\"this.className=&#39;input_text focus&#39;\" /></p>\n");
+    	sb.append("                    <p class=\"btn\"><input src=\"http://" + serverName + "/images/email/secureMail/btn.gif\" name=\"Button\" type=\"image\" id=\"Button\" tabindex=\"3\" border=\"0\" class=\"btn_check\" /></p>\n");
+    	sb.append("                </fieldset>\n");
+    	sb.append("                <input type=\"hidden\" name=\"secureKey\" value=\"${X-JMocha-Secure-Mail-Key}\" />\n");
+    	sb.append("            </form>\n");
+    	sb.append("        </div>\n");
+    	sb.append("    </body>\n");
+    	sb.append("</html>\n");
+    	
+    	return sb.toString();
+    }
+    
     private String toHexString(byte[] array) {
         return DatatypeConverter.printHexBinary(array);
     }    
