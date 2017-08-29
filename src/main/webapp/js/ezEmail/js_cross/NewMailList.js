@@ -213,6 +213,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Read = SelectSingleNodeValue(XmlRows[Cnt], "read");
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
+                var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
                 var _TR = document.createElement("TR");
                 _TR.setAttribute("id", "Maillist_" + Cnt);
                 _TR.style.cursor = "pointer";
@@ -224,6 +225,7 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("read", p_Read);
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
+                _TR.setAttribute("securemail", p_SecureMail);
                 _TR.setAttribute("draggable", true);
                 _TR.ondragstart = function () { drag(event) };
             
@@ -293,11 +295,13 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
-                            _TDColum.innerHTML = p_Subject;
-                            p_Subject = p_Subject.trim();
-                            if(p_Subject == ""){
-                            	_TDColum.innerHTML = strLang97;
+                            if (p_Subject.trim() == "") {
+                            	p_Subject = strLang97;
                             }
+                            if (p_SecureMail == 1) {
+                            	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + p_Subject;
+                            }
+                            _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function () { event_listclick(this); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };

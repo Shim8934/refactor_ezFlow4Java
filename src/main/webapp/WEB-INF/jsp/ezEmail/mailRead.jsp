@@ -50,7 +50,9 @@
 		    var pContentClass = "${pContentClass}";
 		    var pNoneActiveX = "${NoneActiveX}";
 		    var jMochaStandAlone = "${jMochaStandAlone}";
+		    var isSecureMail = "${isSecureMail}";
 		    window.onresize = window_onresize;
+		    
 			function window_onload()
 			{
 			    window_onresize();

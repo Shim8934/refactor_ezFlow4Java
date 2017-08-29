@@ -271,6 +271,7 @@ function resultView(xmlDoc) {
         fromname = SelectSingleNodeValue(XmlRows[i], "FROMNAME");
         hasattachment = SelectSingleNodeValue(XmlRows[i], "HASATTACHMENT");
         read = SelectSingleNodeValue(XmlRows[i], "READ");
+        securemail = SelectSingleNodeValue(XmlRows[i], "SECUREMAIL");
         id = SelectSingleNodeValue(XmlRows[i], "ITEMID");
         displayto = SelectSingleNodeValue(XmlRows[i], "DISPLAYTO");
         ItemClass = SelectSingleNodeValue(XmlRows[i], "CONTENTCLASS");
@@ -285,6 +286,7 @@ function resultView(xmlDoc) {
         tr.setAttribute("contentclass", ItemClass);
         tr.setAttribute("itemID", id);
         tr.setAttribute("targetURL", id);
+        tr.setAttribute("securemail", securemail);
         tr.onmouseover = function () { event_listMover(this); };
         tr.onmouseout = function () { event_listMout(this); };
         tr.onclick = function () { event_listclick(this); };
@@ -333,7 +335,7 @@ function resultView(xmlDoc) {
             preparedTD(tr, "100px", "left", "middle", displayto, displayto, 1, false);
             tr.recvFrom = displayto;
         }
-
+        
         preparedTD(tr, "100%", "left", "middle", subject, subject, 1, false);
 
         if (TrimText(datereceived) != "null")

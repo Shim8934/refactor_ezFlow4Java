@@ -442,8 +442,11 @@ public class EzEmailMailListController {
 				subject = (subject != null) ? subject : "";
 				subject = commonUtil.cleanValue(subject);
 				
+				// secureMail
 				if (ezEmailUtil.hasSecureMailFlag(message)) {
-					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+					sb.append(String.format("<securemail>1</securemail>"));
+				} else {
+					sb.append(String.format("<securemail>0</securemail>"));
 				}
 				
 				if (viewSelectIndex.equals("1")) {
