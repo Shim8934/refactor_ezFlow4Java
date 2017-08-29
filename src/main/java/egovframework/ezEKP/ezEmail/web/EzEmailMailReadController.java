@@ -494,7 +494,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				if (message == null) {
     					logger.error("Message not found. uid=" + uid);
     				} else {
-    					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, locale);
+    					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, false, locale);
     					double size = Double.parseDouble(bodyInfoList.get(2));
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
     					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
@@ -610,7 +610,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
 				} else {
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, locale);
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, false, locale);
 				}
 			}
 		} catch (MessagingException e) {
@@ -1210,7 +1210,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				if (message == null) {
     					logger.error("Message not found. uid=" + uid);
     				} else {
-    					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, locale);
+    					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, false, locale);
     					double size = Double.parseDouble(bodyInfoList.get(2));
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
     					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
@@ -1406,7 +1406,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					logger.debug("pSubject=" + pSubject);
 					
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true, locale);
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true, false, locale);
 					pBody = bodyInfoList.get(0);
 					pAttachListHtml = bodyInfoList.get(1);
 					
@@ -1614,7 +1614,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					sb.append("<DATE><![CDATA[" + dateStr + "]]></DATE>");
 					
 					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, false, locale);
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, false, false, locale);
 					
 					String htmlBody = bodyInfoList.get(0);
 					htmlBody = EgovStringUtil.getSpclStrCnvr(htmlBody);

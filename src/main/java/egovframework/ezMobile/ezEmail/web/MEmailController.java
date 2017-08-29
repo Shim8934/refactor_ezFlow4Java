@@ -672,7 +672,7 @@ public class MEmailController extends EgovFileMngUtil {
 					if (message == null) {
 						logger.error("Message not found. uid=" + uid);
 					} else {
-						bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, locale);
+						bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, true, locale);
 						double size = Double.parseDouble(bodyInfoList.get(2));
 						String strSize = ezEmailUtil.getSizeWithUnit(size);
 						pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
