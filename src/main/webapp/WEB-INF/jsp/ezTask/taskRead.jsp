@@ -743,7 +743,7 @@
 			        printattachViewProgress.style.display = "";
 			
 			    window.print();
-			
+
 			    document.getElementById("printScreen").style.display = "none";
 			    document.getElementById("normalScreen").style.display = "";
 			    document.getElementById("menu").style.display = "";
