@@ -2,7 +2,7 @@ package egovframework.ezMobile.ezResource.vo;
 
 public class ResScheGetHolidayVO {
 	/** 기념일ID*/
-	private int holidayID;
+	private int holidayId;
 	/** 기념일 이름*/
 	private String holidayName;
 	/** 기념일 이름2*/
@@ -29,11 +29,11 @@ public class ResScheGetHolidayVO {
 		this.calendarDay = calendarDay;
 	}
 	
-	public int getHolidayID() {
-		return holidayID;
+	public int getHolidayId() {
+		return holidayId;
 	}
-	public void setHolidayID(int holidayID) {
-		this.holidayID = holidayID;
+	public void setHolidayId(int holidayId) {
+		this.holidayId = holidayId;
 	}
 	public String getHolidayName() {
 		return holidayName;

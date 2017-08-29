@@ -2,11 +2,11 @@ package egovframework.ezMobile.ezResource.vo;
 
 public class ResGetScheduleRepetitionVO {
 	/** 자원예약게시판ID*/
-	private String ownerID;
+	private String ownerId;
 	/** 순번*/
 	private int num;
 	/** 회사ID*/
-	private String companyID;
+	private String companyId;
 	/** 반복시작일*/
 	private String startDateTime;
 	/** 반복종료일*/
@@ -48,11 +48,11 @@ public class ResGetScheduleRepetitionVO {
 		this.value = value;
 	}
 	
-	public String getOwnerID() {
-		return ownerID;
+	public String getOwnerId() {
+		return ownerId;
 	}
-	public void setOwnerID(String ownerID) {
-		this.ownerID = ownerID;
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
 	public int getNum() {
 		return num;
@@ -60,11 +60,11 @@ public class ResGetScheduleRepetitionVO {
 	public void setNum(int num) {
 		this.num = num;
 	}
-	public String getCompanyID() {
-		return companyID;
+	public String getCompanyId() {
+		return companyId;
 	}
-	public void setCompanyID(String companyID) {
-		this.companyID = companyID;
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 	public String getStartDateTime() {
 		return startDateTime;
