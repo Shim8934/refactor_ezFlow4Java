@@ -13,11 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
-import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -579,159 +578,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		logger.debug("taskUpdateConfig ended.");
 	}
-
-	/*@Override
-	public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception {
-		logger.debug("taskSave started.");
-
-		TaskInfoVO taskInfoVO = new TaskInfoVO();
-
-		taskInfoVO.setOwnerID(doc.getElementsByTagName("OWNERID").item(0).getTextContent());
-		taskInfoVO.setCreatorID(doc.getElementsByTagName("CREATORID").item(0).getTextContent());
-		taskInfoVO.setCreatorName(doc.getElementsByTagName("CREATORNAME1").item(0).getTextContent());
-		taskInfoVO.setCreatorName2(doc.getElementsByTagName("CREATORNAME2").item(0).getTextContent());
-		taskInfoVO.setHasShare(doc.getElementsByTagName("HASSHARE").item(0).getTextContent());
-		taskInfoVO.setHasAttach(doc.getElementsByTagName("HASATTACH").item(0).getTextContent());
-		taskInfoVO.setTaskStatus(Integer.parseInt(doc.getElementsByTagName("TASKSTATUS").item(0).getTextContent()));
-		taskInfoVO.setImportance(Integer.parseInt(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
-		taskInfoVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-		taskInfoVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-		taskInfoVO.setTitle(commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
-		taskInfoVO.setContentPath("Doc" + commonUtil.separator + "{" + newGuid + "}" + ".mht");
-		taskInfoVO.setTaskType(doc.getElementsByTagName("TASKTYPE").item(0).getTextContent());
-		taskInfoVO.setUpdateTime(commonUtil.getTodayUTCTime(""));
-		taskInfoVO.setNewAnswer("N");
-		taskInfoVO.setNewRefer("N");
-		taskInfoVO.setTenantID(userInfo.getTenantId());
-
-		if (taskInfoVO.getTaskType().equals("1")) { // 업무구분 : 개인
-			taskInfoVO.setPersonID(doc.getElementsByTagName("PERSONID").item(0).getTextContent());
-			taskInfoVO.setPersonName(doc.getElementsByTagName("PERSONNAME1").item(0).getTextContent());
-			taskInfoVO.setPersonName2(doc.getElementsByTagName("PERSONNAME2").item(0).getTextContent());
-			taskInfoVO.setPersonDeptName(doc.getElementsByTagName("PERSONDEPTNAME1").item(0).getTextContent());
-			taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("PERSONDEPTNAME2").item(0).getTextContent());
-
-			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("PERSONID").item(0).getTextContent());
-			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("PERSONNAME1").item(0).getTextContent());
-			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("PERSONNAME2").item(0).getTextContent());
-		} else { // 업무구분 : 지시, 협조
-			taskInfoVO.setPersonID(doc.getElementsByTagName("TASKPERSONID").item(0).getTextContent());
-			taskInfoVO.setPersonName(doc.getElementsByTagName("TASKPERSONNAME1").item(0).getTextContent());
-			taskInfoVO.setPersonName2(doc.getElementsByTagName("TASKPERSONNAME2").item(0).getTextContent());
-			taskInfoVO.setPersonDeptName(doc.getElementsByTagName("TASKPERSONDEPTNAME1").item(0).getTextContent());
-			taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("TASKPERSONDEPTNAME2").item(0).getTextContent());
-			
-			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("TASKPERSONID").item(0).getTextContent());
-			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("TASKPERSONNAME1").item(0).getTextContent());
-			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("TASKPERSONNAME2").item(0).getTextContent());			
-		}
-
-		int shareLength = Integer.parseInt(doc.getElementsByTagName("SHARELENGTH").item(0).getTextContent());
-		String fileList = "";
-		
-		if (taskInfoVO.getHasAttach().equals("Y")) {
-			fileList = doc.getElementsByTagName("FILELIST").item(0).getTextContent();			
-		}
-
-		logger.debug("OwnerID : " + taskInfoVO.getOwnerID() + " | CreatorID : " + taskInfoVO.getCreatorID() + " | CreatorName : " + taskInfoVO.getCreatorName() + " | HasShare : " + taskInfoVO.getHasShare() + " | HasAttach : " + taskInfoVO.getHasAttach());
-		logger.debug("TaskStatus : " + taskInfoVO.getTaskStatus() + " | Importance : " + taskInfoVO.getImportance() + "StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle());
-		logger.debug("ContentPath : " + taskInfoVO.getContentPath() + " | TaskType : " + taskInfoVO.getTaskType() + " | FileList : " + fileList);
-		logger.debug("PersonID : " + taskInfoVO.getPersonID() + " | PersonName : " + taskInfoVO.getPersonName() + " | TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName());
-
-		String taskID = ezTaskDAO.taskSave(taskInfoVO); // taskID 받아옴
-		
-		logger.debug("taskID : " + taskID);
-
-		taskInfoVO.setTaskID(taskID);
-		
-		for (int i=0; i<shareLength; i++) {
-			String shareID = doc.getElementsByTagName("SHAREID").item(i).getTextContent();
-			String shareName1 = doc.getElementsByTagName("SHARENAME1").item(i).getTextContent();
-			String shareName2 = doc.getElementsByTagName("SHARENAME2").item(i).getTextContent();
-			String shareDeptName1 = doc.getElementsByTagName("SHAREDEPTNAME1").item(i).getTextContent();
-			String shareDeptName2 = doc.getElementsByTagName("SHAREDEPTNAME2").item(i).getTextContent();
-
-			taskInfoVO.setOwnerID(shareID);
-			taskInfoVO.setPersonID(shareID);
-			taskInfoVO.setPersonName(shareName1);
-			taskInfoVO.setPersonName2(shareName2);
-			taskInfoVO.setPersonDeptName(shareDeptName1);
-			taskInfoVO.setPersonDeptName2(shareDeptName2);
-
-			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 공유자 Insert
-			 이런처리는 조직도스크립트에서 다 되있는것 같은데 빼먹고 안가져와서 여기서 처리하는거 같음
-			if (!shareID.equals(userInfo.getId())) {
-				ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert				
-			}
-		}
-		
-		PrintWriter pw = null;
-
-		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + "Doc" + commonUtil.separator + "{" + newGuid + "}" + ".mht";
-		File folderDir = new File(realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + "Doc");
-
-		logger.debug("mhtPath : " + mhtPath + " | folderDirIsExist : " + folderDir.exists());
-		
-        if (!folderDir.exists()) {
-        	folderDir.mkdir();
-        }
-
-		try {
-			pw = new PrintWriter(new File(mhtPath));
-			pw.print(commonUtil.cleanValue(doc.getElementsByTagName("CONTENT").item(0).getTextContent()));
-			pw.flush();
-			pw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// 첨부파일 저장
-		Map<String, Object> attachMap = new HashMap<String, Object>();
-
-		if (fileList != null && !fileList.equals("")) {
-			String pDirPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-
-			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID + "_uploadFile");
-
-			if (!file.exists()) {
-	        	file.mkdir();
-	        }
-
-			int fileLength = fileList.split(",").length;
-			String[] fileLists = fileList.split(",");
-
-			attachMap.put("taskID", taskID);
-			attachMap.put("taskType", taskInfoVO.getTaskType());
-			attachMap.put("tenantID", userInfo.getTenantId());
-
-			for (int j=0; j<fileLength; j++) {
-				String[] files = fileLists[j].split(";");
-				String filePath = files[0];
-				String fileName = files[1];
-				String fileSize = files[2];
-
-				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
-
-				String uploadFilePath = commonUtil.separator + taskID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-
-				attachMap.put("fileName", fileName);
-				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", uploadFilePath);
-				
-				logger.debug("uploadFilePath : " + uploadFilePath);
-				
-				ezTaskDAO.insertTaskAttach(attachMap);
-
-				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
-			}
-		}
-		
-		logger.debug("taskSave ended.");
-
-		return "OK";
-	}*/
 	
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		logger.debug("fileMove started.");

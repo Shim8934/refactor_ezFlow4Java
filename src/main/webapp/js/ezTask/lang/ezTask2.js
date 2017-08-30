@@ -42,6 +42,7 @@ var strLang41 = "Total "
 var strLang42 = "-items"
 var strLang43 = "Persons";
 var strLang44 = "검색결과";
+var strLang45 = "시작일을 종료일보다 빠르게 지정해주십시오."
 var strLang48 = "Attachment filename"
 var strLang49 = "Filesize"
 var strLang50 = "Filesize"
