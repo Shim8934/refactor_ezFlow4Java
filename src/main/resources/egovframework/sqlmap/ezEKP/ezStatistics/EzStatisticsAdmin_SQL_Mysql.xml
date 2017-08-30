@@ -15,7 +15,7 @@
 				A.FORMNAME AS FORMINFO,
          		CASE  
          			WHEN DRAFTENDCNT > 0 
-         			THEN ROUND(DTIME / DRAFTENDCNT, 2)
+         			THEN ROUND(DTIME / DRAFTENDCNT)
          			ELSE 0 
          		END AS DTIME
          	FROM 
@@ -83,7 +83,7 @@
                 IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
                 CASE 
                     WHEN DRAFTENDCNT > 0 
-                    THEN ROUND(DTIME / DRAFTENDCNT, 2)
+                    THEN ROUND(DTIME / DRAFTENDCNT)
                 	ELSE 0
                 END DTIME  
            	FROM 
@@ -143,7 +143,7 @@
                 IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
                 CASE
                 	WHEN DRAFTENDCNT > 0 
-                    THEN ROUND(DTIME / DRAFTENDCNT, 2)
+                    THEN ROUND(DTIME / DRAFTENDCNT)
                 	ELSE 0
                 END DTIME  
            	FROM 
