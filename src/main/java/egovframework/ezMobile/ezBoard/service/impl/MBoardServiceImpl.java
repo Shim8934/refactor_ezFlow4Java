@@ -1016,6 +1016,7 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		});
 	    
+	    //자식존재여부 체크
 	    for (int i=0; i< brdBoardTreeList.size(); i++) {
 	    	String isLeaf = checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID);
 	    	brdBoardTreeList.get(i).setIsLeaf(isLeaf);
