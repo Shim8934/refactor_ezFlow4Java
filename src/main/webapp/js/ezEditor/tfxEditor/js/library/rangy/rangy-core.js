@@ -368,6 +368,9 @@
     Module.prototype = {
         init: function() {
             var requiredModuleNames = this.dependencies || [];
+            
+            var IE_version = xfeBrowserFlag.getDocumentMode() ? xfeBrowserFlag.getDocumentMode() : xfeBrowserFlag.getBrowserVersion();
+
             for (var i = 0, len = requiredModuleNames.length, requiredModule, moduleName; i < len; ++i) {
                 moduleName = requiredModuleNames[i];
 
@@ -379,7 +382,13 @@
                 requiredModule.init();
 
                 if (!requiredModule.supported) {
-                    throw new Error("required module '" + moduleName + "' not supported");
+                
+                    /**                    
+                     * @20161226    .kscho
+                     */
+                    if(xfeBrowserFlag.isIE() && IE_version !== 11) {
+                        throw new Error("required module '" + moduleName + "' not supported");
+                    }
                 }
             }
 
@@ -2924,6 +2933,8 @@
                 // Previously an iframe was used but this caused problems in some circumstances in IE, so tests are
                 // performed on the current document's selection. See issue 109.
 
+                var IE_version = xfeBrowserFlag.getDocumentMode() ? xfeBrowserFlag.getDocumentMode() : xfeBrowserFlag.getBrowserVersion();
+
                 // Note also that if a selection previously existed, it is wiped and later restored by these tests. This
                 // will result in the selection direction begin reversed if the original selection was backwards and the
                 // browser does not support setting backwards selections (Internet Explorer, I'm looking at you).
@@ -2945,12 +2956,38 @@
                     // Test whether the native selection will allow a collapsed selection within a non-editable element
                     var r1 = document.createRange();
 
-                    r1.setStart(textNode, 1);
-                    r1.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(r1);
-                    collapsedNonEditableSelectionsSupported = (sel.rangeCount == 1);
-                    sel.removeAllRanges();
+
+
+                            
+                    if(xfeBrowserFlag.isIE()) {
+
+                        if(IE_version !== 9 && IE_version !== 10) {
+                            r1.setStart(textNode, 1);
+                            r1.collapse(true);
+                            sel.removeAllRanges();
+                            sel.addRange(r1);
+                            collapsedNonEditableSelectionsSupported = (sel.rangeCount == 1);
+                            sel.removeAllRanges();
+                        } else {
+                            /**
+                             * IE9 와 IE10 에서 에디터 로드시 에디터를 포함한 페이지가 display:none 과 같이 숨겨져 있을 경우
+                             * 예외가 발생한다. 일단 브라우저 체크해서 해당 부분은 처리 안되게 수정.
+                             * 
+                             * @20161123
+                             */
+                            //collapsedNonEditableSelectionsSupported = false;
+                        }
+
+                    } else {
+                        r1.setStart(textNode, 1);
+                        r1.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(r1);
+                        collapsedNonEditableSelectionsSupported = (sel.rangeCount == 1);
+                        sel.removeAllRanges();
+                    }
+                    
+                    
 
                     // Test whether the native selection is capable of supporting multiple ranges.
                     if (!selectionHasMultipleRanges) {
@@ -2963,13 +3000,42 @@
                         if (chromeMatch && parseInt(chromeMatch[1]) >= 36) {
                             selectionSupportsMultipleRanges = false;
                         } else {
-                            var r2 = r1.cloneRange();
-                            r1.setStart(textNode, 0);
-                            r2.setEnd(textNode, 3);
-                            r2.setStart(textNode, 2);
-                            sel.addRange(r1);
-                            sel.addRange(r2);
-                            selectionSupportsMultipleRanges = (sel.rangeCount == 2);
+                            
+                            
+                            
+                            if(xfeBrowserFlag.isIE() && (IE_version === 9 || IE_version === 10)) {
+                                
+                                // IE9 Workaround
+                                // Todo: Is this solution well?
+                                selectionSupportsMultipleRanges = false;
+                                
+                                /* IE9 Bug - r2 is empty
+                                var r2 = r1.cloneRange();
+                                r1.setStart(textNode, 0);
+                                r2.setEnd(textNode, 3);
+                                r2.setStart(textNode, 2);
+                                sel.addRange(r1);
+                                sel.addRange(r2);
+                                selectionSupportsMultipleRanges = (sel.rangeCount == 2);
+                                selectionSupportsMultipleRanges = (sel.rangeCount == 2);*/
+
+                            } else {
+                            
+                                var r2 = r1.cloneRange();
+                                r1.setStart(textNode, 0);
+                                r2.setEnd(textNode, 3);
+                                r2.setStart(textNode, 2);
+                                sel.addRange(r1);
+                                
+                                // current chrome doesn't support multiple ranges. 20140718
+                                if(!xfeBrowserFlag.isChrome()) {
+                                    sel.addRange(r2);    
+                                }
+                                //sel.addRange(r2);
+                                
+                                
+                                selectionSupportsMultipleRanges = (sel.rangeCount == 2);    
+                            }                                         
                         }
                     }
 
