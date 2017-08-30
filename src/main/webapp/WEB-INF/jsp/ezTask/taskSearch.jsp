@@ -268,7 +268,7 @@
 			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
 			        }
 		
-			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N") {
+			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N" && SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
 			        }
 			        else
@@ -279,13 +279,12 @@
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
 			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
 			                div.style.width = "72px";
 			                div.style.lineHeight = "18px";
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			            case "2":
@@ -295,19 +294,17 @@
 			                div.style.lineHeight = "18px";
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
+			                div.style.color = "white";			                
 			                tr.cells[6].appendChild(div);
 			                break;
 			            case "3":
 			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
 			                div.style.width = "72px";
 			                div.style.lineHeight = "18px";
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			        }
@@ -387,9 +384,10 @@
 			    if (totalcount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
 			    }
-
+			    
 				$("#resultCount").empty();
-				$("#resultCount").append(searchCount + "&nbsp;");
+				$("#resultCount").append(" : <span id='searchCount' style='color:#CC3300'>" + searchCount + "&nbsp;</span>");
+				$("#searchCount").after("<spring:message code='ezTask.t191' />");
 
 			    $(".progressbar").css("display", "inline-table");
 			    $(".percentCount").remove();
@@ -534,7 +532,7 @@
 		<div class="txt">
 			<h2 class="h2_dot"><spring:message code='ezTask.t190' /><span class="point">
 <!-- 			<asp:Label ID="LabelCount" class="point" Runat="server"></asp:Label> -->
-			</span><span id="resultCount" style="color:#CC3300"></span><spring:message code='ezTask.t191' /></h2>
+			</span><span id="resultCount"></span></h2>
 		</div>
 		
 		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
