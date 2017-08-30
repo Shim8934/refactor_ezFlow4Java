@@ -222,6 +222,7 @@
 			var strListInfo = "";
 			var strListIdInfo = "";
 			function chk_onselect(obj) {
+alert("@" + obj.checked);				
 				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
@@ -559,11 +560,11 @@
 // 		        delrepeatcount = GetAttribute(selectelem, "repeatcount");
 // 		        var creatorId = GetAttribute(selectelem, "creatorid");
 
-				var taskIdArr = new Array();
+// 				var taskIdArr = new Array();
 				var idArr = new Array();
-				taskIdArr = strListInfo.split(";"); 
+// 				taskIdArr = strListInfo.split(";"); 
 				idArr = strListIdInfo.split(";");
-
+alert("strListIdInfo : " + strListIdInfo);
 				if (idArr.length < 1) {
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
@@ -575,7 +576,7 @@
 					loc = idArr[i].indexOf("_");
 					idArrList += idArr[i].substring(0, loc) + ";";
 				}
-
+alert("idArrList : " + idArrList);
 				idArr = null;
 				idArr = idArrList.split(";");
 
