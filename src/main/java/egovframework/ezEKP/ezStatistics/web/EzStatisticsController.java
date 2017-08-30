@@ -553,29 +553,42 @@ public class EzStatisticsController {
 		tableBodyNodeData1to12 = tbody.getChildNodes().item(2);
 		
 		row = sheet.createRow(0);
+		
 		for (int i = 0; i < tableHeadNode1to12.getChildNodes().getLength() ; i++){
-			if(i != 0){
+			
+			if (i != 0) {
+				
 			cell = row.createCell((i-1)*4+1);
 			row.createCell((i-1)*4+2).setCellStyle(headerStyle);
 			row.createCell((i-1)*4+3).setCellStyle(headerStyle);
 			row.createCell((i-1)*4+4).setCellStyle(headerStyle);
+			
 			} else {
+				
 				cell = row.createCell(i);
 			}
+			
 			cell.setCellValue(tableHeadNode1to12.getChildNodes().item(i).getTextContent());
 			cell.setCellStyle(headerStyle);
 		}
 		row = sheet.createRow(1);
+		
 		for (int i = 0; i < tableBodyNodeType.getChildNodes().getLength() ; i++){
+		
 			cell = row.createCell(i);
 			cell.setCellValue(tableBodyNodeType.getChildNodes().item(i).getTextContent());
 			cell.setCellStyle(headerStyle);
+			
 		}
+		
 		row = sheet.createRow(2);
+		
 		for (int i = 0; i < tableBodyNodeData1to12.getChildNodes().getLength() ; i++){
+		
 			cell = row.createCell(i);
 			cell.setCellValue(tableBodyNodeData1to12.getChildNodes().item(i).getTextContent());
 			cell.setCellStyle(bodyStyle);
+			
 		}
 		
 		for (int i = 0; i < 12; i++) {
