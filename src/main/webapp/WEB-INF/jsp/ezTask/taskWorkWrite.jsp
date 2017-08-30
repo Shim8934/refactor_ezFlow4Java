@@ -23,31 +23,7 @@
 	        var deptname2 = "${userInfo.deptName1 }";
 	        var taskid = "${taskInfoVO.taskID }";
 	        var hasattach = "${taskInfoVO.personAttach }";
-			/* 필요하면 주석제거하고 하나씩 빼쓰자
-	        var taskstatus = "${taskInfoVO.taskStatus }";
-	        var completerate = "${taskInfoVO.completeRate }";
-	        var startdate = "${taskInfoVO.startDate }";
-	        var enddate = "${taskInfoVO.endDate }";
-	        var importance = "${taskInfoVO.importance }";
-	        var tasktype = "${taskInfoVO.taskType }";
-	        var creatorid = "${taskInfoVO.creatorID }";
-	        var hasattach = "${taskInfoVO.hasAttach }";
-	        var hasshare = "${taskInfoVO.hasShare}";
-	        var contentPath = "${taskInfoVO.contentPath }"; */
 	        var personContentpath = "${taskInfoVO.personContentPath }";
-			/* 필요하면 주석제거하고 하나씩 빼쓰자
-	        var sharelist = "";
-	        var g_person = null;
-	        var g_share = null;
-	        var shareid = "_shareid";
-	        var sharename = "_sharename";
-	        var sharename2 = "_sharename2";
-	        var sharedept = "_sharedept";
-	        var sharedept2 = "_sharedept2";
-	        var sharemail = "_sharemail";
-	        var isreadpage = false;
-	        var FormProcSpelling = "FormProcSpelling";
-	        var personid = "${taskInfoVO.personID }"; */
 	        
 	        window.onload = function () {
 	        	if (hasattach == "Y") {

@@ -302,7 +302,7 @@
 							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate + ") : </span>";
 							taskCommentList += "<span>";
 							taskCommentList += vo.comment;
-							taskCommentList += "<img src='/images/comment_delete.gif' title='asdf' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
+							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' title='" + "<spring:message code='ezTask.t159' />" + "' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
 							taskCommentList += "<br/>";
 						});
@@ -359,15 +359,9 @@
 			    
 				/* 레이어팝업으로 taskWriteCross 호출 */
 				
-				if (useTodoMemo == 'YES') {
-					var feature = GetOpenPosition(760, 750);
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
-			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
-				} else {
-					var feature = GetOpenPosition(760, 750);
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
-			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
-				}
+				var feature = GetOpenPosition(760, 750);
+				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
+		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 				
 			}
 			
@@ -417,7 +411,7 @@
 							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate.substring(0, 16) + ") : </span>";
 							taskCommentList += "<span>";
 							taskCommentList += vo.comment;
-							taskCommentList += "<img src='/images/comment_delete.gif' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
+							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
 							taskCommentList += "<br/>";
 						});
@@ -929,7 +923,7 @@
 									<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
 										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
 										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
-										<span><c:out value='${taskCommentVO.comment}'/><img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
+										<span><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
 										<br/>
 									</c:forEach>
 								</div>
