@@ -134,9 +134,12 @@
 	        }
 	
 	        function getapprovalstatistics() {
+	        	var objTd2 = document.getElementById("timeForm");
+	        	objTd2.style.display = "";
+	        	
 	            var pformList = new ListView();
 	            pformList.LoadFromID("lvformlist");
-	            
+
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -338,7 +341,7 @@
 	            <td style="vertical-align:top">
 	                <div id="formlist" style="Width: 300px; Height: 630px; overflow: auto;display:none;border-right:1px solid #b6b6b6;"></div>
 	            </td>
-	            <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
+	            <td id="timeForm" style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
 	                <div id="colorbox" class="statistics_addition" style="display: none">
 	                    <dl>
 	                        <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
