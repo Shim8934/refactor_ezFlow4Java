@@ -843,7 +843,11 @@
 						<c:if test="${useTodoMemo == 'YES'}">
 							<tr>
 				            	<th><spring:message code='ezTask.t170' /></th>
-				            	<td id="TextMemo" colspan="3" style="padding:0px; width:100%; height:55px; overflow-y:auto"></td>
+				            	<td id="TextMemo" colspan="3" style="padding:0px; width:100%; height:55px; overflow-y:auto">
+				            		<div>
+				            			<c:out value = '${taskInfoVO.memo }' />
+				            		</div>
+				            	</td>
 							</tr>
 						</c:if>
 					</table>

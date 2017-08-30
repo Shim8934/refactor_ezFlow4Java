@@ -259,7 +259,7 @@
 				persondeptname2 = #personDeptName2#,
 				taskpersonid = #personID#,
 				taskpersonname = #personName#,
-				taskpersonname2 = #personName2#
+				taskpersonname2 = #personName2#,
 				memo = #memo#
     		WHERE
     			tenantID = #tenantID#

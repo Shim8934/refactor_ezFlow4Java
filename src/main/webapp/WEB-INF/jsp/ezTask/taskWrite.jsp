@@ -54,6 +54,8 @@
 			var persondept = "${taskInfoVO.personDeptName }";
 			var persondept2 = "${taskInfoVO.personDeptName2 }";
 			var personemail = "${taskInfoVO.personEmail }";
+			var useTodoMemo = "${useTodoMemo }";
+			var memo = "<c:out value = '${taskInfoVO.memo }' />";
           
 			window.onload = function () {
 				if (taskid != "") {
@@ -61,6 +63,8 @@
 					document.getElementById("taskstatusSelect").value = taskstatus;
 					document.getElementById("completerateSelect").value = completerate;
 					$("#TextTitle").val("${taskInfoVO.title }");
+					$("#TextMemo").val(Replace2HTML(memo));
+					
 					
 					if (hasattach == "Y") {
 			            setAttachFileInfo("${taskAttachList}");

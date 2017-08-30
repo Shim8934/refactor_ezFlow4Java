@@ -82,7 +82,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String userID = userInfo.getId();
 		int tenantID = userInfo.getTenantId();
 		
-		String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
+		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 
 		//delayColor
 		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
@@ -110,7 +110,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
-		String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
+		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
 		String taskID = request.getParameter("taskID");
@@ -729,7 +729,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
+		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String realPath = commonUtil.getRealPath(request);
 		
 		String taskID = request.getParameter("taskID");
@@ -796,7 +796,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();
     	
-    	String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
+    	String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
     	
     	String app = request.getParameter("app");
     	String type = request.getParameter("type");
