@@ -52,7 +52,7 @@
 						$(".row_body").css("background", "#ffffff");
 						
 						strListInfo = $(elem).attr("taskID") + ";";
-			            strListIdInfo = $(elem).attr("creatorID") + "_;";
+			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
 						
 			        	selectelem = null;
 			    	}
@@ -69,6 +69,11 @@
 		        selectelem = elem;
 		        elem.style.backgroundColor = "rgb(233, 241, 244)";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
+		        
+		        if (strListInfo == "") {
+		        	strListInfo = $(elem).attr("taskID") + ";";
+		        	strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
+		        }
 		    }
 
 		    function ReadTask(elem) {
@@ -221,8 +226,7 @@
 
 			var strListInfo = "";
 			var strListIdInfo = "";
-			function chk_onselect(obj) {
-alert("@" + obj.checked);				
+			function chk_onselect(obj) {				
 				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
@@ -294,10 +298,12 @@ alert("@" + obj.checked);
 		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
+			        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
 
 			        tr.setAttribute("startdate", startdate);
 
-			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskStatus='" + taskstatus + "' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
+			        "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -362,7 +368,6 @@ alert("@" + obj.checked);
 			                break;
 			        }
 
-			        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
 			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
 			        var span = document.createElement("SPAN");
 			        span.className = "workProgressBar";
@@ -435,9 +440,11 @@ alert("@" + obj.checked);
 
 			function selectTab(num) {
 				if (num == 2) {
+					DateChange();
 					list_body.style.display = "";
 					list_body2.style.display = "none";
 				} else {
+					DateChange();
 					list_body.style.display = "none";
 					list_body2.style.display = "";
 				}
@@ -550,6 +557,31 @@ alert("@" + obj.checked);
 		    var delparentid = "";
 		    var delrepeatcount = "";
 		    function DeleteTask() {
+				var deleteList = [];
+				var deleteListID = [];
+				
+				if ($("#checkboxAll").is(":checked")) {
+					$(":checkbox[name=myCheckbox]:checked").each(function(){					
+						deleteList.push($(this).attr("creatorid"));
+						deleteListID.push($(this).attr("taskID") + ";")
+					});
+
+					for (var i = 0; i < deleteList.length; i++) {
+						strListIdInfo += deleteList[i] + ";";
+					}
+				}
+				
+				if ($("#checkboxAll2").is(":checked")) {
+					$(":checkbox[name=myCheckbox]:checked").each(function(){					
+						deleteList.push($(this).attr("creatorid"));
+						deleteListID.push($(this).attr("taskID") + ";")
+					});
+
+					for (var i = 0; i < deleteList.length; i++) {
+						strListIdInfo += deleteList[i] + ";";
+					}
+				}
+				
 // 		        if (selectelem == null) {
 // 		            alert("<spring:message code='ezTask.t104' />");
 // 		            return;
@@ -689,6 +721,29 @@ alert("idArrList : " + idArrList);
 		    }
 
 		    function DateChange() {
+		    	
+		    	if ($("#checkboxAll").is(":checked")) {
+		    		$("#checkboxAll").prop("checked", false);
+		    		$(".row_body td").css("background", "");
+		    	}
+		    	
+		    	if ($("#checkboxAll2").is(":checked")) {
+		    		$("#checkboxAll2").prop("checked", false);
+		    		$(".row_body2 td").css("background", "");
+		    	}
+		    	
+		    	//전체 체크박스 선택, 해제
+				$("#checkboxAll").on("click", function() {
+					if ($("#checkboxAll").is(":checked")) {
+						$(":checkbox[taskstatus != 3]").prop("checked", true);
+						$(".row_body td").css("background", "rgb(233, 241, 244)");
+					} else {
+						$(":checkbox[taskstatus != 3]").prop("checked", false);
+						$(".row_body td").css("background", "");
+						selectelem = null;
+					}
+				})
+				
 // 		        var startYearMontgday = start.split("-");
 // 		        var endYearMontgday = end.split("-");
 // 		        var startMonth = startYearMontgday[1];
@@ -805,14 +860,26 @@ alert("idArrList : " + idArrList);
 		        document.getElementById("list").style.height = height + "px";
 		        ChangeTab(document.getElementById("1tab1"));
 		        
-		     // 전체 체크박스 선택, 해제
+		        //전체 체크박스 선택, 해제 (진행중)
 				$("#checkboxAll").on("click", function() {
 					if ($("#checkboxAll").is(":checked")) {
-						$(":checkbox").prop("checked", true);
+						$(":checkbox[taskstatus != 3]").prop("checked", true);
 						$(".row_body td").css("background", "rgb(233, 241, 244)");
 					} else {
-						$(":checkbox").prop("checked", false);
+						$(":checkbox[taskstatus != 3]").prop("checked", false);
 						$(".row_body td").css("background", "");
+						selectelem = null;
+					}
+				})
+				
+				//전체 체크박스 선택, 해제 (완료)
+				$("#checkboxAll2").on("click", function() {
+					if ($("#checkboxAll2").is(":checked")) {
+						$(":checkbox[taskstatus = '3']").prop("checked", true);
+						$(".row_body2 td").css("background", "rgb(233, 241, 244)");
+					} else {
+						$(":checkbox[taskstatus = '3']").prop("checked", false);
+						$(".row_body2 td").css("background", "");
 						selectelem = null;
 					}
 				})
@@ -863,10 +930,10 @@ alert("idArrList : " + idArrList);
 		    function ChangeTab(obj) {
 		        var pSelectTab = GetAttribute(obj, "divname");
 
-		        if ($("#checkboxAll").is(":checked")) {
-					$(":checkbox").prop("checked", false);
-					$(".row_body td").css("background", "#FFFFFF");
-				}
+// 		        if ($("#checkboxAll").is(":checked")) {
+// 					$(":checkbox").prop("checked", false);
+// 					$(".row_body td").css("background", "#FFFFFF");
+// 				}
 
 		        switch (pSelectTab) {
 		            case "taskprog":
@@ -1095,7 +1162,7 @@ alert("idArrList : " + idArrList);
 						<col style ="width:80px;">
 						<col style ="width:97px;">
 						<tr>
-							<th ><input id="checkboxAll2" type="checkbox" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+							<th ><input id="checkboxAll2" type="checkbox" taskstatus="3" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 							<th ><spring:message code='ezTask.t156' /></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
