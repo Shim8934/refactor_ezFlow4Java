@@ -218,8 +218,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		taskInfoVO.setPersonDeptName2(param.get("personDeptName2").toString());
 		taskInfoVO.setHasShare(param.get("hasShare").toString());
 		taskInfoVO.setTaskType(param.get("taskType").toString());
-		taskInfoVO.setTaskStatus(Integer.parseInt(param.get("taskStatus").toString()));
-		taskInfoVO.setCompleteRate(Integer.parseInt(param.get("completeRate").toString()));
 		taskInfoVO.setImportance(Integer.parseInt(param.get("importance").toString()));
 		taskInfoVO.setStartDate(param.get("startDate").toString());
 		taskInfoVO.setEndDate(param.get("endDate").toString());

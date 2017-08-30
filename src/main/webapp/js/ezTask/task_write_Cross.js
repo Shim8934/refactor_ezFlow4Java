@@ -742,8 +742,6 @@ function save_task() {
 	        personDeptName2 : personDeptName2,
 			hasShare : hasshare,
 			taskType : tasktype,
-			taskStatus : $("#taskstatusSelect").val(),
-			completeRate : $("#completerateSelect").val(),
 			importance : importance,
 			startDate : startdate + " 00:00:00",
 			endDate : enddate + " 23:59:59",

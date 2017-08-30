@@ -97,6 +97,8 @@
 			}
 			
 			function beforeprint() {
+				$(".popup").css('background-image', 'none');
+				
 				document.getElementById("main_body").style.display = "none";
 				document.getElementById("printScreen").style.display = "";
 				
@@ -110,6 +112,8 @@
 				document.getElementById("printDocument").innerHTML = message.GetEditorContent();
 				
 				window.print();
+				
+				$(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 				
 				document.getElementById("main_body").style.display = "";
 				document.getElementById("printScreen").style.display = "none";

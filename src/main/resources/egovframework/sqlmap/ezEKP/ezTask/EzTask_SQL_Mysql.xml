@@ -240,9 +240,6 @@
     		UPDATE
     			TBL_TASK
     		SET
-				taskstatus = #taskStatus#,
-				completerate = #completeRate#,
-				completedate = #completeDate#,
 				importance = #importance#,
 				hasshare = #hasShare#,
 				hasattach = #hasAttach#,
