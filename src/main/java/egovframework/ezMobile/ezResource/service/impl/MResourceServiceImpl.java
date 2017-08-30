@@ -272,6 +272,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);
 		
+		for (ResGetScheduleVO resVO : getScheduleList) {
+			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
+			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
+		}
+		
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
 			
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
