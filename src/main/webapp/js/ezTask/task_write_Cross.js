@@ -756,7 +756,8 @@ function save_task() {
 			contentPath : contentPath,
 			hasAttach : hasattach,
 			fileList : fileList,
-			shareList : shareList
+			shareList : shareList,
+			memo : memo
 		};
 	
     $.ajax({
