@@ -178,7 +178,7 @@
 		    }
 			
 		    window.onresize = function () {
-		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
+		        document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
 	    	}
 		    
 		    window.onunload = function () {
@@ -540,7 +540,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; width: 99.7%; overflow: auto;border-top:0px"></iframe>
 	      			
 	      			<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
        				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
@@ -637,7 +637,7 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
     	<script type="text/javascript">
-	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
+	       	document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
     	</script>
 	</body>
 </html>

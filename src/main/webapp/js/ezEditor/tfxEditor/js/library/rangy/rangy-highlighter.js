@@ -121,7 +121,32 @@
 
         var textContentConverter = {
             rangeToCharacterRange: function(range, containerNode) {
+                
+                
                 var bookmark = range.getBookmark(containerNode);
+                
+                
+                /**
+                 * updated by ...
+                 * 
+                 * @20170630    .kscho
+                 */
+                var start_length = range.startContainer.length;
+                var end_length = range.endContainer.length;                
+                
+                if(start_length === end_length) {
+                    
+                    if(start_length === bookmark.end) {
+                        return new CharacterRange(bookmark.start, bookmark.end + 1);    
+                    }
+                }
+               
+                if(range.commonAncestorContainer.length === undefined) {
+                    return new CharacterRange(bookmark.start, bookmark.end + 1);
+                }
+                //<--------------------------------------- update end
+                
+                
                 return new CharacterRange(bookmark.start, bookmark.end);
             },
 
@@ -474,12 +499,15 @@
                     throw new Error("No class applier found for class '" + className + "'");
                 }
 
+
                 // Store the existing selection as character ranges
                 var serializedSelection = converter.serializeSelection(selection, containerElement);
 
+
                 // Create an array of selected character ranges
                 var selCharRanges = [];
-                forEach(serializedSelection, function(rangeInfo) {
+                forEach(serializedSelection, function(rangeInfo) {                    
+                    
                     selCharRanges.push( CharacterRange.fromCharacterRange(rangeInfo.characterRange) );
                 });
 

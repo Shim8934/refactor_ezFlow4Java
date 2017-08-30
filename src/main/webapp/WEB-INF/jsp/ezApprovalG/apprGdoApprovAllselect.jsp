@@ -61,6 +61,7 @@
 		        var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
 		        if (parseInt(cnt) > 1) {
 		            for (var i = 0; i < parseInt(cnt) ; i++) {
+		            	// 체크된 값의 정보만 xmlpara에 생성
 		                if (eval(document.frm.chk[i]).checked) {
 		                    doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", document.frm.chk[i].value.split("|")[0]);
@@ -71,6 +72,7 @@
 		            }
 		        }
 		        else {
+		        	// 리스트의 값이 하나인 경우
 		            if (eval(document.frm.chk).checked) {
 		                doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", document.frm.chk.value.split("|")[0]);
@@ -84,16 +86,17 @@
 		        xmlhttp.send(xmlpara);
 		        var RtnVal = xmlhttp.responseText;
 		        var arrRtnVal = new Array();
-		        arrRtnVal[0] = RtnVal.split("/")[0];
-		        arrRtnVal[1] = RtnVal.split("/")[1];
-		        arrRtnVal[2] = RtnVal.split("/")[2];
-		        arrRtnVal[3] = RtnVal.split("/")[3];
+		        arrRtnVal[0] = RtnVal.split("/")[0]; // OK or ERR
+		        arrRtnVal[1] = RtnVal.split("/")[1]; // totalCount
+		        arrRtnVal[2] = RtnVal.split("/")[2]; // trueCount
+		        arrRtnVal[3] = RtnVal.split("/")[3]; // falseCount
 		        if (arrRtnVal[0] == "OK") {
 		            hideProgress();
 		            pAlertContent = strLang933 + arrRtnVal[1] + strLang934;
 		            pAlertContent += strLang935 + arrRtnVal[2] + strLang934;
-		            if (arrRtnVal[3] != 0)
+		            if (arrRtnVal[3] != 0) {
 		                pAlertContent += strLang936 + arrRtnVal[3] + strLang934;
+		            }
 		            pAlertContent += strLang931;
 		            OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 		        }
@@ -154,18 +157,21 @@
 		
 		    }
 		    function btnApprove_onclick() {
+		    	// '일괄결재 대상 리스트'가 없는 경우
 		        if (parseInt(cnt) == 0) {
 		            var pAlertContent = strLang937;
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
+		    	// '일괄결재 대상 리스트'가 있는 경우
 		        else if (parseInt(cnt) > 1) {
 		            var j = 0;
 		            for (var i = 0; i < parseInt(cnt) ; i++) {
-		                if (eval(document.frm.chk[i]).checked)
+		                if (eval(document.frm.chk[i]).checked) {
 		                    j++;
+		                }
 		            }
-		            if (j == 0) {
+		            if (j == 0) { // 리스트에서 체크된 값이 없는 경우
 		                var pAlertContent = strLang930;
 		                OpenAlertUI(pAlertContent);
 		                return;
