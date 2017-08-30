@@ -35,7 +35,7 @@ function APRAttachXMLParsing()
 	
     strXML = "<LISTVIEWDATA><HEADERS>";
     strXML = strXML + "<HEADER><NAME>" + strLang48 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-    strXML = strXML + "<HEADER><NAME>" + strLang49 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    strXML = strXML + "<HEADER><NAME>" + strLang50 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     strXML = strXML + "</HEADERS><ROWS>";
 	
     for( i = 0 ; i < pTotalRowsLen ; i++)
