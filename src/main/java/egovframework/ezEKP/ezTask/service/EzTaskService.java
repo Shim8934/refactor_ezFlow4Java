@@ -2,8 +2,8 @@ package egovframework.ezEKP.ezTask.service;
 
 import java.util.List;
 
-import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 
@@ -16,7 +16,7 @@ public interface EzTaskService {
 	
 	List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception;
 	
-	public List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception;
+	List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception;
 	
 	String getAttachListStr(String taskID, String folderPath, String type, int tenantID) throws Exception;
 	
@@ -36,8 +36,6 @@ public interface EzTaskService {
 	public String getDelayColor(String memberID, int tenantID) throws Exception;
 
 	public void taskUpdateConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
-
-	/*public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception;*/
 
 	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception;
 

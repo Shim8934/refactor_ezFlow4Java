@@ -27,16 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.ibm.icu.text.SimpleDateFormat;
-import com.ibm.icu.text.SimpleDateFormat;
-import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
-import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -721,28 +718,6 @@ public class EzTaskController extends EgovFileMngUtil {
         
         return "json";
     }
-
-	/**
-	 * 업무등록 실행
-	 */
-	/*@RequestMapping(value = "/ezTask/taskSave.do", produces = "text/xml; charset=utf-8")
-	@ResponseBody
-	public String taskSave(HttpServletRequest request, @RequestBody String xmlData, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-		logger.debug("taskSave started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
-		String realPath = commonUtil.getRealPath(request);
-		String newGuid = UUID.randomUUID().toString();
-
-		Document doc = commonUtil.convertStringToDocument(xmlData.toString());
-
-		String ret = ezTaskService.taskSave(doc, realPath, userInfo, newGuid);
-
-		logger.debug("ret : " + ret);
-		logger.debug("taskSave ended");
-		
-		return ret;
-	}*/
 
 	/**
 	 * 업무작성, 수정화면조회 조회
