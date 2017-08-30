@@ -465,56 +465,29 @@ public class EzStatisticsController {
       Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
       
       Node tableNode = analysisData.getElementsByTagName("table").item(0);
+      Node tBody = tableNode.getChildNodes().item(0);
       Node tableHeadNode;
       Node tableBodyNode;
       
       sheet = workbook.createSheet("report");
-      tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
-      tableBodyNode = tableNode.getChildNodes().item(0);
       
-      row = sheet.createRow(0);
-      cell = row.createCell(0);
-      cell.setCellValue(tableHeadNode.getChildNodes().item(0).getTextContent());
-      cell = row.createCell(1);
-      cell.setCellValue(tableBodyNode.getChildNodes().item(1).getChildNodes().item(0).getTextContent());
-      
-      row = sheet.createRow(1);
-      for (int i=0; i<tableHeadNode.getChildNodes().getLength()-1; i++) {
-         cell = row.createCell(i);
-         cell.setCellValue(tableHeadNode.getChildNodes().item(i+1).getTextContent());
-         cell.setCellStyle(headerStyle);
-      }
-      
-      for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
-         row = sheet.createRow(i+2);
-         Node tr = tableBodyNode.getChildNodes().item(i+1);
-         
-         for (int j=0; j<tr.getChildNodes().getLength(); j++) {
-            if (i==0) {
-               if (j+1<tr.getChildNodes().getLength()) {
-                  cell = row.createCell(j);
-                  cell.setCellValue(tr.getChildNodes().item(j+1).getTextContent());
-               }
-            } else {
-               cell = row.createCell(j);
-               cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
-            }
-            if (headerFLAG.equals("TRUE")) {
-               if (i != 1) {
-                  cell.setCellStyle(bodyStyle);
-               } else {
-                  cell.setCellStyle(headerStyle);
-               }
-            } else {
-               if (i != 2) {
-                  cell.setCellStyle(bodyStyle);
-               } else {
-                  cell.setCellStyle(headerStyle);
-               }
-            }
-         }
-      }
-      
+      tableHeadNode = tBody.getChildNodes().item(0);
+      tableBodyNode = tBody.getChildNodes().item(1);
+
+	  row = sheet.createRow(0);
+	  for (int i = 0; i < tableHeadNode.getChildNodes().getLength() ; i++){
+		  cell = row.createCell(i);
+		  cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+		  cell.setCellStyle(headerStyle);
+	  }
+
+	  row = sheet.createRow(1);
+	  for (int i = 0; i < tableBodyNode.getChildNodes().getLength() ; i++){
+	 	  cell = row.createCell(i);
+		  cell.setCellValue(tableBodyNode.getChildNodes().item(i).getTextContent());
+		  cell.setCellStyle(bodyStyle);
+	  }
+
       response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
       workbook.write(response.getOutputStream());
       
@@ -617,4 +590,3 @@ public class EzStatisticsController {
 		logger.debug("qstResultAnalysisSaveTotalA ended");
 	}
 }
-
