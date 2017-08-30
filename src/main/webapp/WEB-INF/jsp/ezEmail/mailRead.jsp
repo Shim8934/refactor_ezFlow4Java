@@ -373,7 +373,7 @@
 		    }
 		    
 		    function secureInfo_onClick() {
-		    	DivPopUpShow(550, 530, "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL));
+		    	DivPopUpShow(550, 500, "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL));
 		    }
 		</script>
 	</head>

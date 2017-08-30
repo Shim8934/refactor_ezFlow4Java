@@ -26,13 +26,20 @@
 		<script type="text/javascript">
 			var offsetMin = "${offsetMin}";
 		    
-		    function confirm() {
+		    function btnClose() {
 		    	parent.DivPopUpHidden();
 		    }
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.lhm44' /></h1>
+		
+		<div id="close">
+		  <ul>
+		    <li><span onClick="btnClose()"><spring:message code='ezEmail.t63' /></span></li>
+		  </ul>
+		</div>
+		
 		<span><spring:message code='ezEmail.lhm45' /></span><br/>
 		<br/>
 		
@@ -82,10 +89,6 @@
 					</tr>
 				</c:forEach>
 			</table>
-		</div>
-		
-		<div class="btnposition">
-		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		</div>
 	</body>
 </html>
