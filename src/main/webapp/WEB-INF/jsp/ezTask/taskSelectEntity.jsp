@@ -345,12 +345,12 @@
 	            checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 
 	            if (CrossYN()) {
-	                DivPopUpShow(595, 310, "/ezTask/checkName2.do");
+	                DivPopUpShow(595, 310, "/ezTask/taskCheckName2.do");
 	            }
 	            else {
 	                var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
 	                feature = feature + GetShowModalPosition(540, 460);
-	                window.showModalDialog("/ezTask/checkName2.do", rgParams, feature);
+	                window.showModalDialog("/ezTask/taskCheckName2.do", rgParams, feature);
 
 	                if (rgParams["deptid"] != "") {
 	                    bSearch = true;

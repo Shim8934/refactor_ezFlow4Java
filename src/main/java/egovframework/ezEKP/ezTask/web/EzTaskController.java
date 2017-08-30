@@ -955,12 +955,12 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 조직도 부서 호출
 	 */
-	@RequestMapping(value = "/ezTask/checkName2.do")
-	public String checkName2() throws Exception {
-		logger.debug("checkName2 started.");
+	@RequestMapping(value = "/ezTask/taskCheckName2.do")
+	public String taskCheckName2() throws Exception {
+		logger.debug("taskCheckName2 started.");
 
-		logger.debug("checkName2 ended.");
+		logger.debug("taskCheckName2 ended.");
 
-		return "/ezTask/checkName2";
+		return "/ezTask/taskCheckName2";
 	}
 }
