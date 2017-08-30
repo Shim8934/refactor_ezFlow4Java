@@ -343,7 +343,7 @@ public class MBoardServiceImpl implements MBoardService {
 //    }
 	
 	@Override
-	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add) throws Exception {
+	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText) throws Exception {
 		logger.debug("getBoardItemList started.");
 		
 		String boardID = mBoardInfoVO.getBoardID();
@@ -359,7 +359,7 @@ public class MBoardServiceImpl implements MBoardService {
 		int listSize = 10;
         
 		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
-		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset);
+		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText);
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -373,7 +373,7 @@ public class MBoardServiceImpl implements MBoardService {
 		}
 		
 		//스크롤 페이징할 때 공지사항 추가 안되게 add를 받아옴
-		if (add == null || add.equals("")) {
+		if ((add == null || add.equals("")) && (pSearchText == null || pSearchText.equals(""))) {
 			for (MBoardItemVO vo : mBoardNoticeItemList) {
 				mBoardItemList.add(0, vo);
 			}
@@ -536,7 +536,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return vo;
 	}
 	
-	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset) throws Exception {
+	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText) throws Exception {
 		logger.debug("getBoarditemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID + " || lastDate = " + lastDate);
 		
@@ -549,6 +549,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
 		
 		List<MBoardItemVO> list = mBoardDAO.getBoardItemList(map);
 		

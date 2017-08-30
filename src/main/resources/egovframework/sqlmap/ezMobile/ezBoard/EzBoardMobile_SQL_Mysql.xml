@@ -178,6 +178,15 @@
 					A.apprflag = 'Y'
 			]]>
 		</isEqual>
+        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+                        OR
+                    A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
 		
 		<isEqual property="gubun" compareValue="1">
             <isNotEmpty property="lastDate">
