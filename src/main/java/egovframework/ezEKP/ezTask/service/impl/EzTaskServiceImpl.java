@@ -254,6 +254,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("personName2", vo.getPersonName2());
 		map.put("personDeptName", vo.getPersonDeptName());
 		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("memo", vo.getMemo());
 		map.put("tenantID", tenantID);
 		
 		String taskID = ezTaskDAO.insertTask(map);
@@ -292,6 +293,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("personName2", vo.getPersonName2());
 		map.put("personDeptName", vo.getPersonDeptName());
 		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("memo", vo.getMemo());
 		map.put("tenantID", tenantID);
 		
 		ezTaskDAO.updateTask(map);
@@ -344,6 +346,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("personName2", vo.getPersonName2());
 		map.put("personDeptName", vo.getPersonDeptName());
 		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("memo", vo.getMemo());
 		map.put("insertType", "share");
 		map.put("tenantID", tenantID);
 		

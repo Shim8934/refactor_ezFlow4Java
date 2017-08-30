@@ -401,6 +401,29 @@
               document.getElementById("main_body").style.display = "";
               document.getElementById("printScreen").style.display = "none";
           }
+          
+          function textLimit(obj, event, limit) {
+              if (navigator.userAgent.indexOf('Firefox') != -1) {
+                  if (!event) event = window.event;
+              }
+
+              if (event.keyCode == 8 || event.keyCode == 46) {
+                  return true;
+              }
+
+              var textValue = new String(obj.value)
+              var retText = "";
+              var tcount = 0;
+              for (k = 0; k < textValue.length; k++) {
+                  var onechar = textValue.charAt(k);
+                  tcount += escape(onechar).length > 4 ? 2 : 1
+                  retText += onechar;
+                  if (tcount >= limit) {
+                      obj.value = retText;
+                      return false;
+                  }
+              }
+          }
       </script>
    </head>
    <body class="popup">
@@ -610,12 +633,17 @@
                 </td>
             </tr>
             <!-- 메모  -->
-<!--             <tr style="display:inline;"> -->
-<%--             	<th><spring:message code='ezTask.t170' /></th> --%>
-<!--             	<td colspan="3" style="width:100%;"> -->
-<!--             		<input type="text" id="TextMemo" style="width:100%;"> -->
-<!--             	</td> -->
-<!--             </tr> -->
+            <c:if test="${useTodoMemo == 'YES' }">
+	            <tr style="display:inline;">
+	            	<th><spring:message code='ezTask.t170' /></th>
+	            	<td colspan="3" style="padding:0px;">
+	<!--             	<td colspan="3" style="width:100%;"> -->
+	<!--             		<input type="text" id="TextMemo" style="width:100%;"> -->
+						<textarea id="TextMemo" style="width:100%; height:55px; border: 0px solid rgb(222, 222, 222); border-image: none; resize:none; overflow-y:auto" onkeyup="return textLimit(this, event, 200)"></textarea>
+	            	</td>
+	            </tr>	
+            </c:if>
+            
             <tr>
                 <td>
                      <br/> 
