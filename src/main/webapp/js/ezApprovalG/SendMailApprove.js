@@ -856,7 +856,9 @@ function getHapyuitype(pSelectedRow, orgid) {
 
 }
 
-
+/**
+ * 해당 문서의 '의견' 정보 추출
+ * */
 function getOpinionInfo(docid, Flag) {
     $.ajax({
 		type : "POST",
@@ -900,6 +902,10 @@ function getOpinionInfo(docid, Flag) {
             txtRtn = txtRtn + "</tr>";
         }
     }
+    /**
+     *  NodeList.length > 0 의견이 존재하는 경우
+     *  NodeList.length <= 0 의견이 존재하지 않는 경우
+     */
     if (TitleList.length > 0 && NodeList.length > 0) {
         txtRtn = txtRtn + "</table>";
     } else if (TitleList.length > 0 && NodeList.length <= 0) {

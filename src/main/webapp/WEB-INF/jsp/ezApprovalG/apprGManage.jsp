@@ -538,7 +538,7 @@
 		        openForm();
 		    }
 		    var selectedDocIDS = "";
-		    function btnApprove_onclick(tempFlag) {
+		    function btnApprove_onclick(tempFlag) { // tempFlag -> 0:결재, 1:모두결재, 2:일괄결재
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
