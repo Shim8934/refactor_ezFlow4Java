@@ -258,7 +258,7 @@
 					type : "user"
 				} ,
 					success : function(xml) {
-						event_displayUserList2(loadXMLString(xml));
+						event_displayUserList2(xml);
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					alert("<spring:message code='ezTask.t193' />");
@@ -268,38 +268,59 @@
 
 	    var checkname2_cross_dialogArguments = new Array();
 	    function deptsearch_click() {
-
 	        if (document.getElementById("keyword").value == "") {
 	            alert("<spring:message code='ezTask.t990' />");
 	            document.getElementById("keyword").focus();
 	            return;
 	        }
-	        var objNode;
-	        var xmlHTTP = createXMLHttpRequest();
-	        var xmlDom = createXmlDom();
-	        createNodeInsert(xmlDom, objNode, "DATA");
-	        createNodeAndInsertText(xmlDom, objNode, "SEARCH", "displayName::" + document.getElementById("keyword").value);
-	        createNodeAndInsertText(xmlDom, objNode, "CELL", "extensionAttribute3;displayName;extensionAttribute9;");
-	        createNodeAndInsertText(xmlDom, objNode, "PROP", "");
-	        createNodeAndInsertText(xmlDom, objNode, "TYPE", "group");
-	        try {
-	            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
-	            xmlHTTP.send(xmlDom);
-	            if (xmlHTTP.statusText != "OK") {
-	                alert("<spring:message code='ezTask.t195' />" + xmlHTTP.statusText);
-	                xmlDom = null;
-	                xmlHTTP = null;
-	            }
-	            else {
-	                xmlDom = loadXMLString(xmlHTTP.responseText)
-	                adCount = xmlDom.getElementsByTagName("ROW").length;
-	            }
-	        }
-	        catch (e) {
-	            alert("<spring:message code='ezTask.t195' />" + e.description);
-	            xmlDom = null;
-	            xmlHTTP = null;
-	        }
+// 	        var objNode;
+// 	        var xmlHTTP = createXMLHttpRequest();
+// 	        var xmlDom = createXmlDom();
+// 	        createNodeInsert(xmlDom, objNode, "DATA");
+// 	        createNodeAndInsertText(xmlDom, objNode, "SEARCH", "displayName::" + document.getElementById("keyword").value);
+// 	        createNodeAndInsertText(xmlDom, objNode, "CELL", "extensionAttribute3;displayName;extensionAttribute9;");
+// 	        createNodeAndInsertText(xmlDom, objNode, "PROP", "");
+// 	        createNodeAndInsertText(xmlDom, objNode, "TYPE", "group");
+// 	        try {
+// 	            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
+// 	            xmlHTTP.send(xmlDom);
+// 	            if (xmlHTTP.statusText != "OK") {
+// 	                alert("<spring:message code='ezTask.t195' />" + xmlHTTP.statusText);
+// 	                xmlDom = null;
+// 	                xmlHTTP = null;
+// 	            }
+// 	            else {
+// 	                xmlDom = loadXMLString(xmlHTTP.responseText)
+// 	                adCount = xmlDom.getElementsByTagName("ROW").length;
+// 	            }
+// 	        }
+// 	        catch (e) {
+// 	            alert("<spring:message code='ezTask.t195' />" + e.description);
+// 	            xmlDom = null;
+// 	            xmlHTTP = null;
+// 	        }
+
+			var xmlDom = createXmlDom();
+			var adCount = "";
+			$.ajax({
+				url : '/ezOrgan/getSearchList.do',
+				method : 'POST',
+				dataType : "text",
+				async : false,
+				data : {
+					search : "displayName::" + document.getElementById("keyword").value,
+					cell : "extensionAttribute3;displayName;extensionAttribute9;",
+					prop : "",
+					type : "group"
+				} ,
+					success : function(xml) {
+						xmlDom = loadXMLString(xml);
+						adCount = xmlDom.getElementsByTagName("ROW").length;					
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("<spring:message code='ezTask.t195' />");
+				}
+			});
 
 	        if (adCount == 0) {
 	            alert("<spring:message code='ezTask.t192' />");
@@ -320,16 +341,16 @@
 	            rgParams["addrBook"] = xmlDom;
 	            rgParams["deptid"] = "";
 
-	            checkname2_cross_dialogArguments[0] = rgParams;
+	            checkname2_cross_dialogArguments[0] = rgParams;	            
 	            checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 
 	            if (CrossYN()) {
-	                DivPopUpShow(609, 372, "/myoffice/ezTask/htm/checkName2_cross.aspx");
+	                DivPopUpShow(595, 310, "/ezTask/checkName2.do");
 	            }
 	            else {
 	                var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
 	                feature = feature + GetShowModalPosition(540, 460);
-	                window.showModalDialog("/myoffice/ezTask/htm/checkName2_cross.aspx", rgParams, feature);
+	                window.showModalDialog("/ezTask/checkName2.do", rgParams, feature);
 
 	                if (rgParams["deptid"] != "") {
 	                    bSearch = true;
@@ -362,24 +383,17 @@
 
 	    }
 
-	    function event_displayUserList2() {
-	        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	            if (g_xmlHTTP.statusText == "OK") {
-	                var ResposeXML = loadXMLString(g_xmlHTTP.responseText);
-	                if (ResposeXML.getElementsByTagName("ROW").length == 0)
-	                    alert("<spring:message code='ezTask.t196' />");
-	                else {
-	                    pListXML_Info = ResposeXML;
-	                    pSeach = true;
-	                    DisplayUserImageList();
-	                    makePageSelPage();
-	                }
-	            }
-	            else
-	                alert("<spring:message code='ezTask.t193' />" + g_xmlHTTP.statusText)
-
-	            g_xmlHTTP = null;
-	        }
+	    function event_displayUserList2(xml) {    	
+            var ResposeXML = loadXMLString(xml);
+            if (ResposeXML.getElementsByTagName("ROW").length == 0) {
+                alert("<spring:message code='ezTask.t196' />");	                	
+            } else {     	
+                pListXML_Info = ResposeXML;
+                pSeach = true;
+                DisplayUserImageList();
+                makePageSelPage();
+            }
+            g_xmlHTTP = null;
 	    }
 	    function infoview_click() {
 	        if (p_ListOrderObject == null || p_ListOrderObject == "") {
