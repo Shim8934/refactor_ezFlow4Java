@@ -770,7 +770,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("userTodoMemo", useTodoMemo);
+		model.addAttribute("useTodoMemo", useTodoMemo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskShareList", taskShareList);
