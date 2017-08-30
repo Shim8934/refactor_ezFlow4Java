@@ -523,4 +523,98 @@ public class EzStatisticsController {
       logger.debug("qstResultAnalysisSaveApproval ended");
    }
 	   
+   /**
+	 * 전자결재 통계 Excel 내려받기 호출 함수
+	 * 양식별, 부서별, 개인별 통계 현황
+	 */
+	@RequestMapping(value = "/ezStatistics/saticGetXlsTotalA.do")
+	public void qstResultAnalysisSaveTotalA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("qstResultAnalysisSaveTotalA started");
+	
+		String headerFLAG = "";
+		
+		if (request.getParameter("headerFlag") != null) {
+			headerFLAG = request.getParameter("headerFlag");
+        }
+		
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		
+		HSSFSheet sheet;
+		
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		
+		Row row;
+		Cell cell;
+		
+		String pFileName = "";
+		String strDate = EgovDateUtil.getToday("-");
+		pFileName = strDate+"_Report.xls";
+		
+		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+		
+		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+		
+		Node tableNode = analysisData.getElementsByTagName("table").item(0);
+		Node tbody = tableNode.getChildNodes().item(0);
+		Node tableHeadNode1to12;
+		Node tableBodyNodeType;
+		Node tableBodyNodeData1to12;
+		
+		sheet = workbook.createSheet("report");
+		tableHeadNode1to12 = tbody.getChildNodes().item(0);
+		tableBodyNodeType = tbody.getChildNodes().item(1);
+		tableBodyNodeData1to12 = tbody.getChildNodes().item(2);
+		
+		row = sheet.createRow(0);
+		for (int i = 0; i < tableHeadNode1to12.getChildNodes().getLength() ; i++){
+			if(i != 0){
+			cell = row.createCell((i-1)*4+1);
+			row.createCell((i-1)*4+2).setCellStyle(headerStyle);
+			row.createCell((i-1)*4+3).setCellStyle(headerStyle);
+			row.createCell((i-1)*4+4).setCellStyle(headerStyle);
+			} else {
+				cell = row.createCell(i);
+			}
+			cell.setCellValue(tableHeadNode1to12.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(headerStyle);
+		}
+		row = sheet.createRow(1);
+		for (int i = 0; i < tableBodyNodeType.getChildNodes().getLength() ; i++){
+			cell = row.createCell(i);
+			cell.setCellValue(tableBodyNodeType.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(headerStyle);
+		}
+		row = sheet.createRow(2);
+		for (int i = 0; i < tableBodyNodeData1to12.getChildNodes().getLength() ; i++){
+			cell = row.createCell(i);
+			cell.setCellValue(tableBodyNodeData1to12.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(bodyStyle);
+		}
+		
+		for (int i = 0; i < 12; i++) {
+			 sheet.addMergedRegion(new CellRangeAddress(0,0,i*4+1,i*4+4));
+		}
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		
+		workbook.close();
+		
+		logger.debug("qstResultAnalysisSaveTotalA ended");
+	}
 }
+

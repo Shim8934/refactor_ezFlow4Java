@@ -362,7 +362,7 @@
 	            </dl>
 	        </div>
 	    </div>
-	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/excelExportOut.do">
+	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsTotalA.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
 	        <input type="hidden" id="userAgent" name="userAgent" value="">
 	    </form>
