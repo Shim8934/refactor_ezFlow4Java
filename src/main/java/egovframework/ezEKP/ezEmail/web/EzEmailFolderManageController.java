@@ -394,15 +394,19 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	}
 	
 	private Set<String> unSubscribeAndGetSubscribeFolderSet(Folder folder, Set<String> folderSet) throws MessagingException {
-		if (folder.isSubscribed()) {
+		if (folder.exists()) {
+			if (folder.isSubscribed()) {
+				folder.setSubscribed(false);
+				folderSet.add(folder.getFullName());
+			}
+			
+			Folder[] folderArr = folder.listSubscribed();
+			
+			for (Folder f : folderArr) {
+				unSubscribeAndGetSubscribeFolderSet(f, folderSet);
+			}
+		} else {
 			folder.setSubscribed(false);
-			folderSet.add(folder.getFullName());
-		}
-		
-		Folder[] folderArr = folder.listSubscribed();
-		
-		for (Folder f : folderArr) {
-			unSubscribeAndGetSubscribeFolderSet(f, folderSet);
 		}
 		
 		return folderSet;
