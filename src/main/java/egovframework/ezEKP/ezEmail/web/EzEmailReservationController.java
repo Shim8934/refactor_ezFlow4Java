@@ -394,7 +394,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			
 			// analyze the message and retrieve the attached file list.
 			List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-			List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, draftsFolderName, uid, -1, attachedFileList, false, locale);					
+			List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, draftsFolderName, uid, -1, attachedFileList, false, false, locale);					
 			body = EgovStringUtil.getSpclStrCnvr2(bodyInfoList.get(0));
 			
 			if (attachedFileList.size() > 0) {

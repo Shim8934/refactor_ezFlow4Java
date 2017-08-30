@@ -627,20 +627,18 @@
 				TBL_RS_SCHEDULE
             SET 
             	TITLE = #v_PTITLE#,
-				LOCATION = #v_PLOCATION#,
-                TIMEDISPLAY = #v_PTIMEDISPLAY#,
+		]]>	
+		<isEqual property="v_PREFLAG" compareValue="0">               
                 STARTDATE = STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T'),
                 ENDDATE = STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T'),
-                ALERTTIME = #v_PALERTTIME#,
-                CONTENT = #v_PCONTENT#,
+        </isEqual>
+        <isNotEmpty property="v_POWNERID">				
+				 CONTENT = #v_PCONTENT#,
+		</isNotEmpty>
+		<![CDATA[
+                ALERTTIME = #v_PALERTTIME#,             
                 IMPORTANCE = #v_PIMPORTANCE#,
-                REFLAG = #v_PREFLAG#,
-                GRESFLAG = #v_PGRESFLAG#,
-                ALLDAY = #v_PALLDAY#,
-                WRITEDAY = #v_PWRITEDAY#,
-                ENTRYLIST = #v_PENTRYLIST#,
-                ATTACHFLAG = #v_PATTACHFLAG#,
-                CHARACTERID = #v_PCHARACTERID#
+                ALLDAY = #v_PALLDAY#
 			WHERE
            		COMPANYID = #v_PCOMPANYID#
 			AND

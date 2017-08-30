@@ -3090,7 +3090,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						LOGGER.debug("Message's seen flag changed to true.");
 					}
 					
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, locale);
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale);
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
 					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
@@ -3222,8 +3222,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				intIndex = Integer.parseInt(strIndex);
 			}
 			LOGGER.debug("index=" + intIndex);
-			
-			
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
@@ -3264,52 +3262,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 						try {
 							input = part.getInputStream();
-//							output = response.getOutputStream();
-							String[] encoding_type = part.getHeader("Content-Transfer-Encoding");
-							for(int i = 0; i < encoding_type.length ; i++) {
-								LOGGER.debug("@@@@@@@@@@@@@@@@@@@@@@@@" + encoding_type[i]);
-							}
-//							byte[] buffer = new byte[4096];
-							int byteRead;
-							
-//							while ((byteRead = input.read(buffer)) != -1) {
-//								output.write(buffer, 0, byteRead);
-//							}
-							Encoder encoder = Base64.getEncoder();
-//							Decoder decoder = Base64.getDecoder();
-
-							BufferedReader streamReader = new BufferedReader(new InputStreamReader(input)); 
-							StringBuilder responseStrBuilder = new StringBuilder();
-
-							int i;
-							StringBuffer buffer = new StringBuffer();
-							
-//							byte[] b = new byte[4096]; 
-//							while ( (i = input.read(b)) != -1) {
-//								buffer.append(new String(b, 0, i)); 
-//							} 
-							
-							InputStream is;
+					
 							byte[] bytes = IOUtils.toByteArray(input);
 							
-//							String inputStr;
-//							while ((inputStr = streamReader.readLine()) != null) {
-//							    responseStrBuilder.append(inputStr);
-//							}
-//							new JSONObject(responseStrBuilder.toString());
-														
 							JSONObject data = new JSONObject();
 							
-							JSONParser jp = new JSONParser();
+							JSONParser jp = new JSONParser();			
 							
-//							JSONObject partJSON = jp.parse(input , "UTF-8");
-							LOGGER.debug("buffer : " + buffer.toString());
-							LOGGER.debug("responseStrBuilder : " + responseStrBuilder.toString());
-							LOGGER.debug("bytes : " + ByteBuffer.wrap(bytes));
+							Encoder encoder = Base64.getEncoder();
 							
-							data.put("buffer", buffer.toString());
 							data.put("bytes", bytes);
-							data.put("responseStrBuilder", responseStrBuilder.toString());
 							data.put("filename",filename);
 							data.put("filetype",part.getContentType());
 							
@@ -3328,10 +3290,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							}
 							if (input != null) {
 								try { input.close(); } catch (IOException e1) {}
-							}
-							if (output != null) {
-//								try { output.flush(); } catch (IOException e1) {}
-//								try { output.close(); } catch (IOException e1) {}
 							}
 						}
 						
@@ -3683,6 +3641,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	    	size += b.length;
 	    }
 	}
+	
 	/**
 	 * 모바일 G/W 이메일 [put] method sample
 	 */

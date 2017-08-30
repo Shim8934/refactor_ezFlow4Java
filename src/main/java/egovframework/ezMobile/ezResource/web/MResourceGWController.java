@@ -495,6 +495,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 		
 		String test = (String) jsonObject.get("userId");
 		LOGGER.debug("test: " + test);
+		LOGGER.debug("jsonObject in update res sch: " + jsonObject);
 		
 		try {
 			
@@ -502,135 +503,46 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userId =  jsonObject.get("userId").toString();
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
-			
-			LOGGER.debug("tenantId: " + tenantId);
-			
 			String ownerId = resourceId; 
-			String pNum = "";
-			String endDate =  "";
-			String importance =  "";
+			String endDate = jsonObject.get("endDate").toString();
+			String importance = jsonObject.get("importance").toString();
 			String num = scheduleId;
-			String title =  ""; 
-			String deptNm =  "";
+			String title = jsonObject.get("title").toString();
+			String deptNm =  info.getDeptName();
 			String timeDisplay =  ""; 
-			String writeDay = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 			String writerId =  "";
-			String content =  "";
+			String content = jsonObject.get("content").toString();
 			String ownerNm =  "";
-			String allDay =  "0"; 
-			String companyId =  "";
+			String allDay =  jsonObject.get("allDay").toString(); 
+			String companyId =  info.getCompanyId();
 			String attachFlag =  ""; 
 			String entryList =  ""; 
 			String location =  ""; 
-			String alterTime =  "";
-			String startDate =  ""; 
-
-			
-			ownerId = resourceId; 
-			
-			if(jsonObject.containsKey("pNum")){
-				pNum = jsonObject.get("pNum").toString();
-			}
-			
-			if(jsonObject.containsKey("startDate")){
-				startDate = jsonObject.get("startDate").toString();
-			}
-			
-			if(jsonObject.containsKey("endDate")){
-				endDate = jsonObject.get("endDate").toString();
-			}
-			
-			if(jsonObject.containsKey("importance")){
-				importance = jsonObject.get("importance").toString();
-			}
-			
-			
-			if(jsonObject.containsKey("title")){
-				title = jsonObject.get("title").toString();
-			}
-			
-			if(jsonObject.containsKey("deptNm")){
-				deptNm = jsonObject.get("deptNm").toString();
-			}
-			
-			if(jsonObject.containsKey("timeDisplay")){
-				timeDisplay = jsonObject.get("timeDisplay").toString();
-			}
-			
-			if(jsonObject.containsKey("userId")){
-				writerId = jsonObject.get("userId").toString();
-			}
-			
-			if(jsonObject.containsKey("content")){
-				content = jsonObject.get("content").toString();
-			}
-			
-			if(jsonObject.containsKey("writerName")){
-				ownerNm = jsonObject.get("writerName").toString();
-			}
-			
-			if(jsonObject.containsKey("companyId")){
-				companyId = jsonObject.get("companyId").toString();
-			}
-			
-			if(jsonObject.containsKey("attachFlag")){
-				attachFlag = jsonObject.get("attachFlag").toString();
-			}
-			
-			if(jsonObject.containsKey("entryList")){
-				entryList = jsonObject.get("entryList").toString();
-			}
-			
-			if(jsonObject.containsKey("location")){
-				location = jsonObject.get("location").toString();
-			}
-			
-			if(jsonObject.containsKey("alterTime")){
-				alterTime = jsonObject.get("alterTime").toString();
-			}
-			
-			if(jsonObject.containsKey("scheduleId")){
-				scheduleId = jsonObject.get("scheduleId").toString();
-			}
-
-			writeDay = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			allDay =  "0"; 
+			String startDate = jsonObject.get("startDate").toString(); 
+			String reFlag = "";
+			String gresFlag = "";
+			String characterId = "";
+			String alertTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
-			String approveFlag =  "";
-			
-			String alertTime = "";
-			String reFlag = "0";
-			String gresFlag = "";
-			String characterId = "0";
-
+	    	String writeDay = "";
+	    	
 	    	LOGGER.debug("ownerId: " + ownerId);
 	    	LOGGER.debug("companyId: " + companyId);	    	
-	    	LOGGER.debug("pNum: " + pNum);
 	    	LOGGER.debug("writerId: " + writerId);
 	    	LOGGER.debug("deptNm: " + deptNm);
 	    	LOGGER.debug("ownerNm: " + ownerNm);
 	    	LOGGER.debug("title: " + title);
-	    	LOGGER.debug("location: " + location);
-	    	LOGGER.debug("timeDisplay: " + timeDisplay);
 	    	LOGGER.debug("allDay: " + allDay);
-	    	LOGGER.debug("alterTime: " + alterTime);
 	    	LOGGER.debug("content: " + content);
 	    	LOGGER.debug("importance: " + importance);
-	    	LOGGER.debug("writeDay: " + writeDay);
-	    	LOGGER.debug("entryList: " + entryList);
-	    	LOGGER.debug("attachFlag: " + attachFlag);
 	    	LOGGER.debug("scheduleId: " + scheduleId);
 	    	LOGGER.debug("startDate: " + utcStartDate);
 	    	LOGGER.debug("endDate: " + utcEndDate);
 	    	LOGGER.debug("tenantId: " + tenantId);
-	    	LOGGER.debug("approveFlag: " + approveFlag);
 	    	LOGGER.debug("alertTime: " + alertTime);
-	    	LOGGER.debug("reFlag: " + reFlag);
-	    	LOGGER.debug("gresFlag: " + gresFlag);
-	    	LOGGER.debug("characterId: " + characterId);
-	    	
-	    	mResourceService.modifyResSch(title, location, timeDisplay, startDate, endDate, alertTime, content, importance, reFlag, gresFlag, allDay, writeDay, entryList, attachFlag, characterId, companyId, num, ownerId, tenantId);
+    	
+	    	mResourceService.modifyResSch(title, location, timeDisplay, utcStartDate, utcEndDate, alertTime, content, importance, reFlag, gresFlag, allDay, writeDay, entryList, attachFlag, characterId, companyId, num, ownerId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

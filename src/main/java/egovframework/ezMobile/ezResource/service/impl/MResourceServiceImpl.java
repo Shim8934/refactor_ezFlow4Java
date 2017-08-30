@@ -167,8 +167,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			String characterId, String companyId, String num, String ownerId,
 			int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_OWNERID", ownerId);
-		map.put("v_COMPANYID", companyId);
+		map.put("v_POWNERID", ownerId);
+		map.put("v_PCOMPANYID", companyId);
 		map.put("tenantID", tenantId);
 		map.put("v_PTITLE", title);
 		map.put("v_PLOCATION", location);
@@ -185,6 +185,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PREFLAG", reFlag);
 		map.put("v_PGRESFLAG", gresFlag);
 		map.put("v_PNUM", num);
+		
+		LOGGER.debug("map in modifyResSch: " + map);
+		
 		mResourceDAO.modifyResSch(map);
 	}
 
@@ -268,6 +271,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		List<ResGetScheduleVO> getScheduleList = getScheduleNormalList(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);
+		
+		for (ResGetScheduleVO resVO : getScheduleList) {
+			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
+			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
+		}
 		
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
 			
