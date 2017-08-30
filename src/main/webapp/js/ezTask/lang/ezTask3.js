@@ -42,6 +42,7 @@ var strLang41 = "総 "
 var strLang42 = "件"
 var strLang43 = "人";
 var strLang44 = "검색결과";
+var strLang45 = "시작일을 종료일보다 빠르게 지정해주십시오."
 var strLang48 = "添付ファイル名";
 var strLang49 = "ファイルサイズ";
 var strLang50 = "ファイルサイズ";
@@ -53,7 +54,6 @@ var strLang55 = "は既に業務共有者に登録されています。";
 var strLang56 = "は既に業務担当者に登録されています。";
 var strLang57 = "担当者を指定してください";
 var strLang58 = "このファイル形式はアップロードが制限されているです。";
-
 var strLang59 = "트리뷰의 ID가 지정되지 않았습니다.";
 var strLang60 = "데이터가 지정되지 않았습니다."
 var strLang61 = "리스트의 ID가 지정되지 않았습니다."
