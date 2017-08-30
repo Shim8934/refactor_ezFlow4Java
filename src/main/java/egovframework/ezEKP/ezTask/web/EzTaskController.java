@@ -214,7 +214,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		taskInfoVO.setImportance(Integer.parseInt(param.get("importance").toString()));
 		taskInfoVO.setStartDate(param.get("startDate").toString());
 		taskInfoVO.setEndDate(param.get("endDate").toString());
-		taskInfoVO.setTitle(commonUtil.cleanValue(param.get("title").toString()));
+		taskInfoVO.setTitle(param.get("title").toString());
 		taskInfoVO.setHasAttach(param.get("hasAttach").toString());
 		taskInfoVO.setContentPath(param.get("contentPath").toString());
 		taskInfoVO.setMemo(param.get("memo").toString());
@@ -854,7 +854,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<IMPORTANCE>" + list.get(i).getImportance() + "</IMPORTANCE>");
     		resultXML.append("<STARTDATE>" + list.get(i).getStartDate() + "</STARTDATE>");
     		resultXML.append("<ENDDATE>" + list.get(i).getEndDate() + "</ENDDATE>");
-    		resultXML.append("<TITLE>" + list.get(i).getTitle() + "</TITLE>");
+    		resultXML.append("<TITLE>" + commonUtil.cleanValue(list.get(i).getTitle()) + "</TITLE>");
     		resultXML.append("<HASATTACH>" + list.get(i).getHasAttach() + "</HASATTACH>");
 
     		List<TaskCommentVO> taskCommentList = null;
