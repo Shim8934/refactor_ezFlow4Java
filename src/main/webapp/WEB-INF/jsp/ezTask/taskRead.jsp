@@ -672,6 +672,8 @@
 			} */
 		
 			function beforeprint() {
+				$(".popup").css('background-image', 'none');
+				
 			    document.getElementById("printScreen").style.display = "block";
 			    document.getElementById("normalScreen").style.display = "none";
 			    document.getElementById("menu").style.display = "none";
@@ -743,7 +745,9 @@
 			        printattachViewProgress.style.display = "";
 			
 			    window.print();
-
+			    
+			    $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
+			    
 			    document.getElementById("printScreen").style.display = "none";
 			    document.getElementById("normalScreen").style.display = "";
 			    document.getElementById("menu").style.display = "";
