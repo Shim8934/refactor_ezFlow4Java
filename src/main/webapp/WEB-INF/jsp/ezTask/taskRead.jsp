@@ -839,6 +839,13 @@
 								</div>
 							</td>
 						</tr>
+						
+						<c:if test="${useTodoMemo == 'YES'}">
+							<tr>
+				            	<th><spring:message code='ezTask.t170' /></th>
+				            	<td id="TextMemo" colspan="3" style="padding:0px; width:100%; height:55px; overflow-y:auto"></td>
+							</tr>
+						</c:if>
 					</table>
 				</td>
 			</tr>
@@ -864,6 +871,7 @@
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
+			
 			<tr>
 				<td style="padding-top:4px;height:20px" class="pad1">
 					<table class="file">

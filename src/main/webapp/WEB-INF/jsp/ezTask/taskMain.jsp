@@ -42,6 +42,7 @@
 		    var userlang = "${userInfo.lang}";
 		    var pUse_Editor = "Use_Editor";
 		    var primary = "${userInfo.primary}";
+		    var useTodoMemo = "${useTodoMemo }";
 		    document.onselectstart = function () { return false; };
 		    function select_row(elem) {	    	
 				if ($("#checkboxAll").is(":checked")) {
@@ -94,18 +95,35 @@
 		        var taskID = GetAttribute(elem.parentElement, "taskid");
 		        var parentid = GetAttribute(elem.parentElement, "parentid");
 		        var date = GetAttribute(elem.parentElement, "startdate")
-		        var feature = GetOpenPosition(780, 920);
+		        var feature = "";
+		        
 		        if (parentid != "0")
 		            taskid = parentid;
-
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        
+		        if (useTodoMemo == 'YES') {
+		        	feature = GetOpenPosition(780, 990);
+		        	
+		        	if (CrossYN() || pNoneActiveX == "YES") {
+			            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 990px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			        } else {
+			            if (pUse_Editor == "" || pUse_Editor == "CK") {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 990px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            } else {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 990px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            }
+			        }
 		        } else {
-		            if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            } else {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            }
+		        	feature = GetOpenPosition(780, 935);
+		        	
+		        	if (CrossYN() || pNoneActiveX == "YES") {
+			            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			        } else {
+			            if (pUse_Editor == "" || pUse_Editor == "CK") {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            } else {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            }
+			        }
 		        }
 		    }
 	
@@ -240,7 +258,8 @@
 
 			var strListInfo = "";
 			var strListIdInfo = "";
-			function chk_onselect(obj) {				
+
+			function chk_onselect(obj) {
 				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
@@ -575,7 +594,10 @@
 
 				var idArr = new Array(); 
 				idArr = strListIdInfo.split(";");
+<<<<<<< HEAD
 
+=======
+>>>>>>> f04f2cca7463b2f8cf7d4be3e9903f4a40a58afb
 				if (idArr.length < 1) {
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
@@ -587,7 +609,10 @@
 					loc = idArr[i].indexOf("_");
 					idArrList += idArr[i].substring(0, loc) + ";";
 				}
+<<<<<<< HEAD
 
+=======
+>>>>>>> f04f2cca7463b2f8cf7d4be3e9903f4a40a58afb
 				idArr = null;
 				idArr = idArrList.split(";");
 
