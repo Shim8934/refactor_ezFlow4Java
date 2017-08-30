@@ -298,6 +298,8 @@
           }
 
           function beforeprint() {
+        	  $(".popup").css('background-image', 'none');
+        	  
               document.getElementById("main_body").style.display = "none";
               document.getElementById("printScreen").style.display = "";
 
@@ -325,6 +327,7 @@
                       tasktypename = "<spring:message code = 'ezTask.t2002' />";
                       break;
               }
+              
               setNodeText(document.getElementById("printTasktype"), tasktypename);
               setNodeText(document.getElementById("printCompleteRate"), document.getElementById("completerateSelect").value + "%");
 
@@ -387,10 +390,13 @@
               for (i = 1; i < nodes.length; i++) {
                   filehtml = filehtml + "<span><input type='checkbox'><img src='/images/email/mail_006.gif'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
               }
+              
               document.getElementById("printAttach").innerHTML = filehtml;
               document.getElementById("printDocument").innerHTML = message.GetEditorContent();
 
               window.print();
+              
+              $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 
               document.getElementById("main_body").style.display = "";
               document.getElementById("printScreen").style.display = "none";

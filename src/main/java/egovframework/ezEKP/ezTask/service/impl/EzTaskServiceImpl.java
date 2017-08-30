@@ -281,9 +281,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
 		map.put("nowDate", nowDate);
-		map.put("taskStatus", vo.getTaskStatus());
-		map.put("completeRate", 0);
-		map.put("completeDate", "");
 		map.put("importance", vo.getImportance());
 		map.put("hasShare", vo.getHasShare());
 		map.put("hasAttach", vo.getHasAttach());
