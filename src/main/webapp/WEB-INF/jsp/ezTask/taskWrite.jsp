@@ -65,7 +65,6 @@
 					$("#TextTitle").val("${taskInfoVO.title }");
 					$("#TextMemo").val(Replace2HTML(memo));
 					
-					
 					if (hasattach == "Y") {
 			            setAttachFileInfo("${taskAttachList}");
 			        }
@@ -95,36 +94,39 @@
 					g_person["email"][0] = personemail;
 				}
 	             
-	             if (sharelist != "") {
-	                 document.getElementById("sharelist").innerHTML = sharelist;
+	            if (sharelist != "") {
+					document.getElementById("sharelist").innerHTML = sharelist;
 	
-	                 g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-	                 shareid = shareid.split(";");
-	                 sharename = sharename.split(";");
-	                 sharename2 = sharename2.split(";");
-	                 sharedept = sharedept.split(";");
-	                 sharedept2 = sharedept2.split(";");
-	                 sharemail = sharemail.split(";");
-	
-	                 for (var i = 0; i < shareid.length; i++) {
-	                     g_share["name"][i] = sharename[i];
-	                     g_share["name1"][i] = sharename1[i];
-	                     g_share["name2"][i] = sharename2[i];
-	                     g_share["id"][i] = shareid[i];
-	                     g_share["deptname"][i] = sharedept[i];
-	                     g_share["deptname2"][i] = sharedept2[i];
-	                     g_share["email"][i] = sharemail[i];
-	                 }
-	             }
+					g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+					shareid = shareid.split(";");
+					sharename = sharename.split(";");
+					sharename2 = sharename2.split(";");
+					sharedept = sharedept.split(";");
+					sharedept2 = sharedept2.split(";");
+					sharemail = sharemail.split(";");
+					
+					for (var i = 0; i < shareid.length; i++) {
+						g_share["name"][i] = sharename[i];
+						g_share["name1"][i] = sharename1[i];
+						g_share["name2"][i] = sharename2[i];
+						g_share["id"][i] = shareid[i];
+						g_share["deptname"][i] = sharedept[i];
+						g_share["deptname2"][i] = sharedept2[i];
+						g_share["email"][i] = sharemail[i];
+					}
+				}
 	             
-	             if (document.getElementById("TextTitle").value == "") {
-	                 document.getElementById("TextTitle").focus();
-	             }
+				if (document.getElementById("TextTitle").value == "") {
+					document.getElementById("TextTitle").focus();
+				}
 			}
 
 			window.onresize = function () {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
-	//             document.getElementById("EdtorSize").style.height = document.body.clientHeight - 150 + "PX";
+				if (useTodoMemo == 'YES') {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 455 + "PX";
+				} else {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+				}
 			}
 			
 			$(function () {
@@ -141,298 +143,289 @@
 							$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
 						})
 					}
-			});
+				});
+	
+				$("#Edatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly: true,
+					beforeShow: function (input) {
+						var i_offset = $(input).offset();
+						setTimeout(function () {
+							$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+		     			})
+		 			}
+				});
+
+				var SDate = new Date(startdate);
+				var EDate = new Date(enddate);
+				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Sdatepicker").datepicker('setDate', SDate);
 				
-			$("#Edatepicker").datepicker({
-				changeMonth: true,
-				changeYear: true,
-				autoSize: true,
-				showOn: "both",
-				buttonImage: "/images/ImgIcon/calendar-month.gif",
-				buttonImageOnly: true,
-				beforeShow: function (input) {
-					var i_offset = $(input).offset();
-					setTimeout(function () {
-						$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-        			})
-    			}
+				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Edatepicker").datepicker('setDate', EDate);
 			});
+      
+			$(function () {
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+					           "<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					                "<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					              "<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+			  };
+			  
+			  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			});
+      
+			function attach_Add() {
+			    document.form.file1.click();
+			}
+			var AttachLimit = 5;
+			function btn_AttachAdd_onclick() {
+			    if (document.form.file1.value != "") {
+			        document.getElementById("maxsize").value = parseInt(AttachLimit) * 1024 * 1024;
+			        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+			        var frm = document.getElementById('form');
+			        frm.submit();
+			    } else {
+			        alert("<spring:message code='ezTask.t145' />");
+			    }
+			}
+              
+			function returnvalue(strXML) {
+			    var ndx = strXML.indexOf("</ROOT>");
+			    strXML = strXML.substr(0, ndx + 7);
+			    pAttachXml = loadXMLString(strXML);
+			    var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+			    var extFlag = false;
 			
-              var SDate = new Date(startdate);
-              var EDate = new Date(enddate);
-              $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-              $("#Sdatepicker").datepicker('setDate', SDate);
-      
-              $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-              $("#Edatepicker").datepicker('setDate', EDate);
-          });
-      
-          $(function () {
-             $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-               closeText: "<spring:message code='main.t3' />",
-               prevText: "<spring:message code='main.t0604' />",
-               nextText: "<spring:message code='main.t0605' />",
-               currentText: "<spring:message code='main.t0606' />",
-               monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-                            "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-                            "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-                            "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-               monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-                                 "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-                                 "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-                                 "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-               dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-                          "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
-                          "<spring:message code='main.t0627' />"],
-               dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-                               "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-                               "<spring:message code='main.t0627' />"],
-               dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-                             "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-                             "<spring:message code='main.t0627' />"],
-               weekHeader: "Wk",
-               dateFormat: "yy-mm-dd",
-               firstDay: 0,
-               isRTL: false,
-               duration: 200,
-               showAnim: "show",
-               showMonthAfterYear: true
-            };
-            
-            $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-          });
-      
-          function attach_Add() {
-              document.form.file1.click();
-          }
-          var AttachLimit = 5;
-          function btn_AttachAdd_onclick() {
-              if (document.form.file1.value != "") {
-                  document.getElementById("maxsize").value = parseInt(AttachLimit) * 1024 * 1024;
-                  document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-                  var frm = document.getElementById('form');
-                  frm.submit();
-              } else {
-                  alert("<spring:message code='ezTask.t145' />");
-              }
-          }
-              
-          function returnvalue(strXML) {
-              var ndx = strXML.indexOf("</ROOT>");
-              strXML = strXML.substr(0, ndx + 7);
-              pAttachXml = loadXMLString(strXML);
-              var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
-              var extFlag = false;
-
-              for (i = 0; i < nodes.length; i++) {
-                  if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-                      if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
-                          alert(strLang51);
-                          return;
-                      }
-                  } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
-                      extFlag = true;
-                  } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-                      alert(strLang52 + AttachLimit + "MB" + strLang53);
-                      return;
-                  } else {
-                      alert(strLang24);
-                  }
-              }
-              
-              if (extFlag) {
-                  alert(strLang58);
-              }
-
-              AttachFileInfo(strXML);
-          }
+			    for (i = 0; i < nodes.length; i++) {
+			        if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+			            if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
+			                alert(strLang51);
+			                return;
+			            }
+			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
+			            extFlag = true;
+			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+			            alert(strLang52 + AttachLimit + "MB" + strLang53);
+			            return;
+			        } else {
+			            alert(strLang24);
+			        }
+			    }
+			    
+			    if (extFlag) {
+			        alert(strLang58);
+			    }
+			
+			    AttachFileInfo(strXML);
+			}
           
-          function Editor_Complete() {
-              if (taskid != "") {
-                  $.ajax({
-                  type : "POST",
-                  dataType : "text",
-                  async : false,
-                  url : "/ezCommon/mhtToHTMLContent.do",
-                  data : {
-                        type : "TASKCONTENT",
-                        itemID : contentPath
-                  },
-                  success: function(result){
-                     message.SetEditorContent(result);
-                  }
-                  });
-                  
-                  try {
-                      var objTags = document.getElementById('message').getElementsByTagName("a");
+			function Editor_Complete() {
+			    if (taskid != "") {
+			        $.ajax({
+			        type : "POST",
+			        dataType : "text",
+			        async : false,
+			        url : "/ezCommon/mhtToHTMLContent.do",
+			        data : {
+			              type : "TASKCONTENT",
+			              itemID : contentPath
+			        },
+			        success: function(result){
+			           message.SetEditorContent(result);
+			        }
+			        });
+			        
+			        try {
+			            var objTags = document.getElementById('message').getElementsByTagName("a");
+			
+			            for (var i = 0 ; i < objTags.length ; i++) {
+			                if (objTags.item(i).href.indexOf("javascript:") == -1)
+			                    objTags.item(i).target = "_blink";
+			            }
+			        }
+			        catch (e) { }
+			    }
+			}
 
-                      for (var i = 0 ; i < objTags.length ; i++) {
-                          if (objTags.item(i).href.indexOf("javascript:") == -1)
-                              objTags.item(i).target = "_blink";
-                      }
-                  }
-                  catch (e) { }
-              }
-          }
+			function changemenu(obj) {
+				if (obj.id == "P") {
+					taskType = obj.value;
+					document.getElementById("personinputtr").style.display = "none";
+				} else if (obj.id == "I") {
+					taskType = obj.value;
+					document.getElementById("personinputtr").style.display = "";
+					document.getElementById("periodblock").style.display = "";
+				} else if (obj.id == "C") {
+					taskType = obj.value;
+					document.getElementById("personinputtr").style.display = "";
+					document.getElementById("periodblock").style.display = "";
+				} else {
+					document.getElementById("importantSelect").value = obj.value;
+				}
+			}
 
-          function changemenu(obj) {
-              if (obj.id == "P") {
-                  taskType = obj.value;
-                  document.getElementById("personinputtr").style.display = "none";
-//                   document.getElementById("trrepeatinfo").style.display = "";
-              } else if (obj.id == "I") {
-                  taskType = obj.value;
-                  document.getElementById("personinputtr").style.display = "";
-//                   document.getElementById("trrepeatinfo").style.display = "none";
-//                   repetition = "";
-                  document.getElementById("periodblock").style.display = "";
-//                   document.getElementById("repeatblock").style.display = "none";
-//                   document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-              } else if (obj.id == "C") {
-                  taskType = obj.value;
-                  document.getElementById("personinputtr").style.display = "";
-//                   document.getElementById("trrepeatinfo").style.display = "none";
-//                   repetition = "";
-                  document.getElementById("periodblock").style.display = "";
-//                   document.getElementById("repeatblock").style.display = "none";
-//                   document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-              } else {
-                  document.getElementById("importantSelect").value = obj.value;
-              }
-          }
+			function beforeprint() {
+				$(".popup").css('background-image', 'none');
+	
+				document.getElementById("main_body").style.display = "none";
+				document.getElementById("printScreen").style.display = "";
+				
+				setNodeText(document.getElementById("printPerson"), getNodeText(document.getElementById("personlist")));
+				setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("sharelist")));
+				
+				var tasktype = document.getElementsByName("tasktypesel");
+				var tasktypename;
+	
+				for (var i = 0; i < tasktype.length; i++) {
+					if (tasktype[i].checked) {
+						tasktypename = tasktype[i].value;
+						break;
+					}
+				}
+				
+				switch (tasktypename) {
+					case "1":
+						tasktypename = "<spring:message code = 'ezTask.t2000' />";
+						break;
+					case "2":
+						tasktypename = "<spring:message code = 'ezTask.t2001' />";
+						break;
+					case "3":
+						tasktypename = "<spring:message code = 'ezTask.t2002' />";
+						break;
+				}
+					
+				setNodeText(document.getElementById("printTasktype"), tasktypename);
+				setNodeText(document.getElementById("printCompleteRate"), document.getElementById("completerateSelect").value + "%");
+				
+				var important = document.getElementsByName("important");
+				var importantname;
+				
+				for (var i = 0; i < important.length; i++) {
+					if (important[i].checked) {
+						importantname = important[i].value;
+						break;
+					}
+				}
+					
+				switch (importantname) {
+					case "1":
+						importantname = "<spring:message code = 'ezTask.t171' />";
+						break;
+					case "2":
+						importantname = "<spring:message code = 'ezTask.t172' />";
+						break;
+					case "3":
+						importantname = "<spring:message code = 'ezTask.t173' />";
+						break;
+				}
+	
+				setNodeText(document.getElementById("printImportance"), importantname);
+	
+				var taskstatus = document.getElementById("taskstatusSelect").value;
 
-          function beforeprint() {
-        	  $(".popup").css('background-image', 'none');
-        	  
-              document.getElementById("main_body").style.display = "none";
-              document.getElementById("printScreen").style.display = "";
+				switch (taskstatus) {
+					case "1":
+						taskstatus = "<spring:message code = 'ezTask.t97' />";
+						break;
+					case "2":
+						taskstatus = "<spring:message code = 'ezTask.t98' />";
+						break;
+					case "3":
+						taskstatus = "<spring:message code = 'ezTask.t99' />";
+						break;
+					case "4":
+						taskstatus = "<spring:message code = 'ezTask.t100' />";
+						break;
+				}
 
-              setNodeText(document.getElementById("printPerson"), getNodeText(document.getElementById("personlist")));
-              setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("sharelist")));
-
-              var tasktype = document.getElementsByName("tasktypesel");
-              var tasktypename;
-
-              for (var i = 0; i < tasktype.length; i++) {
-                  if (tasktype[i].checked) {
-                      tasktypename = tasktype[i].value;
-                      break;
-                  }
-              }
-
-              switch (tasktypename) {
-                  case "1":
-                      tasktypename = "<spring:message code = 'ezTask.t2000' />";
-                      break;
-                  case "2":
-                      tasktypename = "<spring:message code = 'ezTask.t2001' />";
-                      break;
-                  case "3":
-                      tasktypename = "<spring:message code = 'ezTask.t2002' />";
-                      break;
-              }
-              
-              setNodeText(document.getElementById("printTasktype"), tasktypename);
-              setNodeText(document.getElementById("printCompleteRate"), document.getElementById("completerateSelect").value + "%");
-
-              var important = document.getElementsByName("important");
-              var importantname;
-
-              for (var i = 0; i < important.length; i++) {
-                  if (important[i].checked) {
-                      importantname = important[i].value;
-                      break;
-                  }
-              }
-
-              switch (importantname) {
-                  case "1":
-                      importantname = "<spring:message code = 'ezTask.t171' />";
-                      break;
-                  case "2":
-                      importantname = "<spring:message code = 'ezTask.t172' />";
-                      break;
-                  case "3":
-                      importantname = "<spring:message code = 'ezTask.t173' />";
-                      break;
-              }
-
-              setNodeText(document.getElementById("printImportance"), importantname);
-
-              var taskstatus = document.getElementById("taskstatusSelect").value;
-
-              switch (taskstatus) {
-                  case "1":
-                      taskstatus = "<spring:message code = 'ezTask.t97' />";
-                      break;
-                  case "2":
-                      taskstatus = "<spring:message code = 'ezTask.t98' />";
-                      break;
-                  case "3":
-                      taskstatus = "<spring:message code = 'ezTask.t99' />";
-                      break;
-                  case "4":
-                      taskstatus = "<spring:message code = 'ezTask.t100' />";
-                      break;
-              }
-
-              setNodeText(document.getElementById("printStatus"), taskstatus);
-
-              var printdate;
-
-              if (document.getElementById("periodblock").style.display == "")
-                  printdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (<spring:message code = 'ezTask.t207' />)";
-              else
-                  printdate = getNodeText(document.getElementById("repeatblock"));
-
-              setNodeText(document.getElementById("printDate"), printdate);
-              setNodeText(document.getElementById("printTitle"), document.getElementById("TextTitle").value);
-
-              var filehtml = "";
-              var nodes;
-              nodes = dadiframe.filelist.childNodes;
-              for (i = 1; i < nodes.length; i++) {
-                  filehtml = filehtml + "<span><input type='checkbox'><img src='/images/email/mail_006.gif'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
-              }
-              
-              document.getElementById("printAttach").innerHTML = filehtml;
-              document.getElementById("printDocument").innerHTML = message.GetEditorContent();
-
-              window.print();
-              
-              $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
-
-              document.getElementById("main_body").style.display = "";
-              document.getElementById("printScreen").style.display = "none";
-          }
+				setNodeText(document.getElementById("printStatus"), taskstatus);
+				
+				var printdate;
+				
+				if (document.getElementById("periodblock").style.display == "")
+					printdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (<spring:message code = 'ezTask.t207' />)";
+				else
+					printdate = getNodeText(document.getElementById("repeatblock"));
+				
+				setNodeText(document.getElementById("printDate"), printdate);
+				setNodeText(document.getElementById("printTitle"), document.getElementById("TextTitle").value);
+				
+				var filehtml = "";
+				var nodes;
+				nodes = dadiframe.filelist.childNodes;
+				for (i = 1; i < nodes.length; i++) {
+					filehtml = filehtml + "<span><input type='checkbox'><img src='/images/email/mail_006.gif'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
+				}
+				
+				document.getElementById("printAttach").innerHTML = filehtml;
+				document.getElementById("printDocument").innerHTML = message.GetEditorContent();
+				
+				window.print();
+				
+				$(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
+				
+				document.getElementById("main_body").style.display = "";
+				document.getElementById("printScreen").style.display = "none";
+			}
           
-          function textLimit(obj, event, limit) {
-              if (navigator.userAgent.indexOf('Firefox') != -1) {
-                  if (!event) event = window.event;
-              }
+			function textLimit(obj, event, limit) {
+				if (navigator.userAgent.indexOf('Firefox') != -1) {
+					if (!event) event = window.event;
+				}
+					
+				if (event.keyCode == 8 || event.keyCode == 46) {
+					return true;
+				}
 
-              if (event.keyCode == 8 || event.keyCode == 46) {
-                  return true;
-              }
-
-              var textValue = new String(obj.value)
-              var retText = "";
-              var tcount = 0;
-              for (k = 0; k < textValue.length; k++) {
-                  var onechar = textValue.charAt(k);
-                  tcount += escape(onechar).length > 4 ? 2 : 1
-                  retText += onechar;
-                  if (tcount >= limit) {
-                      obj.value = retText;
-                      return false;
-                  }
-              }
-          }
-      </script>
-   </head>
-   <body class="popup">
-      <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>   
-      <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+				var textValue = new String(obj.value)
+				var retText = "";
+				var tcount = 0;
+				for (k = 0; k < textValue.length; k++) {
+					var onechar = textValue.charAt(k);
+					tcount += escape(onechar).length > 4 ? 2 : 1
+					retText += onechar;
+					if (tcount >= limit) {
+						obj.value = retText;
+						return false;
+					}
+				}
+			}
+		</script>
+	</head>
+	<body class="popup">
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>   
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
          <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
       </div>
       <div id="main_body">
@@ -700,7 +693,11 @@
          </table>
       </div>
       <script>
-         document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+		if (useTodoMemo == 'YES') {
+			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 455 + "PX";
+		} else {
+			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+		}
       </script>
    </body>
 </html>
