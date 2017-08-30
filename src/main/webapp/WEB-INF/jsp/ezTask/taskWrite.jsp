@@ -62,7 +62,7 @@
 					document.getElementById("importantSelect").value = importance;
 					document.getElementById("taskstatusSelect").value = taskstatus;
 					document.getElementById("completerateSelect").value = completerate;
-					$("#TextTitle").val("${taskInfoVO.title }");
+					$("#TextTitle").val("<c:out value = '${taskInfoVO.title }' />");
 					$("#TextMemo").val(Replace2HTML(memo));
 					
 					if (hasattach == "Y") {
