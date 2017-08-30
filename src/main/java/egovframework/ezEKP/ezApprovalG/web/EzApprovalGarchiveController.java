@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.StringReader;
 import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.Properties;
@@ -11,7 +13,10 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +29,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -37,10 +44,10 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzApprovalGarchiveController {
-    
+public class EzApprovalGarchiveController extends EgovFileMngUtil {
+
     private static final Logger logger = LoggerFactory.getLogger(EzApprovalGarchiveController.class);
-            
+    
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -147,7 +154,7 @@ public class EzApprovalGarchiveController {
 		String docHref = request.getParameter("docHref");
 		String docType = request.getParameter("docType");
 		String orgDocID = request.getParameter("orgDocID");
-		String formID = request.getParameter("formID");;
+		String formID = request.getParameter("formID");
 		String endDir = request.getParameter("endDir");
 		String docTitle = request.getParameter("docTitle");
 		String listSusin = request.getParameter("listSusin");
@@ -191,7 +198,7 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("pass", pass);
 		model.addAttribute("listSusin", listSusin);
 		model.addAttribute("g_RecID", g_RecID);
-		model.addAttribute("g_SepAttNo",g_SepAttNo);
+		model.addAttribute("g_SepAttNo", g_SepAttNo);
 		model.addAttribute("docID", docID);
 		
 		logger.debug("contDocView_NoDoc ended");
@@ -2118,24 +2125,26 @@ public class EzApprovalGarchiveController {
 	
 	/**
 	 * 외부 부서검색 팝업창 호출
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezApprovalG/searchOrganGList.do", produces = "text/xml;charset=utf-8")
 	public String searchOrganGList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("searchOrganGList started");
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String keyword = request.getParameter("keyword") ;
-		
+
+		String keyword = request.getParameter("keyword");
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("keyword", keyword);
 		logger.debug("searchOrganGList ended");
 		return "/ezApprovalG/apprGsearchOrganGList";
 	}
-	
+
 	/**
 	 * 외부 부서검색 데이터 리스트 가져오기
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezApprovalG/searchOrganGListData.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
@@ -2152,10 +2161,11 @@ public class EzApprovalGarchiveController {
 		logger.debug("searchOrganGListData ended");
 		return strXML;
 	}
-	
+
 	/**
 	 * 외부 수신처 이름 수정 팝업창 호출
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8")
 	public String aprDeptName(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
@@ -2165,10 +2175,11 @@ public class EzApprovalGarchiveController {
 		logger.debug("aprDeptName ended");
 		return "/ezApprovalG/apprGaprDeptName";
 	}
-	
+
 	/**
 	 * 외부 수신처 발송 시 코드 xml 화
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezApprovalG/getencodeinfoxXML.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
@@ -2192,36 +2203,40 @@ public class EzApprovalGarchiveController {
 		logger.debug("getencodeinfoxXML ended");
 		return result.toString();
 	}
-	
+
 	/**
 	 * 외부 수신처 발송 시 문서 정보
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezApprovalG/getEndDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getEndDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		logger.debug("getencodeinfoxXML started");
+		logger.debug("getEndDocInfo started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
         String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getDocInfo(docID, "END", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 
-		logger.debug("getencodeinfoxXML ended");
+		logger.debug("getEndDocInfo ended");
 		return result;
 	}
-	
-	/**
-	 * 외부 수신처 발송 시 문서 본문 xml 타입으로 
-	 * @throws Exception 
-        // HTML 정리 페이지로 MSHTML을 사용하여 태그를 정리한다.
-        // MSHTML로 Element Tag의 Attribute를 정리하지는 않고 필수 Attribute 추가만 진행한다.
-        // Attribute 전체 목록(사용하지 않는 Attribute포함)을 가지고 오기 때문에 이를 체크하는데 시간이 많이 소요되기 때문이다.(각 태그당 100개 이상의 속성)
-        // 사용하지 않는 Attribute에 대한 처리는 Javascript 에서 처리한다.
-        // 또한 Width, Height속성은 width_kaoni, height_kaoni로 리턴하여 자바스크립트에서 Replace하여 사용한다.
-        // IE에서 Width, Height에 숫자만 인식되는 현상을 피하기 위해서이다.
 
-        // 주의. 각 Element처리시 Element.OuterHTML을 사용하는 경우 해당 Element 하위의 Element의 값이 인식되지 않는 문제로 인해 OuterHTML 수정시에는 
-        // GetElementsByTagName을 다시 로드하여 사용하도록 한다.
+	/**
+	 * 외부 수신처 발송 시 문서 본문 xml 타입으로
+	 * 
+	 * @throws Exception
+	 *             // HTML 정리 페이지로 MSHTML을 사용하여 태그를 정리한다. // MSHTML로 Element
+	 *             Tag의 Attribute를 정리하지는 않고 필수 Attribute 추가만 진행한다. // Attribute
+	 *             전체 목록(사용하지 않는 Attribute포함)을 가지고 오기 때문에 이를 체크하는데 시간이 많이 소요되기
+	 *             때문이다.(각 태그당 100개 이상의 속성) // 사용하지 않는 Attribute에 대한 처리는
+	 *             Javascript 에서 처리한다. // 또한 Width, Height속성은 width_kaoni,
+	 *             height_kaoni로 리턴하여 자바스크립트에서 Replace하여 사용한다. // IE에서 Width,
+	 *             Height에 숫자만 인식되는 현상을 피하기 위해서이다.
+	 * 
+	 *             // 주의. 각 Element처리시 Element.OuterHTML을 사용하는 경우 해당 Element 하위의
+	 *             Element의 값이 인식되지 않는 문제로 인해 OuterHTML 수정시에는 //
+	 *             GetElementsByTagName을 다시 로드하여 사용하도록 한다.
 	 */
 	@RequestMapping(value = "/ezApprovalG/getContentXml.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
@@ -2251,5 +2266,154 @@ public class EzApprovalGarchiveController {
 		logger.debug("getLineInfo ended");
 		return result;
 	}
+
+	@RequestMapping(value = "/ezApprovalG/simsaGUpload.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String simsaGUpload(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
+		logger.debug("simsaGUpload started");
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String docID = request.getParameter("docID");
+		StringBuilder saveXML = new StringBuilder("<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml-stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">");
+		saveXML.append(xmlPara.replace("\n", "").replace("\t", "").replace("&amp;nbsp;", " ").replace("&amp;gt;", "&gt;").replace("&amp;lt;", "&lt;"));
+		String realPath = commonUtil.getRealPath(request);
+		String savePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator	+ "sendXML"	+ commonUtil.separator + docID + "pubdoc.xml";
+		boolean saveFlag = false;
+		String result = null;
+		try {
+			char intxt[] = new char[saveXML.toString().length()];
+			saveXML.toString().getChars(0, saveXML.toString().length(), intxt, 0); // 입력하고자 하는 문자열을 문자 배열 intxt에 저장
+
+			File file = new File(realPath + savePath);
+			FileOutputStream fop = new FileOutputStream(file);
+			// get the content in bytes
+			fop.write(saveXML.toString().getBytes("utf-8"));
+			fop.flush();
+			fop.close();
+
+			saveFlag = true;
+		} catch (Exception e) {
+			saveFlag = false;
+		} 
+		
+		if (saveFlag) {
+			result = "OK";
+		} else {
+			result = "O";
+		}
+
+		logger.debug("simsaGUpload ended");
+		return result;
+	}
+
+	@RequestMapping(value = "/ezApprovalG/checkPubDocXML.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String checkPubDocXML(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("checkPubDocXML started");
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String xmlPath = request.getParameter("xmlPath");
+		String mapPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID();
+
+		String result = ezApprovalGService.checkPubDocXML(mapPath + xmlPath);
+		logger.debug("checkPubDocXML ended");
+		return result;
+	}
+
+	@RequestMapping(value = "/ezApprovalG/sendMsg2.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String sendMsg2(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("sendMsg2 started");
+		userInfo = commonUtil.userInfo(loginCookie);
+ 
+		String extXML = request.getParameter("extXML");
+		Document xmlDom = commonUtil.convertStringToDocument(extXML);
+		String mapPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) ;
+		
+		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("UTF-8")));
+		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("UTF-8")));
+		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("UTF-8")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("UTF-8")));
+
+		for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
+				switch (xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getNodeValue()) {
+				case "pubdoc":
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("UTF-8")));
+					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("UTF-8")));
+					break;
+
+				default:
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("UTF-8")));
+					break;
+				}
+		}
+		
+		String result = ezApprovalGService.createSendMsgXML(xmlDom, mapPath, userInfo);
+		logger.debug("sendMsg2 ended");
+ 		return result;
+	}
 	
+	@RequestMapping(value = "/ezApprovalG/sendMsg.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String sendMsg(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("sendMsg started");
+		userInfo = commonUtil.userInfo(loginCookie);
+ 
+		String xmlData = request.getParameter("xmlData");
+		String xmlPath = request.getParameter("xmlPath");
+		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "sendXML" + commonUtil.separator + xmlPath;
+
+		try {
+
+			File file = new File(path);
+			FileOutputStream fop = new FileOutputStream(file);
+			// get the content in bytes
+			fop.write(xmlData.replace("\n", "").replace("\t", "").getBytes("utf-8"));
+			fop.flush();
+			fop.close();
+
+		} catch (Exception e) {
+		} 
+		
+		    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+		    DocumentBuilder builder;  
+	        builder = factory.newDocumentBuilder();  
+	        Document xmlDom = builder.parse( new InputSource( new StringReader( xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "").replace("\n", "").replace("\t", "") ) ) );  
+			
+			String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
+			String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
+			String[] arrReceiveID = receiveID.split(";");
+			String strReceiveID = receiveID;
+			
+			if (receiveID.substring(0, 1).equals(";")) {
+				strReceiveID = receiveID.substring(1);
+			}
+	
+	        if (receiveID.substring(receiveID.length() - 1, receiveID.length()).equals(";")) {
+	        	strReceiveID = receiveID.substring(0, receiveID.length() - 1);
+	        }
+	
+	        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
+	        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true));
+	
+	        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
+	        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
+	
+	        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), true);
+	     
+	        String result = ezApprovalGService.getFileName(commonUtil.getRealPath(request), sendID + arrReceiveID[arrReceiveID.length - 1].toString() + strTime, "sendtemp", strXML, userInfo.getTenantId());
+	        logger.debug("sendMsg ended");
+	        return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/cert.do", produces = "text/xml;charset=utf-8")
+	public String cert(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("cert started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		logger.debug("cert ended");
+		return "ezApprovalG/apprGcert";
+	}
 }

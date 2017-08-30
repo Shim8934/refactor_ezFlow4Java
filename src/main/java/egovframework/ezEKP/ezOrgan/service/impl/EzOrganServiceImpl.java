@@ -1571,7 +1571,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 			str.append("<DATA9>" + ou.get(i)[8]  + "</DATA9>");
 			str.append("<DATA10>" + ou.get(i)[9]  + "</DATA10>");
 			str.append("<DATA11>" + ou.get(i)[6]  + "</DATA11>");
-			str.append("<DATA12>" + ou.get(i)[7]  + "</DATA12>");
+			if (ou.get(i)[7].isEmpty() || ou.get(i)[7].equals("N")) {
+				str.append("<DATA12>N</DATA12>");
+			} else {
+				str.append("<DATA12>" + ou.get(i)[7]  + "</DATA12>");
+			}
 			str.append("<DATA13>" + ou.get(i)[11]  + "</DATA13>");
 		}
 		str.append("</ORGAN>");

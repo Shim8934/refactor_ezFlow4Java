@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,14 +18,13 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -42,6 +40,10 @@ import org.w3c.dom.html.HTMLCollection;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLTableElement;
 import org.w3c.dom.html.HTMLTableRowElement;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -21712,7 +21714,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			boolean hasBRTag = true;
 			 
 			do {
-				if(xmlDom.getElementsByTagName("br").getLength() > 0) {
+ 				if(xmlDom.getElementsByTagName("br").getLength() > 0) {
 					String strInnerHtml = xmlDom.getElementsByTagName("br").item(0).getTextContent();
 					Node parentNode = xmlDom.getElementsByTagName("br").item(0).getParentNode();
 					
@@ -21824,6 +21826,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder result = new StringBuilder();
 		
 		map.put("docID", docID);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
 		List<ApprGAprLineVO> strLineXML = new ArrayList<ApprGAprLineVO>(); 
 		strLineXML = ezApprovalGDAO.relayAprLineXmlForExt(map);
 		
@@ -21906,11 +21910,168 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			result.append("<NAME>" + xmlDoc.getElementsByTagName("APRMEMBERNAME").item(i).getTextContent() + "</NAME>");
 			
-			strProcessDate = xmlDoc.getElementsByTagName("PROCESSDATE").item(i).getTextContent();
+			strProcessDate = xmlDoc.getElementsByTagName("PROCESSDATE").item(i).getTextContent().substring(0,19);
+			result.append("<DATE>" + strProcessDate.substring(0,10) + "</DATE>");
 			
+			result.append("<SIGNDATE>" + strProcessDate.substring(5,10)  + "</SIGNDATE>");
 			
-			
+			result.append("<TIME>" + strProcessDate.substring(11,19)  + "</TIME>");
+			result.append("</APPROVAL>");
 		}
-		return null;
+		result.append("</APPROVALINFO>");
+		return result.toString();
+	}
+
+	@Override
+	public String checkPubDocXML(String mapPath) throws Exception {
+		String result = null;
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(false);
+		factory.setNamespaceAware(true);
+
+		DocumentBuilder builder = factory.newDocumentBuilder();
+
+		builder.setErrorHandler(new SimpleErrorHandler());    
+		// the "parse" method also validates XML, will throw an exception if misformatted
+		try {
+    		Document document = builder.parse(new InputSource(mapPath));
+			result = "OK";
+		} catch (Exception e){
+			result = "FALSE";
+		}
+		return result;
+	}
+	
+	public class SimpleErrorHandler implements ErrorHandler {
+	    public void warning(SAXParseException e) throws SAXException {
+	        System.out.println(e.getMessage());
+	    }
+
+	    public void error(SAXParseException e) throws SAXException {
+	        System.out.println(e.getMessage());
+	    }
+
+	    public void fatalError(SAXParseException e) throws SAXException {
+	        System.out.println(e.getMessage());
+	    }
+	}
+
+	@Override
+	public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception {
+		String strRtnXML = "";
+		String strDocType = xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
+		String strDocID = xmlDom.getElementsByTagName("doc-id").item(0).getTextContent();
+		
+		int idx;
+        int pos;
+
+        String strConRole;
+        String strAttachPath;
+        String strAttachFile;
+        String strPath;
+        
+		if (strDocType.equals("send") || strDocType.equals("resend")) {
+			if (xmlDom.getElementsByTagName("content").getLength() > 0) {
+				for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
+					strConRole = xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getTextContent();
+					
+					if (!strConRole.equals("pubdoc") && !strConRole.equals("return") && !strConRole.equals("fail")) {
+						idx = xmlDom.getElementsByTagName("content").item(i).getTextContent().indexOf("?filepath=");
+						
+						if (idx > 0) {
+							xmlDom.getElementsByTagName("content").item(i).setTextContent(xmlDom.getElementsByTagName("content").item(i).getTextContent().substring(idx + 10));
+						}
+						
+						pos = xmlDom.getElementsByTagName("content").item(i).getTextContent().lastIndexOf("/");
+						strAttachPath = xmlDom.getElementsByTagName("content").item(i).getTextContent().substring(0, pos);
+						strAttachFile = xmlDom.getElementsByTagName("content").item(i).getTextContent().substring(pos + 1);
+						
+                        strPath = strAttachPath.replace("/Upload_ApprovalG", mapPath).replace("/", commonUtil.separator) + commonUtil.separator + strAttachFile;
+                        
+                        //메일 보내는건가? 찾아봐야함
+//                        CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
+//                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
+
+                        xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().getBytes("UTF-8")));
+						System.out.println("11");
+//						strPath = strAttachPath.replace(strFolderUrl, strFolderPath)
+					}
+				}
+			}
+			 strRtnXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
+	         strRtnXML = strRtnXML + commonUtil.convertDocumentToString(xmlDom).replace("&amp;", "&");
+		}
+		 String strFilePath = mapPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg" + commonUtil.separator + strDocID + ".xml";
+
+		 File file = new File (mapPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg");
+		 
+		 if (!file.exists()) {
+			 file.mkdirs();
+		 }
+		 
+         File FI = new File(strFilePath);
+
+         if (FI.exists()) {
+        	 FI.delete();
+         }
+         
+ 		try {
+
+ 			FileOutputStream fop = new FileOutputStream(FI);
+ 			// get the content in bytes
+ 			fop.write(strRtnXML.replace("\n", "").replace("\t", "").getBytes("utf-8"));
+ 			fop.flush();
+ 			fop.close();
+ 		} catch (Exception e) {
+ 		} 
+       
+         return strDocID + ".xml::" + strRtnXML.replace("\n", "").replace("\t", "");
+	}
+
+	@Override
+	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception {
+		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "DATA" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+		String strResult = "";
+		boolean exist;
+		String result = "";
+		
+		for (int i = 1; i <= 99; i++) {
+			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
+			
+		      File FI = new File(realPath + strPath);
+		      
+		      if (!FI.exists()) {
+		    	  FI.mkdirs();
+			  }
+		      
+		      File file = new File(realPath + strPath + strResult);
+		         
+		      exist = file.exists();
+		      
+		      if (!exist) {
+		    	  strResult =  strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
+		      } else {
+		    	  strResult = strFileName + "00.xml";
+		      }
+		}
+		
+		try {
+			File fos = new File(realPath + strPath + strResult);
+			
+		    if (!fos.exists()) {
+		    	fos.delete();
+			}
+		    
+			FileOutputStream fop = new FileOutputStream(fos);
+			// get the content in bytes
+			fop.write(strXML.getBytes("utf-8"));
+			fop.flush();
+			fop.close();
+			
+			result = "OK";
+		} catch (Exception e) {
+			result = "FALSE";
+		} 
+		return result;
 	}
 }

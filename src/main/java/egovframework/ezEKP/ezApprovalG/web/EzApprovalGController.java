@@ -339,6 +339,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String subQuery = request.getParameter("SubQuery");
 		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId());
 		
+		String relayG_type = ezCommonService.getTenantConfig("UserInfo_RelayG_Type", userInfo.getTenantId()); 
+		
 		nowDate = nowDate.substring(0, 16);
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -365,6 +367,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("listType", listType);
 		model.addAttribute("proxyInfo", proxyInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("relayG_type", relayG_type);
+		
 		logger.debug("aprManage ended.");
 		
 		return "ezApprovalG/apprGManage";

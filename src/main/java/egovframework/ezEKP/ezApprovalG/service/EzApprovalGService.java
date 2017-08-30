@@ -462,4 +462,10 @@ public interface EzApprovalGService {
 	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
 
 	public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception;
+
+	public String checkPubDocXML(String mapPath) throws Exception;
+
+	public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception;
+
+	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception;
 }

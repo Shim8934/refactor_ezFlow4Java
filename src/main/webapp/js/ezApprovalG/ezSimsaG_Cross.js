@@ -95,15 +95,17 @@ function getPasswdEnd() {
     cert_dialogArguments[0] = true;
     cert_dialogArguments[1] = getPasswdEnd_Complete;
 
-    DivPopUpShow(420, 350, "/myoffice/ezApprovalG/enforce/cert.aspx");
+    DivPopUpShow(420, 350, "/ezApprovalG/cert.do");
 }
 
 function getPasswdEnd_Complete(ret) {
+	alert(20);
 	 DivPopUpHidden();
 	    if (ret[0]) {
 	        encodePass = ret[1];
 	        encodePath = ret[2];
 	    }
+	    
 	    if (makeXML(pDocID)) {
 	        Check_Container();
 	        return true;
@@ -583,32 +585,41 @@ function makeXML(newDocID) {
 	            tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "title", attachName[i]);
 	        }
 	    }
-
 	    var SaveDocHTTp = createXMLHttpRequest();
-	    SaveDocHTTp.open("POST", "aspx/SimsaG_Upload.aspx?DOCID=" + pDocID, false);
-	    SaveDocHTTp.send(sihangXML);
-
-	    var ResultXML = loadXMLString(SaveDocHTTp.responseText);
-	    if (getNodeText(GetChildNodes(ResultXML)[0]) == "OK") {
-	        var xmlhttp = createXMLHttpRequest();
-	        var xmlPubDocCheck = createXmlDom();
-	        var objNode;
-	        createNodeInsert(xmlPubDocCheck, objNode, "PARAMETER");
-	        createNodeAndInsertText(xmlPubDocCheck, objNode, "XMLPATH", "/Upload_ApprovalG/" + companyID + "/sendXML/" + pDocID + "pubdoc.xml");
-	        xmlhttp.open("POST", "aspx/checkPubDocXML.aspx", false);
-	        xmlhttp.send(xmlPubDocCheck);
-	        if (xmlhttp.responseText != "0") {
+	    SaveDocHTTp.open("POST", "/ezApprovalG/simsaGUpload.do?docID=" + pDocID, false);
+	    SaveDocHTTp.send(getXmlString(sihangXML));
+	     
+	    if (SaveDocHTTp.responseText == "OK") {
+	    	
+	        $.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/checkPubDocXML.do",
+	    		data : {
+	    			xmlPath :  "/sendXML/" + pDocID + "pubdoc.xml"
+	    		},
+	    		success: function(xml){
+	    			result = xml;
+	    		}        			
+	    	});
+	        
+	        if (result != "OK") {
 	            var pAlertContent = strLang185;
 	            OpenAlertUI(pAlertContent);
 	            return false;
-	        }
-	        else {
+	        } else {
 	            var rtnXML = makeExtinfo(sihangXML, newDocID, "SEND");
 	            var resultXml = encodeDN(rtnXML);
 	            ContentXML = resultXml.split('::')[1];
 	            ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
+	            alert(ContentXML);
 	            result = sendExtDoc(ContentXML);
-	            return true;
+	            if (result) {
+	            	return true;
+	            } else {
+	            	return false;
+	            }
 	        }
 	    }
 	}
@@ -737,7 +748,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
         //xmlhttp.open("GET", "packXML.xml", false);
         //xmlhttp.send("");
         //var objSave = new ActiveXObject("EzUtil.MiscFunc");
-        var ExtXML = loadXMLFile("packXML.xml"); // xmlhttp.responseXML;	  
+        var ExtXML = loadXMLFile("/xml/ezApprovalG/packXML.xml"); // xmlhttp.responseXML;	  
         var eNodes = ExtXML.documentElement;
         var Nodes = psihangXML.documentElement;
 
@@ -837,7 +848,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
             SetAttribute(tempNode, "content-transfer-encoding", "base64");
             SetAttribute(tempNode, "content-type", "");
             SetAttribute(tempNode, "charset", "");
-            setNodeText(tempNode, sealPath.replace(pDomainName, ""));                        
+            setNodeText(tempNode, sealPath);                        
         }
 
 
@@ -928,36 +939,49 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 }
 
 var i = 0;
-function sendExtDoc(ExtXML)
-{
-	try
-	{
+function sendExtDoc(ExtXML) {
+	try {
 		i = i + 1;		
-		var xmlhttp = createXMLHttpRequest();
-		var xmlpara = createXmlDom();
-		var objNode;
-
-		createNodeInsert(xmlpara, objNode, "PARAMETER");
-	    createNodeAndInsertText(xmlpara, objNode, "XMLDATA", "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\"><pack>" + ExtXML + "</pack>");
-		createNodeAndInsertText(xmlpara, objNode, "XMLPATH", "/Upload_ApprovalG/" + companyID + "/sendXML/" + pDocID + i + "pack.xml");
-						
-		xmlhttp.open("Post","aspx/sendMsg_Cross.aspx",false);
-		xmlhttp.send(xmlpara);
-		return true;
-	}
-	catch(e)
-	{
+		
+	    $.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/sendMsg.do",
+			data : {
+				xmlData : "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">" + ExtXML ,
+				xmlPath : pDocID + i + "pack.xml"
+			},
+			success: function(xml){
+				result = xml;
+			} ,
+			error : function () {
+				return false;
+			}       			
+		});
+		
+	    if (result == "OK") {
+	    	return true;
+	    }
+	} catch(e) {
 		return false;
 	}
 }
 
-function encodeDN(ExtXML)	
-{
-    var xmlhttp = createXMLHttpRequest();
-	xmlhttp.open("POST", "aspx/sendMsg2_Cross.aspx", false);
-	xmlhttp.send(ExtXML);
-	var XmlData = xmlhttp.responseText;
-	return XmlData;
+function encodeDN(ExtXML) {
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/sendMsg2.do",
+		data : {
+			extXML : getXmlString(ExtXML)
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	return result;
 }
 
 function encodeUP(emlName)

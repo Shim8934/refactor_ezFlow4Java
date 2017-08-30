@@ -725,6 +725,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGDocListVO>) list("EzApprovalG.getDocInfoS", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> relayAprLineXmlForExt(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.relayAprLineXmlForExt", map);
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}
@@ -2682,10 +2687,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public void updateProAprDocInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateProAprDocInfo", map);
-	}
-
-	public List<ApprGAprLineVO> relayAprLineXmlForExt(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

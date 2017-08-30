@@ -81,6 +81,7 @@
 		    var OrderCell = "";
 		    var USE_OCS = "${useOcs}";
 		    var SendOutFlag = "O";
+		    var g_RelayG_Type = "${relayG_type}";
 		    var userLang = "1";
 		    var pSelMenu = "${selMenu}";
 		    var pOpenYaer = "${openYear}";

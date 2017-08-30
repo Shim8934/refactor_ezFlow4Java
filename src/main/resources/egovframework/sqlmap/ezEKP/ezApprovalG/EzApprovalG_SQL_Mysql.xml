@@ -22473,4 +22473,35 @@
          AND
          	A.COMPANYID = #companyID#
       </update>
+      
+      <select id="EzApprovalG.relayAprLineXmlForExt" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+      		SELECT 
+      			APRTYPE, 
+      			APRMEMBERSN, 
+      			CASE WHEN OPINIONGB IS NULL THEN '' ELSE OPINIONGB END AS OPINIONGB,
+				ISPROPOSERYN, 
+				ISBRIEFUSERYN, 
+				APRMEMBERJOBTITLE, 
+				APRMEMBERNAME, 
+				PROCESSDATE
+			FROM 
+				TBl_ENDAPRLINEINFO A 
+			LEFT OUTER JOIN 
+				TBl_ENDAPROPINIONINFO B 
+			ON 
+				A.APRMEMBERID = B.USERID 
+			AND 
+				A.DOCID = B.DOCID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE 
+				(A.DOCID = #docID#) 
+			AND
+				A.TENANT_ID = #v_TENANTID#
+			AND 
+				(B.OPINIONGB = '001' OR B.OPINIONGB IS NULL)
+			AND 
+				(A.APRTYPE IN ('001', '004', '016', '018', '008', '019'))
+			ORDER BY A.APRMEMBERSN
+      </select>
 </sqlMap>
