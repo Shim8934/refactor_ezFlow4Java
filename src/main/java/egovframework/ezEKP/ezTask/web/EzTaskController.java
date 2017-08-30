@@ -183,7 +183,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 지시사항 수정 Method
+	 * 업무작성 저장 Method
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezTask/taskSave.do")
@@ -214,7 +214,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		taskInfoVO.setImportance(Integer.parseInt(param.get("importance").toString()));
 		taskInfoVO.setStartDate(param.get("startDate").toString());
 		taskInfoVO.setEndDate(param.get("endDate").toString());
-		taskInfoVO.setTitle(param.get("title").toString());
+		taskInfoVO.setTitle(commonUtil.cleanValue(param.get("title").toString()));
 		taskInfoVO.setHasAttach(param.get("hasAttach").toString());
 		taskInfoVO.setContentPath(param.get("contentPath").toString());
 		taskInfoVO.setMemo(param.get("memo").toString());
