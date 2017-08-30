@@ -82,17 +82,14 @@ public class EzTaskController extends EgovFileMngUtil {
 		String userID = userInfo.getId();
 		int tenantID = userInfo.getTenantId();
 		
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//		Date curretnTime = new Date();
-//
-//		String initDate = sdf.format(curretnTime);
+		String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
 
 		//delayColor
 		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("delayColor", delayColor);
-//		model.addAttribute("initDate", initDate);
+		model.addAttribute("useTodoMemo", useTodoMemo);
 
 		logger.debug("taskMain ended.");
 
@@ -112,7 +109,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
+		String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
 		String taskID = request.getParameter("taskID");
@@ -174,12 +172,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskWorkAttachList", taskWorkAttachList);
 		model.addAttribute("taskCommentList", taskCommentList);
 		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
-		
-		
 		model.addAttribute("type", type);
 		model.addAttribute("delayColor", delayColor);
-		
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useTodoMemo", useTodoMemo);
 		
 		logger.debug("taskRead ended.");
 		
@@ -221,6 +217,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		taskInfoVO.setTitle(param.get("title").toString());
 		taskInfoVO.setHasAttach(param.get("hasAttach").toString());
 		taskInfoVO.setContentPath(param.get("contentPath").toString());
+		taskInfoVO.setMemo(param.get("memo").toString());
 		
 		List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("shareList");
 		List<TaskShareVO> shareList = new ArrayList<TaskShareVO>();
@@ -478,7 +475,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 		
 		String parentID = taskInfoVO.getParentID();
-				
+		
 		//taskWork첨부파일목록조회
 		String taskWorkAttachList = null;
 		if (taskInfoVO.getPersonAttach().equals("Y")) {
@@ -648,11 +645,11 @@ public class EzTaskController extends EgovFileMngUtil {
         File tempFile = new File(pDirPath + "tempUploadFile");
 
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
         
         if (!tempFile.exists()) {
-        	tempFile.mkdir();
+        	tempFile.mkdirs();
         }
 
         StringBuffer strXML = new StringBuffer();
@@ -732,6 +729,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
 		String realPath = commonUtil.getRealPath(request);
 		
 		String taskID = request.getParameter("taskID");
@@ -745,11 +743,9 @@ public class EzTaskController extends EgovFileMngUtil {
 			taskID = "";
 		} else {
 			/*업무수정*/
-			
 			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 			
 			//업무공유자목록조회
-			
 			if (taskInfoVO.getHasShare().equals("Y")) {
 				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
 			}
@@ -774,6 +770,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("userTodoMemo", useTodoMemo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskShareList", taskShareList);
@@ -794,8 +791,13 @@ public class EzTaskController extends EgovFileMngUtil {
     	logger.debug("taskGetList started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
+    	String userID = userInfo.getId();
+    	String primary = userInfo.getPrimary();
     	String offset = userInfo.getOffset();
+    	int tenantID = userInfo.getTenantId();
+    	
+    	String useTodoMemo = ezCommonService.getTenantConfig("useTodoMemo", tenantID);
+    	
     	String app = request.getParameter("app");
     	String type = request.getParameter("type");
     	String filter = request.getParameter("filter");
@@ -820,22 +822,20 @@ public class EzTaskController extends EgovFileMngUtil {
     			cal.setTime(now);
 
     			cal.add(Calendar.MONTH, -3);
-    			startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), userInfo.getOffset(), false).substring(0, 10);
+    			startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);
 
     			cal.setTime(now);
     			cal.add(Calendar.MONTH, 3);
-    			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), userInfo.getOffset(), false).substring(0, 10);    			
+    			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);    			
     		}
     	}
 
-    	List<TaskInfoVO> list = ezTaskService.taskGetList(userInfo.getId(), startDate, endDate, offset, app, type, filter, chkValue, searchClass, userInfo.getTenantId());
-    	String cnt = ezTaskService.getTaskCount(userInfo.getId(), offset, type, filter, chkValue, userInfo.getTenantId());
+    	List<TaskInfoVO> list = ezTaskService.taskGetList(userID, startDate, endDate, offset, app, type, filter, chkValue, searchClass, tenantID);
+    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 
     	StringBuffer resultXML = new StringBuffer();
-    	String primary = userInfo.getPrimary();
-    	int tenantID = userInfo.getTenantId();
     	
     	resultXML.append("<DATA>");
     	

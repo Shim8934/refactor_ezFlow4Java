@@ -37,7 +37,6 @@ public class TaskInfoVO {
 	private String startDate;
 	/** 완료기한 */
 	private String endDate;
-	
 	/** 제목 */
 	private String title;
 	/** 지시사항 본문경로 */
@@ -68,13 +67,14 @@ public class TaskInfoVO {
 	private String personContentPath;
 	/** 공유자관련 VO */
 	private List<TaskShareVO> shareList;
-	
 	/** */
 	private String taskPersonID;
 	/** */
 	private String taskPersonName;
 	/** */
 	private String taskPersonName2;
+	/** memo */
+	private String memo;
 	/** 테넌트ID*/
 	private int tenantID;
 	public String getTaskID() {
@@ -286,6 +286,12 @@ public class TaskInfoVO {
 	}
 	public void setTaskPersonName2(String taskPersonName2) {
 		this.taskPersonName2 = taskPersonName2;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
 	public int getTenantID() {
 		return tenantID;

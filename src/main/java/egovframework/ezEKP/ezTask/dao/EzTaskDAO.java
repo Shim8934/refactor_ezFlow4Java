@@ -82,17 +82,6 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		update("EzTaskDAO.taskUpdateConfig", map);
 	}
 
-	public String taskSave(TaskInfoVO taskInfoVO) throws Exception {
-		return (String) insert("EzTaskDAO.taskSave", taskInfoVO);
-	}
-	public void shareTaskSave(TaskInfoVO taskInfoVO) throws Exception {
-		insert("EzTaskDAO.shareTaskSave", taskInfoVO);
-	}
-
-	public void shareTaskSave2(TaskInfoVO taskInfoVO) throws Exception {
-		insert("EzTaskDAO.shareTaskSave2", taskInfoVO);
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<TaskInfoVO> taskGetList(Map<String, Object> map) throws Exception {
 		return (List<TaskInfoVO>) list("EzTaskDAO.taskGetList", map);

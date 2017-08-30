@@ -729,6 +729,12 @@ function save_task() {
 		hasattach = "N";
 	}
 	
+	if (useTodoMemo == 'YES') {
+		memo = document.getElementById("TextMemo").value;
+	} else {
+		memo = "";
+	}
+	
 	data = {
 			taskID : taskid,
 			ownerID : userid,

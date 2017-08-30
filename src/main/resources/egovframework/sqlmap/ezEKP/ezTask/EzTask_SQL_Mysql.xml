@@ -40,7 +40,8 @@
 				personattach,
 				personcontentpath,
 				taskpersonid,
-				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname
+				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname,
+				memo
 			FROM
 				TBL_TASK A
 			JOIN
@@ -137,6 +138,7 @@
 				taskpersonid,
 				taskpersonname,
 				taskpersonname2,
+				memo,
 				tenantid)
 			VALUES
 		]]>
@@ -169,6 +171,7 @@
 				#personID#,
 				#personName#,
 				#personName2#,
+				#memo#,
 				#tenantID#)
 			]]>
 		</isNull>
@@ -201,6 +204,7 @@
 				#personID#,
 				#personName#,
 				#personName2#,
+				#memo#,
 				#tenantID#)
 			]]>
 		</isNotNull>
@@ -256,6 +260,7 @@
 				taskpersonid = #personID#,
 				taskpersonname = #personName#,
 				taskpersonname2 = #personName2#
+				memo = #memo#
     		WHERE
     			tenantID = #tenantID#
     		AND
@@ -402,7 +407,8 @@
 				taskPersonID,
 				taskPersonName,
 				taskPersonName2,
-				hasComment
+				hasComment,
+				memo
 			FROM
 				TBL_TASK
 			WHERE
@@ -583,53 +589,6 @@
             VALUES
                 (#memberID#, #delayColor#, #autoDelete#, #tenantID#)
         ]]>
-    </insert>
-
-    <insert id="EzTaskDAO.taskSave" parameterClass="TaskInfoVO">
-        <![CDATA[
-             INSERT INTO TBL_TASK
-                 (parentid, ownerid, creatorid, creatorname, creatorname2, createdate, taskstatus, completerate, completedate, importance, hasshare, hasattach, hascomment, startdate, enddate, title, contentpath, tasktype, updatetime, newanswer, newrefer, personid, personname, personname2, persondeptname, persondeptname2, taskpersonid, taskpersonname, taskpersonname2, tenantid)
-         ]]>
-         <isEqual property="taskType" compareValue="1">
-	         <![CDATA[
-	             VALUES
-	                 (0, #ownerID#, #creatorID#, #creatorName#, #creatorName2#, #updateTime#, #taskStatus#, 0, '', #importance#, #hasShare#, #hasAttach#, 'N', #startDate#, #endDate#, #title#, #contentPath#, #taskType#, #updateTime#, #newAnswer#, #newRefer#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, #taskPersonID#, #taskPersonName#, #taskPersonName2#, #tenantID#)
-	         ]]>
-         </isEqual>
-         <isEqual property="taskType" compareValue="2">
-	         <![CDATA[
-	             VALUES
-	                 (0, #ownerID#, #creatorID#, #creatorName#, #creatorName2#, #updateTime#, #taskStatus#, 0, '', #importance#, #hasShare#, #hasAttach#, 'N', #startDate#, #endDate#, #title#, #contentPath#, #taskType#, #updateTime#, #newAnswer#, #newRefer#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, #taskPersonID#, #taskPersonName#, #taskPersonName2#, #tenantID#)
-	         ]]>
-         </isEqual>
-         <isEqual property="taskType" compareValue="3">
-	         <![CDATA[
-	             VALUES
-	                 (0, #ownerID#, #creatorID#, #creatorName#, #creatorName2#, #updateTime#, #taskStatus#, 0, '', #importance#, #hasShare#, #hasAttach#, 'N', #startDate#, #endDate#, #title#, #contentPath#, #taskType#, #updateTime#, #newAnswer#, #newRefer#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, #taskPersonID#, #taskPersonName#, #taskPersonName2#, #tenantID#)
-	         ]]>
-         </isEqual>
-        
-        <selectKey keyProperty="taskID" resultClass="String">
-        	SELECT LAST_INSERT_ID()
-        </selectKey>
-    </insert>
-    
-    <insert id="EzTaskDAO.shareTaskSave" parameterClass="TaskInfoVO">
-        <![CDATA[
-             INSERT INTO TBL_TASK
-                 (parentid, ownerid, creatorid, creatorname, creatorname2, createdate, taskstatus, completerate, completedate, importance, hasshare, hasattach, hascomment, startdate, enddate, title, contentpath, tasktype, updatetime, newanswer, newrefer, personid, personname, personname2, persondeptname, persondeptname2, taskpersonid, taskpersonname, taskpersonname2, tenantid)
-             VALUES
-                 (#taskID#, #ownerID#, #creatorID#, #creatorName#, #creatorName2#, #updateTime#, #taskStatus#, 0, '', #importance#, #hasShare#, #hasAttach#, 'N', #startDate#, #endDate#, #title#, #contentPath#, #taskType#, #updateTime#, #newAnswer#, #newRefer#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, #taskPersonID#, #taskPersonName#, #taskPersonName2#, #tenantID#)
-         ]]>
-    </insert>
-
-    <insert id="EzTaskDAO.shareTaskSave2" parameterClass="TaskInfoVO">
-        <![CDATA[
-             INSERT INTO TBL_TASKSHARE
-                 (taskid, sharerid, sharername, sharername2, sharerdeptname, sharerdeptname2, completerate, completedate, hasmemo, hasattach, updatetime, neworder, tenantid)
-             VALUES
-                 (#taskID#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, 0, '', '', #hasAttach#, #updateTime#, 'Y', #tenantID#)
-         ]]>
     </insert>
 
 	<insert id="EzTaskDAO.insertTaskAttach" parameterClass="map">

@@ -45,6 +45,7 @@
 		    var taskAttachList = "${taskAttachList }";
 		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
 		    var taskWorkAttachList = "${taskWorkAttachList }";
+		    var useTodoMemo = "${useTodoMemo }";
 		    
 		    $(document).ready(function() {
 				load_bodyhtml();
@@ -357,9 +358,17 @@
 			    var win;
 			    
 				/* 레이어팝업으로 taskWriteCross 호출 */
-				var feature = GetOpenPosition(760, 750);
-				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
-		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+				
+				if (useTodoMemo == 'YES') {
+					var feature = GetOpenPosition(760, 750);
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
+			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+				} else {
+					var feature = GetOpenPosition(760, 750);
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
+			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+				}
+				
 			}
 			
 			/* 의견삭제 */
@@ -431,47 +440,6 @@
 				
 				DivPopUpShow(200, 150, "/ezTask/taskStatus.do?taskID=" + taskid);
 			}
-			
-			/* 진행단계변경시 스크립트? 안쓰는거같음 이효진 */
-			/* function status_change() {
-			    var rate = document.getElementById("completerateSelect").value;
-			    var status = document.getElementById("taskstatusSelect").value;
-			
-			    if (status == "3") {
-			        document.getElementById("completerateSelect").value = "100";
-			        return;
-			    }
-			
-			    if (status == "1") {
-			        document.getElementById("completerateSelect").value = "0";
-			        return;
-			    }
-			
-			    if (rate == "100") {
-			        document.getElementById("completerateSelect").value = "10";
-			        return;
-			    }
-			} */
-			
-			/* 완료율변경시 스크립트? 안쓰는거같음 이효진 */
-			/* function rate_change() {
-			    var rate = document.getElementById("completerateSelect").value;
-			    var status = document.getElementById("taskstatusSelect").value;
-			
-			    if (rate == "100") {
-			        document.getElementById("taskstatusSelect").value = "3";
-			        return;
-			    }
-			
-			    if (rate == "0") {
-			        if (status == "3")
-			            document.getElementById("taskstatusSelect").value = "1";
-			        return;
-			    }
-			
-			    if (status == "1" || status == "3")
-			        document.getElementById("taskstatusSelect").value = "2";
-			} */
 			
 			function Tab1_NewTabIni(pTabNodeID) {
 			    for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
@@ -604,73 +572,6 @@
 			            document.getElementById("taskstatus2").checked = true;
 			}
 			
-			/* function Editor_Complete() {
-			    loadiframe();
-			}
-			
-			function loadiframe() {
-			    if (content != "") {
-			        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(content);
-			        message2.SetEditorContentURL(fullPath);
-			    }
-			    
-			    try {
-			        var objTags = document.getElementById('message2').getElementsByTagName("a");
-			
-			        for (var i = 0 ; i < objTags.length ; i++) {
-			            if (objTags.item(i).href.indexOf("javascript:") == -1)
-			                objTags.item(i).target = "_blink";
-			        }
-			    }
-			    catch (e) { }
-			}
-			
-			function attach_Add() {
-			    document.form.file1.click();
-			}
-			
-			function btn_AttachAdd_onclick() {
-			    if (document.form.file1.value != "") {
-			        var AttachLimit = 5;
-			        document.getElementById("maxsize").value = parseInt(AttachLimit) * 1024 * 1024;
-			        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-			        var frm = document.getElementById('form');
-			        frm.submit();
-			    } else {
-			        alert("<spring:message code='ezTask.t145' />");
-			    }
-			}
-			
-			function returnvalue(strXML) {
-			    var ndx = strXML.indexOf("</ROOT>");
-			    strXML = strXML.substr(0, ndx + 7);
-			    pAttachXml = loadXMLString(strXML);
-			    var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
-			    var extFlag = false;
-			
-			    for (i = 0; i < nodes.length; i++) {
-			        if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-			            if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
-			                alert(strLang51);
-			                return;
-			            }
-			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
-			            extFlag = true;
-			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-			            alert(strLang52 + AttachLimit + "MB" + strLang53);
-			            return;
-			        } else {
-			            alert(strLang24);
-			        }
-			    }
-			    
-				if (extFlag) {
-					alert(strLang58);
-			    }
-			
-			    AttachFileInfo(strXML);
-			} */
-		
 			function beforeprint() {
 				$(".popup").css('background-image', 'none');
 				
@@ -851,8 +752,8 @@
 		<br/>
 		<!-- 이쪽에 업무정보 -->
 		 
-		 <table id="taskInfo" class="layout">
-		 	<tr>
+		<table id="taskInfo" class="layout">
+			<tr>
 				<td>
 					<spring:message code='ezTask.lhj02' />
 				</td>
