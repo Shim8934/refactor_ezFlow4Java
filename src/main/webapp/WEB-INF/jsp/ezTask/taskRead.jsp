@@ -827,7 +827,7 @@
 		<table id="taskProgress" class="layout">
 			<tr>
 				<td>
-					진행단계
+					<spring:message code='ezTask.t119' />
 				</td>
 			<tr>
 			<tr>
