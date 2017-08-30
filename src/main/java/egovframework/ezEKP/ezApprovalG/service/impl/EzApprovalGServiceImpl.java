@@ -77,6 +77,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -21993,7 +21994,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
 
                         xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().getBytes("UTF-8")));
-						System.out.println("11");
 //						strPath = strAttachPath.replace(strFolderUrl, strFolderPath)
 					}
 				}
@@ -22073,5 +22073,124 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			result = "FALSE";
 		} 
 		return result;
+	}
+
+	@Override
+	public boolean insertRelayDB(String strDocID, String strXDocID, String strRecDate, String strFrom, String strTo, String strSubject, String strXMailType, String strXFromCode, String strXToCode,
+			String strXGW, String strXDocType, String strXDTDVersion, String strXXSLVersion, String strContentType, String strSealURL, String strXmlURL, String strLastDate, String strCompanyID, LoginVO userInfo) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		String format = null;
+		format = sdf.format(sdf.parse(strRecDate));
+		boolean result = false;
+		
+		try {
+			map.put("xDocID", strXDocID);
+			map.put("xToCode", strXToCode);
+			map.put("docID", strDocID);
+			map.put("recDate", format.toString());
+			map.put("from", strFrom);
+			map.put("to", strTo);
+			map.put("subject", strSubject);
+			map.put("xMailType", strXMailType);
+			map.put("xFromCode", strXFromCode);
+			map.put("xGw", strXGW);
+			map.put("xDocType", strXDocType);
+			map.put("xDtdVersion", strXDTDVersion);
+			map.put("xxslVersion", strXXSLVersion);
+			map.put("contentType", strContentType);
+			map.put("sealUrl", strSealURL);
+			map.put("xmlUrl", strContentType);
+			map.put("lastDate", strLastDate);
+			map.put("companyID", userInfo.getCompanyID());
+			map.put("v_TENANTID", userInfo.getTenantId());
+			
+			//string 인지 리스트로 받아오는지 확실치 않아서 일단 리스트, 확인 후 변경
+			List<ApprGRelayVO> apprGAttachInfoVOList = ezApprovalGDAO.recRelayInfo(map);
+			
+			if(apprGAttachInfoVOList.size() > 0) {
+				ezApprovalGDAO.deleteRecRelayInfo(map);
+				ezApprovalGDAO.deleteRelayAprDocInfo(map);
+			}
+			ezApprovalGDAO.insertRelayDB(map);
+			result = true;
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
+
+	@Override
+	public void fieldUpdate(String strFieldName, String strValue, String strXDocID, String strDeptID, String strCompanyID, LoginVO userInfo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("FIELDNAME", strFieldName);
+		map.put("VALUE", strValue);
+		map.put("XDOCID", strXDocID);
+		map.put("DEPTID", strDeptID);
+		
+		ezApprovalGDAO.updateRelayFiled(map);
+	}
+
+	@Override
+	public void addAttachInfo(String strFileName, String strRealFileName, String strDocID, String strSN, String strType, String strCompanyID,	LoginVO userInfo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", strDocID);
+		map.put("TYPE", strType);
+		map.put("REALFILENAME", strRealFileName);
+		map.put("FILENAME", strFileName);
+		map.put("SN", strSN);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		if (strType.equals("XML")) {
+			List<ApprGRelayVO> apprGRelayExchList = ezApprovalGDAO.recRelayExchInfo(map);
+			
+			if (apprGRelayExchList.size() > 0) {
+				ezApprovalGDAO.updateRelayExchInfo(map);
+			} else {
+				ezApprovalGDAO.insertRelayExchInfo(map);
+			} 
+		} else if (strType.equals("XSL")) {
+			List<ApprGRelayVO> apprGRelayExchList = ezApprovalGDAO.recRelayExchInfo(map);
+			
+			if (apprGRelayExchList.size() > 0) {
+				ezApprovalGDAO.updateRelayExchInfo(map);
+			} else {
+				ezApprovalGDAO.insertRelayExchInfo2(map);
+			}
+		} else {
+			if (!strType.equals("Y")) {
+				map.put("TYPE", "N");
+			} 
+			
+			if (strSN.equals("")) {
+				strSN = "0";
+				map.put("SN", strSN);
+			}
+			
+			List<ApprGRelayVO> apprGRelayAttachList = ezApprovalGDAO.recRelayAttachInfo(map);
+			
+			if (apprGRelayAttachList.size() == 0) {
+				ezApprovalGDAO.insertRecRelayAttachInfo(map);
+			}
+		}
+	}
+
+	@Override
+	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, LoginVO userInfo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", strDocID);
+		map.put("REALFILENAME", strRealFileName);
+		map.put("FILENAME", strFileName);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		List<ApprGRelayVO> apprGRelaySignList = ezApprovalGDAO.recRelaySignInfo(map);
+		
+		if (apprGRelaySignList.size() == 0) {
+			ezApprovalGDAO.insertRecRelaySignInfo(map);
+		}
 	}
 }

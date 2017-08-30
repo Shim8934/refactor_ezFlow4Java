@@ -7389,6 +7389,72 @@ CREATE TABLE `tbl_userstartpage_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `tbl_recrelayinfo`;
+
+CREATE TABLE `tbl_recrelayinfo` (
+  `docID` char(20) DEFAULT NULL,
+  `xDocID` varchar(255) NOT NULL,
+  `recdate` datetime DEFAULT NULL,
+  `mFrom` varchar(255) DEFAULT NULL,
+  `mTo` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `xMailType` varchar(8) DEFAULT NULL,
+  `xFromCode` varchar(255) DEFAULT NULL,
+  `xToCode` varchar(255) DEFAULT NULL,
+  `xGw` varchar(255) DEFAULT NULL,
+  `xDocType` varchar(6) DEFAULT NULL,
+  `xDtdversion` varchar(255) DEFAULT NULL,
+  `xxslVersion` varchar(255) DEFAULT NULL,
+  `contentType` varchar(255) DEFAULT NULL,
+  `sealURL` varchar(255) DEFAULT NULL,
+  `xmlURL` varchar(255) DEFAULT NULL,
+  `emlURL` varchar(255) DEFAULT NULL,
+  `isPKI` char(1) DEFAULT NULL,
+  `receivedDate` char(14) DEFAULT NULL,
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`idx`,`xDocID`,`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+DROP TABLE IF EXISTS `tbl_recexchinfo`;
+CREATE TABLE `tbl_recexchinfo` (
+  `PackDocID` varchar(255) DEFAULT NULL,
+  `administrative_num` varchar(255) DEFAULT NULL,
+  `s_id` varchar(30) DEFAULT NULL,
+  `s_UserID` varchar(30) DEFAULT NULL,
+  `s_orgname` varchar(100) DEFAULT NULL,
+  `s_systemname` varchar(100) DEFAULT NULL,
+  `s_email` varchar(50) DEFAULT NULL,
+  `r_ID` varchar(30) DEFAULT NULL,
+  `r_UserID` varchar(30) DEFAULT NULL,
+  `recdate` datetime DEFAULT NULL,
+  `attachxml` varchar(255) DEFAULT NULL,
+  `attachxsl` varchar(255) DEFAULT NULL,
+  `xmlpath` varchar(255) DEFAULT NULL,
+  `sourcexmlPath` varchar(255) DEFAULT NULL,
+  `DocID` varchar(50) DEFAULT NULL,
+  `ModiFlag` varchar(10) DEFAULT NULL,
+  `ModiDate` datetime DEFAULT NULL,
+  `Notification` varchar(10) DEFAULT NULL,
+  `AddenDa` text,
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`COMPANYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tbl_recrelayattachinfo`;
+CREATE TABLE `tbl_recrelayattachinfo` (
+  `xDocID` varchar(255) DEFAULT NULL,
+  `AttachName` varchar(255) DEFAULT NULL,
+  `AttachURL` varchar(255) DEFAULT NULL,
+  `AttachSN` int(11) DEFAULT NULL,
+  `AttachType` char(1) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`COMPANYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --

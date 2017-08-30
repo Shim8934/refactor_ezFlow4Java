@@ -468,4 +468,13 @@ public interface EzApprovalGService {
 	public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception;
 
 	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception;
+
+	public boolean insertRelayDB(String strDocID, String strXDocID, String strRecDate, String strFrom, String strTo, String strSubject, String strXMailType, String strXFromCode, String strXToCode,
+			String strXGW, String strXDocType, String strXDTDVersion, String strXXSLVersion, String strContentType, String strSealURL, String strXmlURL, String strLastDate, String strCompanyID, LoginVO userInfo) throws Exception;
+
+	public void fieldUpdate(String strFieldName, String strValue, String strXDocID, String strDeptID, String strCompanyID, LoginVO userInfo) throws Exception;
+
+	public void addAttachInfo(String strCont_Name, String strRealFileName, String strDocID, String strSN, String strType, String strCompanyID,	LoginVO userInfo) throws Exception;
+
+	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, LoginVO userInfo) throws Exception;
 }
