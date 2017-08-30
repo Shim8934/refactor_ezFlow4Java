@@ -43,13 +43,26 @@
 		    var pUse_Editor = "Use_Editor";
 		    var primary = "${userInfo.primary}";
 		    document.onselectstart = function () { return false; };
-		    function select_row(elem) {
+		    function select_row(elem) {	    	
+				if ($("#checkboxAll").is(":checked")) {
+					$("input[type=checkbox]").prop("checked", false);
+		    		$(".row_body td").css("background", "");
+		    		strListInfo = "";
+		    		strListIdInfo = "";
+				}
+
+				if ($("#checkboxAll2").is(":checked")) {
+					$("input[type=checkbox]").prop("checked", false);
+		    		$(".row_body2 td").css("background", "");
+		    		strListInfo = "";
+		    		strListIdInfo = "";
+				}
+
 		    	if (selectelem != null) { 		
 			    	if (selectelem != elem) {
-// 			    		selectelem.style.backgroundColor = "#ffffff";
-// 			        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
 						$("input[type=checkbox]").prop("checked", false);
 						$(".row_body").css("background", "#ffffff");
+						$(".row_body2").css("background", "#ffffff");
 						
 						strListInfo = $(elem).attr("taskID") + ";";
 			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
@@ -59,6 +72,7 @@
 		    	}
 
 		        if (selectelem != null) {
+
 		        	selectelem.style.backgroundColor = "#ffffff";
 		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
 
@@ -292,9 +306,6 @@
 			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
 			        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
 			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
-
-// 			        if (SelectSingleNode(node, "REPEATCOUNT") != null)
-// 			            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
 		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
@@ -557,46 +568,14 @@
 		    var delparentid = "";
 		    var delrepeatcount = "";
 		    function DeleteTask() {
-				var deleteList = [];
-				var deleteListID = [];
-				
-				if ($("#checkboxAll").is(":checked")) {
-					$(":checkbox[name=myCheckbox]:checked").each(function(){					
-						deleteList.push($(this).attr("creatorid"));
-						deleteListID.push($(this).attr("taskID") + ";")
-					});
+		        if (strListIdInfo == null || strListIdInfo == "") {
+		            alert("<spring:message code='ezTask.t104' />");
+		            return;
+		        }
 
-					for (var i = 0; i < deleteList.length; i++) {
-						strListIdInfo += deleteList[i] + ";";
-					}
-				}
-				
-				if ($("#checkboxAll2").is(":checked")) {
-					$(":checkbox[name=myCheckbox]:checked").each(function(){					
-						deleteList.push($(this).attr("creatorid"));
-						deleteListID.push($(this).attr("taskID") + ";")
-					});
-
-					for (var i = 0; i < deleteList.length; i++) {
-						strListIdInfo += deleteList[i] + ";";
-					}
-				}
-				
-// 		        if (selectelem == null) {
-// 		            alert("<spring:message code='ezTask.t104' />");
-// 		            return;
-// 		        }
-
-// 		        deltaskid = GetAttribute(selectelem, "taskid")
-// 		        delparentid = GetAttribute(selectelem, "parentid");
-// 		        delrepeatcount = GetAttribute(selectelem, "repeatcount");
-// 		        var creatorId = GetAttribute(selectelem, "creatorid");
-
-// 				var taskIdArr = new Array();
-				var idArr = new Array();
-// 				taskIdArr = strListInfo.split(";"); 
+				var idArr = new Array(); 
 				idArr = strListIdInfo.split(";");
-alert("strListIdInfo : " + strListIdInfo);
+
 				if (idArr.length < 1) {
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
@@ -608,7 +587,7 @@ alert("strListIdInfo : " + strListIdInfo);
 					loc = idArr[i].indexOf("_");
 					idArrList += idArr[i].substring(0, loc) + ";";
 				}
-alert("idArrList : " + idArrList);
+
 				idArr = null;
 				idArr = idArrList.split(";");
 
@@ -619,18 +598,6 @@ alert("idArrList : " + idArrList);
 			            return;
 			        }
 				}
-				
-// 				for (var i = 0; i < taskIdArr.length - 1 ; i++) {
-// alert("@@ " + $("tr[taskid='" + taskIdArr[i] + "']").attr("parentid"));					
-// 					if ($("tr[taskid='" + taskIdArr[i] + "']").attr("parentid") != 0) {
-// 						alert("<spring:message code='ezTask.t105' />");
-// 			            return;	
-// 					}
-// 				}
-
-// 		        if (delparentid != "0") {
-		            
-// 		        }
 
 				if (confirm("<spring:message code='ezTask.t106' />")) {
 					$.ajax({
@@ -731,19 +698,7 @@ alert("idArrList : " + idArrList);
 		    		$("#checkboxAll2").prop("checked", false);
 		    		$(".row_body2 td").css("background", "");
 		    	}
-		    	
-		    	//전체 체크박스 선택, 해제
-				$("#checkboxAll").on("click", function() {
-					if ($("#checkboxAll").is(":checked")) {
-						$(":checkbox[taskstatus != 3]").prop("checked", true);
-						$(".row_body td").css("background", "rgb(233, 241, 244)");
-					} else {
-						$(":checkbox[taskstatus != 3]").prop("checked", false);
-						$(".row_body td").css("background", "");
-						selectelem = null;
-					}
-				})
-				
+
 // 		        var startYearMontgday = start.split("-");
 // 		        var endYearMontgday = end.split("-");
 // 		        var startMonth = startYearMontgday[1];
@@ -859,30 +814,6 @@ alert("idArrList : " + idArrList);
 
 		        document.getElementById("list").style.height = height + "px";
 		        ChangeTab(document.getElementById("1tab1"));
-		        
-		        //전체 체크박스 선택, 해제 (진행중)
-				$("#checkboxAll").on("click", function() {
-					if ($("#checkboxAll").is(":checked")) {
-						$(":checkbox[taskstatus != 3]").prop("checked", true);
-						$(".row_body td").css("background", "rgb(233, 241, 244)");
-					} else {
-						$(":checkbox[taskstatus != 3]").prop("checked", false);
-						$(".row_body td").css("background", "");
-						selectelem = null;
-					}
-				})
-				
-				//전체 체크박스 선택, 해제 (완료)
-				$("#checkboxAll2").on("click", function() {
-					if ($("#checkboxAll2").is(":checked")) {
-						$(":checkbox[taskstatus = '3']").prop("checked", true);
-						$(".row_body2 td").css("background", "rgb(233, 241, 244)");
-					} else {
-						$(":checkbox[taskstatus = '3']").prop("checked", false);
-						$(".row_body2 td").css("background", "");
-						selectelem = null;
-					}
-				})
 		    }
 		    document.onselectstart = function () {
 		        event.cancelBubble = true;
@@ -929,11 +860,6 @@ alert("idArrList : " + idArrList);
 		    }
 		    function ChangeTab(obj) {
 		        var pSelectTab = GetAttribute(obj, "divname");
-
-// 		        if ($("#checkboxAll").is(":checked")) {
-// 					$(":checkbox").prop("checked", false);
-// 					$(".row_body td").css("background", "#FFFFFF");
-// 				}
 
 		        switch (pSelectTab) {
 		            case "taskprog":
@@ -1064,6 +990,77 @@ alert("idArrList : " + idArrList);
 		            return;
 		        }
 		    }
+		    
+		    function selectAll() {
+		    	$(".row_body td").css("background", "");
+
+				var deleteList = [];
+				var deleteListID = [];			
+				if ($("#checkboxAll").is(":checked")) {
+					strListIdInfo = "";
+					strListInfo = "";
+
+					if ($("#checkboxAll").is(":checked")) {
+						$(":checkbox[taskstatus != 3]").prop("checked", true);
+						$(".row_body td").css("background", "rgb(233, 241, 244)");
+					} else {
+						$(":checkbox[taskstatus != 3]").prop("checked", false);
+						$(".row_body td").css("background", "");
+						selectelem = null;
+					}
+					
+					$(":checkbox[name=myCheckbox]:checked").each(function(){					
+						deleteList.push($(this).attr("creatorid") + ";");
+						deleteListID.push($(this).attr("taskID") + ";")
+					});
+
+					for (var i = 0; i < deleteList.length; i++) {
+						strListIdInfo += deleteList[i];
+						strListInfo += deleteListID[i];
+					}
+				} else {		
+					strListIdInfo = "";
+					strListInfo = "";
+					$("input[type=checkbox]").prop("checked", false);
+					$(".row_body").css("background", "");
+				}
+		    }
+		    
+		    function selectAll2() {
+		    	$(".row_body2 td").css("background", "");
+
+				var deleteList = [];
+				var deleteListID = [];
+
+				if ($("#checkboxAll2").is(":checked")) {
+					strListIdInfo = "";
+					strListInfo = "";
+
+					if ($("#checkboxAll2").is(":checked")) {
+						$(":checkbox[taskstatus = '3']").prop("checked", true);
+						$(".row_body2 td").css("background", "rgb(233, 241, 244)");
+					} else {
+						$(":checkbox[taskstatus = '3']").prop("checked", false);
+						$(".row_body2 td").css("background", "");
+						selectelem = null;
+					}
+					
+					$(":checkbox[name=myCheckbox]:checked").each(function(){					
+						deleteList.push($(this).attr("creatorid") + ";");
+						deleteListID.push($(this).attr("taskID") + ";")
+					});
+
+					for (var i = 0; i < deleteList.length; i++) {
+						strListIdInfo += deleteList[i];
+						strListInfo += deleteListID[i];
+					}
+				} else {
+					strListIdInfo = "";
+					strListInfo = "";
+					$("input[type=checkbox]").prop("checked", false);
+					$(".row_body2").css("background", "");
+				}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -1122,7 +1119,7 @@ alert("idArrList : " + idArrList);
 						<col style ="width:80px;">
 						<col style ="width:97px;">
 						<tr>
-							<th ><input id="checkboxAll" type="checkbox" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+							<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 							<th ><spring:message code='ezTask.t156' /></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
@@ -1162,7 +1159,7 @@ alert("idArrList : " + idArrList);
 						<col style ="width:80px;">
 						<col style ="width:97px;">
 						<tr>
-							<th ><input id="checkboxAll2" type="checkbox" taskstatus="3" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+							<th ><input id="checkboxAll2" type="checkbox" onclick="selectAll2()" taskstatus="3" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 							<th ><spring:message code='ezTask.t156' /></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
