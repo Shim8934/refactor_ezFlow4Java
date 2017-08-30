@@ -594,10 +594,7 @@
 
 				var idArr = new Array(); 
 				idArr = strListIdInfo.split(";");
-<<<<<<< HEAD
 
-=======
->>>>>>> f04f2cca7463b2f8cf7d4be3e9903f4a40a58afb
 				if (idArr.length < 1) {
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
@@ -609,10 +606,7 @@
 					loc = idArr[i].indexOf("_");
 					idArrList += idArr[i].substring(0, loc) + ";";
 				}
-<<<<<<< HEAD
 
-=======
->>>>>>> f04f2cca7463b2f8cf7d4be3e9903f4a40a58afb
 				idArr = null;
 				idArr = idArrList.split(";");
 
