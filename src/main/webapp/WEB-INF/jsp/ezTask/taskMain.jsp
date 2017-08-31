@@ -354,13 +354,17 @@
 			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
 			        }
 		
-			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N" && SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
+			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
 			        }
 			        else
 			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
-			        tr.cells[4].style.overflow = "hidden"
-			        tr.cells[4].style.textOverflow = "ellipsis"
+			        tr.cells[4].style.overflow = "hidden";
+			        tr.cells[4].style.textOverflow = "ellipsis";
+			        
+			        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
+			        tr.cells[6].style.overflow = "hidden";
+			        tr.cells[6].style.textOverflow = "ellipsis";
 		
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
@@ -372,7 +376,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                div.style.verticalAlign = "top";
-			                tr.cells[6].appendChild(div);
+			                tr.cells[7].appendChild(div);
 			                break;
 			            case "2":
 			                var div = document.createElement("DIV");
@@ -383,7 +387,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                div.style.verticalAlign = "top";
-			                tr.cells[6].appendChild(div);
+			                tr.cells[7].appendChild(div);
 			                break;
 			            case "3":
 			                var div = document.createElement("DIV");
@@ -394,7 +398,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                div.style.verticalAlign = "top";
-			                tr.cells[6].appendChild(div);
+			                tr.cells[7].appendChild(div);
 			                break;
 			        }
 
@@ -410,9 +414,9 @@
 
 			        span.appendChild(span2);
 
-			        tr.cells[7].appendChild(span);
-			        setNodeText(tr.cells[8], startdate);
-			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
+			        tr.cells[8].appendChild(span);
+			        setNodeText(tr.cells[9], startdate);
+			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 
 			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
 				        list_body.children[1].appendChild(tr);
@@ -1132,7 +1136,8 @@
 						<col style ="width:20px;">
 						<col style ="width:60px;">
 						<col >
-						<col style ="width:90px;">
+						<col style ="width:50px;">
+						<col style ="width:140px;">
 		                <col style ="width:90px;">
 						<col style ="width:110px;">
 						<col style ="width:80px;">
@@ -1143,8 +1148,8 @@
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
-<%-- 							<th ><spring:message code='ezTask.t170' /></th> --%>
 							<th ></th>
+							<th ><spring:message code='ezTask.t170' /></th>
 		                    <th ><spring:message code='ezTask.t2003' /></th>
 							<th ><spring:message code='ezTask.t120' /></th>
 							<th ><spring:message code='ezTask.t121' /></th>
@@ -1161,9 +1166,10 @@
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 						<tr id="tr_ing" style="text-align:center">
-							<td colspan="10" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
 				    <table class="mainlist" id="list_body2" style="WIDTH: 100%;table-layout:fixed; display:none">
@@ -1172,7 +1178,8 @@
 						<col style ="width:20px;">
 						<col style ="width:60px;">
 						<col >
-						<col style ="width:90px;">
+						<col style ="width:50px;">
+						<col style ="width:140px;">
 		                <col style ="width:90px;">
 						<col style ="width:110px;">
 						<col style ="width:80px;">
@@ -1183,8 +1190,8 @@
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
-<%-- 							<th ><spring:message code='ezTask.t170' /></th> --%>
 							<th ></th>
+							<th ><spring:message code='ezTask.t170' /></th>
 		                    <th ><spring:message code='ezTask.t2003' /></th>
 							<th ><spring:message code='ezTask.t120' /></th>
 							<th ><spring:message code='ezTask.t121' /></th>
@@ -1201,9 +1208,10 @@
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 						<tr id="tr_ing2" style="text-align:center">
-							<td colspan="10" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
 				</td>

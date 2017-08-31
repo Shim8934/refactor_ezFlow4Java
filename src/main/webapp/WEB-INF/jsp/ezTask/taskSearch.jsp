@@ -268,7 +268,7 @@
 			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
 			        }
 		
-			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N" && SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
+			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
 			        }
 			        else
