@@ -1162,7 +1162,14 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		}
 	}
-	
-	
+
+	@Override
+	public String checkFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.checkFavorite(map);
+	}
 	
 }

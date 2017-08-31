@@ -49,6 +49,8 @@ public interface MBoardService {
 	
 	String getMhtContent(String realPath, String domain, MCommonVO userInfo, String url,Locale locale) throws Exception;
 	
+	String checkFavorite(String userID, String boardID, int tenantID) throws Exception;
+	
 	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
 	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID) throws Exception;
