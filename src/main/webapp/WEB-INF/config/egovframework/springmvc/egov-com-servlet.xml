@@ -64,11 +64,10 @@
     <mvc:annotation-driven/>
 
 	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">
-		<websocket:stomp-endpoint path="/websocket" allowed-origins="/">
+		<websocket:stomp-endpoint path="/websocket" allowed-origins="/*">
 			<websocket:handshake-interceptors>
 				<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></bean>
 			</websocket:handshake-interceptors>
-<!-- 			<websocket:sockjs session-cookie-needed="true"/> -->
 		</websocket:stomp-endpoint>
 		<websocket:simple-broker prefix="/topic, /message"/>
 	</websocket:message-broker>

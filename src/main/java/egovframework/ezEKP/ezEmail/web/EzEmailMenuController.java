@@ -893,7 +893,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 				
 				session = sessionMap.get(userkey);
-				logger.debug("[WebSocket] mailBoxImportZip SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
+				logger.debug("[WebSocket] mailBoxImportZip Started. SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
 			}
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
@@ -1048,7 +1048,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		// 유저정보를 키로 가지고있는 세션맵에서 메세지 보낼 세션정보를 가지고온다.
 		if (userkey != null) {
 			session = sessionMap.get(userkey);
-			logger.debug("[WebSocket] mailBoxExportZip SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
+			logger.debug("[WebSocket] mailBoxExportZip Started. SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
 		}
 		
 		try {
@@ -1278,8 +1278,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	@OnMessage
     public void handleMessage(String jsonStr, Session session) throws Exception{
     	
-		logger.info("[WebSocket] OnMessage called.");
-
 		JSONObject sendObj = new JSONObject();
 		JSONObject recObj = new JSONObject();
 		JSONParser jsonParser = new JSONParser();
@@ -1292,11 +1290,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			sendObj.put("userkey", userkey);
 			jsonStr = sendObj.toJSONString();
 			session.getBasicRemote().sendText(jsonStr);
-			logger.info("[WebSocket] SessionId=" + session.getId() + " UserKey="+ userkey + " SessionMap Size=" + sessionMap.size() + " Connection Started.");
 			
 		} else if (recObj.get("status").equals("progress")) {
 			session.getBasicRemote().sendText(jsonStr);
-			logger.info("[WebSocket] SessionId=" + session.getId() + " Send message=" + jsonStr +" Connection progressed.");
 		} 
 		
     }
