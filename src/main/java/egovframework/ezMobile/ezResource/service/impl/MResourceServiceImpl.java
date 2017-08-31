@@ -124,7 +124,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alterTime,
 			String content, String importance, String writeDay,
-			String entryList, String attachFlag, String approveFlag,
+			String entryList, String attachFlag, String approveFlag, String reFlag,
 			String scheduleId) {
 		
 		LOGGER.debug("in addResSch!!! ");
@@ -151,7 +151,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PATTACHFLAG", attachFlag);
 		map.put("v_PAPPROVEFLAG", approveFlag);
 		map.put("v_PSCHEDULEID", scheduleId);
-		map.put("v_PREFLAG", "0");
+		map.put("v_PREFLAG", reFlag);
 		map.put("v_PGRESFLAG", "");
 		map.put("v_PCHARACTERID", 0);
 		//map.put("v_PNUM", "26");
