@@ -78,7 +78,7 @@
             <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span>
             <ul class="on"></ul>
             </h2>
-            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" >시스템 모니터링</span>
+            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span>
             <ul class="on"></ul>
             </h2>            
             </c:if>
