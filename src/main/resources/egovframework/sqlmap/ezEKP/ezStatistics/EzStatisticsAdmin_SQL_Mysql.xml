@@ -906,7 +906,7 @@
                      	  		WRITERID WRITERIDB  ,
                                 WRITERDEPTID WRITERDEPTIDB  ,
                                 IFNULL(COUNT(*) , 0) DENDCNT  ,
-                                ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME,
+                                AVG(substr(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')), 1, 2)) DENDTIME,
                                 TENANT_ID ,
                                 COMPANYID
                             FROM 
@@ -1096,7 +1096,7 @@
                      	  	( SELECT 
                      	  		FORMID FORMIDB  ,
                                 IFNULL(COUNT(*) , 0) DENDCNT  ,
-                                ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME  ,
+                                AVG(substr(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')), 1, 2)) DENDTIME  ,
                                 TENANT_ID ,
                                 COMPANYID
                               FROM 
