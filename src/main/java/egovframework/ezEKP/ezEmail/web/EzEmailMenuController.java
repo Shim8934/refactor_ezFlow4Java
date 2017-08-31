@@ -1034,8 +1034,15 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
+		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
+		
+		File f = new File(pDirTempPath);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		
 		String guid = UUID.randomUUID().toString();
-		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + guid;
+		pDirTempPath += commonUtil.separator + guid;
 		
 		IMAPAccess ia = null;
 		ZipOutputStream zos = null;
