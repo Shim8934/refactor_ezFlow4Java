@@ -63,7 +63,13 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 			} else if (statApprVO.getType().equals("USER")) {
 				docCountLogVOs = ezStatisticsAdminDAO.getTimeList_U(statApprVO);
 			}
-			
+
+			for (int i=0; i<docCountLogVOs.size(); i++) {
+				if (docCountLogVOs.get(i).getdTime() < 0.01) {
+					docCountLogVOs.get(i).setdTime((float) 0.01);
+				}
+			}
+
 			StringBuffer sb = new StringBuffer();
 			sb.append("<DATA>");
 			

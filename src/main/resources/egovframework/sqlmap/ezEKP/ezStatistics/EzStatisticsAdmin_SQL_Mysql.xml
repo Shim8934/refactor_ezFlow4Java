@@ -15,7 +15,7 @@
 				A.FORMNAME AS FORMINFO,
          		CASE  
          			WHEN DRAFTENDCNT > 0 
-         			THEN ROUND(DTIME / DRAFTENDCNT)
+         			THEN ROUND((DTIME / DRAFTENDCNT / 86400), 2)
          			ELSE 0 
          		END AS DTIME
          	FROM 
@@ -906,7 +906,7 @@
                      	  		WRITERID WRITERIDB  ,
                                 WRITERDEPTID WRITERDEPTIDB  ,
                                 IFNULL(COUNT(*) , 0) DENDCNT  ,
-                                AVG(substr(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')), 1, 2)) DENDTIME,
+                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) DENDTIME,
                                 TENANT_ID ,
                                 COMPANYID
                             FROM 
@@ -933,7 +933,7 @@
                      	  		WRITERID WRITERIDB  ,
                                 WRITERDEPTID WRITERDEPTIDB  ,
                                 IFNULL(COUNT(*) , 0) SENDCNT  ,
-                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME  ,
+                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) SENDTIME  ,
                                 TENANT_ID ,
                                 COMPANYID
                             FROM 
@@ -1096,7 +1096,7 @@
                      	  	( SELECT 
                      	  		FORMID FORMIDB  ,
                                 IFNULL(COUNT(*) , 0) DENDCNT  ,
-                                AVG(substr(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')), 1, 2)) DENDTIME  ,
+                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) DENDTIME  ,
                                 TENANT_ID ,
                                 COMPANYID
                               FROM 
@@ -1121,7 +1121,7 @@
                      	  	( SELECT 
                      	  		FORMID FORMIDB  ,
                                 IFNULL(COUNT(*) , 0) SENDCNT  ,
-                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME ,
+                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) SENDTIME ,
                                 TENANT_ID ,
                                 COMPANYID
                               FROM 
