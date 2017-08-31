@@ -73,7 +73,6 @@
 		    	}
 
 		        if (selectelem != null) {
-
 		        	selectelem.style.backgroundColor = "#ffffff";
 		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
 
@@ -84,7 +83,7 @@
 		        selectelem = elem;
 		        elem.style.backgroundColor = "rgb(233, 241, 244)";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
-		        
+
 		        if (strListInfo == "") {
 		        	strListInfo = $(elem).attr("taskID") + ";";
 		        	strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
@@ -235,7 +234,7 @@
 			        goToPageByNum(parseInt(pageNum - 1));		    	
 			    }
 			    else {
-			        return;		    	
+			        return;
 			    }
 			}
 	
@@ -484,41 +483,41 @@
 				}
 			}
 
-		    function update_status(elem) {
-		        var taskid = GetAttribute(elem.parentElement.parentElement, "taskid")
-		        var parentid = GetAttribute(elem.parentElement.parentElement, "parentid");
-		        var repeatcount = GetAttribute(elem.parentElement.parentElement, "repeatcount");
+// 		    function update_status(elem) {
+// 		        var taskid = GetAttribute(elem.parentElement.parentElement, "taskid")
+// 		        var parentid = GetAttribute(elem.parentElement.parentElement, "parentid");
+// 		        var repeatcount = GetAttribute(elem.parentElement.parentElement, "repeatcount");
 		
-		        if (parentid != "0") {
-		            alert("<spring:message code='ezTask.t101' />");
-		            return;
-		        }
+// 		        if (parentid != "0") {
+// 		            alert("<spring:message code='ezTask.t101' />");
+// 		            return;
+// 		        }
 		
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
+// 		        var xmlHTTP = createXMLHttpRequest();
+// 		        var xmlDom = createXmlDom();
 		
-		        var objRoot, objNode;
-		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", taskid);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
-		        if (elem.checked == true) {
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "3");
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "100");
-		        }
-		        else {
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "1");
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "0");
-		        }
+// 		        var objRoot, objNode;
+// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", taskid);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
+// 		        if (elem.checked == true) {
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "3");
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "100");
+// 		        }
+// 		        else {
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "1");
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "0");
+// 		        }
 		
 		
-		        xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
-		        xmlHTTP.send(xmlDom);
+// 		        xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
+// 		        xmlHTTP.send(xmlDom);
 		
-		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		            alert("<spring:message code='ezTask.t102' />");
-		        else
-		            RefreshView();
-		    }
+// 		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+// 		            alert("<spring:message code='ezTask.t102' />");
+// 		        else
+// 		            RefreshView();
+// 		    }
 					
 		    function page_move(which, evt) {
 		        if (CrossYN()) {
@@ -815,8 +814,8 @@
 	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 
-	            makePageSelPage();
 	            show_page();
+	            makePageSelPage();
 
 	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
 	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
@@ -895,7 +894,7 @@
 		                break;
 		        }
 		    }
-		
+
 		    function onkeydown_start_search(evt) {
 		        if (evt.keyCode == "13") {
 		            search();
