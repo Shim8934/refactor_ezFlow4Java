@@ -30,7 +30,7 @@ function putBansongSign() {
     var RtnVal = getGyulJeDate();
     var CurrentDate = RtnVal.split(".");
     var s = CurrentDate[1] + "." + CurrentDate[2];
-    
+    // aprType 9(개인병렬협조), 11(부서순차협조), 12(부서병렬협조)
     if (pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
@@ -1404,10 +1404,11 @@ function SaveApproveInfo(pApproveFlag) {
     var field = message.GetListItem(fields, "doctitle");
     pDocTitle = field.textContent;
     createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
-
+    // 경우에 따른 DOCNO 설정.
     if (pApproveFlag == "2") {
     	var field = message.GetListItem(fields, "deptshortedname");
     	if (field) {
+    		var forTest = getfieldValue(field).slice(-1);
     		if (getfieldValue(field).slice(-1) == "-") {
     			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
     		} else {
@@ -1416,6 +1417,7 @@ function SaveApproveInfo(pApproveFlag) {
     	} else {
     		var field = message.GetListItem(fields, "docnumber");
     		if (field) {
+    			var forTest = getfieldValue(field).slice(-1);
     			if (getfieldValue(field).slice(-1) == "-") {
         			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
         		} else {
@@ -1424,6 +1426,7 @@ function SaveApproveInfo(pApproveFlag) {
     		} else {
     			var field = message.GetListItem(fields, "bedocnumber");
     			if (field) {
+    				var forTest = getfieldValue(field).slice(-1);
     				if (getfieldValue(field).slice(-1) == "-") {
     	    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
     	    		} else {

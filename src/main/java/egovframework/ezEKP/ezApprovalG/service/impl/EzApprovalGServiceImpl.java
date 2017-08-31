@@ -1885,7 +1885,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return "TRUE";
 	}
-
+	/**
+	 * 환경설정->결재환경설정->암호사용설정
+	 * 사용여부 -> FLAG : Y or N
+	 * 결재암호 선택 -> PWDTYPE : L(로그인) or A(결재전용)
+	 * */
 	@Override
 	public String getApprovalPWD(String userID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6362,7 +6366,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getDocInfoHab(map);
 	}
 	/**
-	 * orgID의 현재 aprState 이전에 002(확인), 006(참조), 008(개인순차협조), 009(개인합의) 값의 갯수
+	 * orgID의 현재 aprState 이전에 002(확인), 006(참조), 008(개인순차협조), 009(개인병렬협조) 값의 갯수
 	 * */
 	public int getDocInfoRef(String docID, String orgUID, String aprState, String companyID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -10924,6 +10928,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprType(map);
 			
 			if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+				//displayName : 회사/부서명, displayName2 : 회사/부서명 (다국어), department : 부서ID
 				doApprove(docID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo);
 				sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
 				
