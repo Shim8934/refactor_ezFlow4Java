@@ -72,11 +72,10 @@
 	            selDeptID = selnode.GetNodeData("CN");
 	            var selnodeLevel = selnode.GetNodeData("nodelevel");
 	            selNodeParentId = selnode.GetNodeData("CN");
-	            
-	             for (var i =0 ;i < selnodeLevel-1 ; i++ ) {
+	            for (var i =0 ;i < selnodeLevel-1 ; i++ ) {
 	     	      	selNodeParentId = $("#" + selnodeId).parent().parent().attr("cn");
-	             	selnodeLevel = $("#" + selnodeId).parent().parent().attr("nodelevel");
-	             }
+	     	      	selnodeId = $("#" + selnodeId).parent().parent().attr("id");
+	            }
 
 				 getapprovalstatistics();
 	   	     }
