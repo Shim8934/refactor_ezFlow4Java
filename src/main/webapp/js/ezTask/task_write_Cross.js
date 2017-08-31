@@ -659,8 +659,7 @@ function save_task() {
 	var taskpersonDept = document.getElementById("personDept").innerHTML;
 	var taskpersonDept2 = document.getElementById("personDept2").innerHTML;
 	
-	var memo = $("#TextMemo").val();
-//  var memo = document.getElementById("TextMemo").value; // 메모 value 값
+	var memo = "";
 
 	if (sharelist != "") {
 		hasshare = "Y";
@@ -730,7 +729,9 @@ function save_task() {
 	}
 	
 	if (useTodoMemo == 'YES') {
-		memo = document.getElementById("TextMemo").value;
+		memo =$("#TextMemo").val();
+		
+		circularComment = trim(ReplaceText(memo, "\n", "<br>"));
 	} else {
 		memo = "";
 	}
