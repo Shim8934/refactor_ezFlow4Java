@@ -640,7 +640,6 @@
 				            	</td>
 	            			</tr>
 	            		</table>
-	            	</td>
 	            </tr>
             </c:if>
             

@@ -187,22 +187,14 @@
 	            totalcount = GetChildNodes(listdom.documentElement).length - 2;
 	            totalpage = Math.ceil(new Number(totalcount / pagesize));
 
-// 	            if (isrefresh)
-// 	                isrefresh = false;
-// 	            else
-	                currentpage = 1;
+                currentpage = 1;
 	
-// 	            if (currentpage > totalpage)
-// 	                currentpage = totalpage;
+	            if (currentpage == 0) {
+	                currentpage = 1;	            	
+	            }
 	
-	            if (currentpage == 0)
-	                currentpage = 1;
-	
-// 	            makePageSelPage();
 	            show_page();
 
-// 	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
-// 	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
 				cntAdd = "";
 
 	            return;
@@ -225,10 +217,6 @@
 			            break;
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
-
-// 			        if (isrefresh2) {
-// 						$("#taskID_" + SelectSingleNodeValue(node, "TASKID") + "").remove();
-// 					}
 
 				    tr = row_body.cloneNode(true);
 				    document.getElementById("tr_ing").style.display = "none";
@@ -337,6 +325,8 @@
 			        
 			        searchCount++;
 				}
+
+				$("#resultCount").empty();
 
 			    if (totalcount == 0) {
 			        document.getElementById("tr_ing").style.display = "";

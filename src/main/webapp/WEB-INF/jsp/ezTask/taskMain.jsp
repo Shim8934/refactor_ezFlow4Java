@@ -293,9 +293,9 @@
 			    var tr = "";
 			    var onTaskCount = 0; // 진행중업무 Count
 			    var finishTaskCount = 0; // 완료업무 Count
-
+alert("@@" + (currentpage*pagesize));
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
-					if (totalcount == 0 || i == totalcount) {
+			    	if (totalcount == 0 || i == totalcount) {
 			            break;
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
@@ -565,26 +565,26 @@
 
 		        DateChange();
 		    }
-		    function MoveTask() {
-		        if (selectelem == null) {
-		            alert("<spring:message code='ezTask.t103' />");
-		            return;
-		        }
+// 		    function MoveTask() {
+// 		        if (selectelem == null) {
+// 		            alert("<spring:message code='ezTask.t103' />");
+// 		            return;
+// 		        }
 		
-		        var taskid = selectelem.taskid;
-		        var repeatcount = selectelem.repeatcount;
-		        var date = selectelem.startdate;
+// 		        var taskid = selectelem.taskid;
+// 		        var repeatcount = selectelem.repeatcount;
+// 		        var date = selectelem.startdate;
 		
-		        var feature = GetOpenPosition(790, 660);
-		        if (CrossYN()) {
-		            var win = window.open("/myoffice/ezSchedule/schedule_write_CK.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
-		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
-		        else {
-		            var win = window.open("/myoffice/ezSchedule/schedule_write.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
-		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
-		    }
+// 		        var feature = GetOpenPosition(790, 660);
+// 		        if (CrossYN()) {
+// 		            var win = window.open("/myoffice/ezSchedule/schedule_write_CK.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
+// 		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+// 		        }
+// 		        else {
+// 		            var win = window.open("/myoffice/ezSchedule/schedule_write.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
+// 		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+// 		        }
+// 		    }
 
 		    var deltaskid = "";
 		    var delparentid = "";
@@ -640,56 +640,56 @@
 		    }
 		</script>
 		<script>
-		    function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
-		        var tmpdt = new Date(v_dateStr);
-		        switch (v_kind) {
-		            case 'd':
-		                tmpdt.setDate(tmpdt.getDate() + v_movNum);
-		                break;
-		            case 'm':
-		                tmpdt.setMonth(tmpdt.getMonth() + v_movNum);
-		                break;
-		            case 'y':
-		                tmpdt.setFullYear(tmpdt.getFullYear() + v_movNum);
-		                break;
-		        }
-		        return tmpdt.getFullYear().toString(10) + '-' + (tmpdt.getMonth() + 1).toString() + '-' + tmpdt.getDate().toString(10) + ' ' + tmpdt.toTimeString().substring(0, 8);
-		    }
-		    function v_GetChangedDateTime2_nonIE(v_dateTime, hourNum, minuteNum) {
-		        return (navigator.userAgent.indexOf('Firefox') != -1) ?
-		        (function(v_dateTime, hourNum, minuteNum) {
+// 		    function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
+// 		        var tmpdt = new Date(v_dateStr);
+// 		        switch (v_kind) {
+// 		            case 'd':
+// 		                tmpdt.setDate(tmpdt.getDate() + v_movNum);
+// 		                break;
+// 		            case 'm':
+// 		                tmpdt.setMonth(tmpdt.getMonth() + v_movNum);
+// 		                break;
+// 		            case 'y':
+// 		                tmpdt.setFullYear(tmpdt.getFullYear() + v_movNum);
+// 		                break;
+// 		        }
+// 		        return tmpdt.getFullYear().toString(10) + '-' + (tmpdt.getMonth() + 1).toString() + '-' + tmpdt.getDate().toString(10) + ' ' + tmpdt.toTimeString().substring(0, 8);
+// 		    }
+// 		    function v_GetChangedDateTime2_nonIE(v_dateTime, hourNum, minuteNum) {
+// 		        return (navigator.userAgent.indexOf('Firefox') != -1) ?
+// 		        (function(v_dateTime, hourNum, minuteNum) {
 		            
-		            var dt = new Date(v_dateTime);  
+// 		            var dt = new Date(v_dateTime);  
 		            
-		            var offset = dt.getTimezoneOffset(); 
-		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
+// 		            var offset = dt.getTimezoneOffset(); 
+// 		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
 		
-		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-		        }).call(this, v_dateTime, hourNum, minuteNum)
-		        : (navigator.userAgent.indexOf('MSIE') == -1) ?
-		        (function(v_dateTime, hourNum, minuteNum) {
-		            var dt = new Date(
-		            Date.UTC(
-		            parseInt(v_dateTime.substring(0, 4), 10),
-		            parseInt(v_dateTime.substring(5, 7), 10) - 1,
-		            parseInt(v_dateTime.substring(8, 10), 10), 
-		            parseInt(v_dateTime.substring(11, 13), 10),
-		            parseInt(v_dateTime.substring(15, 17), 10),
-		            parseInt(v_dateTime.substring(18, 20), 10),
-		            parseInt(v_dateTime.substring(21, 24), 10)
-		            ))
+// 		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
+// 		        }).call(this, v_dateTime, hourNum, minuteNum)
+// 		        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+// 		        (function(v_dateTime, hourNum, minuteNum) {
+// 		            var dt = new Date(
+// 		            Date.UTC(
+// 		            parseInt(v_dateTime.substring(0, 4), 10),
+// 		            parseInt(v_dateTime.substring(5, 7), 10) - 1,
+// 		            parseInt(v_dateTime.substring(8, 10), 10), 
+// 		            parseInt(v_dateTime.substring(11, 13), 10),
+// 		            parseInt(v_dateTime.substring(15, 17), 10),
+// 		            parseInt(v_dateTime.substring(18, 20), 10),
+// 		            parseInt(v_dateTime.substring(21, 24), 10)
+// 		            ))
 		            
-		            var offset = dt.getTimezoneOffset();
+// 		            var offset = dt.getTimezoneOffset();
 		
-		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
+// 		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
 		
-		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-		        }).call(this, v_dateTime, hourNum, minuteNum)
-		        :
-		        (function(v_dateTime, hourNum, minuteNum) {
-		    }).call(this, v_dateTime, hourNum, minuteNum)
-		        ;
-		    }
+// 		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
+// 		        }).call(this, v_dateTime, hourNum, minuteNum)
+// 		        :
+// 		        (function(v_dateTime, hourNum, minuteNum) {
+// 		    }).call(this, v_dateTime, hourNum, minuteNum)
+// 		        ;
+// 		    }
 		    function v_AppendZero(v_str) {
 		        if (isNaN(v_str)) {
 		            switch (v_str.toString().length) {
