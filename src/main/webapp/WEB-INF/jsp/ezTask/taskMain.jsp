@@ -214,8 +214,18 @@
 			    PagingHTML += "</div>";
 			    td_Create1(PagingHTML);
 			}
-	
+
 			function goToPageByNum(Value) {
+				if ($("#checkboxAll").is(":checked")) {
+		    		$("#checkboxAll").prop("checked", false);
+		    		$(".row_body td").css("background", "");
+		    	}
+
+		    	if ($("#checkboxAll2").is(":checked")) {
+		    		$("#checkboxAll2").prop("checked", false);
+		    		$(".row_body2 td").css("background", "");
+		    	}
+
 			    currentpage = Value;
 			    makePageSelPage();
 			    show_page();
@@ -293,7 +303,6 @@
 			    var tr = "";
 			    var onTaskCount = 0; // 진행중업무 Count
 			    var finishTaskCount = 0; // 완료업무 Count
-alert("@@" + (currentpage*pagesize));
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 			    	if (totalcount == 0 || i == totalcount) {
 			            break;
@@ -345,13 +354,21 @@ alert("@@" + (currentpage*pagesize));
 			            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
 			        else
 			            tr.cells[2].innerHTML += "&nbsp;";
-		
-			        if (primary == "1") {
-			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
+
+			        if (SelectSingleNodeValue(node, "TASKTYPE") == 1) {
+				        if (primary == "1") {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME"));
+				        } else {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME2"));
+				        }			        	
+			        } else {
+			        	if (primary == "1") {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME"));
+				        } else {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME2"));
+				        }
 			        }
-			        else {
-			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
-			        }
+
 		
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
@@ -471,15 +488,26 @@ alert("@@" + (currentpage*pagesize));
 				}
 			}
 
+			var taskStatusCount = "";
 			function selectTab(num) {
 				if (num == 2) {
+					taskStatusCount = 0;
 					DateChange();
 					list_body.style.display = "";
 					list_body2.style.display = "none";
-				} else {
+				} else if (num == 1) {
+					taskStatusCount = 1;
 					DateChange();
 					list_body.style.display = "none";
 					list_body2.style.display = "";
+				} else {
+					if ($("input[value=ongoing]").is(":checked")) {
+						taskStatusCount = 0;
+					} else {
+						taskStatusCount = 1;
+					}
+
+					DateChange();
 				}
 			}
 
@@ -597,7 +625,6 @@ alert("@@" + (currentpage*pagesize));
 
 				var idArr = new Array(); 
 				idArr = strListIdInfo.split(";");
-
 				if (idArr.length < 1) {
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
@@ -710,60 +737,19 @@ alert("@@" + (currentpage*pagesize));
 		    }
 
 		    function DateChange() {
-		    	
 		    	if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body td").css("background", "");
 		    	}
-		    	
+
 		    	if ($("#checkboxAll2").is(":checked")) {
 		    		$("#checkboxAll2").prop("checked", false);
 		    		$(".row_body2 td").css("background", "");
 		    	}
 
-// 		        var startYearMontgday = start.split("-");
-// 		        var endYearMontgday = end.split("-");
-// 		        var startMonth = startYearMontgday[1];
-// 		        var endMonth = endYearMontgday[1];
-// 		        var startDay = startYearMontgday[2];
-// 		        var endDay = endYearMontgday[2];
 		        var filter = "";
 		        var chkValue = "";
 		        var searchClass = "";
-
-// 		        if (startMonth.length == 1) {
-// 		            startMonth = "0" + startMonth;
-// 		        }
-// 		        if (endMonth.length == 1) {
-// 		            endMonth = "0" + endMonth;
-// 		        }
-// 		        if (startDay.length == 1) {
-// 		            startDay = "0" + startDay;
-// 		        }
-// 		        if (endDay.length == 1) {
-// 		            endDay = "0" + endDay;
-// 		        }
-		
-// 		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
-// 		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
-
-
-
-		
-// 		        xmlHTTP2 = createXMLHttpRequest();
-// 		        var xmlDom = createXmlDom();
-		
-// 		        var objRoot, objNode;
-// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
-		
-// 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
-// 		        xmlHTTP2.onreadystatechange = after_DateChange;
-// 		        xmlHTTP2.send(xmlDom);
 
 				$.ajax({
 					type : "POST",
@@ -777,7 +763,8 @@ alert("@@" + (currentpage*pagesize));
 						type : type,
 						filter : filter,
 						chkValue : chkValue,
-						searchClass : searchClass
+						searchClass : searchClass,
+						taskStatusCount : taskStatusCount
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -886,11 +873,13 @@ alert("@@" + (currentpage*pagesize));
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
-		                DateChange();
+// 		                DateChange();
+						selectTab(0);
 		                break;
 		            case "taskdictate":
 		                type = "2";
-		                DateChange();
+// 		                DateChange();
+						selectTab(0);
 		                break;
 		        }
 		    }
@@ -910,29 +899,6 @@ alert("@@" + (currentpage*pagesize));
 		            return;
 		        }
 
-// 		        var startYearMontgday = startdate.split("-");
-// 		        var endYearMontgday = enddate.split("-");
-// 		        var startMonth = startYearMontgday[1];
-// 		        var endMonth = endYearMontgday[1];
-// 		        var startDay = startYearMontgday[2];
-// 		        var endDay = endYearMontgday[2];
-		
-// 		        if (startMonth.length == 1) {
-// 		            startMonth = "0" + startMonth;
-// 		        }
-// 		        if (endMonth.length == 1) {
-// 		            endMonth = "0" + endMonth;
-// 		        }
-// 		        if (startDay.length == 1) {
-// 		            startDay = "0" + startDay;
-// 		        }
-// 		        if (endDay.length == 1) {
-// 		            endDay = "0" + endDay;
-// 		        }
-		
-// 		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
-// 		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
-		
 		        var chkValue;
 		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
 		            if (document.getElementsByName("searchCheck")[i].checked == true)
@@ -944,22 +910,6 @@ alert("@@" + (currentpage*pagesize));
 		            filter = document.getElementById("txt_keyword").value;
 		        }
 
-// 		        xmlHTTP2 = createXMLHttpRequest();
-// 		        var xmlDom = createXmlDom();
-		
-// 		        var objRoot, objNode;
-// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "FILTER", filter);
-		
-// 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_searchlist.aspx", true);
-// 		        xmlHTTP2.onreadystatechange = after_search;
-// 		        xmlHTTP2.send(xmlDom);
-		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -1059,10 +1009,10 @@ alert("@@" + (currentpage*pagesize));
 					strListInfo = "";
 
 					if ($("#checkboxAll2").is(":checked")) {
-						$(":checkbox[taskstatus = '3']").prop("checked", true);
+						$(":checkbox[taskstatus = 3]").prop("checked", true);
 						$(".row_body2 td").css("background", "rgb(233, 241, 244)");
 					} else {
-						$(":checkbox[taskstatus = '3']").prop("checked", false);
+						$(":checkbox[taskstatus = 3]").prop("checked", false);
 						$(".row_body2 td").css("background", "");
 						selectelem = null;
 					}

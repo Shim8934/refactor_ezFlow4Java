@@ -326,8 +326,6 @@
 			        searchCount++;
 				}
 
-				$("#resultCount").empty();
-
 			    if (totalcount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
 			        $("#resultCount").empty();
@@ -380,9 +378,9 @@
 
 			function ReadTask(obj)
 			{
-				var taskid = $(obj).closest("tr").attr("taskid");
+				var taskID = $(obj).closest("tr").attr("taskid");
 				var feature = "";
-				
+
 				if (useTodoMemo == 'YES') {
 		        	feature = GetOpenPosition(780, 990);
 		        	

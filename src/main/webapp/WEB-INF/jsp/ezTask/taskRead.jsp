@@ -793,8 +793,8 @@
 						<tr id ="persontr">
 							<th><spring:message code='ezTask.t2005' /></th>
 							<td colspan="3" width="100%">
-								<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.personID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-									<c:out value = '${taskInfoVO.personName }' />
+								<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.taskPersonID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+									<c:out value = '${taskInfoVO.taskPersonName }' />
 								</div>
 							</td>
 						</tr>

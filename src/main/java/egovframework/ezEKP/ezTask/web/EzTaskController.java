@@ -803,6 +803,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String filter = request.getParameter("filter");
     	String chkValue = request.getParameter("chkValue");
     	String searchClass = request.getParameter("searchClass");
+    	String taskStatusCount = request.getParameter("taskStatusCount");
     	String startDate = request.getParameter("startDate");
     	String endDate = request.getParameter("endDate");
     	String useDate = "";
@@ -830,7 +831,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		}
     	}
 
-    	List<TaskInfoVO> list = ezTaskService.taskGetList(userID, startDate, endDate, offset, app, type, filter, chkValue, searchClass, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.taskGetList(userID, startDate, endDate, offset, app, type, filter, chkValue, searchClass, taskStatusCount, tenantID);
     	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());

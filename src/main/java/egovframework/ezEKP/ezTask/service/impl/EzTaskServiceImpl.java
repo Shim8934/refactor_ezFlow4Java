@@ -598,9 +598,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception {
+	public List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception {
 		logger.debug("taskGetList started.");
-		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass);
+		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount);
 
 		if (!startDate.equals("")) {
 			startDate += " 00:00:00";
@@ -620,6 +620,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("filter", filter);
 		map.put("chkValue", chkValue);
 		map.put("searchClass", searchClass);
+		map.put("taskStatusCount", taskStatusCount);
 		map.put("tenantID", tenantID);
 
 		List<TaskInfoVO> list = ezTaskDAO.taskGetList(map); 

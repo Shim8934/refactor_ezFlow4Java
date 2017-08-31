@@ -413,13 +413,27 @@
 				TBL_TASK
 			WHERE
 		]]>
+		
+		<isEqual property="taskStatusCount" compareValue="0">
+			<![CDATA[
+					taskstatus != 3
+				AND
+			]]>
+		</isEqual>
+
+		<isEqual property="taskStatusCount" compareValue="1">
+			<![CDATA[
+					taskstatus = 3
+				AND
+			]]>
+		</isEqual>
 
 		<isNotEqual property="type" compareValue="">
 			<isEqual property="type" compareValue="1">
 				<![CDATA[
-						taskPersonid = #memberID#
-					AND
-						personid = taskpersonid
+						((taskPersonid = #memberID# AND creatorid = ownerid)
+					OR
+						personid = #memberID#)
 					AND
 				]]>
 			</isEqual>
