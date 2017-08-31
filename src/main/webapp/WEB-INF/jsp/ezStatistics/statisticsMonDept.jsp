@@ -62,14 +62,24 @@
 	        }
 	
 	        var selDeptID;
+	        var selNodeParentId;
 	        function TreeViewNodeClick() {
 	            var nodeIdx = 1;
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var selnode = treeView.GetSelectNode();
+	            var selnodeId = treeView.GetSelectNodeID();
 	            selDeptID = selnode.GetNodeData("CN");
-	            getapprovalstatistics();
-	        }
+	            var selnodeLevel = selnode.GetNodeData("nodelevel");
+	            selNodeParentId = selnode.GetNodeData("CN");
+	            
+	             for (var i =0 ;i < selnodeLevel-1 ; i++ ) {
+	     	      	selNodeParentId = $("#" + selnodeId).parent().parent().attr("cn");
+	             	selnodeLevel = $("#" + selnodeId).parent().parent().attr("nodelevel");
+	             }
+
+				 getapprovalstatistics();
+	   	     }
 	
 	        function RequestData(pNodeID, pTreeID) {
 	            var TreeIdx = pNodeID;
@@ -156,7 +166,7 @@
 					async : true,
 					url : "/ezStatistics/getStatisticsAprMon.do",
 					data : {
-							company : "",
+							company : selNodeParentId,
 							date : document.getElementById("selyear").value,
 							searchID : selDeptID,
 							type : "DEPT"

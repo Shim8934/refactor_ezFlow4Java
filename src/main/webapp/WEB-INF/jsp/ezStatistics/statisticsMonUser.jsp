@@ -61,13 +61,23 @@
 	            treeView.DataSource(xmlTree);
 	            treeView.DataBind("TreeView");
 	        }
-	
+	        var selNodeParentId;
 	        function TreeViewNodeClick() {
+	        	console.log("TreeViewNode Click");
 	            var nodeIdx = 1;
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var selnode = treeView.GetSelectNode();
+	            var selnodeId = treeView.GetSelectNodeID();
 	            DeptID = selnode.GetNodeData("CN");
+	            var selnodeLevel = selnode.GetNodeData("nodelevel");
+	            selNodeParentId = selnode.GetNodeData("CN");
+	            
+	            for (var i =0 ;i < selnodeLevel-1 ; i++ ) {
+	     	    	selNodeParentId = $("#" + selnodeId).parent().parent().attr("cn");
+	            	selnodeLevel = $("#" + selnodeId).parent().parent().attr("nodelevel");
+	            }
+	            
 	            displayUserList(DeptID);
 	        }
 	
@@ -201,7 +211,7 @@
 					async : true,
 					url : "/ezStatistics/getStatisticsAprMon.do",
 					data : {
-							company : "",
+							company : selNodeParentId,
 							date : document.getElementById("selyear").value,
 							searchID : GetAttribute(pUserList.GetSelectedRows()[0],"DATA2"),
 							type : "USER"
