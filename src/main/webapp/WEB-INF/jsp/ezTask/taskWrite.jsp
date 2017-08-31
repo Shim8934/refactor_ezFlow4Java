@@ -61,8 +61,6 @@
 					document.getElementById("importantSelect").value = importance;
 					document.getElementById("taskstatusSelect").value = taskstatus;
 					document.getElementById("completerateSelect").value = completerate;
-// 					$("#TextTitle").val("<c:out value = '${taskInfoVO.title }' />");
-// 					$("#TextTitle").text('${taskInfoVO.title }');
 					
 					if (hasattach == "Y") {
 			            setAttachFileInfo("${taskAttachList}");
