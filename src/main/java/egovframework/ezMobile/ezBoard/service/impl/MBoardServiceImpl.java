@@ -358,7 +358,7 @@ public class MBoardServiceImpl implements MBoardService {
 		//임시로 10으로 지정
 		int listSize = 10;
         
-		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
+		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
 		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText);
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
@@ -386,7 +386,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 
 	@Override
-	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception {
+	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText) throws Exception {
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
@@ -404,7 +404,7 @@ public class MBoardServiceImpl implements MBoardService {
 		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
         int endRow = (mobileListSize * page) - noticeCount;
 		
-        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
+        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
         
         List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
         
@@ -617,7 +617,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 	
 	@Override
-	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
+	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID, String pSearchText) throws Exception {
 		logger.debug("getBoardItemListCount started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
 		
@@ -626,6 +626,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("userID", userID);
 		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText);
 		map.put("tenantID", tenantID);
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);

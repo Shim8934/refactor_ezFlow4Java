@@ -21,7 +21,7 @@ public interface MBoardService {
 	
 	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText) throws Exception;
 
-	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
+	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText) throws Exception;
 	
 	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
 	
@@ -53,7 +53,7 @@ public interface MBoardService {
 	
 	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
-	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID) throws Exception;
+	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
 	
 	Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
 	

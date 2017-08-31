@@ -362,6 +362,15 @@
 				AND
 					enddate > #nowDate#
 			]]>
+            
+            <isNotEmpty property="pSearchText">
+                <![CDATA[
+                    AND
+                        (title LIKE CONCAT('%' ,#pSearchText#, '%')
+                            OR
+                        writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                ]]>
+            </isNotEmpty>
 			
 			<isEqual property="apprFlag" compareValue="Y">
 				<![CDATA[
