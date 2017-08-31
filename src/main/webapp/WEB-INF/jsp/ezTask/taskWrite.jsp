@@ -55,15 +55,12 @@
 			var persondept2 = "${taskInfoVO.personDeptName2 }";
 			var personemail = "${taskInfoVO.personEmail }";
 			var useTodoMemo = "${useTodoMemo }";
-			var memo = "<c:out value = '${taskInfoVO.memo }' />";
           
 			window.onload = function () {
 				if (taskid != "") {
 					document.getElementById("importantSelect").value = importance;
 					document.getElementById("taskstatusSelect").value = taskstatus;
 					document.getElementById("completerateSelect").value = completerate;
-					$("#TextTitle").val("<c:out value = '${taskInfoVO.title }' />");
-					$("#TextMemo").val(Replace2HTML(memo));
 					
 					if (hasattach == "Y") {
 			            setAttachFileInfo("${taskAttachList}");
@@ -501,7 +498,7 @@
                   <table class="content">
                      <tr>
                         <th><spring:message code='ezTask.t118' /></th>
-                        <td colspan="3"><input type="text" id="TextTitle" style="width:100%; maxlength:100;"></td>
+                        <td colspan="3"><input type="text" id="TextTitle" style="width:100%; maxlength:100;" value = "<c:out value = '${taskInfoVO.title }' />"></td>
                      </tr>
                      <tr>
                         <th><spring:message code='ezTask.t2003' /></th>
@@ -631,14 +628,20 @@
             </tr>
             <!-- 메모  -->
             <c:if test="${useTodoMemo == 'YES' }">
-	            <tr style="display:inline;">
-	            	<th><spring:message code='ezTask.t170' /></th>
-	            	<td colspan="3" style="padding:0px;">
-	<!--             	<td colspan="3" style="width:100%;"> -->
-	<!--             		<input type="text" id="TextMemo" style="width:100%;"> -->
-						<textarea id="TextMemo" style="width:100%; height:55px; border: 0px solid rgb(222, 222, 222); border-image: none; resize:none; overflow-y:auto" onkeyup="return textLimit(this, event, 200)"></textarea>
+	            <tr>
+	            	<td>
+	            		<table class="content">
+	            			<tr>
+	            				<th><spring:message code='ezTask.t170' /></th>
+				            	<td colspan="3" style="width:100%;">
+<!-- 				            	<td colspan="3" style="width:100%;"> -->
+<!-- 				            		<input type="text" id="TextMemo" style="width:100%;"> -->
+									<textarea id="TextMemo" style="width:99.6%; height:55px; padding-bottom:5px; padding-left:5px; padding-right:0px; padding-top:5px; border:0px solid rgb(222, 222, 222); border-image: none; resize:none; overflow-y:auto" onkeyup="return textLimit(this, event, 200)">${taskInfoVO.memo }</textarea>
+				            	</td>
+	            			</tr>
+	            		</table>
 	            	</td>
-	            </tr>	
+	            </tr>
             </c:if>
             
             <tr>
