@@ -2807,8 +2807,12 @@ function openAaprDocAttachUI() {
 
         aprcabinetattach_cross_dialogArguments[0] = parameter;
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
-
-        DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
+        
+        if(approvalFlag == "G") {
+        	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
+        } else {
+        	DivPopUpShow(1050, 660, "/ezApprovalG/aprDocAttach.do");
+        }
     } catch (e) {
         alert(e.description);
     }
