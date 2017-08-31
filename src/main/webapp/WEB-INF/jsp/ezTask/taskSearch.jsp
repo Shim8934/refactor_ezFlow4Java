@@ -383,11 +383,12 @@
 
 			    if (totalcount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
+			        $("#resultCount").empty();
+			    } else {
+			    	$("#resultCount").empty();
+					$("#resultCount").append(" : <span id='searchCount' style='color:#CC3300'>" + searchCount + "&nbsp;</span>");
+					$("#searchCount").after("<spring:message code='ezTask.t191' />");
 			    }
-			    
-				$("#resultCount").empty();
-				$("#resultCount").append(" : <span id='searchCount' style='color:#CC3300'>" + searchCount + "&nbsp;</span>");
-				$("#searchCount").after("<spring:message code='ezTask.t191' />");
 
 			    $(".progressbar").css("display", "inline-table");
 			    $(".percentCount").remove();
