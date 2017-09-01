@@ -740,6 +740,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<TaskShareVO> taskShareList = null;
 		List<TaskAttachVO> taskAttachList = null;
 		StringBuilder strAttach = new StringBuilder();
+		StringBuilder strShare = new StringBuilder();
 		
 		if (taskID == null) {
 			/*업무작성*/
@@ -751,6 +752,26 @@ public class EzTaskController extends EgovFileMngUtil {
 			//업무공유자목록조회
 			if (taskInfoVO.getHasShare().equals("Y")) {
 				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
+				
+				StringBuilder strShareName = new StringBuilder();
+				StringBuilder strShareName1 = new StringBuilder();
+				StringBuilder strShareName2 = new StringBuilder();
+				StringBuilder strShareID = new StringBuilder();
+				StringBuilder strShareDeptName = new StringBuilder();
+				StringBuilder strShareDeptName2 = new StringBuilder();
+				StringBuilder strShareEmail = new StringBuilder();
+				
+				for (TaskShareVO vo : taskShareList) {
+					strShareName.append(vo.getSharerName() + ";");
+					strShareName1.append(vo.getSharerName1() + ";");
+					strShareName2.append(vo.getSharerName2() + ";");
+					strShareID.append(vo.getSharerID() + ";");
+					strShareDeptName.append(vo.getSharerDeptName() + ";");
+					strShareDeptName2.append(vo.getSharerDeptName2() + ";");
+					strShareEmail.append(vo.getEmail() + ";");
+                }
+				
+				strShare.append(strShareName.toString() + "||" + strShareName1.toString() + "||" + strShareName2.toString() + "||" + strShareID.toString() + "||" + strShareDeptName.toString() + "||" + strShareDeptName2);
 			}
 			
 			//첨부파일목록조회
@@ -776,7 +797,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
-		model.addAttribute("taskShareList", taskShareList);
+		model.addAttribute("taskShareList", strShare);
 		model.addAttribute("taskAttachList", strAttach.toString());
 		
 		logger.debug("taskWrite ended.");

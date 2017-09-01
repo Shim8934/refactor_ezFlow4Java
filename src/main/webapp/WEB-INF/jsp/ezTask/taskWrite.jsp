@@ -40,6 +40,7 @@
 			var sharelist = "";
 			var g_person = null;
 			var g_share = null;
+			var sharelist = "${taskShareList }";
 			var shareid = "_shareid";
 			var sharename = "_sharename";
 			var sharename2 = "_sharename2";
@@ -93,7 +94,14 @@
 	             
 	            if (sharelist != "") {
 					document.getElementById("sharelist").innerHTML = sharelist;
-	
+					
+					sharename = sharelist.split("||")[0];
+					sharename1 = sharelist.split("||")[1];
+					sharename2 = sharelist.split("||")[2];
+					shareid = sharelist.split("||")[3];
+					sharedept = sharelist.split("||")[4];
+					sharedept2 = sharelist.split("||")[5];
+					
 					g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 					shareid = shareid.split(";");
 					sharename = sharename.split(";");
@@ -101,6 +109,7 @@
 					sharedept = sharedept.split(";");
 					sharedept2 = sharedept2.split(";");
 					sharemail = sharemail.split(";");
+					shareidlist = "";
 					
 					for (var i = 0; i < shareid.length; i++) {
 						g_share["name"][i] = sharename[i];
@@ -109,7 +118,14 @@
 						g_share["id"][i] = shareid[i];
 						g_share["deptname"][i] = sharedept[i];
 						g_share["deptname2"][i] = sharedept2[i];
-						g_share["email"][i] = sharemail[i];
+// 						g_share["email"][i] = sharemail[i];
+
+						if (i == 0) {
+							shareidlist += shareid[i];
+						} else {
+							shareidlist += ", " + shareid[i];
+						}
+						
 					}
 				}
 	             

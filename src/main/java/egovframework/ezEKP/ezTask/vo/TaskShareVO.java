@@ -30,6 +30,8 @@ public class TaskShareVO {
 	private String updateTime;
 	/**  */
 	private String newOrder;
+	/** email */
+	private String email;
 	/** 테넌트ID */
 	private int tenantID;
 	
@@ -116,6 +118,12 @@ public class TaskShareVO {
 	}
 	public void setNewOrder(String newOrder) {
 		this.newOrder = newOrder;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public int getTenantID() {
 		return tenantID;
