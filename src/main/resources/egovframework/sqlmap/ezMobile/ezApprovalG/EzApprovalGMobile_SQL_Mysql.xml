@@ -84,7 +84,7 @@
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
 				SELECT 
-					DOCID,
+					DISTINCT DOCID,
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
@@ -255,7 +255,7 @@
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
 				SELECT 
-					COUNT(*)
+					COUNT(DISTINCT DOCID)
 				FROM 
 					VAPRWILLDOCLIST 
 	   			WHERE

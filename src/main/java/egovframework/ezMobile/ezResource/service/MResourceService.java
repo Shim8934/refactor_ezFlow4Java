@@ -34,7 +34,7 @@ public interface MResourceService {
 	
 	public void addResSch(String ownerId, String companyId, int tenantId, String pNum, String writerId, String deptNm, String ownerNm, String title, 
 			String location, String timeDisplay, String startDate, String endDate, String allDay, String alterTime, String content, String importance, 
-			String writeDay, String entryList, String attachFlag, String approve, String scheduleId);
+			String writeDay, String entryList, String attachFlag, String approveFlag, String reFlag,String scheduleId);
 	
 	public void modifyResSch(String title, String startDate, String endDate, 
 			String alterTime, String content,String importance, String reFlag,
