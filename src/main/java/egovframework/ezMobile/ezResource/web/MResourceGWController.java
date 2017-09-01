@@ -255,6 +255,9 @@ public class MResourceGWController extends EgovFileMngUtil {
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
 
+			String contentBefore = resVO.getContent();
+			contentBefore = contentBefore.replaceAll("<[^>]*>", " ");
+			resVO.setContent(contentBefore);
 			String reFlag = resVO.getReFlag();
 			
 			if(reFlag.equals("1")){
@@ -311,7 +314,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			LOGGER.debug("tenantId: " + tenantId);
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
-
+			
 			String obj = "";
 			
 			Gson gson = new Gson();
