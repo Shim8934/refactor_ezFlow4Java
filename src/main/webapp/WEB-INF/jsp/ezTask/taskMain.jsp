@@ -303,6 +303,7 @@
 			    var tr = "";
 			    var onTaskCount = 0; // 진행중업무 Count
 			    var finishTaskCount = 0; // 완료업무 Count
+
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 			    	if (totalcount == 0 || i == totalcount) {
 			            break;
@@ -359,13 +360,11 @@
 				        if (primary == "1") {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME"));
 				        } else {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME2"));
-				        }			        	
-			        } else {
-			        	if (primary == "1") {
+				            setNodeText(tr.cells[			        	if (primary == "1") {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME"));
 				        } else {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME2"));
+				        }           setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME2"));
 				        }
 			        }
 
