@@ -505,14 +505,14 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		MBoardInfoVO vo = mBoardDAO.getBoardProperty(map);
 		
+		if (vo.getGuBun().equals("4")) {
+			vo.setType("photoBoardItem");
+		}
+		
 		if (vo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 			vo.setType("newBoardItemList");
 		} else {
 			vo.setType("boardItemList");
-		}
-		
-		if (vo.getGuBun().equals("4")) {
-			vo.setType("photoBoardItem");
 		}
 		
 		logger.debug("getBoardProperty ended.");
