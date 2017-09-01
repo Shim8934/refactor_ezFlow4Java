@@ -3290,8 +3290,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					if (part == null) {
 						LOGGER.error("AttachPart not found. AttachPartIndex=" + index);
 					} else {
-					
-						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
 						LOGGER.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
 						
 						try {
