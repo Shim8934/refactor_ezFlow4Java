@@ -382,27 +382,27 @@
 				var feature = "";
 
 				if (useTodoMemo == 'YES') {
-		        	feature = GetOpenPosition(780, 990);
+		        	feature = GetOpenPosition(780, 940);
 		        	
 		        	if (CrossYN() || pNoneActiveX == "YES") {
-			            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 990px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 940px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			        } else {
 			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 990px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 940px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            } else {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 990px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 940px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            }
 			        }
 		        } else {
-		        	feature = GetOpenPosition(780, 935);
+		        	feature = GetOpenPosition(780, 885);
 		        	
 		        	if (CrossYN() || pNoneActiveX == "YES") {
-			            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			        } else {
 			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            } else {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            }
 			        }
 		        }

@@ -357,11 +357,18 @@
 			    
 			    var win;
 			    
-				/* 레이어팝업으로 taskWriteCross 호출 */
-				
-				var feature = GetOpenPosition(760, 750);
-				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
-		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+				/* 레이어팝업으로 taskWrite 호출 */
+				if (useTodoMemo == 'YES') {
+					var feature = GetOpenPosition(760, 700);
+		        	
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
+			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		        } else {
+					var feature = GetOpenPosition(760, 645);
+		        	
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
+			                "height = 645px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		        }
 				
 			}
 			
@@ -535,9 +542,9 @@
 			    var win;
 			    
 				/* 레이어팝업으로 taskWorkWriteCross 호출 */
-				var feature = GetOpenPosition(760, 750);
+				var feature = GetOpenPosition(760, 700);
 				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWorkWrite.do?taskID=" + id, "",
-		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 			}
 			
 			/* 진행상태변경시 스크립트 */
@@ -703,7 +710,9 @@
 	<body class="popup" style="overflow:hidden; height:99%">
 		<div id="menu">
 			<ul>
-				<li id="delete"><SPAN onClick="delete_task()"><spring:message code='ezTask.t115' /></SPAN></li>
+				<c:if test="${userInfo.id == taskInfoVO.creatorID }">
+					<li id="delete"><SPAN onClick="delete_task()"><spring:message code='ezTask.t115' /></SPAN></li>
+				</c:if>
 				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 			</ul>
 		</div>
@@ -865,7 +874,7 @@
 		
 		<table id="normalScreen" class="layout" style="height:100%">
 			<tr>
-				<td style="padding-bottom:4px;height: 495px;">
+				<td style="padding-bottom:4px;height: 445px;">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
@@ -889,7 +898,7 @@
 			</tr>
 		</table>
 		
-		<table id="tablework" class="layout" style="height: 535px;display:none;" >
+		<table id="tablework" class="layout" style="height: 485px;display:none;" >
 			<tr style="vertical-align:top">
 				<td colspan="3" style="padding-bottom:4px; height:495px;">
 					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
@@ -913,13 +922,13 @@
 			</tr>
 		</table>
 		
-		<table id="tablecomment" class="layout" style="display:none;height:555px">
+		<table id="tablecomment" class="layout" style="display:none;height:505px">
 			<tr>
 				<td style="height:20px" colspan="3">
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="taskCommentList" style="overflow: auto; width:100%; height: 510px; background-color: white; padding-top:3px;">
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 460px; background-color: white; padding-top:3px;">
 									<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
 										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
 										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
