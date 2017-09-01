@@ -133,10 +133,6 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
-			if (lastDate == null || lastDate.equals("")) {
-				lastDate = commonUtil.getTodayUTCTime("");
-			}
-			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
