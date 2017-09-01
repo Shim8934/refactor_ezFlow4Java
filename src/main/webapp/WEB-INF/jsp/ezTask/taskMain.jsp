@@ -356,19 +356,20 @@
 			        else
 			            tr.cells[2].innerHTML += "&nbsp;";
 
-			        if (SelectSingleNodeValue(node, "TASKTYPE") == 1) {
+		            if (SelectSingleNodeValue(node, "TASKTYPE") == 1) {
 				        if (primary == "1") {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME"));
 				        } else {
-				            setNodeText(tr.cells[			        	if (primary == "1") {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME2"));
+				        }			        	
+			        } else {
+			        	if (primary == "1") {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME"));
 				        } else {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME2"));
-				        }           setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME2"));
 				        }
 			        }
 
-		
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
 			        }
