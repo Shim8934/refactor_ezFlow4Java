@@ -245,6 +245,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String endDate = request.getParameter("endDate");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
+			String offset = info.getOffSet();
 			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("resourceId: " + resourceId);
@@ -259,6 +260,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			if(reFlag.equals("1")){
 				resVO.setStartDate(startDate);
 				resVO.setEndDate(endDate);
+			} else {
+				resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
+				resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
 			}
 
 			String obj = "";
