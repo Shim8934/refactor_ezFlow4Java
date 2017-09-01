@@ -3222,8 +3222,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				intIndex = Integer.parseInt(strIndex);
 			}
 			LOGGER.debug("index=" + intIndex);
-			
-			
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
@@ -3264,39 +3262,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 						try {
 							input = part.getInputStream();
-							
-							String[] encoding_type = part.getHeader("Content-Transfer-Encoding");
-							
-							for(int i = 0; i < encoding_type.length ; i++) {
-								LOGGER.debug("@@@@@@@@@@@@@@@@@@@@@@@@" + encoding_type[i]);
-							}
-							
-							int byteRead;
-							
-							String encodeType = encoding_type[0];
-							
-//							input = MimeUtility.decode(input, encodeType);
-							
-//							BufferedReader streamReader = new BufferedReader(new InputStreamReader(input)); 
-//							StringBuilder responseStrBuilder = new StringBuilder();
-
-							int i;
-							StringBuffer buffer = new StringBuffer();
-							
-							InputStream is;
-							
+					
 							byte[] bytes = IOUtils.toByteArray(input);
 							
 							JSONObject data = new JSONObject();
 							
-							JSONParser jp = new JSONParser();
-						
-							LOGGER.debug("bytes : " + ByteBuffer.wrap(bytes));
+							JSONParser jp = new JSONParser();			
+							
+							Encoder encoder = Base64.getEncoder();
 							
 							data.put("bytes", bytes);
 							data.put("filename",filename);
 							data.put("filetype",part.getContentType());
-							data.put("encodeType", encodeType);
 							
 							result.put("status", "success");
 							result.put("code", 0);			
@@ -3313,10 +3290,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							}
 							if (input != null) {
 								try { input.close(); } catch (IOException e1) {}
-							}
-							if (output != null) {
-//								try { output.flush(); } catch (IOException e1) {}
-								try { output.close(); } catch (IOException e1) {}
 							}
 						}
 						
@@ -3668,6 +3641,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	    	size += b.length;
 	    }
 	}
+	
 	/**
 	 * 모바일 G/W 이메일 [put] method sample
 	 */

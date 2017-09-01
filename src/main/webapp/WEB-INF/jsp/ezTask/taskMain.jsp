@@ -73,7 +73,6 @@
 		    	}
 
 		        if (selectelem != null) {
-
 		        	selectelem.style.backgroundColor = "#ffffff";
 		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
 
@@ -84,7 +83,7 @@
 		        selectelem = elem;
 		        elem.style.backgroundColor = "rgb(233, 241, 244)";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
-		        
+
 		        if (strListInfo == "") {
 		        	strListInfo = $(elem).attr("taskID") + ";";
 		        	strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
@@ -215,8 +214,18 @@
 			    PagingHTML += "</div>";
 			    td_Create1(PagingHTML);
 			}
-	
+
 			function goToPageByNum(Value) {
+				if ($("#checkboxAll").is(":checked")) {
+		    		$("#checkboxAll").prop("checked", false);
+		    		$(".row_body td").css("background", "");
+		    	}
+
+		    	if ($("#checkboxAll2").is(":checked")) {
+		    		$("#checkboxAll2").prop("checked", false);
+		    		$(".row_body2 td").css("background", "");
+		    	}
+
 			    currentpage = Value;
 			    makePageSelPage();
 			    show_page();
@@ -235,7 +244,7 @@
 			        goToPageByNum(parseInt(pageNum - 1));		    	
 			    }
 			    else {
-			        return;		    	
+			        return;
 			    }
 			}
 	
@@ -294,9 +303,8 @@
 			    var tr = "";
 			    var onTaskCount = 0; // 진행중업무 Count
 			    var finishTaskCount = 0; // 완료업무 Count
-
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
-					if (totalcount == 0 || i == totalcount) {
+			    	if (totalcount == 0 || i == totalcount) {
 			            break;
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
@@ -346,21 +354,33 @@
 			            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
 			        else
 			            tr.cells[2].innerHTML += "&nbsp;";
-		
-			        if (primary == "1") {
-			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
+
+			        if (SelectSingleNodeValue(node, "TASKTYPE") == 1) {
+				        if (primary == "1") {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME"));
+				        } else {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME2"));
+				        }			        	
+			        } else {
+			        	if (primary == "1") {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME"));
+				        } else {
+				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME2"));
+				        }
 			        }
-			        else {
-			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
-			        }
+
 		
-			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N" && SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
+			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
 			        }
 			        else
 			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
-			        tr.cells[4].style.overflow = "hidden"
-			        tr.cells[4].style.textOverflow = "ellipsis"
+			        tr.cells[4].style.overflow = "hidden";
+			        tr.cells[4].style.textOverflow = "ellipsis";
+			        
+			        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
+			        tr.cells[6].style.overflow = "hidden";
+			        tr.cells[6].style.textOverflow = "ellipsis";
 		
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
@@ -372,7 +392,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                div.style.verticalAlign = "top";
-			                tr.cells[6].appendChild(div);
+			                tr.cells[7].appendChild(div);
 			                break;
 			            case "2":
 			                var div = document.createElement("DIV");
@@ -383,7 +403,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                div.style.verticalAlign = "top";
-			                tr.cells[6].appendChild(div);
+			                tr.cells[7].appendChild(div);
 			                break;
 			            case "3":
 			                var div = document.createElement("DIV");
@@ -394,7 +414,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                div.style.verticalAlign = "top";
-			                tr.cells[6].appendChild(div);
+			                tr.cells[7].appendChild(div);
 			                break;
 			        }
 
@@ -410,9 +430,9 @@
 
 			        span.appendChild(span2);
 
-			        tr.cells[7].appendChild(span);
-			        setNodeText(tr.cells[8], startdate);
-			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
+			        tr.cells[8].appendChild(span);
+			        setNodeText(tr.cells[9], startdate);
+			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 
 			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
 				        list_body.children[1].appendChild(tr);
@@ -468,53 +488,64 @@
 				}
 			}
 
+			var taskStatusCount = "";
 			function selectTab(num) {
 				if (num == 2) {
+					taskStatusCount = 0;
 					DateChange();
 					list_body.style.display = "";
 					list_body2.style.display = "none";
-				} else {
+				} else if (num == 1) {
+					taskStatusCount = 1;
 					DateChange();
 					list_body.style.display = "none";
 					list_body2.style.display = "";
+				} else {
+					if ($("input[value=ongoing]").is(":checked")) {
+						taskStatusCount = 0;
+					} else {
+						taskStatusCount = 1;
+					}
+
+					DateChange();
 				}
 			}
 
-		    function update_status(elem) {
-		        var taskid = GetAttribute(elem.parentElement.parentElement, "taskid")
-		        var parentid = GetAttribute(elem.parentElement.parentElement, "parentid");
-		        var repeatcount = GetAttribute(elem.parentElement.parentElement, "repeatcount");
+// 		    function update_status(elem) {
+// 		        var taskid = GetAttribute(elem.parentElement.parentElement, "taskid")
+// 		        var parentid = GetAttribute(elem.parentElement.parentElement, "parentid");
+// 		        var repeatcount = GetAttribute(elem.parentElement.parentElement, "repeatcount");
 		
-		        if (parentid != "0") {
-		            alert("<spring:message code='ezTask.t101' />");
-		            return;
-		        }
+// 		        if (parentid != "0") {
+// 		            alert("<spring:message code='ezTask.t101' />");
+// 		            return;
+// 		        }
 		
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
+// 		        var xmlHTTP = createXMLHttpRequest();
+// 		        var xmlDom = createXmlDom();
 		
-		        var objRoot, objNode;
-		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", taskid);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
-		        if (elem.checked == true) {
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "3");
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "100");
-		        }
-		        else {
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "1");
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "0");
-		        }
+// 		        var objRoot, objNode;
+// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", taskid);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
+// 		        if (elem.checked == true) {
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "3");
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "100");
+// 		        }
+// 		        else {
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "1");
+// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "0");
+// 		        }
 		
 		
-		        xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
-		        xmlHTTP.send(xmlDom);
+// 		        xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
+// 		        xmlHTTP.send(xmlDom);
 		
-		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		            alert("<spring:message code='ezTask.t102' />");
-		        else
-		            RefreshView();
-		    }
+// 		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+// 		            alert("<spring:message code='ezTask.t102' />");
+// 		        else
+// 		            RefreshView();
+// 		    }
 					
 		    function page_move(which, evt) {
 		        if (CrossYN()) {
@@ -562,26 +593,26 @@
 
 		        DateChange();
 		    }
-		    function MoveTask() {
-		        if (selectelem == null) {
-		            alert("<spring:message code='ezTask.t103' />");
-		            return;
-		        }
+// 		    function MoveTask() {
+// 		        if (selectelem == null) {
+// 		            alert("<spring:message code='ezTask.t103' />");
+// 		            return;
+// 		        }
 		
-		        var taskid = selectelem.taskid;
-		        var repeatcount = selectelem.repeatcount;
-		        var date = selectelem.startdate;
+// 		        var taskid = selectelem.taskid;
+// 		        var repeatcount = selectelem.repeatcount;
+// 		        var date = selectelem.startdate;
 		
-		        var feature = GetOpenPosition(790, 660);
-		        if (CrossYN()) {
-		            var win = window.open("/myoffice/ezSchedule/schedule_write_CK.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
-		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
-		        else {
-		            var win = window.open("/myoffice/ezSchedule/schedule_write.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
-		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
-		    }
+// 		        var feature = GetOpenPosition(790, 660);
+// 		        if (CrossYN()) {
+// 		            var win = window.open("/myoffice/ezSchedule/schedule_write_CK.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
+// 		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+// 		        }
+// 		        else {
+// 		            var win = window.open("/myoffice/ezSchedule/schedule_write.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
+// 		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+// 		        }
+// 		    }
 
 		    var deltaskid = "";
 		    var delparentid = "";
@@ -594,7 +625,6 @@
 
 				var idArr = new Array(); 
 				idArr = strListIdInfo.split(";");
-
 				if (idArr.length < 1) {
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
@@ -637,56 +667,56 @@
 		    }
 		</script>
 		<script>
-		    function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
-		        var tmpdt = new Date(v_dateStr);
-		        switch (v_kind) {
-		            case 'd':
-		                tmpdt.setDate(tmpdt.getDate() + v_movNum);
-		                break;
-		            case 'm':
-		                tmpdt.setMonth(tmpdt.getMonth() + v_movNum);
-		                break;
-		            case 'y':
-		                tmpdt.setFullYear(tmpdt.getFullYear() + v_movNum);
-		                break;
-		        }
-		        return tmpdt.getFullYear().toString(10) + '-' + (tmpdt.getMonth() + 1).toString() + '-' + tmpdt.getDate().toString(10) + ' ' + tmpdt.toTimeString().substring(0, 8);
-		    }
-		    function v_GetChangedDateTime2_nonIE(v_dateTime, hourNum, minuteNum) {
-		        return (navigator.userAgent.indexOf('Firefox') != -1) ?
-		        (function(v_dateTime, hourNum, minuteNum) {
+// 		    function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
+// 		        var tmpdt = new Date(v_dateStr);
+// 		        switch (v_kind) {
+// 		            case 'd':
+// 		                tmpdt.setDate(tmpdt.getDate() + v_movNum);
+// 		                break;
+// 		            case 'm':
+// 		                tmpdt.setMonth(tmpdt.getMonth() + v_movNum);
+// 		                break;
+// 		            case 'y':
+// 		                tmpdt.setFullYear(tmpdt.getFullYear() + v_movNum);
+// 		                break;
+// 		        }
+// 		        return tmpdt.getFullYear().toString(10) + '-' + (tmpdt.getMonth() + 1).toString() + '-' + tmpdt.getDate().toString(10) + ' ' + tmpdt.toTimeString().substring(0, 8);
+// 		    }
+// 		    function v_GetChangedDateTime2_nonIE(v_dateTime, hourNum, minuteNum) {
+// 		        return (navigator.userAgent.indexOf('Firefox') != -1) ?
+// 		        (function(v_dateTime, hourNum, minuteNum) {
 		            
-		            var dt = new Date(v_dateTime);  
+// 		            var dt = new Date(v_dateTime);  
 		            
-		            var offset = dt.getTimezoneOffset(); 
-		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
+// 		            var offset = dt.getTimezoneOffset(); 
+// 		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
 		
-		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-		        }).call(this, v_dateTime, hourNum, minuteNum)
-		        : (navigator.userAgent.indexOf('MSIE') == -1) ?
-		        (function(v_dateTime, hourNum, minuteNum) {
-		            var dt = new Date(
-		            Date.UTC(
-		            parseInt(v_dateTime.substring(0, 4), 10),
-		            parseInt(v_dateTime.substring(5, 7), 10) - 1,
-		            parseInt(v_dateTime.substring(8, 10), 10), 
-		            parseInt(v_dateTime.substring(11, 13), 10),
-		            parseInt(v_dateTime.substring(15, 17), 10),
-		            parseInt(v_dateTime.substring(18, 20), 10),
-		            parseInt(v_dateTime.substring(21, 24), 10)
-		            ))
+// 		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
+// 		        }).call(this, v_dateTime, hourNum, minuteNum)
+// 		        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+// 		        (function(v_dateTime, hourNum, minuteNum) {
+// 		            var dt = new Date(
+// 		            Date.UTC(
+// 		            parseInt(v_dateTime.substring(0, 4), 10),
+// 		            parseInt(v_dateTime.substring(5, 7), 10) - 1,
+// 		            parseInt(v_dateTime.substring(8, 10), 10), 
+// 		            parseInt(v_dateTime.substring(11, 13), 10),
+// 		            parseInt(v_dateTime.substring(15, 17), 10),
+// 		            parseInt(v_dateTime.substring(18, 20), 10),
+// 		            parseInt(v_dateTime.substring(21, 24), 10)
+// 		            ))
 		            
-		            var offset = dt.getTimezoneOffset();
+// 		            var offset = dt.getTimezoneOffset();
 		
-		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
+// 		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
 		
-		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-		        }).call(this, v_dateTime, hourNum, minuteNum)
-		        :
-		        (function(v_dateTime, hourNum, minuteNum) {
-		    }).call(this, v_dateTime, hourNum, minuteNum)
-		        ;
-		    }
+// 		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
+// 		        }).call(this, v_dateTime, hourNum, minuteNum)
+// 		        :
+// 		        (function(v_dateTime, hourNum, minuteNum) {
+// 		    }).call(this, v_dateTime, hourNum, minuteNum)
+// 		        ;
+// 		    }
 		    function v_AppendZero(v_str) {
 		        if (isNaN(v_str)) {
 		            switch (v_str.toString().length) {
@@ -707,60 +737,19 @@
 		    }
 
 		    function DateChange() {
-		    	
 		    	if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body td").css("background", "");
 		    	}
-		    	
+
 		    	if ($("#checkboxAll2").is(":checked")) {
 		    		$("#checkboxAll2").prop("checked", false);
 		    		$(".row_body2 td").css("background", "");
 		    	}
 
-// 		        var startYearMontgday = start.split("-");
-// 		        var endYearMontgday = end.split("-");
-// 		        var startMonth = startYearMontgday[1];
-// 		        var endMonth = endYearMontgday[1];
-// 		        var startDay = startYearMontgday[2];
-// 		        var endDay = endYearMontgday[2];
 		        var filter = "";
 		        var chkValue = "";
 		        var searchClass = "";
-
-// 		        if (startMonth.length == 1) {
-// 		            startMonth = "0" + startMonth;
-// 		        }
-// 		        if (endMonth.length == 1) {
-// 		            endMonth = "0" + endMonth;
-// 		        }
-// 		        if (startDay.length == 1) {
-// 		            startDay = "0" + startDay;
-// 		        }
-// 		        if (endDay.length == 1) {
-// 		            endDay = "0" + endDay;
-// 		        }
-		
-// 		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
-// 		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
-
-
-
-		
-// 		        xmlHTTP2 = createXMLHttpRequest();
-// 		        var xmlDom = createXmlDom();
-		
-// 		        var objRoot, objNode;
-// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
-		
-// 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
-// 		        xmlHTTP2.onreadystatechange = after_DateChange;
-// 		        xmlHTTP2.send(xmlDom);
 
 				$.ajax({
 					type : "POST",
@@ -774,7 +763,8 @@
 						type : type,
 						filter : filter,
 						chkValue : chkValue,
-						searchClass : searchClass
+						searchClass : searchClass,
+						taskStatusCount : taskStatusCount
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -811,8 +801,8 @@
 	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 
-	            makePageSelPage();
 	            show_page();
+	            makePageSelPage();
 
 	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
 	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
@@ -883,15 +873,17 @@
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
-		                DateChange();
+// 		                DateChange();
+						selectTab(0);
 		                break;
 		            case "taskdictate":
 		                type = "2";
-		                DateChange();
+// 		                DateChange();
+						selectTab(0);
 		                break;
 		        }
 		    }
-		
+
 		    function onkeydown_start_search(evt) {
 		        if (evt.keyCode == "13") {
 		            search();
@@ -907,29 +899,6 @@
 		            return;
 		        }
 
-// 		        var startYearMontgday = startdate.split("-");
-// 		        var endYearMontgday = enddate.split("-");
-// 		        var startMonth = startYearMontgday[1];
-// 		        var endMonth = endYearMontgday[1];
-// 		        var startDay = startYearMontgday[2];
-// 		        var endDay = endYearMontgday[2];
-		
-// 		        if (startMonth.length == 1) {
-// 		            startMonth = "0" + startMonth;
-// 		        }
-// 		        if (endMonth.length == 1) {
-// 		            endMonth = "0" + endMonth;
-// 		        }
-// 		        if (startDay.length == 1) {
-// 		            startDay = "0" + startDay;
-// 		        }
-// 		        if (endDay.length == 1) {
-// 		            endDay = "0" + endDay;
-// 		        }
-		
-// 		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
-// 		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
-		
 		        var chkValue;
 		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
 		            if (document.getElementsByName("searchCheck")[i].checked == true)
@@ -941,22 +910,6 @@
 		            filter = document.getElementById("txt_keyword").value;
 		        }
 
-// 		        xmlHTTP2 = createXMLHttpRequest();
-// 		        var xmlDom = createXmlDom();
-		
-// 		        var objRoot, objNode;
-// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "FILTER", filter);
-		
-// 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_searchlist.aspx", true);
-// 		        xmlHTTP2.onreadystatechange = after_search;
-// 		        xmlHTTP2.send(xmlDom);
-		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -1056,10 +1009,10 @@
 					strListInfo = "";
 
 					if ($("#checkboxAll2").is(":checked")) {
-						$(":checkbox[taskstatus = '3']").prop("checked", true);
+						$(":checkbox[taskstatus = 3]").prop("checked", true);
 						$(".row_body2 td").css("background", "rgb(233, 241, 244)");
 					} else {
-						$(":checkbox[taskstatus = '3']").prop("checked", false);
+						$(":checkbox[taskstatus = 3]").prop("checked", false);
 						$(".row_body2 td").css("background", "");
 						selectelem = null;
 					}
@@ -1132,7 +1085,8 @@
 						<col style ="width:20px;">
 						<col style ="width:60px;">
 						<col >
-						<col style ="width:90px;">
+						<col style ="width:50px;">
+						<col style ="width:140px;">
 		                <col style ="width:90px;">
 						<col style ="width:110px;">
 						<col style ="width:80px;">
@@ -1143,8 +1097,8 @@
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
-<%-- 							<th ><spring:message code='ezTask.t170' /></th> --%>
 							<th ></th>
+							<th ><spring:message code='ezTask.t170' /></th>
 		                    <th ><spring:message code='ezTask.t2003' /></th>
 							<th ><spring:message code='ezTask.t120' /></th>
 							<th ><spring:message code='ezTask.t121' /></th>
@@ -1161,9 +1115,10 @@
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 						<tr id="tr_ing" style="text-align:center">
-							<td colspan="10" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
 				    <table class="mainlist" id="list_body2" style="WIDTH: 100%;table-layout:fixed; display:none">
@@ -1172,7 +1127,8 @@
 						<col style ="width:20px;">
 						<col style ="width:60px;">
 						<col >
-						<col style ="width:90px;">
+						<col style ="width:50px;">
+						<col style ="width:140px;">
 		                <col style ="width:90px;">
 						<col style ="width:110px;">
 						<col style ="width:80px;">
@@ -1183,8 +1139,8 @@
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
-<%-- 							<th ><spring:message code='ezTask.t170' /></th> --%>
 							<th ></th>
+							<th ><spring:message code='ezTask.t170' /></th>
 		                    <th ><spring:message code='ezTask.t2003' /></th>
 							<th ><spring:message code='ezTask.t120' /></th>
 							<th ><spring:message code='ezTask.t121' /></th>
@@ -1201,9 +1157,10 @@
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 						<tr id="tr_ing2" style="text-align:center">
-							<td colspan="10" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
 				</td>

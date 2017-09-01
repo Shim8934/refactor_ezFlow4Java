@@ -806,6 +806,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String filter = request.getParameter("filter");
     	String chkValue = request.getParameter("chkValue");
     	String searchClass = request.getParameter("searchClass");
+    	String taskStatusCount = request.getParameter("taskStatusCount");
     	String startDate = request.getParameter("startDate");
     	String endDate = request.getParameter("endDate");
     	String useDate = "";
@@ -833,7 +834,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		}
     	}
 
-    	List<TaskInfoVO> list = ezTaskService.taskGetList(userID, startDate, endDate, offset, app, type, filter, chkValue, searchClass, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.taskGetList(userID, startDate, endDate, offset, app, type, filter, chkValue, searchClass, taskStatusCount, tenantID);
     	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
@@ -881,6 +882,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<TASKPERSONID>" + list.get(i).getTaskPersonID() + "</TASKPERSONID>");
     		resultXML.append("<TASKPERSONNAME>" + list.get(i).getTaskPersonName() + "</TASKPERSONNAME>");
     		resultXML.append("<TASKPERSONNAME2>" + list.get(i).getTaskPersonName2() + "</TASKPERSONNAME2>");
+    		resultXML.append("<MEMO>" + list.get(i).getMemo() + "</MEMO>");
     		
     		resultXML.append("</ROW>");
     		

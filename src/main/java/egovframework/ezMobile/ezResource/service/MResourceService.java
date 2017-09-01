@@ -8,6 +8,7 @@ import java.util.Map;
 
 
 
+
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
@@ -35,8 +36,8 @@ public interface MResourceService {
 			String location, String timeDisplay, String startDate, String endDate, String allDay, String alterTime, String content, String importance, 
 			String writeDay, String entryList, String attachFlag, String approve, String scheduleId);
 	
-	public void modifyResSch(String title, String location, String timeDisplay, String startDate, String endDate, String alterTime, String content, String importance, 
-			String reFlag, String gresFlag, String allDay, String writeDay, String entryList, String attachFlag, String characterId,
+	public void modifyResSch(String title, String startDate, String endDate, 
+			String alterTime, String content,String importance, String reFlag,
 			String companyId, String num, String ownerId, int tenantId);
 	
 	public void delResSch(String companyId, String ownerId, String num, String startDate, String endDate, String offset,String reFlag, int tenantId) throws Exception;

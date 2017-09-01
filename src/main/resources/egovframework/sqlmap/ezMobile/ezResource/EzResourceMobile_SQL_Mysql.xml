@@ -637,12 +637,13 @@
 		</isNotEmpty>
 		<![CDATA[
                 ALERTTIME = #v_PALERTTIME#,             
-                IMPORTANCE = #v_PIMPORTANCE#,
-                ALLDAY = #v_PALLDAY#
+                IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
            		COMPANYID = #v_PCOMPANYID#
 			AND
            		NUM = #v_PNUM#
+           	AND
+           		REFLAG = #v_PREFLAG#	
 			AND
            		OWNERID = #v_POWNERID#
 			AND

@@ -968,7 +968,8 @@ System.out.println("strFilePath:"+strFilePath);
             String boardID = "";
             
             if (mode == 0) {
-            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);            
+            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);
+            	
             } else {
             	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, tenantID);
             	
@@ -1015,9 +1016,27 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		});
 	    
-	    
+	    //자식존재여부 체크
+	    for (int i=0; i< brdBoardTreeList.size(); i++) {
+	    	String isLeaf = checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID);
+	    	brdBoardTreeList.get(i).setIsLeaf(isLeaf);
+	    }
 
 		return brdBoardTreeList;
+	}
+	
+	public String checkIfLeafBoard(String pBoardID, int tenantID) {
+		try {
+	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID, tenantID);
+	        
+	        if (ret > 0) {
+	        	return "FALSE";
+	        } else {
+	        	return "TRUE";
+	        }
+		} catch(Exception ex) {
+			return "FALSE";
+		}
 	}
 
 	@Override

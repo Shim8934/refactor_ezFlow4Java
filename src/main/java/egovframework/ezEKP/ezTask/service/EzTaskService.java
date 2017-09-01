@@ -37,7 +37,7 @@ public interface EzTaskService {
 
 	public void taskUpdateConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
 
-	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception;
+	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception;
 
 	String getTaskCount(String memberID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception;
 
