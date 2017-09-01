@@ -505,7 +505,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		MBoardInfoVO vo = mBoardDAO.getBoardProperty(map);
 		
-		if (vo.getGuBun().equals("4")) {
+		if (vo.getGuBun().equals("4") || vo.getGuBun().equals("3")) {
 			vo.setType("photoBoardItem");
 		}
 		
