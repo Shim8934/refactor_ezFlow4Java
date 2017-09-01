@@ -72,8 +72,12 @@
 	            selDeptID = selnode.GetNodeData("CN");
 	            var selnodeLevel = selnode.GetNodeData("nodelevel");
 	            selNodeParentId = selnode.GetNodeData("CN");
-	            for (var i =0 ;i < selnodeLevel-1 ; i++ ) {
-	     	      	selNodeParentId = $("#" + selnodeId).parent().parent().attr("cn");
+	            
+	            for (var i =0 ;i < selnodeLevel ; i++ ) {
+	     	      	if($("#" + selnodeId).parent().parent().attr("setnodeiconbyname")=="ICONCOMP"){
+	     	      		selNodeParentId = $("#" + selnodeId).parent().parent().attr("cn");
+	     	      		break;
+	     	      	}
 	     	      	selnodeId = $("#" + selnodeId).parent().parent().attr("id");
 	            }
 
