@@ -5307,7 +5307,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
-		} else {// 문서 정보, 첨부 정보, 결재 정보 추출
+		} else {
+			/**
+			 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
+			 * -> 문서 정보, 첨부 정보, 결재선 정보
+			 * */
 			String approveRet = getApproveDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 			Document aprXML = commonUtil.convertStringToDocument(approveRet);
 			
@@ -5323,7 +5327,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), realPath, userInfo.getLocale(), domain);
 		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
-		
+		//DOCSTATE : 011(수신)
 		if (aprStateSign.equals("011")) {
 			signAdd = "1";
 		} else {
@@ -6353,7 +6357,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getDocInfoJeonKyul(map);
 	}
 	/**
-	 * orgID의 현재 aprState 이전에 002(확인), 007(참조), 018(기안), 019(검토), 031 값의 갯수
+	 * '합의' 가능 결재 카운트
 	 * */
 	public int getDocInfoHab(String docID, String orgUID, String aprState, String companyID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6366,7 +6370,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getDocInfoHab(map);
 	}
 	/**
-	 * orgID의 현재 aprState 이전에 002(확인), 006(참조), 008(개인순차협조), 009(개인병렬협조) 값의 갯수
+	 * '참조' 가능 결재 카운트
 	 * */
 	public int getDocInfoRef(String docID, String orgUID, String aprState, String companyID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6379,7 +6383,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getDocInfoRef(map);
 	}
 	/**
-	 * 결재 문서에서 치뤄질 결재 갯수 가져오기
+	 * 결재 진행 중인 문서 갯수 가져오기
 	 * */
 	public int getDocAprCnt(String docID, String companyID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -7791,7 +7795,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 
 		logger.debug("getDocInfo Param : v_DOCID = " + docID + " v_MODE = " + " v_TENANTID = " + tenantID + " companyID = " + companyID);
-		// 진행 중인 문서 리스트 출력 TBL_APRDOCINFO, TBL_EXPAPRDOCINFO
+		// 문서 리스트 출력 TBL_APRDOCINFO, TBL_EXPAPRDOCINFO
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getDocInfo(map);
 		
 		if (apprGDocListVOList.size() == 0) {
@@ -8688,7 +8692,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		return ezApprovalGDAO.getApprovalPWD1(map);
 	}
-
+	/**
+	 * 결재가 진행되어야할 문서 추출 -> XML
+	 * */
 	@Override
 	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
@@ -8699,7 +8705,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_DOCID", docID.trim());
-		// 002(진행) || 005(보류) 리스트 추출
+		// 002(진행) || 005(보류) 문서 추출 -> 결재처리 안된 문서 추출
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getApproveDocInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -9355,6 +9361,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID, offset));
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<CONVDOCINFO>");
+		// 합의, 감사, 유통, 행정, 전자기안문 등 고정 변환문서 정보 추가.
 		rtnVal.append("<HAPYUI>" + makeXMLString(getCode2Name("A36", "001", companyID, lang, tenantID)) + "</HAPYUI>");
 		rtnVal.append("<GAMSA>" + makeXMLString(getCode2Name("A36", "002", companyID, lang, tenantID)) + "</GAMSA>");
 		rtnVal.append("<RELAY>" + makeXMLString(getCode2Name("A36", "003", companyID, lang, tenantID)) + "</RELAY>");
