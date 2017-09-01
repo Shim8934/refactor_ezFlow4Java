@@ -1917,11 +1917,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								LOGGER.debug("draftUID message deleted successfully during retry.");
 							} catch (Exception e) {
 								LOGGER.error("Failed to delete draftUID message during retry. draftUID=" + draftUID);
+								result.put("status", "error");
+			        			result.put("code", 1);			
+			        			result.put("data", "");
 							} finally {
 								if (draftFolder != null) {
 									try {
     								draftFolder.close(true);
-									} catch (Exception e) {}
+									} catch (Exception e) {
+										result.put("status", "error");
+					        			result.put("code", 1);			
+					        			result.put("data", "");
+									}
 									draftFolder = null;
 								}
 							}
@@ -1942,11 +1949,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	                            LOGGER.debug("sentFolderMessageUID message deleted successfully during retry.");
 	                        } catch (Exception e) {
 	                            LOGGER.error("Failed to delete sentFolderMessageUID message during retry. sentFolderMessageUID=" + sentFolderMessageUID);
+	                            result.put("status", "error");
+	                			result.put("code", 1);			
+	                			result.put("data", "");
 	                        } finally {
 	                            if (sentFolder != null) {
 	                                try {
 	                                    sentFolder.close(true);
-	                                } catch (Exception e) {}
+	                                } catch (Exception e) {
+	                                	result.put("status", "error");
+	                        			result.put("code", 1);			
+	                        			result.put("data", "");
+	                                }
 	                                
 	                                sentFolder = null;
 	                            }
@@ -2432,8 +2446,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        	messageSize = cos.getSize() / 1024.0;
 		        } catch(Exception e) {
 		        	e.printStackTrace();
+		        	result.put("status", "error");
+        			result.put("code", 1);			
+        			result.put("data", "");
 		        } finally {
-		        	try { cos.close(); } catch (Exception e) {}
+		        	try { 
+		        		cos.close(); 
+		        	} catch (Exception e) {
+		        	result.put("status", "error");
+        			result.put("code", 1);			
+        			result.put("data", "");
+        			}
 		        }
 		        
 		        LOGGER.debug("mailboxUsage=" + mailboxUsage + ", messageSize=" + messageSize + ", mailboxQuota=" + mailboxQuota);
@@ -2573,7 +2596,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
 			                if (mailSendCompleted == false) {
-    			            	Transport.send(message);
+    			            	try {
+    			            		Transport.send(message);
+    			            	} catch (MessagingException e){
+    			            		result.put("status", "error");
+    			        			result.put("code", 1);			
+    			        			result.put("data", "");
+    			        			
+    			        			return result;
+    			            	}
     			            	
     			            	sentFolderMessageUID = 0;
     			            	mailSendCompleted = true;
@@ -2673,6 +2704,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        
 			} catch (Exception e) {
 				e.printStackTrace();
+				result.put("status", "error");
+    			result.put("code", 1);			
+    			result.put("data", "");
 				if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
 					LOGGER.error("mailInterSend : " + e.getMessage());
 					pResult = e.getMessage();
