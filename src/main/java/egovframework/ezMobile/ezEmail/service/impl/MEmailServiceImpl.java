@@ -93,7 +93,10 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	        boolean isImportantOnly = false;
 	        
 	        if (filter.equals("isUnreadOnly")) {
+	        	LOGGER.debug("isUnreadOnly");
 	        	isUnreadOnly = true;
+	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
+	        	LOGGER.debug("isUnreadOnly unreadMessage : " + messages.length);
 	        } 
 	        
 	        else if (filter.equals("isImportantOnly")) {
@@ -209,7 +212,11 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
 				subject = (subject != null) ? subject : "";
-						
+				
+				if(subject.equals("")) {
+					subject = "제목 없음";
+				}
+				
 				messageJson.put("subject",subject);
 				
 				// received date
