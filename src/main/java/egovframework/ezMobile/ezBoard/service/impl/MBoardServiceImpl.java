@@ -356,7 +356,7 @@ public class MBoardServiceImpl implements MBoardService {
 		List<MBoardItemVO> mBoardNoticeItemList = getNoticePostItemList(boardID, userID, gubun, page, tenantID, offset);
 		
 		//임시로 10으로 지정
-		int listSize = 10;
+		int listSize = 30;
         
 		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
 		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText);
@@ -718,7 +718,12 @@ public class MBoardServiceImpl implements MBoardService {
 		//모바일에서는 영구게시만 지원
 		map.put("endDate", "9999-12-30 14:59:59");
 		map.put("abstract", boardListVO.get("abstract"));
-		map.put("hasAttach", boardListVO.get("hasAttach"));
+		
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
 		
 		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
 		//새로 작성할때는 1로 fix

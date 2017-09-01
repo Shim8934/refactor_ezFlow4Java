@@ -200,7 +200,7 @@
             <isEmpty property="lastDate">
                 <![CDATA[
                 AND
-                    startdate <= #nowDate#
+                    startdate < #nowDate#
                 AND
                     enddate > #nowDate#
             ]]>
@@ -209,14 +209,14 @@
 		</isEqual>
 		
 		<isEqual property="gubun" compareValue="2">
-			<![CDATA[
+			 <![CDATA[
 				AND
 					startdate <= #lastDate#
 				AND
 					enddate > #nowDate#
 				AND
 					D.totalcount IS NULL
-			]]>
+			]]> 
 		</isEqual>
 			
 		<isEqual property="gubun" compareProperty="3">
