@@ -560,12 +560,15 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		String userID = userInfo.getId();
 		int tenantID = userInfo.getTenantId();
+		
+		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 
 		//delayColor
 		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
 
 		model.addAttribute("userInfo",userInfo);
 		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("useTodoMemo", useTodoMemo);
 
 		logger.debug("taskSearch ended.");
 
