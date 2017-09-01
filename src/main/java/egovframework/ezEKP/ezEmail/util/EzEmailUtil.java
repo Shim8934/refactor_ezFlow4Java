@@ -1405,22 +1405,23 @@ public class EzEmailUtil {
 //				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
 //				folder.fetch(messages, fp);
 				
-				Message orgMsg[] = f.getMessages(); 
-				this.sortMessages(folder, orgMsg, "receivedDate", true);
-				
-				int j = 0;
-				do {                
-						Message testMsg = orgMsg[end-1];         
-						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();
-						end--;
-						if (lrDate < lFrom) {
-							arrayList.add(testMsg);
-							j++;
-						}
-					} 
-				while (j < 10 && end > 0);// 더 빨리 온 메세지를 뽑는다.
-
+				Message orgMsg[] = f.getMessages();
+				if ( orgMsg.length > 1 ) {
+					this.sortMessages(folder, orgMsg, "receivedDate", true);
+					
+					int j = 0;
+					do {                
+							Message testMsg = orgMsg[end-1];         
+							rDate = testMsg.getReceivedDate();         
+							lrDate = rDate.getTime();
+							end--;
+							if (lrDate < lFrom) {
+								arrayList.add(testMsg);
+								j++;
+							}
+						} 
+					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				}
 				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 
 				return msg;
@@ -1438,31 +1439,32 @@ public class EzEmailUtil {
 				long lrDate;//message Date long for  comparing endDate       
 				int j = 0;
 				
-				Message orgMsg[] = f.search(sTerm); 
-				this.sortMessages(folder, orgMsg, "receivedDate", true);
-				
-				do {                
-						Message testMsg = orgMsg[end-1];         
-						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();
-						end--;
-						if (lrDate < lFrom) {
-							if (isUnreadOnly || isImportantOnly) {
-								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
-									arrayList.add(testMsg);
-									j++;
-								} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
+				Message orgMsg[] = f.search(sTerm);
+				if ( orgMsg.length > 1 ) {
+					this.sortMessages(folder, orgMsg, "receivedDate", true);
+					
+					do {                
+							Message testMsg = orgMsg[end-1];         
+							rDate = testMsg.getReceivedDate();         
+							lrDate = rDate.getTime();
+							end--;
+							if (lrDate < lFrom) {
+								if (isUnreadOnly || isImportantOnly) {
+									if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
 										arrayList.add(testMsg);
 										j++;
+									} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
+											arrayList.add(testMsg);
+											j++;
+									}
+								} else {
+									arrayList.add(testMsg);
+									j++;
 								}
-							} else {
-								arrayList.add(testMsg);
-								j++;
 							}
-						}
-					} 
-				while (j < 10 && end > 0);// 더 빨리 온 메세지를 뽑는다.
-				
+						} 
+					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				}
 				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 				
 				messages = msg;

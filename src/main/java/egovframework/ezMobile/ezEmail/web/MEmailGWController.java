@@ -44,6 +44,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
@@ -52,6 +53,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -3254,10 +3256,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					if (part == null) {
 						LOGGER.error("AttachPart not found. AttachPartIndex=" + index);
 					} else {
-//						response.setContentType(part.getContentType());
-						
+					
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
-//						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
 						LOGGER.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
 						
 						try {
@@ -3266,11 +3266,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							byte[] bytes = IOUtils.toByteArray(input);
 							
 							JSONObject data = new JSONObject();
-							
-							JSONParser jp = new JSONParser();			
-							
-							Encoder encoder = Base64.getEncoder();
-							
+																				
 							data.put("bytes", bytes);
 							data.put("filename",filename);
 							data.put("filetype",part.getContentType());
@@ -3309,9 +3305,94 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		LOGGER.debug("downloadAttach ended.");
 		
-//		return Response.ok(output)
-//                .header("Content-Disposition", "attachment; filename=\"" + filename + "\"" )
-//                .build();	
+		return result;
+	}
+	
+	/**
+	 * 메일 인라인 이미지 읽어오기 실행 함수
+	 */
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/inlineattach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object downloadInline(HttpServletRequest request,
+			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId, Locale locale) throws Exception {
+
+		LOGGER.debug("downloadInline started.");
+		
+		InputStream input = null;
+		OutputStream output = null;
+		IMAPAccess ia = null;
+		JSONObject result = new JSONObject();
+		
+		// get user credentials
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+			LOGGER.debug("userEmail=" + userEmail);
+		
+			// retrieve the passed in parameters
+			String folderPath = folderId;
+			String strUid = messageId;
+			long uid = strUid != null ? Long.parseLong(strUid) : 0;
+			String contentId = index;
+			
+			if (contentId != null) {
+				contentId = EgovStringUtil.getHtmlStrCnvr(contentId);
+			}	
+		
+		LOGGER.debug("folderPath=" + folderPath + ",uid=" + uid + ",contentId=" + contentId);
+				
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+	
+			Folder f = ia.getFolder(folderPath);
+			if (f == null || !f.exists()) {
+				LOGGER.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message == null) {
+					LOGGER.error("Message not found. uid=" + uid);
+				} else {
+					Part part = ezEmailUtil.getInlinePart(message, contentId);
+					
+					if (part == null) {
+						LOGGER.error("InlinePart not found. contentId=" + contentId);
+					} else {
+						input = part.getInputStream();
+						byte[] bytes = IOUtils.toByteArray(input);
+						int byteRead;
+						
+						JSONObject data = new JSONObject();
+						
+						data.put("bytes", bytes);
+						data.put("filetype",part.getContentType());
+						
+						result.put("status", "success");
+						result.put("code", 0);			
+						result.put("data", data);
+
+					}
+				}
+			}
+		} catch (MessagingException e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+			return result;
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		LOGGER.debug("downloadInline ended.");
 		return result;
 	}
 	
