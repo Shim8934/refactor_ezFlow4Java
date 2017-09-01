@@ -108,7 +108,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			Locale locale = new Locale(ld);
 			
 			JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-			
+
 			//안읽은메일 리스트 카운트
 			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 			
