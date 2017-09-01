@@ -461,7 +461,7 @@
 	                 <div id="colorbox" class="statistics_addition" style="display: none">
 	                     <dl>
 	                         <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
-	                         <dd class="additiontext"><spring:message code='ezStatistics.t1035'/>(<spring:message code='ezStatistics.t57'/>)</dd>
+	                         <dd class="additiontext"><spring:message code='ezStatistics.t1035'/></dd>
 	                     </dl>
 	                 </div>
 	                    <div id="chartdiv" style="width: 100%; text-align: center;">
