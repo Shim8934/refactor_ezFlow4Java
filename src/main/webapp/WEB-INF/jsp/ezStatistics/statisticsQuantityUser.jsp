@@ -415,13 +415,13 @@
     }
 
     function getmailsize(size) {
-        if (parseInt(size) / 1024 / 1024 / 1024 > 1)
+        if (parseInt(size) / 1024 / 1024 / 1024 > 1) {
             return (parseInt(size) / 1024 / 1024 / 1024).toFixed(1) + "GB";
-        else if (parseInt(size) / 1024 / 1024 > 1)
+        } else if (parseInt(size) / 1024 / 1024 > 1) {
             return (parseInt(size) / 1024 / 1024).toFixed(1) + "MB";
-        else if (parseInt(size) / 1024 > 1)
+        } else if (parseInt(size) / 1024 > 1) {
             return (parseInt(size) / 1024).toFixed(1) + "KB";
-        else
+        } else {
             return (parseInt(size)).toFixed(1) + "B";
     }
 

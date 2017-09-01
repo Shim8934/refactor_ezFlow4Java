@@ -317,6 +317,21 @@
                             _Tr2.appendChild(_Td);
                         }
                     }
+                    
+                    var max = 0;
+                    var maxdata = 0;
+                    for (var i = 0; i < SelectNodes(resultxml, "DATA/ROW").length; i++) {
+                    	if (CrossYN()) {
+                            maxdata = Number(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "QTY").textContent);                    		
+                    	} else {
+                    		maxdata = Number(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "QTY").text);       		
+                    	}
+
+                    	if (maxdata > max) {
+                    		max = maxdata;
+                    		getmailsize(max);
+                    	}                  	
+                    }
                     data.push(tempdata);
                     _Table.appendChild(_Tr2);
                     _Table.appendChild(_Tr3);
@@ -330,13 +345,13 @@
     }
 
     function getmailsize(size) {
-        if (parseInt(size) / 1024 / 1024 / 1024 > 1)
+        if (parseInt(size) / 1024 / 1024 / 1024 > 1) {
             return (parseInt(size) / 1024 / 1024 / 1024).toFixed(1) + "GB";
-        else if (parseInt(size) / 1024 / 1024 > 1)
+        } else if (parseInt(size) / 1024 / 1024 > 1) {
             return (parseInt(size) / 1024 / 1024).toFixed(1) + "MB";
-        else if (parseInt(size) / 1024 > 1)
+        } else if (parseInt(size) / 1024 > 1) {
             return (parseInt(size) / 1024).toFixed(1) + "KB";
-        else
+        } else {
             return (parseInt(size)).toFixed(1) + "B";
     }
 

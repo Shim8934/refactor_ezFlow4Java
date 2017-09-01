@@ -249,7 +249,7 @@
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
-                _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>" + "(" + "<spring:message code='ezStatistics.t57'/>" + ")";
+                _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>";
                 _Tr.appendChild(_Th);
 
                 _Table.appendChild(_Tr);
