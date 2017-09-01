@@ -2430,7 +2430,7 @@ public class EzEmailUtil {
     
     public String getSecureBodyHtml(String fileName, Locale locale) {
     	StringBuilder sb = new StringBuilder();
-    	sb.append("<div class=\"security_message\" style=\"background:#d0e1ff\">\n");
+    	sb.append("<div class=\"security_message\" style=\"background:#d0e1ff;min-width:770px;\">\n");
     	sb.append("    <div class=\"security_img\" style=\"max-width:780px;margin:0 auto;padding-left:40px;padding-bottom:20px\">\n");
     	sb.append("        <img src=\"cid:" + fileName + ".gif@12345678.87654321\">\n");
     	sb.append("        <section class=\"security_txt\" style=\"margin:0px 0px 0px 300px;padding:54px 0px;font-family:" + egovMessageSource.getMessage("main.t0620", locale).replace(";", ",") + ";position:relative;left:-50px;margin-top:-250px\">\n");
