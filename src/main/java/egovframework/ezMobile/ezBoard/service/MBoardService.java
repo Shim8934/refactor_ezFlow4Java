@@ -19,9 +19,9 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface MBoardService {
 	List<MBoardListHeaderVO> getListHeader(MBoardInfoVO mBoardInfoVO, String lang, int tenantID) throws Exception;
 	
-	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add) throws Exception;
+	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText) throws Exception;
 
-	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
+	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText) throws Exception;
 	
 	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
 	
@@ -49,9 +49,11 @@ public interface MBoardService {
 	
 	String getMhtContent(String realPath, String domain, MCommonVO userInfo, String url,Locale locale) throws Exception;
 	
+	String checkFavorite(String userID, String boardID, int tenantID) throws Exception;
+	
 	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
-	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID) throws Exception;
+	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
 	
 	Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
 	

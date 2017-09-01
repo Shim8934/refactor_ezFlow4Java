@@ -239,7 +239,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 		
 		try {
 			
-
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			String startDate = request.getParameter("startDate");
@@ -255,9 +254,13 @@ public class MResourceGWController extends EgovFileMngUtil {
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
 
-			resVO.setStartDate(startDate);
-			resVO.setEndDate(endDate);
+			String reFlag = resVO.getReFlag();
 			
+			if(reFlag.equals("1")){
+				resVO.setStartDate(startDate);
+				resVO.setEndDate(endDate);
+			}
+
 			String obj = "";
 			
 			Gson gson = new Gson();
@@ -340,7 +343,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 
 		try {
 			
-
 			String serverName = request.getHeader("x-user-host");
 			String userId =  jsonObject.get("userId").toString();
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
@@ -350,91 +352,24 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String ownerId = resourceId; 
 			String pNum = "";
-			String endDate =  "";
-			String importance =  "";
-			String title =  ""; 
-			String deptNm =  "";
+			String endDate = jsonObject.get("endDate").toString();
+			String importance = jsonObject.get("importance").toString();
+			String title =  jsonObject.get("title").toString(); 
+			String deptNm =  info.getDeptName();
 			String timeDisplay =  ""; 
 			String writeDay = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			String writerId =  "";
-			String content =  "";
-			String ownerNm =  "";
-			String allDay =  "0"; 
-			String companyId =  "";
+			String writerId =  userId;
+			String content =  jsonObject.get("content").toString();
+			String ownerNm =  info.getUserName();
+			String allDay =  jsonObject.get("allDay").toString(); 
+			String companyId =  info.getCompanyId();
 			String attachFlag =  ""; 
 			String entryList =  ""; 
 			String location =  ""; 
 			String alterTime =  "";
-			String startDate =  ""; 
+			String startDate =  jsonObject.get("startDate").toString(); 
 			String scheduleId =  "";
-			
-			ownerId = resourceId; 
-			
-			if(jsonObject.containsKey("pNum")){
-				pNum = jsonObject.get("pNum").toString();
-			}
-			
-			if(jsonObject.containsKey("startDate")){
-				startDate = jsonObject.get("startDate").toString();
-			}
-			
-			if(jsonObject.containsKey("endDate")){
-				endDate = jsonObject.get("endDate").toString();
-			}
-			
-			if(jsonObject.containsKey("importance")){
-				importance = jsonObject.get("importance").toString();
-			}
-			
-			
-			if(jsonObject.containsKey("title")){
-				title = jsonObject.get("title").toString();
-			}
-			
-			if(jsonObject.containsKey("deptNm")){
-				deptNm = jsonObject.get("deptNm").toString();
-			}
-			
-			if(jsonObject.containsKey("timeDisplay")){
-				timeDisplay = jsonObject.get("timeDisplay").toString();
-			}
-			
-			if(jsonObject.containsKey("userId")){
-				writerId = jsonObject.get("userId").toString();
-			}
-			
-			if(jsonObject.containsKey("content")){
-				content = jsonObject.get("content").toString();
-			}
-			
-			if(jsonObject.containsKey("writerName")){
-				ownerNm = jsonObject.get("writerName").toString();
-			}
-			
-			if(jsonObject.containsKey("companyId")){
-				companyId = jsonObject.get("companyId").toString();
-			}
-			
-			
-			if(jsonObject.containsKey("attachFlag")){
-				attachFlag = jsonObject.get("attachFlag").toString();
-			}
-			
-			if(jsonObject.containsKey("entryList")){
-				entryList = jsonObject.get("entryList").toString();
-			}
-			
-			if(jsonObject.containsKey("location")){
-				location = jsonObject.get("location").toString();
-			}
-			
-			if(jsonObject.containsKey("alterTime")){
-				alterTime = jsonObject.get("alterTime").toString();
-			}
-			
-			if(jsonObject.containsKey("scheduleId")){
-				scheduleId = jsonObject.get("scheduleId").toString();
-			}
+			String reFlag =  jsonObject.get("reFlag").toString();
 
 			writeDay = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 			allDay =  "0"; 
@@ -465,7 +400,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	LOGGER.debug("tenantId: " + tenantId);
 	    	LOGGER.debug("approveFlag: " + approveFlag);
 
-	    	mResourceService.addResSch(ownerId, companyId, tenantId, pNum, writerId, deptNm, ownerNm, title, location, timeDisplay, utcStartDate, utcEndDate, allDay, alterTime, content, importance, writeDay, entryList, attachFlag, approveFlag, scheduleId);
+	    	mResourceService.addResSch(ownerId, companyId, tenantId, pNum, writerId, deptNm, ownerNm, title, location, timeDisplay, utcStartDate, utcEndDate, allDay, alterTime, content, importance, writeDay, entryList, attachFlag, approveFlag, reFlag, scheduleId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -508,32 +443,18 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String importance = jsonObject.get("importance").toString();
 			String num = scheduleId;
 			String title = jsonObject.get("title").toString();
-			String deptNm =  info.getDeptName();
-			String timeDisplay =  ""; 
-			String writerId =  "";
-			String content = jsonObject.get("content").toString();
-			String ownerNm =  "";
-			String allDay =  jsonObject.get("allDay").toString(); 
+			String content = jsonObject.get("content").toString(); 
 			String companyId =  info.getCompanyId();
-			String attachFlag =  ""; 
-			String entryList =  ""; 
-			String location =  ""; 
 			String startDate = jsonObject.get("startDate").toString(); 
-			String reFlag = "";
-			String gresFlag = "";
-			String characterId = "";
+			String reFlag = jsonObject.get("reFlag").toString(); 
 			String alertTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
-	    	String writeDay = "";
+
 	    	
 	    	LOGGER.debug("ownerId: " + ownerId);
 	    	LOGGER.debug("companyId: " + companyId);	    	
-	    	LOGGER.debug("writerId: " + writerId);
-	    	LOGGER.debug("deptNm: " + deptNm);
-	    	LOGGER.debug("ownerNm: " + ownerNm);
 	    	LOGGER.debug("title: " + title);
-	    	LOGGER.debug("allDay: " + allDay);
 	    	LOGGER.debug("content: " + content);
 	    	LOGGER.debug("importance: " + importance);
 	    	LOGGER.debug("scheduleId: " + scheduleId);
@@ -541,8 +462,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	LOGGER.debug("endDate: " + utcEndDate);
 	    	LOGGER.debug("tenantId: " + tenantId);
 	    	LOGGER.debug("alertTime: " + alertTime);
-    	
-	    	mResourceService.modifyResSch(title, location, timeDisplay, utcStartDate, utcEndDate, alertTime, content, importance, reFlag, gresFlag, allDay, writeDay, entryList, attachFlag, characterId, companyId, num, ownerId, tenantId);
+	    	LOGGER.debug("reFlag: " + reFlag);
+	    	
+	    	mResourceService.modifyResSch(title,utcStartDate, utcEndDate, alertTime, content, importance, reFlag, companyId, num, ownerId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

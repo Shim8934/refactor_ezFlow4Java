@@ -343,7 +343,7 @@ public class MBoardServiceImpl implements MBoardService {
 //    }
 	
 	@Override
-	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add) throws Exception {
+	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText) throws Exception {
 		logger.debug("getBoardItemList started.");
 		
 		String boardID = mBoardInfoVO.getBoardID();
@@ -358,8 +358,8 @@ public class MBoardServiceImpl implements MBoardService {
 		//임시로 10으로 지정
 		int listSize = 10;
         
-		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
-		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset);
+		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
+		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText);
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -373,7 +373,7 @@ public class MBoardServiceImpl implements MBoardService {
 		}
 		
 		//스크롤 페이징할 때 공지사항 추가 안되게 add를 받아옴
-		if (add == null || add.equals("")) {
+		if ((add == null || add.equals("")) && (pSearchText == null || pSearchText.equals(""))) {
 			for (MBoardItemVO vo : mBoardNoticeItemList) {
 				mBoardItemList.add(0, vo);
 			}
@@ -386,7 +386,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 
 	@Override
-	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception {
+	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText) throws Exception {
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
@@ -404,7 +404,7 @@ public class MBoardServiceImpl implements MBoardService {
 		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
         int endRow = (mobileListSize * page) - noticeCount;
 		
-        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
+        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
         
         List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
         
@@ -536,7 +536,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return vo;
 	}
 	
-	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset) throws Exception {
+	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText) throws Exception {
 		logger.debug("getBoarditemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID + " || lastDate = " + lastDate);
 		
@@ -549,6 +549,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
 		
 		List<MBoardItemVO> list = mBoardDAO.getBoardItemList(map);
 		
@@ -616,7 +617,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 	
 	@Override
-	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
+	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID, String pSearchText) throws Exception {
 		logger.debug("getBoardItemListCount started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
 		
@@ -625,6 +626,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("userID", userID);
 		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText);
 		map.put("tenantID", tenantID);
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
@@ -968,7 +970,8 @@ System.out.println("strFilePath:"+strFilePath);
             String boardID = "";
             
             if (mode == 0) {
-            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);            
+            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);
+            	
             } else {
             	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, tenantID);
             	
@@ -1015,9 +1018,27 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		});
 	    
-	    
+	    //자식존재여부 체크
+	    for (int i=0; i< brdBoardTreeList.size(); i++) {
+	    	String isLeaf = checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID);
+	    	brdBoardTreeList.get(i).setIsLeaf(isLeaf);
+	    }
 
 		return brdBoardTreeList;
+	}
+	
+	public String checkIfLeafBoard(String pBoardID, int tenantID) {
+		try {
+	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID, tenantID);
+	        
+	        if (ret > 0) {
+	        	return "FALSE";
+	        } else {
+	        	return "TRUE";
+	        }
+		} catch(Exception ex) {
+			return "FALSE";
+		}
 	}
 
 	@Override
@@ -1142,7 +1163,14 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		}
 	}
-	
-	
+
+	@Override
+	public String checkFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.checkFavorite(map);
+	}
 	
 }

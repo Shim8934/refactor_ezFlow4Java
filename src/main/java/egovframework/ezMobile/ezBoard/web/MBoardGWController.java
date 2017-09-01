@@ -129,6 +129,7 @@ public class MBoardGWController {
 			String userID = request.getParameter("userID");
 			String lastDate = request.getParameter("lastDate");
 			String add = request.getParameter("add");
+			String pSearchText = request.getParameter("pSearchText");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
@@ -146,9 +147,11 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
-			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getUserId(),add);
-			int listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(),info.getTenantId());
+			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getUserId(),add,pSearchText);
+			int listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(),info.getTenantId(),pSearchText);
 			
+			//즐겨찾기 여부
+			String favoriteYN = mBoardService.checkFavorite(userID, boardId, info.getTenantId());
 			LOGGER.debug("listCount : "+listCount);
 			
 			result.put("status", "ok");
@@ -156,6 +159,7 @@ public class MBoardGWController {
 			result.put("data", list);
 			result.put("data2", boardInfo);
 			result.put("listCount", listCount);
+			result.put("favoriteYN", favoriteYN);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -478,7 +482,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/favorite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
+	public JSONObject insertFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] started.");
 		
 		JSONObject result = new JSONObject();
@@ -499,6 +503,7 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
+		return result;
 	}
 	
 	/**
@@ -506,7 +511,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/favorite", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
+	public JSONObject deleteFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] started.");
 		
 		JSONObject result = new JSONObject();
@@ -527,6 +532,7 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
+		return result;
 	}
 	
 	/**

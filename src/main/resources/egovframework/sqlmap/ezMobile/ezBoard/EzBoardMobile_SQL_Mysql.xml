@@ -178,6 +178,15 @@
 					A.apprflag = 'Y'
 			]]>
 		</isEqual>
+        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+                        OR
+                    A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
 		
 		<isEqual property="gubun" compareValue="1">
             <isNotEmpty property="lastDate">
@@ -353,6 +362,15 @@
 				AND
 					enddate > #nowDate#
 			]]>
+            
+            <isNotEmpty property="pSearchText">
+                <![CDATA[
+                    AND
+                        (title LIKE CONCAT('%' ,#pSearchText#, '%')
+                            OR
+                        writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                ]]>
+            </isNotEmpty>
 			
 			<isEqual property="apprFlag" compareValue="Y">
 				<![CDATA[
@@ -1116,6 +1134,21 @@
                   TENANT_ID = #tenantID#    
            ]]>
       </delete>
+      
+       <select id="MBoardDAO.checkFavorite" parameterClass="Map" resultClass="Integer">
+          <![CDATA[
+              SELECT 
+                  COUNT(*) 
+              FROM 
+                  TBL_Board_MyBoards 
+              WHERE  
+                  USERID = #userID#
+              AND
+                  BOARDID = #boardID#
+              AND
+                  TENANT_ID = #tenantID#
+              ]]>
+  </select>
       
       <select id="MBoardDAO.getAttachList" parameterClass="Map" resultClass="MBoardAttachVO">
           <![CDATA[
