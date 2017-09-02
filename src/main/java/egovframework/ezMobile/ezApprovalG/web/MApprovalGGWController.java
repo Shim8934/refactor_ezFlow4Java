@@ -25,6 +25,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -413,7 +414,6 @@ public class MApprovalGGWController {
 				result.put("code", "0");
 				result.put("data", "");
 			}
-			
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -720,6 +720,35 @@ public class MApprovalGGWController {
 		}
 
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/mobile/ezapproval/left-count/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mApprovalLeftCount(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			MApprovalGLeftVO approvalGLeftVO = mApprovalGService.getLeftCount(userId, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", approvalGLeftVO);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] ended.");
 		
 		return result;
 	}

@@ -245,6 +245,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String endDate = request.getParameter("endDate");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
+			String offset = info.getOffSet();
 			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("resourceId: " + resourceId);
@@ -254,11 +255,17 @@ public class MResourceGWController extends EgovFileMngUtil {
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
 
+			String contentBefore = resVO.getContent();
+			contentBefore = contentBefore.replaceAll("<[^>]*>", " ");
+			resVO.setContent(contentBefore);
 			String reFlag = resVO.getReFlag();
 			
 			if(reFlag.equals("1")){
 				resVO.setStartDate(startDate);
 				resVO.setEndDate(endDate);
+			} else {
+				resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
+				resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
 			}
 
 			String obj = "";
@@ -307,7 +314,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			LOGGER.debug("tenantId: " + tenantId);
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
-
+			
 			String obj = "";
 			
 			Gson gson = new Gson();

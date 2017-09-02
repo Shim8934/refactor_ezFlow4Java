@@ -24,6 +24,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -378,6 +379,35 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		LOGGER.debug("getDocState ended");
 		
 		return docState;
+	}
+
+	@Override
+	public MApprovalGLeftVO getLeftCount(String userId, MCommonVO userInfo) throws Exception {
+		LOGGER.debug("getLeftCount started");
+		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
+		String userIDS = "'" + userInfo.getUserId() + "'";
+		String proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
+		
+		if (proxyOption.equals("1")) {
+			userIDS = ezApprovalGService.getProxyUser(userInfo.getUserId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffSet());
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", userIDS);
+		map.put("userId", userId);
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyId());
+		map.put("approvalFlag", approvalFlag);
+		map.put("mainViewYN", mainViewYN);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		MApprovalGLeftVO approvalGLeftVO = mApprovalGDAO.getLeftCount(map);
+
+		LOGGER.debug("getLeftCount ended");
+		
+		return approvalGLeftVO;
 	}
 	
 }
