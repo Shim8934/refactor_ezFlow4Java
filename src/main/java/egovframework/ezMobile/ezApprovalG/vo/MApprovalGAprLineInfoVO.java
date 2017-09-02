@@ -3,14 +3,18 @@ package egovframework.ezMobile.ezApprovalG.vo;
 public class MApprovalGAprLineInfoVO {
 	/** 결재상태*/
 	private String aprState;
+	/** 결재 종류*/
+	private String aprType;
 	/** 결재자이름*/
 	private String aprMemberName;
 	/** 결재자직위*/
 	private String aprMemberJobTitle;
 	/** 결재자부서명*/
 	private String aprMemberDeptName;
-	/** 결재날짜*/
+	/** 받은날짜*/
 	private String receivedDate;
+	/** 결재날짜*/
+	private String processDate;
 	/** 대리결재자이름*/
 	private String proxyUserName;
 	/** 대리결재자직위*/
@@ -74,5 +78,16 @@ public class MApprovalGAprLineInfoVO {
 	public void setAprMemberPhoto(String aprMemberPhoto) {
 		this.aprMemberPhoto = aprMemberPhoto;
 	}
-
+	public String getProcessDate() {
+		return processDate;
+	}
+	public void setProcessDate(String processDate) {
+		this.processDate = processDate;
+	}
+	public String getAprType() {
+		return aprType;
+	}
+	public void setAprType(String aprType) {
+		this.aprType = aprType;
+	}
 }
