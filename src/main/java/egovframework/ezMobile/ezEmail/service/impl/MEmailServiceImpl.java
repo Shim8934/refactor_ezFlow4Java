@@ -145,6 +145,8 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				JSONObject messageJson = new JSONObject();
 				
 				messageJson.put("href",folderId+"/"+uidFolder.getUID(message));
+				messageJson.put("folderId",folderId);
+				messageJson.put("messageId",uidFolder.getUID(message));
 				messageJson.put("fromemail","");
 								
 				// importance
