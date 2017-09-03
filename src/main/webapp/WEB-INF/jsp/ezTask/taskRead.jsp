@@ -59,10 +59,15 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-		        //담당자 지정하는부분인것 같음 이효진
-		        /* if (personlist != "") {
-		            document.getElementById("personlist").innerHTML = personlist;
-		        } */
+		        if (useTodoMemo == 'YES') {
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 480 + "PX");
+		    	} else {
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 425 + "PX");
+		    	}
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -86,6 +91,19 @@
 				
 				initProgressBar(taskstatus, completerate);
 		    });
+		    
+		    window.onresize = function () {
+		    	if (useTodoMemo == 'YES') {
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 480 + "PX");
+		    	} else {
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 425 + "PX");
+		    	}
+		    	
+	         }
 		    
 			function scrollTop() {
 				try {
@@ -869,9 +887,18 @@
 		
 		<table id="normalScreen" class="layout" style="height:100%">
 			<tr>
-				<td style="padding-bottom:4px;height: 445px;">
-					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-				</td>
+				<c:choose>
+					<c:when test="${useTodoMemo == 'YES' }">
+						<td style="padding-bottom:4px;height: 440px;">
+							<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+						</td>
+					</c:when>
+					<c:otherwise>
+						<td style="padding-bottom:4px;height: 495px;">
+							<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+						</td>
+					</c:otherwise>
+				</c:choose>
 			</tr>
 			
 			<tr>
@@ -893,11 +920,20 @@
 			</tr>
 		</table>
 		
-		<table id="tablework" class="layout" style="height: 485px;display:none;" >
+		<table id="tablework" class="layout" style="height:100%; display:none;" >
 			<tr style="vertical-align:top">
-				<td colspan="3" style="padding-bottom:4px; height:495px;">
-					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-				</td>
+				<c:choose>
+					<c:when test="${useTodoMemo == 'YES' }">
+						<td colspan="3" style="padding-bottom:4px; height:440px;">
+							<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+						</td>
+					</c:when>
+					<c:otherwise>
+						<td colspan="3" style="padding-bottom:4px; height:495px;">
+							<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+						</td>
+					</c:otherwise>
+				</c:choose>
 			</tr>
 			<tr style="vertical-align:top">
 				<td style="padding-top:4px" colspan="3">
@@ -917,7 +953,7 @@
 			</tr>
 		</table>
 		
-		<table id="tablecomment" class="layout" style="display:none;height:505px">
+		<table id="tablecomment" class="layout" style="height:100%; display:none;">
 			<tr>
 				<td style="height:20px" colspan="3">
 					<table class ="content" style="width:100%">
