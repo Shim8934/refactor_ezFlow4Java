@@ -749,6 +749,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			/*업무수정*/
 			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 			
+			taskInfoVO.setMemo(taskInfoVO.getMemo().replace("<br>", "\n"));
 			//업무공유자목록조회
 			if (taskInfoVO.getHasShare().equals("Y")) {
 				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
