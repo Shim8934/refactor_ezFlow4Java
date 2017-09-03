@@ -195,6 +195,7 @@
 	                document.getElementById("maxReadCount").disabled = true;
 	            } else {
 	            	document.getElementById("maxReadCount").disabled = false;
+	            	document.getElementById("maxReadCount").focus();
 	            }
 		    }
 		    
