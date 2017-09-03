@@ -593,12 +593,7 @@
                      <tr id="shareinputtr">
                         <th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
                            <td colspan ="3">
-                           		<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px">
-									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
-										<c:out value = '${taskShareVO.sharerName }' />
-										<c:if test="${not status.last }">,&nbsp;</c:if>
-									</c:forEach>
-                           		</div>
+                           		<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"><c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}"><c:out value = '${taskShareVO.sharerName }' /><c:if test="${not status.last }">,&nbsp;</c:if></c:forEach></div>
                            		<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
