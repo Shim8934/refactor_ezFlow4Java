@@ -904,7 +904,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<TASKPERSONID>" + list.get(i).getTaskPersonID() + "</TASKPERSONID>");
     		resultXML.append("<TASKPERSONNAME>" + list.get(i).getTaskPersonName() + "</TASKPERSONNAME>");
     		resultXML.append("<TASKPERSONNAME2>" + list.get(i).getTaskPersonName2() + "</TASKPERSONNAME2>");
-    		resultXML.append("<MEMO>" + list.get(i).getMemo() + "</MEMO>");
+    		resultXML.append("<MEMO>" + commonUtil.cleanValue(list.get(i).getMemo()) + "</MEMO>");
     		
     		resultXML.append("</ROW>");
     		

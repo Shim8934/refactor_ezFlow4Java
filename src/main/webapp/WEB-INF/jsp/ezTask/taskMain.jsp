@@ -499,12 +499,26 @@
 			function selectTab(num) {
 				if (num == 2) {
 					taskStatusCount = 0;
-					DateChange();
+					filter = document.getElementById("txt_keyword").value
+
+					if (filter != "") {
+						search();
+					} else {
+						DateChange();
+					}
+
 					list_body.style.display = "";
 					list_body2.style.display = "none";
 				} else if (num == 1) {
 					taskStatusCount = 1;
-					DateChange();
+					filter = document.getElementById("txt_keyword").value
+
+					if (filter != "") {
+						search();
+					} else {
+						DateChange();
+					}
+
 					list_body.style.display = "none";
 					list_body2.style.display = "";
 				} else {
@@ -875,18 +889,26 @@
 		        }
 		    }
 		    function ChangeTab(obj) {
+		    	var num = "";
 		        var pSelectTab = GetAttribute(obj, "divname");
+
+		        if (filter != "") {
+		        	num = 2;
+		        	$("#radio3").click();
+		        } else {
+		        	num = 0;
+		        }
 
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
 // 		                DateChange();
-						selectTab(0);
+						selectTab(num);
 		                break;
 		            case "taskdictate":
 		                type = "2";
 // 		                DateChange();
-						selectTab(0);
+						selectTab(num);
 		                break;
 		        }
 		    }
@@ -900,22 +922,25 @@
 		    function keyword_Clear() {
 		        document.getElementById('txt_keyword').value = "";
 		    }
+
+		    var chkValue = "";
+		    var filter = "";
 		    function search() {
 		        if ($.trim($("#txt_keyword").val()) == "") {
 		        	alert("<spring:message code='ezTask.jsh01' />");
 		            return;
 		        }
 
-		        var chkValue;
 		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
 		            if (document.getElementsByName("searchCheck")[i].checked == true)
 		                chkValue = document.getElementsByName("searchCheck")[i].value;
 		
 		        }
-		        var filter = document.getElementById("txt_keyword").value;
-		        if (userlang != "1" && chkValue == "TaskPersonName") {
-		            filter = document.getElementById("txt_keyword").value;
-		        }
+
+		        filter = document.getElementById("txt_keyword").value;
+// 		        if (userlang != "1" && chkValue == "TaskPersonName") {
+// 		            filter = document.getElementById("txt_keyword").value;
+// 		        }
 
 		        $.ajax({
 					type : "POST",
@@ -928,7 +953,8 @@
 						app : 1,
 						type : type,
 						filter : filter,
-						chkValue : chkValue
+						chkValue : chkValue,
+						taskStatusCount : taskStatusCount
 					},
 					success : function(xml) {
 						after_DateChange(xml);
