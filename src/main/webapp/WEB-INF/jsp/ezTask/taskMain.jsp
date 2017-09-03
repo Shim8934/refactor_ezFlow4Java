@@ -359,22 +359,29 @@
 		            if (SelectSingleNodeValue(node, "TASKTYPE") == 1) {
 				        if (primary == "1") {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME"));
+				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "CREATORNAME"));
 				        } else {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME2"));
+				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "CREATORNAME2"));
 				        }			        	
 			        } else {
 			        	if (primary == "1") {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME"));
+				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "TASKPERSONNAME"));
 				        } else {
 				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TASKPERSONNAME2"));
+				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "TASKPERSONNAME2"));
 				        }
 			        }
+		            
+		            tr.cells[3].style.overflow = "hidden";
+		            tr.cells[3].style.textOverflow = "ellipsis";
 
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
-			        }
-			        else
+			        } else {
 			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
+			        }
 			        tr.cells[4].style.overflow = "hidden";
 			        tr.cells[4].style.textOverflow = "ellipsis";
 			        
@@ -1083,7 +1090,7 @@
 						<col style ="width:30px;">
 						<col style ="width:50px;">
 						<col style ="width:20px;">
-						<col style ="width:60px;">
+						<col style ="width:100px;">
 						<col >
 						<col style ="width:50px;">
 						<col style ="width:140px;">
@@ -1125,7 +1132,7 @@
 						<col style ="width:30px;">
 						<col style ="width:50px;">
 						<col style ="width:20px;">
-						<col style ="width:60px;">
+						<col style ="width:100px;">
 						<col >
 						<col style ="width:50px;">
 						<col style ="width:140px;">
