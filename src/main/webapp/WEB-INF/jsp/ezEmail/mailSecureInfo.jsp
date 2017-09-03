@@ -40,7 +40,7 @@
 		  </ul>
 		</div>
 		
-		<span><spring:message code='ezEmail.lhm45' /></span><br/>
+		<span>▒ <spring:message code='ezEmail.lhm45' /></span><br/>
 		<br/>
 		
 		<h2><spring:message code='ezEmail.lhm44' /></h2>
