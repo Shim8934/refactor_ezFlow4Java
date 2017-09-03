@@ -222,4 +222,75 @@ public class MPortalGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 모바일 G/W 포탈 [GET] 우측메뉴총계 (일반/폴더/포탈/타임라인)
+	 */
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/{type}/right-panel/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject portalRightPanel(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("portalMainList Start");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			Map<String, Object> dataObject = new HashMap<String, Object>();
+
+			String serverName = request.getHeader("x-user-host");			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			String listCnt = request.getParameter("listCnt");			
+			
+			//받은결재함 리스트
+			String today = commonUtil.getTodayUTCTime("");
+		
+			//받은결재함 리스트 카운트
+			int apprCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
+			
+			//오늘의일정 리스트			
+			JSONObject scheduleInfo = mScheduleService.scheduleMainList(info, listCnt);
+			
+			//오늘의일정 리스트 카운트
+			Object scheduleCnt = scheduleInfo.get("cnt");
+			
+			//안읽은메일 리스트
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);			
+
+			//안읽은메일 리스트 카운트
+			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+			
+			//새게시물 리스트 카운트
+			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			
+			//오늘의자원 리스트
+			Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt);
+			
+			//오늘의자원 리스트 카운트
+			Object resourceCnt = resourceMap.get("count");			
+			
+			dataObject.put("apprCnt", apprCnt+"");
+			
+			dataObject.put("scheduleCnt", scheduleCnt+"");
+			
+			dataObject.put("mailCnt", mailCnt+"");
+			
+			dataObject.put("boardCnt", boardCnt+"");
+			
+			dataObject.put("resourceCnt", resourceCnt+"");
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", dataObject);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");		
+		}		
+		
+		logger.debug("portalMainList End");
+		
+		return result;
+	}
+	
 }
