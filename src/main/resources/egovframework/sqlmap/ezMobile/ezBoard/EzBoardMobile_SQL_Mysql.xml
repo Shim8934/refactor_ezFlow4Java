@@ -211,7 +211,7 @@
 		<isEqual property="gubun" compareValue="2">
 			 <![CDATA[
 				AND
-					startdate <= #lastDate#
+					startdate < #lastDate#
 				AND
 					enddate > #nowDate#
 				AND
@@ -222,7 +222,7 @@
 		<isEqual property="gubun" compareProperty="3">
 			<![CDATA[
 				AND
-					startdate <= #lastDate#
+					startdate < #lastDate#
 				AND
 					enddate < #nowDate#
 			]]>
@@ -292,7 +292,7 @@
 				AND
 					BOARDID = #boardID#
 				AND
-					STARTDATE <= #nowDate#
+					STARTDATE < #nowDate#
 				AND
 					ENDDATE > #nowDate#
 				AND
