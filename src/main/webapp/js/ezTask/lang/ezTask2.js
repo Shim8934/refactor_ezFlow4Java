@@ -59,7 +59,8 @@ var strLang57 = "Please specify the person.";
 var strLang58 = "The extension of the file upload limit.";
 
 var strLang59 = "트리뷰의 ID가 지정되지 않았습니다.";
-var strLang60 = "데이터가 지정되지 않았습니다."
-var strLang61 = "리스트의 ID가 지정되지 않았습니다."
-var strLang62 = "데이터가 지정되지 않았습니다."
-var strLang63 = "노드가 존재하지 않습니다."
+var strLang60 = "데이터가 지정되지 않았습니다.";
+var strLang61 = "리스트의 ID가 지정되지 않았습니다.";
+var strLang62 = "데이터가 지정되지 않았습니다.";
+var strLang63 = "노드가 존재하지 않습니다.";
+var strLang64 =	"제목은 공백으로 입력할 수 없습니다.";

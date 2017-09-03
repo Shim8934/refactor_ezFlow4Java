@@ -635,6 +635,11 @@ function save_task() {
         document.getElementById("TextTitle").focus();
         return;
     }
+	
+	if ($.trim($("#TextTitle").val()) == "") {
+    	alert(strLang64);
+        return;
+    }
 
     var startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
     var enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
