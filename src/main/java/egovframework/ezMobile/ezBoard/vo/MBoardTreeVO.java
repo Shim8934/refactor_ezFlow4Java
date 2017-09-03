@@ -22,7 +22,9 @@ public class MBoardTreeVO {
 	/** 이즈맆	*/
 	private String isLeaf;
 	/** */
-	private String docNO;		
+	private String docNO;
+	/** */
+	private int listCount;
 	
 	public String getBoardId() {
 		return boardId;
@@ -90,4 +92,11 @@ public class MBoardTreeVO {
 	public void setDocNO(String docNO) {
 		this.docNO = docNO;
 	}
+	public int getListCount() {
+		return listCount;
+	}
+	public void setListCount(int listCount) {
+		this.listCount = listCount;
+	}
+	
 }
