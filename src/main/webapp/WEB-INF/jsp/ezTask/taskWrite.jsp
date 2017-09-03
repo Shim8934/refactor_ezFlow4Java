@@ -79,7 +79,7 @@
 					document.getElementById("C").click();
 				}
 	
-				if (personid != "") {
+				if (personid != "" && personid != creatorid) {
 					document.getElementById("personlist").innerHTML = personid;
 	                 
 					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
@@ -291,12 +291,12 @@
 					taskType = obj.value;
 					document.getElementById("personinputtr").style.display = "";
 					document.getElementById("periodblock").style.display = "";
+					$("#personlist").html("");
 				} else if (obj.id == "C") {
 					taskType = obj.value;
 					document.getElementById("personinputtr").style.display = "";
 					document.getElementById("periodblock").style.display = "";
-				} else {
-					document.getElementById("importantSelect").value = obj.value;
+					$("#personlist").html("");
 				}
 			}
 
@@ -330,7 +330,7 @@
 						tasktypename = "<spring:message code = 'ezTask.t2002' />";
 						break;
 				}
-					
+				
 				setNodeText(document.getElementById("printTasktype"), tasktypename);
 				setNodeText(document.getElementById("printCompleteRate"), document.getElementById("completerateSelect").value + "%");
 				

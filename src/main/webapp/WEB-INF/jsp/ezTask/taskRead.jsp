@@ -31,7 +31,6 @@
 			var completerate = "${taskInfoVO.completeRate }";
 			var duration = 500;
 			var delayColor = "${delayColor }";
-		    var shareid = "${shareID }";
 		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
 		    var date = "${date }";
@@ -67,6 +66,7 @@
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
+		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2000' />";
 		        } else if (tasktype == "2") {
@@ -605,17 +605,13 @@
 			    $("#printComment").html($("#taskCommentList").html());
 			    $("#printComment img").remove();
 			    
-			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
+			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			
-			    if (personid == userid && shareid.indexOf(userid) == -1) {
-			        document.getElementById("printDocument2").innerHTML = message.document.body.innerHTML;
-			    	document.getElementById("printAttach2").innerHTML = document.getElementById("attachedfileDIV2").innerHTML;
-			    } else if (personid == userid && shareid.indexOf(userid) > -1) {
-			        document.getElementById("printDocument2").innerHTML = message.document.body.innerHTML;
-			        document.getElementById("printAttach2").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
-			    } else if (tasktype != "1") {
-			        document.getElementById("printDocument2").innerHTML = message.document.body.innerHTML;
+			    if (tasktype != "1") {
+			    	$("#printTaskWork").show();
+			    	$("#printTaskWorkContent").show();
+			        document.getElementById("printDocument2").innerHTML = message2.document.body.innerHTML;
 			        document.getElementById("printAttach2").innerHTML = document.getElementById("attachedfileDIV2").innerHTML;
 			    }
 			
@@ -634,8 +630,7 @@
 			    if ($("#taskCommentList").html().trim() != "") {
 			        document.getElementById("printCommentView").style.display = "";
 			        document.getElementById("optiontr").style.display = "";
-			    }
-			    else {
+			    } else {
 			        document.getElementById("printCommentView").style.display = "none";
 			        document.getElementById("optiontr").style.display = "none";
 			    }
@@ -644,7 +639,7 @@
 			        printattachView.style.display = "";
 			
 			    if (tasktype != "1" && document.getElementById("printAttach2").innerHTML.trim() != "")
-			        printattachViewProgress.style.display = "";
+			    	printattachViewProgress.style.display = "";
 			
 			    window.print();
 			    
@@ -981,10 +976,10 @@
 				</tr>
 				
 				<!-- 진행사항 -->
-				<tr>
+				<tr id="printTaskWork" style="display:none;">
 					<td><spring:message code='ezTask.t2011' /></td>
 				</tr>
-				<tr>
+				<tr id="printTaskWorkContent" style="display:none;">
 					<td style="padding-top:10px;padding-bottom:4px"><div class='margin' id="printDocument2" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
 				</tr>
 				<tr id="printattachViewProgress" style="display:none">
