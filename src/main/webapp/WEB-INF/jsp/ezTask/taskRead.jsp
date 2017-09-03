@@ -984,7 +984,7 @@
 				</td>
 			</tr>
 		</table>
-		<div id="printScreen" style="display: none; padding-top:50px;">
+		<div id="printScreen" style="display: none;">
 			<table class="layout" >
 				<tr>
 					<td>
@@ -1042,7 +1042,6 @@
 						</table>
 					</td>
 				</tr>
-				
 			</table>
 		</div>
 
