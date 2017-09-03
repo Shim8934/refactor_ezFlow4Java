@@ -37,6 +37,8 @@ public class MApprovalGDocInfoVO {
 	private String aprType;
 	/** 결재상태*/
 	private String aprState;
+	/** 문서상태*/
+	private String functionType;
 	
 	public String getDocID() {
 		return docID;
@@ -146,4 +148,11 @@ public class MApprovalGDocInfoVO {
 	public void setAprState(String aprState) {
 		this.aprState = aprState;
 	}
+	public String getFunctionType() {
+		return functionType;
+	}
+	public void setFunctionType(String functionType) {
+		this.functionType = functionType;
+	}
+	
 }
