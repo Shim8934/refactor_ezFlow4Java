@@ -1023,10 +1023,24 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		});
 	    
-	    //자식존재여부 체크
+	    
+	    Map<String, Object> map = new HashMap<String, Object>();
+		
 	    for (int i=0; i< brdBoardTreeList.size(); i++) {
+	    	//자식존재여부 체크
 	    	String isLeaf = checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID);
 	    	brdBoardTreeList.get(i).setIsLeaf(isLeaf);
+	    	
+	    	map.put("boardID", brdBoardTreeList.get(i).getBoardId());
+			map.put("userID", info.getUserId());
+			map.put("gubun", (brdBoardTreeList.get(i).getGuBun() == null || !brdBoardTreeList.get(i).getGuBun().equals("2") || !brdBoardTreeList.get(i).getGuBun().equals("3")) ? "1" : brdBoardTreeList.get(i).getGuBun());
+			map.put("nowDate", commonUtil.getTodayUTCTime(""));
+			map.put("pSearchText", "");
+			map.put("tenantID", tenantID);
+		    
+	    	int listCount = mBoardDAO.getBoardItemListCount(map);
+	    	
+	    	brdBoardTreeList.get(i).setListCount(listCount);
 	    }
 
 		return brdBoardTreeList;
