@@ -58,4 +58,4 @@ var strLang59	=	"ツリービューのIDが指定されていません。";
 var strLang60	=	"データが指定されていません。";
 var strLang61	=	"リストのIDが指定されていません。";
 var strLang62	=	"データが指定されていません。";
-var strLang63	=	"ノードが存在しません。";                    
+var strLang63	=	"ノードが存在しません。";var strLang64	=	"제목은 공백으로 입력할 수 없습니다.";
