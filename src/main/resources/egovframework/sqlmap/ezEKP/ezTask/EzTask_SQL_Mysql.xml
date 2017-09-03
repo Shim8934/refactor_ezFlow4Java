@@ -80,9 +80,19 @@
 		    SELECT
 				sharerid,
 				case when #primary# = 1 then sharername else sharername2 end as sharername,
-				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname
+				sharername as sharername1,
+				sharername2,
+				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname,
+				sharerdeptname2,
+				B.mail as email
 			FROM
-				TBL_TASKSHARE
+				TBL_TASKSHARE A
+			JOIN
+				TBL_USERMASTER B
+			ON
+				A.tenantid = B.tenant_id
+			AND
+				A.sharerid = B.cn
 			WHERE
 				tenantid = #tenantID#
 			AND

@@ -41,12 +41,13 @@
 			var g_person = null;
 			var g_share = null;
 			var sharelist = "${taskShareList }";
-			var shareid = "_shareid";
-			var sharename = "_sharename";
-			var sharename2 = "_sharename2";
-			var sharedept = "_sharedept";
-			var sharedept2 = "_sharedept2";
-			var sharemail = "_sharemail";
+			var shareliststr = "${taskShareListStr }";
+			var shareid = "";
+			var sharename = "";
+			var sharename2 = "";
+			var sharedept = "";
+			var sharedept2 = "";
+			var sharemail = "";
 			var isreadpage = false;
 			var FormProcSpelling = "FormProcSpelling";
 			var personid = "${taskInfoVO.personID }";
@@ -92,43 +93,35 @@
 					g_person["email"][0] = personemail;
 				}
 	             
-	            if (sharelist != "") {
-					document.getElementById("sharelist").innerHTML = sharelist;
-					
-					sharename = sharelist.split("||")[0];
-					sharename1 = sharelist.split("||")[1];
-					sharename2 = sharelist.split("||")[2];
-					shareid = sharelist.split("||")[3];
-					sharedept = sharelist.split("||")[4];
-					sharedept2 = sharelist.split("||")[5];
+	            if (shareliststr != "") {
+					sharename = shareliststr.split("||")[0];
+					sharename1 = shareliststr.split("||")[1];
+					sharename2 = shareliststr.split("||")[2];
+					shareid = shareliststr.split("||")[3];
+					sharedept = shareliststr.split("||")[4];
+					sharedept2 = shareliststr.split("||")[5];
+					sharemail = shareliststr.split("||")[6];
 					
 					g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+					
 					shareid = shareid.split(";");
 					sharename = sharename.split(";");
 					sharename2 = sharename2.split(";");
 					sharedept = sharedept.split(";");
 					sharedept2 = sharedept2.split(";");
 					sharemail = sharemail.split(";");
-					shareidlist = "";
 					
-					for (var i = 0; i < shareid.length; i++) {
+					for (var i = 0; i < shareid.length - 1; i++) {
 						g_share["name"][i] = sharename[i];
 						g_share["name1"][i] = sharename1[i];
 						g_share["name2"][i] = sharename2[i];
 						g_share["id"][i] = shareid[i];
 						g_share["deptname"][i] = sharedept[i];
 						g_share["deptname2"][i] = sharedept2[i];
-// 						g_share["email"][i] = sharemail[i];
-
-						if (i == 0) {
-							shareidlist += shareid[i];
-						} else {
-							shareidlist += ", " + shareid[i];
-						}
-						
+						g_share["email"][i] = sharemail[i];
 					}
 				}
-	             
+	            
 				if (document.getElementById("TextTitle").value == "") {
 					document.getElementById("TextTitle").focus();
 				}
@@ -600,7 +593,12 @@
                      <tr id="shareinputtr">
                         <th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
                            <td colspan ="3">
-                           		<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+                           		<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px">
+									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
+										<c:out value = '${taskShareVO.sharerName }' />
+										<c:if test="${not status.last }">,&nbsp;</c:if>
+									</c:forEach>
+                           		</div>
                            		<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>

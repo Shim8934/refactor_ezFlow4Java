@@ -771,7 +771,7 @@ public class EzTaskController extends EgovFileMngUtil {
 					strShareEmail.append(vo.getEmail() + ";");
                 }
 				
-				strShare.append(strShareName.toString() + "||" + strShareName1.toString() + "||" + strShareName2.toString() + "||" + strShareID.toString() + "||" + strShareDeptName.toString() + "||" + strShareDeptName2);
+				strShare.append(strShareName.toString() + "||" + strShareName1.toString() + "||" + strShareName2.toString() + "||" + strShareID.toString() + "||" + strShareDeptName.toString() + "||" + strShareDeptName2 + "||" + strShareEmail.toString());
 			}
 			
 			//첨부파일목록조회
@@ -797,7 +797,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
-		model.addAttribute("taskShareList", strShare);
+		model.addAttribute("taskShareList", taskShareList);
+		model.addAttribute("taskShareListStr", strShare.toString());
 		model.addAttribute("taskAttachList", strAttach.toString());
 		
 		logger.debug("taskWrite ended.");
