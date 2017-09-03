@@ -494,12 +494,12 @@
 		  </ul>
 		</div>
 		<div style="margin-bottom:5px;">
-		    <a class="imgbtn"><span onClick="add_onclick()" style="width:40px;text-align:center;"><spring:message code='ezEmail.t308' /></span></a>
-		    <a class="imgbtn"><span onClick="modify_onclick()" style="width:40px;text-align:center;"><spring:message code='ezEmail.t149' /></span></a>
+		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezEmail.t308' /></span></a>
+		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezEmail.t149' /></span></a>
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezEmail.t95' /></span></a>
-		    <a class="imgbtn"><span onClick="move_onclick()" style="width:70px;text-align:center;"><spring:message code='ezEmail.t482' /></span></a>
-		    <a class="imgbtn"><span onClick="delete_mail_onclick()" style="width:70px;text-align:center;"><spring:message code='ezEmail.t483' /></span></a>
-		    <a class="imgbtn"><span onClick="subscribe_onclick()" style="width:100%;text-align:center;"><spring:message code='ezEmail.lhm71' /></span></a>
+		    <a class="imgbtn"><span onClick="move_onclick()" style="text-align:center;"><spring:message code='ezEmail.t482' /></span></a>
+		    <a class="imgbtn"><span onClick="delete_mail_onclick()" style="text-align:center;"><spring:message code='ezEmail.t483' /></span></a>
+		    <a class="imgbtn"><span onClick="subscribe_onclick()" style="text-align:center;"><spring:message code='ezEmail.lhm71' /></span></a>
 		</div>
 		<table class="popuplist" style="width:100%">
 		  <tr>
