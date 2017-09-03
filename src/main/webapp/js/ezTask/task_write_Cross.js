@@ -708,7 +708,7 @@ function save_task() {
     }
     
     var strBody = message.GetEditorContent();
-    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
     
 	var listtable = dadiframe.document.getElementById("filelist");
 	var filelist = GetChildNodes(listtable);
@@ -731,7 +731,7 @@ function save_task() {
 	if (useTodoMemo == 'YES') {
 		memo =$("#TextMemo").val();
 		
-		circularComment = trim(ReplaceText(memo, "\n", "<br>"));
+		memo = trim(ReplaceText(memo, "\n", "<br>"));
 	} else {
 		memo = "";
 	}
@@ -809,8 +809,8 @@ function EmbedContentIntoXML(bodyhtml) {
             ConvertSaveImageFile(OrgSrc, ImgWidth, ImgHeight);
         }
     }
-    var BodyHTMLContent = HTMLtoMHT_MakeTag(tempDiv);
-    return BodyHTMLContent;
+//    var BodyHTMLContent = HTMLtoMHT_MakeTag(tempDiv);
+    return bodyhtml;
 }
 
 function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
