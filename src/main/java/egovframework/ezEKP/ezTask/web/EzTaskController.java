@@ -613,11 +613,11 @@ public class EzTaskController extends EgovFileMngUtil {
         
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
 
-        for (int i = 0; i < cnt; i++) {
-            resultUpload[i] = "false";
-            sGUID[i] = UUID.randomUUID().toString();
-            pUploadSN[i] = "{" + sGUID[i] + "}";
-        }
+//        for (int i = 0; i < cnt; i++) {
+//            resultUpload[i] = "false";
+//            sGUID[i] = UUID.randomUUID().toString();
+//            pUploadSN[i] = "{" + sGUID[i] + "}";
+//        }
 
         if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
             for (int i = 0; i < cnt; i++) {
@@ -629,10 +629,10 @@ public class EzTaskController extends EgovFileMngUtil {
             }
         }
 
-        for (int i = 0; i < cnt; i++) {
-            pFileName[i] = pFileName[i].replace("%2b", "+");
-            pFileName[i] = pFileName[i].replace("%3b", ";");
-        }
+//        for (int i = 0; i < cnt; i++) {
+//            pFileName[i] = pFileName[i].replace("%2b", "+");
+//            pFileName[i] = pFileName[i].replace("%3b", ";");
+//        }
         
         String pDirPath = commonUtil.getUploadPath("upload_task.ROOT", loginSimpleVO.getTenantId());
 
@@ -658,21 +658,29 @@ public class EzTaskController extends EgovFileMngUtil {
         StringBuffer strXML = new StringBuffer();
         strXML.append("<ROOT><NODES>");
         
-        for (int i = 0; i < cnt; i++) {        	
+        for (int i = 0; i < cnt; i++) {
+        	resultUpload[i] = "false";
+            sGUID[i] = UUID.randomUUID().toString();
+            pUploadSN[i] = "{" + sGUID[i] + "}";
+            
+            pFileName[i] = pFileName[i].replace("%2b", "+");
+            pFileName[i] = pFileName[i].replace("%3b", ";");
+            
         	fileSize[i] = multiFile.get(i).getSize();
             String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
             String newFileName = pUploadSN[i];
 
             if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
-				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA><![CDATA[" + newFileName + "__" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
 				strXML.append("<DATA4><![CDATA[]]></DATA4>");
 				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
             } else {
-            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");
+//            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");
+            	writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "tempUploadFile");
             	
-				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA><![CDATA[" + newFileName + "__" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
 				strXML.append("<DATA4><![CDATA[]]></DATA4>");
@@ -705,10 +713,10 @@ public class EzTaskController extends EgovFileMngUtil {
 			String[] data = fileList.split(","); 
 			
 			for (int i=0; i<data.length; i++) {
-				String sGUID = data[i].split(";")[0];
-				String fileName = data[i].split(";")[1];
+				String sGUID = data[i].split("__")[0];
+				String fileName = data[i].split("__")[1];
 				
-				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "__" + fileName);
 				
 				file.delete();
 			}			
