@@ -879,11 +879,14 @@
 		        }
 		        openOpinionUI("BanSong", btnReject_option_Complete);
 		    }
+		    /**
+		    * '반송'
+		    */
 		    function btnReject_option_Complete(ret) {
 		        DivPopUpHidden();
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
-		            UpdateLineHistory();
+		            UpdateLineHistory(); // '변경내역' 업데이트
 		            var rtnVal = ExcuteInfo("BANSONG_BEFORE", "");
 		            if (!rtnVal) {
 		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
@@ -891,7 +894,7 @@
 		                return;
 		            }
 		            
-		            signInfo = putBansongSign();
+		            signInfo = putBansongSign(); // '서명' 관련 정보 출력
 
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
