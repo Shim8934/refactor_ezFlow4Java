@@ -98,7 +98,7 @@ function getDocList_after(xml) {
 
     var lstCnt = getNodeText(cntNode);
     
-    totalPage = Math.floor(new Number(lstCnt / pageSize));
+    totalPage = Math.ceil(new Number(lstCnt / pageSize));
     pTotalCnt = lstCnt;
     if (pageNum > totalPage) {
         pageNum--;
@@ -266,7 +266,7 @@ function getReceivedDocList_after(xml) {
 
 
         var lstCnt = getNodeText(cntNode);
-        totalPage = Math.floor(new Number(lstCnt / pageSize));
+        totalPage = Math.ceil(new Number(lstCnt / pageSize));
         pTotalCnt = lstCnt;
 
         if (pageNum > totalPage) {
@@ -394,7 +394,7 @@ function getSendOutDocList_after(xml) {
 
         var lstCnt = getNodeText(cntNode);
 
-        totalPage = Math.floor(new Number(lstCnt / pageSize));
+        totalPage = Math.ceil(new Number(lstCnt / pageSize));
         pTotalCnt = lstCnt;
         makePageSelPage();
 

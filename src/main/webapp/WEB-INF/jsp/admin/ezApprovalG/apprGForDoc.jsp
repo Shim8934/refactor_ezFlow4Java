@@ -155,7 +155,7 @@
 	                    lstCnt = 0;
 	                }
 	                
-				    totalPage = Math.floor(new Number(lstCnt / pageSize));
+				    totalPage = Math.ceil(new Number(lstCnt / pageSize));
 				    pTotalCnt = lstCnt;
 				    makePageSelPage();
 				
