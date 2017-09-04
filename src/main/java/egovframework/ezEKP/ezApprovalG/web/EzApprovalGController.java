@@ -6040,7 +6040,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		int totCnt = 0, trueCnt = 0, falseCnt = 0;
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		
+		logger.debug("<<<xmlDom : " + commonUtil.convertDocumentToString(xmlDom));
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String pw = xmlDom.getElementsByTagName("PASSWD").item(0).getTextContent().trim();
