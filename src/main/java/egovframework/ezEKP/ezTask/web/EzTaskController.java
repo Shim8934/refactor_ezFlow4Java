@@ -187,7 +187,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezTask/taskSave.do")
-	public String taskSave1(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model) throws Exception {
+	public String taskSave(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSave1 started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
