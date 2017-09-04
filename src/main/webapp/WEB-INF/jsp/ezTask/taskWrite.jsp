@@ -70,14 +70,35 @@
 					
 					Editor_Complete();
 				}
-	
-				if (tasktype == "1") {
-					document.getElementById("P").click();
-				} else if (tasktype == "2") {
-					document.getElementById("I").click();
-				} else if (tasktype == "3") {
-					document.getElementById("C").click();
+				
+				if (useTodoMemo == 'YES') {
+					if (tasktype == "1") {
+						document.getElementById("P").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("I").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("C").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					}
+				} else {
+					if (tasktype == "1") {
+						document.getElementById("P").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("I").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("C").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					}
 				}
+				
 	
 				if (personid != "" && personid != creatorid) {
 					document.getElementById("personlist").innerHTML = personid;
@@ -128,10 +149,28 @@
 			}
 
 			window.onresize = function () {
+				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
+				
 				if (useTodoMemo == 'YES') {
-					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					if (tasktype == "1") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					}
 				} else {
-					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+					if (tasktype == "1") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					}
 				}
 			}
 			
@@ -284,20 +323,45 @@
 			}
 
 			function changemenu(obj) {
-				if (obj.id == "P") {
-					taskType = obj.value;
-					document.getElementById("personinputtr").style.display = "none";
-				} else if (obj.id == "I") {
-					taskType = obj.value;
-					document.getElementById("personinputtr").style.display = "";
-					document.getElementById("periodblock").style.display = "";
-					$("#personlist").html("");
-				} else if (obj.id == "C") {
-					taskType = obj.value;
-					document.getElementById("personinputtr").style.display = "";
-					document.getElementById("periodblock").style.display = "";
-					$("#personlist").html("");
+				if (useTodoMemo == 'YES') {
+					if (obj.id == "P") {
+						taskType = obj.value;
+						document.getElementById("personinputtr").style.display = "none";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (obj.id == "I") {
+						taskType = obj.value;
+						document.getElementById("personinputtr").style.display = "";
+						document.getElementById("periodblock").style.display = "";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+						$("#personlist").html("");
+					} else if (obj.id == "C") {
+						taskType = obj.value;
+						document.getElementById("personinputtr").style.display = "";
+						document.getElementById("periodblock").style.display = "";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+						$("#personlist").html("");
+					}
+				} else {
+					if (obj.id == "P") {
+						taskType = obj.value;
+						document.getElementById("personinputtr").style.display = "none";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					} else if (obj.id == "I") {
+						taskType = obj.value;
+						document.getElementById("personinputtr").style.display = "";
+						document.getElementById("periodblock").style.display = "";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						$("#personlist").html("");
+					} else if (obj.id == "C") {
+						taskType = obj.value;
+						document.getElementById("personinputtr").style.display = "";
+						document.getElementById("periodblock").style.display = "";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						$("#personlist").html("");
+					}
 				}
+				
+				
 			}
 
 			function beforeprint() {
@@ -707,9 +771,25 @@
       </div>
       <script>
 		if (useTodoMemo == 'YES') {
-			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+			if (tasktype == "1") {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+			} else if (tasktype == "2") {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+			} else if (tasktype == "3") {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+			} else {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+			}
 		} else {
-			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+			if (tasktype == "1") {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+			} else if (tasktype == "2") {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+			} else if (tasktype == "3") {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+			} else {
+				document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+			}
 		}
       </script>
    </body>

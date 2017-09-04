@@ -60,13 +60,13 @@
 		        setTimeout(scrollTop, 1000);
 		        
 		        if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 480 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 470 + "PX");
 		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 425 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 430 + "PX");
 		    	}
 
 		        if (tasktype == "1") {
@@ -94,13 +94,13 @@
 		    
 		    window.onresize = function () {
 		    	if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 500 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 480 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 470 + "PX");
 		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 445 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 425 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 430 + "PX");
 		    	}
 		    	
 	         }

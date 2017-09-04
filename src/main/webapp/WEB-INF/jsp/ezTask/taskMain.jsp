@@ -112,15 +112,15 @@
 			            }
 			        }
 		        } else {
-		        	feature = GetOpenPosition(780, 885);
+		        	feature = GetOpenPosition(780, 890);
 		        	
 		        	if (CrossYN() || pNoneActiveX == "YES") {
-			            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 890px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			        } else {
 			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 890px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            } else {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 890px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            }
 			        }
 		        }
@@ -133,7 +133,7 @@
 		    		feature = GetOpenPosition(780, 940);
 	                window.open("/ezTask/taskWrite.do", "", "height=940px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	} else {
-		    		feature = GetOpenPosition(780, 660);
+		    		feature = GetOpenPosition(780, 885);
 	                window.open("/ezTask/taskWrite.do", "", "height=885px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	}
                 
