@@ -211,6 +211,11 @@
 	    }
 	    var issearch = false;
 	    function search_click(type) {
+	    	if ($.trim($("#keyword").val()) == "") {
+	        	alert("<spring:message code='ezTask.jsh01' />");
+	            return;
+	        }
+
 	        if (document.getElementById("keyword").value == "") {
 	            alert("<spring:message code='ezTask.t990' />");
 	            document.getElementById("keyword").focus();
@@ -1187,99 +1192,98 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-
 	     <table id="TreeViewTD">
-	                    <tr>
-	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
-	                                    <table style="margin-top: 3px; width: 100%;">
-	                                        <tr>
-	                                            <td>
-	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
-	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezTask.t17' /></option>
-	                                                        <option value="description" usedefault="1"><spring:message code='ezTask.t15' /></option>
-	                                                        <option value="title" usedefault="1"><spring:message code='ezTask.t201' /></option>
-	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezTask.t1000' /></option>
-	                                                        <option value="mobile" usedefault="0"><spring:message code='ezTask.t1001' /></option>
-	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezTask.t202' /></option>
-	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezTask.t1005' /></option>
-	                                                        <option value="mail" usedefault="0"><spring:message code='ezTask.t1002' /></option>
-	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezTask.t1003' /></option>
-	                                                    </select>
-	                                                    <input id="keyword" value="" onkeydown="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
-	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezTask.t183' /></span></a>
+              <tr>
+                  <td>
+                      <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+                          <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+                              <table style="margin-top: 3px; width: 100%;">
+                                  <tr>
+                                      <td>
+                                          <div style="margin-left: 5px;">
+                                              <select id="search_type">
+                                                  <option selected value="displayname" usedefault="1"><spring:message code='ezTask.t17' /></option>
+                                                  <option value="description" usedefault="1"><spring:message code='ezTask.t15' /></option>
+                                                  <option value="title" usedefault="1"><spring:message code='ezTask.t201' /></option>
+                                                  <option value="telephonenumber" usedefault="1"><spring:message code='ezTask.t1000' /></option>
+                                                  <option value="mobile" usedefault="0"><spring:message code='ezTask.t1001' /></option>
+                                                  <option value="HomePhone" usedefault="0"><spring:message code='ezTask.t202' /></option>
+                                                  <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezTask.t1005' /></option>
+                                                  <option value="mail" usedefault="0"><spring:message code='ezTask.t1002' /></option>
+                                                  <option value="streetAddress" usedefault="0"><spring:message code='ezTask.t1003' /></option>
+                                              </select>
+                                              <input id="keyword" value="" onkeydown="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+                                              <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezTask.t183' /></span></a>
 
-	                                                </div>
-	                                            </td>
-	                                            <td>
-	                                                <div style="float: right; margin-right: 5px;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezTask.t1004' /></span></a>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                    </table>
-	                                </div>
-	                            </div>
-	                            <table style="margin-top: 3px;">
-	                                <tr>
-	                                    <td class="box">
-	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
-	                                    </td>
-	                                    <td></td>
-	                                    <td class="listview" style="width: 426px" id="orglistView">
-	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
-	                                            <tr>
-	                                                <th style="white-space:normal">
-	                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-	                                                    <span style="float: right;">
-	                                                        <span onclick="ChangeListView_onClick('TXT');">
-	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
-	                                                        <span onclick="ChangeListView_onClick('IMG');">
-	                                                            <img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
-	                                                    </span>
-	                                                </th>
-	                                            </tr>
-	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
-	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
-	                                                <tr>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t17' /></td>
-	                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t201' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezTask.t202' /></td>
-	                                                </tr>
-	                                            </table>
-	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
-	                                                <tr>
-	                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t15' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t17' /></td>
-	                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t201' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezTask.t202' /></td>
-	                                                </tr>
-	                                            </table>
-	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6"></div>
-	                                </tr>
-	                            </table>
-	                        </td>
-	                        <td style="width: 30px; text-align: center;">
-	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="InsertUser(ListViewMsgTo)"><br>
-	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="DeleteUser(ListViewMsgTo)">
-	                        </td>
-	                        <td style="vertical-align: top;">
-	                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
-	                                <span style="min-width: 45px;" id="ToTitleStr"></span>
-	                            </h2>
-	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteUser(ListViewMsgTo)"></div>
-	                            </div>
-	                        </td>
-	                    </tr>
-	                </table>
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <div style="float: right; margin-right: 5px;">
+                                              <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezTask.t1004' /></span></a>
+                                          </div>
+                                      </td>
+                                  </tr>
+                              </table>
+                          </div>
+                      </div>
+                      <table style="margin-top: 3px;">
+                          <tr>
+                              <td class="box">
+                                  <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+                              </td>
+                              <td></td>
+                              <td class="listview" style="width: 426px" id="orglistView">
+                                  <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+                                      <tr>
+                                          <th style="white-space:normal">
+                                              <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+                                              <span style="float: right;">
+                                                  <span onclick="ChangeListView_onClick('TXT');">
+                                                      <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
+                                                  <span onclick="ChangeListView_onClick('IMG');">
+                                                      <img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
+                                              </span>
+                                          </th>
+                                      </tr>
+                                  </table>
+                                  <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+                                      <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
+                                          <tr>
+                                              <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t17' /></td>
+                                              <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t201' /></td>
+                                              <td class="td_gray" style="font-weight: bold;"><spring:message code='ezTask.t202' /></td>
+                                          </tr>
+                                      </table>
+                                      <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
+                                          <tr>
+                                              <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t15' /></td>
+                                              <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t17' /></td>
+                                              <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezTask.t201' /></td>
+                                              <td class="td_gray" style="font-weight: bold;"><spring:message code='ezTask.t202' /></td>
+                                          </tr>
+                                      </table>
+                                  </div>
+                                  <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+                                  <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6"></div>
+                          </tr>
+                      </table>
+                  </td>
+                  <td style="width: 30px; text-align: center;">
+                      <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
+                          style="cursor: pointer;" onclick="InsertUser(ListViewMsgTo)"><br>
+                      <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
+                          style="cursor: pointer;" onclick="DeleteUser(ListViewMsgTo)">
+                  </td>
+                  <td style="vertical-align: top;">
+                      <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
+                          <span style="min-width: 45px;" id="ToTitleStr"></span>
+                      </h2>
+                      <div class="receiver_borderbox">
+                          <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 510px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteUser(ListViewMsgTo)"></div>
+                      </div>
+                  </td>
+              </tr>
+          </table>
 	  <div class="btnposition">
 	      <a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezTask.t19' /></span></a>
 	      <a class="imgbtn" onClick="window.close()" ><span><spring:message code='ezTask.t20' /></span></a>
