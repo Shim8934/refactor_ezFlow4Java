@@ -31,7 +31,7 @@
 	
 	/**
 	 * 각 서버를 checkbox로 제어
-	 * checkedId, graphId를 이용한 그래프가 그려질 div 구분
+	 * checkedId, graphId를 이용한 그래프가 그려지는 div 구분
 	 */
 	function chkServerList_onclick(listNum) {	
 		var checkedId = "chkVal_" + listNum;
@@ -70,7 +70,7 @@
 			$("#monitoringForm").append(str);			
 			makingGraph(graphId);
 		} else {
-			document.getElementById(graphId).remove();
+			monitoringForm.removeChild(document.getElementById(graphId));			
 		} 
 	}	
 
@@ -86,6 +86,7 @@
 		var diskMax = [];
 		//var diskioMax = 0;
 		
+		//범례 색상
 		var cpuMemoryColor = ['#77B0A8', '#E96359'];
 		var diskioColor = ['#4641D9', '#2F9D27', '#FF5E00', '#FFBB00', '#99004C', '#000093', '#FF0000'];
 		var networkColor = ['#000093', '#FF0000'];
@@ -97,8 +98,18 @@
 		var start;
 		
 		jui.ready(["chart.builder"], function (builder) {
-			var diskTarget = [];		
-			//var diskioMax = 0;
+			var diskTarget = [];
+			
+			// 2초마다 그래프 재생성
+	      	var refreshIntervalID = setInterval(function() {
+				setGraphForm();
+				
+		    	// 해당 그래프가 없을 경우 setInterval 종료
+		    	if (document.getElementById(graphId) == null) {
+		    		clearInterval(refreshIntervalID);
+		    	}				
+		    }, 2000);			
+			
 			// CPU & Memory 관련 그래프
 			var cpuMemoryChart = builder ("#cpuMemInfo", {		
 				axis: [{
@@ -255,150 +266,6 @@
 					size: 14
 				}]
 			});
-
-			/**
-			 *  그래프 업데이트 관련 함수
-			 *  update() : 그래프 데이터 업데이트
-			 *  updateGrid() : 그래프에 그려질 축 업데이트
-			 */
-	      	var refreshIntervalID = setInterval(function() {
-
-	   	    	current = new Date();
-	   	    	start = new Date - 1000 * 60;
-	   	    	var domain = [start , current];
-	   	    	var networkMax = 0;
-	   	    	var networkDomain;
-	   	    	var networkStep;
-	   	    	var networkTmp = 0;
-	   	    	
-	   	    	var diskioMax = 0;
-	   	    	var diskioDomain;
-	   	    	var diskioStep;
-		    	getInfo();
-                
-		    	// 해당 그래프가 없을 경우 setInterval 종료
-		    	if (document.getElementById(graphId) == null) {
-		    		clearInterval(refreshIntervalID);
-		    	}
-
-		    	cpuMemoryChart.axis(0).update(cpuMemoryData);   	    	
-		    	cpuMemoryChart.axis(0).updateGrid("x", {
-		            domain : domain
-		        });
-		    	cpuMemoryChart.updateBrush(0, {
-		    		type: "line",
-		    		target: ["Cpu", "Memory"]
-		    	});
-		    	cpuMemoryChart.render(true);
-
-		    	/**
-		    	 * 디스크 입출력 y축을 동적으로 변하게 하기 위한 부분
-		    	 */	      	
- 		    	diskioChart.axis(0).update(diskioData);
-		    	diskioChart.axis(0).updateGrid("x", {
-		    		domain : domain
-		        });		    			    	
-		    	/**
-		    	 * diskMax 안에서 가장 큰 값을 찾는다.
-		    	 */
-		    	for (var i = 0; i < diskMax.length; i++) {
-		    		if (diskMax[i] >= diskioMax) {
-		    			diskioMax = diskMax[i];
-		    		}
-		    	}
-		    	if (diskioMax > 1) {
-		    		var domainVal = (parseInt(diskioMax/10)) * 10;
-		    		if (domainVal < 10) {
-		    			domainVal = 0;
-		    		}
-		    		diskioDomain = [0, domainVal + 10 ];
-		    		diskioStep = 2;
-		    	} else {
-		    		diskioDomain = [0, 1];
-		    		diskioStep = 5;
-		    	}		    	
-		    	diskioChart.axis(0).updateGrid("y", {
-					type: "range",
-					domain: diskioDomain,
-					step: diskioStep,
-					line: true,
-					format: function(value) {
-						return value + "MB/s";	 
-					}
-		    	});
-		    	
-		    	diskioChart.updateBrush(0, {
-		    		type: "line",
-		    		target: diskTarget
-		    	})
- 		    	diskioChart.updateBrush(1, {
-		    		type: "scatter",
-		    		target: diskTarget,
-		    		symbol: "circle",
-		    		clip: true,
-		    		size: 8
-		    	})
- 		    	diskioChart.addWidget({
-		    		type: "tooltip",
-		    		brush: [1]
-		    	})
-		    	diskioChart.render(true); 
-		    	
-		    	networkChart.axis(0).update(networkData);
-		    	networkChart.axis(0).updateGrid("x", {
-		    		domain : domain
-		        });
-	    		
-		    	/**
-		    	 * 네트워크 데이터 y축을 동적으로 변하게 하기 위한 부분
-		    	 * networkData에 있는 transfer, receive 값 중 가장 큰 값을 
-		    	 * networkMax저장해서 y축 값을 변경
-		    	 */
-	    		for (var i = 0; i < networkData.length; i++) {
-	    			
-	    			if (networkData[i].Receive > networkData[i].Transfer) {
-	    				networkTmp = networkData[i].Receive;
-	    			} else {
-	    				networkTmp = networkData[i].Transfer;
-	    			}	    			
-	    			if (networkTmp > networkMax) {
-	    				networkMax = networkTmp;
-	    			}
-	    		}	
-		    	if (networkMax > 50) { 	
-		    		
-		    		/** 
-		    		 * 최대값의 10의 자리를 기준으로 + 10
-		    		 * 예) 최대값이 63인 경우 70Mbps를 y축으로 설정 
-		    		*/
-		    		var step = parseInt(networkMax / 10);
-		    		var result = (step * 10) + 10 ;
-
-			        networkDomain = [0, result];
-			        networkStep = step + 1;
-		    	} else {
-		    		networkDomain = [0, 50];
-		    		networkStep = 5;	    		
-		    	}
-		    	
-		    	networkChart.axis(0).updateGrid("y", {
-					type: "range",
-					domain: networkDomain,
-					step: networkStep,
-					line: true,
-					format: function(value) {
-						return value + "Mbps";
-					}			
-    			});	 
-		    	networkChart.updateBrush(0, {
-		    		type: "line",
-		    		target: ["Receive", "Transfer"]
-		    	});
-		    	networkChart.render(true);
-		    	
-		    	filesysChart.axis(0).update(fileSysData);	   
-		    	filesysChart.render(true);
-		    }, 2000);
 	      	
 			// 그래프에 필요한 데이터 가져오기
 	    	function getInfo() {
@@ -436,8 +303,8 @@
 	    		if (old == 0) {
 	    			result = 0;
 	    		} else {
-	    			result = ( current - old ) / 2 * 8 / 1024 / 1024;
 	    			// 2초간 조사한 값, Byte->bit(*8), bit->KBit(/1024)->Mbit(/1024)
+	    			result = ( current - old ) / 2 * 8 / 1024 / 1024;
 	    		}	    		
 	    		return result;
 	    	}
@@ -537,7 +404,144 @@
 	    			str += '</tr>';
 	    		}
 	    		$("#filesysBody").html(str);
-	    	} 
+	    	} 	    	
+
+			/**
+			 *  그래프 업데이트 관련 함수
+			 *  update() : 그래프 데이터 업데이트
+			 *  updateGrid() : 그래프에 그려질 축 업데이트
+			 */
+			function setGraphForm() {
+		   	    	current = new Date();
+		   	    	start = new Date - 1000 * 60;
+		   	    	var domain = [start , current];
+		   	    	var networkMax = 0;
+		   	    	var networkDomain;
+		   	    	var networkStep;
+		   	    	var networkTmp = 0;
+		   	    	
+		   	    	var diskioMax = 0;
+		   	    	var diskioDomain;
+		   	    	var diskioStep;
+			    	getInfo(); // 그래프 데이터 가져오기
+
+			    	cpuMemoryChart.axis(0).update(cpuMemoryData);   	    	
+			    	cpuMemoryChart.axis(0).updateGrid("x", {
+			            domain : domain
+			        });
+			    	cpuMemoryChart.updateBrush(0, {
+			    		type: "line",
+			    		target: ["Cpu", "Memory"]
+			    	});
+			    	cpuMemoryChart.render(true);
+
+			    	// 디스크 입출력 y축을 동적으로 변하게 하기 위한 부분
+	 		    	diskioChart.axis(0).update(diskioData);
+			    	diskioChart.axis(0).updateGrid("x", {
+			    		domain : domain
+			        });		    			    	
+
+			    	// diskMax 안에서 가장 큰 값을 찾는다.
+			    	for (var i = 0; i < diskMax.length; i++) {
+			    		if (diskMax[i] >= diskioMax) {
+			    			diskioMax = diskMax[i];
+			    		}
+			    	}
+			    	if (diskioMax > 1) {
+			    		var domainVal = (parseInt(diskioMax/10)) * 10;
+			    		if (domainVal < 10) {
+			    			domainVal = 0;
+			    		}
+			    		diskioDomain = [0, domainVal + 10 ];
+			    		diskioStep = 2;
+			    	} else {
+			    		diskioDomain = [0, 1];
+			    		diskioStep = 5;
+			    	}		    	
+			    	diskioChart.axis(0).updateGrid("y", {
+						type: "range",
+						domain: diskioDomain,
+						step: diskioStep,
+						line: true,
+						format: function(value) {
+							return value + "MB/s";	 
+						}
+			    	});
+			    	
+			    	diskioChart.updateBrush(0, {
+			    		type: "line",
+			    		target: diskTarget
+			    	})
+	 		    	diskioChart.updateBrush(1, {
+			    		type: "scatter",
+			    		target: diskTarget,
+			    		symbol: "circle",
+			    		clip: true,
+			    		size: 8
+			    	})
+	 		    	diskioChart.addWidget({
+			    		type: "tooltip",
+			    		brush: [1]
+			    	})
+			    	diskioChart.render(true); 
+			    	
+			    	networkChart.axis(0).update(networkData);
+			    	networkChart.axis(0).updateGrid("x", {
+			    		domain : domain
+			        });
+		    		
+			    	/**
+			    	 * 네트워크 데이터 y축을 동적으로 변하게 하기 위한 부분
+			    	 * networkData에 있는 transfer, receive 값 중 가장 큰 값을 
+			    	 * networkMax저장해서 y축 값을 변경
+			    	 */
+		    		for (var i = 0; i < networkData.length; i++) {
+		    			
+		    			if (networkData[i].Receive > networkData[i].Transfer) {
+		    				networkTmp = networkData[i].Receive;
+		    			} else {
+		    				networkTmp = networkData[i].Transfer;
+		    			}	    			
+		    			if (networkTmp > networkMax) {
+		    				networkMax = networkTmp;
+		    			}
+		    		}	
+			    	
+			    	if (networkMax > 50) { 				    		
+			    		/** 
+			    		 * 최대값의 10의 자리를 기준으로 + 10
+			    		 * 예) 최대값이 63인 경우 70Mbps를 y축으로 설정 
+			    		*/
+			    		var step = parseInt(networkMax / 10);
+			    		var result = (step * 10) + 10 ;
+
+				        networkDomain = [0, result];
+				        networkStep = step + 1;
+			    	} else {
+			    		networkDomain = [0, 50];
+			    		networkStep = 5;	    		
+			    	}
+			    	
+			    	networkChart.axis(0).updateGrid("y", {
+						type: "range",
+						domain: networkDomain,
+						step: networkStep,
+						line: true,
+						format: function(value) {
+							return value + "Mbps";
+						}			
+	    			});	 
+			    	networkChart.updateBrush(0, {
+			    		type: "line",
+			    		target: ["Receive", "Transfer"]
+			    	});
+			    	networkChart.render(true);
+			    	
+			    	filesysChart.axis(0).update(fileSysData);	   
+			    	filesysChart.render(true);				 
+			 }			 
+			// 최초 그래프 생성		 
+			 setGraphForm(); 	    	
 		});		
 	}	
 </script>
