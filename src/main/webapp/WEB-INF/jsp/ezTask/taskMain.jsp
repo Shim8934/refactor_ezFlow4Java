@@ -112,7 +112,7 @@
 			            }
 			        }
 		        } else {
-		        	feature = GetOpenPosition(780, 935);
+		        	feature = GetOpenPosition(780, 885);
 		        	
 		        	if (CrossYN() || pNoneActiveX == "YES") {
 			            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);

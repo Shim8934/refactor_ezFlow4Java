@@ -852,9 +852,9 @@ function setAttachFileInfo(strXML) {
             var newFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
             var pFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
             var fileSize = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]);
-            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
+//            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
 
-            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
+            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]) == "OK") {
                 objTr = document.createElement("TR");
                 objTr.setAttribute("DATA2", newFileName + "__" + fileSize);
 
