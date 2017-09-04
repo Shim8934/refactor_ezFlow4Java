@@ -52,7 +52,7 @@
 					document.getElementById('attachedfileDIV').innerHTML = taskAttachList;
 		    	}
 				
-				load_bodyhtml2();
+				load_bodyhtml2(personContentpath);
 				if (hasTaskWorkAttach == 'Y') {
 					document.getElementById('attachedfileDIV2').innerHTML = taskWorkAttachList
 		    	}
@@ -178,7 +178,7 @@
 			}
 			
 			/* 진행사항 본문 */
-			function load_bodyhtml2() {
+			function load_bodyhtml2(personContentpath) {
 				if (personContentpath != "") {
 					$.ajax({
 						type : "POST",
