@@ -16612,7 +16612,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int totalCount = getAprDocListCount(listType, userID, userIDs, searchQuery, dueryData, companyID, tenantID);
 		logger.debug("<<<totalCount : " + totalCount);
 
-		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+		int querySize = Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
         int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 
         if (querySize2 >= Integer.parseInt(pageSize)) {
@@ -21260,7 +21260,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSTRMULTIDATA", strMultiData);
 //		map.put("v_PAGESIZE", pageSize);
 		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
-		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
+		map.put("v_PAGESIZE", Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) -1));
 		map.put("v_PAGESIZE3", pageSize);
 		map.put("v_ORDEROPTION", OrderOption1);
 		
