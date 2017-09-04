@@ -315,9 +315,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		String personAttach = request.getParameter("personAttach");
 		String contentPath = request.getParameter("contentPath");
 		
-		ezTaskService.taskWorkSave(taskID, content, attachList, fileName, fileSize, personAttach, contentPath, realPath, uploadTaskPath, tenantID);
+		String personContentPath = ezTaskService.taskWorkSave(taskID, content, attachList, fileName, fileSize, personAttach, contentPath, realPath, uploadTaskPath, tenantID);
 		
 		logger.debug("taskWorkSave ended.");
+		
+		model.addAttribute("personContentPath", personContentPath);
 		
 		return "json";
 	}
