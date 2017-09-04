@@ -132,7 +132,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 편지함 목록 조회, 메일 이동 시 편지함 목록 출력
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object mMailFolderList(HttpServletRequest request, @PathVariable String userId, @RequestParam(value="folderId", required=false) String folderId, Locale locale) {
+	public Object mMailFolderList(HttpServletRequest request, @PathVariable String userId, @RequestParam(value="folderId", required=false) String folderId) {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -151,29 +151,31 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 			
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			LOGGER.debug("locale : ," + locale.getDisplayLanguage());
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 			
 			List<Folder> subMailFolder = null;
+//			JSONObject folder = null;
 			
 			if (folderId != null && !folderId.equals("")) {
 				subMailFolder = ia.getSubFolders(folderId);
 			} else {
+				LOGGER.debug("getTopLevelFolders");
 				subMailFolder = ia.getTopLevelFolders();
 			}
 			
-//			MEmailFolderVO folder = null;
 			JSONObject folder = null;
 			
 			for (int i=0; i<subMailFolder.size(); i++) {
 				Folder f = subMailFolder.get(i);
 				
-//				folder = new MEmailFolderVO();
 				folder = new JSONObject();
 				
-//				folder.setName(f.getName());
-//				folder.setFullName(f.getFullName());
-//				folder.setUnReadCount(f.getUnreadMessageCount());
 				if ( f.getName().equals("INBOX") ) {
 					folder.put("name", "받은 편지함");
 				} else {
@@ -183,15 +185,86 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				folder.put("unReadCount", f.getUnreadMessageCount());
 				
 				if (f.list().length > 0) {
-//					folder.setHasSub(true);
 					folder.put("hasSub", true);
 				} else {
-//					folder.setHasSub(false);
 					folder.put("hasSub", false);
 				}
 				mailFolderList.add(folder);
 			}
 			
+//			if (!folderId.equals("")) {
+//				subMailFolder = ia.getSubFolders(folderId);
+//				
+//				for (int i=0; i<subMailFolder.size(); i++) {
+//					Folder f = subMailFolder.get(i);
+//					folder = new JSONObject();
+//					
+//
+//					if (f.getUnreadMessageCount()>0) {
+//						folder.put("fullName", f.getFullName());
+//						folder.put("unReadCount", f.getUnreadMessageCount());
+//					} else {
+//						folder.put("fullName", f.getFullName());
+//						folder.put("unReadCount", f.getUnreadMessageCount());
+//					}
+//
+//					folder.put("fullName", f.getFullName());
+//					
+//					if (f.list().length > 0) {
+//						folder.put("hasSub", true);
+//					} else {
+//						folder.put("hasSub", false);
+//					}
+//					
+//					mailFolderList.add(folder);
+//				}
+//			} else {
+//				subMailFolder = ia.getTopLevelFolders();
+//				for (int i=0,j=0; i<subMailFolder.size(); i++) {
+//					Folder f = subMailFolder.get(i);
+//					folder = new JSONObject();
+//					
+//					if (f.getName().equalsIgnoreCase("INBOX")) {
+//						folder.put("name", "받은 편지함");
+//					} else {
+//						folder.put("name", f.getName());
+//					}
+//
+//					if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
+//						subFolderXML.append(" orgBoxName='0'");
+//						subFolderXML.append(" fullcaption='_INBOX'"); //수정
+//					} else if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))) {
+//						subFolderXML.append(" orgBoxName='1'");
+//						subFolderXML.append(" fullcaption='_SENT'"); //수정
+//					} else if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))) {
+//						subFolderXML.append(" orgBoxName='2'");
+//						subFolderXML.append(" fullcaption='_DRAFT'"); //수정
+//					} else if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))) {
+//						subFolderXML.append(" orgBoxName='3'");
+//						subFolderXML.append(" fullcaption='_DELETE'"); //수정
+//					} else if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))) {
+//						subFolderXML.append(" orgBoxName='4'");
+//						subFolderXML.append(" fullcaption='_PERSONAL'"); //수정
+//					} else if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))) {
+//						subFolderXML.append(" orgBoxName='5'");
+//						subFolderXML.append(" fullcaption='_JUNK'"); //수정
+//					} else {
+//						subFolderXML.append(" orgBoxName='"+((j++)+6)+"'");
+//						subFolderXML.append(" fullcaption='_NONE'"); //수정
+//					}
+//
+//					subFolderXML.append(" href='"+fd.getFullName()+"'"); //수정
+//					if (fd.list().length>0) {
+//						subFolderXML.append(" hassub='1'");
+//					}
+//					if (bcount.equals("-1")) {
+//						if (fd.getUnreadMessageCount()>0) {
+//							subFolderXML.append(" style='font-weight:bold'");
+//						}
+//					}
+//					subFolderXML.append("></node>");
+//				}
+//			}//end else 	
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", mailFolderList);
@@ -546,7 +619,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			
 			tenantID = info.getTenantId();
-			
+
 			String mailSign1 = "";
 			String mailSign2 = "";
 			String mailSign3 = "";
@@ -3295,7 +3368,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					if (part == null) {
 						LOGGER.error("AttachPart not found. AttachPartIndex=" + index);
 					} else {
-						LOGGER.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
+//						LOGGER.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
 						
 						try {
 							input = part.getInputStream();
