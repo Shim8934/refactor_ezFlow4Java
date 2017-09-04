@@ -459,15 +459,19 @@ public class MBoardGWController {
 			
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
+			result.put("data2", listCount);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			result.put("data2", "");
 		}				
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] ended.");
 		return result;
