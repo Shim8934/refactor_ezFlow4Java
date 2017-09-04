@@ -672,7 +672,7 @@ function save_task() {
 		hasshare = "N";
 	}
 
-    if (!check_length($("#TextTitle").val(), 100, "<spring:message code='ezTask.t996' />")) {
+    if (!check_length($("#TextTitle").val(), 100, "" + strLang11 + "")) {
     	return;
     }
 
