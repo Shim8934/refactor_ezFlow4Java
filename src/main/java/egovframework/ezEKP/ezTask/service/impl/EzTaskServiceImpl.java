@@ -390,7 +390,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public void taskWorkSave(String taskID, String content, String attachList, String fileNames, String fileSizes, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception {
+	public String taskWorkSave(String taskID, String content, String attachList, String fileNames, String fileSizes, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception {
 		logger.debug("taskWorkSave started.");
 		logger.debug("taskID = " + taskID + " || content = " + content + " || attachList = " + attachList + " || fileName = " + fileNames + " || fileSize = " + fileSizes + " || personAttach = " + personAttach + " || contentPath = " + contentPath + " || realPath = " + realPath + " || uploadTaskPath = " + uploadTaskPath);
 		
@@ -463,7 +463,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			}
 		}
 		
-		logger.debug("taskWorkSave ended.");
+		logger.debug("taskWorkSave ended. personContentPath = " + contentPath);
+		
+		return contentPath;
 	}
 	
 	@Override

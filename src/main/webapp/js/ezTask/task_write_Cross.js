@@ -911,7 +911,7 @@ function setAttachFileInfo(strXML) {
 
 function save_taskWork() {
     var content = message.GetEditorContent();
-    content = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    content = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(content) + "</BODY>" + "</HTML>");
 
     if (taskid == "") {
     	personContentpath = "";
@@ -955,6 +955,8 @@ function save_taskWork() {
 			contentPath : personContentpath
 		},
 		success : function(result) {
+			personContentpath = result.personContentPath;
+			
 			parent.DivPopUpHidden();
 			parent.load_bodyhtml2();
 			parent.getTaskWorkAttachList();
