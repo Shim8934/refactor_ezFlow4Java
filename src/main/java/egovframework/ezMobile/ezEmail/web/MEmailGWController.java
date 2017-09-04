@@ -74,6 +74,7 @@ import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
@@ -110,6 +111,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzEmailMailReadController ezEmailMailReadController;
+	
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
@@ -3150,7 +3155,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 									userEmail, password);
 							
-							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
+							ezEmailMailReadController.processAutoMDN(sa, message, userEmail, userVO.getDisplayName(), info.getTenantId());
 						}
 						else {
 							LOGGER.debug("MDNSentFlag is set");
@@ -3669,68 +3674,68 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}
 	
-	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName) {
-		LOGGER.debug("processAutoMDN started.");
-		
-		try {		
-			String fromEmailAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
-			
-			LOGGER.debug("myEmailAddress=" + myEmailAddress + ",fromEmailAddress=" + fromEmailAddress);
-			
-			int atSignIndex = fromEmailAddress.indexOf("@");
-			
-			if (fromEmailAddress.equals("") || atSignIndex == -1) {
-				LOGGER.debug("invalid fromEmailAddress=" + fromEmailAddress);
-				return;
-			}
-			
-			String fromEmailDomain = fromEmailAddress.substring(atSignIndex + 1);
-			String myEmailDomain = myEmailAddress.substring(myEmailAddress.indexOf("@") + 1);
-			
-			LOGGER.debug("fromEmailDomain=" + fromEmailDomain + ",myEmailDomain=" + myEmailDomain);
-			
-			if (!fromEmailDomain.equalsIgnoreCase(myEmailDomain)) {
-				LOGGER.debug("different domain");
-				LOGGER.debug("processAutoMDN ended.");
-				return;
-			}
-									
-			String[] messageIds = message.getHeader("Message-ID");
-			String[] mdnHeaders = message.getHeader("Disposition-Notification-To");
-			
-			if (messageIds != null && mdnHeaders != null) {				
-				LOGGER.debug("Sending an MDN...");
-											
-				Message replyMessage = message.reply(false);
-				
-        		// ANSWERED flag needs to be cleared since the above reply method sets it.
-				message.setFlag(Flags.Flag.ANSWERED, false);
-				
-				InternetHeaders h = new InternetHeaders();
-				
-				h.addHeader("Reporting-UA", "JMocha Mail 1.0");
-				h.addHeader("Final-Recipient", String.format("rfc822;%s", myEmailAddress));
-				h.addHeader("Original-Message-ID", messageIds[0]);
-				h.addHeader("Disposition", "automatic-action/MDN-sent-automatically; displayed");
-				
-				DispositionNotification dn = new DispositionNotification();
-				dn.setNotifications(h);
-				
-				MultipartReport mpr = new MultipartReport("This is a Read Receipt.", dn);
-				replyMessage.setContent(mpr);		
-				replyMessage.setFrom(new InternetAddress(myEmailAddress, myName, "UTF-8"));
-										
-				sa.sendMessageWithNewTransport(replyMessage);
-				
-				ezEmailUtil.setMDNSentFlag(message, true);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		LOGGER.debug("processAutoMDN ended.");
-	}
+//	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName) {
+//		LOGGER.debug("processAutoMDN started.");
+//		
+//		try {		
+//			String fromEmailAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
+//			
+//			LOGGER.debug("myEmailAddress=" + myEmailAddress + ",fromEmailAddress=" + fromEmailAddress);
+//			
+//			int atSignIndex = fromEmailAddress.indexOf("@");
+//			
+//			if (fromEmailAddress.equals("") || atSignIndex == -1) {
+//				LOGGER.debug("invalid fromEmailAddress=" + fromEmailAddress);
+//				return;
+//			}
+//			
+//			String fromEmailDomain = fromEmailAddress.substring(atSignIndex + 1);
+//			String myEmailDomain = myEmailAddress.substring(myEmailAddress.indexOf("@") + 1);
+//			
+//			LOGGER.debug("fromEmailDomain=" + fromEmailDomain + ",myEmailDomain=" + myEmailDomain);
+//			
+//			if (!fromEmailDomain.equalsIgnoreCase(myEmailDomain)) {
+//				LOGGER.debug("different domain");
+//				LOGGER.debug("processAutoMDN ended.");
+//				return;
+//			}
+//									
+//			String[] messageIds = message.getHeader("Message-ID");
+//			String[] mdnHeaders = message.getHeader("Disposition-Notification-To");
+//			
+//			if (messageIds != null && mdnHeaders != null) {				
+//				LOGGER.debug("Sending an MDN...");
+//											
+//				Message replyMessage = message.reply(false);
+//				
+//        		// ANSWERED flag needs to be cleared since the above reply method sets it.
+//				message.setFlag(Flags.Flag.ANSWERED, false);
+//				
+//				InternetHeaders h = new InternetHeaders();
+//				
+//				h.addHeader("Reporting-UA", "JMocha Mail 1.0");
+//				h.addHeader("Final-Recipient", String.format("rfc822;%s", myEmailAddress));
+//				h.addHeader("Original-Message-ID", messageIds[0]);
+//				h.addHeader("Disposition", "automatic-action/MDN-sent-automatically; displayed");
+//				
+//				DispositionNotification dn = new DispositionNotification();
+//				dn.setNotifications(h);
+//				
+//				MultipartReport mpr = new MultipartReport("This is a Read Receipt.", dn);
+//				replyMessage.setContent(mpr);		
+//				replyMessage.setFrom(new InternetAddress(myEmailAddress, myName, "UTF-8"));
+//										
+//				sa.sendMessageWithNewTransport(replyMessage);
+//				
+//				ezEmailUtil.setMDNSentFlag(message, true);
+//			}
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		LOGGER.debug("processAutoMDN ended.");
+//	}
 	
 	public class CountOutputStream extends OutputStream {
 	    int size;
