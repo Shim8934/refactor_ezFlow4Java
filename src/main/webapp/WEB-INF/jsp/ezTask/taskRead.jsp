@@ -327,6 +327,7 @@
 						
 						console.log(taskCommentList);
 						$("#taskCommentList").html(taskCommentList);
+						$("#TextComment").val("");
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
