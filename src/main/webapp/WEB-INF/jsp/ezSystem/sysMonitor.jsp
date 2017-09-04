@@ -41,10 +41,11 @@
 			var str = "";
 			
 			str += "<div class='infoMain' id="+ graphId +" target="+ graphId +">";
-			str += "	<div class='serverInfo'>";
-			str += "		<p id='serverName'></p>";
-			str += "		<p id='osName'></p>";
-			str += "		<p id='osVer'></p>";
+			str += "	<div class='serverInfo' name='serverInfo'>";
+			//str += "		<p id='serverName'></p>";
+			//str += "		<p id='osName'></p>";
+			//str += "		<p id='osVer'></p>";
+			str += "		<p id='osInfo'></p>";
 			str += "	</div>";
 			str += "	<div class='graphInfo'>";
 			str += "		<div id='cpuMemInfo'>";						
@@ -288,13 +289,18 @@
 	    		var obj = JSON.parse(list);
 	    		var osInfo = obj.getSysInfo;
 	    		
-	    		var serverName = "<p id='serverName'>" + osInfo[0].hostname + "</p>"
+/* 	    		var serverName = "<p id='serverName'>" + osInfo[0].hostname + "</p>"
 	    		var osName = "<p id='osName'><strong>OS : </strong>" + osInfo[0].os + "</p>";
-	    		var osVer = "<p id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</p>";
+	    		var osVer = "<p id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</p>"; */
+ 				var tab = "&emsp;&emsp;";
+	    		var serverName = tab + "<span id='serverName'>" + osInfo[0].hostname + "</span>"
+	    		var osName = tab + "<span id='osName'><strong>OS : </strong>" + osInfo[0].os + "</span>";
+	    		var osVer = tab + "<span id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</span>";
 	    		
-	    		$("#serverName").html(serverName);
-	    		$("#osName").html(osName);
-	    		$("#osVer").html(osVer);
+	    		//$("#serverName").html(serverName);
+	    		//$("#osName").html(osName);
+	    		//$("#osVer").html(osVer);
+	    		$("#osInfo").html(serverName + osName + osVer);
 	    	}
 	    	
 	    	// 네트워크 트래픽 속도 계산 공식
@@ -546,17 +552,59 @@
 	}	
 </script>
 <style type="text/css">
-.infoMain   { border : 1px solid; color : #b6b6b6; height : 600px; margin : 20px 0px 0px; }
-.serverInfo { float : left; width : 15%; height : 100%;	color : #000000; padding-left : 10px; }
-.graphInfo  { float : left; width : 84%; height : 50%; }
+.infoMain   { border : 1px solid; color : #b6b6b6; height : 650px; margin : 20px 0px 0px; background-color : #f3f3f3; }
+.serverInfo { float : left; width : 100%; color : #000000; background-color : #FFFFFF; }
+.graphInfo  { float : left; width : 100%; height : 46%; }
 
 #serverName { color : #000000; font-weight : bold; font-size : 24px; text-align : left; }
-#cpuMemInfo { width : 50%; height: 95%;float : left; }
-#diskioInfo { width : 50%; height: 95%; display : inline-block; }
-#networkInfo { width : 50%; height: 95%; float : left; }
-#filesysInfo { width : 50%; height: 95%; display : inline-block; }
+#osName { font-size : 15px; }
+#osVer { font-size : 15px; }
+#cpuMemInfo { 
+	width : 50%; 
+	height: 100%; 
+	float : left; 
+	background-color : #FFFFFF; 
+	box-sizing: border-box; 
+	border : 10px solid; 
+	border-right: 5px solid; 
+	border-bottom: 5px solid; 
+	color : #f3f3f3;
+}
+#diskioInfo { 
+	width : 50%; 
+	height: 100%; 
+	display : inline-block; 
+	background-color : #FFFFFF; 
+	box-sizing: border-box; 
+	border : 10px solid; 
+	border-left: 5px solid; 
+	border-bottom: 5px solid; 
+	color : #f3f3f3;
+}
+#networkInfo { 
+	width : 50%; 
+	height: 100%; 
+	float : left; 
+	background-color : #FFFFFF; 
+	box-sizing: border-box; 
+	border : 10px solid; 
+	border-right: 5px solid; 
+	border-top: 5px solid; 
+	color : #f3f3f3;
+}
+#filesysInfo { 
+	width : 50%; 
+	height: 100%; 
+	display : inline-block; 
+	background-color : #FFFFFF; 
+	box-sizing: border-box; 
+	border : 10px solid; 
+	border-left: 5px solid; 
+	border-top: 5px solid;
+	color : #f3f3f3;
+}
 #filesysGraph { height: auto; overflow: hidden; }
-#filesysUsed { height: auto; padding-left: 5%; }
+#filesysUsed { height: auto; padding-left: 5%; background-color : #FFFFFF;}
 #tableRow {padding-left:5px;}
 #tData { padding-bottom: 2%; padding-right: 5px; }
 </style>
