@@ -112,7 +112,7 @@
 		    }, 2000);			
 			
 			// CPU & Memory 관련 그래프
-			var cpuMemoryChart = builder ("#cpuMemInfo", {		
+			var cpuMemoryChart = builder ("#cpuMemInfo", {	
 				axis: [{
 					x: {
 						type: "date",
@@ -154,7 +154,7 @@
 					type: "title",
 					text: "<spring:message code='ezSystem.pjg01'/>",
 					align:"end",
-					size: 14
+					size: 16
 				}],
 				style: {
 				    titleFontWeight: "bold"
@@ -198,7 +198,7 @@
 					type: "title",
 					text: "<spring:message code='ezSystem.pjg02'/>",
 					align:"end",
-					size: 14
+					size: 16
 				}],
 				style: {
 				    titleFontWeight: "bold"
@@ -247,7 +247,7 @@
 					type: "title",
 					text: "<spring:message code='ezSystem.pjg03'/>",
 					align:"end",
-					size: 14
+					size: 16
 				}],
 				style: {
 				    titleFontWeight: "bold"
@@ -273,7 +273,7 @@
 					type: "title",
 					text: "<spring:message code='ezSystem.pjg04'/>",
 					align:"end",
-					size: 14
+					size: 16
 				}],
 				style: {
 				    titleFontWeight: "bold"
