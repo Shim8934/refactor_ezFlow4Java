@@ -438,24 +438,21 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 첨부파일 다운로드
 	 */
 	@RequestMapping(value = "/ezTask/downloadAttach.do")
-	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");
 		String realPath = commonUtil.getRealPath(request);
-		String uploadFilePath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
 
 		if (fileName == null || fileName.equals("")) {
-			fileName = filePath; 
+			fileName = filePath;
 		}
-		
+
 		String fullFilePath = realPath + filePath;
 
 		logger.debug("fullFilePath : " + fullFilePath + " | fileName : " + fileName);
-		
+
 		downFile(request, response, fullFilePath, fileName);
 
 		logger.debug("downloadAttach ended.");

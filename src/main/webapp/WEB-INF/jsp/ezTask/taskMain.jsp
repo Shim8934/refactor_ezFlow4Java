@@ -397,6 +397,7 @@
 				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
 				        tr.cells[6].style.overflow = "hidden";
 				        tr.cells[6].style.textOverflow = "ellipsis";
+				        tr.cells[6].setAttribute("title", SelectSingleNodeValue(node, "MEMO"));
 			        }
 		
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {

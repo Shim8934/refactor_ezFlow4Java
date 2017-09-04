@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezTask.service.impl;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -508,7 +509,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
 			sb.append("<img src='" + fileImage + "' >");
-			sb.append("<a href='/ezTask/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
+			sb.append("<a href='/ezTask/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + URLEncoder.encode(fileName, "UTF-8") + "' />");
 			sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
 		}
 		
