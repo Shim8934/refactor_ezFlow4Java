@@ -319,7 +319,7 @@
 							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
 							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate.substring(0, 16) + ") : </span>";
 							taskCommentList += "<span>";
-							taskCommentList += vo.comment;
+							taskCommentList += encodeURIComponent(vo.comment);
 							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' title='" + "<spring:message code='ezTask.t159' />" + "' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
 							taskCommentList += "<br/>";

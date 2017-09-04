@@ -493,9 +493,8 @@
 		</table>
 		<br>
 		<div class="txt">
-			<h2 class="h2_dot"><spring:message code='ezTask.t190' /><span class="point">
-<!-- 			<asp:Label ID="LabelCount" class="point" Runat="server"></asp:Label> -->
-			</span><span id="resultCount"></span></h2>
+			<h2 class="h2_dot"><spring:message code='ezTask.t190' />
+			<span class="point"></span><span id="resultCount"></span></h2>
 		</div>
 		
 		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
