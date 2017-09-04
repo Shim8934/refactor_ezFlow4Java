@@ -327,6 +327,7 @@
 						
 						console.log(taskCommentList);
 						$("#taskCommentList").html(taskCommentList);
+						$("#TextComment").val("");
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
@@ -859,9 +860,9 @@
 						<c:if test="${useTodoMemo == 'YES'}">
 							<tr>
 				            	<th><spring:message code='ezTask.t170' /></th>
-				            	<td id="TextMemo" colspan="3" style="padding:0px; width:100%; height:55px; overflow-y:auto">
-				            		<div>
-				            			${taskInfoVO.memo }
+				            	<td id="TextMemo" colspan="3">
+				            		<div style="overflow-y:auto;padding-top:2px;">
+				            			<c:out value = '${taskInfoVO.memo }' />
 				            		</div>
 				            	</td>
 							</tr>

@@ -180,6 +180,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		if (taskID.equals("")) {
 			/* task write */
+			taskInfoVO.setTaskStatus(1);
 			taskID = insertTask(taskInfoVO, offset, tenantID);
 			
 		} else {

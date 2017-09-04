@@ -32,7 +32,7 @@
 	        }
 	        
 	        window.onresize = function () {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 230 + "PX";
 	         }
 	        
 			function Editor_Complete() {
@@ -96,7 +96,7 @@
 			}
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" style="overflow: hidden;">
 		<div id="main_body">
 			<table id="normalScreen" class="layout">
 				<tr>
@@ -140,7 +140,7 @@
 			</table>
 		</div>
 		<script>
-			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 230 + "PX";
 		</script>
 	</body>
 </html>
