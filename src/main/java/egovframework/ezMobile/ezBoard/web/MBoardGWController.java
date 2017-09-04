@@ -536,7 +536,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/attach-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getAttachList(@PathVariable String contentId, HttpServletRequest request) throws Exception {		
+	public JSONObject getAttachList(@PathVariable String contentId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] started.");
 		
 		JSONObject result = new JSONObject();
@@ -559,6 +559,7 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");
+		return result;
 	}
 	
 /*	*//**

@@ -3,7 +3,6 @@ package egovframework.ezMobile.ezCommon.web;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -20,6 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+
+/** 
+ * @Description [Controller] 모바일GW - 공통
+ * @author 오픈솔루션팀 황윤진
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2017.09.02    황윤진         신규작성
+ *
+ * @see
+ */
 
 @RestController
 public class MCommonGWController {
