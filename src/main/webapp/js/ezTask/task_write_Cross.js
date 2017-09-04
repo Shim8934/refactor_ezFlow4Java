@@ -955,11 +955,9 @@ function save_taskWork() {
 			contentPath : personContentpath
 		},
 		success : function(result) {
-			personContentpath = result.personContentPath;
-			
-			parent.DivPopUpHidden();
-			parent.load_bodyhtml2();
+			parent.load_bodyhtml2(result.personContentPath);
 			parent.getTaskWorkAttachList();
+			parent.DivPopUpHidden();
 	        window.close();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
