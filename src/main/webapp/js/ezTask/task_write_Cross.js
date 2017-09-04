@@ -911,7 +911,7 @@ function setAttachFileInfo(strXML) {
 
 function save_taskWork() {
     var content = message.GetEditorContent();
-    content = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(content) + "</BODY>" + "</HTML>");
+    content = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
 
     if (taskid == "") {
     	personContentpath = "";
