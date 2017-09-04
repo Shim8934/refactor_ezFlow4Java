@@ -477,4 +477,14 @@ public interface EzApprovalGService {
 	public void addAttachInfo(String strCont_Name, String strRealFileName, String strDocID, String strSN, String strType, String strCompanyID,	LoginVO userInfo) throws Exception;
 
 	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, LoginVO userInfo) throws Exception;
+
+	public boolean createRelayDocInfo(String realPath, String strXDocID, String strReceiveID, String strCompanyID, LoginVO userInfo) throws Exception;
+
+	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, LoginVO userInfo) throws Exception;
+
+	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, LoginVO userInfo) throws Exception;
+
+	public boolean insFailMessage(String strXDocID, String strSendID, String strSendName, String message, String strCompanyID, LoginVO userInfo) throws Exception;
+
+	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception;
 }

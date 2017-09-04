@@ -767,7 +767,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
         
         String url = "";
-        if (type.equals("HTMLPORTLET") || type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM") || type.equals("COMMUNITYCONTENT")) {
+        if (type.equals("HTMLPORTLET") || type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM") || type.equals("COMMUNITYCONTENT") || type.equals("")) {
         	url = request.getParameter("href");
         } else if (type.equals("COMMUNITYNOTI")) {
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");

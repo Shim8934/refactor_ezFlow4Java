@@ -1205,7 +1205,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
 		
-		if(userVO!=null){
+		if (userVO != null) {
 			StringBuilder stb = new StringBuilder();		
 			
 			stb.append("<ROW>");
@@ -1268,7 +1268,6 @@ public class EzOrganServiceImpl implements EzOrganService {
             String pOUCODE =  ou.get(i)[3];
             String pTOPOUCODE =  ou.get(i)[2];
             String pOURECEIVEDOCUMENTYN = ou.get(i)[7];
-            String pOUSMTPADDRESS =  ou.get(i)[9];
 
             nodeInfo.append("<NODE>");
             nodeInfo.append("<VALUE>" + pORGANIZATIONUNITNAME + "</VALUE>");
@@ -1277,7 +1276,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             nodeInfo.append("<DATA2>" + "ou=" + pORGANIZATIONUNITNAME + "," + "</DATA2>");
             nodeInfo.append("<DATA3>");
             
-            if (pOUSMTPADDRESS.equals("") || pOURECEIVEDOCUMENTYN.equals("") || pOURECEIVEDOCUMENTYN.equals("N")) {
+            if (pOURECEIVEDOCUMENTYN.trim().equals("") || pOURECEIVEDOCUMENTYN.trim().equals("N")) {
             	nodeInfo.append("N");
             } else {
             	nodeInfo.append("Y");
@@ -1290,7 +1289,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             	 nodeInfo.append("<SETNODEICONBYNAME>ICONCOMP</SETNODEICONBYNAME>");
             }
             
-            if (pOUSMTPADDRESS.equals("") || pOURECEIVEDOCUMENTYN.equals("")|| pOURECEIVEDOCUMENTYN.equals("N"))
+            if (pOURECEIVEDOCUMENTYN.trim().equals("")|| pOURECEIVEDOCUMENTYN.trim().equals("N"))
             {
             	nodeInfo.append("<SETTEXTCOLORBYNAME>GRAY</SETTEXTCOLORBYNAME>");
             }
@@ -1307,7 +1306,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	private List<String[]> ldapSearch(String strFilter, String strBaseDN, int intScope) throws Exception {
 		List<String[]> ou = new ArrayList<String[]>();
 
-		Hashtable<String, String> env           = new Hashtable<String, String>(5, 0.75f); 
+		Hashtable<String, String> env = new Hashtable<String, String>(5, 0.75f); 
         NamingEnumeration m_ne = null;
         String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode", "ouOrder"}; 
        

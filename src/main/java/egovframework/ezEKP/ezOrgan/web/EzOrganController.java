@@ -265,13 +265,13 @@ public class EzOrganController {
 	}
 	
 	/**
-	 * 조직도 트리정보  함수
+	 * 조직도 외부수신처 depth 1 트리정보  함수
 	 */
 	@RequestMapping(value = "/ezOrgan/getOrganTreeInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrganTreeInfo() throws Exception{
 		logger.debug("getOrganTreeInfo Started.(Outer Rec.)");
-		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
+		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1)(docsysteminfo=*))";
 		String strBaseDN = "";
 		int intScope = 1;
 

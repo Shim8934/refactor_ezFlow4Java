@@ -174,6 +174,11 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
+		
+		if (type == null) {
+			type = "";
+		}
+		
 		strResult = ezCommonService.getMHTtoHTML(type, itemID, userInfo.getTenantId(), realPath, request, locale);
 
 		logger.debug("mhtToHTMLContent ended");

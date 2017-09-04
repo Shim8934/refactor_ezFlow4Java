@@ -1,24 +1,27 @@
-var pRelayDocInfo = createXmlDom();
+var pRelayDocInfo = "";
 var decodePass = "";
 var decodePath = "";
 var pRelayURL = "";
 var pRelayURL2 = "";
 var needDoubleFormFlag = false;
 var pPublicFlag = "";
-
 function GetRelayDocInfo() {
     try {
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
+    	var result ="";
+      	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getRelayDocInfo.do",
+    		data : {
+    			docID : pDocID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
 
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/ReceivUI/aspx/getRelayDocInfo.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        pRelayDocInfo = loadXMLString(xmlhttp.responseText);
+      	pRelayDocInfo = loadXMLString(result);
         if (pRelayDocInfo.documentElement.childNodes.length < 1)
             return false;
         else
@@ -221,6 +224,7 @@ function RemoveDocInfo() {
 }
 
 function getExtInfo() {
+	alert(10);
     var xmlURL = getNodeText(GetElementsByTagName(pRelayDocInfo, "xmlURL")[0]);
     var sealURL = getNodeText(GetElementsByTagName(pRelayDocInfo, "sealURL")[0]);
     if (xmlURL == "") {
@@ -230,20 +234,22 @@ function getExtInfo() {
         return false;
     }
 
-    xmlURL = "/Upload_ApprovalG/" + sCompanyID + "/ExDocXML/" + xmlURL;
-
-    var xmlhttp = createXMLHttpRequest();
-    var xmlDocCheck = createXmlDom();
-    var sihangXML = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlDocCheck, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlDocCheck, objNode, "XMLPATH", xmlURL);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ReceivUI/aspx/loadDocXML.aspx", false);
-    xmlhttp.send(xmlDocCheck);
-
-    sihangXML = loadXMLString(xmlhttp.responseText);
+    xmlURL = sCompanyID + "/ExDocXML/" + xmlURL;
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/loadDocXML.do",
+		data : {
+			XMLPATH : xmlURL
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    sihangXML = loadXMLString(result);
 
     if (getXmlString(sihangXML) == "") {
         alert(strLang726 + xmlURL);
@@ -292,7 +298,7 @@ function getExtInfo() {
         }
 
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "head/organ");
+            Nodes = SelectNodes(eNodes, "pubdoc/head/organ");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/head/organ");
@@ -309,7 +315,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "head/receiptinfo/recipient");
+            Nodes = SelectNodes(eNodes, "pubdoc/head/receiptinfo/recipient");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/head/receiptinfo/recipient");
@@ -347,7 +353,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "head/receiptinfo/via");
+            Nodes = SelectNodes(eNodes, "pubdoc/head/receiptinfo/via");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/head/receiptinfo/via");
@@ -365,7 +371,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "body/title");
+            Nodes = SelectNodes(eNodes, "pubdoc/body/title");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/body/title");
@@ -387,7 +393,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "body");
+            Nodes = SelectNodes(eNodes, "pubdoc/body");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/body");
@@ -397,7 +403,7 @@ function getExtInfo() {
             if (GetAttribute(Nodes[0], "separate") == "false" || GetAttribute(Nodes[0], "separate") == null) {
                 var tempNodes = null;
                 if (CrossYN()) {
-                    tempNodes = SelectNodes(eNodes, "body/content");
+                    tempNodes = SelectNodes(eNodes, "pubdoc/body/content");
                 }
                 else {
                     tempNodes = SelectNodes(eNodes, "pubdoc/body/content");
@@ -425,7 +431,7 @@ function getExtInfo() {
             else {
                 var tempNodes = null;
                 if (CrossYN()) {
-                    tempNodes = SelectNodes(eNodes, "body/content");
+                    tempNodes = SelectNodes(eNodes, "pubdoc/body/content");
                 }
                 else {
                     tempNodes = SelectNodes(eNodes, "pubdoc/body/content");
@@ -458,7 +464,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendername");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendername");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendername");
@@ -475,7 +481,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/seal");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/seal");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/seal");
@@ -519,7 +525,7 @@ function getExtInfo() {
                     field.style.width = signWidth
                     field.style.height = signHeight
 
-                    var strimg = "<img src='" + RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(sealPath) + "' border=0 embedding='1' ";
+                    var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filepath=" + escape(sealPath) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + ">";
 
@@ -532,7 +538,7 @@ function getExtInfo() {
                 if (field) {
                     var signWidth = 105;
                     var signHeight = 35;
-                    var strimg = "<img src='" + RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape("/Upload_ApprovalG/SealImg/nostamp.gif") + "' border=0 embedding='1' >";
+                    var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filepath=" + escape("/Upload_ApprovalG/SealImg/nostamp.gif") + "' border=0 embedding='1' >";
                     var field2 = message.GetListItem(fields, "chief");
                     var chiefwidth = 1;
                     if (field2) {
@@ -559,7 +565,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/approvalinfo/approval");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/approval");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/approval");
@@ -643,7 +649,7 @@ function getExtInfo() {
                         if (signHeight > 48)
                             signHeight = 28;
 
-                        var strimg = "<img src='" + RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
+                        var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
                         strimg = strimg + " width=" + signWidth;
                         strimg = strimg + " height=" + signHeight + ">";
 
@@ -733,7 +739,7 @@ function getExtInfo() {
                         if (signHeight > 48)
                             signHeight = 28;
 
-                        var strimg = "<img src='" + RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
+                        var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
                         strimg = strimg + " width=" + signWidth;
                         strimg = strimg + " height=" + signHeight + ">";
 
@@ -1020,7 +1026,7 @@ function getExtInfo() {
                 else
                     var signHeight = ConversionPt(GetAttribute(GetChildNodes(Nodes[0])[0], "height"));
 
-                var strimg = "<img src='" + RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
+                var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
                 strimg = strimg + " width=" + signWidth;
                 strimg = strimg + " height=" + signHeight + ">";
                 field.innerHTML = strimg;
@@ -1058,7 +1064,7 @@ function getExtInfo() {
                 else
                     var signHeight = ConversionPt(GetAttribute(GetChildNodes(Nodes[0])[0], "height"));
 
-                var strimg = "<img src='" + RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
+                var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filepath=" + escape(signPath) + "' border=0 embedding='1' ";
                 strimg = strimg + " width=" + signWidth;
                 strimg = strimg + " height=" + signHeight + ">";
 
@@ -2060,7 +2066,7 @@ function SendDraftMappingSign(ret) {
             if (field) {
 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filepath=" + escape(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
 
@@ -2117,7 +2123,7 @@ function SendDraftMappingSign(ret) {
             if (field) {
 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filepath=" + escape(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
 

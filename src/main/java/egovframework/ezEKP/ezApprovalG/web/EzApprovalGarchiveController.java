@@ -2416,4 +2416,52 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("cert ended");
 		return "ezApprovalG/apprGcert";
 	}
+	
+	
+	@RequestMapping(value = "/ezApprovalG/getRelayDocInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRelayDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("getRelayDocInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getRelayInfo(docID,userInfo);
+		logger.debug("getRelayDocInfo ended");
+		return result;
+	}
+	
+	
+	@RequestMapping(value = "/ezApprovalG/loadDocXML.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String loadDocXML(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("getRelayDocInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String result = "";
+		String xmlPath = request.getParameter("XMLPATH");
+		String strContent = "";
+		try {
+			 Document xmlDoc = commonUtil.xmlLod(commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + xmlPath);
+			 
+			 strContent = commonUtil.convertDocumentToString(xmlDoc);
+			 strContent = strContent.substring(strContent.indexOf("<content>"),strContent.indexOf("</content>")).replace("<content>", "");
+			 
+			strContent = "<![CDATA[" + strContent + "]]>";
+			
+			xmlDoc.getElementsByTagName("content").item(0).setTextContent("");
+			xmlDoc.getElementsByTagName("content").item(0).setTextContent(strContent);
+			
+			result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + commonUtil.convertDocumentToString(xmlDoc).substring(commonUtil.convertDocumentToString(xmlDoc).indexOf("<pubdoc>"), commonUtil.convertDocumentToString(xmlDoc).length());
+
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace().toString());
+		}
+		
+//		result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + strResultXML;
+		logger.debug("getRelayDocInfo ended");
+		return result;
+	}
+	
+	
+	
 }

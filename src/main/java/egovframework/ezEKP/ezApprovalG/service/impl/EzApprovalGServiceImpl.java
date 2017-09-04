@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,7 +18,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -22117,6 +22120,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRelayDB(map);
 			result = true;
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			result = false;
 		}
 		return result;
@@ -22129,6 +22133,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("VALUE", strValue);
 		map.put("XDOCID", strXDocID);
 		map.put("DEPTID", strDeptID);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
 		
 		ezApprovalGDAO.updateRelayFiled(map);
 	}
@@ -22192,5 +22198,483 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (apprGRelaySignList.size() == 0) {
 			ezApprovalGDAO.insertRecRelaySignInfo(map);
 		}
+	}
+
+	// 중계문서 정보를 가져와서 진행문서 생성
+	@Override
+	public boolean createRelayDocInfo(String realPath, String strXDocID, String strXToCode, String strCompanyID, LoginVO userInfo) throws Exception {
+		String strFromDeptID = "";
+		String strFromDeptName = "";
+		String strToDeptID = "";
+		String strToDeptName = "";
+		String strFormID = "";
+		String strDocTitle = "";
+		String strAttachYN = "";
+		String strAttachName = "";
+		String strAttachDisplayName = "";
+		String strAttachURL = "";
+		String strSource = "";
+		String strTarget = "";
+		String strRecDate = "";
+		String strNewID = "";
+		String strXmlDirPath = "";
+		int iSIndex;
+		int iAttCnt;
+		
+		 Map<String, Object> map = new HashMap<String, Object>();
+		 
+		try {
+			strAttachYN = "N";
+            strFormID = ezCommonService.getTenantConfig("Relay_FormID", userInfo.getTenantId());
+            strXmlDirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) ;
+
+    		map.put("XDOCID", strXDocID);
+    		map.put("XTOCODE", strXToCode);
+    		map.put("companyID", userInfo.getCompanyID());
+    		map.put("v_TENANTID", userInfo.getTenantId());
+    		
+    		List<ApprGRelayVO> realyXDocList = ezApprovalGDAO.relayGetByXDocIDInfo(map);
+    		
+    		StringBuffer sb = new StringBuffer();
+            sb.append("<DATA>");
+            
+            for (int i = 0; i < realyXDocList.size(); i++) {
+    			sb.append(commonUtil.getQueryResult(realyXDocList.get(i)));
+    		}
+    		sb.append("</DATA>");
+    		
+    		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+    		
+			if( docXML.getElementsByTagName("ROW").getLength() > 0 ) {
+				strFromDeptName = docXML.getElementsByTagName("MFROM").item(0).getTextContent();
+				strFromDeptID = docXML.getElementsByTagName("XFROMCODE").item(0).getTextContent();
+				strToDeptID = docXML.getElementsByTagName("XTOCODE").item(0).getTextContent();
+				strDocTitle = docXML.getElementsByTagName("SUBJECT").item(0).getTextContent();
+				strRecDate = docXML.getElementsByTagName("RECDATE").item(0).getTextContent().substring(0,19);
+			} else {
+				throw new Exception();
+			}
+			
+			strToDeptName = ezOrganService.getPropertyValue(strToDeptID, "displayName", userInfo.getTenantId());
+			iSIndex = strFromDeptID.indexOf("/");
+			strFromDeptID = strFromDeptID.substring(iSIndex + 1).trim();
+		    
+			iSIndex = strFromDeptName.indexOf("<");
+			strFromDeptName = strFromDeptName.substring(iSIndex + 1);
+			strFromDeptName = strFromDeptName.replace(">", "").trim();
+
+			List<ApprGRelayVO> realyAttachList = ezApprovalGDAO.relayGetAttachInfo(map);
+			
+			
+			StringBuffer sb2 = new StringBuffer();
+            sb2.append("<DATA>");
+            
+            for (int i = 0; i < realyAttachList.size(); i++) {
+    			sb2.append(commonUtil.getQueryResult(realyAttachList.get(i)));
+    		}
+    		sb2.append("</DATA>");
+    		
+    		Document domXML = commonUtil.convertStringToDocument(sb2.toString());
+			
+
+			iAttCnt = domXML.getElementsByTagName("ROW").getLength();
+
+			if( iAttCnt > 0 ) {
+				strAttachYN = "Y";
+			}
+			
+			strNewID = getNewID(strCompanyID, userInfo.getTenantId());
+
+			map.put("NEWID", strNewID);
+    		map.put("FORMID", strFormID);
+    		map.put("DOCTITLE", strDocTitle);
+    		map.put("ATTACHYN", strAttachYN);
+    		
+			ezApprovalGDAO.insertRelayAprDocInfo(map);
+			ezApprovalGDAO.insertRelayExpAprDocInfo(map);
+            
+			// 첨부파일 가져오기
+			if( strAttachYN.equals("Y")) {
+				for( int i = 0 ; i < iAttCnt ; i++ ) {
+					if(!domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("")) {
+						strAttachName = domXML.getElementsByTagName("ATTACHNAME").item(i).getTextContent();
+                        strAttachURL = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + strCompanyID + commonUtil.separator + "UploadFile" 
+						               + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true).substring(0,4) + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+						strAttachDisplayName = strAttachName;
+
+						map.put("NEWID", strNewID);
+			    		map.put("ATTACHSN", domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent());
+			    		map.put("ATTACHNAME", strAttachName);
+			    		map.put("ATTACHURL", strAttachURL);
+			    		map.put("ATTACHDISPNAME", strAttachDisplayName);
+			    		map.put("ATTACHTYPE", domXML.getElementsByTagName("ATTACHTYPE").item(i).getTextContent());
+			    		
+						ezApprovalGDAO.insertRelayAttchInfo(map);
+
+						if(domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("") ) {
+							strSource = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocDown" + commonUtil.separator + domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent();
+                            strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "UploadFile" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true).substring(0,4) + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+
+                            FileInputStream input = null;
+                            FileOutputStream output = null;
+                            try {
+                                // 복사할 대상 파일을 지정해준다.
+                                File file = new File(strSource);
+                                 
+                                // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.         
+                                input = new FileInputStream(file);
+                                // 복사된 파일의 위치를 지정해준다.
+                                output = new FileOutputStream(new File(strTarget));
+                                             
+                                int readBuffer = 0;
+                                byte [] buffer = new byte[512];
+                                while((readBuffer = input.read(buffer)) != -1) {
+                                    output.write(buffer, 0, readBuffer);
+                                }
+                            } catch (IOException e) {
+                                System.out.println(e);
+                            } finally {
+                                try{
+                                    // 생성된 InputStream Object를 닫아준다.
+                                    input.close();
+                                    // 생성된 OutputStream Object를 닫아준다.
+                                    output.close();
+                                } catch(IOException io) {}
+                            }
+                        }
+
+						}
+					}
+			}
+			
+			map.put("FROMDEPTID", strFromDeptID);
+			map.put("FROMDEPTNAME", strFromDeptName);
+			map.put("TODEPTID", strToDeptID);
+			map.put("TODEPTNAME", strToDeptName);
+			map.put("RECDATE", strRecDate);
+			map.put("XDOCID", strXDocID);
+			map.put("XTOCODE", strXToCode);
+			
+			ezApprovalGDAO.insertRelayAprReceiptProessInfo(map);
+			
+			ezApprovalGDAO.updateRecRelayInfo(map);
+			ezApprovalGDAO.updateRecExchInfo(map);
+
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			map.put("NEWID", strNewID);
+			map.put("XDOCID", strXDocID);
+			map.put("XTOCODE", strXToCode);
+			
+			ezApprovalGDAO.updateRecRelayInfoRollback(map);
+			ezApprovalGDAO.updateRecExchInfoRollback(map);
+			
+			ezApprovalGDAO.deleteRelayReceiptProcessInfo(map);
+			ezApprovalGDAO.deleteRelayAttachInfo(map);
+			ezApprovalGDAO.deleteRelayExpAprDocInfo(map);
+			ezApprovalGDAO.deleteRelayAprDocInfo2(map);
+			return false;
+		}
+	}
+
+	// 수신,접수,반송 처리결과에 대한 ACK 통합문서 생성
+	@Override
+	public boolean sendAck(String realPath, String strDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, LoginVO userInfo) throws Exception {
+		/*	1. recRelayInfo 테이블에서 해당 문서의 정보를 조회함
+		        1) 수신부서의 ID            : xFromCode (원문발신부서코드)
+		        2) 원문상의 문서ID          : xDocID
+		        3) 원문상의 문서제목        : subject
+		    2. 원본 통합문서 sample xml를 로딩 (값이 없는 샘플문서를 미리 생성하여 둠)
+		    3. 입력값 Assign
+		    4. sendtemp 폴더에 저장 : 발신부서코드(7) + 수신부서코드(7) + 시간스탬프(YYYYMMDDhhmmss) + 일련번호(2)*/
+
+         String strSamplePath;
+         String strSendOrgCode;
+
+         String strSendName;
+         String strResult;
+         String strTemp;
+         String strTime;
+         String strFileName;
+         String strTimeStamp;
+
+         try {
+             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
+             strTimeStamp = strTime.replace("-", "");
+             strTimeStamp = strTimeStamp.replace(" ", "");
+             strTimeStamp = strTimeStamp.replace(":", "");
+             
+             strSamplePath = commonUtil.getUploadPath("upload_relay.ROOT", userInfo.getTenantId()) +commonUtil.separator + "sample.xml";
+             strSendOrgCode = strCompanyID;
+             strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", userInfo.getTenantId());
+
+             Document objXML = commonUtil.xmlLod(realPath + commonUtil.separator + strSamplePath);
+
+             strFileName = strSendID + strReceiveID + strTimeStamp;
+             strFileName = getFileName(realPath, strFileName, "send", userInfo.getTenantId());
+
+             objXML.getElementsByTagName("send-orgcode").item(0).setTextContent(strSendOrgCode);
+             objXML.getElementsByTagName("send-id").item(0).setTextContent(strSendID);
+             objXML.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(strSendName.getBytes("UTF-8")));
+             objXML.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
+             objXML.getElementsByTagName("date").item(0).setTextContent(strTime);
+             objXML.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(strTitle.getBytes("UTF-8")));
+             objXML.getElementsByTagName("doc-id").item(0).setTextContent(strDocID);
+             
+             objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").setTextContent(strDocType);
+             objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setTextContent(Base64.encodeBase64String(strDocTypeName.getBytes("UTF-8")));
+             objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setTextContent(Base64.encodeBase64String(strDocTypeDept.getBytes("UTF-8")));
+
+             // 수정(2006.06.26) : 그룹웨어명을 한글명에서 영문명으로 변경 - 한글인 경우 행자부에서 디코딩이 안되는 문제 발생
+             objXML.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String("ezFlow2000/G".getBytes("UTF-8")));
+
+             objXML.getElementsByTagName("dtd-version").item(0).setTextContent("2.0");
+             objXML.getElementsByTagName("xsl-version").item(0).setTextContent("2.0");
+
+             if (strDocType.equals("req-resend")) {
+
+                 objXML.getElementsByTagName("contents").item(0).appendChild(objXML.createElement("content"));
+                 objXML.createElement("content").setAttribute("content-role", "return");
+                 objXML.createElement("content").setAttribute("filename", "return");
+                 objXML.createElement("content").setAttribute("content-transfer-encoding", "base64");
+                 objXML.createElement("content").setAttribute("content-type", "text/xml");
+                 objXML.createElement("content").setAttribute("charset", "");
+                 objXML.getElementsByTagName("content").item(0).setTextContent(Base64.encodeBase64String(strErrMsg.getBytes("UTF-8")));
+             }
+
+             strTemp = objXML.getDocumentElement().toString();
+             strResult = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
+             strResult = strResult + strTemp.replace("&amp;", "&");
+
+             File ackFile = new File(realPath + commonUtil.getUploadPath("upload_relay.ROOT", userInfo.getTenantId())  + commonUtil.separator +"DATA" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
+             
+         	if( ackFile.exists()) {
+         		ackFile.delete();
+         	}
+             
+			FileOutputStream fop = new FileOutputStream(ackFile);
+			// get the content in bytes
+			fop.write(strResult.getBytes("utf-8"));
+			fop.flush();
+			fop.close();
+
+             return true;
+         }
+         catch (Exception Ex) {
+             return false;
+         } 
+	}
+
+	private String getFileName(String realPath, String strFileName, String strFolderName, int tenantID) {
+		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "DATA" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+		String strResult = "";
+		boolean exist;
+		String result = "";
+		
+		for (int i = 1; i <= 99; i++) {
+			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
+			
+		      File FI = new File(realPath + strPath);
+		      
+		      if (!FI.exists()) {
+		    	  FI.mkdirs();
+			  }
+		      
+		      File file = new File(realPath + strPath + strResult);
+		         
+		      exist = file.exists();
+		      
+		      if (!exist) {
+		    	  strResult =  strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
+		      } else {
+		    	  strResult = strFileName + "00.xml";
+		      }
+		}
+		return strResult;
+	}
+
+	@Override
+	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, LoginVO userInfo) throws Exception {
+		boolean result = false;
+		try {
+			String strRecDate = strPrecDate;
+			String strRecStates = "";
+
+			if( strRecDate.trim().equals("")) {
+				strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
+			} else {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				strRecDate = format.parse(strRecDate).toString();
+			}
+
+			switch( strMode.trim()) {
+				case "send":
+					strRecStates = "S";
+					break;
+
+				case "resend":
+					strRecStates = "S";
+					break;
+
+				case "fail":
+					strRecStates = "E";
+					break;
+			
+				case "arrive":
+					strRecStates = "V";
+					break;
+
+				case "receive":
+					strRecStates = "R";
+					break;
+
+				case "accept":
+					strRecStates = "I";
+					break;
+
+				case "return":
+					strRecStates = "T";
+					break;
+
+				case "req-resend":
+					strRecStates = "T";
+					break;
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyID", userInfo.getCompanyID());
+			map.put("v_TENANTID", userInfo.getTenantId());
+			map.put("DOCID", strDocID);
+			map.put("RECEIPTPOINTID", strDeptID);
+			map.put("PROCESSDATE", strRecDate);
+			map.put("PROCESSYN", strRecStates);
+			map.put("ACCEPTNAME", strAcceptName);
+			
+			ezApprovalGDAO.updateRelaySusinState(map);
+			result = true;
+		} catch (Exception e) {
+			result = false;
+		}
+			return result;
+	}
+
+	@Override
+	public boolean insFailMessage(String docID, String sendID, String sendName, String message, String companyID, LoginVO userInfo) throws Exception {
+		
+		boolean result = false;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("PDOCID", docID);
+		map.put("PSENDID", sendID);
+		map.put("PSENDNAME", sendName);
+		map.put("PMESSAGE", message);
+		
+		try {
+			ezApprovalGDAO.insertRelayFailMessage(map);
+			result = true;
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
+
+	@Override
+	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception {
+		
+		StringBuilder result = new StringBuilder();
+		Map <String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		List<ApprGRelayVO> relayDocList = ezApprovalGDAO.getRelayInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < relayDocList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(relayDocList.get(i)));
+		}
+        
+		sb.append("</DATA>");
+		
+		Document listXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		result.append("<DATA>");
+		if (listXML.getElementsByTagName("ROW").getLength() > 0) {
+			result.append("<xDocID>");
+			if (listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
+				result.append("");
+			} else {
+				result.append(listXML.getElementsByTagName("XDOCID").item(0).getTextContent());
+			}
+			result.append("</xDocID>");
+			
+			String strRecDate = listXML.getElementsByTagName("RECDATE").item(0).getTextContent();
+
+			result.append("<recdate>");
+			if( strRecDate.equals("")) {
+				result.append("");
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				result.append( sdf.format(sdf.parse(strRecDate)));
+			}
+			
+			result.append("</recdate>");
+			
+			result.append("<mFrom>" + listXML.getElementsByTagName("MFROM").item(0).getTextContent() + "</mFrom>");
+
+			result.append("<mTo>" + listXML.getElementsByTagName("MTO").item(0).getTextContent() + "</mTo>");
+
+			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent() + "</Subject>");
+			result.append("<xMailType>" + listXML.getElementsByTagName("XMAILTYPE").item(0).getTextContent() + "</xMailType>");
+			result.append("<xFromCode>" + listXML.getElementsByTagName("XFROMCODE").item(0).getTextContent() + "</xFromCode>");
+			result.append("<xToCode>" + listXML.getElementsByTagName("XTOCODE").item(0).getTextContent() + "</xToCode>");
+			
+			result.append("<xGW>" + listXML.getElementsByTagName("XGW").item(0).getTextContent() + "</xGW>");
+			result.append("<xDocType>" + listXML.getElementsByTagName("XDOCTYPE").item(0).getTextContent() + "</xDocType>");
+			result.append("<xDTDversion>" + listXML.getElementsByTagName("XDTDVERSION").item(0).getTextContent() + "</xDTDversion>");
+			
+			result.append("<xXSLversion>" + listXML.getElementsByTagName("XXSLVERSION").item(0).getTextContent() + "</xXSLversion>");
+			result.append("<ContentType>" + listXML.getElementsByTagName("CONTENTTYPE").item(0).getTextContent() + "</ContentType>");
+			result.append("<sealURL>" + listXML.getElementsByTagName("SEALURL").item(0).getTextContent() + "</sealURL>");
+			result.append("<xmlURL>" + listXML.getElementsByTagName("XMLURL").item(0).getTextContent() + "</xmlURL>");
+			
+			result.append("<emlURL>" + listXML.getElementsByTagName("EMLURL").item(0).getTextContent() + "</emlURL>");
+			result.append("<isPKI>" + listXML.getElementsByTagName("ISPKI").item(0).getTextContent() + "</isPKI>");
+			result.append("<ReceivedDate>" + listXML.getElementsByTagName("RECEIVEDDATE").item(0).getTextContent() + "</ReceivedDate>");
+		}
+		result.append("</DATA>");
+		if (!listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
+			List<ApprGRelayVO> relayDocSignList = ezApprovalGDAO.getRelaySignInfo(map);
+			
+			StringBuffer sb2 = new StringBuffer();
+			sb2.append("<DATA>");
+	        
+	        for (int i = 0; i < relayDocSignList.size(); i++) {
+	        	sb2.append(commonUtil.getQueryResult(relayDocSignList.get(i)));
+			}
+	        
+	        sb2.append("</DATA>");
+			
+			Document docXML = commonUtil.convertStringToDocument(sb2.toString());
+			
+			if (relayDocSignList.size() > 0) {
+				result.append("<SignInfos>");
+				
+				for( int i = 0; i< docXML.getElementsByTagName("ROW").getLength(); i++) {
+					result.append("<SignInfo>");
+					result.append("<SignName>" + docXML.getElementsByTagName("SIGNNAME").item(i).getTextContent() + "</SignName>");
+					result.append("<RealSignName>" + docXML.getElementsByTagName("REALSIGNNAME").item(i).getTextContent() + "</RealSignName>");
+					result.append("</SignInfo>");
+				}
+				result.append("</SignInfos>");
+			}
+		}
+		
+		return result.toString();
 	}
 }
