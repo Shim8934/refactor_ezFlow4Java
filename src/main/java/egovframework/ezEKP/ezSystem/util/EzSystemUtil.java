@@ -34,7 +34,7 @@ public class EzSystemUtil {
 
 		BufferedReader br = null;		
 		/**
-		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 * 설정 아이피에 따라 로컬 테스트
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
@@ -87,7 +87,7 @@ public class EzSystemUtil {
 
 		BufferedReader br = null;
 		/**
-		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 * 설정 아이피에 따라 로컬 테스트
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
@@ -156,7 +156,7 @@ public class EzSystemUtil {
 
 		BufferedReader br = null;
 		/**
-		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 * 설정 아이피에 따라 로컬 테스트
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("cat", "/proc/meminfo");
@@ -211,7 +211,7 @@ public class EzSystemUtil {
 	
 		BufferedReader br = null;
 		/**
-		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 * 설정 아이피에 따라 로컬 테스트
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("df", "-h");
@@ -269,7 +269,7 @@ public class EzSystemUtil {
 		
 		BufferedReader br = null;
 		/**
-		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 * 설정 아이피에 따라 로컬 테스트
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
@@ -351,7 +351,7 @@ public class EzSystemUtil {
 		
 		BufferedReader br = null;
 		/**
-		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 * 설정 아이피에 따라 로컬 테스트
 		 */
 		if (!ip.equalsIgnoreCase("192.168.56.1") && !ip.equalsIgnoreCase("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");

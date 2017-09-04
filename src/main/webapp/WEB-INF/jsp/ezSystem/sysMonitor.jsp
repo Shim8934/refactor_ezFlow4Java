@@ -47,6 +47,9 @@
 			//str += "		<p id='osVer'></p>";
 			str += "		<p id='osInfo'></p>";
 			str += "	</div>";
+			str += "	<div class='summary' name='summary'>";
+			str += " 		<p id='summaryInfo'></p>";
+			str += "	</div>";
 			str += "	<div class='graphInfo'>";
 			str += "		<div id='cpuMemInfo'>";						
 			str += "		</div>";
@@ -104,6 +107,7 @@
 			// 2초마다 그래프 재생성
 	      	var refreshIntervalID = setInterval(function() {
 				setGraphForm();
+				//setSummary();
 				
 		    	// 해당 그래프가 없을 경우 setInterval 종료
 		    	if (document.getElementById(graphId) == null) {
@@ -315,6 +319,12 @@
 	    		$("#osInfo").html(serverName + osName + osVer);
 	    	}
 	    	
+	    	// 요약 정보
+	    	//function setSummary() {
+	    	//	
+	    	//	$("#summaryInfo").html(test);
+	    	//}
+	    	
 	    	// 네트워크 트래픽 속도 계산 공식
 	    	function getMbps(old, current) {
 	    		
@@ -391,6 +401,9 @@
 	    		var memory = mobj.getMemoryInfo;	 
 	       		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memavailable);
 	    		
+	       		console.log(cobj);
+	       		console.log(mobj);
+	       		
 	    		if (cpuMemoryData.length >= 30) {
 	    			cpuMemoryData.shift();
 	    		}
@@ -564,13 +577,15 @@
 	}	
 </script>
 <style type="text/css">
-.infoMain   { border : 1px solid; color : #b6b6b6; height : 650px; margin : 20px 0px 0px; background-color : #f3f3f3; }
-.serverInfo { float : left; width : 100%; color : #000000; background-color : #FFFFFF; }
+.infoMain   { border : 1px solid; color : #b6b6b6; height : 700px; margin : 20px 0px 0px; background-color : #f3f3f3; }
+.serverInfo { float : left; width : 75%; height: 7%; color : #000000; background-color : #FFFFFF; }
+.summary	{ float : right; width: 25%;  height: 7%; background-color : #FFFFFF; box-sizing: border-box; }
 .graphInfo  { float : left; width : 100%; height : 46%; }
 
 #serverName { color : #000000; font-weight : bold; font-size : 20px; text-align : left; }
 #osName { font-size : 15px; }
 #osVer { font-size : 15px; }
+#summaryInfo { font-size : 15px; }
 #cpuMemInfo { 
 	width : 50%; 
 	height: 100%; 
@@ -615,8 +630,8 @@
 	border-top: 5px solid;
 	color : #f3f3f3;
 }
-#filesysGraph { height: auto; overflow: hidden; }
-#filesysUsed { height: auto; padding-left: 5%; background-color : #FFFFFF;}
+#filesysGraph { height: 60%; overflow: hidden; }
+#filesysUsed { height: 30%; padding-left: 5%; background-color : #FFFFFF; }
 #tableRow {padding-left:5px;}
 #tData { padding-bottom: 2%; padding-right: 5px; }
 </style>
