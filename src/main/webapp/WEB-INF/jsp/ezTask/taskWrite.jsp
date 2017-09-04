@@ -101,7 +101,7 @@
 				
 	
 				if (personid != "" && personid != creatorid) {
-					document.getElementById("personlist").innerHTML = personid;
+					document.getElementById("personlist").innerHTML = personname;
 	                 
 					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 	
