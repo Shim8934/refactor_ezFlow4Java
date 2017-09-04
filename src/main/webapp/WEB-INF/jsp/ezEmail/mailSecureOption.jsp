@@ -227,7 +227,6 @@
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.lhm63' /></h1>
 		<span>▒ <spring:message code='ezEmail.lhm39' /></span><br>
-		<span>▒ <spring:message code='ezEmail.lhm40' /></span><br>
 		<span>▒ <spring:message code='ezEmail.lhm41' /></span><br>
 		<br>
 		

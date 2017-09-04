@@ -6,9 +6,9 @@
 <html>
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<title><spring:message code='ezEmail.lhm44' /></title>
-		<script type="text/javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
@@ -40,7 +40,7 @@
 		  </ul>
 		</div>
 		
-		<span>▒ <spring:message code='ezEmail.lhm45' /></span><br/>
+		<span>▒ <spring:message code='ezEmail.lhm41' /></span><br/>
 		<br/>
 		
 		<h2><spring:message code='ezEmail.lhm44' /></h2>
