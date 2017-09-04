@@ -171,7 +171,7 @@
 		                var is_newfile;
 		                var Rtnval;
 
-		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA");
 
 						if (fileList == "") {
 							fileList = pAttachDelFileName;

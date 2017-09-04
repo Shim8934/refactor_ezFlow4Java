@@ -26,9 +26,9 @@ public interface EzTaskService {
 	
 	void updateTaskStatus(String taskID, String taskStatus, String completeRate, int tenantID) throws Exception;
 	
-	void taskWorkSave(String taskID, String content, String attachList, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception;
+	void taskWorkSave(String taskID, String content, String attachList, String fileName, String fileSize, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception;
 	
-	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, int tenantID) throws Exception;
+	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID) throws Exception;
 	
 	/* 정수현*/
 	public void taskSaveConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;

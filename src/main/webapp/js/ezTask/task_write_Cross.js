@@ -718,12 +718,18 @@ function save_task() {
 	var listtable = dadiframe.document.getElementById("filelist");
 	var filelist = GetChildNodes(listtable);
 	var fileList = "";
+	var fileName = "";
+	var fileSize = "";
 	
 	for (var i = 0; i < filelist.length - 1; i++) {	    
 		if (i == 0) {
-			fileList = GetAttribute(filelist[i + 1], "data2");
+			fileList = GetAttribute(filelist[i + 1], "data");
+			fileName = GetAttribute(filelist[i + 1], "data2");
+			fileSize = GetAttribute(filelist[i + 1], "data3");
 		} else {
-			fileList += "," + GetAttribute(filelist[i + 1], "data2");
+			fileList += "," + GetAttribute(filelist[i + 1], "data");
+			fileName += "," + GetAttribute(filelist[i + 1], "data2");
+			fileSize += "," + GetAttribute(filelist[i + 1], "data3");
 		}
 	}
 	
@@ -762,6 +768,8 @@ function save_task() {
 			contentPath : contentPath,
 			hasAttach : hasattach,
 			fileList : fileList,
+			fileName : fileName,
+			fileSize : fileSize,
 			shareList : shareList,
 			memo : memo
 		};
@@ -852,11 +860,12 @@ function setAttachFileInfo(strXML) {
             var newFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
             var pFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
             var fileSize = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]);
-//            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
 
             if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]) == "OK") {
-                objTr = document.createElement("TR");
-                objTr.setAttribute("DATA2", newFileName + "__" + fileSize);
+            	objTr = document.createElement("TR");
+                objTr.setAttribute("DATA", newFileName);
+                objTr.setAttribute("DATA2", pFileName);
+                objTr.setAttribute("DATA3", fileSize);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
@@ -913,15 +922,21 @@ function save_taskWork() {
     var listtable = dadiframe.document.getElementById("filelist");
 	var filelist = GetChildNodes(listtable);
 	var fileList = "";
-
+	var fileName = "";
+	var fileSize = "";
+	
 	for (var i = 0; i < filelist.length - 1; i++) {	    
 		if (i == 0) {
-			fileList = GetAttribute(filelist[i + 1], "data2");
+			fileList = GetAttribute(filelist[i + 1], "data");
+			fileName = GetAttribute(filelist[i + 1], "data2");
+			fileSize = GetAttribute(filelist[i + 1], "data3");
 		} else {
-			fileList += "," + GetAttribute(filelist[i + 1], "data2");
+			fileList += "," + GetAttribute(filelist[i + 1], "data");
+			fileName += "," + GetAttribute(filelist[i + 1], "data2");
+			fileSize += "," + GetAttribute(filelist[i + 1], "data3");
 		}
 	}
-	
+
 	if (fileList.length > 0) {
 		personAttach = "Y";
 	} else {
@@ -936,6 +951,8 @@ function save_taskWork() {
 			taskID : taskid,
 			content : content,
 			attachList : fileList,
+			fileName : fileName,
+			fileSize : fileSize,
 			personAttach : personAttach,
 			contentPath : personContentpath
 		},
