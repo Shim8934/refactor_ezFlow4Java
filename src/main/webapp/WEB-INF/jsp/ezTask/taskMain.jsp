@@ -385,9 +385,11 @@
 			        tr.cells[4].style.overflow = "hidden";
 			        tr.cells[4].style.textOverflow = "ellipsis";
 			        
-			        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
-			        tr.cells[6].style.overflow = "hidden";
-			        tr.cells[6].style.textOverflow = "ellipsis";
+			        if (useTodoMemo == "YES") {
+				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
+				        tr.cells[6].style.overflow = "hidden";
+				        tr.cells[6].style.textOverflow = "ellipsis";
+			        }
 		
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
@@ -1130,7 +1132,12 @@
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
 							<th ></th>
-							<th ><spring:message code='ezTask.t170' /></th>
+							<c:if test="${useTodoMemo == 'YES'}">
+								<th ><spring:message code='ezTask.t170' /></th>
+							</c:if>
+							<c:if test="${useTodoMemo == 'NO'}">
+								<th ></th>
+							</c:if>
 		                    <th ><spring:message code='ezTask.t2003' /></th>
 							<th ><spring:message code='ezTask.t120' /></th>
 							<th ><spring:message code='ezTask.t121' /></th>
@@ -1172,7 +1179,12 @@
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
 							<th ></th>
-							<th ><spring:message code='ezTask.t170' /></th>
+							<c:if test="${useTodoMemo == 'YES'}">
+								<th ><spring:message code='ezTask.t170' /></th>
+							</c:if>
+							<c:if test="${useTodoMemo == 'NO'}">
+								<th ></th>
+							</c:if>
 		                    <th ><spring:message code='ezTask.t2003' /></th>
 							<th ><spring:message code='ezTask.t120' /></th>
 							<th ><spring:message code='ezTask.t121' /></th>
