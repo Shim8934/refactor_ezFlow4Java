@@ -110,15 +110,18 @@ function getPasswdEnd()
 }
 
 function getPasswdEnd_Complete(ret) {
-    DivPopUpHidden();
-    if (ret[0]) {
-        encodePass = ret[1];
-        encodePath = ret[2];
-    }
-    if (makeXML(pDocID))
-        Check_Container();
-    else
-        return false;
+	 DivPopUpHidden();
+	    if (ret[0]) {
+	        encodePass = ret[1];
+	        encodePath = ret[2];
+	    }
+	    
+	    if (makeXML(pDocID)) {
+	        Check_Container();
+	        return true;
+	    } else {
+	    	return false;
+	    }
 }
 
 function sendExt()
