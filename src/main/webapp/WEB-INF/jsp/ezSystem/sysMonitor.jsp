@@ -155,7 +155,10 @@
 					text: "<spring:message code='ezSystem.pjg01'/>",
 					align:"end",
 					size: 14
-				}]
+				}],
+				style: {
+				    titleFontWeight: "bold"
+				}				
 			});
 
 			// Disk I/O 관련 그래프
@@ -196,7 +199,10 @@
 					text: "<spring:message code='ezSystem.pjg02'/>",
 					align:"end",
 					size: 14
-				}]
+				}],
+				style: {
+				    titleFontWeight: "bold"
+				}	
 			});
 
 			// Network Traffic 관련 그래프
@@ -242,7 +248,10 @@
 					text: "<spring:message code='ezSystem.pjg03'/>",
 					align:"end",
 					size: 14
-				}]
+				}],
+				style: {
+				    titleFontWeight: "bold"
+				}	
 			});
 
 			// Filesystem 용량 관련 그래프
@@ -265,7 +274,10 @@
 					text: "<spring:message code='ezSystem.pjg04'/>",
 					align:"end",
 					size: 14
-				}]
+				}],
+				style: {
+				    titleFontWeight: "bold"
+				}	
 			});
 	      	
 			// 그래프에 필요한 데이터 가져오기
@@ -404,9 +416,9 @@
 	    			});
  	    			str += '<tr id="tableRow">';
 	    			str += '<td id="tData"><strong>'+ fileSystem[i].diskName +'</strong></td>';
-	    			str += '<td id="tData"> ■ '+"<spring:message code='ezSystem.pjg05'/>" +' '+ fileSystem[i].total + '</td>';
-	    			str += '<td id="tData"> ■ '+"<spring:message code='ezSystem.pjg06'/>" +' '+ fileSystem[i].used +'</td>';
-	    			str += '<td id="tData"> ■ '+"<spring:message code='ezSystem.pjg07'/>"+' '+ fileSystem[i].avail +'</td>';
+	    			str += '<td id="tData">&emsp;&emsp;■ '+"<spring:message code='ezSystem.pjg05'/>" +' '+ fileSystem[i].total + '</td>';
+	    			str += '<td id="tData">&emsp; ■ '+"<spring:message code='ezSystem.pjg06'/>" +' '+ fileSystem[i].used +'</td>';
+	    			str += '<td id="tData">&emsp; ■ '+"<spring:message code='ezSystem.pjg07'/>"+' '+ fileSystem[i].avail +'</td>';
 	    			str += '</tr>';
 	    		}
 	    		$("#filesysBody").html(str);
@@ -557,8 +569,8 @@
 .graphInfo  { float : left; width : 100%; height : 46%; }
 
 #serverName { color : #000000; font-weight : bold; font-size : 24px; text-align : left; }
-#osName { font-size : 15px; }
-#osVer { font-size : 15px; }
+#osName { font-size : 15px; font-weight : bold;}
+#osVer { font-size : 15px; font-weight : bold;}
 #cpuMemInfo { 
 	width : 50%; 
 	height: 100%; 
