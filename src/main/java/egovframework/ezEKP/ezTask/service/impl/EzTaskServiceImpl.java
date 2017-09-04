@@ -483,7 +483,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			String filePath = vo.getFilePath();
 			String fileSize = vo.getFileSize();
 			String fileImage = null;
-			
+
 			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
 				fileImage = "/images/image.png";
 			} else if (fileName.contains(".doc")) {
@@ -505,10 +505,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			} else {
 				fileImage = "/images/email/mail_006.gif";
 			}
-			
+
 			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
 			sb.append("<img src='" + fileImage + "' >");
-			sb.append("<a href='/ezCommon/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
+			sb.append("<a href='/ezTask/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
 			sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
 		}
 		

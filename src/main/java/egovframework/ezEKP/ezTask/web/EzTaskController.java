@@ -447,15 +447,17 @@ public class EzTaskController extends EgovFileMngUtil {
 		String fileName = request.getParameter("fileName");
 		String realPath = commonUtil.getRealPath(request);
 		String uploadFilePath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
-		
+
 		if (fileName == null || fileName.equals("")) {
 			fileName = filePath; 
 		}
 		
-		String fullFilePath = realPath + uploadFilePath + filePath;
+		String fullFilePath = realPath + filePath;
 
-		downFile(request, response, fullFilePath, fileName);
+		logger.debug("fullFilePath : " + fullFilePath);
 		
+		downFile(request, response, fullFilePath, fileName);
+
 		logger.debug("downloadAttach ended.");
 	}
 	
@@ -617,12 +619,6 @@ public class EzTaskController extends EgovFileMngUtil {
         
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
 
-//        for (int i = 0; i < cnt; i++) {
-//            resultUpload[i] = "false";
-//            sGUID[i] = UUID.randomUUID().toString();
-//            pUploadSN[i] = "{" + sGUID[i] + "}";
-//        }
-
         if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
             for (int i = 0; i < cnt; i++) {
                 String _pFileName = multiFile.get(i).getOriginalFilename();
@@ -632,11 +628,6 @@ public class EzTaskController extends EgovFileMngUtil {
                 pFileName[i] = _pFileName;
             }
         }
-
-//        for (int i = 0; i < cnt; i++) {
-//            pFileName[i] = pFileName[i].replace("%2b", "+");
-//            pFileName[i] = pFileName[i].replace("%3b", ";");
-//        }
         
         String pDirPath = commonUtil.getUploadPath("upload_task.ROOT", loginSimpleVO.getTenantId());
 
@@ -678,16 +669,13 @@ public class EzTaskController extends EgovFileMngUtil {
 				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
-//				strXML.append("<DATA4><![CDATA[]]></DATA4>");
 				strXML.append("<DATA4><![CDATA[denied]]></DATA4>");
             } else {
-//            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");
             	writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "tempUploadFile");
             	
 				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
-//				strXML.append("<DATA4><![CDATA[]]></DATA4>");
 				strXML.append("<DATA4><![CDATA[OK]]></DATA4>");
             }
         }
