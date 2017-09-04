@@ -201,6 +201,7 @@
 	                	fileList : fileList
 	                },
 	                success: function() {
+	                	$("#checkboxall").prop("checked", false);
 	                },
 	                error: function() {
 	                	alert("<spring:message code='ezTask.t992' />");	

@@ -633,27 +633,16 @@
                            </c:choose>
                         </td>
                      </tr>
-<%--                         <c:choose> --%>
-<%--                            <c:when test="${taskInfoVO.creatorID == userInfo.id || taskInfoVO.creatorID== ''}"> --%>
-<!--                               <tr id="personinputtr" style="display:none"> -->
-<%--                                  <th ><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th> --%>
-<!--                                  <td colspan ="3"><div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div></td> -->
-<!--                               </tr> -->
-<%--                            </c:when> --%>
-<%--                            <c:otherwise> --%>
-                              <tr id="personinputtr" style="display:none">
-                                 <th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
-                                 <td colspan ="3">
-                                 	<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
-                                 	<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-		         					<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-		         					<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-		         					<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-                                 </td>
-                              </tr>
-<%--                            </c:otherwise> --%>
-<%--                         </c:choose> --%>
-
+                     <tr id="personinputtr" style="display:none">
+                        <th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
+                        <td colspan ="3">
+                        	<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+                        	<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+		  					<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+		  					<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+		  					<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+                        </td>
+                     </tr>
                      <tr id="shareinputtr">
                         <th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
                            <td colspan ="3">
@@ -663,27 +652,7 @@
 	         					<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
                            </td>
-                           <!-- <td colspan="3" id ="itemList">
-                              <input name="Input" id="shareInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
-                              <div id="shareList" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;"></div>
-                              <div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-                              <div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-                              <div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-                              <div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-                           </td> -->
                      </tr>
-
-<!--                         <tr style="display:none"> -->
-<%--                            <th><spring:message code='ezTask.t212' /></th> --%>
-<!--                            <td colspan="3"> -->
-<!--                               <input type="text" id='TextCompleteDate' class='datepicker_date' name="txtPermanence" readonly ="true"> -->
-<!--                               <img id="TextCompleteDate_img" src="/images/i_scheduler.gif" style="CURSOR:pointer;POSITION:relative;vertical-align:middle;width:19px;height:15px" popuplocation='bottomright' tabindex="0" popupLocation='topright' /> -->
-<!--                            </td> -->
-<!--                         </tr> -->
-<!--                         <tr id="trrepeatinfo"> -->
-<%--                            <th><a class="imgbtn"><span onClick="config_repeat()"><spring:message code='ezTask.t213' /></span></a></th> --%>
-<!--                            <td class="pos1" colspan="3"><div id="repeatinfo" style="overflow-Y: auto; padding-top: 2px; width:100%; height: 19px"></div></td> -->
-<!--                         </tr> -->
                      <tr>
                         <th><spring:message code='ezTask.t158' /></th>
                         <td colspan="3"><span id="periodblock">
@@ -707,9 +676,6 @@
 	            			<tr>
 	            				<th><spring:message code='ezTask.t170' /></th>
 				            	<td colspan="3" style="width:100%;">
-<!-- 				            	<td colspan="3" style="width:100%;"> -->
-<!-- 				            		<input type="text" id="TextMemo" style="width:100%;"> -->
-									<%-- <textarea id="TextMemo" style="width:99.6%; height:55px; padding-bottom:5px; padding-left:5px; padding-right:0px; padding-top:5px; border:0px solid rgb(222, 222, 222); border-image: none; resize:none; overflow-y:auto" onkeyup="return textLimit(this, event, 200)">${taskInfoVO.memo }</textarea> --%>
 									<input type="text" id="TextMemo" style="width:100%; maxlength:100;" value = "<c:out value = '${taskInfoVO.memo }' />">
 				            	</td>
 	            			</tr>

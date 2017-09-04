@@ -24,7 +24,6 @@
 		</STYLE>
 		<script type="text/javascript">
 			var delayColor = "${delayColor}";
-// 			var completecolor = "_completecolor";
 			var userid = "${userInfo.id}";
 			var listdom = "";
 			var pagecount = 0;
@@ -44,7 +43,8 @@
 		    var primary = "${userInfo.primary}";
 		    var useTodoMemo = "${useTodoMemo }";
 		    document.onselectstart = function () { return false; };
-		    function select_row(elem) {	    	
+		    function select_row(elem) {
+		    	// 전체체크박스 선택 후 목록에서 하나 선택 시 전체체크 해제
 				if ($("#checkboxAll").is(":checked")) {
 					$("input[type=checkbox]").prop("checked", false);
 		    		$(".row_body td").css("background", "");
@@ -59,12 +59,12 @@
 		    		strListIdInfo = "";
 				}
 
+				// 목록에서 하나씩 다른거 선택할 때
 		    	if (selectelem != null) { 		
 			    	if (selectelem != elem) {
 						$("input[type=checkbox]").prop("checked", false);
 						$(".row_body").css("background", "#ffffff");
 						$(".row_body2").css("background", "#ffffff");
-						
 						strListInfo = $(elem).attr("taskID") + ";";
 			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
 						
@@ -72,10 +72,10 @@
 			    	}
 		    	}
 
+				// 체크 후 체크박스 눌러서 체크 해제할 때
 		        if (selectelem != null) {
 		        	selectelem.style.backgroundColor = "#ffffff";
 		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
-
 		            selectelem = null;
 		            return;
 		        }
@@ -84,6 +84,7 @@
 		        elem.style.backgroundColor = "rgb(233, 241, 244)";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 
+		        // 목록화면 나오고 처음 선택할 때 strListInfo 값 셋팅
 		        if (strListInfo == "") {
 		        	strListInfo = $(elem).attr("taskID") + ";";
 		        	strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
@@ -224,6 +225,7 @@
 			}
 
 			function goToPageByNum(Value) {
+				// 페이지 이동할 때 체크되어있는게 있으면 모두 해제
 				if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body td").css("background", "");
@@ -506,6 +508,7 @@
 				}
 			}
 
+			// 진행중, 완료 리스트 따로가져오기 위한 값
 			var taskStatusCount = "";
 			function selectTab(num) {
 				if (num == 2) {
@@ -543,42 +546,6 @@
 				}
 			}
 
-// 		    function update_status(elem) {
-// 		        var taskid = GetAttribute(elem.parentElement.parentElement, "taskid")
-// 		        var parentid = GetAttribute(elem.parentElement.parentElement, "parentid");
-// 		        var repeatcount = GetAttribute(elem.parentElement.parentElement, "repeatcount");
-		
-// 		        if (parentid != "0") {
-// 		            alert("<spring:message code='ezTask.t101' />");
-// 		            return;
-// 		        }
-		
-// 		        var xmlHTTP = createXMLHttpRequest();
-// 		        var xmlDom = createXmlDom();
-		
-// 		        var objRoot, objNode;
-// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", taskid);
-// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
-// 		        if (elem.checked == true) {
-// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "3");
-// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "100");
-// 		        }
-// 		        else {
-// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", "1");
-// 		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", "0");
-// 		        }
-		
-		
-// 		        xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
-// 		        xmlHTTP.send(xmlDom);
-		
-// 		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-// 		            alert("<spring:message code='ezTask.t102' />");
-// 		        else
-// 		            RefreshView();
-// 		    }
-					
 		    function page_move(which, evt) {
 		        if (CrossYN()) {
 		            if (which == 0) {
@@ -625,26 +592,6 @@
 
 		        DateChange();
 		    }
-// 		    function MoveTask() {
-// 		        if (selectelem == null) {
-// 		            alert("<spring:message code='ezTask.t103' />");
-// 		            return;
-// 		        }
-		
-// 		        var taskid = selectelem.taskid;
-// 		        var repeatcount = selectelem.repeatcount;
-// 		        var date = selectelem.startdate;
-		
-// 		        var feature = GetOpenPosition(790, 660);
-// 		        if (CrossYN()) {
-// 		            var win = window.open("/myoffice/ezSchedule/schedule_write_CK.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
-// 		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-// 		        }
-// 		        else {
-// 		            var win = window.open("/myoffice/ezSchedule/schedule_write.aspx?taskid=" + taskid + "&datetype=2&sdate=" + date + " 00:00&edate=" + date + " 23:30", "",
-// 		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-// 		        }
-// 		    }
 
 		    var deltaskid = "";
 		    var delparentid = "";
@@ -699,56 +646,6 @@
 		    }
 		</script>
 		<script>
-// 		    function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
-// 		        var tmpdt = new Date(v_dateStr);
-// 		        switch (v_kind) {
-// 		            case 'd':
-// 		                tmpdt.setDate(tmpdt.getDate() + v_movNum);
-// 		                break;
-// 		            case 'm':
-// 		                tmpdt.setMonth(tmpdt.getMonth() + v_movNum);
-// 		                break;
-// 		            case 'y':
-// 		                tmpdt.setFullYear(tmpdt.getFullYear() + v_movNum);
-// 		                break;
-// 		        }
-// 		        return tmpdt.getFullYear().toString(10) + '-' + (tmpdt.getMonth() + 1).toString() + '-' + tmpdt.getDate().toString(10) + ' ' + tmpdt.toTimeString().substring(0, 8);
-// 		    }
-// 		    function v_GetChangedDateTime2_nonIE(v_dateTime, hourNum, minuteNum) {
-// 		        return (navigator.userAgent.indexOf('Firefox') != -1) ?
-// 		        (function(v_dateTime, hourNum, minuteNum) {
-		            
-// 		            var dt = new Date(v_dateTime);  
-		            
-// 		            var offset = dt.getTimezoneOffset(); 
-// 		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
-		
-// 		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-// 		        }).call(this, v_dateTime, hourNum, minuteNum)
-// 		        : (navigator.userAgent.indexOf('MSIE') == -1) ?
-// 		        (function(v_dateTime, hourNum, minuteNum) {
-// 		            var dt = new Date(
-// 		            Date.UTC(
-// 		            parseInt(v_dateTime.substring(0, 4), 10),
-// 		            parseInt(v_dateTime.substring(5, 7), 10) - 1,
-// 		            parseInt(v_dateTime.substring(8, 10), 10), 
-// 		            parseInt(v_dateTime.substring(11, 13), 10),
-// 		            parseInt(v_dateTime.substring(15, 17), 10),
-// 		            parseInt(v_dateTime.substring(18, 20), 10),
-// 		            parseInt(v_dateTime.substring(21, 24), 10)
-// 		            ))
-		            
-// 		            var offset = dt.getTimezoneOffset();
-		
-// 		            var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
-		
-// 		            return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-// 		        }).call(this, v_dateTime, hourNum, minuteNum)
-// 		        :
-// 		        (function(v_dateTime, hourNum, minuteNum) {
-// 		    }).call(this, v_dateTime, hourNum, minuteNum)
-// 		        ;
-// 		    }
 		    function v_AppendZero(v_str) {
 		        if (isNaN(v_str)) {
 		            switch (v_str.toString().length) {
@@ -912,12 +809,10 @@
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
-// 		                DateChange();
 						selectTab(num);
 		                break;
 		            case "taskdictate":
 		                type = "2";
-// 		                DateChange();
 						selectTab(num);
 		                break;
 		        }
@@ -948,9 +843,6 @@
 		        }
 
 		        filter = document.getElementById("txt_keyword").value;
-// 		        if (userlang != "1" && chkValue == "TaskPersonName") {
-// 		            filter = document.getElementById("txt_keyword").value;
-// 		        }
 
 		        $.ajax({
 					type : "POST",
