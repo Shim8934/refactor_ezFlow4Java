@@ -212,12 +212,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + "__" + fileName);
+				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + fileName.substring(fileName.lastIndexOf("."), fileName.length()));
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
-				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "__" + fileName;
-				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + "__" + fileName;
+				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + fileName.substring(fileName.lastIndexOf("."), fileName.length());
 			
 				fileMove(beforePath, afterPath);
 			}
@@ -450,12 +450,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + "__" + fileName);
+				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + fileName.substring(fileName.lastIndexOf("."), fileName.length()));
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
 				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "__" + fileName;
-				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + "__" + fileName;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + fileName.substring(fileName.lastIndexOf("."), fileName.length());
 				
 				fileMove(beforePath, afterPath);
 			}
@@ -587,7 +587,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 
-		File file = new File(beforeFilePath.split("__")[0]);
+		File file = new File(beforeFilePath);
 
 		try {
 			file.renameTo(new File(afterFilePath));			

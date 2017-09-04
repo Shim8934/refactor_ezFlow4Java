@@ -674,8 +674,8 @@ public class EzTaskController extends EgovFileMngUtil {
 				strXML.append("<DATA><![CDATA[" + newFileName + "__" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
-				strXML.append("<DATA4><![CDATA[]]></DATA4>");
-				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
+//				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA4><![CDATA[denied]]></DATA4>");
             } else {
 //            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");
             	writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "tempUploadFile");
@@ -683,8 +683,8 @@ public class EzTaskController extends EgovFileMngUtil {
 				strXML.append("<DATA><![CDATA[" + newFileName + "__" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
-				strXML.append("<DATA4><![CDATA[]]></DATA4>");
-				strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
+//				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA4><![CDATA[OK]]></DATA4>");
             }
         }
         strXML.append("</NODES></ROOT>");
@@ -703,11 +703,9 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_task.ROOT", loginSimpleVO.getTenantId());
 		String fileList = request.getParameter("fileList");
-		String filePath = "";
+		String filePath = "tempUploadFile";
 		
 		logger.debug("fileList : " + fileList);
-
-		filePath = "tempUploadFile";
 
 		if (fileList.length() != 0) {
 			String[] data = fileList.split(","); 
@@ -716,7 +714,9 @@ public class EzTaskController extends EgovFileMngUtil {
 				String sGUID = data[i].split("__")[0];
 				String fileName = data[i].split("__")[1];
 				
-				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "__" + fileName);
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID);
+				
+				logger.debug("Delete FileList : " + file);
 				
 				file.delete();
 			}			
@@ -793,8 +793,8 @@ public class EzTaskController extends EgovFileMngUtil {
 					strAttach.append("<DATA><![CDATA[" + vo.getFilePath().substring(vo.getTaskID().length() + 2) + "]]></DATA>");
 					strAttach.append("<DATA2><![CDATA[" + vo.getFileName() + "]]></DATA2>");
 					strAttach.append("<DATA3><![CDATA[" + vo.getFileSize() + "]]></DATA3>");
-					strAttach.append("<DATA4><![CDATA[" + vo.getAttachID() + "]]></DATA4>");
-					strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
+//					strAttach.append("<DATA4><![CDATA[" + vo.getAttachID() + "]]></DATA4>");
+					strAttach.append("<DATA4><![CDATA[OK]]></DATA4>");
                 }
 				
 				strAttach.append("</NODES></ROOT>");
