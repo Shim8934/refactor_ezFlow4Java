@@ -127,8 +127,16 @@
 		    }
 	
 		    function WriteTask() {
-                var feature = GetOpenPosition(760, 660);
-                window.open("/ezTask/taskWrite.do", "", "height=715px, width=760px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    	var feature = "";
+		    	
+		    	if (useTodoMemo == 'YES') {
+		    		feature = GetOpenPosition(780, 940);
+	                window.open("/ezTask/taskWrite.do", "", "height=940px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    	} else {
+		    		feature = GetOpenPosition(780, 660);
+	                window.open("/ezTask/taskWrite.do", "", "height=885px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    	}
+                
 		    }
 	
 			var BlockSize = 10;
