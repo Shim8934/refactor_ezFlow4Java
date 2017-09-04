@@ -73,10 +73,15 @@
 	
 				if (tasktype == "1") {
 					document.getElementById("P").click();
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 				} else if (tasktype == "2") {
 					document.getElementById("I").click();
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 				} else if (tasktype == "3") {
 					document.getElementById("C").click();
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+				} else {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 				}
 	
 				if (personid != "" && personid != creatorid) {
@@ -287,15 +292,18 @@
 				if (obj.id == "P") {
 					taskType = obj.value;
 					document.getElementById("personinputtr").style.display = "none";
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 				} else if (obj.id == "I") {
 					taskType = obj.value;
 					document.getElementById("personinputtr").style.display = "";
 					document.getElementById("periodblock").style.display = "";
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					$("#personlist").html("");
 				} else if (obj.id == "C") {
 					taskType = obj.value;
 					document.getElementById("personinputtr").style.display = "";
 					document.getElementById("periodblock").style.display = "";
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					$("#personlist").html("");
 				}
 			}
