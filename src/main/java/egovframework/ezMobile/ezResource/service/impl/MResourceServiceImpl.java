@@ -265,6 +265,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		for (ResGetScheduleVO resVO : getScheduleList) {
 			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
 			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
+			resVO.setDate(resVO.getStartDate().substring(0,10));
 		}
 		
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
