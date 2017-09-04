@@ -545,9 +545,9 @@
 			FROM
 				TBL_TASK
 			WHERE
-				taskPersonid = #memberID#
-			AND
-				personid = taskpersonid
+				((taskPersonid = #memberID# AND creatorid = ownerid)
+			OR
+				personid = #memberID#)
 		]]>
 
 		<isNotEqual property="filter" compareValue="">

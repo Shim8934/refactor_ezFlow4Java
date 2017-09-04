@@ -454,7 +454,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String fullFilePath = realPath + filePath;
 
-		logger.debug("fullFilePath : " + fullFilePath);
+		logger.debug("fullFilePath : " + fullFilePath + " | fileName : " + fileName);
 		
 		downFile(request, response, fullFilePath, fileName);
 
