@@ -568,9 +568,9 @@
 .serverInfo { float : left; width : 100%; color : #000000; background-color : #FFFFFF; }
 .graphInfo  { float : left; width : 100%; height : 46%; }
 
-#serverName { color : #000000; font-weight : bold; font-size : 24px; text-align : left; }
-#osName { font-size : 15px; font-weight : bold;}
-#osVer { font-size : 15px; font-weight : bold;}
+#serverName { color : #000000; font-weight : bold; font-size : 20px; text-align : left; }
+#osName { font-size : 15px; }
+#osVer { font-size : 15px; }
 #cpuMemInfo { 
 	width : 50%; 
 	height: 100%; 
