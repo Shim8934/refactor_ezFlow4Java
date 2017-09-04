@@ -734,9 +734,7 @@ function save_task() {
 	}
 	
 	if (useTodoMemo == 'YES') {
-		memo =$("#TextMemo").val();
-		
-		memo = trim(ReplaceText(memo, "\n", "<br>"));
+		memo = $("#TextMemo").val();
 	} else {
 		memo = "";
 	}

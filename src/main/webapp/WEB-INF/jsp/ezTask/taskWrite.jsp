@@ -645,7 +645,8 @@
 				            	<td colspan="3" style="width:100%;">
 <!-- 				            	<td colspan="3" style="width:100%;"> -->
 <!-- 				            		<input type="text" id="TextMemo" style="width:100%;"> -->
-									<textarea id="TextMemo" style="width:99.6%; height:55px; padding-bottom:5px; padding-left:5px; padding-right:0px; padding-top:5px; border:0px solid rgb(222, 222, 222); border-image: none; resize:none; overflow-y:auto" onkeyup="return textLimit(this, event, 200)">${taskInfoVO.memo }</textarea>
+									<%-- <textarea id="TextMemo" style="width:99.6%; height:55px; padding-bottom:5px; padding-left:5px; padding-right:0px; padding-top:5px; border:0px solid rgb(222, 222, 222); border-image: none; resize:none; overflow-y:auto" onkeyup="return textLimit(this, event, 200)">${taskInfoVO.memo }</textarea> --%>
+									<input type="text" id="TextMemo" style="width:100%; maxlength:100;" value = "<c:out value = '${taskInfoVO.memo }' />">
 				            	</td>
 	            			</tr>
 	            		</table>
