@@ -60,15 +60,9 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-		        if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 250 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 250 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 230 + "PX");
-		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 210 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 210 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 190 + "PX");
-		    	}
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 210 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -94,15 +88,9 @@
 		    });
 		    
 		    window.onresize = function () {
-		    	if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 250 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 250 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 230 + "PX");
-		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 210 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 210 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 190 + "PX");
-		    	}
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 210 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -925,18 +913,9 @@
 		
 		<table id="normalScreen" class="layout" style="height:100%">
 			<tr>
-				<c:choose>
-					<c:when test="${useTodoMemo == 'YES' }">
-						<td style="padding-bottom:4px;height: 440px;">
-							<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:when>
-					<c:otherwise>
-						<td style="padding-bottom:4px;height: 495px;">
-							<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:otherwise>
-				</c:choose>
+				<td style="padding-bottom:4px;height: 440px;">
+					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+				</td>
 			</tr>
 			
 			<tr>
@@ -960,18 +939,9 @@
 		
 		<table id="tablework" class="layout" style="height:100%; display:none;" >
 			<tr style="vertical-align:top">
-				<c:choose>
-					<c:when test="${useTodoMemo == 'YES' }">
-						<td colspan="3" style="padding-bottom:4px; height:440px;">
-							<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:when>
-					<c:otherwise>
-						<td colspan="3" style="padding-bottom:4px; height:495px;">
-							<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:otherwise>
-				</c:choose>
+				<td colspan="3" style="padding-bottom:4px; height:440px;">
+					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+				</td>
 			</tr>
 			<tr style="vertical-align:top">
 				<td style="padding-top:4px" colspan="3">
