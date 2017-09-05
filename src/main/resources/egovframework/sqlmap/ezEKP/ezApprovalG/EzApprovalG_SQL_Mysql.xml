@@ -6765,7 +6765,6 @@
 							   	LIMIT #v_PAGESIZE#,#v_PAGESIZE3#
 							   	</isNotEqual>
 							   	 ) A 
-							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
 <!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
 <!-- 				INNER JOIN TBL_CODELIST B   -->
