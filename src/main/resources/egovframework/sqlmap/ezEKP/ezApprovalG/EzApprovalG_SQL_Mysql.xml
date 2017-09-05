@@ -6758,17 +6758,12 @@
 							   		ORDER BY 
 							   				ENDDATE DESC
 							   	</isEmpty>
-<<<<<<< HEAD
-							   	<![CDATA[
-							   	LIMIT #v_PAGESIZE#
-=======
 							   	<isEqual property="alFlag" compareValue="1">
 							   	LIMIT #v_PAGESIZE#,#v_PAGESIZE2#
 							   	</isEqual>
 							   	<isNotEqual property="alFlag" compareValue="1">
 							   	LIMIT #v_PAGESIZE#,#v_PAGESIZE3#
 							   	</isNotEqual>
->>>>>>> 09bca04... 전자결재 sql 불필요한 join 삭제 및 페이지네이션 이상한 것 수정
 							   	 ) A 
 							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
