@@ -148,20 +148,19 @@
 			</div>
 			
 			<div class='txt'>
-				<div>▒ <spring:message code = 'ezTask.lhj03' /></div>
-				<br/>
-				<div>▒ <spring:message code = 'ezTask.lhj04' /></div>
-				<br/>
-				<div>▒ <spring:message code = 'ezTask.lhj05' /></div>
-				<br />
-				<div>▒ <spring:message code = 'ezTask.lhj06' /></div>
-				<br />
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj03' /></div>
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj04' /></div>
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj05' /></div>
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj06' /></div>
 			</div>
 			
-			
+			<br />
 			
 			<div id="taskProgressBar"></div>
 			
+			<br />
+			<br />
+				
 			<table class="content" style="width:100%;">
 				<tr>
 					<th>
