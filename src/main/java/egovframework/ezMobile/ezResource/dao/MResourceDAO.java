@@ -145,11 +145,15 @@ public class MResourceDAO extends EgovAbstractDAO {
 		return (ResGetScheduleRepetitionVO) select("MResourceDAO.getRepDateTimes", map);
 	}
 	
-		@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public List<ResScheGetHolidayVO> getTholiday(Map<String, Object> map){
-	return  (List<ResScheGetHolidayVO>) list("MResourceDAO.getTholiday", map);
-}
+			return  (List<ResScheGetHolidayVO>) list("MResourceDAO.getTholiday", map);
+	}
 	
-	
+	@SuppressWarnings("unchecked")
+	public MResourceScheduleVO getResBrdDetail(Map<String, Object> map){
+			return  (MResourceScheduleVO) select("MResourceDAO.getResBrdDetail", map);
+	}
+		
 }
 

@@ -248,9 +248,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception {
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt, String check, String checkSDate, String checkEDate) throws Exception {
 		LOGGER.debug("getScheduleList Start");
-
+	
 		Map<String, Object> result = new HashMap<>();
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
@@ -371,12 +371,28 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		}else{
 			resultList = getScheduleList;
 		}
-
+		
+		String repeatYn = "N";
+	
+		if(check.equals("Y")) {
+		for (ResGetScheduleVO vo : resultList) {
+		LOGGER.debug("startDate: " + vo.getStartDate());
+		LOGGER.debug("startDate: " + vo.getStartDate().substring(0,17).toString().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", ""));
+		LOGGER.debug("startDate: " + checkSDate.toString().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", ""));
+		LOGGER.debug("startDate: " + Long.parseLong(vo.getStartDate().substring(0,17).toString().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")));
+		if((Long.parseLong(vo.getStartDate().substring(0,17).replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getEndDate().substring(0,17).replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")))
+		||(Long.parseLong(vo.getStartDate().substring(0,17).replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getEndDate().substring(0,17).replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")))
+		|| (Long.parseLong(vo.getEndDate().substring(0,17).replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getStartDate().substring(0,17).replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) )){
+				repeatYn = "Y";
+			}
+		}
+		}
 		
 		LOGGER.debug("resultList: " + resultList);
 		
 		result.put("scheduleList", resultList);
 		result.put("count", count);
+		result.put("repeatYn", repeatYn);
 		LOGGER.debug("getScheduleList End");
 		return result;
 	}
@@ -1149,7 +1165,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
     	LOGGER.debug("tenantId: " + tenantId);
     	LOGGER.debug("offset: " + offset);
   	
-		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt);
+		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt, "", "", "");
 
 		LOGGER.debug("result: " + result);
 	
@@ -1168,6 +1184,16 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_TENANTID", tenantId);
 		
 		return mResourceDAO.getTholiday(map);
+	}
+	
+	//휴일가져오기
+	@Override
+	public MResourceScheduleVO getResBrdDetail(String ownerId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDID", ownerId);
+		map.put("tenantID", tenantId);
+		
+		return mResourceDAO.getResBrdDetail(map);
 	}
 	
 }

@@ -1,5 +1,7 @@
 package egovframework.ezMobile.ezResource.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -127,7 +130,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	//LOGGER.debug("utcEndDate: " + utcEndDate);
 	    	LOGGER.debug("writerDt: " + writerDt);
 	    	
-	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "");
+	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -297,9 +300,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 자원예약중복조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/check-repetition", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject resourceSchCheckRepeat(@PathVariable String resourceId, @PathVariable String scheduleId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/check-repetition] started.");
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/check-repetition", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject resourceSchCheckRepeat(@PathVariable String resourceId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/check-repetition] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -308,20 +311,45 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
-			String companyId = request.getParameter("companyId");
+			String companyId = info.getCompanyId();
+			String startDate = request.getParameter("startDate");
+			String endDate =  request.getParameter("endDate");
+			String ownerId = request.getParameter("ownerId");
+			String offset = info.getOffSet();
+			String writerDt = "";
+			String sDate = startDate.substring(0, 10);
+			String eDate = endDate.substring(0, 10);
+			
+			String repeatYn = "N";
 			
 			LOGGER.debug("resourceId: " + resourceId);
-			LOGGER.debug("scheduleId: " + scheduleId);
 			LOGGER.debug("companyId: " + companyId);
 			LOGGER.debug("tenantId: " + tenantId);
+			LOGGER.debug("sDate: " + sDate);
+			LOGGER.debug("eDate: " + eDate);
  
-			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
+			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, tenantId);
+			LOGGER.debug("resVO: " + resVO);
+			
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+
+			String resApproveFlag = resVO.getResApproveFlag();
+			
+			if(resApproveFlag.equals("0")) {
+				resultMap = mResourceService.getScheduleList(ownerId, companyId, sDate, eDate, writerDt, tenantId, offset, "", "Y", startDate, endDate);
+				LOGGER.debug("resultMap: " + resultMap);
+			}
+			
+			//resVO.setRepeatYn(repeatYn);
+			
+			//LOGGER.debug("resVO: " + resVO);
 			
 			String obj = "";
 			
 			Gson gson = new Gson();
 			
-			obj = gson.toJson(resVO);
+			obj = gson.toJson(resultMap);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -336,8 +364,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 		}
 		
 		LOGGER.debug("resourceId: " + resourceId);
-		LOGGER.debug("scheduleId: " + scheduleId);
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/check-repetition] ended.");
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/check-repetition] ended.");
 		return result;
 	}
 	
