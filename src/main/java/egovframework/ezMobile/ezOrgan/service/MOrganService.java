@@ -6,4 +6,6 @@ import egovframework.ezMobile.ezOrgan.vo.MPersonListVO;
 
 public interface MOrganService {
 	List<MPersonListVO> getPersonList(String companyID, int tenantID, String pSearchText) throws Exception;
+	
+	int getPersonListCount(String companyID, int tenantID, String pSearchText) throws Exception;
 }

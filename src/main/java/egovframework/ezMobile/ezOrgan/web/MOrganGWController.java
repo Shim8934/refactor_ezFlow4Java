@@ -67,19 +67,20 @@ public class MOrganGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
-			//String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
-			
 			List <MPersonListVO> list = mOrganService.getPersonList(info.getCompanyId(), info.getTenantId(),pSearchText);
+			int listCount = mOrganService.getPersonListCount(info.getCompanyId(), info.getTenantId(), pSearchText);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
+			result.put("listCount", listCount);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			result.put("listCount", "");
 		}
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezorgan/personlist] ended.");
 		return result;

@@ -27,5 +27,29 @@
                 DISPLAYNAME ASC
         ]]> 
     </select>
+    
+    <select id="MOrganDAO.getPersonListCount" parameterClass="Map" resultClass="Integer">
+        <![CDATA[
+            SELECT
+                COUNT(*)
+            FROM
+                tbl_usermaster
+            WHERE
+                PHYSICALDELIVERYOFFICENAME = #companyID#
+            AND
+                TENANT_ID = #tenantID#
+        ]]>        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
+        <![CDATA[    
+            ORDER BY
+                EXTENSIONATTRIBUTE15 ASC,
+                DISPLAYNAME ASC
+        ]]> 
+    </select>
 </sqlMap>
 
