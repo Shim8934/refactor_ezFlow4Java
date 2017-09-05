@@ -812,7 +812,6 @@
 
 		        if (filter != "") {
 		        	num = 2;
-		        	$("#radio3").click();
 		        } else {
 		        	num = 0;
 		        }
@@ -827,6 +826,8 @@
 						selectTab(num);
 		                break;
 		        }
+
+		        $("#radio3").click();
 		    }
 
 		    function onkeydown_start_search(evt) {
