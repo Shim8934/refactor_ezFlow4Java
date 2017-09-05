@@ -396,30 +396,16 @@
 				if (parentid != "0")
 		            taskid = parentid;
 
-				if (useTodoMemo == 'YES') {
-		        	feature = GetOpenPosition(780, 940);
-		        	
-		        	if (CrossYN() || pNoneActiveX == "YES") {
-			            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 940px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        } else {
-			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 940px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			            } else {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 940px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			            }
-			        }
+				feature = GetOpenPosition(780, 640);
+	        	
+	        	if (CrossYN() || pNoneActiveX == "YES") {
+		            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 640px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        } else {
-		        	feature = GetOpenPosition(780, 885);
-		        	
-		        	if (CrossYN() || pNoneActiveX == "YES") {
-			            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        } else {
-			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			            } else {
-			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 885px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			            }
-			        }
+		            if (pUse_Editor == "" || pUse_Editor == "CK") {
+		                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 640px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            } else {
+		                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 640px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            }
 		        }
 			}
 

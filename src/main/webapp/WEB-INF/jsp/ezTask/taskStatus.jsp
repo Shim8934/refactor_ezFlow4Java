@@ -162,7 +162,6 @@
 				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj03' /></div>
 				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj04' /></div>
 				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj05' /></div>
-				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj06' /></div>
 			</div>
 			
 			<br />

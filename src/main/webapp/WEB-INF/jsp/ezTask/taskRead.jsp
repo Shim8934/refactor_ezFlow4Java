@@ -60,15 +60,9 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-		        if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 470 + "PX");
-		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 430 + "PX");
-		    	}
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 210 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -94,16 +88,9 @@
 		    });
 		    
 		    window.onresize = function () {
-		    	if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 470 + "PX");
-		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 430 + "PX");
-		    	}
-		    	
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 210 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -155,13 +142,14 @@
 			
 			/* 초기 탭선택스크립트 */
 			function onloadchangtab() {
-				if (type == "1" && (tasktype != "1" && ownerid == userid)) {
+				Tab1_MouseClick(document.getElementById("1tab0"));
+				/* if (type == "1" && (tasktype != "1" && ownerid == userid)) {
 					Tab1_MouseClick(document.getElementById("1tab2"));
 				} else if (type == "2") {
 					Tab1_MouseClick(document.getElementById("1tab3"));
 				} else {
 					Tab1_MouseClick(document.getElementById("1tab1"));
-				}
+				} */
 			}
 
 			/* 지시사항 본문 */
@@ -333,11 +321,12 @@
 							taskCommentList += vo.comment;
 							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' title='" + "<spring:message code='ezTask.t159' />" + "' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
-							taskCommentList += "<br/>";
+							taskCommentList += "<br />";
 						});
 						
 						console.log(taskCommentList);
 						$("#taskCommentList").html(taskCommentList);
+						$("#taskCommentList2").html(taskCommentList);
 						$("#TextComment").val("");
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
@@ -450,11 +439,11 @@
 							taskCommentList += vo.comment;
 							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
-							taskCommentList += "<br/>";
+							taskCommentList += "<br />";
 						});
 						
-						console.log(taskCommentList);
 						$("#taskCommentList").html(taskCommentList);
+						$("#taskCommentList2").html(taskCommentList);
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
@@ -516,8 +505,25 @@
 			function ChangeTab(obj) {
 			    var pSelectTab = GetAttribute(obj,"divname");
 			    switch (pSelectTab) {
+				    case "MailEnv_div0":
+			            selecttab = "0";
+			            document.getElementById("taskInfo").style.display = "";
+			            document.getElementById("normalScreen").style.display = "none";
+			            document.getElementById("tablework").style.display = "none";
+			            document.getElementById("tablecomment").style.display = "none";
+			            
+			            if (ownerid == userid) {
+				        	document.getElementById("editTask").style.display = "";
+				        	document.getElementById("editTaskWork").style.display = "none";
+				        } else if (personid == userid) {
+				        	document.getElementById("editTask").style.display = "none";
+				        	document.getElementById("editTaskWork").style.display = "none";
+				        }
+			            
+			            break;
 			        case "MailEnv_div1":
 			            selecttab = "1";
+			            document.getElementById("taskInfo").style.display = "none";
 			            document.getElementById("normalScreen").style.display = "";
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
@@ -533,6 +539,7 @@
 			            break;
 			        case "MailEnv_div2":
 			            selecttab = "2";
+			            document.getElementById("taskInfo").style.display = "none";
 			            document.getElementById("normalScreen").style.display = "none";
 			            document.getElementById("tablework").style.display = "";
 			            document.getElementById("tablecomment").style.display = "none";
@@ -548,6 +555,7 @@
 			            break;
 			        case "MailEnv_div3":
 			            selecttab = "3";
+			            document.getElementById("taskInfo").style.display = "none";
 			            document.getElementById("normalScreen").style.display = "none";
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "";
@@ -683,17 +691,23 @@
 			    document.getElementById("tablework").style.display = "";
 			    document.getElementById("tablecomment").style.display = "";
 			
-			    if (selecttab == "1") {
+			    if (selecttab == "0") {
+			    	document.getElementById("taskInfo").style.display = "";
+			    	document.getElementById("normalScreen").style.display = "none";
+			        document.getElementById("tablework").style.display = "none";
+			        document.getElementById("tablecomment").style.display = "none";
+			    } else if (selecttab == "1") {
+			    	document.getElementById("taskInfo").style.display = "none";
 			        document.getElementById("normalScreen").style.display = "";
 			        document.getElementById("tablework").style.display = "none";
 			        document.getElementById("tablecomment").style.display = "none";
-			    }
-			    else if (selecttab == "2") {
+			    } else if (selecttab == "2") {
+			    	document.getElementById("taskInfo").style.display = "none";
 			        document.getElementById("normalScreen").style.display = "none";
 			        document.getElementById("tablework").style.display = "";
 			        document.getElementById("tablecomment").style.display = "none";
-			    }
-			    else if (selecttab == "3") {
+			    } else if (selecttab == "3") {
+			    	document.getElementById("taskInfo").style.display = "none";
 			        document.getElementById("normalScreen").style.display = "none";
 			        document.getElementById("tablework").style.display = "none";
 			        document.getElementById("tablecomment").style.display = "";
@@ -777,16 +791,23 @@
 				</td>
 			</tr>
 		</table>
-		<br/>
-		<!-- 이쪽에 업무정보 -->
 		 
+		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px; border-top: 0px;">
+			<div class="portlet_tabpart03_top" id="tab1">
+				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0"><spring:message code='ezTask.lhj02' /></span></p>
+				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
+				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
+				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
+				
+				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
+				<div style="float: right; margin-top: 3px;">
+					<a id="editTask" class="imgbtn" style="display:none; "><span onclick="return edit_task()"><spring:message code='ezTask.t151' /></span></span></a>
+					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t151' /></span></a>
+				</div>
+			</div>
+		</div> 
+		
 		<table id="taskInfo" class="layout">
-			<tr>
-				<td>
-					<spring:message code='ezTask.lhj02' />
-				</td>
-			<tr>
-			
 		 	<tr>
 				<td style="height:20px">
 					<table class="content">
@@ -797,6 +818,8 @@
 									<c:out value = '${taskInfoVO.creatorName }' />
 								</div>
 							</td>
+						</tr>
+						<tr>
 							<th><spring:message code='ezTask.t155' /></th>
 							<td style="padding-right:15px;white-space:nowrap">${fn:substring(taskInfoVO.createDate, 0, 10) }</td>
 						</tr>
@@ -807,6 +830,8 @@
 									<span id="taskType"></span>
 								</div>
 							</td>
+						</tr>
+						<tr>
 							<th><spring:message code='ezTask.t156' /></th>
 							<td>
 								<div>
@@ -852,6 +877,8 @@
 									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' />
 								</div>
 							</td>
+						</tr>
+						<tr>
 							<th><spring:message code='ezTask.t122' /></th>
 							<td>
 								<div>
@@ -881,36 +908,14 @@
 					</table>
 				</td>
 			</tr>
+			
 		</table>
-		
-		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px;">
-			<div class="portlet_tabpart03_top" id="tab1">
-				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
-				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
-				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
-				
-				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
-				<div style="float: right; margin-top: 3px;">
-					<a id="editTask" class="imgbtn" style="display:none; "><span onclick="return edit_task()"><spring:message code='ezTask.t151' /></span></span></a>
-					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t151' /></span></a>
-				</div>
-			</div>
-		</div> 
 		
 		<table id="normalScreen" class="layout" style="height:100%">
 			<tr>
-				<c:choose>
-					<c:when test="${useTodoMemo == 'YES' }">
-						<td style="padding-bottom:4px;height: 440px;">
-							<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:when>
-					<c:otherwise>
-						<td style="padding-bottom:4px;height: 495px;">
-							<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:otherwise>
-				</c:choose>
+				<td style="padding-bottom:4px;height: 440px;">
+					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+				</td>
 			</tr>
 			
 			<tr>
@@ -922,7 +927,7 @@
 								<div id="attachedfileDIV" style="overflow:auto;height:50px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2">
-								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
+								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
 								<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 							<td id="Td2" style="display:none"></td>
@@ -934,18 +939,9 @@
 		
 		<table id="tablework" class="layout" style="height:100%; display:none;" >
 			<tr style="vertical-align:top">
-				<c:choose>
-					<c:when test="${useTodoMemo == 'YES' }">
-						<td colspan="3" style="padding-bottom:4px; height:440px;">
-							<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:when>
-					<c:otherwise>
-						<td colspan="3" style="padding-bottom:4px; height:495px;">
-							<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-						</td>
-					</c:otherwise>
-				</c:choose>
+				<td colspan="3" style="padding-bottom:4px; height:440px;">
+					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+				</td>
 			</tr>
 			<tr style="vertical-align:top">
 				<td style="padding-top:4px" colspan="3">
@@ -956,7 +952,7 @@
 								<div id="attachedfileDIV2" style="overflow: auto;height: 50px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2"><a class="imgbtn">
-								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
+								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
 								<a class="imgbtn"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 						</tr>
@@ -976,7 +972,7 @@
 										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
 										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
 										<span><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
-										<br/>
+										<br />
 									</c:forEach>
 								</div>
 							</td>
