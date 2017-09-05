@@ -33,6 +33,8 @@ public class EzSystemUtil {
 		logger.debug("getSysInfo started. : " + tenantID);
 
 		BufferedReader br = null;		
+		BufferedReader cbr = null;
+		BufferedReader mbr = null;
 		/**
 		 * 설정 아이피에 따라 로컬 테스트
 		 */
@@ -43,12 +45,19 @@ public class EzSystemUtil {
 			br = new BufferedReader(isr);			
 		} else {
 			String filePath = "D:/test/uname.txt";
+			String cpuFile = "D:/test/cpuinfo.txt";
+			String memFile = "D:/test/meminfo.txt";
 			FileReader fr = new FileReader(filePath);
+			FileReader cf = new FileReader(cpuFile);
+			FileReader mr = new FileReader(memFile);
 			br = new BufferedReader(fr);			
+			cbr	= new BufferedReader(cf);
+			mbr = new BufferedReader(mr);			
 		}
 
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
+		JSONObject tmpObj = new JSONObject();
 		
 		while (true) {
 			String line = br.readLine();
@@ -56,17 +65,35 @@ public class EzSystemUtil {
 			if (line == null) {
 				break;
 			} else {
-				JSONObject tmpObj = new JSONObject();
+				//JSONObject tmpObj = new JSONObject();
 				String[] tmp = line.trim().split("\\s+");
 				
 				tmpObj.put("hostname", tmp[0]);
 				tmpObj.put("version", tmp[1]);
 				tmpObj.put("os", tmp[2]);
 				
-				jArr.add(tmpObj);
+				//jArr.add(tmpObj);
 			}
 		}
+		
+		for (int i = 0; i < 1; i ++) {
+			String line = cbr.readLine();
+			String[] tmp = line.trim().split(":");
+			tmpObj.put("cpu", tmp[1].trim());		
+		}
+		
+		for (int i = 0; i < 1; i ++) {
+			String line = mbr.readLine();
+			String[] tmp = line.trim().split("\\s+");
+			
+			tmpObj.put("memory", tmp[1]);
+		}
+		
 		br.close();
+		cbr.close();
+		mbr.close();
+		
+		jArr.add(tmpObj);
 		
 		jObj.put("getSysInfo", jArr);		
 		

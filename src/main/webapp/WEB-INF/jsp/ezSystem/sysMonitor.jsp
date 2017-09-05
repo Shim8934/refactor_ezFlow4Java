@@ -47,9 +47,6 @@
 			//str += "		<p id='osVer'></p>";
 			str += "		<p id='osInfo'></p>";
 			str += "	</div>";
-			str += "	<div class='summary' name='summary'>";
-			str += " 		<p id='summaryInfo'></p>";
-			str += "	</div>";
 			str += "	<div class='graphInfo'>";
 			str += "		<div id='cpuMemInfo'>";						
 			str += "		</div>";
@@ -107,7 +104,6 @@
 			// 2초마다 그래프 재생성
 	      	var refreshIntervalID = setInterval(function() {
 				setGraphForm();
-				//setSummary();
 				
 		    	// 해당 그래프가 없을 경우 setInterval 종료
 		    	if (document.getElementById(graphId) == null) {
@@ -304,7 +300,7 @@
 	    	function setOsInfo(list) {
 	    		var obj = JSON.parse(list);
 	    		var osInfo = obj.getSysInfo;
-	    		
+	    		console.log(osInfo);
 /* 	    		var serverName = "<p id='serverName'>" + osInfo[0].hostname + "</p>"
 	    		var osName = "<p id='osName'><strong>OS : </strong>" + osInfo[0].os + "</p>";
 	    		var osVer = "<p id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</p>"; */
@@ -312,18 +308,14 @@
 	    		var serverName = tab + "<span id='serverName'>" + osInfo[0].hostname + "</span>"
 	    		var osName = tab + "<span id='osName'><strong>OS : </strong>" + osInfo[0].os + "</span>";
 	    		var osVer = tab + "<span id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</span>";
+	    		var cpuName = tab + "<span id='cpuName'><strong>CPU : </strong>" + osInfo[0].cpu + "</span>";
+	    		var memorySize = tab + "<span id='memorySize'><strong>Memory : </strong>" + (osInfo[0].memory / 1024 / 1024).toFixed(2) + " GB </span>";
 	    		
 	    		//$("#serverName").html(serverName);
 	    		//$("#osName").html(osName);
 	    		//$("#osVer").html(osVer);
-	    		$("#osInfo").html(serverName + osName + osVer);
+	    		$("#osInfo").html(serverName + osName + osVer + cpuName + memorySize);
 	    	}
-	    	
-	    	// 요약 정보
-	    	//function setSummary() {
-	    	//	
-	    	//	$("#summaryInfo").html(test);
-	    	//}
 	    	
 	    	// 네트워크 트래픽 속도 계산 공식
 	    	function getMbps(old, current) {
@@ -401,8 +393,8 @@
 	    		var memory = mobj.getMemoryInfo;	 
 	       		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memavailable);
 	    		
-	       		console.log(cobj);
-	       		console.log(mobj);
+	       		//console.log(cobj);
+	       		//console.log(mobj);
 	       		
 	    		if (cpuMemoryData.length >= 30) {
 	    			cpuMemoryData.shift();
@@ -578,14 +570,14 @@
 </script>
 <style type="text/css">
 .infoMain   { border : 1px solid; color : #b6b6b6; height : 700px; margin : 20px 0px 0px; background-color : #f3f3f3; }
-.serverInfo { float : left; width : 75%; height: 7%; color : #000000; background-color : #FFFFFF; }
-.summary	{ float : right; width: 25%;  height: 7%; background-color : #FFFFFF; box-sizing: border-box; }
+.serverInfo { float : left; width : 100%; height: 7%; color : #000000; background-color : #FFFFFF; }
 .graphInfo  { float : left; width : 100%; height : 46%; }
 
 #serverName { color : #000000; font-weight : bold; font-size : 20px; text-align : left; }
 #osName { font-size : 15px; }
 #osVer { font-size : 15px; }
-#summaryInfo { font-size : 15px; }
+#cpuName { font-size : 15px; }
+#memorySize { font-size : 15px; }
 #cpuMemInfo { 
 	width : 50%; 
 	height: 100%; 
