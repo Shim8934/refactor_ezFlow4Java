@@ -60,13 +60,13 @@
 		        setTimeout(scrollTop, 1000);
 		        
 		        if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 470 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 350 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 350 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 330 + "PX");
 		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 430 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 310 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 310 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 290 + "PX");
 		    	}
 
 		        if (tasktype == "1") {
@@ -94,13 +94,13 @@
 		    
 		    window.onresize = function () {
 		    	if (useTodoMemo == 'YES') {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 490 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 470 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 350 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 350 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 330 + "PX");
 		    	} else {
-		    		$("#message").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 450 + "PX");
-			    	$("#taskCommentList").height(document.documentElement.clientHeight - 430 + "PX");
+		    		$("#message").closest("td").height(document.documentElement.clientHeight - 310 + "PX");
+			    	$("#message2").closest("td").height(document.documentElement.clientHeight - 310 + "PX");
+			    	$("#taskCommentList").height(document.documentElement.clientHeight - 290 + "PX");
 		    	}
 		    	
 	         }
@@ -323,11 +323,12 @@
 							taskCommentList += vo.comment;
 							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' title='" + "<spring:message code='ezTask.t159' />" + "' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
-							taskCommentList += "<br/>";
+							taskCommentList += "<br />";
 						});
 						
 						console.log(taskCommentList);
 						$("#taskCommentList").html(taskCommentList);
+						$("#taskCommentList2").html(taskCommentList);
 						$("#TextComment").val("");
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
@@ -440,11 +441,11 @@
 							taskCommentList += vo.comment;
 							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
-							taskCommentList += "<br/>";
+							taskCommentList += "<br />";
 						});
 						
-						console.log(taskCommentList);
 						$("#taskCommentList").html(taskCommentList);
+						$("#taskCommentList2").html(taskCommentList);
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
@@ -767,32 +768,6 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<!-- 이쪽에 진행단계 -->
-		<table id="taskProgress" class="layout">
-			<tr>
-				<td>
-					<spring:message code='ezTask.t119' />
-				</td>
-			<tr>
-			<tr>
-				<td>
-					<table style = "border: 1px solid #b6b6b6;margin: 0; width: 100%;">
-						<colgroup><col width="80%" /><col width="20%" /></colgroup>
-						<tr>
-							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
-								<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"></div>
-							</td>
-							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
-								<div style="text-align:center; vertical-align: middle;">
-									<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-		<br/>
 		<!-- 이쪽에 업무정보 -->
 		<table class="layout">
 		 	<tr>
@@ -835,9 +810,34 @@
 				</td>
 			</tr>
 		</table>
-		
+		<br />
+		<!-- 이쪽에 진행단계 -->
+		<table id="taskProgress" class="layout">
+			<tr>
+				<td>
+					<spring:message code='ezTask.t119' />
+				</td>
+			<tr>
+			<tr>
+				<td>
+					<table style = "border: 1px solid #b6b6b6;margin: 0; width: 100%;">
+						<colgroup><col width="80%" /><col width="20%" /></colgroup>
+						<tr>
+							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
+								<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"></div>
+							</td>
+							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
+								<div style="text-align:center; vertical-align: middle;">
+									<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 		 
-		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px;">
+		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px; border-top: 0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
 				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0"><spring:message code='ezTask.lhj02' /></span></p>
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
@@ -853,11 +853,11 @@
 		</div> 
 		
 		<table id="taskInfo" class="layout">
-			<tr>
+			<%-- <tr>
 				<td>
 					<spring:message code='ezTask.lhj02' />
 				</td>
-			<tr>
+			<tr> --%>
 			
 		 	<tr>
 				<td style="height:20px">
@@ -953,6 +953,42 @@
 					</table>
 				</td>
 			</tr>
+			
+			<tr>
+				<td>
+					<table id="tablecomment2" class="layout" style="height:100%; margin-top:10px;">
+						<tr>
+							<td style="height:20px" colspan="3">
+								<table class ="content" style="width:100%">
+									<tr>
+										<td style="vertical-align:top">
+											<div id="taskCommentList2" style="overflow: auto; width:100%; height: 275px; background-color: white; padding-top:3px;">
+												<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
+													<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
+													<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
+													<span><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
+													<br />
+												</c:forEach>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td style="padding-top:10px">
+								<table class="content">
+									<tr style="padding-top:10px;padding-bottom:4px;height:30px">
+										<th><spring:message code='ezTask.t2012' /></th>
+										<td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td>
+										<td class="pos2"><a class="imgbtn"><span onClick="add_comment()"><spring:message code='ezTask.t96' /></span></a></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 		</table>
 		
 		<table id="normalScreen" class="layout" style="height:100%">
@@ -980,7 +1016,7 @@
 								<div id="attachedfileDIV" style="overflow:auto;height:50px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2">
-								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
+								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
 								<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 							<td id="Td2" style="display:none"></td>
@@ -1014,7 +1050,7 @@
 								<div id="attachedfileDIV2" style="overflow: auto;height: 50px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2"><a class="imgbtn">
-								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
+								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
 								<a class="imgbtn"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 						</tr>
@@ -1034,7 +1070,7 @@
 										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
 										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
 										<span><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
-										<br/>
+										<br />
 									</c:forEach>
 								</div>
 							</td>
