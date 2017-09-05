@@ -5,8 +5,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -74,12 +75,8 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		insert("EzTaskDAO.taskSaveConfig", map);
 	}
 
-	public String getDelayColor(Map<String, Object> map) throws Exception {
-		return (String) select("EzTaskDAO.getDelayColor", map);
-	}
-
-	public String getCompleteColor(Map<String, Object> map) throws Exception {
-		return (String) select("EzTaskDAO.getCompleteColor", map);
+	public TaskConfigVO getOriginColor(Map<String, Object> map) throws Exception {
+		return (TaskConfigVO) select("EzTaskDAO.getOriginColor", map);
 	}
 
 	public void taskUpdateConfig(Map<String, Object> map) throws Exception {

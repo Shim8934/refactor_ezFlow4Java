@@ -25,6 +25,7 @@
 		    var pSearchType = "pSearchType";
 		    var primary = "${userInfo.primary}";
 		    var delayColor = "${delayColor}";
+		    var completeColor = "${completeColor}"
 		    var selectelem = null;
 		    var useTodoMemo = "${useTodoMemo }";
 
@@ -351,6 +352,16 @@
 					$(".bar[taskid='" + barID + "']").LineProgressbar({
 						percentage: completerate,
 						fillBackgroundColor: delayColor,
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
+				} else if (taskstatus == '3') {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: completeColor,
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',

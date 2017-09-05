@@ -26,6 +26,7 @@
 	        var creatorid = "${taskInfoVO.creatorID }";
 	        var personid = "${taskInfoVO.personID }";
 	        var delayColor = "${delayColor }";
+	        var completeColor = "${completeColor }";
 	        var duration = 500;
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var importance = "${taskInfoVO.importance }";
@@ -85,6 +86,16 @@
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
 						fillBackgroundColor: delayColor,
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '100%',
+						duration : duration
+					});
+				} else if (taskstatus == '3') {
+					$('#taskProgressBar').LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: completeColor,
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',

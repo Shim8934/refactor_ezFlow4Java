@@ -31,6 +31,7 @@
 			var completerate = "${taskInfoVO.completeRate }";
 			var duration = 500;
 			var delayColor = "${delayColor }";
+			var completeColor = "${completeColor }";
 		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
 		    var date = "${date }";
@@ -123,6 +124,16 @@
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
 						fillBackgroundColor: delayColor,
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '100%',
+						duration : duration
+					});
+				} else if (taskstatus == '3') {
+					$('#taskProgressBar').LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: completeColor,
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',

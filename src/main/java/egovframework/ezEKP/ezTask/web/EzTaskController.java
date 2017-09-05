@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -84,12 +85,16 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 
-		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
-		String completeColor = ezTaskService.getCompleteColor(userID, tenantID);
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
+
+		if (configVO == null) {
+			ezTaskService.taskSaveConfig(userInfo.getId(), "#FF0000", "#0080FF", 0, userInfo.getTenantId());
+			configVO = ezTaskService.getOriginColor(userID, tenantID);
+		}
 
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("delayColor", delayColor);
-		model.addAttribute("completeColor", completeColor);
+		model.addAttribute("delayColor", configVO.getDelayColor());
+		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useTodoMemo", useTodoMemo);
 
 		logger.debug("taskMain ended.");
@@ -161,10 +166,9 @@ public class EzTaskController extends EgovFileMngUtil {
 				taskWorkAttachList  = ezTaskService.getAttachListStr(parentID, folderPath, "2", tenantID);
 			}
 		}
-		
-		//delayColor
-		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
-		
+
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
@@ -174,7 +178,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskCommentList", taskCommentList);
 		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
 		model.addAttribute("type", type);
-		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("delayColor", configVO.getDelayColor());
+		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		
@@ -426,11 +431,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
-		String delayColor = ezTaskService.getDelayColor(userInfo.getId(), tenantID);
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), tenantID);
 		
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("delayColor", configVO.getDelayColor());
+		model.addAttribute("completeColor", configVO.getCompleteColor());
 		
 		logger.debug("taskStatus ended.");
 		
@@ -510,13 +516,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskConfig started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
-		String completeColor = ezTaskService.getCompleteColor(userInfo.getId(), userInfo.getTenantId());
 
-		logger.debug("delayColor : " + delayColor + " | completeColor : " + completeColor);
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
-		model.addAttribute("delayColor", delayColor);
-		model.addAttribute("completeColor", completeColor);
+		logger.debug("delayColor : " + configVO.getDelayColor() + " | completeColor : " + configVO.getCompleteColor());
+
+		model.addAttribute("delayColor", configVO.getDelayColor());
+		model.addAttribute("completeColor", configVO.getCompleteColor());
 
 		logger.debug("taskConfig ended.");
 
@@ -545,24 +551,14 @@ public class EzTaskController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String delayColor = request.getParameter("delayColor");
 		String completeColor = request.getParameter("completeColor");
-		int gubun = 0;
 		int autoDelete = 0;
 
-		String _delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
-		String _completeColor = ezTaskService.getCompleteColor(userInfo.getId(), userInfo.getTenantId());
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
-		if (!_delayColor.equals("#FF0000")) {
-			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, autoDelete, gubun, userInfo.getTenantId());
-		} else {
-			ezTaskService.taskSaveConfig(userInfo.getId(), delayColor, autoDelete, gubun, userInfo.getTenantId());
-		}
-
-		if (!_completeColor.equals("#FF0000")) {
-			gubun = 1;
-			ezTaskService.taskUpdateConfig(userInfo.getId(), completeColor, autoDelete, gubun, userInfo.getTenantId());
-		} else {
-			gubun = 1;
-			ezTaskService.taskSaveConfig(userInfo.getId(), completeColor, autoDelete, gubun, userInfo.getTenantId());
+		logger.debug("originDelayColor : " + configVO.getDelayColor() + " | originCompleteColor : " + configVO.getCompleteColor());
+		
+		if (configVO != null) {
+			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, completeColor, autoDelete, userInfo.getTenantId());
 		}
 
 		logger.debug("taskSaveConfig ended.");
@@ -584,11 +580,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 
-		//delayColor
-		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 
 		model.addAttribute("userInfo",userInfo);
-		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("delayColor", configVO.getDelayColor());
+		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useTodoMemo", useTodoMemo);
 
 		logger.debug("taskSearch ended.");

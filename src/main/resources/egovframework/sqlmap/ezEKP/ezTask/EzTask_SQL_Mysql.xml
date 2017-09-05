@@ -6,6 +6,7 @@
 	<typeAlias alias="TaskShareVO"					type="egovframework.ezEKP.ezTask.vo.TaskShareVO"/>
 	<typeAlias alias="TaskCommentVO"				type="egovframework.ezEKP.ezTask.vo.TaskCommentVO"/>
 	<typeAlias alias="TaskAttachVO"					type="egovframework.ezEKP.ezTask.vo.TaskAttachVO"/>
+	<typeAlias alias="TaskConfigVO"					type="egovframework.ezEKP.ezTask.vo.TaskConfigVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
 	   <![CDATA[
@@ -379,7 +380,7 @@
     	]]>
     </delete>
 
-	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">
+	<select id="EzTaskDAO.getOriginColor" parameterClass="Map" resultClass="TaskConfigVO">
 		<![CDATA[
 			SELECT
 				IFNULL((SELECT
@@ -389,13 +390,7 @@
 						WHERE
 							tenantid = #tenantID#
 						AND
-							userid = #userID#), '##FF0000') as delaycolor
-		]]>
-	</select>
-
-	<select id="EzTaskDAO.getCompleteColor" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
+							userid = #userID#), '##FF0000') as delaycolor,
 				IFNULL((SELECT
 							completecolor
 						FROM
@@ -403,7 +398,14 @@
 						WHERE
 							tenantid = #tenantID#
 						AND
-							userid = #userID#), '##FF0000') as completecolor
+							userid = #userID#), '##0080FF') as completecolor,
+				userid
+			FROM
+				TBL_TASKCONFIG
+			WHERE
+					userid = #userID#
+				AND
+					tenantid = #tenantID#
 		]]>
 	</select>
 
@@ -623,23 +625,9 @@
 	<insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_TASKCONFIG
-        ]]>
-
-        <isEqual property="gubun" compareValue="0">
-        	<![CDATA[
-                (userid, delaycolor, autodelete, tenantid)
-        	]]>
-        </isEqual>
-
-        <isEqual property="gubun" compareValue="1">
-        	<![CDATA[
-                (userid, completecolor, autodelete, tenantid)
-        	]]>
-        </isEqual>
-
-        <![CDATA[
+                (userid, delaycolor, completecolor, autodelete, tenantid)
             VALUES
-                (#memberID#, #color#, #autoDelete#, #tenantID#)
+                (#memberID#, #delayColor#, #completeColor#, #autoDelete#, #tenantID#)
         ]]>
     </insert>
 
@@ -657,21 +645,8 @@
             UPDATE
                 TBL_TASKCONFIG
             SET
-        ]]>
-
-        <isEqual property="gubun" compareValue="0">
-        	<![CDATA[
-                delaycolor = #color#,
-            ]]>
-        </isEqual>
-
-        <isEqual property="gubun" compareValue="1">
-        	<![CDATA[
-                completecolor = #color#,
-            ]]>
-        </isEqual>
-
-        <![CDATA[
+                delaycolor = #delayColor#,
+                completecolor = #completeColor#,
                 autodelete = #autoDelete#
             WHERE 
                 userid = #memberID#
