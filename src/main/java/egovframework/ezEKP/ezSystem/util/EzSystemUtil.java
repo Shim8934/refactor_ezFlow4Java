@@ -32,17 +32,33 @@ public class EzSystemUtil {
 		
 		logger.debug("getSysInfo started. : " + tenantID);
 
-		BufferedReader br = null;		
+		BufferedReader br = null;
 		BufferedReader cbr = null;
 		BufferedReader mbr = null;
 		/**
-		 * 설정 아이피에 따라 로컬 테스트
+		 * 설정 아이피에 따라 로컬 테스트\
+		 * builder -> OS 관련 정보
+		 * cBuilder -> CPU 정보
+		 * mBuilder -> 메모리 정보
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
+			String command = "^'model name'";
 			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
+			ProcessBuilder cBuilder = new ProcessBuilder("grep", command, "/proc/cpuinfo");
+			ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
+			
 			Process process = builder.start();
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
-			br = new BufferedReader(isr);			
+			br = new BufferedReader(isr);
+			
+			process = cBuilder.start();
+			isr = new InputStreamReader(process.getInputStream());
+			cbr = new BufferedReader(isr);
+			
+			process = mBuilder.start();
+			isr = new InputStreamReader(process.getInputStream());
+			mbr = new BufferedReader(isr);
+			
 		} else {
 			String filePath = "D:/test/uname.txt";
 			String cpuFile = "D:/test/cpuinfo.txt";
