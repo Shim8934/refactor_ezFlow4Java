@@ -880,7 +880,7 @@
 		                break;
 		        }
 
-		        $("#radio5").click();
+		        $("#radio3").click();
 		    }
 
 		    function onkeydown_start_search(evt) {
@@ -1100,21 +1100,21 @@
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
 
-				<!-- 진행중 -->
+				<!-- 완료 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
 					<input name="check" id="radio4" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio4" style="vertical-align:middle"><spring:message code='ezTask.t99' /></label>
 				</li>
 
-				<!-- 완료 -->
+				<!-- 진행중 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;">
-					<input name="check" id="radio3" type="radio" value="ongoing" onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
+					<input name="check" id="radio3" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio3" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
 
 				<!-- 전체보기 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;">
-					<input name="check" id="radio5" type="radio" value="ongoing" checked onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
+					<input name="check" id="radio5" type="radio" value="ongoing" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio5" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
 				</li>
 
