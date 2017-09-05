@@ -150,27 +150,34 @@
 		</script>
 	</head>
 	<body class="popup">
+		<h1><spring:message code='ezTask.lhj01' /></h1>
 		<div id="main_body">
-			<div id="menu">
-				<ul>
-					<li><span onClick="taskUpdateInstance()"><spring:message code='ezTask.t96' /></span></li>
-				</ul>
-			</div>
-			
 			<div id="close">
 				<ul>
 					<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 				</ul>
 			</div>
 			
-			<table style="width:100%;">
+			<div class='txt'>
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj03' /></div>
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj04' /></div>
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj05' /></div>
+				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj06' /></div>
+			</div>
+			
+			<br />
+			
+			<div id="taskProgressBar"></div>
+			
+			<br />
+			<br />
+				
+			<table class="content" style="width:100%;">
 				<tr>
+					<th>
+						<spring:message code = 'ezTask.t120' />
+					</th>
 					<td>
-						<div id="taskProgressBar"></div>
-					</td>
-				</tr>
-				<tr>
-					<td style = "text-align: center;">
 						<select id = "completeRate">
 							<option value = "0">0%</option>
 							<option value = "10">10%</option>
@@ -184,15 +191,26 @@
 							<option value = "90">90%</option>
 							<option value = "100">100%</option>
 						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<spring:message code = 'ezTask.t164' />
+					</th>
+					<td>
 						<select id = "taskStatus">
 							<option value = "1"><spring:message code="ezTask.t97" /></option>
 							<option value = "2"><spring:message code="ezTask.t98" /></option>
 							<option value = "3"><spring:message code="ezTask.t99" /></option>
 							<option value = "4"><spring:message code="ezTask.t100" /></option>
-						</select>						
+						</select>
 					</td>
 				</tr>
 			</table>
+		</div>
+		<div class="btnposition">
+	    	<a class="imgbtn" onclick="taskUpdateInstance()"><span><spring:message code='ezTask.t19' /></span></a>
+	    	<a class="imgbtn" onclick="close_onclick();"><span><spring:message code='ezTask.t20' /></span></a>
 		</div>
 	</body>
 </html>
