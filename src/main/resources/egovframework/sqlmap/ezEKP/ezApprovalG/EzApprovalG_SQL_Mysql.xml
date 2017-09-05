@@ -6626,22 +6626,22 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10), '%Y-%m-%d %H:%i:%s')
+							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 		   STARTDATE <= STR_TO_DATE(SUBSTR(#v_STARTDATE2#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 		   STARTDATE <= STR_TO_DATE(#v_STARTDATE2#,'%Y-%m-%d %H:%i:%s')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE1">
 							   	 	 AND 
-							   	 	       ENDDATE >= STR_TO_DATE(SUBSTR(#v_ENDDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 	       ENDDATE >= STR_TO_DATE(#v_ENDDATE1#,'%Y-%m-%d %H:%i:%s')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 	 		ENDDATE <= STR_TO_DATE(SUBSTR(#v_ENDDATE2#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 	 		ENDDATE <= STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE1">
@@ -20904,7 +20904,7 @@
    		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
    		ORDER BY LINKDATE DESC 
    		</isLessEqual>
-   			LIMIT $v_PQUERYSIZESUB$
+   			LIMIT #v_PQUERYSIZESUB#, #v_PLISTCOUNT#
    		) A 
          
       	<isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
@@ -20923,13 +20923,6 @@
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
    		ORDER BY LINKDATE DESC
    		</isLessEqual>
-   		LIMIT 
-   			<isGreaterEqual property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PLISTCOUNT$
-   			</isGreaterEqual>
-   			<isLessThan property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PQUERYSIZEMAIN$
-   			</isLessThan>
    	</select>
    	
    	   	<select id="EzApprovalG.getUserContListAll" parameterClass="Map" resultClass="ApprGDocListVO">

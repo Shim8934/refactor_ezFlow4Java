@@ -1294,7 +1294,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
 		
 		if (orderOption1.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,10).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,orderOption1.trim().length()).toLowerCase());
 		}
 		
 		logger.debug("getLineInfo Param : v_DOCID= " + docID + " v_MODE=" + mode + " v_ORDEROPTION=" + orderOption1 +" companyID = " + companyID +" v_TENANTID="+ tenantID);
@@ -6439,12 +6439,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDEROPTION", orderOption1);
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
 		if(orderOption1.length() > 0) {
-			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,7).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,orderOption1.trim().length()).toLowerCase());
 		}
 		map.put("v_ORDEROPTION2", orderOption2);
 		map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
 		if(orderOption2.length() > 0) {
-			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0,7).toLowerCase());
+			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0,orderOption2.trim().length()).toLowerCase());
 		}
 		map.put("v_BASICORDER", basicOrder);
 		map.put("v_BASICORDER2", basicOrderReverse);
@@ -6623,13 +6623,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
 		
 		if(orderOption1.length() > 0){
-			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,7).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,orderOption1.trim().length()).toLowerCase());
 		}
 		map.put("v_ORDEROPTION2", orderOption2);
 		map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
 		
 		if(orderOption2.length() > 0){
-			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0,7).toLowerCase());
+			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0,orderOption2.trim().length()).toLowerCase());
 		}
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getContDocList(map);
@@ -15964,10 +15964,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_FORMID", formID.trim());
-		map.put("v_STARTDATE1", tmpStartDate1);
-		map.put("v_STARTDATE2", tmpStartDate2);
-		map.put("v_ENDDATE1", tmpEndDate1);
-		map.put("v_ENDDATE2", tmpEndDate2);
+		map.put("v_ENDDATE1", tmpStartDate1);
+		map.put("v_ENDDATE2", tmpStartDate2);
+		map.put("v_STARTDATE1", tmpEndDate1);
+		map.put("v_STARTDATE2", tmpEndDate2);
 		map.put("v_PROCESSDATE1", tmpProcessDate1);
 		map.put("iv_APRFLAG", aprFlag);
 		map.put("alFlag", alFlag);
@@ -15993,7 +15993,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
 		
 		if(orderOption1.length() > 0 ) {
-		map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, 7).toLowerCase());
+		map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, orderOption1.trim().length()).toLowerCase());
 			if(orderOption1.length() >= 7 ) {
 				if(orderOption1.substring(0, 7).toLowerCase().equals("enddate")) {
 					map.put("v_tmp", "ORDER BY "+ orderOption1 +" DESC");
@@ -16010,7 +16010,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDEROPTION2", orderOption2);
 		map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
 		if (orderOption2.length() > 0 ) {
-			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0, 7).toLowerCase());
+			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0, orderOption2.trim().length()).toLowerCase());
 		}
 		map.put("approvalFlag", approvalFlag);
 		map.put("v_LANGTYPE", langType);
@@ -20742,7 +20742,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSTRMULTIDATA", strMultiData);
 		map.put("v_PLISTCOUNT", pPageSize);
 		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1)));
-		map.put("v_PQUERYSIZESUB", Integer.parseInt(pPageSize)*Integer.parseInt(pPageNum));
+		map.put("v_PQUERYSIZESUB", Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1));
 		map.put("v_ORDEROPTION", OrderOption1);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offSet));
 		
@@ -21148,21 +21148,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
 		
 		if (OrderOption1.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,7).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,OrderOption1.trim().length()).toLowerCase());
 		}
 		map.put("v_ORDEROPTION2", OrderOption2);
 		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
 		
 		if (OrderOption2.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,OrderOption2.trim().length()).toLowerCase());
 		}
 		
 		map.put("v_PSTRLANG", lang);
 		map.put("v_PSTRMULTIDATA", strMultiData);
 //		map.put("v_PAGESIZE", pageSize);
 		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
-		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
-		map.put("v_PAGESIZE3", Integer.parseInt(pageSize) * Integer.parseInt(pageNum) - Integer.parseInt(pageSize));
+		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1));
+		map.put("v_PAGESIZE3", pageSize);
 		map.put("v_ORDEROPTION", OrderOption1);
 		
 		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
