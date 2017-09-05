@@ -252,9 +252,8 @@ public class EzTaskController extends EgovFileMngUtil {
 				taskWorkAttachList  = ezTaskService.getAttachListStr(parentID, folderPath, "2", tenantID);
 			}
 		}
-		
-		//delayColor
-		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
+
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
@@ -265,7 +264,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskCommentList", taskCommentList);
 		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
 		model.addAttribute("type", type);
-		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("delayColor", configVO.getDelayColor());
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		
@@ -338,10 +337,9 @@ public class EzTaskController extends EgovFileMngUtil {
 				taskWorkAttachList  = ezTaskService.getAttachListStr(parentID, folderPath, "2", tenantID);
 			}
 		}
-		
-		//delayColor
-		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
-		
+
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
@@ -351,7 +349,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskCommentList", taskCommentList);
 		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
 		model.addAttribute("type", type);
-		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("delayColor", configVO.getDelayColor());
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		

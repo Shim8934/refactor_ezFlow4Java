@@ -302,7 +302,9 @@
 
 			    var length = list_body.children[1].rows.length;
 			    var length2 = list_body2.children[1].rows.length;
+			    var length3 = list_body3.children[1].rows.length;
 
+			    // 리스트 다시 가져올때 기존에 있던 것 삭제
 			    for (var i = 3; i < length; i++) {
 			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
 			    }
@@ -311,9 +313,14 @@
 			        list_body2.children[1].removeChild(list_body2.children[1].rows[3]);			    	
 			    }
 
+			    for (var i = 3; i < length3; i++) {
+			        list_body3.children[1].removeChild(list_body3.children[1].rows[3]);
+			    }
+
 			    var tr = "";
 			    var onTaskCount = 0; // 진행중업무 Count
 			    var finishTaskCount = 0; // 완료업무 Count
+			    var allTaskCount = 0; // 전체업무 Count
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 			    	if (totalcount == 0 || i == totalcount) {
@@ -321,22 +328,32 @@
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
 
-					if (type == 1) {		
-				        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-					        tr = row_body.cloneNode(true);
-					        document.getElementById("tr_ing").style.display = "none";
-				        } else {
-				        	tr = row_body2.cloneNode(true);
-					        document.getElementById("tr_ing2").style.display = "none";
-				        }
-					} else {
-						if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-					        tr = row_body.cloneNode(true);
-					        document.getElementById("tr_ing").style.display = "none";
-				        } else {
-				        	tr = row_body2.cloneNode(true);
-					        document.getElementById("tr_ing2").style.display = "none";
-				        }
+					if (type == 1) { // 개인
+						if (showAll == 0) {
+					        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+						        tr = row_body.cloneNode(true);
+						        document.getElementById("tr_ing").style.display = "none";
+					        } else {
+					        	tr = row_body2.cloneNode(true);
+						        document.getElementById("tr_ing2").style.display = "none";
+					        }
+						} else {
+							tr = row_body3.cloneNode(true);
+					        document.getElementById("tr_ing3").style.display = "none";
+						}
+					} else { // 지시, 협조
+						if (showAll == 0) {
+					        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+						        tr = row_body.cloneNode(true);
+						        document.getElementById("tr_ing").style.display = "none";
+					        } else {
+					        	tr = row_body2.cloneNode(true);
+						        document.getElementById("tr_ing2").style.display = "none";
+					        }
+						} else {
+							tr = row_body3.cloneNode(true);
+					        document.getElementById("tr_ing3").style.display = "none";
+						}
 					}
 
 			        tr.style.display = "";
@@ -455,12 +472,17 @@
 			        setNodeText(tr.cells[9], startdate);
 			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 
-			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-				        list_body.children[1].appendChild(tr);
-				        onTaskCount++;
+			        if (showAll == 0) {
+				        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+					        list_body.children[1].appendChild(tr);
+					        onTaskCount++;
+				        } else {
+				        	list_body2.children[1].appendChild(tr);
+				        	finishTaskCount++;
+				        }
 			        } else {
-			        	list_body2.children[1].appendChild(tr);
-			        	finishTaskCount++;
+			        	list_body3.children[1].appendChild(tr);
+			        	allTaskCount++;
 			        }
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
@@ -472,6 +494,10 @@
 
 			    if (finishTaskCount == 0) {
 			        document.getElementById("tr_ing2").style.display = "";			    	
+			    }
+
+			    if (allTaskCount == 0) {
+			        document.getElementById("tr_ing3").style.display = "";
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
@@ -526,6 +552,7 @@
 			function selectTab(num) {
 				if (num == 3) {
 					showAll = 1;
+					taskStatusCount = 2;
 					filter = document.getElementById("txt_keyword").value
 
 					if (filter != "") {
@@ -533,7 +560,7 @@
 					} else {
 						DateChange();
 					}
-alert("@@");
+
 					list_body.style.display = "none";
 					list_body2.style.display = "none";
 					list_body3.style.display = "";
