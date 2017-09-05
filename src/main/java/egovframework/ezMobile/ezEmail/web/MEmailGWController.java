@@ -279,8 +279,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			@RequestParam(value="end", required=true) String end,
 			@RequestParam(value="search", required=false) String search,
 			@RequestParam(value="filter", required=false) String filter,
-			@RequestParam(value="endDate", required=false) String endDate,
-			Locale locale) {
+			@RequestParam(value="endDate", required=false) String endDate) {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
@@ -293,7 +292,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Date ed = null;
 			
 			boolean senderReceiverFlag = false;
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
        
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
 			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 			String sendName = egovMessageSource.getMessage("ezEmail.t644", locale);
 			String tempName = egovMessageSource.getMessage("ezEmail.t644", locale);
@@ -321,11 +329,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        
 	        Message[] messages = null;
 			
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
-			String userEmail = info.getUserId() + "@" + domainName;
-			String password = jspw;
 			LOGGER.debug("userEmail : " + userEmail + ", password : " + password);
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
@@ -882,7 +885,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [POST] 임시저장
 	 */
 	@RequestMapping(value="/mobile/ezemail/mail-save/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object mMailSave(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject, Locale locale) throws Exception {
+	public Object mMailSave(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [POST /ezemail/mail-save/users/{userId}] started.");
 		JSONObject result = new JSONObject();
 		
@@ -963,6 +966,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
+			
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 					userEmail, password);
@@ -1871,7 +1877,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [POST] 메일발송(send)
 	 */
 	@RequestMapping(value="/mobile/ezemail/mail-send/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object mMailSend(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject, Locale locale) {
+	public Object mMailSend(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
 		LOGGER.debug("MOBILE G/W MAIL [POST /ezemail/mail-send/users/{userId}] started.");
 		JSONObject result = new JSONObject();
 		
@@ -1951,6 +1957,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
+			
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 					userEmail, password);
@@ -2893,7 +2902,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 메일 읽기
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object mMailRead(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId, Locale locale) throws Exception {
+	public Object mMailRead(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
 				
 		JSONObject result = new JSONObject();
@@ -2910,6 +2919,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 		String userEmail = info.getUserId() + "@" + domainName;
 		String password = jspw;
+		
+		String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+		Locale locale = new Locale(ld);
 
 		String pAttachListHtmlSub = null;
 		
@@ -3279,7 +3291,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailFileDown(HttpServletRequest request,
-			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId, Locale locale) throws Exception {
+			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}] started.");
 		
 		String filename = "";
@@ -3296,6 +3308,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 			LOGGER.debug("userEmail=" + userEmail);
+			
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
 			
 			// retrieve the passed in parameters
 			String folderPath = folderId;
@@ -3407,7 +3422,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/inlineattach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object downloadInline(HttpServletRequest request,
-			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId, Locale locale) throws Exception {
+			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
 
 		LOGGER.debug("downloadInline started.");
 		
@@ -3425,6 +3440,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String password = jspw;
 			LOGGER.debug("userEmail=" + userEmail);
 		
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
 			// retrieve the passed in parameters
 			String folderPath = folderId;
 			String strUid = messageId;
@@ -3495,7 +3513,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailMove(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
-			@RequestBody JSONObject jsonobject, Locale locale) throws Exception {
+			@RequestBody JSONObject jsonobject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [PUT /ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -3503,8 +3521,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		IMAPAccess ia = null;
 		
 		try {
-//			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-//			String password = userIdAndPassword.get(1);
 			
 			String uniqueId =  messageId;
 			String mfolderId = (String) jsonobject.get("mfolderId");
@@ -3521,17 +3537,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			for (int i = 0; i < MsgIdArray.length; i++) {
 				uids[i] = Long.parseLong(MsgIdArray[i]);
 			}
-			
-//			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-//	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-//	        String userEmail = userInfo.getId() + "@" + domainName;
-//			
+				
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 					
@@ -3573,7 +3588,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailStatusChange(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
-			@RequestBody JSONObject jsonobject, Locale locale) throws Exception {
+			@RequestBody JSONObject jsonobject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [PUT /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
 		// get user credentials
 		
@@ -3598,6 +3613,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;			
 			String password = jspw;
 
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
 			LOGGER.debug("userEmail=" + userEmail);
 		        
 			String isRead = (String) jsonobject.get("isRead");
@@ -3655,7 +3673,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * @return 
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public Object mMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId ,Locale locale) throws Exception {
+	public Object mMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
 		
 				
@@ -3673,6 +3691,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 		
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
 			if(folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))){
 				permanentlyDelete = true;
 			}
