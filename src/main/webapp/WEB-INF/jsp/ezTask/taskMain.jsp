@@ -112,6 +112,18 @@
 			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 940px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            }
 			        }
+		        	
+		        	/* feature = GetOpenPosition(780, 740);
+		        	
+		        	if (CrossYN() || pNoneActiveX == "YES") {
+			            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			        } else {
+			            if (pUse_Editor == "" || pUse_Editor == "CK") {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            } else {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            }
+			        } */
 		        } else {
 		        	feature = GetOpenPosition(780, 890);
 		        	
@@ -124,6 +136,18 @@
 			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 890px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			            }
 			        }
+			        
+		        	/* feature = GetOpenPosition(780, 690);
+		        	
+		        	if (CrossYN() || pNoneActiveX == "YES") {
+			            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 690px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			        } else {
+			            if (pUse_Editor == "" || pUse_Editor == "CK") {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 690px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            } else {
+			                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 690px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			            }
+			        } */
 		        }
 		    }
 	
