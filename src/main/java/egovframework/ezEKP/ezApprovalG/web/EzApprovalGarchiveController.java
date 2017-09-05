@@ -2087,7 +2087,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/setCabinetHesong.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setCabinetHesong(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
@@ -2115,12 +2114,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezApprovalG/selectEnc.do", produces = "text/xml;charset=utf-8")
 	public String selectEnc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
 		logger.debug("selectEnc started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 
-		logger.debug("selectEnc started");
-
-		return "ezApprovalG/apprGselectEnc";
+		logger.debug("selectEnc ended");
+		return "/ezApprovalG/apprGselectEnc";
 	}
 	
 	/**
@@ -2137,6 +2136,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("keyword", keyword);
+		
 		logger.debug("searchOrganGList ended");
 		return "/ezApprovalG/apprGsearchOrganGList";
 	}
@@ -2158,6 +2158,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String strFilter = "(&(ou=*" + keyword + "*)(objectclass=ucorg2)(docsysteminfo=*))";
         int intScope = 3;
         String strXML = ezOrganService.searchOuterOrgan(strFilter, intScope, strBaseDn);
+        
 		logger.debug("searchOrganGListData ended");
 		return strXML;
 	}
@@ -2170,8 +2171,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8")
 	public String aprDeptName(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("aprDeptName started");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
 		logger.debug("aprDeptName ended");
 		return "/ezApprovalG/apprGaprDeptName";
 	}
@@ -2199,7 +2202,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		while ((FileText = br.readLine()) != null) {
 			result.append(FileText);
 		}
-
+		br.close();
 		logger.debug("getencodeinfoxXML ended");
 		return result.toString();
 	}
@@ -2211,7 +2214,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezApprovalG/getEndDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getEndDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String getEndDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("getEndDocInfo started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2226,21 +2229,19 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	 * 외부 수신처 발송 시 문서 본문 xml 타입으로
 	 * 
 	 * @throws Exception
-	 *             // HTML 정리 페이지로 MSHTML을 사용하여 태그를 정리한다. // MSHTML로 Element
-	 *             Tag의 Attribute를 정리하지는 않고 필수 Attribute 추가만 진행한다. // Attribute
-	 *             전체 목록(사용하지 않는 Attribute포함)을 가지고 오기 때문에 이를 체크하는데 시간이 많이 소요되기
-	 *             때문이다.(각 태그당 100개 이상의 속성) // 사용하지 않는 Attribute에 대한 처리는
-	 *             Javascript 에서 처리한다. // 또한 Width, Height속성은 width_kaoni,
-	 *             height_kaoni로 리턴하여 자바스크립트에서 Replace하여 사용한다. // IE에서 Width,
-	 *             Height에 숫자만 인식되는 현상을 피하기 위해서이다.
+	 *             // HTML 정리 페이지로 MSHTML을 사용하여 태그를 정리한다. 
+	 *             // MSHTML로 ElementTag의 Attribute를 정리하지는 않고 필수 Attribute 추가만 진행한다. 
+	 *             // Attribute 전체 목록(사용하지 않는 Attribute포함)을 가지고 오기 때문에 이를 체크하는데 시간이 많이 소요되기   때문이다.(각 태그당 100개 이상의 속성) 
+	 *             // 사용하지 않는 Attribute에 대한 처리는    Javascript 에서 처리한다. 
+	 *             // 또한 Width, Height속성은 width_kaoni, height_kaoni로 리턴하여 자바스크립트에서 Replace하여 사용한다. 
+	 *             // IE에서 Width, Height에 숫자만 인식되는 현상을 피하기 위해서이다.
 	 * 
-	 *             // 주의. 각 Element처리시 Element.OuterHTML을 사용하는 경우 해당 Element 하위의
-	 *             Element의 값이 인식되지 않는 문제로 인해 OuterHTML 수정시에는 //
-	 *             GetElementsByTagName을 다시 로드하여 사용하도록 한다.
+	 *             // 주의. 각 Element처리시 Element.OuterHTML을 사용하는 경우 해당 Element 하위의     Element의 값이 인식되지 않는 문제로 인해 OuterHTML 수정시에는 
+	 *             //     GetElementsByTagName을 다시 로드하여 사용하도록 한다.
 	 */
 	@RequestMapping(value = "/ezApprovalG/getContentXml.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getContentXml(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+	public String getContentXml(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("getContentXml started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2253,9 +2254,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	
 	@RequestMapping(value = "/ezApprovalG/getLineInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getLineInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+	public String getLineInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
 		logger.debug("getLineInfo started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2365,7 +2367,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "sendXML" + commonUtil.separator + xmlPath;
 
 		try {
-
 			File file = new File(path);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
@@ -2445,23 +2446,16 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			 strContent = commonUtil.convertDocumentToString(xmlDoc);
 			 strContent = strContent.substring(strContent.indexOf("<content>"),strContent.indexOf("</content>")).replace("<content>", "");
 			 
-			strContent = "<![CDATA[" + strContent + "]]>";
+			 strContent = "<![CDATA[" + strContent + "]]>";
 			
-			xmlDoc.getElementsByTagName("content").item(0).setTextContent("");
-			xmlDoc.getElementsByTagName("content").item(0).setTextContent(strContent);
+			 xmlDoc.getElementsByTagName("content").item(0).setTextContent("");
+			 xmlDoc.getElementsByTagName("content").item(0).setTextContent(strContent);
 			
-			result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + commonUtil.convertDocumentToString(xmlDoc).substring(commonUtil.convertDocumentToString(xmlDoc).indexOf("<pubdoc>"), commonUtil.convertDocumentToString(xmlDoc).length());
-
+			 result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + commonUtil.convertDocumentToString(xmlDoc).substring(commonUtil.convertDocumentToString(xmlDoc).indexOf("<pubdoc>"), commonUtil.convertDocumentToString(xmlDoc).length());
 		} catch (Exception e){
-			System.out.println(e.getMessage());
-			System.out.println(e.getStackTrace().toString());
 		}
 		
-//		result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + strResultXML;
 		logger.debug("getRelayDocInfo ended");
 		return result;
 	}
-	
-	
-	
 }
