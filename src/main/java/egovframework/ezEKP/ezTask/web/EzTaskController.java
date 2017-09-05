@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezTask.web;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -283,8 +284,7 @@ public class EzTaskController extends EgovFileMngUtil {
 				strAttach.append("<DATA><![CDATA[" + vo.getFilePath().substring(vo.getTaskID().length() + 2) + "]]></DATA>");
 				strAttach.append("<DATA2><![CDATA[" + vo.getFileName() + "]]></DATA2>");
 				strAttach.append("<DATA3><![CDATA[" + vo.getFileSize() + "]]></DATA3>");
-				strAttach.append("<DATA4><![CDATA[" + vo.getAttachID() + "]]></DATA4>");
-				strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
+				strAttach.append("<DATA4><![CDATA[OK]]></DATA4>");
 	        }
 			
 			strAttach.append("</NODES></ROOT>");
@@ -796,7 +796,6 @@ public class EzTaskController extends EgovFileMngUtil {
 					strAttach.append("<DATA><![CDATA[" + vo.getFilePath().substring(vo.getTaskID().length() + 2) + "]]></DATA>");
 					strAttach.append("<DATA2><![CDATA[" + vo.getFileName() + "]]></DATA2>");
 					strAttach.append("<DATA3><![CDATA[" + vo.getFileSize() + "]]></DATA3>");
-//					strAttach.append("<DATA4><![CDATA[" + vo.getAttachID() + "]]></DATA4>");
 					strAttach.append("<DATA4><![CDATA[OK]]></DATA4>");
                 }
 				
@@ -837,7 +836,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	
     	String app = request.getParameter("app");
     	String type = request.getParameter("type");
-    	String filter = request.getParameter("filter");
+    	String filter = URLEncoder.encode(request.getParameter("filter"), "UTF-8");
     	String chkValue = request.getParameter("chkValue");
     	String searchClass = request.getParameter("searchClass");
     	String taskStatusCount = request.getParameter("taskStatusCount");
