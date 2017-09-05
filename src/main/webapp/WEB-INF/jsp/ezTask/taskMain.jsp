@@ -288,7 +288,9 @@
 
 			    var length = list_body.children[1].rows.length;
 			    var length2 = list_body2.children[1].rows.length;
+			    var length3 = list_body3.children[1].rows.length;
 
+			    // 리스트 다시 가져올때 기존에 있던 것 삭제
 			    for (var i = 3; i < length; i++) {
 			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
 			    }
@@ -297,9 +299,14 @@
 			        list_body2.children[1].removeChild(list_body2.children[1].rows[3]);			    	
 			    }
 
+			    for (var i = 3; i < length3; i++) {
+			        list_body3.children[1].removeChild(list_body3.children[1].rows[3]);
+			    }
+
 			    var tr = "";
 			    var onTaskCount = 0; // 진행중업무 Count
 			    var finishTaskCount = 0; // 완료업무 Count
+			    var allTaskCount = 0; // 전체업무 Count
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 			    	if (totalcount == 0 || i == totalcount) {
@@ -307,22 +314,32 @@
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
 
-					if (type == 1) {		
-				        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-					        tr = row_body.cloneNode(true);
-					        document.getElementById("tr_ing").style.display = "none";
-				        } else {
-				        	tr = row_body2.cloneNode(true);
-					        document.getElementById("tr_ing2").style.display = "none";
-				        }
-					} else {
-						if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-					        tr = row_body.cloneNode(true);
-					        document.getElementById("tr_ing").style.display = "none";
-				        } else {
-				        	tr = row_body2.cloneNode(true);
-					        document.getElementById("tr_ing2").style.display = "none";
-				        }
+					if (type == 1) { // 개인
+						if (showAll == 0) {
+					        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+						        tr = row_body.cloneNode(true);
+						        document.getElementById("tr_ing").style.display = "none";
+					        } else {
+					        	tr = row_body2.cloneNode(true);
+						        document.getElementById("tr_ing2").style.display = "none";
+					        }
+						} else {
+							tr = row_body3.cloneNode(true);
+					        document.getElementById("tr_ing3").style.display = "none";
+						}
+					} else { // 지시, 협조
+						if (showAll == 0) {
+					        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+						        tr = row_body.cloneNode(true);
+						        document.getElementById("tr_ing").style.display = "none";
+					        } else {
+					        	tr = row_body2.cloneNode(true);
+						        document.getElementById("tr_ing2").style.display = "none";
+					        }
+						} else {
+							tr = row_body3.cloneNode(true);
+					        document.getElementById("tr_ing3").style.display = "none";
+						}
 					}
 
 			        tr.style.display = "";
@@ -441,12 +458,17 @@
 			        setNodeText(tr.cells[9], startdate);
 			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 
-			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-				        list_body.children[1].appendChild(tr);
-				        onTaskCount++;
+			        if (showAll == 0) {
+				        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+					        list_body.children[1].appendChild(tr);
+					        onTaskCount++;
+				        } else {
+				        	list_body2.children[1].appendChild(tr);
+				        	finishTaskCount++;
+				        }
 			        } else {
-			        	list_body2.children[1].appendChild(tr);
-			        	finishTaskCount++;
+			        	list_body3.children[1].appendChild(tr);
+			        	allTaskCount++;
 			        }
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
@@ -458,6 +480,10 @@
 
 			    if (finishTaskCount == 0) {
 			        document.getElementById("tr_ing2").style.display = "";			    	
+			    }
+
+			    if (allTaskCount == 0) {
+			        document.getElementById("tr_ing3").style.display = "";
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
@@ -507,8 +533,25 @@
 
 			// 진행중, 완료 리스트 따로가져오기 위한 값
 			var taskStatusCount = "";
+			// 전체보기
+			var showAll = "";
 			function selectTab(num) {
-				if (num == 2) {
+				if (num == 3) {
+					showAll = 1;
+					taskStatusCount = 2;
+					filter = document.getElementById("txt_keyword").value
+
+					if (filter != "") {
+						search();
+					} else {
+						DateChange();
+					}
+
+					list_body.style.display = "none";
+					list_body2.style.display = "none";
+					list_body3.style.display = "";
+				} else if (num == 2) {
+					showAll = 0;
 					taskStatusCount = 0;
 					filter = document.getElementById("txt_keyword").value
 
@@ -520,7 +563,9 @@
 
 					list_body.style.display = "";
 					list_body2.style.display = "none";
+					list_body3.style.display = "none";
 				} else if (num == 1) {
+					showAll = 0;
 					taskStatusCount = 1;
 					filter = document.getElementById("txt_keyword").value
 
@@ -532,6 +577,7 @@
 
 					list_body.style.display = "none";
 					list_body2.style.display = "";
+					list_body3.style.display = "none";
 				} else {
 					if ($("input[value=ongoing]").is(":checked")) {
 						taskStatusCount = 0;
@@ -996,14 +1042,25 @@
 				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
+
+				<!-- 진행중 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
 					<input name="check" id="radio4" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio4" style="vertical-align:middle"><spring:message code='ezTask.t99' /></label>
 				</li>
+
+				<!-- 완료 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;">
 					<input name="check" id="radio3" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio3" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
+
+				<!-- 전체보기 -->
+				<li id="right" style="float:right;font-weight:normal;color:black;">
+					<input name="check" id="radio5" type="radio" value="ongoing" checked onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
+					<label for="radio5" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
+				</li>
+
 			</ul>
 		</div>
 		<script type="text/javascript">
@@ -1012,6 +1069,8 @@
 		<table style="WIDTH: 100%;overflow:AUTO;" id="list">
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
+
+					<!-- 진행중 -->
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
@@ -1059,6 +1118,8 @@
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
+
+				    <!-- 완료 -->
 				    <table class="mainlist" id="list_body2" style="WIDTH: 100%;table-layout:fixed; display:none">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
@@ -1106,6 +1167,56 @@
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
+
+				    <!-- 전체 -->
+				    <table class="mainlist" id="list_body3" style="WIDTH: 100%;table-layout:fixed; display:none">
+						<col style ="width:30px;">
+						<col style ="width:50px;">
+						<col style ="width:20px;">
+						<col style ="width:100px;">
+						<col >
+						<col style ="width:50px;">
+						<col style ="width:140px;">
+		                <col style ="width:90px;">
+						<col style ="width:110px;">
+						<col style ="width:80px;">
+						<col style ="width:97px;">
+						<tr>
+							<th ><input id="checkboxAll3" type="checkbox" onclick="selectAll3()" taskstatus="3" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+							<th ><spring:message code='ezTask.t156' /></th>
+							<th ><img src="/images/newAttach.gif"></th>
+							<th ><spring:message code='ezTask.t2005' /></th>
+							<th ><spring:message code='ezTask.t118' /></th>
+							<th ></th>
+							<c:if test="${useTodoMemo == 'YES'}">
+								<th ><spring:message code='ezTask.t170' /></th>
+							</c:if>
+							<c:if test="${useTodoMemo == 'NO'}">
+								<th ></th>
+							</c:if>
+		                    <th ><spring:message code='ezTask.t2003' /></th>
+							<th ><spring:message code='ezTask.t120' /></th>
+							<th ><spring:message code='ezTask.t121' /></th>
+							<th ><spring:message code='ezTask.t122' /></th>
+						</tr>
+						<tr class="row_body3" id="row_body3" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
+							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+						</tr>
+						<tr id="tr_ing3" style="text-align:center">
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+						</tr>
+				    </table>
+
 				</td>
 				<td style="width:5px;">&nbsp;</td>
 				<td style="vertical-align:top;width:182px"></td>

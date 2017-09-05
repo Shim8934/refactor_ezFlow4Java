@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 
@@ -31,13 +32,11 @@ public interface EzTaskService {
 	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID) throws Exception;
 	
 	/* 정수현*/
-	public void taskSaveConfig(String memberID, String color, int autoDelete, int gubun, int tenantID) throws Exception;
+	public void taskSaveConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception;
 
-	public String getDelayColor(String userID, int tenantID) throws Exception;
+	public TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception;
 
-	public String getCompleteColor(String userID, int tenantID) throws Exception;
-
-	public void taskUpdateConfig(String memberID, String color, int autoDelete, int gubun, int tenantID) throws Exception;
+	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception;
 
 	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception;
 

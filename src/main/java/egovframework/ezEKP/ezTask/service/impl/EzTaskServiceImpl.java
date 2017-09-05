@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -538,50 +539,33 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 	/* 정수현*/
 	@Override
-	public String getDelayColor(String userID, int tenantID) throws Exception {
-		logger.debug("getDelayColor started.");
+	public TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception {
+		logger.debug("getOriginColor started.");
 		logger.debug("userID = " + userID + " || tenantID = " + tenantID);
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
 
-		String result = ezTaskDAO.getDelayColor(map);
+		TaskConfigVO result = ezTaskDAO.getOriginColor(map);
 
-		logger.debug("getDelayColor ended. delayColor = " + result);
-		
-		return result;
-	}
-	
-	@Override
-	public String getCompleteColor(String userID, int tenantID) throws Exception {
-		logger.debug("getCompleteColor started.");
-		logger.debug("userID = " + userID + " || tenantID = " + tenantID);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("userID", userID);
-		map.put("tenantID", tenantID);
-
-		String result = ezTaskDAO.getCompleteColor(map);
-
-		logger.debug("getCompleteColor ended. completeColor = " + result);
+		logger.debug("getOriginColor ended.");
 		
 		return result;
 	}
 
 	@Override
-	public void taskSaveConfig(String memberID, String color, int autoDelete, int gubun, int tenantID) throws Exception {
+	public void taskSaveConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception {
 		logger.debug("taskSaveConfig started.");
-		logger.debug("memberID : " + memberID + " | color : " + color + " | autoDelete : " + autoDelete + " | gubun : " + gubun);
+		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | autoDelete : " + autoDelete);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
-		map.put("color", color);
+		map.put("delayColor", delayColor);
+		map.put("completeColor", completeColor);
 		map.put("autoDelete", autoDelete);
-		map.put("gubun", gubun);
 		map.put("tenantID", tenantID);
 		
 		ezTaskDAO.taskSaveConfig(map);
@@ -590,16 +574,16 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public void taskUpdateConfig(String memberID, String color, int autoDelete, int gubun, int tenantID) throws Exception {
+	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception {
 		logger.debug("taskUpdateConfig started.");
-		logger.debug("memberID : " + memberID + " | color : " + color + " | autoDelete : " + autoDelete + " | gubun : " + gubun);
+		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | autoDelete : " + autoDelete);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("memberID", memberID);
-		map.put("color", color);
+		map.put("delayColor", delayColor);
+		map.put("completeColor", completeColor);
 		map.put("autoDelete", autoDelete);
-		map.put("gubun", gubun);
 		map.put("tenantID", tenantID);
 
 		ezTaskDAO.taskUpdateConfig(map);
