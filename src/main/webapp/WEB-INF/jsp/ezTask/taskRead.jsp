@@ -458,7 +458,7 @@
 					return;
 				}
 				
-				DivPopUpShow(200, 150, "/ezTask/taskStatus.do?taskID=" + taskid);
+				DivPopUpShow(410, 320, "/ezTask/taskStatus.do?taskID=" + taskid);
 			}
 			
 			function Tab1_NewTabIni(pTabNodeID) {
