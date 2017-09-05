@@ -62,7 +62,7 @@
 		        
 	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 210 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 230 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -90,7 +90,7 @@
 		    window.onresize = function () {
 	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 210 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 230 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -326,7 +326,6 @@
 						
 						console.log(taskCommentList);
 						$("#taskCommentList").html(taskCommentList);
-						$("#taskCommentList2").html(taskCommentList);
 						$("#TextComment").val("");
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
@@ -443,7 +442,6 @@
 						});
 						
 						$("#taskCommentList").html(taskCommentList);
-						$("#taskCommentList2").html(taskCommentList);
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
@@ -615,6 +613,7 @@
 				$(".popup").css('background-image', 'none');
 				
 			    document.getElementById("printScreen").style.display = "block";
+			    document.getElementById("taskInfo").style.display = "none";
 			    document.getElementById("normalScreen").style.display = "none";
 			    document.getElementById("menu").style.display = "none";
 			    document.getElementById("close").style.display = "none";
@@ -684,6 +683,7 @@
 			    $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 			    
 			    document.getElementById("printScreen").style.display = "none";
+			    document.getElementById("taskInfo").style.display = "";
 			    document.getElementById("normalScreen").style.display = "";
 			    document.getElementById("menu").style.display = "";
 			    document.getElementById("close").style.display = "";
@@ -766,8 +766,46 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
+		<table style="width: 100%;">
+			<colgroup><col width="60%" /><col width="40%" /></colgroup>
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<th><spring:message code='ezTask.t121' /></th>
+							<td>
+								<div>
+									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' />
+								</div>
+							</td>
+						</tr>
+						<tr> 
+							<th><spring:message code='ezTask.t122' /></th>
+							<td>
+								<div>
+									<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th><spring:message code='ezTask.t118' /></th>
+							<td colspan="3">
+								<div style="overflow-y:auto;padding-top:2px">
+									<c:out value = '${taskInfoVO.title }' />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"></div>
+					<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
+				</td>
+			</tr>
+		</table>
+		
 		<!-- 이쪽에 진행단계 -->
-		<table id="taskProgress" class="layout">
+		<%-- <table id="taskProgress" class="layout">
 			<tr>
 				<td>
 					<spring:message code='ezTask.t119' />
@@ -790,7 +828,7 @@
 					</table>
 				</td>
 			</tr>
-		</table>
+		</table> --%>
 		 
 		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px; border-top: 0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
@@ -870,7 +908,7 @@
 								</div>
 							</td>
 						</tr>
-						<tr>
+						<%-- <tr>
 							<th><spring:message code='ezTask.t121' /></th>
 							<td>
 								<div>
@@ -893,7 +931,7 @@
 									<c:out value = '${taskInfoVO.title }' />
 								</div>
 							</td>
-						</tr>
+						</tr> --%>
 						
 						<c:if test="${useTodoMemo == 'YES'}">
 							<tr>
@@ -967,7 +1005,7 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="taskCommentList" style="overflow: auto; width:100%; height: 460px; background-color: white; padding-top:3px;">
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 430px; background-color: white; padding-top:3px;">
 									<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
 										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
 										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
@@ -983,17 +1021,125 @@
 			<tr>
 				<td style="padding-top:10px">
 					<table class="content">
-						<tr style="padding-top:10px;padding-bottom:4px;height:30px">
+						<tr style="padding-top:10px;padding-bottom:4px;height:50px">
 							<th><spring:message code='ezTask.t2012' /></th>
-							<td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td>
+							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
+							<td class="pos1"><textarea style='resize:none;overflow:auto;'></textarea></td>
 							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()"><spring:message code='ezTask.t96' /></span></a></td>
+							
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
+		
 		<div id="printScreen" style="display: none;">
 			<table class="layout" >
+				<tr>
+					<td>
+						<spring:message code='ezTask.lhj02' />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table class="content">
+							<tr>
+								<th><spring:message code='ezTask.t117' /></th>
+								<td style="white-space:nowrap">
+									<div style="CURSOR:pointer; " onClick="show_personinfo('0')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+										<c:out value = '${taskInfoVO.creatorName }' />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t155' /></th>
+								<td style="padding-right:15px;white-space:nowrap">${fn:substring(taskInfoVO.createDate, 0, 10) }</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t2003' /></th>
+								<td style="width:100%">
+									<div>
+										<span id="taskType"></span>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t156' /></th>
+								<td>
+									<div>
+										<c:choose>
+											<c:when test="${taskInfoVO.importance == '1' }">
+												<spring:message code = 'ezTask.t171' />
+											</c:when>
+											<c:when test="${taskInfoVO.importance == '2' }">
+												<spring:message code = 'ezTask.t172' />
+											</c:when>
+											<c:otherwise>
+												<spring:message code = 'ezTask.t173' />
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</td>
+							</tr>
+							<tr id ="persontr">
+								<th><spring:message code='ezTask.t2005' /></th>
+								<td colspan="3" width="100%">
+									<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.taskPersonID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+										<c:out value = '${taskInfoVO.taskPersonName }' />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t157' /></th>
+								<td colspan="3" style="width:100%">
+									<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
+										<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
+											<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
+												<c:out value = '${taskShareVO.sharerName }' /> (<c:out value = '${taskShareVO.sharerDeptName }' />)
+											</span>
+											<c:if test="${not status.last }">,&nbsp;</c:if>
+										</c:forEach>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t121' /></th>
+								<td>
+									<div>
+										<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t122' /></th>
+								<td>
+									<div>
+										<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t118' /></th>
+								<td colspan="3">
+									<div style="overflow-y:auto;padding-top:2px">
+										<c:out value = '${taskInfoVO.title }' />
+									</div>
+								</td>
+							</tr>
+							
+							<c:if test="${useTodoMemo == 'YES'}">
+								<tr>
+					            	<th><spring:message code='ezTask.t170' /></th>
+					            	<td id="TextMemo" colspan="3">
+					            		<div style="overflow-y:auto;padding-top:2px;">
+					            			<c:out value = '${taskInfoVO.memo }' />
+					            		</div>
+					            	</td>
+								</tr>
+							</c:if>
+						</table>
+					</td>
+				</tr>
 				<tr>
 					<td>
 						<c:if test="${taskInfoVO.taskType == '1'}">
@@ -1002,7 +1148,6 @@
 						<c:if test="${taskInfoVO.taskType != '1'}">
 							<spring:message code='ezTask.t2010' />
 						</c:if>
-						
 					</td>
 				</tr>
 				<tr>
