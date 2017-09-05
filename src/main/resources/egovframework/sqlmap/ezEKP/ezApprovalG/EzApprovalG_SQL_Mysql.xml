@@ -221,7 +221,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#
+							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
 								) C ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -246,7 +246,6 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -333,7 +332,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#
+							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
 							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -358,7 +357,6 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -412,7 +410,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#
+							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
 							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -437,7 +435,6 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -546,7 +543,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						LIMIT #v_PAGESIZE#
+						LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
 						)C ) A 
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -571,7 +568,6 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -659,7 +655,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						LIMIT #v_PAGESIZE#
+						LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
 						)C ) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -684,7 +680,6 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -742,7 +737,7 @@
 														</isNotEqual>
 													</isEmpty>
 													<![CDATA[
-													LIMIT #v_PAGESIZE#
+													LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
 													)C ) A
 													]]>
 														<isNotEmpty property="v_ORDEROPTION2"> 
@@ -767,7 +762,6 @@
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
-														LIMIT #v_PAGESIZE2#
 														)D 
 														]]>
                      			</isNotEqual>
