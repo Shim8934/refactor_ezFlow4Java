@@ -28,6 +28,7 @@ import java.util.zip.ZipOutputStream;
 import javax.annotation.Resource;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -1078,6 +1079,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 				Message[] messages = ((IMAPFolder)folder).getMessages();
 				
+				boolean isRead = false;
 				int messageCount = messages.length; // 총 메일 갯수
 				int currCount = 1;
 				long lastTime = System.currentTimeMillis();
@@ -1124,8 +1126,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					ZipEntry zipEntry = new ZipEntry("/" + fileName);
 					zos.putNextEntry(zipEntry);
 					
+					isRead = message.isSet(Flags.Flag.SEEN);
+					
 					message.writeTo(zos);
 
+					if (!isRead) {
+						message.setFlag(Flags.Flag.SEEN, false);
+					}
+					
 					zos.closeEntry();
 
 					// 진행율 클라이언트에게 전송
