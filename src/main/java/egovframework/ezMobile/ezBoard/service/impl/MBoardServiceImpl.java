@@ -727,7 +727,8 @@ public class MBoardServiceImpl implements MBoardService {
 			map.put("hasAttach", "0");
 		}
 		
-		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
+		//모바일에서는 답변을 달기가 없기 때문에, itemID로 들어감
+		map.put("upperItemIDTree", boardListVO.get("itemID"));
 		//새로 작성할때는 1로 fix
 		map.put("itemLevel", "1");
 		//리플이나 수정일때는 값받아와야함.
