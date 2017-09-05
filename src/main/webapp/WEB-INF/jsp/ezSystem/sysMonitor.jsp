@@ -300,7 +300,6 @@
 	    	function setOsInfo(list) {
 	    		var obj = JSON.parse(list);
 	    		var osInfo = obj.getSysInfo;
-	    		console.log(osInfo);
 /* 	    		var serverName = "<p id='serverName'>" + osInfo[0].hostname + "</p>"
 	    		var osName = "<p id='osName'><strong>OS : </strong>" + osInfo[0].os + "</p>";
 	    		var osVer = "<p id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</p>"; */
@@ -314,7 +313,7 @@
 	    		//$("#serverName").html(serverName);
 	    		//$("#osName").html(osName);
 	    		//$("#osVer").html(osVer);
-	    		$("#osInfo").html(serverName + osName + osVer + cpuName + memorySize);
+	    		$("#osInfo").html(osName + osVer + cpuName + memorySize);
 	    	}
 	    	
 	    	// 네트워크 트래픽 속도 계산 공식
