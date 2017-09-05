@@ -55,20 +55,21 @@ public class MOrganGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezorgan/personlist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object getPersonList(@PathVariable String boardId, HttpServletRequest request, Model model) {		
+	public Object getPersonList(HttpServletRequest request, Model model) {		
 		LOGGER.debug("MOBILE G/W ORGAN [GET /ezorgan/personlist] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			String userID = request.getParameter("userID");
+			String pSearchText = request.getParameter("pSearchText");
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
 			//String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			
-			List <MPersonListVO> list = mOrganService.getPersonList(info.getCompanyId(), info.getTenantId());
+			List <MPersonListVO> list = mOrganService.getPersonList(info.getCompanyId(), info.getTenantId(),pSearchText);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

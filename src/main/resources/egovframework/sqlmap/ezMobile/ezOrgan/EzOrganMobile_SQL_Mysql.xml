@@ -6,15 +6,26 @@
     
 	<select id="MOrganDAO.getPersonList" parameterClass="Map" resultClass="MPersonListVO">
         <![CDATA[
-            select
+            SELECT
                 *
-            from
+            FROM
                 tbl_usermaster
-            where
+            WHERE
                 PHYSICALDELIVERYOFFICENAME = #companyID#
-            and
+            AND
                 TENANT_ID = #tenantID#
-        ]]>
+        ]]>        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
+        <![CDATA[    
+            ORDER BY
+                EXTENSIONATTRIBUTE15 ASC,
+                DISPLAYNAME ASC
+        ]]> 
     </select>
 </sqlMap>
 

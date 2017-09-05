@@ -39,10 +39,11 @@ public class MOrganServiceImpl implements MOrganService {
 	private EgovMessageSource egovMessageSource;
 
 	@Override
-	public List<MPersonListVO> getPersonList(String companyID, int tenantID) throws Exception {
+	public List<MPersonListVO> getPersonList(String companyID, int tenantID, String pSearchText) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
 		return mOrganDAO.getPersonList(map);
 	}
 	
