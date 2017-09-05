@@ -84,11 +84,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 
-		//delayColor
 		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
+		String completeColor = ezTaskService.getCompleteColor(userID, tenantID);
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("completeColor", completeColor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
 
 		logger.debug("taskMain ended.");
@@ -509,9 +510,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskConfig started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String _delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
+		String delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
+		String completeColor = ezTaskService.getCompleteColor(userInfo.getId(), userInfo.getTenantId());
 
-		model.addAttribute("_delayColor", _delayColor);
+		logger.debug("delayColor : " + delayColor + " | completeColor : " + completeColor);
+
+		model.addAttribute("delayColor", delayColor);
+		model.addAttribute("completeColor", completeColor);
 
 		logger.debug("taskConfig ended.");
 
@@ -539,14 +544,25 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String delayColor = request.getParameter("delayColor");
+		String completeColor = request.getParameter("completeColor");
+		int gubun = 0;
 		int autoDelete = 0;
 
 		String _delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
-		
+		String _completeColor = ezTaskService.getCompleteColor(userInfo.getId(), userInfo.getTenantId());
+
 		if (!_delayColor.equals("#FF0000")) {
-			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, autoDelete, userInfo.getTenantId());
+			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, autoDelete, gubun, userInfo.getTenantId());
 		} else {
-			ezTaskService.taskSaveConfig(userInfo.getId(), delayColor, autoDelete, userInfo.getTenantId());
+			ezTaskService.taskSaveConfig(userInfo.getId(), delayColor, autoDelete, gubun, userInfo.getTenantId());
+		}
+
+		if (!_completeColor.equals("#FF0000")) {
+			gubun = 1;
+			ezTaskService.taskUpdateConfig(userInfo.getId(), completeColor, autoDelete, gubun, userInfo.getTenantId());
+		} else {
+			gubun = 1;
+			ezTaskService.taskSaveConfig(userInfo.getId(), completeColor, autoDelete, gubun, userInfo.getTenantId());
 		}
 
 		logger.debug("taskSaveConfig ended.");
