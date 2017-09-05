@@ -21267,11 +21267,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSTRMULTIDATA", strMultiData);
 //		map.put("v_PAGESIZE", pageSize);
 		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
-<<<<<<< HEAD
 		map.put("v_PAGESIZE", Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) -1));
-=======
-		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1));
->>>>>>> 7f620229c
+
 		map.put("v_PAGESIZE3", pageSize);
 		map.put("v_ORDEROPTION", OrderOption1);
 		
