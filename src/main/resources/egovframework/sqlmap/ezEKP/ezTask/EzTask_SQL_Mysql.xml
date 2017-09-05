@@ -392,7 +392,21 @@
 							userid = #userID#), '##FF0000') as delaycolor
 		]]>
 	</select>
-	
+
+	<select id="EzTaskDAO.getCompleteColor" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				IFNULL((SELECT
+							completecolor
+						FROM
+							TBL_TASKCONFIG
+						WHERE
+							tenantid = #tenantID#
+						AND
+							userid = #userID#), '##FF0000') as completecolor
+		]]>
+	</select>
+
 	<select id="EzTaskDAO.taskGetList" resultClass="TaskInfoVO">
 	   <![CDATA[
 		    SELECT
@@ -609,9 +623,23 @@
 	<insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_TASKCONFIG
+        ]]>
+
+        <isEqual property="gubun" compareValue="0">
+        	<![CDATA[
                 (userid, delaycolor, autodelete, tenantid)
+        	]]>
+        </isEqual>
+
+        <isEqual property="gubun" compareValue="1">
+        	<![CDATA[
+                (userid, completecolor, autodelete, tenantid)
+        	]]>
+        </isEqual>
+
+        <![CDATA[
             VALUES
-                (#memberID#, #delayColor#, #autoDelete#, #tenantID#)
+                (#memberID#, #color#, #autoDelete#, #tenantID#)
         ]]>
     </insert>
 
@@ -629,7 +657,21 @@
             UPDATE
                 TBL_TASKCONFIG
             SET
-                delaycolor = #delayColor#,
+        ]]>
+
+        <isEqual property="gubun" compareValue="0">
+        	<![CDATA[
+                delaycolor = #color#,
+            ]]>
+        </isEqual>
+
+        <isEqual property="gubun" compareValue="1">
+        	<![CDATA[
+                completecolor = #color#,
+            ]]>
+        </isEqual>
+
+        <![CDATA[
                 autodelete = #autoDelete#
             WHERE 
                 userid = #memberID#

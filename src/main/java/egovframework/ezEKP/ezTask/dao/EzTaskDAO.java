@@ -78,6 +78,10 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		return (String) select("EzTaskDAO.getDelayColor", map);
 	}
 
+	public String getCompleteColor(Map<String, Object> map) throws Exception {
+		return (String) select("EzTaskDAO.getCompleteColor", map);
+	}
+
 	public void taskUpdateConfig(Map<String, Object> map) throws Exception {
 		update("EzTaskDAO.taskUpdateConfig", map);
 	}
@@ -110,4 +114,5 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public void taskDeleteAttach(Map<String, Object> map) throws Exception {
 		delete("EzTaskDAO.taskDeleteAttach", map);
 	}
+
 }

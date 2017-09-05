@@ -9,8 +9,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-			var delaycolor = "_delaycolor";
-// 			var completecolor = "_completecolor";
+			var delaycolor = "";
+			var completecolor = "";
 // 			var autodelete = "_autodelete";
 
 			document.onselectstart = function () { return false; };
@@ -41,6 +41,7 @@
 // 						return;
 // 				}
 				var delayColor = $("#DelayColor").text();
+				var completeColor = $("#CompleteColor").text();
 
 // 				if (getNodeText(document.getElementById("DelayColor")) == "") {
 // 					alert("<spring:message code='ezTask.t86' />");
@@ -52,7 +53,8 @@
 					url : "/ezTask/taskSaveConfig.do",
 					dataType : "json",
 					data : {
-						delayColor : delayColor
+						delayColor : delayColor,
+						completeColor : completeColor
 					},
 					success : function() {
 						alert("<spring:message code='ezTask.t89' />");
@@ -147,27 +149,26 @@
 					<td>
 						<table style="table-layout:fixed;">
 							<tr>
-								<td id="DelayColorDisplay" style="background-color:${_delayColor};width:100px"></td>
-								<td id="DelayColor" style="width:70px; padding-left:10px">${_delayColor}</td>
+								<td id="DelayColorDisplay" style="background-color:${delayColor};width:100px"></td>
+								<td id="DelayColor" style="width:70px; padding-left:10px">${delayColor}</td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('DelayColor')"><spring:message code='ezTask.t91' /></span></a></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 
-<!-- 				<tr> -->
-<%-- 					<th><spring:message code='ezTask.t92' /></th> --%>
-<!-- 					<td> -->
-<!-- 						<table style="table-layout:fixed"> -->
-<!-- 							<tr> -->
-<%-- 								<td id="CompleteColorDisplay" style="background-color:${_completecolor};width:100px"></td> --%>
-<%-- 								<td id="CompleteColor" style="width:70px; padding-left:10px">${_completecolor}</td> --%>
-								
-<%-- 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('CompleteColor')"><spring:message code='ezTask.t91' /></span></a></td> --%>
-<!-- 							</tr> -->
-<!-- 						</table> -->
-<!-- 					</td> -->
-<!-- 				</tr> -->
+				<tr>
+					<th><spring:message code='ezTask.t92' /></th>
+					<td>
+						<table style="table-layout:fixed">
+							<tr>
+								<td id="CompleteColorDisplay" style="background-color:${completeColor};width:100px"></td>
+								<td id="CompleteColor" style="width:70px; padding-left:10px">${completeColor}</td>
+								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('CompleteColor')"><spring:message code='ezTask.t91' /></span></a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 
 <!-- 				<tr style="display:none"> -->
 <%-- 					<th><spring:message code='ezTask.t93' /></th> --%>
