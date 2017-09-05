@@ -60,12 +60,22 @@
 		    		strListIdInfo = "";
 				}
 
+				if ($("#checkboxAll3").is(":checked")) {
+					$("input[type=checkbox]").prop("checked", false);
+		    		$(".row_body3 td").css("background", "");
+		    		strListInfo = "";
+		    		strListIdInfo = "";
+				}
+
 				// 목록에서 하나씩 다른거 선택할 때
 		    	if (selectelem != null) { 		
 			    	if (selectelem != elem) {
 						$("input[type=checkbox]").prop("checked", false);
-						$(".row_body").css("background", "#ffffff");
-						$(".row_body2").css("background", "#ffffff");
+// 						$(selectelem).siblings("input[type=checkbox]").prop("checked", false);
+// 						$(".row_body").css("background", "#ffffff");
+// 						$(".row_body2").css("background", "#ffffff");
+						$(selectelem).css("background", "#ffffff");
+						$(selectelem).siblings().css("background", "#ffffff");
 						strListInfo = $(elem).attr("taskID") + ";";
 			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
 						
@@ -235,6 +245,11 @@
 		    	if ($("#checkboxAll2").is(":checked")) {
 		    		$("#checkboxAll2").prop("checked", false);
 		    		$(".row_body2 td").css("background", "");
+		    	}
+
+		    	if ($("#checkboxAll3").is(":checked")) {
+		    		$("#checkboxAll3").prop("checked", false);
+		    		$(".row_body3 td").css("background", "");
 		    	}
 
 			    currentpage = Value;
@@ -683,7 +698,7 @@
 			            return;
 			        }
 				}
-
+alert(strListIdInfo + " / " + strListInfo);
 				if (confirm("<spring:message code='ezTask.t106' />")) {
 					$.ajax({
 						type : "POST",
@@ -723,6 +738,7 @@
 		    }
 
 		    function DateChange() {
+		    	// 전체체크 후 다른거선택 후 다시 돌아왔을 때 체크되어있는것 해제
 		    	if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body td").css("background", "");
@@ -731,6 +747,11 @@
 		    	if ($("#checkboxAll2").is(":checked")) {
 		    		$("#checkboxAll2").prop("checked", false);
 		    		$(".row_body2 td").css("background", "");
+		    	}
+
+		    	if ($("#checkboxAll3").is(":checked")) {
+		    		$("#checkboxAll3").prop("checked", false);
+		    		$(".row_body3 td").css("background", "");
 		    	}
 
 		        var filter = "";
@@ -873,7 +894,7 @@
 		                break;
 		        }
 
-		        $("#radio3").click();
+		        $("#radio5").click();
 		    }
 
 		    function onkeydown_start_search(evt) {
@@ -974,7 +995,7 @@
 						selectelem = null;
 					}
 					
-					$(":checkbox[name=myCheckbox]:checked").each(function(){					
+					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
 						deleteListID.push($(this).attr("taskID") + ";")
 					});
@@ -1010,7 +1031,7 @@
 						selectelem = null;
 					}
 					
-					$(":checkbox[name=myCheckbox]:checked").each(function(){					
+					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
 						deleteListID.push($(this).attr("taskID") + ";")
 					});
@@ -1024,6 +1045,42 @@
 					strListInfo = "";
 					$("input[type=checkbox]").prop("checked", false);
 					$(".row_body2").css("background", "");
+				}
+		    }
+
+		    function selectAll3() {
+		    	$(".row_body3 td").css("background", "");
+
+				var deleteList = [];
+				var deleteListID = [];
+
+				if ($("#checkboxAll3").is(":checked")) {
+					strListIdInfo = "";
+					strListInfo = "";
+
+					if ($("#checkboxAll3").is(":checked")) {
+						$(".row_body3 td input[type = checkbox]").prop("checked", true);
+						$(".row_body3 td").css("background", "rgb(233, 241, 244)");
+					} else {
+						$(".row_body3 td input[type = checkbox]").prop("checked", false);
+						$(".row_body3 td").css("background", "");
+						selectelem = null;
+					}
+					
+					$(":checkbox[name=myCheckbox]:checked").each(function(){
+						deleteList.push($(this).attr("creatorid") + ";");
+						deleteListID.push($(this).attr("taskID") + ";")
+					});
+
+					for (var i = 0; i < deleteList.length; i++) {
+						strListIdInfo += deleteList[i];
+						strListInfo += deleteListID[i];
+					}
+				} else {
+					strListIdInfo = "";
+					strListInfo = "";
+					$("input[type=checkbox]").prop("checked", false);
+					$(".row_body3").css("background", "");
 				}
 		    }
 		</script>
@@ -1065,7 +1122,7 @@
 
 				<!-- 완료 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;">
-					<input name="check" id="radio3" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
+					<input name="check" id="radio3" type="radio" value="ongoing" onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio3" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
 
