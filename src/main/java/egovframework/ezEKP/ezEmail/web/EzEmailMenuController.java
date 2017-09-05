@@ -855,7 +855,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		int messageCount = 0;
 		int currCount = 1;
 		
-		
 		String userkey = request.getParameter("userkey");
 		String sessionKeyName = "percent";
 		Session session = null;
@@ -882,14 +881,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 			ZipEntry ze = zis.getNextEntry();
 			
-			
 			// 유저정보를 키로 가지고있는 세션맵에서 메세지 보낼 세션정보를 확인하고, 메일의 갯수를 확인한다.
 			if (userkey != null) {
 				ZipInputStream zis1 = new ZipInputStream(multiFile.get(0).getInputStream());	
-				@SuppressWarnings("unused")
-				ZipEntry tmpZe = zis.getNextEntry();
 				
-				while ((tmpZe = zis1.getNextEntry()) != null) {
+				while (zis1.getNextEntry() != null) {
 					messageCount++;
 				}
 				
@@ -904,7 +900,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					userAccount, password, egovMessageSource, locale);
 			
 			Folder folder = ia.getFolder(folderPath);
-
 			
 			if (folder == null || !folder.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
