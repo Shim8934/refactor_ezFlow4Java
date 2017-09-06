@@ -253,11 +253,15 @@
 		
 			        if (primary == "1") {
 			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
-			        }
-			        else {
+			            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "PERSONNAME"));
+			        } else {
 			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
+			            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "PERSONNAME2"));
 			        }
-		
+
+			        tr.cells[3].style.overflow = "hidden";
+		            tr.cells[3].style.textOverflow = "ellipsis";
+
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
 			        }

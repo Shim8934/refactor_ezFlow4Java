@@ -110,7 +110,7 @@ function manage_share_Complete(retVal) {
                     return;
                 }
 
-                setNodeText(document.getElementById("personlist"), retVal["name"][0]);
+                setNodeText(document.getElementById("personlist"), retVal["name"][0] + " (" + retVal["deptname"][0] + ")");
 
                 g_person["name"][0] = retVal["name"][0];
                 g_person["id"][0] = retVal["id"][0];
@@ -133,9 +133,9 @@ function manage_share_Complete(retVal) {
                         alert(retVal["name"][i] + strLang56);
                     } else {
                         if (getNodeText(document.getElementById("sharelist")) == "") {
-                            setNodeText(document.getElementById("sharelist"), retVal["name"][i]);
+                            setNodeText(document.getElementById("sharelist"), retVal["name"][i] + " (" + retVal["deptname"][i] + ")");
                         } else {
-                        	setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + retVal["name"][i]);
+                        	setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + retVal["name"][i] + " (" + retVal["deptname"][i] + ")");
                         }
 
                         g_share["name"][j] = retVal["name"][i];
