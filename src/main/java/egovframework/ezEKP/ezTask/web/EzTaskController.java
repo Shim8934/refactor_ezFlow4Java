@@ -32,6 +32,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
@@ -61,18 +62,21 @@ public class EzTaskController extends EgovFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;
-	
+
 	@Autowired
 	private EzCommonService ezCommonService;
-	
+
 	@Autowired
 	private EzTaskService ezTaskService;
-	
+
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-	
+
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
+
 	/* 이효진*/
-	
+
 	/**
 	 * 업무관리 메인화면
 	 */
@@ -125,7 +129,18 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
-		
+
+		//작성자, 담당자 Dept 조회
+		String creatorDeptName = "";
+		String taskPersonDeptName = "";
+		if (primary.equals("1")) {
+			creatorDeptName = ezOrganService.getPropertyValue(taskInfoVO.getCreatorID(), "description", tenantID);
+			taskPersonDeptName = ezOrganService.getPropertyValue(taskInfoVO.getTaskPersonID(), "description", tenantID);
+		} else {
+			creatorDeptName = ezOrganService.getPropertyValue(taskInfoVO.getCreatorID(), "description2", tenantID);
+			taskPersonDeptName = ezOrganService.getPropertyValue(taskInfoVO.getTaskPersonID(), "description2", tenantID);
+		}
+
 		String parentID = taskInfoVO.getParentID();
 		
 		//의견목록 조회
@@ -183,6 +198,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
+		model.addAttribute("creatorDeptName", creatorDeptName);
+		model.addAttribute("taskPersonDeptName", taskPersonDeptName);
 		
 		logger.debug("taskRead ended.");
 		

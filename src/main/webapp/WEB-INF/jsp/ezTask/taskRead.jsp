@@ -853,7 +853,7 @@
 							<th><spring:message code='ezTask.t117' /></th>
 							<td style="white-space:nowrap">
 								<div style="CURSOR:pointer; " onClick="show_personinfo('0')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-									<c:out value = '${taskInfoVO.creatorName }' />
+									<c:out value = '${taskInfoVO.creatorName }' />&nbsp;(<c:out value = '${creatorDeptName }' />)
 								</div>
 							</td>
 						</tr>
@@ -891,7 +891,7 @@
 							<th><spring:message code='ezTask.t2005' /></th>
 							<td colspan="3" width="100%">
 								<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.taskPersonID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-									<c:out value = '${taskInfoVO.taskPersonName }' />
+									<c:out value = '${taskInfoVO.taskPersonName }' />&nbsp;(<c:out value = '${taskPersonDeptName }' />)
 								</div>
 							</td>
 						</tr>

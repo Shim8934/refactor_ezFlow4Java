@@ -299,7 +299,7 @@
 
 			function show_page() {
 			    selectelem = null;
-			    makePageSelPage();
+// 			    makePageSelPage();
 
 			    var length = list_body.children[1].rows.length;
 			    var length2 = list_body2.children[1].rows.length;
