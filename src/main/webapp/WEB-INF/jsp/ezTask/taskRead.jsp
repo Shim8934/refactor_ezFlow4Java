@@ -19,6 +19,12 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 		
+		<style type="text/css">
+			.percentCount{
+				width:7%;
+			}
+		</style>
+		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
@@ -172,7 +178,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '88%',
+						width: '93%',
 						duration : duration
 					});
 				} else if (taskstatus == '3') {
@@ -182,7 +188,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '88%',
+						width: '93%',
 						duration : duration
 					});
 				} else {
@@ -192,7 +198,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '88%',
+						width: '93%',
 						duration : duration
 					});
 				}
@@ -825,19 +831,17 @@
 		</script>
 		
 		<div>
-			<div>
-				<span><spring:message code='ezTask.t118' /> : </span>
-				<span><c:out value = '${taskInfoVO.title }' /></span>
-			</div>
-			<div>
+			<div style="text-align: right;margin-bottom: 10px;">
 				<span><spring:message code='ezTask.t121' /> : </span>
 				<span><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span>
-			</div>
-			<div>
 				<span><spring:message code='ezTask.t122' /> : </span>
 				<span><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span>
 			</div>
 			<div>
+				<%-- <span><spring:message code='ezTask.t118' /> : </span> --%>
+				<span style="font-size: 30px;"><c:out value = '${taskInfoVO.title }' /></span>
+			<!-- </div>
+			<div style="background-color: #f3f3f3;"> -->
 				<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact; margin-top:10px;margin-bottom:10px;"></div>
 				<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
 			</div>
@@ -1007,7 +1011,7 @@
 									<c:out value = '${taskInfoVO.title }' /> 
 								</div>
 							</td>
-						</tr>
+						</tr> --%>
 						
 						<c:if test="${useTodoMemo == 'YES'}">
 							<tr>
@@ -1018,7 +1022,7 @@
 				            		</div>
 				            	</td>
 							</tr>
-						</c:if> --%>
+						</c:if>
 					</table>
 				</td>
 			</tr>
@@ -1100,7 +1104,7 @@
 						<tr style="padding-top:10px;padding-bottom:4px;height:50px">
 							<th><spring:message code='ezTask.t2012' /></th>
 							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
-							<td class="pos1"><textarea style='resize:none;overflow:auto;'></textarea></td>
+							<td class="pos1"><textarea id="TextComment" style='resize:none;overflow:auto;'></textarea></td>
 							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()"><spring:message code='ezTask.t96' /></span></a></td>
 							
 						</tr>
