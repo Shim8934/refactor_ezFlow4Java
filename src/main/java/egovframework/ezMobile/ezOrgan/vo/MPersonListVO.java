@@ -107,6 +107,9 @@ public class MPersonListVO {
 	private String birthType;
 	/** 현재 시간*/
 	private String nowDate;
+	
+	private String rowNum;
+	
     /** 사용자가 속한 Tenant의 고유 ID */
     private int tenantId = -1;
 	public String getParentCn() {
@@ -432,5 +435,12 @@ public class MPersonListVO {
 	}
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+	public String getRowNum() {
+		return rowNum;
+	}
+	public void setRowNum(String rowNum) {
+		this.rowNum = rowNum;
 	}	
+	
 }

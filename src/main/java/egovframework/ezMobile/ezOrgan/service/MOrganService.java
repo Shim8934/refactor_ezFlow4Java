@@ -6,7 +6,7 @@ import java.util.Map;
 import egovframework.ezMobile.ezOrgan.vo.MPersonListVO;
 
 public interface MOrganService {
-	List<MPersonListVO> getPersonList(String companyID, int tenantID, String pSearchText) throws Exception;
+	List<MPersonListVO> getPersonList(String companyID, int tenantID, String pSearchText, String rowNum) throws Exception;
 	
 	MPersonListVO getPersonInfo(String userID, int tenantID) throws Exception;
 	
