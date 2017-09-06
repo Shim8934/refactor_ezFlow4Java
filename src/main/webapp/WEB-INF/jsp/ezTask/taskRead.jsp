@@ -23,6 +23,21 @@
 			.percentCount{
 				width:7%;
 			}
+			
+			.popup_title_txt{color:#333; font-size:14px; font-weight:bold; height:16px; margin:0px; padding:0px 0px 10px 0px;}
+			.popup_title_img{margin:0px 0px -1px 0px;}
+			
+			.opinion_ul{list-style:none; margin:0px; padding:0px;}
+			.opinion_ul li{height:30px; border-bottom:1px solid #dce4e8; margin:0px; padding:0px; vertical-align:middle; white-space:nowrap; font-size:12px; color:#333; line-height:28px; clear:both; cursor:pointer;}
+			.opinion_ul li span{display:inline-block; height:30px; margin:0; vertical-align:middle;}
+			.opinion_ul .opinion_dept{width:90px; padding:0 10px; cursor:pointer; text-align:center; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+			.opinion_ul .opinion_list{width:300px; padding:0 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+			.opinion_ul .opinion_date{width:108px; padding:0 10px; float:right; text-align:right;}
+			.opinion_ul .opinion_list .opinionList_close{margin:0px 5px; line-height:32px; cursor:pointer;}
+			
+			.opinion_ul li:nth-child(odd){background:#FFF;}
+			.opinion_ul li:nth-child(even){background:#eaf0f4;}
+						
 		</style>
 		
 		<script type="text/javascript">
@@ -375,20 +390,19 @@
 						}
 						
 						/* commentList */
-						taskCommentList = "";
+						taskCommentList = "<ul class='opinion_ul'>";
 						list.forEach(function(vo, index) {
 							commentorID = "\"" + vo.commentorID + "\"";
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
-							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate.substring(0, 16) + ") : </span>";
-							taskCommentList += "<span>";
-							taskCommentList += vo.comment;
-							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' title='" + "<spring:message code='ezTask.t159' />" + "' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
-							taskCommentList += "</span>";
-							taskCommentList += "<br />";
+							
+							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
+							taskCommentList += "<span class='opinion_list'>" + vo.comment + "</span>";
+							taskCommentList += "<span class='opinion_close' onclick='delete_comment(" + deleteCommentParam + ")'><img src='/images/popup_list_close.png'></span>";
+							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
 						
-						console.log(taskCommentList);
+						taskCommentList += "</ul>";
+						
 						$("#taskCommentList").html(taskCommentList);
 						$("#TextComment").val("");
 					},
@@ -492,18 +506,19 @@
 						}
 						
 						/* commentList */
-						taskCommentList = "";
+						taskCommentList = "<ul class='opinion_ul'>";
 						list.forEach(function(vo, index) {
 							commentorID = "\"" + vo.commentorID + "\"";
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
-							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate.substring(0, 16) + ") : </span>";
-							taskCommentList += "<span>";
-							taskCommentList += vo.comment;
-							taskCommentList += "&nbsp;<img src='/images/comment_delete.gif' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
-							taskCommentList += "</span>";
-							taskCommentList += "<br />";
+							
+							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
+							taskCommentList += "<span class='opinion_list'>" + vo.comment + "</span>";
+							taskCommentList += "<span class='opinion_close' onclick='delete_comment(" + deleteCommentParam + ")'><img src='/images/popup_list_close.png'></span>";
+							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
+						
+						taskCommentList += "</ul>";
+						
 						
 						$("#taskCommentList").html(taskCommentList);
 					},
@@ -1086,12 +1101,16 @@
 						<tr>
 							<td style="vertical-align:top">
 								<div id="taskCommentList" style="overflow: auto; width:100%; height: 430px; background-color: white; padding-top:3px;">
-									<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
-										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
-										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
-										<span><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
-										<br />
-									</c:forEach>
+									<ul class="opinion_ul">
+										<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
+											<li>
+												<span class="opinion_dept" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
+												<span class="opinion_list"><c:out value='${taskCommentVO.comment}'/></span>
+												<span class="opinion_close" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"><img src="/images/popup_list_close.png"></span>
+												<span class="opinion_date"><c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' /></span>
+											</li>
+										</c:forEach>
+									</ul>
 								</div>
 							</td>
 						</tr>
