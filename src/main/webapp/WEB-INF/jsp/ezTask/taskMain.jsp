@@ -136,29 +136,13 @@
 		    		strListIdInfo = "";
 				}
 
-				if ($("#checkboxAll2").is(":checked")) {
-					$("input[type=checkbox]").prop("checked", false);
-		    		$(".row_body2 td").css("background", "");
-		    		strListInfo = "";
-		    		strListIdInfo = "";
-				}
-
-				if ($("#checkboxAll3").is(":checked")) {
-					$("input[type=checkbox]").prop("checked", false);
-		    		$(".row_body3 td").css("background", "");
-		    		strListInfo = "";
-		    		strListIdInfo = "";
-				}
-
 				// 목록에서 하나씩 다른거 선택할 때
 		    	if (selectelem != null) { 		
 			    	if (selectelem != elem) {
 						$("input[type=checkbox]").prop("checked", false);
-// 						$(selectelem).siblings("input[type=checkbox]").prop("checked", false);
-// 						$(".row_body").css("background", "#ffffff");
-// 						$(".row_body2").css("background", "#ffffff");
 						$(selectelem).css("background", "#ffffff");
 						$(selectelem).siblings().css("background", "#ffffff");
+
 						strListInfo = $(elem).attr("taskID") + ";";
 			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
 						
@@ -224,8 +208,8 @@
 			function td_Create1(strtext) {
 			    document.getElementById("tblPageRayer").innerHTML = strtext;
 			}
-	
-			function makePageSelPage() {		
+
+			function makePageSelPage() {
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
@@ -311,16 +295,6 @@
 		    		$(".row_body td").css("background", "");
 		    	}
 
-		    	if ($("#checkboxAll2").is(":checked")) {
-		    		$("#checkboxAll2").prop("checked", false);
-		    		$(".row_body2 td").css("background", "");
-		    	}
-
-		    	if ($("#checkboxAll3").is(":checked")) {
-		    		$("#checkboxAll3").prop("checked", false);
-		    		$(".row_body3 td").css("background", "");
-		    	}
-
 			    currentpage = Value;
 			    makePageSelPage();
 			    show_page();
@@ -382,29 +356,16 @@
 
 			function show_page() {
 			    selectelem = null;
-// 			    makePageSelPage();
 
 			    var length = list_body.children[1].rows.length;
-			    var length2 = list_body2.children[1].rows.length;
-			    var length3 = list_body3.children[1].rows.length;
 
 			    // 리스트 다시 가져올때 기존에 있던 것 삭제
 			    for (var i = 3; i < length; i++) {
 			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
 			    }
 
-			    for (var i = 3; i < length2; i++) {
-			        list_body2.children[1].removeChild(list_body2.children[1].rows[3]);			    	
-			    }
-
-			    for (var i = 3; i < length3; i++) {
-			        list_body3.children[1].removeChild(list_body3.children[1].rows[3]);
-			    }
-
 			    var tr = "";
-			    var onTaskCount = 0; // 진행중업무 Count
-			    var finishTaskCount = 0; // 완료업무 Count
-			    var allTaskCount = 0; // 전체업무 Count
+			    var onTaskCount = 0;
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 			    	if (totalcount == 0 || i == totalcount) {
@@ -412,33 +373,8 @@
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
 
-					if (type == 1) { // 개인
-						if (showAll == 0) {
-					        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-						        tr = row_body.cloneNode(true);
-						        document.getElementById("tr_ing").style.display = "none";
-					        } else {
-					        	tr = row_body2.cloneNode(true);
-						        document.getElementById("tr_ing2").style.display = "none";
-					        }
-						} else {
-							tr = row_body3.cloneNode(true);
-					        document.getElementById("tr_ing3").style.display = "none";
-						}
-					} else { // 지시, 협조
-						if (showAll == 0) {
-					        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-						        tr = row_body.cloneNode(true);
-						        document.getElementById("tr_ing").style.display = "none";
-					        } else {
-					        	tr = row_body2.cloneNode(true);
-						        document.getElementById("tr_ing2").style.display = "none";
-					        }
-						} else {
-							tr = row_body3.cloneNode(true);
-					        document.getElementById("tr_ing3").style.display = "none";
-						}
-					}
+			        tr = row_body.cloneNode(true);
+			        document.getElementById("tr_ing").style.display = "none";
 
 			        tr.style.display = "";
 			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
@@ -453,7 +389,7 @@
 
 			        tr.setAttribute("startdate", startdate);
 
-			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskStatus='" + taskstatus + "' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
+			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
 			        "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
@@ -546,9 +482,7 @@
 			        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
 
 					var span2 = document.createElement("SPAN");
-			        /* span2.style.width = "30px"; */
 			        span2.style.display = "inline-block";
-			        /* setNodeText(span2, completerate + "%"); */
 
 			        span.appendChild(span2);
 
@@ -556,32 +490,14 @@
 			        setNodeText(tr.cells[9], startdate);
 			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 
-			        if (showAll == 0) {
-				        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-					        list_body.children[1].appendChild(tr);
-					        onTaskCount++;
-				        } else {
-				        	list_body2.children[1].appendChild(tr);
-				        	finishTaskCount++;
-				        }
-			        } else {
-			        	list_body3.children[1].appendChild(tr);
-			        	allTaskCount++;
-			        }
+			        list_body.children[1].appendChild(tr);
+			        onTaskCount++;
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 				}
 
 			    if (onTaskCount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
-			    }
-
-			    if (finishTaskCount == 0) {
-			        document.getElementById("tr_ing2").style.display = "";			    	
-			    }
-
-			    if (allTaskCount == 0) {
-			        document.getElementById("tr_ing3").style.display = "";
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
@@ -630,11 +546,8 @@
 
 			// 진행중, 완료 리스트 따로가져오기 위한 값
 			var taskStatusCount = "";
-			// 전체보기
-			var showAll = "";
 			function selectTab(num) {
 				if (num == 3) {
-					showAll = 1;
 					taskStatusCount = 2;
 					filter = document.getElementById("txt_keyword").value
 
@@ -643,12 +556,7 @@
 					} else {
 						DateChange();
 					}
-
-					list_body.style.display = "none";
-					list_body2.style.display = "none";
-					list_body3.style.display = "";
 				} else if (num == 2) {
-					showAll = 0;
 					taskStatusCount = 0;
 					filter = document.getElementById("txt_keyword").value
 
@@ -657,12 +565,7 @@
 					} else {
 						DateChange();
 					}
-
-					list_body.style.display = "";
-					list_body2.style.display = "none";
-					list_body3.style.display = "none";
 				} else if (num == 1) {
-					showAll = 0;
 					taskStatusCount = 1;
 					filter = document.getElementById("txt_keyword").value
 
@@ -671,10 +574,6 @@
 					} else {
 						DateChange();
 					}
-
-					list_body.style.display = "none";
-					list_body2.style.display = "";
-					list_body3.style.display = "none";
 				} else {
 					if ($("input[value=ongoing]").is(":checked")) {
 						taskStatusCount = 0;
@@ -810,16 +709,6 @@
 		    	if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body td").css("background", "");
-		    	}
-
-		    	if ($("#checkboxAll2").is(":checked")) {
-		    		$("#checkboxAll2").prop("checked", false);
-		    		$(".row_body2 td").css("background", "");
-		    	}
-
-		    	if ($("#checkboxAll3").is(":checked")) {
-		    		$("#checkboxAll3").prop("checked", false);
-		    		$(".row_body3 td").css("background", "");
 		    	}
 
 		        var filter = "";
@@ -1060,10 +949,10 @@
 					strListInfo = "";
 
 					if ($("#checkboxAll").is(":checked")) {
-						$(":checkbox[taskstatus != 3]").prop("checked", true);
+						$(":checkbox[name=myCheckbox]").prop("checked", true);
 						$(".row_body td").css("background", "rgb(233, 241, 244)");
 					} else {
-						$(":checkbox[taskstatus != 3]").prop("checked", false);
+						$(":checkbox[name=myCheckbox]").prop("checked", false);
 						$(".row_body td").css("background", "");
 						selectelem = null;
 					}
@@ -1082,78 +971,6 @@
 					strListInfo = "";
 					$("input[type=checkbox]").prop("checked", false);
 					$(".row_body").css("background", "");
-				}
-		    }
-		    
-		    function selectAll2() {
-		    	$(".row_body2 td").css("background", "");
-
-				var deleteList = [];
-				var deleteListID = [];
-
-				if ($("#checkboxAll2").is(":checked")) {
-					strListIdInfo = "";
-					strListInfo = "";
-
-					if ($("#checkboxAll2").is(":checked")) {
-						$(":checkbox[taskstatus = 3]").prop("checked", true);
-						$(".row_body2 td").css("background", "rgb(233, 241, 244)");
-					} else {
-						$(":checkbox[taskstatus = 3]").prop("checked", false);
-						$(".row_body2 td").css("background", "");
-						selectelem = null;
-					}
-					
-					$(":checkbox[name=myCheckbox]:checked").each(function(){
-						deleteList.push($(this).attr("creatorid") + ";");
-						deleteListID.push($(this).attr("taskID") + ";")
-					});
-
-					for (var i = 0; i < deleteList.length; i++) {
-						strListIdInfo += deleteList[i];
-						strListInfo += deleteListID[i];
-					}
-				} else {
-					strListIdInfo = "";
-					strListInfo = "";
-					$("input[type=checkbox]").prop("checked", false);
-					$(".row_body2").css("background", "");
-				}
-		    }
-
-		    function selectAll3() {
-		    	$(".row_body3 td").css("background", "");
-
-				var deleteList = [];
-				var deleteListID = [];
-
-				if ($("#checkboxAll3").is(":checked")) {
-					strListIdInfo = "";
-					strListInfo = "";
-
-					if ($("#checkboxAll3").is(":checked")) {
-						$(".row_body3 td input[type = checkbox]").prop("checked", true);
-						$(".row_body3 td").css("background", "rgb(233, 241, 244)");
-					} else {
-						$(".row_body3 td input[type = checkbox]").prop("checked", false);
-						$(".row_body3 td").css("background", "");
-						selectelem = null;
-					}
-					
-					$(":checkbox[name=myCheckbox]:checked").each(function(){
-						deleteList.push($(this).attr("creatorid") + ";");
-						deleteListID.push($(this).attr("taskID") + ";")
-					});
-
-					for (var i = 0; i < deleteList.length; i++) {
-						strListIdInfo += deleteList[i];
-						strListInfo += deleteListID[i];
-					}
-				} else {
-					strListIdInfo = "";
-					strListInfo = "";
-					$("input[type=checkbox]").prop("checked", false);
-					$(".row_body3").css("background", "");
 				}
 		    }
 		</script>
@@ -1214,7 +1031,6 @@
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 
-					<!-- 진행중 -->
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
@@ -1259,104 +1075,6 @@
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 						<tr id="tr_ing" style="text-align:center">
-							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
-						</tr>
-				    </table>
-
-				    <!-- 완료 -->
-				    <table class="mainlist" id="list_body2" style="WIDTH: 100%;table-layout:fixed; display:none">
-						<col style ="width:30px;">
-						<col style ="width:50px;">
-						<col style ="width:20px;">
-						<col style ="width:100px;">
-						<col >
-						<col style ="width:50px;">
-						<col style ="width:140px;">
-		                <col style ="width:90px;">
-						<col style ="width:110px;">
-						<col style ="width:80px;">
-						<col style ="width:97px;">
-						<tr>
-							<th ><input id="checkboxAll2" type="checkbox" onclick="selectAll2()" taskstatus="3" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-							<th ><spring:message code='ezTask.t156' /></th>
-							<th ><img src="/images/newAttach.gif"></th>
-							<th ><spring:message code='ezTask.t2005' /></th>
-							<th ><spring:message code='ezTask.t118' /></th>
-							<th ></th>
-							<c:if test="${useTodoMemo == 'YES'}">
-								<th ><spring:message code='ezTask.t170' /></th>
-							</c:if>
-							<c:if test="${useTodoMemo == 'NO'}">
-								<th ></th>
-							</c:if>
-		                    <th ><spring:message code='ezTask.t2003' /></th>
-							<th ><spring:message code='ezTask.t120' /></th>
-							<th ><spring:message code='ezTask.t121' /></th>
-							<th ><spring:message code='ezTask.t122' /></th>
-						</tr>
-						<tr class="row_body2" id="row_body2" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-						</tr>
-						<tr id="tr_ing2" style="text-align:center">
-							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
-						</tr>
-				    </table>
-
-				    <!-- 전체 -->
-				    <table class="mainlist" id="list_body3" style="WIDTH: 100%;table-layout:fixed; display:none">
-						<col style ="width:30px;">
-						<col style ="width:50px;">
-						<col style ="width:20px;">
-						<col style ="width:100px;">
-						<col >
-						<col style ="width:50px;">
-						<col style ="width:140px;">
-		                <col style ="width:90px;">
-						<col style ="width:110px;">
-						<col style ="width:80px;">
-						<col style ="width:97px;">
-						<tr>
-							<th ><input id="checkboxAll3" type="checkbox" onclick="selectAll3()" taskstatus="3" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-							<th ><spring:message code='ezTask.t156' /></th>
-							<th ><img src="/images/newAttach.gif"></th>
-							<th ><spring:message code='ezTask.t2005' /></th>
-							<th ><spring:message code='ezTask.t118' /></th>
-							<th ></th>
-							<c:if test="${useTodoMemo == 'YES'}">
-								<th ><spring:message code='ezTask.t170' /></th>
-							</c:if>
-							<c:if test="${useTodoMemo == 'NO'}">
-								<th ></th>
-							</c:if>
-		                    <th ><spring:message code='ezTask.t2003' /></th>
-							<th ><spring:message code='ezTask.t120' /></th>
-							<th ><spring:message code='ezTask.t121' /></th>
-							<th ><spring:message code='ezTask.t122' /></th>
-						</tr>
-						<tr class="row_body3" id="row_body3" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-						</tr>
-						<tr id="tr_ing3" style="text-align:center">
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
