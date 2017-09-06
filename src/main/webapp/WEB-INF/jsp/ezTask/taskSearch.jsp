@@ -16,6 +16,38 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+		<STYLE type="text/css"> 
+			.pagetd{padding-top:6px; }
+			.pcol{padding-top:6px; }
+			.Right_Point01 {
+				font:bold;
+				color:#017bec;
+			}
+			.progressbar {
+				float:left;
+			    width: 100%;
+				margin-top: 5px;
+				margin-bottom: 5px;
+				position: relative;
+				background-color: #EEEEEE;
+				box-shadow: inset 0px 1px 1px rgba(0,0,0,.1);
+			}
+			
+			.proggress{
+				height: 8px;
+				width: 10px;
+				background-color: #3498db;
+			}
+			
+			.percentCount{
+				float:right;
+				width:30%;
+				clear:none;
+				margin-top: 5px;
+				font-weight: bold;
+				font-family: Arial
+			}
+		</STYLE>
 		<script type="text/javascript">
 			var startdate = "_startdate";
 			var enddate = "_enddate";
@@ -28,6 +60,64 @@
 		    var completeColor = "${completeColor}"
 		    var selectelem = null;
 		    var useTodoMemo = "${useTodoMemo }";
+		    
+		    (function($){
+		    	'use strict';
+
+		    	$.fn.LineProgressbar = function(options){
+
+		    		var options = $.extend({
+		    			percentage : null,
+		    			ShowProgressCount: true,
+		    			duration: 1000,
+
+		    			// Styling Options
+		    			fillBackgroundColor: '#3498db',
+		    			backgroundColor: '#EEEEEE',
+		    			radius: '0px',
+		    			height: '10px',
+		    			width: '100%'
+		    		},options);
+
+		    		return this.each(function(index, el) {
+		    			// Markup
+		    			$(el).html('<div class="progressbar"><div class="proggress"></div></div><div class="percentCount"></div>');
+		    			
+
+
+		    			var progressFill = $(el).find('.proggress');
+		    			var progressBar= $(el).find('.progressbar');
+
+
+		    			progressFill.css({
+		    				backgroundColor : options.fillBackgroundColor,
+		    				height : options.height,
+		    				borderRadius: options.radius
+		    			});
+		    			progressBar.css({
+		    				width : options.width,
+		    				backgroundColor : options.backgroundColor,
+		    				borderRadius: options.radius
+		    			});
+
+		    			// Progressing
+		    			progressFill.animate(
+		    				{
+		    					width: options.percentage + "%"
+		    				},
+		    				{	
+		    					step: function(x) {
+		    						if(options.ShowProgressCount){
+		    							$(el).find(".percentCount").text(Math.round(x) + "%");
+		    						}
+		    					},
+		    					duration: options.duration
+		    				}
+		    			);
+		    		////////////////////////////////////////////////////////////////////
+		    		});
+		    	}
+		    })(jQuery);
 
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -314,9 +404,9 @@
 			        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
 
 					var span2 = document.createElement("SPAN");
-			        span2.style.width = "30px";
+// 			        span2.style.width = "30px";
 			        span2.style.display = "inline-block";
-			        setNodeText(span2, completerate + "%");
+// 			        setNodeText(span2, completerate + "%");
 
 			        span.appendChild(span2);
 
@@ -341,7 +431,7 @@
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
-			    $(".percentCount").remove();
+// 			    $(".percentCount").remove();
 			}
 
 			/* progressBar 조회 */
