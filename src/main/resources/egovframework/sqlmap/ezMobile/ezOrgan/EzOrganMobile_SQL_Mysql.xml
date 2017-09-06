@@ -51,5 +51,18 @@
                 DISPLAYNAME ASC
         ]]> 
     </select>
+    
+    <select id="MOrganDAO.getPersonInfo" parameterClass="Map" resultClass="MPersonListVO">
+        <![CDATA[
+            SELECT
+                *
+            FROM
+                tbl_usermaster
+            WHERE
+                TENANT_ID = #tenantID#
+            AND
+                cn = #userID#    
+        ]]>        
+    </select>
 </sqlMap>
 

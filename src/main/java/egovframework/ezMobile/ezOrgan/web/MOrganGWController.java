@@ -85,4 +85,36 @@ public class MOrganGWController {
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezorgan/personlist] ended.");
 		return result;
 	}
+	
+	/**
+	 * 모바일 G/W 직원조회 [GET] 직원 상세정보
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezorgan/personDetail", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getPersonInfo(HttpServletRequest request, Model model) {		
+		LOGGER.debug("MOBILE G/W ORGAN [GET /ezorgan/personDetail] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			
+			MPersonListVO personInfo = mOrganService.getPersonInfo(userID, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", personInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			result.put("listCount", "");
+		}
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezorgan/personDetail] ended.");
+		return result;
+	}
 }

@@ -55,6 +55,14 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("pSearchText", pSearchText);
 		return mOrganDAO.getPersonListCount(map);
 	}
+
+	@Override
+	public MPersonListVO getPersonInfo(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		return mOrganDAO.getPersonInfo(map);
+	}
 	
 	
 }

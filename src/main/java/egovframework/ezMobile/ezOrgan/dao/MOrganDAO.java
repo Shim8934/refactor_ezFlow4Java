@@ -15,6 +15,10 @@ public class MOrganDAO extends EgovAbstractDAO {
 		return (List<MPersonListVO>) list("MOrganDAO.getPersonList", map);
 	}
 	
+	public MPersonListVO getPersonInfo(Map<String, Object> map) throws Exception {
+		return (MPersonListVO) select("MOrganDAO.getPersonInfo", map);
+	}
+	
 	public int getPersonListCount(Map<String, Object> map) throws Exception {
 		return (int) select("MOrganDAO.getPersonListCount", map);
 	}
