@@ -513,8 +513,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-						
-			mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String dateType = request.getParameter("dateType");
+			
+			if(dateType.equals("3")) {
+				mScheduleService.insertScheduleRepeDel(scheduleId, startDate, info.getTenantId());
+			} else {
+				mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
