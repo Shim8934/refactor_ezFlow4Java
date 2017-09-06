@@ -31,13 +31,12 @@
 			.opinion_ul li{height:30px; border-bottom:1px solid #dce4e8; margin:0px; padding:0px; vertical-align:middle; white-space:nowrap; font-size:12px; color:#333; line-height:28px; clear:both; cursor:pointer;}
 			.opinion_ul li span{display:inline-block; height:30px; margin:0; vertical-align:middle;}
 			.opinion_ul .opinion_dept{width:90px; padding:0 10px; cursor:pointer; text-align:center; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-			.opinion_ul .opinion_list{width:300px; padding:0 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+			.opinion_ul .opinion_list{width:350px; padding:0 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 			.opinion_ul .opinion_date{width:108px; padding:0 10px; float:right; text-align:right;}
 			.opinion_ul .opinion_list .opinionList_close{margin:0px 5px; line-height:32px; cursor:pointer;}
 			
 			.opinion_ul li:nth-child(odd){background:#FFF;}
 			.opinion_ul li:nth-child(even){background:#eaf0f4;}
-						
 		</style>
 		
 		<script type="text/javascript">
