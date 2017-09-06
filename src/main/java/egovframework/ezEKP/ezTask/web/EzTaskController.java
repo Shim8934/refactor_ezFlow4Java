@@ -853,7 +853,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	
     	String app = request.getParameter("app");
     	String type = request.getParameter("type");
-    	String filter = URLEncoder.encode(request.getParameter("filter"), "UTF-8");
+    	String filter = request.getParameter("filter");
     	String chkValue = request.getParameter("chkValue");
     	String searchClass = request.getParameter("searchClass");
     	String taskStatusCount = request.getParameter("taskStatusCount");

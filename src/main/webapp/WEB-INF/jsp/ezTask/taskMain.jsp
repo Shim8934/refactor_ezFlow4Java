@@ -991,6 +991,11 @@
 
 		        filter = document.getElementById("txt_keyword").value;
 
+		        if (filter.indexOf("%") != -1) {
+		            alert("'%'" + "<spring:message code='ezTask.jsh08' />");
+		            return;
+		        }
+
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
