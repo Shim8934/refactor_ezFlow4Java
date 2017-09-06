@@ -10,20 +10,16 @@
 		<title><spring:message code='ezTask.t143' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
 		
 		<style type="text/css">
-			.percentCount{
-				width:7%;
-			}
-			
 			.popup_title_txt{color:#333; font-size:14px; font-weight:bold; height:16px; margin:0px; padding:0px 0px 10px 0px;}
 			.popup_title_img{margin:0px 0px -1px 0px;}
 			
@@ -67,64 +63,6 @@
 		    var taskWorkAttachList = "${taskWorkAttachList }";
 		    var useTodoMemo = "${useTodoMemo }";
 		    
-		    (function($){
-		    	'use strict';
-
-		    	$.fn.LineProgressbar = function(options){
-
-		    		var options = $.extend({
-		    			percentage : null,
-		    			ShowProgressCount: true,
-		    			duration: 1000,
-
-		    			// Styling Options
-		    			fillBackgroundColor: '#3498db',
-		    			backgroundColor: '#EEEEEE',
-		    			radius: '0px',
-		    			height: '10px',
-		    			width: '100%'
-		    		},options);
-
-		    		return this.each(function(index, el) {
-		    			// Markup
-		    			$(el).html('<div class="percentCount"></div><div class="progressbar"><div class="proggress"></div></div>');
-		    			
-
-
-		    			var progressFill = $(el).find('.proggress');
-		    			var progressBar= $(el).find('.progressbar');
-
-
-		    			progressFill.css({
-		    				backgroundColor : options.fillBackgroundColor,
-		    				height : options.height,
-		    				borderRadius: options.radius
-		    			});
-		    			progressBar.css({
-		    				width : options.width,
-		    				backgroundColor : options.backgroundColor,
-		    				borderRadius: options.radius
-		    			});
-
-		    			// Progressing
-		    			progressFill.animate(
-		    				{
-		    					width: options.percentage + "%"
-		    				},
-		    				{	
-		    					step: function(x) {
-		    						if(options.ShowProgressCount){
-		    							$(el).find(".percentCount").text(Math.round(x) + "%");
-		    						}
-		    					},
-		    					duration: options.duration
-		    				}
-		    			);
-		    		////////////////////////////////////////////////////////////////////
-		    		});
-		    	}
-		    })(jQuery);
-		    
 		    $(document).ready(function() {
 				load_bodyhtml();
 				if (hasTaskAttach == 'Y') {
@@ -138,9 +76,9 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 290 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 340 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -166,9 +104,9 @@
 		    });
 		    
 		    window.onresize = function () {
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 290 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 340 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -179,41 +117,26 @@
 
 			/* progressBar 조회 */
 			function initProgressBar(taskstatus, completerate) {
-				if (completerate == '0') {
-					duration = 0;
-				} else {
-					duration = 500;
-				}
-				
 				if (taskstatus == '4') {
-					$('#taskProgressBar').LineProgressbar({
-						percentage: completerate,
-						fillBackgroundColor: delayColor,
-						backgroundColor: '#EEEEEE',
-						radius: '10px',
-						height: '10px',
-						width: '93%',
-						duration : duration
+					$('.taskProgressBar').circleProgress({
+						value: ((completerate*1) / 100),
+						fill: {color: delayColor}
+					}).on('circle-animation-progress', function(event, progress) {
+						$(this).find('strong').html(completerate + '%');
 					});
 				} else if (taskstatus == '3') {
-					$('#taskProgressBar').LineProgressbar({
-						percentage: completerate,
-						fillBackgroundColor: completeColor,
-						backgroundColor: '#EEEEEE',
-						radius: '10px',
-						height: '10px',
-						width: '93%',
-						duration : duration
+					$('.taskProgressBar').circleProgress({
+						value: ((completerate*1) / 100),
+						fill: {color: completeColor}
+					}).on('circle-animation-progress', function(event, progress) {
+						$(this).find('strong').html(completerate + '%');
 					});
 				} else {
-					$('#taskProgressBar').LineProgressbar({
-						percentage: completerate,
-						fillBackgroundColor: '#3498db',
-						backgroundColor: '#EEEEEE',
-						radius: '10px',
-						height: '10px',
-						width: '93%',
-						duration : duration
+					$('.taskProgressBar').circleProgress({
+						value: ((completerate*1) / 100),
+						fill: {color: '#3498db'}
+					}).on('circle-animation-progress', function(event, progress) {
+						$(this).find('strong').html(completerate + '%');
 					});
 				}
 			}
@@ -221,13 +144,6 @@
 			/* 초기 탭선택스크립트 */
 			function onloadchangtab() {
 				Tab1_MouseClick(document.getElementById("1tab0"));
-				/* if (type == "1" && (tasktype != "1" && ownerid == userid)) {
-					Tab1_MouseClick(document.getElementById("1tab2"));
-				} else if (type == "2") {
-					Tab1_MouseClick(document.getElementById("1tab3"));
-				} else {
-					Tab1_MouseClick(document.getElementById("1tab1"));
-				} */
 			}
 
 			/* 지시사항 본문 */
@@ -534,7 +450,7 @@
 					return;
 				}
 				
-				DivPopUpShow(410, 300, "/ezTask/taskStatus.do?taskID=" + taskid);
+				DivPopUpShow(410, 400, "/ezTask/taskStatus.do?taskID=" + taskid);
 			}
 			
 			function Tab1_NewTabIni(pTabNodeID) {
@@ -843,86 +759,24 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
-		
+
 		<div>
-			<div style="text-align: right;margin-bottom: 10px;">
-				<span><spring:message code='ezTask.t121' /> : </span>
-				<span><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span>
-				<span><spring:message code='ezTask.t122' /> : </span>
-				<span><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span>
+			<span style="font-size: 30px;"><c:out value = '${taskInfoVO.title }' /></span>
+		</div>
+					
+		<div class="circles">
+			<div class="taskProgressBar circle" style="width:30%">
+				<strong></strong>
 			</div>
-			<div>
-				<%-- <span><spring:message code='ezTask.t118' /> : </span> --%>
-				<span style="font-size: 30px;"><c:out value = '${taskInfoVO.title }' /></span>
-			<!-- </div>
-			<div style="background-color: #f3f3f3;"> -->
-				<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact; margin-top:10px;margin-bottom:10px;"></div>
+			
+			<div style="width:65%; display: inline-block; vertical-align: middle;">
+				<ul>
+					<li><span><spring:message code='ezTask.t121' /> : </span><span><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
+					<li><span><spring:message code='ezTask.t122' /> : </span><span><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
+				</ul>
 				<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
 			</div>
 		</div>
-		<%-- <table class="layout" style="width: 100%;">
-			<colgroup><col width="60%" /><col width="40%" /></colgroup>
-			<tr>
-				<td>
-					<table class="content">
-						<tr>
-							<th><spring:message code='ezTask.t121' /></th>
-							<td>
-								<div>
-									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' />
-								</div>
-							</td>
-						</tr>
-						<tr> 
-							<th><spring:message code='ezTask.t122' /></th>
-							<td>
-								<div>
-									<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' />
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezTask.t118' /></th>
-							<td colspan="3">
-								<div style="overflow-y:auto;padding-top:2px">
-									<c:out value = '${taskInfoVO.title }' />
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td>
-					<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"></div>
-					<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
-				</td>
-			</tr>
-		</table> --%>
-		
-		<!-- 이쪽에 진행단계 -->
-		<%-- <table id="taskProgress" class="layout">
-			<tr>
-				<td>
-					<spring:message code='ezTask.t119' />
-				</td>
-			<tr>
-			<tr>
-				<td>
-					<table style = "border: 1px solid #b6b6b6;margin: 0; width: 100%;">
-						<colgroup><col width="80%" /><col width="20%" /></colgroup>
-						<tr>
-							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
-								<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"></div>
-							</td>
-							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
-								<div style="text-align:center; vertical-align: middle;">
-									<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table> --%>
 		 
 		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px; border-top: 0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
@@ -1002,30 +856,6 @@
 								</div>
 							</td>
 						</tr>
-						<%-- <tr>
-							<th><spring:message code='ezTask.t121' /></th>
-							<td>
-								<div>
-									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' />
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezTask.t122' /></th>
-							<td>
-								<div>
-									<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' />
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezTask.t118' /></th>
-							<td colspan="3">
-								<div style="overflow-y:auto;padding-top:2px">
-									<c:out value = '${taskInfoVO.title }' /> 
-								</div>
-							</td>
-						</tr> --%>
 						
 						<c:if test="${useTodoMemo == 'YES'}">
 							<tr>
