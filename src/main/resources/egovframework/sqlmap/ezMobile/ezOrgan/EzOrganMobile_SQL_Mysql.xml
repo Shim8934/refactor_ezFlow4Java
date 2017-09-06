@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezOrganMobile">
+    <typeAlias  alias="MPersonListVO"           type="egovframework.ezMobile.ezOrgan.vo.MPersonListVO"/>
+    
+	<select id="MOrganDAO.getPersonList" parameterClass="Map" resultClass="MPersonListVO">
+        <![CDATA[
+            SELECT
+                *
+            FROM
+                tbl_usermaster
+            WHERE
+                PHYSICALDELIVERYOFFICENAME = #companyID#
+            AND
+                TENANT_ID = #tenantID#
+        ]]>        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
+        <![CDATA[    
+            ORDER BY
+                EXTENSIONATTRIBUTE15 ASC,
+                DISPLAYNAME ASC
+        ]]> 
+    </select>
+    
+    <select id="MOrganDAO.getPersonListCount" parameterClass="Map" resultClass="Integer">
+        <![CDATA[
+            SELECT
+                COUNT(*)
+            FROM
+                tbl_usermaster
+            WHERE
+                PHYSICALDELIVERYOFFICENAME = #companyID#
+            AND
+                TENANT_ID = #tenantID#
+        ]]>        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
+        <![CDATA[    
+            ORDER BY
+                EXTENSIONATTRIBUTE15 ASC,
+                DISPLAYNAME ASC
+        ]]> 
+    </select>
+    
+    <select id="MOrganDAO.getPersonInfo" parameterClass="Map" resultClass="MPersonListVO">
+        <![CDATA[
+            SELECT
+                *
+            FROM
+                tbl_usermaster
+            WHERE
+                TENANT_ID = #tenantID#
+            AND
+                cn = #userID#    
+        ]]>        
+    </select>
+</sqlMap>
+

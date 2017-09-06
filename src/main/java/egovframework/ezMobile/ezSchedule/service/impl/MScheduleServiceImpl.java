@@ -243,9 +243,16 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	public void deleteSchedule(String scheduleId, int tenantId) throws Exception {
 		// TODO Auto-generated method stub
 		ezScheduleService.deleteSchedule(scheduleId, tenantId);				
-		ezScheduleService.deleteScheduleRepe(scheduleId, tenantId);
-		
+
 		/*ezScheduleService.deleteResource(scheduleId, tenantId);*/		
+	}
+
+	
+	@Override
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception {
+		// TODO Auto-generated method stub
+		ezScheduleService.insertScheduleRepeDel(scheduleId, startDate, tenantId);
+		
 	}
 
 	@Override
