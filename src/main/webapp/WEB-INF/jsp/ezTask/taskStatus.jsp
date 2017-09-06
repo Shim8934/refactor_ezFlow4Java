@@ -124,6 +124,8 @@
 					} else {
 						if (taskstatus == "2" || taskstatus == "4") {
 							$("#taskStatus").val(taskstatus);
+						} else {
+							$("#taskStatus").val("2");
 						}
 					}
 				
