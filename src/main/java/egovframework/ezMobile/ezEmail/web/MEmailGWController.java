@@ -1,21 +1,34 @@
 package egovframework.ezMobile.ezEmail.web;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.FetchProfile;
@@ -24,6 +37,8 @@ import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
+import javax.mail.BodyPart;
+import javax.mail.Header;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
@@ -37,17 +52,24 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
@@ -67,6 +89,7 @@ import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -645,34 +668,74 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 모바일 G/W 이메일 [POST] 첨부파일 업로드
 	 */
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/attachs/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void mMailFileUpload(HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [POST /ezemail/folders/{folderId}/mails/{messageId}/attachs/users/{userId}] started.");
-//		
-//		
-//		LOGGER.debug("mailInterUploadXCK started.");
-//		
-//		String strXML = "";
-//		String strXML2 = "";
+	@RequestMapping(value="/mobile/ezemail/mails/attachs/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object mMailFileUpload(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] started.");
+
+//		LOGGER.debug("####" + jsonObject.toJSONString() +"####");
+		
+		JSONParser jp = new JSONParser();
+		jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String tempFolderName = "";
+			JSONArray fileArray = new JSONArray();
+			int cnt = 0;
+			int maxsize = 0;
+			
+			if (jsonObject.get("tempFolderName") != null) {
+				tempFolderName = (String) jsonObject.get("tempFolderName");
+			}
+			
+			if (jsonObject.get("fileArray") != null) {
+				fileArray = (JSONArray) jsonObject.get("fileArray");
+			}
+			
+			if (jsonObject.get("cnt") != null) {
+				cnt =  ((Long) jsonObject.get("cnt")).intValue();
+			}
+			
+			if (jsonObject.get("maxsize") != null) {
+				maxsize =  ((Long) jsonObject.get("maxsize")).intValue();
+			}
+		
+			LOGGER.debug("####" + tempFolderName +"####");
+//			LOGGER.debug("####" + fileArray.toJSONString() +"####");
+			LOGGER.debug("####" + cnt +"####");
+			LOGGER.debug("####" + maxsize +"####");
+			
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+			
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+		String strXML = "";
+		String strXML2 = "";
 //		String folderDate = "";
 //		String tempFolderName = "";
-//		String xmlList = "";
+		String xmlList = "";
 //		String isBigYN = "N";
 //		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
 //		int cnt = 0;
 //		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
 //			cnt = Integer.parseInt(request.getParameter("cnt"));
 //		}
-//		String realPath = commonUtil.getRealPath(request);
-//		String[] pFileName = new String[cnt];
-//		Long[] fileSize = new Long[cnt];
-//		String[] fileLocation = new String[cnt];
-//		String[] resultUpload = new String[cnt];
-//		String[] sGUID = new String[cnt];
+		String realPath = commonUtil.getRealPath(request);
+		String[] pFileName = new String[cnt];
+		Long[] fileSize = new Long[cnt];
+		String[] fileLocation = new String[cnt];
+		String[] resultUpload = new String[cnt];
+		String[] sGUID = new String[cnt];
 //		String pBigFileUpload = "";
-//		String[] sFileTitle = new String[cnt];
-//		String[] sExt = new String[cnt];
-//		String pDirTempPath = "";
+		String[] sFileTitle = new String[cnt];
+		String[] sExt = new String[cnt];
+		String pDirTempPath = "";
 //		long bigMaxSize = 0;
 //		long changeSize = 0;
 //
@@ -692,41 +755,41 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //		
 //		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 //		
-//		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
 //		
-//		if (useExtension == null) {
-//			useExtension = "";
-//		}
+		if (useExtension == null) {
+			useExtension = "";
+		}
 //		
-//		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
-//			boolean isEmpty = false;
-//			String _pFileName = "";
-//			for (int i=0; i<cnt; i++) {
-//				_pFileName = multiFile.get(i).getOriginalFilename();
-//				if (_pFileName.indexOf(commonUtil.separator) > 0) {
-//					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
-//				}
-//				pFileName[i] = _pFileName;
-//				if (pFileName[i].lastIndexOf(".") > -1) {
-//					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
-//					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-//				} else {
-//					sFileTitle[i] = pFileName[i];
-//					sExt[i] = "";
-//				}
-//				
-//				if (multiFile.get(i).getSize() == 0) {
-//					isEmpty = true;
-//				}
-//			}
-//			if (isEmpty) {
-//				return "OVERFLOW";
-//			}
-//		}
+		if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))){
+			boolean isEmpty = false;
+			String _pFileName = "";
+			for (int i=0; i<cnt; i++) {
+				_pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
+				if (_pFileName.indexOf(commonUtil.separator) > 0) {
+					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
+				}
+				pFileName[i] = _pFileName;
+				if (pFileName[i].lastIndexOf(".") > -1) {
+					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
+					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+				} else {
+					sFileTitle[i] = pFileName[i];
+					sExt[i] = "";
+				}
+				
+				if ( ((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
+					isEmpty = true;
+				}
+			}
+			if (isEmpty) {
+				return "OVERFLOW";
+			}
+		}
 //
-//		for (int i=0; i<cnt; i++) {
-//			sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
-//		}
+		for (int i=0; i<cnt; i++) {
+			sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
+		}
 //
 //		if (request.getParameter("bigmaxsize") != null) {
 //			bigMaxSize = Long.parseLong(request.getParameter("bigmaxsize"));
@@ -735,150 +798,388 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			changeSize = Long.parseLong(request.getParameter("changesize"));
 //		}
 //
-//		strXML = "<ROOT><NODES>";
-//		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
-//		pDirPath = realPath + pDirPath;
+		strXML = "<ROOT><NODES>";
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
+		pDirPath = realPath + pDirPath;
 //		
 //		// check the upload mail root folder and create it if it isn't exist.
-//		File uploadMailRootFolder = new File(pDirPath);
-//		if (!uploadMailRootFolder.exists()) {
-//			LOGGER.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
-//			uploadMailRootFolder.mkdirs();
-//		}
-//		
-//		for (int i=0; i<cnt; i++) {
-//			fileSize[i] = multiFile.get(i).getSize();
-//			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
-//                String pDate = EgovDateUtil.getToday("");
-//                folderDate = pDate;
-//                pDirTempPath = pDirPath + commonUtil.separator + pDate;
-//                File file = new File(pDirTempPath);
-//                if (!file.exists()) {
-//                	file.mkdirs();
-//                }
-//                pBigFileUpload = "Y";
-//                
-//                String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
-//                FileOutputStream fos = null;
-//                try {
-//                	File f = new File(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt");
-//                	fos = new FileOutputStream(f);
-//                    fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
-//                } catch(Exception e) {
-//                	throw e;
-//                } finally {
-//                	if (fos != null) {
-//                		fos.close();
-//                	}
-//                }
-//            } else {
-//                pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
-//                pBigFileUpload = "N";
-//            }
-//			
-//			File f = new File(pDirTempPath);
-//			if (!f.exists()) {
-//				f.mkdirs();
-//            }
-//			
-//			if (fileSize[i] > bigMaxSize && bigMaxSize != 0) {
-//                resultUpload[i] = "overflow";
-//            } else {
-//                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
-//                    resultUpload[i] = "denied";
-//                } else {
-//                    writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
-//                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
-//                    resultUpload[i] = "true";
-//                }
-//                
-//                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
-//                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
-//                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
-//                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-//                if (pBigFileUpload.equals("Y")) {
-//                	strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
-//                } else {
-//                	strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
-//                }
-//                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
-//                strXML2 += "</NODE>";
-//            }
-//            pDirTempPath = "";
-//		}
-//		strXML += strXML2 + "</NODES></ROOT>";
-//
-//        String xmlPath = pDirPath + commonUtil.separator + "templist";
-//        File f = new File(xmlPath);
-//        if (!f.exists()) {
-//			f.mkdirs();
-//        }
-//
-//        xmlPath += commonUtil.separator + tempFolderName + ".txt";
-//        f = new File(xmlPath);
-//        if (f.exists()) {
-//        	String tempXmlList = "";
-//        	InputStreamReader isr = null;
-//        	BufferedReader br = null;
-//        	OutputStreamWriter osw = null;
-//        	try {
-//	        	isr = new InputStreamReader(new FileInputStream(f));
-//	        	br = new BufferedReader(isr);
-//	        	int read = 0;
-//				while ((read = br.read()) != -1) {
-//					tempXmlList += (char)read;
-//				}
-//				Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
-//				Document xmldom2 = commonUtil.convertStringToDocument(strXML);
-//				
-//	            NodeList nodeList = xmldom.getElementsByTagName("NODES");
-//	            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
-//	            for (int i=0; i<nodeList2.getLength(); i++) {
-//	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
-//	            }
-//            	osw = new OutputStreamWriter(new FileOutputStream(f));
-//            	osw.write(commonUtil.convertDocumentToString(xmldom));
-//            	String crlf = System.getProperty("line.separator");
-//        		osw.append(crlf+crlf);
-//	            
-//	            xmlList = strXML;
-//	            
-//        	} catch(Exception e) {
-//        		throw e;
-//        	} finally {
-//        		if (br != null) {
-//        			br.close();
-//        		}
-//        		if (isr != null) {
-//        			isr.close();
-//        		}
-//        		if (osw != null) {
-//        			osw.close();
-//        		}
-//        	}
-//        	
-//        	return xmlList;
-//        	
-//        } else {
-//        	OutputStreamWriter osw = null;
-//        	try {
-//        		osw = new OutputStreamWriter(new FileOutputStream(f));
-//        		osw.write(strXML);
-//        		String crlf = System.getProperty("line.separator");
-//        		osw.append(crlf+crlf);
-//        		xmlList = strXML;
-//        		
-//        	} catch(Exception e) {
-//        		throw e;
-//        	} finally {
-//        		if (osw != null) {
-//        			osw.close();
-//        		}
-//        	}
-//            
-//            return xmlList;
+		File uploadMailRootFolder = new File(pDirPath);
+		if (!uploadMailRootFolder.exists()) {
+			LOGGER.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
+			uploadMailRootFolder.mkdirs();
+		}
+
+		for (int i=0; i<cnt; i++) {
+			fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
+            pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
+			
+			File f = new File(pDirTempPath);
+			if (!f.exists()) {
+				f.mkdirs();
+            }
+
+			if (fileSize[i] > maxsize && maxsize != 0) {
+                resultUpload[i] = "overflow";
+            } else {
+                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+                    resultUpload[i] = "denied";
+                } else {
+                    mobileMailWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i], pDirTempPath);
+                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
+                    resultUpload[i] = "true";
+                }
+                String pBigFileUpload = "N";
+                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
+                strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
+                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+                strXML2 += "</NODE>";
+            }
+            pDirTempPath = "";
+		}
+		strXML += strXML2 + "</NODES></ROOT>";
+
+		String xmlPath = pDirPath + commonUtil.separator + "templist";
+        File f = new File(xmlPath);
+        if (!f.exists()) {
+			f.mkdirs();
+        }
+
+        xmlPath += commonUtil.separator + tempFolderName + ".txt";
+        LOGGER.debug("###" + xmlPath + "###");
+        f = new File(xmlPath);
+        if (f.exists()) {
+        	String tempXmlList = "";
+        	InputStreamReader isr = null;
+        	BufferedReader br = null;
+        	OutputStreamWriter osw = null;
+        	try {
+	        	isr = new InputStreamReader(new FileInputStream(f));
+	        	br = new BufferedReader(isr);
+	        	int read = 0;
+				while ((read = br.read()) != -1) {
+					tempXmlList += (char)read;
+				}
+				Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
+				Document xmldom2 = commonUtil.convertStringToDocument(strXML);
+
+	            NodeList nodeList = xmldom.getElementsByTagName("NODES");
+	            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
+	            for (int i=0; i<nodeList2.getLength(); i++) {
+	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
+	            }
+            	osw = new OutputStreamWriter(new FileOutputStream(f));
+            	osw.write(commonUtil.convertDocumentToString(xmldom));
+            	String crlf = System.getProperty("line.separator");
+        		osw.append(crlf+crlf);
+	            
+	            xmlList = strXML;
+	            
+        	} catch(Exception e) {
+        		throw e;
+        	} finally {
+        		if (br != null) {
+        			br.close();
+        		}
+        		if (isr != null) {
+        			isr.close();
+        		}
+        		if (osw != null) {
+        			osw.close();
+        		}
+        	}
+        	
+        } else {
+        	OutputStreamWriter osw = null;
+        	try {
+        		osw = new OutputStreamWriter(new FileOutputStream(f));
+        		osw.write(strXML);
+        		String crlf = System.getProperty("line.separator");
+        		osw.append(crlf+crlf);
+        		xmlList = strXML;
+        		
+        	} catch(Exception e) {
+        		throw e;
+        	} finally {
+        		if (osw != null) {
+        			osw.close();
+        		}
+        	}
+        }
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", xmlList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");	
+		}
+		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] ended.");
 		
-		LOGGER.debug("MOBILE G/W MAIL [POST /ezemail/folders/{folderId}/mails/{messageId}/attachs/users/{userId}] ended.");		
+		return result;
+	}
+	
+	@RequestMapping(value="/mobile/ezemail/mails/attachsmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@ResponseBody
+	public Object mailInterAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] started.");
+		
+		String returnValue = "";
+		String cmd = "";
+	    
+		JSONObject result = new JSONObject();
+		
+		try {
+		
+			String xmldomString = "";
+			String realPath = commonUtil.getRealPath(request);
+			
+			if (jsonObject.get("xmldom") != null) {
+				xmldomString = (String) jsonObject.get("xmldom");
+			}
+			
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+			
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);		
+			
+			Document xmldom = commonUtil.convertStringToDocument(xmldomString);
+			cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
+			String uidStr = xmldom.getElementsByTagName("URL").item(0).getTextContent();
+			
+			NodeList bigs = xmldom.getElementsByTagName("BIG");
+			boolean hasAttachFile = false;
+			
+			if (bigs != null) {
+				for (int i=0; i < bigs.getLength(); i++) {
+					if (bigs.item(i).getTextContent().equals("N")) {
+					    // 일반첨부파일이 있는 경우
+						hasAttachFile = true;
+						break;
+					}
+				}
+			}
+			
+			long uid = 0;
+			if (uidStr != null && !uidStr.equals("")) {
+				uid = Long.parseLong(uidStr);
+			}
+			
+//			String realPath = commonUtil.getRealPath(request);
+			String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
+			pDirPath = realPath + pDirPath;
+			String pDirTempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "tempFileUpload";
+			
+			MimeMessage newMessage = null;
+			IMAPAccess ia = null;
+			Folder folder = null;
+			Multipart multipart = null;
+			
+			try {
+				
+				if (hasAttachFile) {
+					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+							userEmail, password);
+					
+					// 첨부파일들을 추가하여 임시 보관함에 저장할 메시지를 생성한다.
+					newMessage = sa.createMimeMessage();
+					
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							userEmail, password, egovMessageSource, locale);
+					
+					// 임시 보관함 폴더 오픈 
+					folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+					folder.open(Folder.READ_WRITE);
+					
+					// 첨부파일 Part들을 삽입할 Multipart를 생성한다.
+					multipart = new MimeMultipart();
+				}
+				
+				if (cmd.equals("ADD")) {
+					NodeList fileNodes = xmldom.getElementsByTagName("FILE");
+					
+					// 임시 보관함에 이미 기존 메시지가 있는 경우, 해당 메시지의 파트들을 새 메시지에 병합한다.
+					if (hasAttachFile && uid != 0) {
+					    // 임시 보관함에 있는 메시지를 가져온다.
+						Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+						
+						if (oldMessage != null) {
+						    // 기존 메시지가 Multipart인 경우 처리
+							if (oldMessage.getContent() instanceof Multipart) {
+								Multipart mp = (Multipart)oldMessage.getContent();
+								int count = mp.getCount();
+								BodyPart p = null;
+								
+								// 임시 보관함에 있는 메시지가 multipart/related일 때는 새롭게 related 파트로 구성한 다음
+								// 새 메시지의 서브 파트로 추가한다.
+								if (oldMessage.isMimeType("multipart/related")) {
+									LOGGER.debug("oldMessage is multipart/related");
+								    
+									Multipart relatedPart = new MimeMultipart("related");
+									
+									for (int i = 0; i < count; i++) {
+										p = mp.getBodyPart(i);
+										relatedPart.addBodyPart(p);
+									}
+									
+									MimeBodyPart wrap = new MimeBodyPart();
+									wrap.setContent(relatedPart);
+									multipart.addBodyPart(wrap, 0);
+								} else if (oldMessage.isMimeType("multipart/alternative")) {
+									LOGGER.debug("oldMessage is multipart/alternative");
+								    
+		                            Multipart alternativePart = new MimeMultipart("alternative");
+		                            
+		                            for (int i = 0; i < count; i++) {
+		                                p = mp.getBodyPart(i);
+		                                alternativePart.addBodyPart(p);
+		                            }
+		                            
+		                            MimeBodyPart wrap = new MimeBodyPart();
+		                            wrap.setContent(alternativePart);
+		                            multipart.addBodyPart(wrap, 0);							    
+								} else {
+									for (int i = 0; i < count; i++) {
+										p = mp.getBodyPart(i);
+										multipart.addBodyPart(p);
+									}
+								}
+							}
+							
+							// 기존 메시지의 모든 헤더를 적용한다.
+							Enumeration<Header> e = oldMessage.getAllHeaders();
+							while(e.hasMoreElements()){
+								Header header = e.nextElement();
+								newMessage.setHeader(header.getName(), header.getValue());
+							}
+							
+							// 기존 메시지를 제거한다.
+							oldMessage.setFlag(Flags.Flag.DELETED, true);
+						}
+					}
+					
+					// 새로 업로드된 파일들을 새 메시지에 추가한다.
+					for (int i=0; i<fileNodes.getLength(); i++) {
+						Node subNode = fileNodes.item(i);
+						NodeList childNodes = subNode.getChildNodes();
+						String fileName = childNodes.item(0).getTextContent();
+						String path = childNodes.item(1).getTextContent();
+						String bigBool = childNodes.item(2).getTextContent();
+						
+						// 일반첨부파일의 경우
+//						if (hasAttachFile && bigBool.equals("N")) {
+						    // 첨부파일을 삽입할 Part를 생성한다.
+							BodyPart messageBodyPart = new MimeBodyPart();
+							
+					        File f = new File(pDirTempPath + commonUtil.separator + path);
+					        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
+					        messageBodyPart.setDataHandler(new DataHandler(source));
+					        
+					        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
+					        // otherwise, a wrong encoding may be used on some systems(linux, etc)
+					        String encodedFileName = MimeUtility.encodeText(fileName, "UTF-8", null);
+					        
+							// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
+							// and some mailers (Daum, etc) may not understand it.			        
+					        encodedFileName = MimeUtility.fold(0, encodedFileName);
+					        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"" + encodedFileName + "\"");
+					        
+					        // 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
+					        String contentType = "application/octet-stream";
+					        
+					        // 첨부파일의 Content-Type을 구한다.
+					        if (Files.probeContentType(f.toPath()) != null) {
+					        	contentType = Files.probeContentType(f.toPath());
+					        } else {
+					        	if (path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+					        		contentType = "message/rfc822";
+					        	}
+					        }
+					        
+					        messageBodyPart.setHeader("Content-Type", contentType);
+					        
+					        // Multipart에 첨부파일 Part를 삽입한다.
+					        multipart.addBodyPart(messageBodyPart);
+							
+					        //TODO: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).
+					        //메일에서 첨부파일 삭제할 때 attachCount 필요함.
+					        childNodes.item(4).setTextContent(fileName);
+					        
+//						} else {
+//							if (!path.equals("")) {
+//								String[] newPath = path.split("\\|!\\|");
+//								childNodes.item(1).setTextContent(newPath[1]);
+//								childNodes.item(4).setTextContent(newPath[0] + commonUtil.separator + newPath[1]);
+//							}
+//						}
+					}
+					
+					if (hasAttachFile) {
+						newMessage.setContent(multipart);
+						newMessage.setFlag(Flags.Flag.SEEN, true);
+						AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+						xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uids[0].uid));
+					} else {
+						if (uid == 0) {
+							xmldom.getElementsByTagName("URL").item(0).setTextContent("");
+						} else {
+							xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uid));
+						}
+					}
+		    		
+					// 처리가 완료된 일반첨부파일 원본 파일들을 삭제한다.				
+					for (int i=0; i<fileNodes.getLength(); i++) {
+						Node subNode = fileNodes.item(i);
+						NodeList childNodes = subNode.getChildNodes();
+						
+		                if (childNodes.item(2).getTextContent().equals("N")) {
+		                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
+		                    if (file.exists()) {
+		                    	file.delete();
+		                    }
+		                }
+		            }
+				}
+				
+				if (hasAttachFile) {
+			        folder.close(true);
+				}
+				
+				returnValue = commonUtil.convertDocumentToString(xmldom);
+				
+			} catch (MessagingException e) {
+				returnValue = e.getMessage();
+				e.printStackTrace();
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", returnValue);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("mailInterAttach ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -3839,21 +4140,61 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	/**
-	 * 모바일 G/W 이메일 [put] method sample
-	 */
-//	@RequestMapping(value="/ezMAIL/{MAILid}/gw-testUpdate/{id}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-//	public void testUpdate(@PathVariable String MAILid, @PathVariable String id, @RequestBody LoginVO loginVO) throws Exception {		
-//		LOGGER.debug("gw-testUpdate started.");
-//		
-//		System.out.println(loginVO.getIp());
-//				
-//		LoginVO vo = new LoginVO();
-//		vo.setTenantId(0);
-//		vo.setId(id);
-//		vo.setIp(loginVO.getIp());
-//		
-//		loginService.updateUser(vo);
-//		
-//		LOGGER.debug("gw-testUpdate ended.");		
-//	}
+     * 첨부파일을 서버에 저장한다.
+     *
+     * @param file
+     * @param newName
+     * @param stordFilePath
+     * @throws Exception
+     */
+    public void mobileMailWriteUploadedFile(String bytearray, String newName, String stordFilePath) throws Exception {
+    	LOGGER.debug("mobileMailWriteUploadedFile");
+    	
+		InputStream stream = null;
+		OutputStream bos = null;
+		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+		
+		try {
+//		    stream = file.getInputStream();
+		    File cFile = new File(stordFilePathReal);
+	
+		    if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+		    Decoder decoder = Base64.getDecoder();
+//		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+		    bos.write(decoder.decode(bytearray));
+//		    }
+		} catch (FileNotFoundException fnfe) {
+			LOGGER.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			LOGGER.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			LOGGER.debug("e: {}", e);
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+    }
+	
 }
