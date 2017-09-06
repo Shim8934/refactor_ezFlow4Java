@@ -691,11 +691,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGDocListVO> getContDocListS(Map<String, Object> map) throws Exception {
-		return (List<ApprGDocListVO>) list("EzApprovalG.getContDocListS", map);
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception {
 		return (List<ApprGContInfoVO>) list("EzApprovalG.getSpecialContTree", userInfo);
 	}
@@ -1216,10 +1211,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int userContListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.userContListCount", map);
-	}
-	
-	public int getContDocListCountS(Map<String, Object> map) throws Exception {
-		return (int) select("EzApprovalG.getContDocListCountS", map);
 	}
 	
 	public int getUserContDocListCount(Map<String, Object> map) throws Exception {
