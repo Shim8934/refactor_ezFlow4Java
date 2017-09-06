@@ -44,20 +44,20 @@ public class EzSystemUtil {
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			String command = "'model name'";
 			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
-			ProcessBuilder cBuilder = new ProcessBuilder("grep", command, "/proc/cpuinfo");
+			ProcessBuilder cBuilder = new ProcessBuilder("grep", "CPU", "/proc/cpuinfo");
 			ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
 			
-			Process process = builder.start();
+			Process process = builder.start();				
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
 			br = new BufferedReader(isr);
 			
-			process = cBuilder.start();
-			isr = new InputStreamReader(process.getInputStream());
-			cbr = new BufferedReader(isr);
+			Process cprocess = cBuilder.start();
+			InputStreamReader cisr = new InputStreamReader(cprocess.getInputStream());
+			cbr = new BufferedReader(cisr);
 			
-			process = mBuilder.start();
-			isr = new InputStreamReader(process.getInputStream());
-			mbr = new BufferedReader(isr);
+			Process mprocess = mBuilder.start();
+			InputStreamReader misr = new InputStreamReader(mprocess.getInputStream());
+			mbr = new BufferedReader(misr);
 			
 		} else {
 			String filePath = "D:/test/uname.txt";
@@ -77,7 +77,8 @@ public class EzSystemUtil {
 		
 		while (true) {
 			String line = br.readLine();
-			logger.debug("<<<br.readLine : " + line); 
+			logger.debug("write unameInfo");
+			logger.debug("<<<!!br.readLine : " + line); 
 			if (line == null) {
 				break;
 			} else {
@@ -93,16 +94,18 @@ public class EzSystemUtil {
 		}
 		
 		for (int i = 0; i < 1; i ++) {
-			String line = cbr.readLine();
-			logger.debug("<<<cbr.readLine : " + line); 
-			String[] tmp = line.trim().split(":");
+			String cline = cbr.readLine();
+			logger.debug("write cpuinfo");
+			logger.debug("<<<!!cbr.readLine : " + cline); 
+			String[] tmp = cline.trim().split(":");
 			tmpObj.put("cpu", tmp[1].trim());		
 		}
 		
 		for (int i = 0; i < 1; i ++) {
-			String line = mbr.readLine();
-			logger.debug("<<<mbr.readLine : " + line); 
-			String[] tmp = line.trim().split("\\s+");
+			String mline = mbr.readLine();
+			logger.debug("write meminfo");
+			logger.debug("<<<!!mbr.readLine : " + mline); 
+			String[] tmp = mline.trim().split("\\s+");
 			
 			tmpObj.put("memory", tmp[1]);
 		}
