@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<script>
 			var userid = "${userInfo.id }";
-			var username = "${userInfo.displayName }";
+			var username = "${userInfo.displayName1 }";
 			var username2 = "${userInfo.displayName2 }";
 			var deptname = "${userInfo.deptName }";
 			var deptname2 = "${userInfo.deptName2 }";
@@ -205,8 +205,24 @@
 		 			}
 				});
 
+				// IE에서  new Date 값이 Invalid Date 나와서 수정
+				var startYear = "";
+				var startTime = "";
+				var endYear = "";
+				var endTime = "";
+				if (startdate.indexOf(" ") != -1) {
+					startYear = startdate.split(" ")[0];
+					startTime = startdate.split(" ")[1];
+					startdate = startYear + "T" + startTime;
+
+					endYear = enddate.split(" ")[0];
+					endTime = enddate.split(" ")[1];
+					enddate = endYear + "T" + endTime;
+				}
+
 				var SDate = new Date(startdate);
 				var EDate = new Date(enddate);
+
 				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 				$("#Sdatepicker").datepicker('setDate', SDate);
 				
