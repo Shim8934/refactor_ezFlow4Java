@@ -47,6 +47,64 @@
 		    var taskWorkAttachList = "${taskWorkAttachList }";
 		    var useTodoMemo = "${useTodoMemo }";
 		    
+		    (function($){
+		    	'use strict';
+
+		    	$.fn.LineProgressbar = function(options){
+
+		    		var options = $.extend({
+		    			percentage : null,
+		    			ShowProgressCount: true,
+		    			duration: 1000,
+
+		    			// Styling Options
+		    			fillBackgroundColor: '#3498db',
+		    			backgroundColor: '#EEEEEE',
+		    			radius: '0px',
+		    			height: '10px',
+		    			width: '100%'
+		    		},options);
+
+		    		return this.each(function(index, el) {
+		    			// Markup
+		    			$(el).html('<div class="percentCount"></div><div class="progressbar"><div class="proggress"></div></div>');
+		    			
+
+
+		    			var progressFill = $(el).find('.proggress');
+		    			var progressBar= $(el).find('.progressbar');
+
+
+		    			progressFill.css({
+		    				backgroundColor : options.fillBackgroundColor,
+		    				height : options.height,
+		    				borderRadius: options.radius
+		    			});
+		    			progressBar.css({
+		    				width : options.width,
+		    				backgroundColor : options.backgroundColor,
+		    				borderRadius: options.radius
+		    			});
+
+		    			// Progressing
+		    			progressFill.animate(
+		    				{
+		    					width: options.percentage + "%"
+		    				},
+		    				{	
+		    					step: function(x) {
+		    						if(options.ShowProgressCount){
+		    							$(el).find(".percentCount").text(Math.round(x) + "%");
+		    						}
+		    					},
+		    					duration: options.duration
+		    				}
+		    			);
+		    		////////////////////////////////////////////////////////////////////
+		    		});
+		    	}
+		    })(jQuery);
+		    
 		    $(document).ready(function() {
 				load_bodyhtml();
 				if (hasTaskAttach == 'Y') {
@@ -60,9 +118,9 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 230 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 290 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -88,9 +146,9 @@
 		    });
 		    
 		    window.onresize = function () {
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 230 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 230 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 290 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 290 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -114,7 +172,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%',
+						width: '88%',
 						duration : duration
 					});
 				} else if (taskstatus == '3') {
@@ -124,7 +182,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%',
+						width: '88%',
 						duration : duration
 					});
 				} else {
@@ -134,7 +192,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%',
+						width: '88%',
 						duration : duration
 					});
 				}
@@ -456,7 +514,7 @@
 					return;
 				}
 				
-				DivPopUpShow(410, 320, "/ezTask/taskStatus.do?taskID=" + taskid);
+				DivPopUpShow(410, 300, "/ezTask/taskStatus.do?taskID=" + taskid);
 			}
 			
 			function Tab1_NewTabIni(pTabNodeID) {
@@ -511,7 +569,7 @@
 			            document.getElementById("tablecomment").style.display = "none";
 			            
 			            if (ownerid == userid) {
-				        	document.getElementById("editTask").style.display = "";
+				        	document.getElementById("editTask").style.display = "none";
 				        	document.getElementById("editTaskWork").style.display = "none";
 				        } else if (personid == userid) {
 				        	document.getElementById("editTask").style.display = "none";
@@ -766,11 +824,29 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<table style="width: 100%;">
+		<div>
+			<div>
+				<span><spring:message code='ezTask.t118' /> : </span>
+				<span><c:out value = '${taskInfoVO.title }' /></span>
+			</div>
+			<div>
+				<span><spring:message code='ezTask.t121' /> : </span>
+				<span><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span>
+			</div>
+			<div>
+				<span><spring:message code='ezTask.t122' /> : </span>
+				<span><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span>
+			</div>
+			<div>
+				<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact; margin-top:10px;margin-bottom:10px;"></div>
+				<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
+			</div>
+		</div>
+		<%-- <table class="layout" style="width: 100%;">
 			<colgroup><col width="60%" /><col width="40%" /></colgroup>
 			<tr>
 				<td>
-					<table>
+					<table class="content">
 						<tr>
 							<th><spring:message code='ezTask.t121' /></th>
 							<td>
@@ -802,7 +878,7 @@
 					<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
 				</td>
 			</tr>
-		</table>
+		</table> --%>
 		
 		<!-- 이쪽에 진행단계 -->
 		<%-- <table id="taskProgress" class="layout">
@@ -928,10 +1004,10 @@
 							<th><spring:message code='ezTask.t118' /></th>
 							<td colspan="3">
 								<div style="overflow-y:auto;padding-top:2px">
-									<c:out value = '${taskInfoVO.title }' />
+									<c:out value = '${taskInfoVO.title }' /> 
 								</div>
 							</td>
-						</tr> --%>
+						</tr>
 						
 						<c:if test="${useTodoMemo == 'YES'}">
 							<tr>
@@ -942,7 +1018,7 @@
 				            		</div>
 				            	</td>
 							</tr>
-						</c:if>
+						</c:if> --%>
 					</table>
 				</td>
 			</tr>

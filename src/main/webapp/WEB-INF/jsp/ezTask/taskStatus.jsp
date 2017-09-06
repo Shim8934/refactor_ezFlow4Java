@@ -32,6 +32,64 @@
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
 	        
+	        (function($){
+		    	'use strict';
+
+		    	$.fn.LineProgressbar = function(options){
+
+		    		var options = $.extend({
+		    			percentage : null,
+		    			ShowProgressCount: true,
+		    			duration: 1000,
+
+		    			// Styling Options
+		    			fillBackgroundColor: '#3498db',
+		    			backgroundColor: '#EEEEEE',
+		    			radius: '0px',
+		    			height: '10px',
+		    			width: '100%'
+		    		},options);
+
+		    		return this.each(function(index, el) {
+		    			// Markup
+		    			$(el).html('<div class="percentCount"></div><div class="progressbar"><div class="proggress"></div></div>');
+		    			
+
+
+		    			var progressFill = $(el).find('.proggress');
+		    			var progressBar= $(el).find('.progressbar');
+
+
+		    			progressFill.css({
+		    				backgroundColor : options.fillBackgroundColor,
+		    				height : options.height,
+		    				borderRadius: options.radius
+		    			});
+		    			progressBar.css({
+		    				width : options.width,
+		    				backgroundColor : options.backgroundColor,
+		    				borderRadius: options.radius
+		    			});
+
+		    			// Progressing
+		    			progressFill.animate(
+		    				{
+		    					width: options.percentage + "%"
+		    				},
+		    				{	
+		    					step: function(x) {
+		    						if(options.ShowProgressCount){
+		    							$(el).find(".percentCount").text(Math.round(x) + "%");
+		    						}
+		    					},
+		    					duration: options.duration
+		    				}
+		    			);
+		    		////////////////////////////////////////////////////////////////////
+		    		});
+		    	}
+	        })(jQuery);
+		    	
 	        $(document).ready(function() {
 	        	initProgressBar(taskstatus, completerate)
 	        	
@@ -89,7 +147,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%',
+						width: '88%',
 						duration : duration
 					});
 				} else if (taskstatus == '3') {
@@ -99,7 +157,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%',
+						width: '88%',
 						duration : duration
 					});
 				} else {
@@ -109,7 +167,7 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%',
+						width: '88%',
 						duration : duration
 					});
 				}
@@ -152,21 +210,15 @@
 	<body class="popup">
 		<h1><spring:message code='ezTask.lhj01' /></h1>
 		<div id="main_body">
-			<div id="close">
-				<ul>
-					<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
-				</ul>
-			</div>
-			
 			<div class='txt'>
-				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj03' /></div>
-				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj04' /></div>
-				<div style="margin-top:3px;">▒ <spring:message code = 'ezTask.lhj05' /></div>
+				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj03' /></div>
+				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj04' /></div>
+				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj05' /></div>
 			</div>
 			
 			<br />
 			
-			<div id="taskProgressBar"></div>
+			<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact; margin-top:10px;margin-bottom:10px;"></div>
 			
 			<br />
 			<br />
