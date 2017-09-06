@@ -100,7 +100,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("commentorID", commentorID);
 		map.put("commentorName", commentorName);
 		map.put("commentorName2", commentorName2);
-		map.put("comment", comment);
+		map.put("comment", commonUtil.cleanValue(comment));
 		map.put("hasComment", "Y");
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
