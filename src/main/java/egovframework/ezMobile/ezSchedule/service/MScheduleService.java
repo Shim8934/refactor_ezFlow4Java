@@ -15,6 +15,8 @@ public interface MScheduleService {
 
 	public void deleteSchedule(String scheduleId, int tenantId) throws Exception;
 
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception;
+	
 	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception;
 
 	public String scheduleContentPath(String scheduleId, int tenantId) throws Exception;
