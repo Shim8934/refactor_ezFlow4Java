@@ -42,7 +42,7 @@ public class EzSystemUtil {
 		 * mBuilder -> 메모리 정보
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-			String command = "^'model name'";
+			String command = "'model name'";
 			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
 			ProcessBuilder cBuilder = new ProcessBuilder("grep", command, "/proc/cpuinfo");
 			ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
@@ -77,7 +77,7 @@ public class EzSystemUtil {
 		
 		while (true) {
 			String line = br.readLine();
-			
+			logger.debug("<<<br.readLine : " + line); 
 			if (line == null) {
 				break;
 			} else {
@@ -94,12 +94,14 @@ public class EzSystemUtil {
 		
 		for (int i = 0; i < 1; i ++) {
 			String line = cbr.readLine();
+			logger.debug("<<<cbr.readLine : " + line); 
 			String[] tmp = line.trim().split(":");
 			tmpObj.put("cpu", tmp[1].trim());		
 		}
 		
 		for (int i = 0; i < 1; i ++) {
 			String line = mbr.readLine();
+			logger.debug("<<<mbr.readLine : " + line); 
 			String[] tmp = line.trim().split("\\s+");
 			
 			tmpObj.put("memory", tmp[1]);
