@@ -692,7 +692,7 @@
 	            			<tr>
 	            				<th><spring:message code='ezTask.t170' /></th>
 				            	<td colspan="3" style="width:100%;">
-									<input type="text" id="TextMemo" style="width:100%; maxlength:100;" value = "<c:out value = '${taskInfoVO.memo }' />">
+									<input type="text" id="TextMemo" style="width:100%;" maxlength="100" value = "<c:out value = '${taskInfoVO.memo }' />">
 				            	</td>
 	            			</tr>
 	            		</table>
