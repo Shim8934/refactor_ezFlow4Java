@@ -62,6 +62,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -91,6 +93,7 @@ import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -1183,6 +1186,148 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
+	
+	/**
+	 * 일반 첨부파일 삭제 실행 함수
+	 */
+	
+	@RequestMapping(value="/mobile/ezemail/mails/deletesmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@ResponseBody
+	public Object mailDelInterAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+		LOGGER.debug("mailDelInterAttach started.");
+		
+		
+		String returnValue = "";
+		String cmd = "";
+	    
+		JSONObject result = new JSONObject();
+		
+		try {
+		
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+			
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			returnValue = "<DATA><![CDATA[";
+			
+			String xmldomString = "";
+			String realPath = commonUtil.getRealPath(request);
+			
+			if (jsonObject.get("xmldom") != null) {
+				xmldomString = (String) jsonObject.get("xmldom");
+			}
+			Document xmlDoc = commonUtil.convertStringToDocument(xmldomString);
+			Element root = xmlDoc.getDocumentElement();
+			
+			long uid = 0;
+			if (root.getElementsByTagName("ITEMID") != null) {
+				String uidStr = root.getElementsByTagName("ITEMID").item(0).getTextContent();
+				if (uidStr != null && !uidStr.trim().equals("")) {
+					uid = Long.parseLong(uidStr);
+				}
+			}
+			
+			if (uid != 0) {
+				NodeList rows = root.getElementsByTagName("ROW");
+				
+				if (rows != null && rows.item(0) != null) {
+					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+							userEmail, password);
+					
+					IMAPAccess ia = null;
+					try {
+						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+								userEmail, password, egovMessageSource, locale);
+						
+						Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+						folder.open(Folder.READ_WRITE);
+						Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+						
+						if (oldMessage != null) {
+							
+							//TODO: rows에 filename대신 index넣기, 
+							//deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) 부르기
+							
+							MimeMessage newMessage = sa.createMimeMessage();
+							Multipart multipart = new MimeMultipart();
+							
+							Multipart mp = (Multipart)oldMessage.getContent();
+							int count = mp.getCount();
+							BodyPart p = null;
+							
+							for (int i = 0; i < count; i++) {
+								p = mp.getBodyPart(i);
+								
+								int length = rows.getLength();
+								boolean isRemoved = false;
+								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+									for (int j = 0; j < length; j++) {
+										String mailFileName = MimeUtility.decodeText(p.getFileName());
+										if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
+											isRemoved = true;
+											break;
+										}
+									}
+								}
+								
+								if (!isRemoved) {
+									multipart.addBodyPart(p);
+								}
+							}
+							
+							@SuppressWarnings("unchecked")
+							Enumeration<Header> e = oldMessage.getAllHeaders();
+							while(e.hasMoreElements()){
+								Header header = e.nextElement();
+								newMessage.setHeader(header.getName(), header.getValue());
+							}
+							//
+							
+							if (multipart.getCount() != 0) {
+								newMessage.setContent(multipart);
+								newMessage.setFlag(Flags.Flag.SEEN, true);
+								AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+								returnValue += uids[0].uid;
+							}
+							
+							oldMessage.setFlag(Flags.Flag.DELETED, true);
+							
+						}
+						folder.close(true);
+						
+					} catch (MessagingException e) {
+						e.printStackTrace();
+					} finally {
+						if (ia != null) {
+							ia.close();
+						}
+					}
+				}
+			}
+			returnValue += "]]></DATA>";
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", returnValue);
+			
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		
+		LOGGER.debug("mailDelInterAttach ended. returnValue=" + returnValue);
+		
+		return result;
+	}
+
 	
 	/**
 	 * 모바일 G/W 이메일 [POST] 임시저장
