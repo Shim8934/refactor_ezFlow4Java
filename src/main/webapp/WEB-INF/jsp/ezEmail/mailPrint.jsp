@@ -38,38 +38,38 @@
 	<body>    
 	    <table cellpadding="0" cellspacing="0" style="margin:5px 5px 5px 5px; border-collapse:collapse; font-family:Gulim, Verdana, Geneva, sans-serif;" >
 	        <tr>
-	            <th style="white-space:nowrap; text-align:center; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t161' /></th>
+	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t161' /></th>
 	            <td style="width:60%; font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
 	                ${pSender}
 	            </td>
-	            <th style="white-space:nowrap; text-align:center; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t657' /></th>
+	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t657' /></th>
 	            <td style="width:40%; font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
 	                ${pReciveDT}
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="white-space:nowrap; text-align:center; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t66' /></th>
+	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t66' /></th>
 	            <td colspan="3" style="font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
 	                ${pReciverTo}
 	            </td>
 	        </tr>
 	        <c:if test="${pReciverCc != null and pReciverCc != ''}">
 	        <tr>
-	            <th style="white-space:nowrap; text-align:center; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t594' /></th>
+	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t594' /></th>
 	            <td colspan="3" style="font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
 	                ${pReciverCc}
 	            </td>
 	        </tr>
 	        </c:if>
 	        <tr>
-	            <th style="white-space:nowrap; text-align:center; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t556' /></th>
+	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t556' /></th>
 	            <td colspan="3" style="font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
 	                ${pSubject}
 	            </td>
 	        </tr>
 	        <c:if test="${isAttach == 'OK'}">
 	        <tr>
-	            <th style="white-space:nowrap; text-align:center; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t557' /></th>
+	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t557' /></th>
 	            <td colspan="3" style="font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
 	                ${pAttachListHtml}
 	            </td>
