@@ -1087,7 +1087,7 @@
 					<td style="height:20px" class="pad1">
 						<table class="file">
 							<tr>
-								<th><spring:message code='ezTask.t169' /></th>
+								<th><spring:message code='ezTask.t160' /></th>
 								<td style="width:100%"><div id="printAttach" style="margin-top:0px;padding-top:0px;overflow:visible; height: auto; background-color:white;text-align:left;"></div></td>
 							</tr>
 						</table>
@@ -1105,7 +1105,7 @@
 					<td style="height:20px" class="pad1">
 						<table class="file">
 							<tr>
-								<th><spring:message code='ezTask.t169' /></th>
+								<th><spring:message code='ezTask.t160' /></th>
 								<td style="width:100%"><div id="printAttach2" style="margin-top:0px;padding-top:0px;overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
 							</tr>
 						</table>

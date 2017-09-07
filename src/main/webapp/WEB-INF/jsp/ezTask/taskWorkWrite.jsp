@@ -131,7 +131,7 @@
 		<div id="printScreen" style="display: none">
 			<table class="content">
 				<tr>
-					<th><spring:message code='ezTask.t219' /></th>
+					<th><spring:message code='ezTask.t160' /></th>
 					<td><div id="printAttach"></div></td>
 				</tr>
 				<tr style="width:100%;">
