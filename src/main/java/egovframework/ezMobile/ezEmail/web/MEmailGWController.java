@@ -19,9 +19,11 @@ import java.util.Base64.Decoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -31,14 +33,14 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.annotation.Resource;
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
-import javax.mail.BodyPart;
-import javax.mail.Header;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
@@ -48,6 +50,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,7 +62,6 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,7 +91,6 @@ import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -309,7 +310,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         IMAPAccess ia = null;
 		
 		try {
-				
+			folderId = URLDecoder.decode(folderId, "UTF-8");
+			
 			JSONArray messageJsonArray = new JSONArray();
 			
 			Date ed = null;
@@ -2201,6 +2203,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String htmlbody = "";
 		String displayName = "";
 		String stateName = "";
+		String url = "";
 		
 		if (jsonObject.get("subject") != null) {
 			subject = (String) jsonObject.get("subject");
@@ -2246,11 +2249,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			importance = (String) jsonObject.get("importance");
 		}
 		
+		if (jsonObject.get("url") != null) {
+			url = (String) jsonObject.get("url");
+		}
+		
 		String realPath = commonUtil.getRealPath(request);
 
 		LOGGER.debug("subject = " + subject + ", to = " + to + ", cc = " + cc + ", bcc = " + bcc + ", textBody = " 
 		+ textBody + ", from = " + from + ", charset = " + charset + ", htmlbody = " + htmlbody + ", htmlbody = " + htmlbody
-		+ ", displayName = " + displayName + ", stateName = " + stateName); 
+		+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url); 
 				
 		String serverName = request.getHeader("x-user-host");
 		
@@ -2507,8 +2514,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        message.setHeader("User-Agent", "JMocha Mail 1.0");	        
 //		        
 //		        //inline image 처리
-//		        MimeMultipart relatedPart = null;
-//		        Set<String> contentIdSet = new HashSet<String>();
+		        MimeMultipart relatedPart = null;
+		        Set<String> contentIdSet = new HashSet<String>();
 //		        
 //		        // simpleMime의 값이 1인 아닌 경우는 HTML 형식이다.
 //		        if (!simpleMime.equals("1")) {
@@ -2600,44 +2607,44 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        Folder draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
 		        draftFolder.open(Folder.READ_WRITE);
 		        
-//		        LOGGER.debug("url=" + url);
+		        LOGGER.debug("url=" + url);
 		        
-//		        if (!url.trim().equals("")) {
-//		        	uid = Long.parseLong(url);
-//		        
-//		        	MimeMultipart mixedPart = new MimeMultipart();
-//					
-//					if (uid != 0) {
-//					    // 임시 보관함에 있는 기존 메시지를 불러온다.
-//						oldMessage = ((IMAPFolder)draftFolder).getMessageByUID(uid);
-//						
-//						if (oldMessage != null) {
-//							// copy existing headers that are needed.
-//							String[] headers = oldMessage.getHeader("References");
-//							
-//							if (headers != null) {
-//								message.setHeader("References", headers[0]);
-//							}
-//							
-//							headers = oldMessage.getHeader("In-Reply-To");
-//							if (headers != null) {
-//								message.setHeader("In-Reply-To", headers[0]);
-//							}
-//							
-//							// 기존 메시지가 Multipart 메시지일 경우의 처리
-//							if (oldMessage.getContent() instanceof Multipart) {
-//							    // 기존 메시지의 Multipart를 불러온다.
-//								Multipart mp = (Multipart)oldMessage.getContent();
-//								int count = mp.getCount();
-//								BodyPart p = null;
-//								boolean hasAttach = false;
-//								
-//								// Multipart의 각 Part별 처리를 수행한다.
-//								for (int i = 0; i < count; i++) {
-//									p = mp.getBodyPart(i);
-//									
-//									while (true) {
-//									    // Part가 Related Part일 경우의 처리
+		        if (!url.trim().equals("")) {
+		        	uid = Long.parseLong(url);
+		        
+		        	MimeMultipart mixedPart = new MimeMultipart();
+					
+					if (uid != 0) {
+					    // 임시 보관함에 있는 기존 메시지를 불러온다.
+						oldMessage = ((IMAPFolder)draftFolder).getMessageByUID(uid);
+						
+						if (oldMessage != null) {
+							// copy existing headers that are needed.
+							String[] headers = oldMessage.getHeader("References");
+							
+							if (headers != null) {
+								message.setHeader("References", headers[0]);
+							}
+							
+							headers = oldMessage.getHeader("In-Reply-To");
+							if (headers != null) {
+								message.setHeader("In-Reply-To", headers[0]);
+							}
+							
+							// 기존 메시지가 Multipart 메시지일 경우의 처리
+							if (oldMessage.getContent() instanceof Multipart) {
+							    // 기존 메시지의 Multipart를 불러온다.
+								Multipart mp = (Multipart)oldMessage.getContent();
+								int count = mp.getCount();
+								BodyPart p = null;
+								boolean hasAttach = false;
+								
+								// Multipart의 각 Part별 처리를 수행한다.
+								for (int i = 0; i < count; i++) {
+									p = mp.getBodyPart(i);
+									
+									while (true) {
+									    // Part가 Related Part일 경우의 처리
 //	    								if (alternativePart != null && p.isMimeType("multipart/related")) {
 //	    								    LOGGER.debug("Part is multipart/related");
 //	    								    
@@ -2686,8 +2693,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //	    									
 //	    									removeUnusedInlineImagePart(relatedPart);
 //	    								}
-//	    								// Part가 Alternative Part일 경우의 처리
-//	    								else if (alternativePart != null && p.isMimeType("multipart/alternative")) {
+	    								// Part가 Alternative Part일 경우의 처리
+//	    							else if (alternativePart != null && p.isMimeType("multipart/alternative")) {
 //	    								    LOGGER.debug("Part is multipart/alternative");
 //	    								    
 //	    								    hasAttach = true;
@@ -2715,9 +2722,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //	                                            continue;
 //	                                        }
 //	                                    }								
-//	                                    // there are cases where an in-line image part doesn't have
-//	                                    // a Content-Disposition header, but has a Content-ID header.    								
-//	    								else if (p instanceof MimePart 
+	                                    // there are cases where an in-line image part doesn't have
+	                                    // a Content-Disposition header, but has a Content-ID header.    								
+//	    								if (p instanceof MimePart 
 //	    								        && ((MimePart)p).getContentID() != null) {
 //	    								    String contentId = ((MimePart)p).getContentID();
 //	    								    LOGGER.debug("Existing ContentId=" + contentId);
@@ -2728,45 +2735,45 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //	    								        mixedPart.addBodyPart(p);
 //	    								    }
 //	    								}
-//	    								// Content-Disposition 헤더가 없이 첨부된 파일이 있어
-//	    								// Content-Type이 application으로 시작하는 경우도 추가함 
-//	    								// 예) Content-Type: application/octet-stream;
-//	    								//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
-//	    							    //    Content-Transfer-Encoding: base64	    								
-//	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
-//	    									mixedPart.addBodyPart(p);
-//	    									
-//	    									// 첨부파일 파트인 경우
-//	    									if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
-//	    											|| p.isMimeType("application/*")) {
-//	    										hasAttach = true;
-//	    									}
-//	    								}
-//	    								// Part가 message 인 경우, 즉 메일이 첨부된 경우
-//	    								else if (p.isMimeType("message/*")) {
-//	    								    LOGGER.debug("Part is message");
-//	    								    
-//	    									mixedPart.addBodyPart(p);
-//	    									hasAttach = true;
-//	    								}							
-//	    								
-//	    								break;
-//									}
-//								}
-//								
-//								// 기존 메시지에 첨부파일이 있거나 Alternative Part 혹은 Related Part가 있는 경우의 처리
-//								if (hasAttach) {
-//									if (alternativePart != null) {
-//										MimeBodyPart wrap = new MimeBodyPart();
-//										wrap.setContent(alternativePart);
-//										mixedPart.addBodyPart(wrap, 0);
-//									} else {
-//										mixedPart.addBodyPart(content, 0);
-//									}							
-//									
-//									message.setContent(mixedPart);							
-//								}
-//								// 기존 메시지가 Related Part일 경우의 처리
+	    								// Content-Disposition 헤더가 없이 첨부된 파일이 있어
+	    								// Content-Type이 application으로 시작하는 경우도 추가함 
+	    								// 예) Content-Type: application/octet-stream;
+	    								//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
+	    							    //    Content-Transfer-Encoding: base64	    								
+	    								if (p.getDisposition() != null || p.isMimeType("application/*")) { 
+	    									mixedPart.addBodyPart(p);
+	    									
+	    									// 첨부파일 파트인 경우
+	    									if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+	    											|| p.isMimeType("application/*")) {
+	    										hasAttach = true;
+	    									}
+	    								}
+	    								// Part가 message 인 경우, 즉 메일이 첨부된 경우
+	    								else if (p.isMimeType("message/*")) {
+	    								    LOGGER.debug("Part is message");
+	    								    
+	    									mixedPart.addBodyPart(p);
+	    									hasAttach = true;
+	    								}							
+	    								
+	    								break;
+									}
+								}
+								
+								// 기존 메시지에 첨부파일이 있거나 Alternative Part 혹은 Related Part가 있는 경우의 처리
+								if (hasAttach) {
+									if (alternativePart != null) {
+										MimeBodyPart wrap = new MimeBodyPart();
+										wrap.setContent(alternativePart);
+										mixedPart.addBodyPart(wrap, 0);
+									} else {
+										mixedPart.addBodyPart(content, 0);
+									}							
+									
+									message.setContent(mixedPart);							
+								}
+								// 기존 메시지가 Related Part일 경우의 처리
 //								else if (oldMessage.isMimeType("multipart/related")) {
 //								    LOGGER.debug("oldMessage is multipart/related");
 //									LOGGER.debug("relatedPart=" + relatedPart);
@@ -2803,10 +2810,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //	                                    alternativePart.addBodyPart(wrap, 1);                                                                               
 //	                                } 
 //								}
-//							}					
-//						}
-//					}
-//		        }        
+							}					
+						}
+					}
+		        }        
 		        
 		        //mailboxUsage + messageSize >= mailboxQuota인 경우 OVERQUOTA Exception
 		        CountOutputStream cos = null;
@@ -3983,6 +3990,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		IMAPAccess ia = null;
 		// get user credentials
 		try{
+			
+			folderId = URLDecoder.decode(folderId, "UTF-8");
 			
 			boolean permanentlyDelete = false;
 
