@@ -11,7 +11,7 @@
 	<typeAlias  alias="MApprGOpinionInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
 	<typeAlias  alias="MApprGAbsenteeInfoVO"				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO"/>
 	
-	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO">
+	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
 		<isEqual property="type" compareValue="DO">
 			<![CDATA[
 				SELECT 
@@ -23,7 +23,6 @@
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
-					APRSTATE,
 					FUNCTIONTYPE
 				FROM 
 					VAPRDOINGDOCLIST 
@@ -60,8 +59,6 @@
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
 					HASATTACHYN,
 					HASOPINIONYN,
-					APRTYPE,
-					APRSTATE,
 					FUNCTIONTYPE
 				FROM 
 					VAPRWILLDOCLIST 
@@ -101,7 +98,6 @@
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
-					APRSTATE,
 					FUNCTIONTYPE
 				FROM 
 					VAPRWILLDOCLIST 
@@ -139,9 +135,7 @@
 				A.WRITERDEPTNAME$lang$ WRITERDEPTNAME,
 				A.HASATTACHYN,
 				A.HASOPINIONYN,
-				B.APRTYPE,
-				B.APRSTATE,
-				A.FUNCTIONTYPE
+				B.APRTYPE
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -272,7 +266,8 @@
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
 				SELECT 
-					COUNT(DISTINCT DOCID)
+					COUNT(DISTINCT DOCID,
+								   APRTYPE)
 				FROM 
 					VAPRWILLDOCLIST 
 	   			WHERE
@@ -298,7 +293,8 @@
 		</isEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
-				COUNT(DISTINCT A.DOCID)
+				COUNT(DISTINCT A.DOCID,
+					  		   B.APRTYPE)
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -548,69 +544,170 @@
 	</select>
 	
 	<select id="MApprovalG.getAprDocHref" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				HREF
-			FROM
-				VAPRDOINGDOCLIST 
-   			WHERE
-   				TENANT_ID = #tenantID#
-   			AND
-   				COMPANYID = #companyID#
-   			AND
-   				DOCID = #docID#
-   			LIMIT
-   				1
-		]]>
+		<isEqual property="type" compareValue="DO">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			LIMIT
+	   				1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			LIMIT
+	   				1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			LIMIT
+	   				1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					TBL_ENDAPRDOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			LIMIT
+	   				1
+			]]>
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getAprCommentCount" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
-				COUNT(*)
-			FROM
-				TBL_APROPINIONINFO
-			WHERE
-				TENANT_ID = #tenantID#
-			AND
-				COMPANYID = #companyID#
-			AND
-				DOCID = #docID#
-		]]>
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_ENDAPROPINIONINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			]]>
+		</isEqual>
+		<isNotEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_APROPINIONINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprGOpinionInfoVO">
-		<![CDATA[
-			SELECT 
-				 CONTENT,
-				 OPINIONGB,
-				 USERID,
-				 CASE 
-   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
-   					THEN USERNAME
-   					ELSE USERNAME$lang$
-   				 END USERNAME,
-   				 CASE 
-   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
-   					THEN USERJOBTITLE
-   					ELSE USERJOBTITLE$lang$
-   				 END USERJOBTITLE,
-   				 CASE 
-   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
-   					THEN USERDEPTNAME
-   					ELSE USERDEPTNAME$lang$
-   				 END USERDEPTNAME
-			FROM 
-				TBL_APROPINIONINFO  
-			WHERE 
-				TENANT_ID =#tenantID#
-			AND
-				COMPANYID = #companyID#	
-			AND 
-				DOCID = #docID#
-			ORDER BY 
-				OPINIONSN DESC
-		]]>
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					 CONTENT,
+					 OPINIONGB,
+					 USERID,
+					 CASE 
+	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
+	   					THEN USERNAME
+	   					ELSE USERNAME$lang$
+	   				 END USERNAME,
+	   				 CASE 
+	   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
+	   					THEN USERJOBTITLE
+	   					ELSE USERJOBTITLE$lang$
+	   				 END USERJOBTITLE,
+	   				 CASE 
+	   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
+	   					THEN USERDEPTNAME
+	   					ELSE USERDEPTNAME$lang$
+	   				 END USERDEPTNAME
+				FROM 
+					TBL_ENDAPROPINIONINFO  
+				WHERE 
+					TENANT_ID =#tenantID#
+				AND
+					COMPANYID = #companyID#	
+				AND 
+					DOCID = #docID#
+				ORDER BY 
+					OPINIONSN DESC
+			]]>
+		</isEqual>
+		<isNotEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					 CONTENT,
+					 OPINIONGB,
+					 USERID,
+					 CASE 
+	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
+	   					THEN USERNAME
+	   					ELSE USERNAME$lang$
+	   				 END USERNAME,
+	   				 CASE 
+	   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
+	   					THEN USERJOBTITLE
+	   					ELSE USERJOBTITLE$lang$
+	   				 END USERJOBTITLE,
+	   				 CASE 
+	   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
+	   					THEN USERDEPTNAME
+	   					ELSE USERDEPTNAME$lang$
+	   				 END USERDEPTNAME
+				FROM 
+					TBL_APROPINIONINFO  
+				WHERE 
+					TENANT_ID =#tenantID#
+				AND
+					COMPANYID = #companyID#	
+				AND 
+					DOCID = #docID#
+				ORDER BY 
+					OPINIONSN DESC
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<select id="MApprovalG.getAttachList" parameterClass="Map" resultClass="MApprGAttachInfoVO">
@@ -828,6 +925,92 @@
 				LIMIT
 					1
 			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+			SELECT
+				A.DOCID,
+				A.ORGDOCID,
+				A.FORMID,
+				A.HREF,
+				A.HASATTACHYN,
+				B.APRMEMBERID,
+				B.APRMEMBERNAME,
+				B.APRMEMBERNAME2,
+				B.APRMEMBERDEPTID,
+				A.DOCSTATE,
+				A.DOCTITLE,
+				CASE 
+   					WHEN (A.WRITERNAME$lang$ = '' OR A.WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+   					ELSE A.WRITERNAME$lang$
+   				END WRITERNAME,
+   				CASE 
+   					WHEN (A.WRITERDEPTNAME$lang$ = '' OR A.WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+   					ELSE A.WRITERDEPTNAME$lang$
+   				END WRITERDEPTNAME,
+   				CASE 
+   					WHEN (A.WRITERJOBTITLE$lang$ = '' OR A.WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+   					ELSE A.WRITERJOBTITLE$lang$
+   				END WRITERJOBTITLE
+			FROM
+				TBL_ENDAPRDOCINFO A
+			LEFT OUTER JOIN
+	   			TBL_ENDAPRLINEINFO B
+		   	ON
+	   			A.DOCID = B.DOCID
+		   	AND
+	   			A.TENANT_ID = B.TENANT_ID
+		   	AND
+	   			A.COMPANYID = B.COMPANYID
+			INNER JOIN
+				TBL_EXPENDAPRDOCINFO C
+			ON
+		   		A.DOCID = B.DOCID
+		   	AND
+		   		A.TENANT_ID = C.TENANT_ID
+		   	AND
+		   		A.COMPANYID = C.COMPANYID
+		   	<isEqual property="approvalFlag" compareValue="S">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+    	        INNER JOIN 
+    			 	TBL_CODELIST F
+    		    ON 
+    			 	A.FUNCTIONTYPE = F.CODE2 
+			    AND 
+				 	A.TENANT_ID = F.TENANT_ID
+                AND 
+                 	A.COMPANYID = F.COMPANYID 
+                LEFT OUTER JOIN  
+              		TBL_ENDRECEIPTPOINTINFO G 
+              	ON 
+              		A.DOCID = G.DocID 
+			    AND 
+			  		A.TENANT_ID = G.TENANT_ID
+                AND 
+                	A.COMPANYID = G.COMPANYID              
+		   	</isEqual>
+		   	<![CDATA[
+	   			WHERE
+	   				A.TENANT_ID = #tenantID#
+	   			AND
+	   				A.COMPANYID = #companyID#
+	   			AND
+					A.DOCID = #docID#
+			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				AND  
+					E.CODE1 ='SA02'
+				AND  
+					F.CODE1 ='A04'
+		   	</isEqual>
+			LIMIT
+				1
 		</isEqual>
 	</select>
 	

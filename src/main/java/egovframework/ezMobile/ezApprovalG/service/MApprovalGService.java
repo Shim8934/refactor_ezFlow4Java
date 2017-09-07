@@ -21,11 +21,11 @@ public interface MApprovalGService {
 
 	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, MCommonVO userInfo) throws Exception;
 
-	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale) throws Exception;
+	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type) throws Exception;
 
-	public String getOpinionCount(String pDocID, MCommonVO userInfo) throws Exception;
+	public String getOpinionCount(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
-	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, MCommonVO userInfo) throws Exception;
+	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
 	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType) throws Exception;
 
