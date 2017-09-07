@@ -1422,6 +1422,442 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `talk_tbl_adm_defalutserver`
+--
+
+DROP TABLE IF EXISTS `talk_tbl_adm_defalutserver`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbl_adm_defalutserver` (
+  `ServerID` varchar(64) NOT NULL,
+  PRIMARY KEY (`ServerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tbl_api_accesskey`
+--
+
+DROP TABLE IF EXISTS `talk_tbl_api_accesskey`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbl_api_accesskey` (
+  `NAME` varchar(50) NOT NULL,
+  `API` varchar(200) NOT NULL,
+  `KEY` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tbladdjob`
+--
+
+DROP TABLE IF EXISTS `talk_tbladdjob`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbladdjob` (
+  `UserID` varchar(20) NOT NULL,
+  `DeptID` varchar(50) NOT NULL,
+  `Position` varchar(80) DEFAULT NULL,
+  `Position2` varchar(80) DEFAULT NULL,
+  `OrderBy` varchar(100) DEFAULT NULL,
+  `UpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`UserID`,`DeptID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblauthlogintoken`
+--
+
+DROP TABLE IF EXISTS `talk_tblauthlogintoken`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblauthlogintoken` (
+  `UserID` varchar(32) NOT NULL,
+  `LToken` varchar(128) NOT NULL,
+  `RegData` datetime NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `Type` varchar(1) NOT NULL,
+  PRIMARY KEY (`UserID`,`LToken`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblcompany`
+--
+
+DROP TABLE IF EXISTS `talk_tblcompany`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblcompany` (
+  `CompID` varchar(32) NOT NULL,
+  `CompName` varchar(64) NOT NULL,
+  `CompName2` varchar(64) DEFAULT NULL,
+  `CompEmail` varchar(64) NOT NULL,
+  `COrderBy` int(11) DEFAULT NULL,
+  `UpdateDate` datetime NOT NULL,
+  PRIMARY KEY (`CompID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tbldatelimit`
+--
+
+DROP TABLE IF EXISTS `talk_tbldatelimit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbldatelimit` (
+  `Type` varchar(50) NOT NULL,
+  `Value` int(11) NOT NULL,
+  `RegDate` datetime NOT NULL,
+  PRIMARY KEY (`Type`,`RegDate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tbldept`
+--
+
+DROP TABLE IF EXISTS `talk_tbldept`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbldept` (
+  `DeptID` varchar(32) NOT NULL,
+  `DeptName` varchar(200) NOT NULL,
+  `DeptName2` varchar(200) DEFAULT NULL,
+  `DeptEmail` varchar(200) NOT NULL,
+  `ParentDeptID` varchar(200) NOT NULL,
+  `CompID` varchar(200) NOT NULL,
+  `DOrderBy` varchar(200) DEFAULT NULL,
+  `UpdateDate` datetime NOT NULL,
+  PRIMARY KEY (`DeptID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tbldevice`
+--
+
+DROP TABLE IF EXISTS `talk_tbldevice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbldevice` (
+  `UserID` varchar(32) NOT NULL,
+  `DeviceID` varchar(64) NOT NULL,
+  `DeviceType` varchar(7) NOT NULL,
+  `DeviceSubType` varchar(64) NOT NULL,
+  `DeviceToken` varchar(256) NOT NULL,
+  `PushState` char(1) NOT NULL,
+  `RegDate` datetime NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  PRIMARY KEY (`UserID`,`DeviceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblgroup`
+--
+
+DROP TABLE IF EXISTS `talk_tblgroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblgroup` (
+  `UserID` varchar(32) NOT NULL,
+  `GroupID` varchar(32) NOT NULL,
+  `Title` varchar(128) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  PRIMARY KEY (`UserID`,`GroupID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblmember`
+--
+
+DROP TABLE IF EXISTS `talk_tblmember`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblmember` (
+  `OwnerID` varchar(32) NOT NULL,
+  `GroupID` varchar(32) NOT NULL,
+  `UserID` varchar(32) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  PRIMARY KEY (`OwnerID`,`GroupID`,`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblmemberrelation`
+--
+
+DROP TABLE IF EXISTS `talk_tblmemberrelation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblmemberrelation` (
+  `OwnerID` varchar(32) NOT NULL,
+  `UserID` varchar(32) NOT NULL,
+  `Flag` int(11) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  PRIMARY KEY (`OwnerID`,`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblmessage`
+--
+
+DROP TABLE IF EXISTS `talk_tblmessage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblmessage` (
+  `RoomID` varchar(36) NOT NULL,
+  `Mseq` int(11) NOT NULL,
+  `UserID` varchar(32) NOT NULL,
+  `RegDate` varchar(14) NOT NULL,
+  `Message` varchar(8000) NOT NULL,
+  `FilePath` varchar(300) DEFAULT NULL,
+  `ThumnailPath` varchar(300) DEFAULT NULL,
+  `Height` int(11) DEFAULT NULL,
+  `Width` int(11) DEFAULT NULL,
+  `Size` int(11) DEFAULT NULL,
+  `Type` varchar(10) DEFAULT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `FileLimit` varchar(14) DEFAULT NULL,
+  PRIMARY KEY (`RoomID`,`Mseq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblmessage_backup`
+--
+
+DROP TABLE IF EXISTS `talk_tblmessage_backup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblmessage_backup` (
+  `RoomID` varchar(36) NOT NULL,
+  `Mseq` int(11) NOT NULL,
+  `UserID` varchar(32) NOT NULL,
+  `RegDate` varchar(14) NOT NULL,
+  `Message` varchar(8000) NOT NULL,
+  `FilePath` varchar(300) DEFAULT NULL,
+  `ThumnailPath` varchar(300) DEFAULT NULL,
+  `Height` int(11) DEFAULT NULL,
+  `Width` int(11) DEFAULT NULL,
+  `Size` int(11) DEFAULT NULL,
+  `Type` varchar(10) DEFAULT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `FileLimit` varchar(14) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblnotification`
+--
+
+DROP TABLE IF EXISTS `talk_tblnotification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblnotification` (
+  `ItemSeq` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` varchar(100) DEFAULT NULL,
+  `PostDate` datetime DEFAULT NULL,
+  `Sender` varchar(100) DEFAULT NULL,
+  `Subject` varchar(250) DEFAULT NULL,
+  `Type` int(11) DEFAULT NULL,
+  `EtcData` varchar(200) DEFAULT NULL,
+  `LinkURL` varchar(512) DEFAULT NULL,
+  `ShowMsg` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`ItemSeq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblorgandeleteinfo`
+--
+
+DROP TABLE IF EXISTS `talk_tblorgandeleteinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblorgandeleteinfo` (
+  `ID` varchar(32) NOT NULL,
+  `Type` varchar(10) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `RegDate` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblroom`
+--
+
+DROP TABLE IF EXISTS `talk_tblroom`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblroom` (
+  `RoomID` varchar(36) NOT NULL,
+  `UserID` varchar(32) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `SvrID` varchar(64) NOT NULL,
+  `RoomType` varchar(2) NOT NULL,
+  `RegDate` datetime NOT NULL,
+  PRIMARY KEY (`RoomID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblroommember`
+--
+
+DROP TABLE IF EXISTS `talk_tblroommember`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblroommember` (
+  `RoomID` varchar(36) NOT NULL,
+  `MemberID` varchar(32) NOT NULL,
+  `Mseq` int(11) NOT NULL,
+  `StartMSeq` int(11) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `RegDate` datetime NOT NULL,
+  `DelFlag` varchar(1) NOT NULL,
+  PRIMARY KEY (`RoomID`,`MemberID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblroommemberconfig`
+--
+
+DROP TABLE IF EXISTS `talk_tblroommemberconfig`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblroommemberconfig` (
+  `RoomID` varchar(36) NOT NULL,
+  `MemberID` varchar(32) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `Title` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`RoomID`,`MemberID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblroomseq`
+--
+
+DROP TABLE IF EXISTS `talk_tblroomseq`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblroomseq` (
+  `RoomID` varchar(36) NOT NULL,
+  `UserID` varchar(32) NOT NULL,
+  `MaxSeq` int(11) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  PRIMARY KEY (`RoomID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblserverinfo`
+--
+
+DROP TABLE IF EXISTS `talk_tblserverinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblserverinfo` (
+  `ID` varchar(64) NOT NULL,
+  `IP` varchar(128) NOT NULL,
+  `Port` int(11) NOT NULL,
+  `Type` int(11) NOT NULL,
+  `MaxSupport` int(11) NOT NULL,
+  `NowConnect` int(11) NOT NULL,
+  `Status` int(11) NOT NULL,
+  `RelaySvrID` varchar(64) DEFAULT NULL,
+  `Path` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tbluser`
+--
+
+DROP TABLE IF EXISTS `talk_tbluser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbluser` (
+  `UserID` varchar(32) NOT NULL,
+  `PWD` varchar(32) NOT NULL,
+  `Name` varchar(64) NOT NULL,
+  `Name2` varchar(64) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `DeptID` varchar(32) NOT NULL,
+  `DeptName` varchar(64) NOT NULL,
+  `DeptName2` varchar(64) DEFAULT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `CompName` varchar(64) NOT NULL,
+  `CompName2` varchar(64) DEFAULT NULL,
+  `Position` varchar(200) DEFAULT NULL,
+  `Position2` varchar(200) DEFAULT NULL,
+  `Title` varchar(200) DEFAULT NULL,
+  `Title2` varchar(200) DEFAULT NULL,
+  `Tel` varchar(200) DEFAULT NULL,
+  `Mobile` varchar(200) DEFAULT NULL,
+  `MainDept` int(11) DEFAULT NULL,
+  `OrderBy` varchar(200) DEFAULT NULL,
+  `ProfileImage` varchar(250) DEFAULT NULL,
+  `ProfileImage_s` varchar(250) DEFAULT NULL,
+  `UseMobile` varchar(1) DEFAULT NULL,
+  `UpdateDate` datetime NOT NULL,
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tbluserinfo`
+--
+
+DROP TABLE IF EXISTS `talk_tbluserinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tbluserinfo` (
+  `UserID` varchar(32) NOT NULL,
+  `CompID` varchar(32) NOT NULL,
+  `LoginToken` varchar(128) DEFAULT NULL,
+  `Lang` char(1) DEFAULT NULL,
+  `Message` varchar(256) DEFAULT NULL,
+  `DefaultSvrID` varchar(64) DEFAULT NULL,
+  `PCSvrID` varchar(64) DEFAULT NULL,
+  `MoblieSvrID` varchar(64) DEFAULT NULL,
+  `Status` int(11) DEFAULT NULL,
+  `StatusMobile` int(11) DEFAULT NULL,
+  `PCConnectTime` datetime DEFAULT NULL,
+  `MobileConnectTime` datetime DEFAULT NULL,
+  `PcDisconnectTime` datetime DEFAULT NULL,
+  `MobileDisconnectTime` datetime DEFAULT NULL,
+  `UpdateDate` datetime NOT NULL,
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `talk_tblversion`
+--
+
+DROP TABLE IF EXISTS `talk_tblversion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `talk_tblversion` (
+  `Type` varchar(50) NOT NULL,
+  `Value` varchar(100) NOT NULL,
+  `RegDate` datetime NOT NULL,
+  PRIMARY KEY (`Type`,`RegDate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_addjobmaster`
 --
 
@@ -3885,8 +4321,7 @@ CREATE TABLE `tbl_expaprline` (
   `PROXYUSERDEPTNAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERSN`,`ORGUSERID`),
-  UNIQUE KEY `PK_TBL_EXPAPRLINE` (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERSN`,`ORGUSERID`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERSN`,`ORGUSERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3953,8 +4388,7 @@ CREATE TABLE `tbl_expendaprline` (
   `PROXYUSERDEPTNAME2` varchar(400) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`ORGUSERID`,`APRMEMBERSN`,`DOCID`),
-  UNIQUE KEY `PK_TBL_EXPENDAPRLINE` (`TENANT_ID`,`COMPANYID`,`ORGUSERID`,`APRMEMBERSN`,`DOCID`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`ORGUSERID`,`APRMEMBERSN`,`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5689,6 +6123,39 @@ CREATE TABLE `tbl_receiptpointinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_recexchinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_recexchinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_recexchinfo` (
+  `PackDocID` varchar(255) DEFAULT NULL,
+  `administrative_num` varchar(255) DEFAULT NULL,
+  `s_id` varchar(30) DEFAULT NULL,
+  `s_UserID` varchar(30) DEFAULT NULL,
+  `s_orgname` varchar(100) DEFAULT NULL,
+  `s_systemname` varchar(100) DEFAULT NULL,
+  `s_email` varchar(50) DEFAULT NULL,
+  `r_ID` varchar(30) DEFAULT NULL,
+  `r_UserID` varchar(30) DEFAULT NULL,
+  `recdate` datetime DEFAULT NULL,
+  `attachxml` varchar(255) DEFAULT NULL,
+  `attachxsl` varchar(255) DEFAULT NULL,
+  `xmlpath` varchar(255) DEFAULT NULL,
+  `sourcexmlPath` varchar(255) DEFAULT NULL,
+  `DocID` varchar(50) DEFAULT NULL,
+  `ModiFlag` varchar(10) DEFAULT NULL,
+  `ModiDate` datetime DEFAULT NULL,
+  `Notification` varchar(10) DEFAULT NULL,
+  `AddenDa` text,
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`COMPANYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_record`
 --
 
@@ -5792,6 +6259,74 @@ CREATE TABLE `tbl_recreadhistory` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SERIALNO`,`DOCID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_recrelayattachinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_recrelayattachinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_recrelayattachinfo` (
+  `xDocID` varchar(255) DEFAULT NULL,
+  `AttachName` varchar(255) DEFAULT NULL,
+  `AttachURL` varchar(255) DEFAULT NULL,
+  `AttachSN` int(11) DEFAULT NULL,
+  `AttachType` char(1) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) DEFAULT NULL,
+  `COMPANYID` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_recrelayinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_recrelayinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_recrelayinfo` (
+  `docID` char(20) DEFAULT NULL,
+  `xDocID` varchar(255) NOT NULL,
+  `recdate` datetime DEFAULT NULL,
+  `mFrom` varchar(255) DEFAULT NULL,
+  `mTo` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `xMailType` varchar(8) DEFAULT NULL,
+  `xFromCode` varchar(255) DEFAULT NULL,
+  `xToCode` varchar(255) DEFAULT NULL,
+  `xGw` varchar(255) DEFAULT NULL,
+  `xDocType` varchar(6) DEFAULT NULL,
+  `xDtdversion` varchar(255) DEFAULT NULL,
+  `xxslVersion` varchar(255) DEFAULT NULL,
+  `contentType` varchar(255) DEFAULT NULL,
+  `sealURL` varchar(255) DEFAULT NULL,
+  `xmlURL` varchar(255) DEFAULT NULL,
+  `emlURL` varchar(255) DEFAULT NULL,
+  `isPKI` char(1) DEFAULT NULL,
+  `receivedDate` char(20) DEFAULT NULL,
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`idx`,`xDocID`,`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='							';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_recrelaysigninfo`
+--
+
+DROP TABLE IF EXISTS `tbl_recrelaysigninfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_recrelaysigninfo` (
+  `XDOCID` varchar(255) DEFAULT NULL,
+  `SIGNNAME` varchar(255) DEFAULT NULL,
+  `REALSIGNNAME` varchar(255) DEFAULT NULL,
+  `COMPANYID` varchar(45) DEFAULT NULL,
+  `TENANT_ID` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6508,8 +7043,7 @@ CREATE TABLE `tbl_taskattach` (
   `FILEPATH` varchar(100) NOT NULL,
   `TYPE` varchar(2) DEFAULT NULL,
   `TENANTID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`ATTACHID`,`TENANTID`),
-  UNIQUE KEY `IDX_TBL_TASKATTACH` (`TENANTID`,`ATTACHID`,`TASKID`)
+  PRIMARY KEY (`ATTACHID`,`TENANTID`,`TASKID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6625,9 +7159,10 @@ DROP TABLE IF EXISTS `tbl_taskconfig`;
 CREATE TABLE `tbl_taskconfig` (
   `USERID` varchar(100) NOT NULL,
   `DELAYCOLOR` varchar(12) NOT NULL,
+  `COMPLETECOLOR` varchar(12) NOT NULL,
   `AUTODELETE` bigint(10) NOT NULL,
   `TENANTID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANTID`,`USERID`)
+  PRIMARY KEY (`USERID`,`TENANTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6714,7 +7249,7 @@ CREATE TABLE `tbl_taskshare` (
   `UPDATETIME` datetime DEFAULT NULL,
   `NEWORDER` varchar(4) DEFAULT NULL,
   `TENANTID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TASKID`,`SHARERID`,`TENANTID`)
+  PRIMARY KEY (`TENANTID`,`TASKID`,`SHARERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7360,7 +7895,7 @@ CREATE TABLE `tbl_usermobileinfo` (
   `TIMEZONE` varchar(40) NOT NULL,
   `LANG` varchar(4) NOT NULL,
   `MAINTYPE` char(1) NOT NULL,
-  `LISTCNT` mediumint(5) NOT NULL,  
+  `LISTCNT` mediumint(5) NOT NULL,
   `USESECURITY` char(1) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`USERID`,`TENANT_ID`)
