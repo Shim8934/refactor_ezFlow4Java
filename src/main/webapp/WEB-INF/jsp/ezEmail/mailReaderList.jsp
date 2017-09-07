@@ -285,10 +285,10 @@
 	                    <tr>
 	                        <th style="width: 14px;">
 	                            <input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onclick="event_listCheckboxclick(this);"></th>
-	                        <th style="width: 92px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t31' /></th>
-	                        <th style="width: 212px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t1019' /></th>
-	                        <th style="width: 142px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t99000074' /></th>
-	                        <th style="width: 82px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t99000075' /></th>
+	                        <th style="width: 92px; text-align: left;"><spring:message code='ezEmail.t31' /></th>
+	                        <th style="width: 212px; text-align: left;"><spring:message code='ezEmail.t1019' /></th>
+	                        <th style="width: 142px; text-align: left;"><spring:message code='ezEmail.t99000074' /></th>
+	                        <th style="width: 82px; text-align: left;"><spring:message code='ezEmail.t99000075' /></th>
 	                    </tr>
 	                </table>
 	            </table>

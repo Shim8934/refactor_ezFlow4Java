@@ -40,6 +40,7 @@ var strLang42 = "Select message to export.";
 var strLang43 = "Select message to reply.";
 var strLang45 = "Select message to reply to all.";
 var strLang47 = "Select message to forward";
+var strLang49 = "Select message to view read receipt list."
 var strLang50 = "Select a message to view read receipt list.";
 var strLang51 = "Select item to move or copy.";
 var strLang52 = "Error occurred while copying message.";
