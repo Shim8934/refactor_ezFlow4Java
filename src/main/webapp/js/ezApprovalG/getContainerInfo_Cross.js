@@ -281,7 +281,6 @@ function GetUserContListSave(AllFG) {
     xmlDocListHttp = createXMLHttpRequest();
     DocListType = "UserContDocList";
     if (pChackYN == "FALSE") {
-        curpage = 1;
         nowblock = 0;
         totalPage = 0;
         OrderOption = "";
@@ -301,7 +300,7 @@ function GetUserContListSave(AllFG) {
     createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
     createNodeAndInsertText(xmlpara, objNode, "AllFG", AllFG);
     
-    xmlDocListHttp.open("post", "getUserContListSave.do", true);
+    xmlDocListHttp.open("post", "/ezApprovalG/getUserContListSave.do", true);
     xmlDocListHttp.responseType='blob';
     xmlDocListHttp.send(xmlpara);
     xmlDocListHttp.onload = function(e) {

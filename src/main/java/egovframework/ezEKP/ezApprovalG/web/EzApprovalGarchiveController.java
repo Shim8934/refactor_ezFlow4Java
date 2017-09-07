@@ -1766,11 +1766,8 @@ public class EzApprovalGarchiveController {
 		
 		String pSubQuery = "";
 		String p_UserLang = userInfo.getLang();
-		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10)
-        {
-
-            try
-            {
+		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10) {
+            try {
             	String TempQuery = "";
             	String ReturnQuery = "(1 = 1) ";
             	
@@ -1800,10 +1797,10 @@ public class EzApprovalGarchiveController {
                     }
                 }
                 if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-                    ReturnQuery += " AND STARTDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
                 }
                 if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-                    ReturnQuery += " AND STARTDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
                 }
                 if (TempQuery.indexOf("ENDDATEAF;") != -1) {
                     ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
