@@ -136,6 +136,8 @@
 		            document.getElementById("file").type = "text";
 		            document.getElementById("file").type = "file";
 		        }
+		        
+		        isbigyn = "N";
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
