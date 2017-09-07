@@ -68,11 +68,11 @@
 		            document.getElementById("MailEnv_sub2").style.display = "none";
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
-		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2000' />";
+		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
 		        } else if (tasktype == "2") {
-		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2001' />";
+		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
 		        } else {
-		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2002' />";
+		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
 		        }
 
 				/* 의견카운트 */
@@ -801,7 +801,7 @@
 							<th><spring:message code='ezTask.t2003' /></th>
 							<td style="width:100%">
 								<div>
-									<span id="taskType"></span>
+									<span class="taskType"></span>
 								</div>
 							</td>
 						</tr>
@@ -975,7 +975,7 @@
 								<th><spring:message code='ezTask.t2003' /></th>
 								<td style="width:100%">
 									<div>
-										<span id="taskType"></span>
+										<span class="taskType"></span>
 									</div>
 								</td>
 							</tr>
