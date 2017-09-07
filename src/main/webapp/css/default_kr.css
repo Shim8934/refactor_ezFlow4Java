@@ -1941,9 +1941,9 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .popup_title_img{margin:0px 0px -1px 0px;}
 
 .opinion_ul{list-style:none; margin:0px; padding:0px;}
-.opinion_ul li{border-bottom:1px solid #dce4e8; margin:0px; padding:0px; vertical-align:middle; white-space:nowrap; font-size:12px; color:#333; line-height:28px; clear:both; cursor:pointer;}
+.opinion_ul li{border-bottom:1px solid #dce4e8; margin:0px; padding:0px; vertical-align:middle; white-space:nowrap; font-size:12px; color:#333; line-height:28px; clear:both;}
 .opinion_ul li span{display:inline-block; margin:0; vertical-align:middle;}
-.opinion_ul .opinion_dept{width:15%; padding:0 10px; cursor:pointer; text-align:center; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.opinion_ul .opinion_dept{width:15%; padding:0 10px; cursor:pointer; text-align:center; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; cursor:pointer;}
 .opinion_ul .opinion_list{width:60%; padding:0 10px; white-space:normal;}
 .opinion_ul .opinion_date{width:15%; padding:0 10px; text-align:right;}
 .opinion_ul .opinion_list .opinionList_close{margin:0px 5px; line-height:32px; cursor:pointer;}

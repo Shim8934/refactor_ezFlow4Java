@@ -298,7 +298,7 @@
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
 							
 							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/popup_list_close.png' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
+							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/popup_list_close.png' style='cursor:pointer;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
 // 							taskCommentList += "<span class='opinion_close' onclick='delete_comment(" + deleteCommentParam + ")'><img src='/images/popup_list_close.png' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
 							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
@@ -414,7 +414,7 @@
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
 							
 							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/popup_list_close.png' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
+							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/popup_list_close.png' style='cursor:pointer;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
 // 							taskCommentList += "<span class='opinion_close' onclick='delete_comment(" + deleteCommentParam + ")'><img src='/images/popup_list_close.png'></span>";
 							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
@@ -922,7 +922,7 @@
 										<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
 											<li>
 												<span class="opinion_dept" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
-												<span class="opinion_list"><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/popup_list_close.png" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"></span>
+												<span class="opinion_list"><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/popup_list_close.png" style="cursor:pointer;" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"></span>
 <%-- 												<span class="opinion_close" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"><img src="/images/popup_list_close.png" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"></span> --%>
 												<span class="opinion_date"><c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' /></span>
 											</li>
