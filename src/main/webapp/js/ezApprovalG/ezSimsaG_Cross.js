@@ -613,7 +613,6 @@ function makeXML(newDocID) {
 	            var resultXml = encodeDN(rtnXML);
 	            ContentXML = resultXml.split('::')[1];
 	            ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-	            alert(ContentXML);
 	            result = sendExtDoc(ContentXML);
 	            if (result) {
 	            	return true;

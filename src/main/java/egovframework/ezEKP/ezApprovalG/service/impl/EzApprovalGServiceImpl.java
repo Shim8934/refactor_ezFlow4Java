@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,11 +19,16 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -36,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -7751,6 +7758,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	// 문서의 정보를 가져온다. 
+			// mode : APR - 진행, else - 완료,       selected : ALL - 정규스펙, else - 필요한 것만 ";"로 구분.
 	public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocInfo Started");
 		StringBuilder rtnXML = new StringBuilder();
@@ -7807,7 +7816,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnXML.append("<DATA>");
 		
 		if (selected.toUpperCase().equals("ALL")) {
-			rtnXML.append("<DOCID>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCID").item(0).getTextContent())) + "</DOCID>");
+ 			rtnXML.append("<DOCID>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCID").item(0).getTextContent())) + "</DOCID>");
 			rtnXML.append("<FORMID>" + makeXMLString(makeListField(docXML.getElementsByTagName("FORMID").item(0).getTextContent())) + "</FORMID>");
 			rtnXML.append("<ORGDOCID>" + makeXMLString(makeListField(docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent())) + "</ORGDOCID>");
 			rtnXML.append("<DOCTYPE>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCTYPE").item(0).getTextContent())) + "</DOCTYPE>");
@@ -21606,7 +21615,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception {
 		String strErrorMsg = "";
 		try {
- 			content = beforeXmlConverter("<CONTENT>" + content + "</CONTENT>");
+ 			content = beforeXmlConverter("<CONTENT>" + "<body style='font-family:굴림; font-Size:10px; font-syle:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'><br/>ffff<br/>aaaa<div style='font-family:굴림; font-Size:10px; font-syle:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'>dddd</div>bbbbbbbbcc</body>" + "</CONTENT>");
 			
 			Document xmlDom = commonUtil.convertStringToDocument(content);
 			Node node = xmlDom.getDocumentElement();
@@ -21747,6 +21756,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//strong 태그를 b태그로 변경
 			return strRtnContent;
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
@@ -21760,7 +21770,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    return strRtnContent;
 	}
 
-	private String beforeXmlConverter(String content) {
+	private String beforeXmlConverter(String content) throws Exception {
 		// ==========================================================================================================================
         // DIV태그가 겹쳐있을 경우 처리.
         // ex) <td style="border: 1px solid rgb(0, 0, 0); border-image: none; height: 31px;">
@@ -21768,40 +21778,75 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         //              <div style="font-size: 10pt;">미학과에술문화</div></div></td>
         // 위와 같은 경우 DIV제거를 위해 속성을 맞춰준다.
         // 상위/하위 Element 의 innerText가 동일하다면 Style을 맞춰준다.
-
         // 리턴시 div태그를 p태그로 변경하여 리턴한다.
-//		String html = "<body style='width=100'><p>text</p>dddddd <div style='text-align: center; line-height: 1.2; font-size: 12pt; margin-top: 0px; margin-bottom: 0px;'></div></body>";
 		Document xmlDom = commonUtil.convertStringToDocument(content);
   		Node node = xmlDom.getDocumentElement();
-		for(int i=0; i < xmlDom.getElementsByTagName("body").getLength(); i++) {
-			for(int j=0; j<node.getChildNodes().getLength(); j++) {
-				if(node.getChildNodes().item(j).getNodeType() == 3) {
-					Node parentNode = node.getChildNodes().item(j).getParentNode();
+		for (int i=0; i < xmlDom.getElementsByTagName("body").getLength(); i++) {
+			for (int j=0; j< xmlDom.getElementsByTagName("body").item(0).getChildNodes().getLength(); j++) {
+				Node childNode = xmlDom.getElementsByTagName("body").item(0).getChildNodes().item(j);
+				if (xmlDom.getElementsByTagName("body").item(0).getChildNodes().item(j).getNodeType() == 3) {
+					String parentText = childNode.getParentNode().getTextContent();
+					String tempContext = childNode.getTextContent();
+					
 					Node newChild = xmlDom.createElement("p");
 					
-					if(!parentNode.equals(newChild)) {
-						newChild.appendChild(node.getChildNodes().item(j));
-						parentNode.replaceChild(newChild, node.getChildNodes().item(j));
+					if (!parentText.equals(tempContext)) {
+						
+						newChild.appendChild(xmlDom.createTextNode(childNode.getTextContent()));
+						
+						if (xmlDom.getElementsByTagName("body").item(0).getChildNodes().item(j).getParentNode().hasAttributes()) {
+							if (xmlDom.getElementsByTagName("body").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
+								Attr id = xmlDom.createAttribute("style");
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+						}
+						xmlDom.getElementsByTagName("body").item(0).replaceChild(newChild, xmlDom.getElementsByTagName("body").item(0).getChildNodes().item(j));
 					}
+					  newChild = null; //p 태그 붙이고 다른 것들도 붙일 수 있으니 초기화
 				}
 			}
 		}
 		
-		for(int i=0; i < xmlDom.getElementsByTagName("div").getLength(); i++) {
-			for(int j=0; j<node.getChildNodes().getLength(); j++) {
-				if(node.getChildNodes().item(j).getNodeType() == 3) {
-					Node parentNode = node.getChildNodes().item(j).getParentNode();
+		for (int i=0; i < xmlDom.getElementsByTagName("div").getLength(); i++) {
+			for (int j=0; j< xmlDom.getElementsByTagName("div").item(0).getChildNodes().getLength(); j++) {
+				Node childNode = xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j);
+				if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getNodeType() == 3) {
+					String parentText = childNode.getParentNode().getTextContent();
+					String tempContext = childNode.getTextContent();
+					
 					Node newChild = xmlDom.createElement("p");
-					if(!parentNode.equals(newChild)) {
-						newChild.appendChild(node.getChildNodes().item(j));
-						parentNode.replaceChild(newChild, node.getChildNodes().item(j));
+					
+					if (!parentText.equals(tempContext)) {
+						
+						newChild.appendChild(xmlDom.createTextNode(childNode.getTextContent()));
+						
+						if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().hasAttributes()) {
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
+								Attr id = xmlDom.createAttribute("style");
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+						}
+						xmlDom.getElementsByTagName("body").item(0).replaceChild(newChild, xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j));
 					}
+					  newChild = null; //p 태그 붙이고 다른 것들도 붙일 수 있으니 초기화
 				} else {
 					
 				}
 			}
 		}
 		
+		 StringWriter sw = new StringWriter();
+	        TransformerFactory tf = TransformerFactory.newInstance();
+	        Transformer transformer = tf.newTransformer();
+	        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+	        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	        transformer.transform(new DOMSource(xmlDom), new StreamResult(sw));
+	       System.out.println(sw.toString());
+	       
 		String strRtnHTML = null;
 		
 		if (xmlDom.getElementsByTagName("*").getLength() == 0) {
@@ -22033,7 +22078,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception {
-		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "DATA" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
 		String strResult = "";
 		boolean exist;
 		String result = "";

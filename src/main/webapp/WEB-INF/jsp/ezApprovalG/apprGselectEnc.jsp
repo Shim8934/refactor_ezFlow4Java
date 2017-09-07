@@ -40,42 +40,43 @@
                 document.getElementById("btnOpinion1").style.display = "";
                 document.getElementById("btnOpinion2").style.display = "";
                 document.getElementById("btnOpinion3").style.display = "";
-            }
-            else {
+            } else {
                 var flag = false;
                 objXml = loadXMLString(objXml);
                 if (BroswerAndNonActiveXCheck() == "CROSS") {
                     document.getElementById("btnOpinion1").style.display = "none";
                     document.getElementById("btnOpinion2").style.display = "none";                    
-                }
-                else {
+                } else {
                     if (getNodeText(GetChildNodes(GetChildNodes(objXml)[0])[1]) == "Y") {
                         flag = true;
                         document.getElementById("btnOpinion1").style.display = "";
-                    }
-                    else
+                    } else {
                         document.getElementById("btnOpinion1").style.display = "none";
+                    }
 
                     if (getNodeText(GetChildNodes(GetChildNodes(objXml)[0])[0]) == "Y") {
                         flag = true;
                         document.getElementById("btnOpinion2").style.display = "";
-                    }
-                    else
+                    } else {
                         document.getElementById("btnOpinion2").style.display = "none";
+                    }
 
                     if (getNodeText(GetChildNodes(GetChildNodes(objXml)[0])[2]) == "Y") {
                         flag = true;
                         document.getElementById("btnOpinion3").style.display = "";
-                    }
-                    else
+                    } else {
                         document.getElementById("btnOpinion3").style.display = "none";
-
-                    if(!flag)
+                    }
+                    
+                    if (!flag) {
                         document.getElementById("btnOpinion3").style.display = "";
+                    }
                 }
             }
-            if (!CrossYN())
+            
+            if (!CrossYN()) {
                 window.returnValue = "NONE";
+            }
         }
 
     function GetencodeinfoxXML() {
@@ -84,29 +85,29 @@
         xhttp.send();
         return xhttp.responseText;
     }
+    
     function btnOpinion1_onclick() {
         if (ReturnFunction != null) {
             ReturnFunction("ENC");
-        }
-        else {
+        } else {
             window.returnValue = "ENC";
             window.close();
         }
     }
+    
     function btnOpinion2_onclick() {
         if (ReturnFunction != null) {
             ReturnFunction("SIGN");
-        }
-        else {
+        } else {
             window.returnValue = "SIGN";
             window.close();
         }
     }
+    
     function btnOpinion3_onclick() {
         if (ReturnFunction != null) {
             ReturnFunction("NONE");
-        }
-        else {
+        } else {
             window.returnValue = "NONE";
             window.close();
         }
