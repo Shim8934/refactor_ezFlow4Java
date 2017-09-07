@@ -1869,3 +1869,17 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .progress_txt ul li .txt_title{width:70px; font-weight:bold; margin:0px; padding:0px 9px; background:url(/images/pr_txtList.gif) 0px 10px no-repeat; overflow:hidden;}
 .progress_txt ul li .txt_content{max-width:310px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .progress_txt p{margin:7px 0px; padding:0px;}
+
+.popup_title_txt{color:#333; font-size:14px; font-weight:bold; height:16px; margin:0px; padding:0px 0px 10px 0px;}
+.popup_title_img{margin:0px 0px -1px 0px;}
+
+.opinion_ul{list-style:none; margin:0px; padding:0px;}
+.opinion_ul li{height:30px; border-bottom:1px solid #dce4e8; margin:0px; padding:0px; vertical-align:middle; white-space:nowrap; font-size:12px; color:#333; line-height:28px; clear:both; cursor:pointer;}
+.opinion_ul li span{display:inline-block; height:30px; margin:0; vertical-align:middle;}
+.opinion_ul .opinion_dept{width:90px; padding:0 10px; cursor:pointer; text-align:center; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.opinion_ul .opinion_list{width:350px; padding:0 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.opinion_ul .opinion_date{width:108px; padding:0 10px; float:right; text-align:right;}
+.opinion_ul .opinion_list .opinionList_close{margin:0px 5px; line-height:32px; cursor:pointer;}
+
+.opinion_ul li:nth-child(odd){background:#FFF;}
+.opinion_ul li:nth-child(even){background:#eaf0f4;}

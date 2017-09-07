@@ -19,22 +19,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
 		
-		<style type="text/css">
-			.popup_title_txt{color:#333; font-size:14px; font-weight:bold; height:16px; margin:0px; padding:0px 0px 10px 0px;}
-			.popup_title_img{margin:0px 0px -1px 0px;}
-			
-			.opinion_ul{list-style:none; margin:0px; padding:0px;}
-			.opinion_ul li{height:30px; border-bottom:1px solid #dce4e8; margin:0px; padding:0px; vertical-align:middle; white-space:nowrap; font-size:12px; color:#333; line-height:28px; clear:both; cursor:pointer;}
-			.opinion_ul li span{display:inline-block; height:30px; margin:0; vertical-align:middle;}
-			.opinion_ul .opinion_dept{width:90px; padding:0 10px; cursor:pointer; text-align:center; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-			.opinion_ul .opinion_list{width:350px; padding:0 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-			.opinion_ul .opinion_date{width:108px; padding:0 10px; float:right; text-align:right;}
-			.opinion_ul .opinion_list .opinionList_close{margin:0px 5px; line-height:32px; cursor:pointer;}
-			
-			.opinion_ul li:nth-child(odd){background:#FFF;}
-			.opinion_ul li:nth-child(even){background:#eaf0f4;}
-		</style>
-		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
@@ -617,6 +601,7 @@
 			    document.getElementById("tabpart").style.display = "none";
 			    document.getElementById("tablework").style.display = "none";
 			    document.getElementById("tablecomment").style.display = "none";
+			    $("#updateStatus").hide();
 			
 			    var status = "";
 				switch (taskstatus) {
@@ -687,6 +672,7 @@
 			    document.getElementById("tabpart").style.display = "";
 			    document.getElementById("tablework").style.display = "";
 			    document.getElementById("tablecomment").style.display = "";
+			    $("#updateStatus").show();
 			
 			    if (selecttab == "0") {
 			    	document.getElementById("taskInfo").style.display = "";
@@ -764,7 +750,7 @@
 		</script>
 		
 		<div class="wrap_progress">
-			<h4><c:out value = '${taskInfoVO.title }' /></h4>
+			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"><c:out value = '${taskInfoVO.title }' /></h4>
 			<div class="circle progress_graph">
 				<strong></strong>
 			</div>
@@ -883,7 +869,7 @@
 			</tr>
 			
 			<tr>
-				<td style="padding-top:4px;height:20px" class="pad1">
+				<td style="padding-top:4px;height:20px">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
@@ -966,7 +952,7 @@
 		<div id="printScreen" style="display: none;">
 			<table class="layout" >
 				<tr>
-					<td>
+					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.lhj02' />
 					</td>
 				</tr>
@@ -1070,8 +1056,8 @@
 						</table>
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr style="height:20px;">
+					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<c:if test="${taskInfoVO.taskType == '1'}">
 							<spring:message code='ezTask.t2011' />
 						</c:if>
@@ -1081,10 +1067,10 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="padding-top:10px;padding-bottom:4px"><div class='margin' id="printDocument" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
+					<td><div class='margin' id="printDocument" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
 				</tr>
-				<tr id="printattachView" style="display:none">
-					<td style="height:20px" class="pad1">
+				<tr id="printattachView" style="display:none;">
+					<td style="height:20px; padding-top:10px;">
 						<table class="file">
 							<tr>
 								<th><spring:message code='ezTask.t160' /></th>
@@ -1095,14 +1081,16 @@
 				</tr>
 				
 				<!-- 진행사항 -->
-				<tr id="printTaskWork" style="display:none;">
-					<td><spring:message code='ezTask.t2011' /></td>
+				<tr id="printTaskWork" style="display:none; height:20px;">
+					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
+						<spring:message code='ezTask.t2011' />
+					</td>
 				</tr>
 				<tr id="printTaskWorkContent" style="display:none;">
-					<td style="padding-top:10px;padding-bottom:4px"><div class='margin' id="printDocument2" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
+					<td><div class='margin' id="printDocument2" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
 				</tr>
-				<tr id="printattachViewProgress" style="display:none">
-					<td style="height:20px" class="pad1">
+				<tr id="printattachViewProgress" style="display:none;">
+					<td style="height:20px; padding-top:10px;">
 						<table class="file">
 							<tr>
 								<th><spring:message code='ezTask.t160' /></th>
@@ -1113,7 +1101,9 @@
 				</tr>
 				<!-- 의견 -->
 				<tr id ="optiontr" style="height:20px">
-					<td><spring:message code='ezTask.t2013' /></td>
+					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
+						<spring:message code='ezTask.t2013' />
+					</td>
 				</tr>
 				<tr id="printCommentView" style="display:none">
 					<td style="height:20px">

@@ -116,6 +116,11 @@
 					</td>
 				</tr>
 				<tr>
+					<td class="popup_title_txt" style="padding:0px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
+						<spring:message code='ezTask.lhj06' />
+					</td>
+				</tr>
+				<tr>
 					<td id="EdtorSize" style="height:100%;">
 						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
 					</td>
@@ -131,11 +136,14 @@
 		<div id="printScreen" style="display: none">
 			<table class="content">
 				<tr>
-					<th><spring:message code='ezTask.t160' /></th>
-					<td><div id="printAttach"></div></td>
+					<td class="popup_title_txt"><img src="/images/popup_title_icon.gif" class="popup_title_img"><spring:message code='ezTask.lhj06' /></td>
 				</tr>
 				<tr style="width:100%;">
 					<td colspan="2"><div id="printDocument" style="padding-right: 5px; padding-left: 5px; padding-bottom: 5px; width: 100%; padding-top: 5px"></div></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezTask.t160' /></th>
+					<td><div id="printAttach"></div></td>
 				</tr>
 			</table>
 		</div>
