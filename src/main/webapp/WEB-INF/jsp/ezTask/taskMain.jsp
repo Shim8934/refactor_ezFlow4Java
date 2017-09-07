@@ -749,23 +749,14 @@
 		        }
 		    }
 		    function ChangeTab(obj) {
-		    	var num = "";
 		        var pSelectTab = GetAttribute(obj, "divname");
-
-		        if (filter != "") {
-		        	num = 2;
-		        } else {
-		        	num = 0;
-		        }
 
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
-						selectTab(num);
 		                break;
 		            case "taskdictate":
 		                type = "2";
-						selectTab(num);
 		                break;
 		        }
 
