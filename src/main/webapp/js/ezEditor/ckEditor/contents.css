@@ -14,10 +14,6 @@ table
 	table-layout: fixed;	
 }
 
-table, td, th {
-	border: 1px solid black !important;  	  	
-}  
-
 body
 {
 	/* Font */
