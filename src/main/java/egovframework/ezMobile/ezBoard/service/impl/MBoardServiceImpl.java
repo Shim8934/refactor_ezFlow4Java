@@ -766,7 +766,11 @@ public class MBoardServiceImpl implements MBoardService {
 		//map.put("startDate", boardListVO.get("startDate"));
 		//map.put("endDate", boardListVO.get("endDate"));
 		map.put("abstract", boardListVO.get("abstract"));
-		map.put("hasAttach", boardListVO.get("hasAttach"));
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
 		map.put("writerName", boardListVO.get("writerName"));
 		map.put("writerName2", boardListVO.get("writerName2"));
 		map.put("extensionAttribute2", boardListVO.get("notice"));
