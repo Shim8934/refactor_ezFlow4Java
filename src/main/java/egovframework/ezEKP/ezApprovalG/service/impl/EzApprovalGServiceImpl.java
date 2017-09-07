@@ -21615,7 +21615,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception {
 		String strErrorMsg = "";
 		try {
- 			content = beforeXmlConverter("<CONTENT>" + "<body style='font-family:굴림; font-Size:10px; font-syle:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'><br/>ffff<br/>aaaa<div style='font-family:굴림; font-Size:10px; font-syle:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'>dddd</div>bbbbbbbbcc</body>" + "</CONTENT>");
+ 			content = beforeXmlConverter("<CONTENT>" + "<body><br/>ffff<br/>aaaa<div style='font-family:굴림; font-Size:10px; font-syle:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'><div>dddd</div></div>bbbbbbbbcc</body>" + "</CONTENT>");
 			
 			Document xmlDom = commonUtil.convertStringToDocument(content);
 			Node node = xmlDom.getDocumentElement();
@@ -21789,15 +21789,44 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String tempContext = childNode.getTextContent();
 					
 					Node newChild = xmlDom.createElement("p");
-					
+					Attr id = xmlDom.createAttribute("style");
 					if (!parentText.equals(tempContext)) {
 						
 						newChild.appendChild(xmlDom.createTextNode(childNode.getTextContent()));
 						
 						if (xmlDom.getElementsByTagName("body").item(0).getChildNodes().item(j).getParentNode().hasAttributes()) {
-							if (xmlDom.getElementsByTagName("body").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
-								Attr id = xmlDom.createAttribute("style");
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
 								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size") > -1) {
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle") > -1) {
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight") > -1) {
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align") > -1) {
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent") > -1) {
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent")+1))));
+								newChild.getAttributes().setNamedItem(id);
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration") > -1) {
+								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration")+1))));
 								newChild.getAttributes().setNamedItem(id);
 							}
 						}
@@ -21809,34 +21838,132 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		for (int i=0; i < xmlDom.getElementsByTagName("div").getLength(); i++) {
-			for (int j=0; j< xmlDom.getElementsByTagName("div").item(0).getChildNodes().getLength(); j++) {
-				Node childNode = xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j);
-				if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getNodeType() == 3) {
+			for (int j=0; j< xmlDom.getElementsByTagName("div").item(i).getChildNodes().getLength(); j++) {
+				Node childNode = xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j);
+				StringBuilder style = new StringBuilder();
+				if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getNodeType() == 3) {
 					String parentText = childNode.getParentNode().getTextContent();
 					String tempContext = childNode.getTextContent();
 					
 					Node newChild = xmlDom.createElement("p");
-					
+					Attr id = xmlDom.createAttribute("style");
 					if (!parentText.equals(tempContext)) {
 						
 						newChild.appendChild(xmlDom.createTextNode(childNode.getTextContent()));
 						
-						if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().hasAttributes()) {
-							if (xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
-								Attr id = xmlDom.createAttribute("style");
-								id.setValue((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family")+1))));
-								newChild.getAttributes().setNamedItem(id);
+						if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().hasAttributes()) {
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
+								style.append(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family")+1)));
 							}
+							
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size") > -1) {
+								style.append(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size")+1)));
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle") > -1) {
+								style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle")+1))));
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight") > -1) {
+								style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight")+1))));
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align") > -1) {
+								style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align")+1))));
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent") > -1) {
+								style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent")+1))));
+							}
+							
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration") > -1) {
+								style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration")+1))));
+							}
+							id.setValue(style.toString());
+							newChild.getAttributes().setNamedItem(id);
+							style.setLength(0);
 						}
-						xmlDom.getElementsByTagName("body").item(0).replaceChild(newChild, xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j));
+						xmlDom.getElementsByTagName("div").item(i).replaceChild(newChild, xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j));
 					}
 					  newChild = null; //p 태그 붙이고 다른 것들도 붙일 수 있으니 초기화
 				} else {
+					Attr id = xmlDom.createAttribute("style");
 					
+					if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getTextContent() != null) {
+						if (xmlDom.getElementsByTagName("div").item(i).getTextContent().replace(" ", "").equals(xmlDom.getElementsByTagName("div").item(0).getChildNodes().item(j).getTextContent().replace(" ", ""))) {
+							if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).hasAttributes()) {
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
+									style.append((childNode.getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family")+1))));
+								} 
+								
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size") > -1) {
+									style.append((childNode.getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size")+1))));
+								} 
+								
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle") > -1) {
+									style.append((childNode.getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle")+1))));
+								} 
+								
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight") > -1) {
+									style.append((childNode.getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight")+1))));
+								} 
+								
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().getNamedItem("style").getTextContent().indexOf("text-align") > -1) {
+									style.append((childNode.getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align")+1))));
+								} 
+								
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent") > -1) {
+									style.append((childNode.getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent")+1))));
+								} 
+								
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration") > -1) {
+									style.append((childNode.getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration")+1))));
+								} 
+								
+								id.setValue(style.toString());
+								xmlDom.getElementsByTagName("div").item(i).getAttributes().setNamedItem(id);
+								style.setLength(0);
+							} else {
+								if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().hasAttributes()) {
+									if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family") > -1) {
+										style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-family")+1))));
+									}
+									
+									if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size") > -1) {
+										style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-Size")+1))));
+									}
+									
+									if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle") > -1) {
+										style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-syle")+1))));
+									}
+									
+									if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight") > -1) {
+										style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("font-weight")+1))));
+										xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().setNamedItem(id);
+									}
+									
+									if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align") > -1) {
+										style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-align")+1))));
+									}
+									
+									if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent") > -1) {
+										style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-indent")+1))));
+									}
+									
+									if (xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration") > -1) {
+										style.append((childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().substring(childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration"), childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf(";",childNode.getParentNode().getAttributes().getNamedItem("style").getTextContent().indexOf("text-decoration")+1))));
+									}
+									
+									id.setValue(style.toString());
+									xmlDom.getElementsByTagName("div").item(i).getChildNodes().item(j).getAttributes().setNamedItem(id);
+									style.setLength(0);
+								}
+							}
+						}
+					}
 				}
 			}
 		}
-		
 		 StringWriter sw = new StringWriter();
 	        TransformerFactory tf = TransformerFactory.newInstance();
 	        Transformer transformer = tf.newTransformer();
@@ -21845,8 +21972,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 	        transformer.transform(new DOMSource(xmlDom), new StreamResult(sw));
-	       System.out.println(sw.toString());
-	       
+	       System.out.println(sw.toString());	       
 		String strRtnHTML = null;
 		
 		if (xmlDom.getElementsByTagName("*").getLength() == 0) {
