@@ -555,7 +555,7 @@ function save_task() {
     }
     
     var strBody = message.GetEditorContent();
-    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() +  "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
     
 	var listtable = dadiframe.document.getElementById("filelist");
 	var filelist = GetChildNodes(listtable);
