@@ -63,11 +63,12 @@ public class MOrganGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String pSearchText = request.getParameter("pSearchText");
+			String rowNum = request.getParameter("rowNum");
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
-			List <MPersonListVO> list = mOrganService.getPersonList(info.getCompanyId(), info.getTenantId(),pSearchText);
+			List <MPersonListVO> list = mOrganService.getPersonList(info.getCompanyId(), info.getTenantId(),pSearchText,rowNum);
 			int listCount = mOrganService.getPersonListCount(info.getCompanyId(), info.getTenantId(), pSearchText);
 			
 			result.put("status", "ok");

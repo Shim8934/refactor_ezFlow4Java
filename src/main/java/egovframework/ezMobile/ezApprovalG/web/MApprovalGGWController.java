@@ -217,7 +217,7 @@ public class MApprovalGGWController {
 			String realPath = commonUtil.getRealPath(request);
 			String domain = request.getServerName() + ":" + request.getServerPort();
 			//본문
-			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale);
+			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type);
 			//결재문서정보
 			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, userInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
 			//회수 가능여부
@@ -290,14 +290,16 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
+			String type = request.getParameter("type");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("type : " + type);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			//의견갯수
-			String commentCount = mApprovalGService.getOpinionCount(docId, userInfo);
+			String commentCount = mApprovalGService.getOpinionCount(docId, type, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -359,13 +361,14 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
+			String type = request.getParameter("type");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGService.getOpinionInfo(docId, userInfo);
+			List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGService.getOpinionInfo(docId, type, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

@@ -141,11 +141,15 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale) throws Exception {
+	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type) throws Exception {
 		LOGGER.debug("getMHTBody started");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
+		map.put("approvalFlag", approvalFlag);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
@@ -181,11 +185,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public String getOpinionCount(String pDocID, MCommonVO userInfo) throws Exception {
+	public String getOpinionCount(String pDocID, String type, MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getAprCommentCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
@@ -197,11 +202,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, MCommonVO userInfo) throws Exception {
+	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String type, MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getOpinionInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
@@ -349,9 +355,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAprDocInfo started");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docId);
 		map.put("type", type);
+		map.put("approvalFlag", approvalFlag);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyId);

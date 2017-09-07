@@ -6,10 +6,12 @@
     
 	<select id="MOrganDAO.getPersonList" parameterClass="Map" resultClass="MPersonListVO">
         <![CDATA[
-            SELECT
-                *
+            SELECT A.*
             FROM
-                tbl_usermaster
+            (SELECT
+                *,@rownum:=@rownum+1 as rowNum
+            FROM
+                tbl_usermaster, (select @rownum:=0) tmp
             WHERE
                 PHYSICALDELIVERYOFFICENAME = #companyID#
             AND
@@ -21,11 +23,22 @@
                     (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
             ]]>
         </isNotEmpty>
+        
         <![CDATA[    
             ORDER BY
                 EXTENSIONATTRIBUTE15 ASC,
-                DISPLAYNAME ASC
-        ]]> 
+                DISPLAYNAME ASC)A
+                
+        ]]>
+        <isNotEmpty property="rowNum">
+            <![CDATA[
+                WHERE
+                    rowNum > #rowNum#    
+            ]]>
+        </isNotEmpty>
+        <![CDATA[
+            LIMIT #listSize#
+        ]]>     
     </select>
     
     <select id="MOrganDAO.getPersonListCount" parameterClass="Map" resultClass="Integer">
