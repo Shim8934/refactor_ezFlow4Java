@@ -155,7 +155,7 @@
 		        }
 
 				if (sdate > edate) {
-					alert("<spring:message code='ezTask.t993' />");
+					alert("<spring:message code='ezTask.jsh01' />");
 		            return;
 				}
 
