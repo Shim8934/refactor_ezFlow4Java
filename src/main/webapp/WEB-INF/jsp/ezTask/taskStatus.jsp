@@ -2,20 +2,20 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!DOCTYPE html">
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
 		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
@@ -32,143 +32,85 @@
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
 	        
-	        (function($){
-		    	'use strict';
-
-		    	$.fn.LineProgressbar = function(options){
-
-		    		var options = $.extend({
-		    			percentage : null,
-		    			ShowProgressCount: true,
-		    			duration: 1000,
-
-		    			// Styling Options
-		    			fillBackgroundColor: '#3498db',
-		    			backgroundColor: '#EEEEEE',
-		    			radius: '0px',
-		    			height: '10px',
-		    			width: '100%'
-		    		},options);
-
-		    		return this.each(function(index, el) {
-		    			// Markup
-		    			$(el).html('<div class="percentCount"></div><div class="progressbar"><div class="proggress"></div></div>');
-		    			
-
-
-		    			var progressFill = $(el).find('.proggress');
-		    			var progressBar= $(el).find('.progressbar');
-
-
-		    			progressFill.css({
-		    				backgroundColor : options.fillBackgroundColor,
-		    				height : options.height,
-		    				borderRadius: options.radius
-		    			});
-		    			progressBar.css({
-		    				width : options.width,
-		    				backgroundColor : options.backgroundColor,
-		    				borderRadius: options.radius
-		    			});
-
-		    			// Progressing
-		    			progressFill.animate(
-		    				{
-		    					width: options.percentage + "%"
-		    				},
-		    				{	
-		    					step: function(x) {
-		    						if(options.ShowProgressCount){
-		    							$(el).find(".percentCount").text(Math.round(x) + "%");
-		    						}
-		    					},
-		    					duration: options.duration
-		    				}
-		    			);
-		    		////////////////////////////////////////////////////////////////////
-		    		});
-		    	}
-	        })(jQuery);
-		    	
 	        $(document).ready(function() {
-	        	initProgressBar(taskstatus, completerate)
+	        	initProgressBar(completerate)
 	        	
-				$("#taskStatus").val(taskstatus);
+	        	if (taskstatus == '1') {
+	        		$("#taskStatus").attr("disabled", true);
+	        	} else if (taskstatus == '2') {
+	        		$("#taskStatus").attr("checked", false);
+	        	} else if (taskstatus == '3') {
+	        		$("#taskStatus").attr("disabled", true);
+	        	} else if (taskstatus == '4') {
+	        		$("#taskStatus").attr("checked", true);
+	        	}
+				
 				$("#completeRate").val(completerate);
 	        	
 	        	/* 진행상태 변경시 */
 	        	$("#taskStatus").change(function() {
-					if ($("#taskStatus").val() == "1") {
-						$("#completeRate").val("0");
-					} else if ($("#taskStatus").val() == "2") {
-						if (taskstatus != "4") {
-							$("#completeRate").val(completerate);
-						}
-					} else if ($("#taskStatus").val() == "3") {
-						$("#completeRate").val("100");
+					if ($("#taskStatus").is(":checked")) {
+						taskstatus = 4;
+					} else {
+						taskstatus = 2;
 					}
 					
-					initProgressBar($("#taskStatus").val(), $("#completeRate").val());
-					
-					if ($("#taskStatus").val() == 2 || $("#taskStatus").val() == 4) {
-						taskstatus = $("#taskStatus").val();
-					}
+					initProgressBar($("#completeRate").val());
 				});
 	        	
 	        	/* 완료율 변경시 잘안되서 일단 주석*/
 	        	$("#completeRate").change(function() {
-	        		if ($("#completeRate").val() == "0") {
-						$("#taskStatus").val("1");
-					} else if ($("#completeRate").val() == "100" && taskstatus != "4") {
-						$("#taskStatus").val("3");
-					} else {
-						if (taskstatus == "2" || taskstatus == "4") {
-							$("#taskStatus").val(taskstatus);
+	        		if ($("#taskStatus").is(":checked")) {
+	        			if ($("#completeRate").val() == "0") {
+							$("#taskStatus").attr("checked", false);
+							$("#taskStatus").attr("disabled", true);
+	        				taskstatus = 1;
+						} else if ($("#completeRate").val() == "100") {
+							$("#taskStatus").attr("checked", false);
+							$("#taskStatus").attr("disabled", true);
+							taskstatus = 3;
+						} else {
+							taskstatus = 4;
+							$("#taskStatus").removeAttr("disabled");
 						}
-					}
-				
-					initProgressBar($("#taskStatus").val(), $("#completeRate").val());
+	        		} else {
+	        			//지연안된거
+	        			if ($("#completeRate").val() == "0") {
+	        				taskstatus = 1;
+						} else if ($("#completeRate").val() == "100") {
+							taskstatus = 3;
+						} else {
+							taskstatus = 2;
+						}
+	        		}
+	        		
+					initProgressBar($("#completeRate").val());
 			    	completerate = $("#completeRate").val();
 				});
 	        });
 	        
 	        /* progressBar 조회 */
-			function initProgressBar(taskstatus, completerate) {
-				if (completerate == '0') {
-					duration = 0;
-				} else {
-					duration = 500;
-				}
-				
+			function initProgressBar(completerate) {
 				if (taskstatus == '4') {
-					$('#taskProgressBar').LineProgressbar({
-						percentage: completerate,
-						fillBackgroundColor: delayColor,
-						backgroundColor: '#EEEEEE',
-						radius: '10px',
-						height: '10px',
-						width: '88%',
-						duration : duration
+					$('.taskProgressBar').circleProgress({
+						value: ((completerate*1) / 100),
+						fill: {color: delayColor}
+					}).on('circle-animation-progress', function(event, progress) {
+						$(this).find('strong').html(completerate + '%');
 					});
 				} else if (taskstatus == '3') {
-					$('#taskProgressBar').LineProgressbar({
-						percentage: completerate,
-						fillBackgroundColor: completeColor,
-						backgroundColor: '#EEEEEE',
-						radius: '10px',
-						height: '10px',
-						width: '88%',
-						duration : duration
+					$('.taskProgressBar').circleProgress({
+						value: ((completerate*1) / 100),
+						fill: {color: completeColor}
+					}).on('circle-animation-progress', function(event, progress) {
+						$(this).find('strong').html(completerate + '%');
 					});
 				} else {
-					$('#taskProgressBar').LineProgressbar({
-						percentage: completerate,
-						fillBackgroundColor: '#3498db',
-						backgroundColor: '#EEEEEE',
-						radius: '10px',
-						height: '10px',
-						width: '88%',
-						duration : duration
+					$('.taskProgressBar').circleProgress({
+						value: ((completerate*1) / 100),
+						fill: {color: '#3498db'}
+					}).on('circle-animation-progress', function(event, progress) {
+						$(this).find('strong').html(completerate + '%');
 					});
 				}
 			}
@@ -186,15 +128,15 @@
 					dataType : "json",
 					data : {
 						taskID : id,
-						taskStatus : $("#taskStatus").val(),
-						completeRate : $("#completeRate").val()
+						taskStatus : taskstatus,
+						completeRate : completerate
 					},
 					success : function(result) {
 						//alert("<spring:message code='ezTask.t150' />");
 						
 						try { window.opener.RefreshView() } catch (e) { }
 						close_onclick();
-						parent.initProgressBar($("#taskStatus").val(), $("#completeRate").val());
+						parent.initProgressBar(taskstatus, $("#completeRate").val());
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
@@ -218,9 +160,12 @@
 			
 			<br />
 			
-			<div id="taskProgressBar" style="-webkit-print-color-adjust:exact;print-color-adjust: exact; margin-top:10px;margin-bottom:10px;"></div>
+			<div class="circles" style="text-align: center;">
+				<div class="taskProgressBar circle">
+					<strong></strong>
+				</div>
+			</div>
 			
-			<br />
 			<br />
 				
 			<table class="content" style="width:100%;">
@@ -249,12 +194,8 @@
 						<spring:message code = 'ezTask.t164' />
 					</th>
 					<td>
-						<select id = "taskStatus">
-							<option value = "1"><spring:message code="ezTask.t97" /></option>
-							<option value = "2"><spring:message code="ezTask.t98" /></option>
-							<option value = "3"><spring:message code="ezTask.t99" /></option>
-							<option value = "4"><spring:message code="ezTask.t100" /></option>
-						</select>
+						<%-- <checkbox id = "taskStatus"> --%>
+						<input type="checkbox" id="taskStatus" />
 					</td>
 				</tr>
 			</table>
