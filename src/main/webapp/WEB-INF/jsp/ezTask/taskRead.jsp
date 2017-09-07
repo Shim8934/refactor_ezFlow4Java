@@ -8,9 +8,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezTask.t143' /></title>
+		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -76,9 +76,9 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 340 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 375 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -104,9 +104,9 @@
 		    });
 		    
 		    window.onresize = function () {
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 340 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 340 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 375 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -118,23 +118,26 @@
 			/* progressBar 조회 */
 			function initProgressBar(taskstatus, completerate) {
 				if (taskstatus == '4') {
-					$('.taskProgressBar').circleProgress({
+					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
-						fill: {color: delayColor}
+						fill: {color: delayColor},
+						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
 					});
 				} else if (taskstatus == '3') {
-					$('.taskProgressBar').circleProgress({
+					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
-						fill: {color: completeColor}
+						fill: {color: completeColor},
+						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
 					});
 				} else {
-					$('.taskProgressBar').circleProgress({
+					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
-						fill: {color: '#3498db'}
+						fill: {color: '#3498db'},
+						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
 					});
@@ -450,7 +453,7 @@
 					return;
 				}
 				
-				DivPopUpShow(410, 400, "/ezTask/taskStatus.do?taskID=" + taskid);
+				DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid);
 			}
 			
 			function Tab1_NewTabIni(pTabNodeID) {
@@ -759,24 +762,23 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
-
-		<div>
-			<span style="font-size: 30px;"><c:out value = '${taskInfoVO.title }' /></span>
-		</div>
-					
-		<div class="circles">
-			<div class="taskProgressBar circle" style="width:30%">
+		
+		<div class="wrap_progress">
+			<h4><c:out value = '${taskInfoVO.title }' /></h4>
+			<div class="circle progress_graph">
 				<strong></strong>
 			</div>
 			
-			<div style="width:65%; display: inline-block; vertical-align: middle;">
+			<div class="progress_txt">
 				<ul>
-					<li><span><spring:message code='ezTask.t121' /> : </span><span><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
-					<li><span><spring:message code='ezTask.t122' /> : </span><span><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
+					<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
+					<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
 				</ul>
-				<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
+				<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
 			</div>
 		</div>
+
+		
 		 
 		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px; border-top: 0px;">
 			<div class="portlet_tabpart03_top" id="tab1">

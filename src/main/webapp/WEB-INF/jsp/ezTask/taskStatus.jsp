@@ -76,10 +76,13 @@
 	        		} else {
 	        			//지연안된거
 	        			if ($("#completeRate").val() == "0") {
+	        				$("#taskStatus").attr("disabled", true);
 	        				taskstatus = 1;
 						} else if ($("#completeRate").val() == "100") {
+							$("#taskStatus").attr("disabled", true);
 							taskstatus = 3;
 						} else {
+							$("#taskStatus").removeAttr("disabled");
 							taskstatus = 2;
 						}
 	        		}
@@ -94,21 +97,24 @@
 				if (taskstatus == '4') {
 					$('.taskProgressBar').circleProgress({
 						value: ((completerate*1) / 100),
-						fill: {color: delayColor}
+						fill: {color: delayColor},
+						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
 					});
 				} else if (taskstatus == '3') {
 					$('.taskProgressBar').circleProgress({
 						value: ((completerate*1) / 100),
-						fill: {color: completeColor}
+						fill: {color: completeColor},
+						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
 					});
 				} else {
 					$('.taskProgressBar').circleProgress({
 						value: ((completerate*1) / 100),
-						fill: {color: '#3498db'}
+						fill: {color: '#3498db'},
+						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
 					});

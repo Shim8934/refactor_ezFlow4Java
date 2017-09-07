@@ -1863,3 +1863,17 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .content_propertyInfo table td #mainmenu li.on span{background:url('../images/kr/cm/btn_default_onright.gif') no-repeat top right; color:#fff;}
 .content_propertyInfo table td #mainmenu li.dis{background:url('../images/i_onleft.gif') no-repeat top left;}
 .content_propertyInfo table td #mainmenu li.dis span{background:url('../images/i_onright.gif') no-repeat top right;}
+
+.wrap_progress{width:100%; height:100%; border:1px solid #dedede; overflow:hidden;}
+.wrap_progress h4{height:40px; background:#ebebeb; font-size:15px; color:#333; font-family: Gulim, Arial, Helvetica, sans-serif; line-height:38px; border-left:5px solid #185bcf; padding:0px 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.progress_graph{width:135px; height:135px; margin:12px 74px; float:left;}
+.progress_graph p{width:135px; text-align:center; padding:28px 0px;}
+.progress_graph p .graph_txt01{font-size:24px; color:#0dc699; font-weight:bold; font-family: Gulim, Arial, Helvetica, sans-serif;}
+.progress_graph p .graph_txt02{font-size:15px; font-style:italic; color:#707070; font-family: Gulim, Arial, Helvetica, sans-serif;}
+.progress_txt{height:105px; float:left; margin:27px 0px 27px 62px;}
+.progress_txt ul{list-style:none; font-size:12px; margin:0px; padding:0px;}
+.progress_txt ul li{height:26px; line-height:26px; margin:0px; padding:0px;}
+.progress_txt ul li span{display:inline-block;}
+.progress_txt ul li .txt_title{width:70px; font-weight:bold; margin:0px; padding:0px 9px; background:url(/images/pr_txtList.gif) 0px 10px no-repeat; overflow:hidden;}
+.progress_txt ul li .txt_content{max-width:310px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.progress_txt p{margin:7px 0px; padding:0px;}
