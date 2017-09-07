@@ -25,7 +25,7 @@
 
 		return this.each(function(index, el) {
 			// Markup
-			$(el).html('<div class="progressbar"><div class="proggress"></div><div class="percentCount"></div></div>');
+			$(el).html('<div class="progressbar"><div class="proggress"></div></div><div class="percentCount"></div>');
 			
 
 
