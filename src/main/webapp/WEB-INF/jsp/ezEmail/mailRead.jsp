@@ -405,7 +405,7 @@
 		                <tr>
 		                    <th><spring:message code="ezEmail.t161" /></th>
 		                    <td class="pos1" style="vertical-align:middle;">
-		                        <DIV id="MsgToPut" onMouseOver="this.style.color='#006BB6'" title="<spring:message code='ezEmail.t553' />${fromEmail}" style="CURSOR: pointer; padding-left: 5px; vertical-align: middle;" onMouseOut="this.style.color='#393939'">	
+		                        <DIV id="MsgToPut" onMouseOver="this.style.color='#006BB6'" title="${fromEmail}" style="CURSOR: pointer; padding-left: 5px; vertical-align: middle;" onMouseOut="this.style.color='#393939'">	
 			                        <a onClick="show_senderprofile()">					
 			                            <span id="LabelFromName">${fromStr}</span>
 			                            <span id="LabelSenderInfo"></span>	
