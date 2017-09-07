@@ -21,30 +21,6 @@
 				font:bold;
 				color:#017bec;
 			}
-			.progressbar {
-				float:left;
-			    width: 100%;
-				margin-top: 5px;
-				margin-bottom: 5px;
-				position: relative;
-				background-color: #EEEEEE;
-				box-shadow: inset 0px 1px 1px rgba(0,0,0,.1);
-			}
-			
-			.proggress{
-				height: 8px;
-				width: 10px;
-				background-color: #3498db;
-			}
-			
-			.percentCount{
-				float:right;
-				width:30%;
-				clear:none;
-				margin-top: 5px;
-				font-weight: bold;
-				font-family: Arial
-			}
 		</STYLE>
 		<script type="text/javascript">
 			var delayColor = "${delayColor}";
@@ -67,64 +43,6 @@
 		    var pUse_Editor = "Use_Editor";
 		    var primary = "${userInfo.primary}";
 		    var useTodoMemo = "${useTodoMemo }";
-		    
-		    (function($){
-		    	'use strict';
-
-		    	$.fn.LineProgressbar = function(options){
-
-		    		var options = $.extend({
-		    			percentage : null,
-		    			ShowProgressCount: true,
-		    			duration: 1000,
-
-		    			// Styling Options
-		    			fillBackgroundColor: '#3498db',
-		    			backgroundColor: '#EEEEEE',
-		    			radius: '0px',
-		    			height: '10px',
-		    			width: '100%'
-		    		},options);
-
-		    		return this.each(function(index, el) {
-		    			// Markup
-		    			$(el).html('<div class="progressbar"><div class="proggress"></div></div><div class="percentCount"></div>');
-		    			
-
-
-		    			var progressFill = $(el).find('.proggress');
-		    			var progressBar= $(el).find('.progressbar');
-
-
-		    			progressFill.css({
-		    				backgroundColor : options.fillBackgroundColor,
-		    				height : options.height,
-		    				borderRadius: options.radius
-		    			});
-		    			progressBar.css({
-		    				width : options.width,
-		    				backgroundColor : options.backgroundColor,
-		    				borderRadius: options.radius
-		    			});
-
-		    			// Progressing
-		    			progressFill.animate(
-		    				{
-		    					width: options.percentage + "%"
-		    				},
-		    				{	
-		    					step: function(x) {
-		    						if(options.ShowProgressCount){
-		    							$(el).find(".percentCount").text(Math.round(x) + "%");
-		    						}
-		    					},
-		    					duration: options.duration
-		    				}
-		    			);
-		    		////////////////////////////////////////////////////////////////////
-		    		});
-		    	}
-		    })(jQuery);
 		    
 		    document.onselectstart = function () { return false; };
 		    function select_row(elem) {
