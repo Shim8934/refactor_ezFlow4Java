@@ -196,6 +196,11 @@ function reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang43);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang44);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -228,6 +233,11 @@ function all_reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang45);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang46);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -253,6 +263,11 @@ function all_reply_mail_onclick() {
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);
+    }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang48);
+        return;
     }
     else {
         var pSelectItem;
