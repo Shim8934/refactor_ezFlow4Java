@@ -232,7 +232,7 @@
 				}
 
 				if ($.trim($("#keyword").val()) == "") {
-		        	alert("<spring:message code='ezTask.jsh01' />");
+		        	alert("<spring:message code='ezTask.t990' />");
 		            return;
 		        }
 

@@ -211,12 +211,7 @@
 	    }
 	    var issearch = false;
 	    function search_click(type) {
-	    	if ($.trim($("#keyword").val()) == "") {
-	        	alert("<spring:message code='ezTask.jsh01' />");
-	            return;
-	        }
-
-	        if (document.getElementById("keyword").value == "") {
+	        if (document.getElementById("keyword").value == "" || $.trim($("#keyword").val()) == "") {
 	            alert("<spring:message code='ezTask.t990' />");
 	            document.getElementById("keyword").focus();
 	            return;
@@ -230,27 +225,6 @@
 	            return;
 	        }
 
-	        /* var xmlHTTP = createXMLHttpRequest();
-	        var xmlDom = createXmlDom();
-	        var objNode;
-	        createNodeInsert(xmlDom, objNode, "DATA");
-	        createNodeAndInsertText(xmlDom, objNode, "SEARCH", document.getElementById("search_type").value + "::" + document.getElementById("keyword").value);
-	        createNodeAndInsertText(xmlDom, objNode, "CELL", "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value);
-	        createNodeAndInsertText(xmlDom, objNode, "PROP", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2");
-	        createNodeAndInsertText(xmlDom, objNode, "PAGE", CurPage);
-	        createNodeAndInsertText(xmlDom, objNode, "TYPE", "user");
-
-	        g_xmlHTTP = createXMLHttpRequest();
-	        g_xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", true);
-	        var usedefault;
-	        if (browserIE) {
-	            usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
-	        }
-	        else {
-	            usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
-	        }
-	        g_xmlHTTP.onreadystatechange = event_displayUserList2;
-	        g_xmlHTTP.send(xmlDom); */
 	        $.ajax({
 				url : '/ezOrgan/getSearchList.do',
 				method : 'POST',

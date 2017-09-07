@@ -630,16 +630,16 @@ function check_length(chkstr, maxlength, fieldname) {
 }*/
 
 function save_task() {
-	if (document.getElementById("TextTitle").value == "") {
+	if (document.getElementById("TextTitle").value == "" || $.trim($("#TextTitle").val()) == "") {
     	alert(strLang9);
         document.getElementById("TextTitle").focus();
         return;
     }
 	
-	if ($.trim($("#TextTitle").val()) == "") {
-    	alert(strLang64);
-        return;
-    }
+//	if ($.trim($("#TextTitle").val()) == "") {
+//    	alert(strLang64);
+//        return;
+//    }
 
     var startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
     var enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
