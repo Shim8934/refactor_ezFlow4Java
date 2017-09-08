@@ -3404,8 +3404,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String fromEmail = null;
 		String toStr = null;
 		String toHiddenStr = null;
+		String toMobileStr = "";
 		String ccStr = null;
 		String ccHiddenStr = null;
+		String ccMobileStr = "";
 		String bccStr = "";
 		String subject = null;
 		String dateStr = null;
@@ -3526,6 +3528,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								}
 							}
+							
+							toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 						}
 					}
 					
@@ -3590,6 +3594,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								}
 							}
+							ccMobileStr += getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 						}
 					}
 	
@@ -3688,12 +3693,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 			}
 			
+			LOGGER.debug(toMobileStr);
+			LOGGER.debug(toStr);
+			LOGGER.debug(ccMobileStr);
+			LOGGER.debug(ccStr);
+			
 			mail.put("fromStr", fromStr);
 			mail.put("fromEmail", fromEmail);
 			mail.put("toStr", toStr);
 			mail.put("toHiddenStr", toHiddenStr);
+			mail.put("toMobileStr", toMobileStr);
 			mail.put("ccStr", ccStr);
 			mail.put("ccHiddenStr", ccHiddenStr);
+			mail.put("ccMobileStr", ccMobileStr);
 			mail.put("bccStr", bccStr);
 			mail.put("dateStr", dateStr);
 			mail.put("subject", subject);
@@ -4205,6 +4217,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
+	}
+	
+	private String getMobileReceiverHTML(String name, String address){
+		return "<span style='display:inline-block' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}
 	
 //	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName) {
