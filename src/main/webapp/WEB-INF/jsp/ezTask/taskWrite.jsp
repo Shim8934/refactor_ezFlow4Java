@@ -24,7 +24,7 @@
 			var userid = "${userInfo.id }";
 			var username = "${userInfo.displayName1 }";
 			var username2 = "${userInfo.displayName2 }";
-			var deptname = "${userInfo.deptName }";
+			var deptname = "${userInfo.deptName1 }";
 			var deptname2 = "${userInfo.deptName2 }";
 			var taskid = "${taskInfoVO.taskID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
@@ -57,7 +57,8 @@
 			var persondept2 = "${taskInfoVO.personDeptName2 }";
 			var personemail = "${taskInfoVO.personEmail }";
 			var useTodoMemo = "${useTodoMemo }";
-          
+			var primary = "${userInfo.primary}";
+
 			window.onload = function () {
 				if (taskid != "") {
 					document.getElementById("importantSelect").value = importance;

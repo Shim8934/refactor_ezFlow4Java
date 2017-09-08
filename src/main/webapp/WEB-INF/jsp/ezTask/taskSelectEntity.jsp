@@ -841,9 +841,9 @@
 	    function InsertUser() {
 	        for (var i = 0; i < listContentArry.length; i++) {
 	            var strUserid = GetAttribute(document.getElementById(listContentArry[i]),"_data2");
-	            var strName = GetAttribute(document.getElementById(listContentArry[i]),"_data4");
+	            var strName = GetAttribute(document.getElementById(listContentArry[i]),"_data10");
 	            var strName2 = GetAttribute(document.getElementById(listContentArry[i]),"_data11");
-	            var strDeptNM = GetAttribute(document.getElementById(listContentArry[i]),"_data5");
+	            var strDeptNM = GetAttribute(document.getElementById(listContentArry[i]),"_data12");
 	            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[i]),"_data13");
 	            var strEmail = GetAttribute(document.getElementById(listContentArry[i]),"_data3");
 	            var getlistview = new ListView();
