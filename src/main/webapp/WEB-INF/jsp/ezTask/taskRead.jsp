@@ -253,11 +253,15 @@
 			
 			/* 의견작성 */
 			function add_comment() {
-				if (document.getElementById("TextComment").value == "") {
+				var taskComment = $("#TextComment").val();
+
+				if (taskComment == "") {
 					alert("<spring:message code='ezTask.t241' />");
 					return;
 				}
-				
+
+				taskComment = trim(ReplaceText(taskComment, "\n", "<br>"));
+
 				$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -265,7 +269,7 @@
 					url : "/ezTask/taskSaveComment.do",
 					data : {
 							taskID : taskid,
-							textComment : $("#TextComment").val()
+							textComment : taskComment
 					},
 					success: function(result){
 						/* alert("<spring:message code='ezTask.t222' />"); */
