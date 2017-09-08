@@ -260,6 +260,7 @@
 			/* 의견작성 */
 			function add_comment() {
 				var id = taskid;
+				var taskComment = $("#TextComment").val();
 				if (parentid != "0") {
 					id = parentid;
 				}
@@ -268,7 +269,9 @@
 					alert("<spring:message code='ezTask.t241' />");
 					return;
 				}
-				
+
+				taskComment = trim(ReplaceText(taskComment, "\n", "<br>"));
+
 				$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -276,7 +279,7 @@
 					url : "/ezTask/taskSaveComment.do",
 					data : {
 							taskID : id,
-							textComment : $("#TextComment").val()
+							textComment : taskComment
 					},
 					success: function(result){
 						/* alert("<spring:message code='ezTask.t222' />"); */
