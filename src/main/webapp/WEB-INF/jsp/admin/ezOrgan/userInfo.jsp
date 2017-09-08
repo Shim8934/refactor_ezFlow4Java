@@ -274,6 +274,9 @@
 		            else if (pValue.charCodeAt(iCnt) == 46) {
 		                // .
 		            }
+                    else if (pValue.charCodeAt(iCnt) == 95) {
+                        // _
+                    }		            
 		            else {
 		                return false;
 		            }
