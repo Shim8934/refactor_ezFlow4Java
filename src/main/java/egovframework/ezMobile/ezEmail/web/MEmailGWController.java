@@ -927,6 +927,89 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	
+//	/**
+//	 * 임시저장메일 삭제 실행 함수
+//	 */
+//	
+//	@RequestMapping(value="/mobile/ezemail/mails/delDraft/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+//	public Object delDrafts(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+//		
+//		LOGGER.debug("delDrafts started.");
+//		
+//		try {
+//		
+//			String uidStr = "";
+//			String delid = "";
+//			
+//			if (jsonObject.get("uidStr") != null) {
+//				uidStr = (String) jsonObject.get("uidStr");
+//			}
+//			
+//			if (jsonObject.get("delid") != null) {
+//				delid = (String) jsonObject.get("delid");
+//			}
+//			
+//			String serverName = request.getHeader("x-user-host");
+//			
+//			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+//			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+//			String userEmail = info.getUserId() + "@" + domainName;
+//			String password = jspw;
+//			
+//			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+//			Locale locale = new Locale(ld);
+//			
+//			LOGGER.debug("uidStr=" + uidStr);
+//			
+//			long uid = 0;
+//			if (uidStr != null && !uidStr.equals("")) {
+//				uid = Long.parseLong(uidStr);
+//			}
+//			
+//			if (uid != 0) {
+//	    		
+//	    		IMAPAccess ia = null;
+//	    		try {
+//	    			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+//	    					userEmail, password, egovMessageSource, locale);
+//	    			
+//	    			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+//	    			folder.open(Folder.READ_WRITE);
+//	    			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+//	    			LOGGER.debug("message=" + message);
+//	    			
+//	    			if (message != null) {
+//	    				message.setFlag(Flags.Flag.DELETED, true);
+//	    			}
+//	    	        folder.close(true);
+//	    	        
+//	    		} catch (MessagingException e) {
+//	    			e.printStackTrace();
+//	    		} finally {
+//	    			if (ia != null) {
+//	    				ia.close();
+//	    			}
+//	    		}
+//			}
+//			
+//			//첨부파일 정보파일(templist) 삭제
+//			String delId = delid;
+//	        String realPath = commonUtil.getRealPath(request);
+//	        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
+//	        pDirPath += commonUtil.separator + delId + ".txt";
+//	        File f = new File(pDirPath);
+//	        if (f.exists()) {
+//	        	f.delete();
+//	        }
+//		} catch (Exception e) {
+//			
+//		}
+//        LOGGER.debug("delDrafts ended.");
+//        
+//		return "";
+//	}
+	
 	@RequestMapping(value="/mobile/ezemail/mails/attachsmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Object mailInterAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
@@ -3528,8 +3611,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								}
 							}
-							
-							toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+							if ( i == arrRecipientsTo.length - 1 ) {
+								toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+							} else {
+								toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "&nbsp;,&nbsp;";
+							}
 						}
 					}
 					
