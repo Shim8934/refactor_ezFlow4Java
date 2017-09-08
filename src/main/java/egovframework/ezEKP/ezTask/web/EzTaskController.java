@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezTask.web;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,57 +129,28 @@ public class EzTaskController extends EgovFileMngUtil {
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 
-		//작성자, 담당자 Dept 조회
-		String creatorDeptName = "";
-		String taskPersonDeptName = "";
-		if (primary.equals("1")) {
-			creatorDeptName = ezOrganService.getPropertyValue(taskInfoVO.getCreatorID(), "description", tenantID);
-			taskPersonDeptName = ezOrganService.getPropertyValue(taskInfoVO.getTaskPersonID(), "description", tenantID);
-		} else {
-			creatorDeptName = ezOrganService.getPropertyValue(taskInfoVO.getCreatorID(), "description2", tenantID);
-			taskPersonDeptName = ezOrganService.getPropertyValue(taskInfoVO.getTaskPersonID(), "description2", tenantID);
-		}
-
-		String parentID = taskInfoVO.getParentID();
-		
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
 		if (taskInfoVO.getHasComment().equals("Y")) {
-			if (parentID.equals("0")) {
-				taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
-			} else {
-				taskCommentList = ezTaskService.getCommentList(parentID, offset, primary, tenantID);
-			}
+			taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
 		}
 		
 		//업무공유자목록조회
 		List<TaskShareVO> taskShareList = null;
 		if (taskInfoVO.getHasShare().equals("Y")) {
-			if (parentID.equals("0")) {
-				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
-			} else {
-				taskShareList = ezTaskService.getShareList(parentID, offset, primary, tenantID);
-			}
+			taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
 		}
 		
 		//task첨부파일목록조회
 		String taskAttachList = null;
 		if (taskInfoVO.getHasAttach().equals("Y")) {
-			if (parentID.equals("0")) {
-				taskAttachList = ezTaskService.getAttachListStr(taskID, folderPath, "1", tenantID);
-			} else {
-				taskAttachList = ezTaskService.getAttachListStr(parentID, folderPath, "1", tenantID);
-			}
+			taskAttachList = ezTaskService.getAttachListStr(taskID, folderPath, "1", tenantID);
 		}
 		
 		//taskWork첨부파일목록조회
 		String taskWorkAttachList = null;
 		if (taskInfoVO.getPersonAttach().equals("Y")) {
-			if (parentID.equals("0")) {
-				taskWorkAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
-			} else {
-				taskWorkAttachList  = ezTaskService.getAttachListStr(parentID, folderPath, "2", tenantID);
-			}
+			taskWorkAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
 		}
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
@@ -198,8 +168,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
-		model.addAttribute("creatorDeptName", creatorDeptName);
-		model.addAttribute("taskPersonDeptName", taskPersonDeptName);
 		
 		logger.debug("taskRead ended.");
 		
@@ -226,15 +194,18 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		TaskInfoVO taskInfoVO = new TaskInfoVO();
 		taskInfoVO.setTaskID(param.get("taskID").toString());
-		taskInfoVO.setOwnerID(param.get("ownerID").toString());
-		taskInfoVO.setCreatorID(param.get("creatorID").toString());
-		taskInfoVO.setCreatorName(param.get("creatorName").toString());
-		taskInfoVO.setCreatorName2(param.get("creatorName2").toString());
+		taskInfoVO.setCreatorID(userInfo.getId());
+		taskInfoVO.setCreatorName(userInfo.getDisplayName1());
+		taskInfoVO.setCreatorName2(userInfo.getDisplayName2());
+		taskInfoVO.setCreatorDeptName(userInfo.getDeptName1());
+		taskInfoVO.setCreatorDeptName2(userInfo.getDeptName2());
+		taskInfoVO.setCreatorEmail(userInfo.getEmail());
 		taskInfoVO.setPersonID(param.get("personID").toString());
 		taskInfoVO.setPersonName(param.get("personName").toString());
 		taskInfoVO.setPersonName2(param.get("personName2").toString());
 		taskInfoVO.setPersonDeptName(param.get("personDeptName").toString());
 		taskInfoVO.setPersonDeptName2(param.get("personDeptName2").toString());
+		taskInfoVO.setPersonEmail(param.get("personEmail").toString());
 		taskInfoVO.setHasShare(param.get("hasShare").toString());
 		taskInfoVO.setTaskType(param.get("taskType").toString());
 		taskInfoVO.setImportance(Integer.parseInt(param.get("importance").toString()));
@@ -503,16 +474,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 		
-		String parentID = taskInfoVO.getParentID();
-		
 		//taskWork첨부파일목록조회
 		String taskWorkAttachList = null;
 		if (taskInfoVO.getPersonAttach().equals("Y")) {
-			if (parentID.equals("0")) {
-				taskWorkAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
-			} else {
-				taskWorkAttachList  = ezTaskService.getAttachListStr(parentID, folderPath, "2", tenantID);
-			}
+			taskWorkAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
 		}
 		
 		model.addAttribute("hasTaskWorkAttach", taskInfoVO.getPersonAttach());
@@ -897,8 +862,8 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<ROW>");
     		
     		resultXML.append("<TASKID>" + list.get(i).getTaskID() + "</TASKID>");
-    		resultXML.append("<PARENTID>" + list.get(i).getParentID() + "</PARENTID>");
-    		resultXML.append("<OWNERID>" + list.get(i).getOwnerID() + "</OWNERID>");
+    		/*resultXML.append("<PARENTID>" + list.get(i).getParentID() + "</PARENTID>");
+    		resultXML.append("<OWNERID>" + list.get(i).getOwnerID() + "</OWNERID>");*/
     		resultXML.append("<CREATORID>" + list.get(i).getCreatorID() + "</CREATORID>");
     		resultXML.append("<CREATORNAME>" + list.get(i).getCreatorName() + "</CREATORNAME>");
     		resultXML.append("<CREATORNAME2>" + list.get(i).getCreatorName2() + "</CREATORNAME2>");
@@ -915,13 +880,8 @@ public class EzTaskController extends EgovFileMngUtil {
     		int commentLength = 0;
 
     		if (list.get(i).getHasComment().equals("Y")) {
-    			if (list.get(i).getParentID().equals("0")) {
-    				taskCommentList = ezTaskService.getCommentList(list.get(i).getTaskID(), offset, primary, tenantID);
-    				commentLength = taskCommentList.size();
-    			} else {
-    				taskCommentList = ezTaskService.getCommentList(list.get(i).getParentID(), offset, primary, tenantID);
-    				commentLength = taskCommentList.size();
-    			}
+				taskCommentList = ezTaskService.getCommentList(list.get(i).getTaskID(), offset, primary, tenantID);
+				commentLength = taskCommentList.size();
     		}
 
     		resultXML.append("<HASCOMMENT>" + commentLength + "</HASCOMMENT>");
@@ -929,9 +889,9 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<PERSONNAME>" + list.get(i).getPersonName() + "</PERSONNAME>");
     		resultXML.append("<PERSONNAME2>" + list.get(i).getPersonName2() + "</PERSONNAME2>");
     		resultXML.append("<TASKTYPE>" + list.get(i).getTaskType() + "</TASKTYPE>");
-    		resultXML.append("<TASKPERSONID>" + list.get(i).getTaskPersonID() + "</TASKPERSONID>");
+    		/*resultXML.append("<TASKPERSONID>" + list.get(i).getTaskPersonID() + "</TASKPERSONID>");
     		resultXML.append("<TASKPERSONNAME>" + list.get(i).getTaskPersonName() + "</TASKPERSONNAME>");
-    		resultXML.append("<TASKPERSONNAME2>" + list.get(i).getTaskPersonName2() + "</TASKPERSONNAME2>");
+    		resultXML.append("<TASKPERSONNAME2>" + list.get(i).getTaskPersonName2() + "</TASKPERSONNAME2>");*/
     		resultXML.append("<MEMO>" + commonUtil.cleanValue(list.get(i).getMemo()) + "</MEMO>");
     		
     		resultXML.append("</ROW>");

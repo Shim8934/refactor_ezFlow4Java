@@ -5,10 +5,6 @@ import java.util.List;
 public class TaskInfoVO {
 	/** 업무ID */
 	private String taskID;
-	/** 업무원본ID */
-	private String parentID;
-	/** 소유자ID */
-	private String ownerID;
 	/** 작성자ID */
 	private String creatorID;
 	/** 작성자이름 */
@@ -17,6 +13,12 @@ public class TaskInfoVO {
 	private String creatorName1;
 	/** 작성자이름2 */
 	private String creatorName2;
+	/** 작성자이름 */
+	private String creatorDeptName;
+	/** 작성자이름2 */
+	private String creatorDeptName2;
+	/** 작성자 email */
+	private String creatorEmail;
 	/** 작성일 */
 	private String createDate;
 	/** 업무상태(시작안함, 진행중, 완료, 지연) */
@@ -46,10 +48,6 @@ public class TaskInfoVO {
 	/** */
 	private String updateTime;
 	/** N으로 그냥 고정(사용하는부분 모르겠음)*/
-	private String newAnswer;
-	/** N으로 그냥 고정(사용하는부분 모르겠음)*/
-	private String newRefer;
-	/** 담당자ID */
 	private String personID;
 	/** 담당자 이름 */
 	private String personName;
@@ -67,12 +65,6 @@ public class TaskInfoVO {
 	private String personContentPath;
 	/** 공유자관련 VO */
 	private List<TaskShareVO> shareList;
-	/** */
-	private String taskPersonID;
-	/** */
-	private String taskPersonName;
-	/** */
-	private String taskPersonName2;
 	/** memo */
 	private String memo;
 	/** 테넌트ID*/
@@ -82,18 +74,6 @@ public class TaskInfoVO {
 	}
 	public void setTaskID(String taskID) {
 		this.taskID = taskID;
-	}
-	public String getParentID() {
-		return parentID;
-	}
-	public void setParentID(String parentID) {
-		this.parentID = parentID;
-	}
-	public String getOwnerID() {
-		return ownerID;
-	}
-	public void setOwnerID(String ownerID) {
-		this.ownerID = ownerID;
 	}
 	public String getCreatorID() {
 		return creatorID;
@@ -118,6 +98,24 @@ public class TaskInfoVO {
 	}
 	public void setCreatorName2(String creatorName2) {
 		this.creatorName2 = creatorName2;
+	}
+	public String getCreatorDeptName() {
+		return creatorDeptName;
+	}
+	public void setCreatorDeptName(String creatorDeptName) {
+		this.creatorDeptName = creatorDeptName;
+	}
+	public String getCreatorDeptName2() {
+		return creatorDeptName2;
+	}
+	public void setCreatorDeptName2(String creatorDeptName2) {
+		this.creatorDeptName2 = creatorDeptName2;
+	}
+	public String getCreatorEmail() {
+		return creatorEmail;
+	}
+	public void setCreatorEmail(String creatorEmail) {
+		this.creatorEmail = creatorEmail;
 	}
 	public String getCreateDate() {
 		return createDate;
@@ -203,18 +201,6 @@ public class TaskInfoVO {
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
-	public String getNewAnswer() {
-		return newAnswer;
-	}
-	public void setNewAnswer(String newAnswer) {
-		this.newAnswer = newAnswer;
-	}
-	public String getNewRefer() {
-		return newRefer;
-	}
-	public void setNewRefer(String newRefer) {
-		this.newRefer = newRefer;
-	}
 	public String getPersonID() {
 		return personID;
 	}
@@ -268,24 +254,6 @@ public class TaskInfoVO {
 	}
 	public void setShareList(List<TaskShareVO> shareList) {
 		this.shareList = shareList;
-	}
-	public String getTaskPersonID() {
-		return taskPersonID;
-	}
-	public void setTaskPersonID(String taskPersonID) {
-		this.taskPersonID = taskPersonID;
-	}
-	public String getTaskPersonName() {
-		return taskPersonName;
-	}
-	public void setTaskPersonName(String taskPersonName) {
-		this.taskPersonName = taskPersonName;
-	}
-	public String getTaskPersonName2() {
-		return taskPersonName2;
-	}
-	public void setTaskPersonName2(String taskPersonName2) {
-		this.taskPersonName2 = taskPersonName2;
 	}
 	public String getMemo() {
 		return memo;

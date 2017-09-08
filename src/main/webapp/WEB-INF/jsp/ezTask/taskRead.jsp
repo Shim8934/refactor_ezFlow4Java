@@ -789,7 +789,7 @@
 							<th><spring:message code='ezTask.t117' /></th>
 							<td style="white-space:nowrap">
 								<div style="CURSOR:pointer; " onClick="show_personinfo('0')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-									<c:out value = '${taskInfoVO.creatorName }' />&nbsp;(<c:out value = '${creatorDeptName }' />)
+									<c:out value = '${taskInfoVO.creatorName }' />&nbsp;(<c:out value = '${taskInfoVO.creatorDeptName }' />)
 								</div>
 							</td>
 						</tr>
@@ -826,8 +826,8 @@
 						<tr id ="persontr">
 							<th><spring:message code='ezTask.t2005' /></th>
 							<td colspan="3" width="100%">
-								<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.taskPersonID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-									<c:out value = '${taskInfoVO.taskPersonName }' />&nbsp;(<c:out value = '${taskPersonDeptName }' />)
+								<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.personID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+									<c:out value = '${taskInfoVO.personName }' />&nbsp;(<c:out value = '${taskInfoVO.personDeptName }' />)
 								</div>
 							</td>
 						</tr>
@@ -837,7 +837,7 @@
 								<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
 									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
-											<c:out value = '${taskShareVO.sharerName }' /> (<c:out value = '${taskShareVO.sharerDeptName }' />)
+											<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
 										</span>
 										<c:if test="${not status.last }">,&nbsp;</c:if>
 									</c:forEach>
@@ -963,7 +963,7 @@
 								<th><spring:message code='ezTask.t117' /></th>
 								<td style="white-space:nowrap">
 									<div style="CURSOR:pointer; " onClick="show_personinfo('0')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-										<c:out value = '${taskInfoVO.creatorName }' />
+										<c:out value = '${taskInfoVO.creatorName }' />&nbsp;(<c:out value = '${taskInfoVO.creatorDeptName }' />)
 									</div>
 								</td>
 							</tr>
@@ -1000,8 +1000,8 @@
 							<tr id ="persontr">
 								<th><spring:message code='ezTask.t2005' /></th>
 								<td colspan="3" width="100%">
-									<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.taskPersonID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-										<c:out value = '${taskInfoVO.taskPersonName }' />
+									<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.personID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+										<c:out value = '${taskInfoVO.personName }' />&nbsp;(<c:out value = '${taskInfoVO.personDeptName }' />)
 									</div>
 								</td>
 							</tr>
@@ -1011,7 +1011,7 @@
 									<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
 										<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 											<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
-												<c:out value = '${taskShareVO.sharerName }' /> (<c:out value = '${taskShareVO.sharerDeptName }' />)
+												<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
 											</span>
 											<c:if test="${not status.last }">,&nbsp;</c:if>
 										</c:forEach>

@@ -241,7 +241,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentID", 0);
-		map.put("ownerID", vo.getOwnerID());
 		map.put("creatorID", vo.getCreatorID());
 		map.put("creatorName", vo.getCreatorName());
 		map.put("creatorName2", vo.getCreatorName2());
@@ -333,7 +332,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("sharerDeptName2", shareVO.getSharerDeptName2());
 		
 		map.put("parentID", vo.getTaskID());
-		map.put("ownerID", vo.getOwnerID());
 		map.put("creatorID", vo.getCreatorID());
 		map.put("creatorName", vo.getCreatorName());
 		map.put("creatorName2", vo.getCreatorName2());
