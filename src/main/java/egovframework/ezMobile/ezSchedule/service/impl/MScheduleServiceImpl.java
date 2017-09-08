@@ -276,7 +276,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate) throws Exception {								
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception {								
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
 		
@@ -297,7 +297,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			}	
 		}
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, searchTitle, info.getTenantId());
 		
 		Collections.sort(sList, new EzScheduleCompareUtil());
 		
@@ -315,7 +315,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String startDate = sdf.format(cal.getTime()) + " 00:00:00";
 		String endDate = sdf.format(cal.getTime()) + " 23:59:59";
 		
-		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate);
+		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate, "");
 		int listSize = sList.size();
 		
 		jo.put("cnt", listSize);
