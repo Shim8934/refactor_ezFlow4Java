@@ -1,5 +1,11 @@
 package egovframework.ezMobile.ezBoard.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +44,8 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @RestController
 public class MBoardGWController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MBoardController.class);
+	
+	public static final int BUFF_SIZE = 2048;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -573,6 +581,77 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezboard/fileupload", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject mFileUpload(HttpServletRequest request) throws Exception {
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/filedown] started.");
+		
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+		String content = request.getParameter("content");
+		
+		LOGGER.debug("filePath = " + filePath);
+		LOGGER.debug("fileName:"+fileName);
+		LOGGER.debug("content:"+content);
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			InputStream input = new ByteArrayInputStream(content.getBytes("UTF-8"));
+		
+		    File cFile = new File(filePath);
+			
+		    if (!cFile.isDirectory()) {
+				boolean flag = cFile.mkdirs();
+				if (!flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+		    
+		    bos = new FileOutputStream(filePath + File.separator + fileName);
+			
+
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+	
+		    while ((bytesRead = input.read(buffer, 0, BUFF_SIZE)) != -1) {
+		    	bos.write(buffer, 0, bytesRead);
+		    	
+		    }
+				
+			result.put("status", "ok");
+			result.put("code", 0);
+			
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+			return result;
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/filedown] ended.");
+		
 		return result;
 	}
 	
