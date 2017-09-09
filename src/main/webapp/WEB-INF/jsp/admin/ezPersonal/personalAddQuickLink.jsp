@@ -566,16 +566,30 @@
 	                    <table style="width:280px;margin-top:10px;">
 	                        <tr style="text-align:center;">
 	                            <td style="width:25%">
-	                                <img src='/images/kr/main/quickmenu_icon01.gif' id="A" onclick="radioClick(this,'img')" style="cursor:pointer">
+	                            	<c:choose>
+										<c:when test="${host == 'gw.freet.co.kr'}">
+											<img src='/images/kr/main/quickmenu_icon01.png' id="A" onclick="radioClick(this,'img')" style="cursor:pointer">		
+										</c:when>
+										<c:otherwise>
+											<img src='/images/kr/main/quickmenu_icon01.gif' id="A" onclick="radioClick(this,'img')" style="cursor:pointer">
+										</c:otherwise>
+									</c:choose>
 	                            </td>
 	                            <td style="width:25%">
 	                                <img src='/images/kr/main/quickmenu_icon02.gif' id="B" onclick="radioClick(this,'img')" style="cursor:pointer">
 	                            </td>
 	                            <td style="width:25%">
-	                                <img src='/images/kr/main/quickmenu_icon03.gif' id="C" onclick="radioClick(this,'img')" style="cursor:pointer">
+	                                <c:choose>
+										<c:when test="${host == 'gw.freet.co.kr'}">
+											<img src='/images/kr/main/quickmenu_icon03.png' id="C" onclick="radioClick(this,'img')" style="cursor:pointer">		
+										</c:when>
+										<c:otherwise>
+											<img src='/images/kr/main/quickmenu_icon03.gif' id="C" onclick="radioClick(this,'img')" style="cursor:pointer">
+										</c:otherwise>
+									</c:choose>
 	                            </td>
 	                            <td style="width:25%">
-	                                <img src='/images/kr/main/quickmenu_icon04.gif' id="D" onclick="radioClick(this,'img')" style="cursor:pointer">
+	                            	<img src='/images/kr/main/quickmenu_icon04.gif' id="D" onclick="radioClick(this,'img')" style="cursor:pointer">
 	                            </td>
 	                        </tr>
 	                        <tr style="text-align:center;">
@@ -600,7 +614,14 @@
 	                                <img src='/images/kr/main/quickmenu_icon06.gif' id="F" onclick="radioClick(this,'img')" style="cursor:pointer">
 	                            </td>
 	                            <td style="width:25%">
-	                                <img src='/images/kr/main/quickmenu_icon07.gif' id="G" onclick="radioClick(this,'img')" style="cursor:pointer">
+	                            	<c:choose>
+										<c:when test="${host == 'gw.freet.co.kr'}">
+											<img src='/images/kr/main/quickmenu_icon07.png' id="G" onclick="radioClick(this,'img')" style="cursor:pointer">		
+										</c:when>
+										<c:otherwise>
+											<img src='/images/kr/main/quickmenu_icon07.gif' id="G" onclick="radioClick(this,'img')" style="cursor:pointer">
+										</c:otherwise>
+									</c:choose>
 	                            </td>
 	                            <td style="width:25%">
 	                                <img src='/images/kr/main/quickmenu_icon08.gif' id="H" onclick="radioClick(this,'img')" style="cursor:pointer">
