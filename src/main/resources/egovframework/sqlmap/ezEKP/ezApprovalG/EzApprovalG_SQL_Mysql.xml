@@ -136,7 +136,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 							)C ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -161,6 +161,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -221,7 +222,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 								) C ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -246,6 +247,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -332,7 +334,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -357,6 +359,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -410,7 +413,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -435,6 +438,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -543,7 +547,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+						LIMIT #v_PAGESIZE#
 						)C ) A 
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -568,6 +572,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -655,7 +660,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+						LIMIT #v_PAGESIZE#
 						)C ) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -680,6 +685,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -737,7 +743,7 @@
 														</isNotEqual>
 													</isEmpty>
 													<![CDATA[
-													LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+													LIMIT #v_PAGESIZE#
 													)C ) A
 													]]>
 														<isNotEmpty property="v_ORDEROPTION2"> 
@@ -762,6 +768,7 @@
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
+														LIMIT #v_PAGESIZE2#
 														)D 
 														]]>
                      			</isNotEqual>
@@ -6751,13 +6758,11 @@
 							   		ORDER BY 
 							   				ENDDATE DESC
 							   	</isEmpty>
-							   	<isEqual property="alFlag" compareValue="1">
-							   	LIMIT #v_PAGESIZE#,#v_PAGESIZE2#
-							   	</isEqual>
-							   	<isNotEqual property="alFlag" compareValue="1">
-							   	LIMIT #v_PAGESIZE#,#v_PAGESIZE3#
-							   	</isNotEqual>
+								<isNotEqual property="alFlag" compareValue="1">
+							   	LIMIT #v_PAGESIZE#
+								</isNotEqual>
 							   	 ) A 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
 <!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
 <!-- 				INNER JOIN TBL_CODELIST B   -->
@@ -6903,8 +6908,9 @@
 											ENDDATE DESC
 									</isEmpty>
 									 <![CDATA[
-									 LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+									 LIMIT #v_PAGESIZE#
 							   	 ) B 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
