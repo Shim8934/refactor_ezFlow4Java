@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezMobile.ezOrgan.vo.MOrganListVO;
 import egovframework.ezMobile.ezOrgan.vo.MPersonListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -21,5 +22,15 @@ public class MOrganDAO extends EgovAbstractDAO {
 	
 	public int getPersonListCount(Map<String, Object> map) throws Exception {
 		return (int) select("MOrganDAO.getPersonListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MOrganListVO> getSameOrganList(Map<String, Object> map) throws Exception {
+		return (List<MOrganListVO>) list("MOrganDAO.getSameOrganList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MOrganListVO> getLowOrganList(Map<String, Object> map) throws Exception {
+		return (List<MOrganListVO>) list("MOrganDAO.getLowOrganList", map);
 	}
 }
