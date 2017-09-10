@@ -260,9 +260,6 @@ public class MResourceGWController extends EgovFileMngUtil {
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
 
-			String contentBefore = resVO.getContent();
-			contentBefore = contentBefore.replaceAll("<[^>]*>", " ");
-			resVO.setContent(contentBefore);
 			String reFlag = resVO.getReFlag();
 			
 			if(reFlag.equals("1")){
