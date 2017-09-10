@@ -130,7 +130,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	//LOGGER.debug("utcEndDate: " + utcEndDate);
 	    	LOGGER.debug("writerDt: " + writerDt);
 	    	
-	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "");
+	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -315,18 +315,18 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String startDate = request.getParameter("startDate");
 			String endDate =  request.getParameter("endDate");
 			String ownerId = request.getParameter("ownerId");
+			String num = request.getParameter("num");
 			String offset = info.getOffSet();
 			String writerDt = "";
 			String sDate = startDate.substring(0, 10);
 			String eDate = endDate.substring(0, 10);
-			
-			String repeatYn = "N";
-			
+
 			LOGGER.debug("resourceId: " + resourceId);
 			LOGGER.debug("companyId: " + companyId);
 			LOGGER.debug("tenantId: " + tenantId);
 			LOGGER.debug("sDate: " + sDate);
 			LOGGER.debug("eDate: " + eDate);
+			LOGGER.debug("num: " + num);
  
 			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, tenantId);
 			LOGGER.debug("resVO: " + resVO);
@@ -337,7 +337,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String resApproveFlag = resVO.getResApproveFlag();
 			
 			if(resApproveFlag.equals("0")) {
-				resultMap = mResourceService.getScheduleList(ownerId, companyId, sDate, eDate, writerDt, tenantId, offset, "", "Y", startDate, endDate);
+				resultMap = mResourceService.getScheduleList(ownerId, companyId, sDate, eDate, writerDt, tenantId, offset, "", "Y", num, startDate, endDate);
 				LOGGER.debug("resultMap: " + resultMap);
 			}
 			
