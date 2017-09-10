@@ -146,7 +146,9 @@
 			var type = "ING";
 			var pGongRamDocID = "";
 			var singImageType = "${signImageType}";
-			var isused = "${isused}";
+			var isUsed = "${isUsed}";
+			var beforeDocID = "${beforeDocID}";
+			
 		    window.onload = function ()
 		    {
 		        try {
@@ -209,7 +211,7 @@
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
 		            		//임시보관함일경우 사인 초기화
-		            		setFirstDrafter();
+		            		setFirstDrafter(isUsed, "");
 		            	}
 		            	
 		                getFormRecv();
@@ -217,7 +219,7 @@
 		            }
 		
 		            if (pDraftFlag != "REDRAFT")
-		                setFirstDrafter();
+		                setFirstDrafter(isUsed, beforeDocID);
 		            
 		            if (approvalFlag == "S") {
 			            SetAutoDocnumItem();
@@ -373,6 +375,9 @@
 		                    }
 		                }
 		                else {
+		                	if (isUsed == "reuse") {
+		                		getDocInfo();
+		                	}
 		                    SetBtnStateTrue();
 		                    pDraftFlag = "DRAFT";
 		                    GetExchInfo();
@@ -1217,10 +1222,13 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
-		        if (ListType == "21")
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun ;
+		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;
-		
+				}
+		        if (isUsed == "reuse") {
+		        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
+		        }
 		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1473,7 +1481,7 @@
 		  </tr>
 		  <tr>
 		    <td  style="padding-bottom:10px;height:90%;" >
-		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isused=${isused}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isUsed=${isUsed}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>
 		  <tr>

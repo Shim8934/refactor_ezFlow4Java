@@ -183,6 +183,8 @@
 			//기안(DRAFT), 접수(RECV), 합의(HABYUI) 여부
 			var approvalType;
 			var chamjoAfterYN = "${chamjoAfterYN}";
+			var isUsed = "${isUsed}";
+			var beforeDocID = "${beforeDocID}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){

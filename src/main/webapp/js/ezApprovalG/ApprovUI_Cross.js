@@ -1318,7 +1318,7 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
         alert("openwindow :: " + e.description);
     }
 }
-function getCurApproverAprLine() {
+function getCurApproverAprLine(type) {
 	var result = "";
     
     $.ajax({
@@ -1330,7 +1330,8 @@ function getCurApproverAprLine() {
 				docID    : pDocID, 
 				userID 	 : "",
 				formID   : "",
-				deptID   : arr_userinfo[4]
+				deptID   : arr_userinfo[4],
+				isUsed   : type
 				},
 		success: function(xml){
 			result = xml;

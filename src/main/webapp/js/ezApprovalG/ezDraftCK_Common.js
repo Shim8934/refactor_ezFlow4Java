@@ -328,7 +328,7 @@ function chk_Passwd() {
 }
 
 function setFirstDrafter() {
-    var ret = getAutoAprLine();
+    var ret = getAutoAprLine("");
 
     if (ret[0] != "NONE") {
         IsSkipDrafter = "FALSE";

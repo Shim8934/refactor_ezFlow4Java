@@ -1,5 +1,9 @@
-﻿function getAutoAprLine() {
+﻿function getAutoAprLine(type, beforeDocID) {
     getFormRecv();
+    
+    if (type == "reuse") {
+    	pDocID = beforeDocID;
+    }
     
     var retvalue = new Array();
     retvalue[0] = "NONE";
@@ -8,7 +12,6 @@
     retvalue[3] = "";
 
     var result = "";
-    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -17,7 +20,8 @@
 		data : {
 				docID    : pDocID, 
 				userID 	 : pUserID,
-				formID   : pFormID
+				formID   : pFormID,
+				isUsed   : type
 				},
 		success: function(xml){
 			result = xml;

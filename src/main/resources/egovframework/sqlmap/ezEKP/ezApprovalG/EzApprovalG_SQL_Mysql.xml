@@ -1311,6 +1311,7 @@
 <!-- 		{CALL EZSP_GETAPRLINEINFO(#v_DOCID#, #v_FLAG#, #v_USERID#, #v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_FLAG" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -1381,6 +1382,20 @@
 	            ORDER BY 
 	            	APRMEMBERSN DESC 
             ]]>
+		</isEqual>
+		</isNotEqual>
+		
+		<isEqual property="isUsed" compareValue="reuse">
+			SELECT 
+				*
+			FROM 
+				TBL_ENDAPRLINEINFO
+            WHERE 
+            	DOCID = #v_DOCID#
+           	AND
+           		TENANT_ID = #v_TENANTID#
+	        AND
+	           	COMPANYID = #companyID#
 		</isEqual>
 	</select>
 

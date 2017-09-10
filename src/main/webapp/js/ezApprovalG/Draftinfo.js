@@ -1,6 +1,6 @@
 ﻿var xmlhttp;
 function Draftinfo_ini() {
-    if (!Draftinfoini) {       
+    if (!Draftinfoini) { 
         if (pItemCode == "" || pItemCode == undefined) 
             TreeViewinitializeCodeGroup("0", "1" );
         else
@@ -433,8 +433,7 @@ function GetDeptSubCodeTreeInfo(code, level, TreeIdx) {
     treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 }
 
-function TreeViewCodeNodeClick()
-{
+function TreeViewCodeNodeClick() {
     var treeView = new TreeView();
     treeView.LoadFromID("infotreeView");
     var selnode = treeView.GetSelectNode();

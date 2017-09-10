@@ -93,6 +93,10 @@ function initReceptListView() {
     	docIDorSN = pDocSn;
         pMode = "TMP";
     }
+
+    if (isUsed == "reuse") {
+    	docIDorSN = beforeDocID;
+    }
     
     $.ajax({
 		type : "POST",
@@ -101,7 +105,8 @@ function initReceptListView() {
 		url : "/ezApprovalG/aprDeptRequest.do",
 		data : {
 			docID : docIDorSN,
-			mode  : pMode
+			mode  : pMode,
+			isUsed : isUsed
 		},
 		success: function(xml){
 			result = loadXMLString(xml);
