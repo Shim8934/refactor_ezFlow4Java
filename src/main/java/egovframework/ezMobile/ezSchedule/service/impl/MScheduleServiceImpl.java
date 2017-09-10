@@ -77,6 +77,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
 			contentPath += schedulePath;
 
+System.out.println("contentPath: " + contentPath);
 			byte[] ct = Base64.decode(jsonParam.get("content").toString());
 			String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
 			
@@ -170,7 +171,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}	
 
 	@Override
-	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception {
+	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId, String realPath, Locale locale) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
 		
@@ -200,7 +201,12 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		try {
 			byte[] ct = Base64.decode(jsonParam.get("content").toString());
-			stream = new ByteArrayInputStream(ct);
+			//stream = new ByteArrayInputStream(ct);
+			
+			String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
+			
+			stream = new ByteArrayInputStream(mhtData.getBytes());
+			
 			bos = new FileOutputStream(defaultPath);
 			
 			int bytesRead = 0;
