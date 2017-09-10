@@ -2558,7 +2558,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (isUsed.equals("reuse")) {
 			docList = getAprLineInfoDB(docID, "3", userID, formID, companyID, tenantID, isUsed, beforeDocID);
 			docXML = commonUtil.convertStringToDocument(docList);
-		} 
+		} else {
+			if (dlength <= 0 || reDraftFlag.equals("REDRAFT")) {
+				String isLastAprLine = getCode2Name("A44", "001", companyID, lang, tenantID);
+
+				if (isLastAprLine != null && isLastAprLine.equals("1")) {
+					docList = getAprLineInfoDB(docID, "2", userID, formID, companyID, tenantID, "", "");
+					docXML = commonUtil.convertStringToDocument(docList);
+					dlength = docXML.getElementsByTagName("ROW").getLength();
+				}
+			}
+		}
 
 		
 		String fieldName = "";
