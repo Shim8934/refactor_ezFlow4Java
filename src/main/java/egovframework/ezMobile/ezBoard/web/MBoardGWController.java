@@ -2,19 +2,27 @@ package egovframework.ezMobile.ezBoard.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
+import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +37,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
@@ -586,71 +595,150 @@ public class MBoardGWController {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezboard/fileupload", method=RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject mFileUpload(HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/filedown] started.");
+	public JSONObject mFileUpload(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/fileupload] started.");
 		
 		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");
-		String content = request.getParameter("content");
+		String boardID = request.getParameter("boardID");
 		
 		LOGGER.debug("filePath = " + filePath);
 		LOGGER.debug("fileName:"+fileName);
-		LOGGER.debug("content:"+content);
 		
-		InputStream stream = null;
-		OutputStream bos = null;
+		String serverName = request.getHeader("x-user-host");
+		
+		JSONParser jp = new JSONParser();
+		jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
 		
 		JSONObject result = new JSONObject();
-		
 		try {
-			InputStream input = new ByteArrayInputStream(content.getBytes("UTF-8"));
-		
-		    File cFile = new File(filePath);
+			JSONArray fileArray = new JSONArray();
 			
-		    if (!cFile.isDirectory()) {
-				boolean flag = cFile.mkdirs();
-				if (!flag) {
-				    throw new IOException("Directory creation Failed ");
-				}
-		    }
-		    
-		    bos = new FileOutputStream(filePath + File.separator + fileName);
+			String userID = "";
+			int cnt = 0;
+			int maxSize = 0;
+			
+			if (jsonObject.get("fileArray") != null) {
+				fileArray = (JSONArray) jsonObject.get("fileArray");
+			}
+			
+			if (jsonObject.get("cnt") != null) {
+				cnt =  ((Long) jsonObject.get("cnt")).intValue();
+			}
+			
+			if (jsonObject.get("maxSize") != null) {
+				maxSize =  ((Long) jsonObject.get("maxSize")).intValue();
+			}
+			
+			if (jsonObject.get("userID") != null) {
+				userID = (String) jsonObject.get("userID");
+			}
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			
+			String[] pFileName = new String[cnt];
+			String realPath = commonUtil.getRealPath(request);
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			String[] sGUID = new String[cnt];
+			String[] pUploadSN = new String[cnt];
+			Long[] fileSize = new Long[cnt];
+			String[] resultUpload = new String[cnt];
+			String[] fileLocation = new String[cnt];
+			
+			 for (int i = 0; i < cnt; i++) {
+		            resultUpload[i] = "false";
+		            sGUID[i] = UUID.randomUUID().toString();
+		            pUploadSN[i] = "{" + sGUID[i] + "}";
+		        }
+			
+			if (useExtension == null) {
+				useExtension = "";
+			}
 			
 
-		    int bytesRead = 0;
-		    byte[] buffer = new byte[BUFF_SIZE];
-	
-		    while ((bytesRead = input.read(buffer, 0, BUFF_SIZE)) != -1) {
-		    	bos.write(buffer, 0, bytesRead);
-		    	
-		    }
-				
+	        if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))) {
+	            for (int i = 0; i < cnt; i++) {
+	                String _pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
+	                
+	                if (_pFileName.indexOf(commonUtil.separator) > 0) {
+	                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+	                }
+	                pFileName[i] = _pFileName;
+	            }
+	        }
+			
+			String pDirPath = commonUtil.getUploadPath("upload_board.ROOT", info.getTenantId());
+			pDirPath = realPath + pDirPath;
+			
+			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+	        	pDirPath = pDirPath + commonUtil.separator;
+	        }
+			
+			File file = new File(pDirPath);
+	        File file2 = new File(pDirPath + boardID + commonUtil.separator + "uploadFile");
+	        
+	        if (!file.exists()) {
+	        	file.mkdirs();
+	        	file2.mkdirs();
+	        }
+			
+	        for (int i = 0; i < cnt; i++) {
+	        	fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
+
+	            if (fileSize[i] > maxSize) {
+	                resultUpload[i] = "overflow";
+	            } else {
+                    if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+                        resultUpload[i] = "denied";
+                    } else {
+                        String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator;
+                        File fTemp = new File(pAttachPath, pUploadSN[i] + "_" + pFileName[i]);
+                        
+                        if (!file.exists()) {
+                        	fTemp.mkdirs();
+                        }
+                        
+                        mobileBoardWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        
+                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
+                        resultUpload[i] = "true";
+                    }
+	            }
+	        }
+			
+	        StringBuffer strXML = new StringBuffer();
+
+	        strXML.append("<ROOT><NODES>");
+	        
+	        String attachment = "";
+	        for (int i = 0; i < cnt; i++) {
+	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
+	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
+	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
+	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
+	            strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
+	            strXML.append("</NODE>");
+	            
+	            
+	            attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
+	            
+	        }
+	        
+	        strXML.append("</NODES></ROOT>");
+	        
+	        result.put("data", attachment);
 			result.put("status", "ok");
 			result.put("code", 0);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			
 			return result;
-		} finally {
-			if (bos != null) {
-				try {
-					bos.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
-			if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
-		}
+		} 
 		
-		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/filedown] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/fileupload] ended.");
 		
 		return result;
 	}
@@ -684,4 +772,61 @@ public class MBoardGWController {
 				
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] ended.");
 	}*/
+	
+	/**
+     * 첨부파일을 서버에 저장한다.
+     *
+     * @param file
+     * @param newName
+     * @param stordFilePath
+     * @throws Exception
+     */
+    public void mobileBoardWriteUploadedFile(String bytearray, String newName, String stordFilePath) throws Exception {
+    	LOGGER.debug("mobileBoardWriteUploadedFile");
+    	
+		InputStream stream = null;
+		OutputStream bos = null;
+		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+		
+		try {
+		    File cFile = new File(stordFilePathReal);
+	
+		    if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+		    Decoder decoder = Base64.getDecoder();
+
+		    bos.write(decoder.decode(bytearray));
+
+		} catch (FileNotFoundException fnfe) {
+			LOGGER.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			LOGGER.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			LOGGER.debug("e: {}", e);
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+    }
 }

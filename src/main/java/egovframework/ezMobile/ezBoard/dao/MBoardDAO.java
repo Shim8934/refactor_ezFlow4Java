@@ -141,6 +141,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 		insert("MBoardDAO.setAsRead", map);
 	}
 	
+	public void saveAttachInfo(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.saveAttachInfo", map);
+	}
+	
 	public void setAsRead2(Map<String, Object> map) throws Exception{
 		update("MBoardDAO.setAsRead2", map);
 	}
