@@ -1318,5 +1318,16 @@
                 BoardID = #boardID#
         ]]>
     </select>
+    
+    <insert id="MBoardDAO.saveAttachInfo" parameterClass="Map">
+        <![CDATA[
+            INSERT INTO TBL_Board_Item_Attachments ( 
+                ITEMID,        GUID,       FILEPATH,           FILESIZE,     FILENAME,     TENANT_ID 
+            )
+            VALUES ( 
+                #v_STRITEMID#, #seqNum#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+            )
+        ]]>
+    </insert>
 </sqlMap>
 

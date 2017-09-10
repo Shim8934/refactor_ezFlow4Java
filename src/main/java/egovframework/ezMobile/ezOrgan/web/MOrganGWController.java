@@ -21,6 +21,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOrgan.service.MOrganService;
+import egovframework.ezMobile.ezOrgan.vo.MOrganListVO;
 import egovframework.ezMobile.ezOrgan.vo.MPersonListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -55,7 +56,7 @@ public class MOrganGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezorgan/personlist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object getPersonList(HttpServletRequest request, Model model) {		
+	public JSONObject getPersonList(HttpServletRequest request, Model model) {		
 		LOGGER.debug("MOBILE G/W ORGAN [GET /ezorgan/personlist] started.");
 		
 		JSONObject result = new JSONObject();
@@ -92,7 +93,7 @@ public class MOrganGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezorgan/personDetail", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object getPersonInfo(HttpServletRequest request, Model model) {		
+	public JSONObject getPersonInfo(HttpServletRequest request, Model model) {		
 		LOGGER.debug("MOBILE G/W ORGAN [GET /ezorgan/personDetail] started.");
 		
 		JSONObject result = new JSONObject();
@@ -116,6 +117,35 @@ public class MOrganGWController {
 			result.put("listCount", "");
 		}
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezorgan/personDetail] ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/mobile/ezorgan/dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mGetDeptInfo(HttpServletRequest request, @PathVariable String userId) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptInfo(userInfo.getDeptId(), userInfo.getLang(), userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", mOrganListVOs);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] ended.");
+		
 		return result;
 	}
 }
