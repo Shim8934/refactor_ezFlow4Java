@@ -22,6 +22,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
@@ -64,6 +65,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 		
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
@@ -187,7 +191,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 일정관리 [GET] 일정 상세데이터
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
+	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request, Locale locale) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -205,6 +209,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			MScheduleInfoVO vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, tenantId);
 			dataObject.put("scheduleInfo", vo);
 		
+			String itemID = vo.getContentPath();
+			String type = "SCHEDULECONTENT";
+			String realPath = commonUtil.getRealPath(request);
+	
+			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale);
+			LOGGER.debug("mhtToHtml: " + mhtToHtml);
+			vo.setContent(mhtToHtml);
+			
+			
 			//자원예약 정보
 	        int resourceCnt = ezScheduleService.getResourceCount(scheduleId, tenantId);
 	        
