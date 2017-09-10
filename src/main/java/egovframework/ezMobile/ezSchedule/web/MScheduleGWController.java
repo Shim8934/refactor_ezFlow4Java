@@ -499,9 +499,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	    	String contentPath = mScheduleService.scheduleContentPath(scheduleId, info.getTenantId());
 	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-	    	String defaultPath = commonUtil.getRealPath(request) + contentPath;
+	    	String defaultPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId()) + contentPath;
     	
-	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId());
+	        String realPath = commonUtil.getRealPath(request);
+	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
+	    	
+	        LOGGER.debug("contentPath: " + contentPath);
+	        
+	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
