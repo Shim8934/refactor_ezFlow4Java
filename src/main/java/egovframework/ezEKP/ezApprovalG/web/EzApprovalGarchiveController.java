@@ -1200,7 +1200,7 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String result = "FALSE";
-		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
 		Document resultXML = commonUtil.convertStringToDocument(strXml);
 		
 		if(resultXML.getElementsByTagName("HREF").getLength()>0){
@@ -1329,7 +1329,7 @@ public class EzApprovalGarchiveController {
 		String docID = xmlDom.getElementsByTagName("DocID").item(0).getTextContent();
 		String mode =  xmlDom.getElementsByTagName("mode").item(0).getTextContent();
 		String fields =  xmlDom.getElementsByTagName("fields").item(0).getTextContent();
-		String result = ezApprovalGService.getDocInfo(docID, mode, fields, userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.getDocInfo(docID, mode, fields, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
 		
 		logger.debug("<<<docID : " + docID);
 		logger.debug("<<<mode : " + mode);

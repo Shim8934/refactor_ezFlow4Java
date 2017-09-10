@@ -136,7 +136,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 							)C ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -161,6 +161,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -221,7 +222,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 								) C ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -246,6 +247,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -332,7 +334,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -357,6 +359,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -410,7 +413,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE#
 							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -435,6 +438,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -543,7 +547,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+						LIMIT #v_PAGESIZE#
 						)C ) A 
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -568,6 +572,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -655,7 +660,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+						LIMIT #v_PAGESIZE#
 						)C ) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
@@ -680,6 +685,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
+							LIMIT #v_PAGESIZE2#
 							)D 
 							]]>
 			</isEqual>
@@ -737,7 +743,7 @@
 														</isNotEqual>
 													</isEmpty>
 													<![CDATA[
-													LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+													LIMIT #v_PAGESIZE#
 													)C ) A
 													]]>
 														<isNotEmpty property="v_ORDEROPTION2"> 
@@ -762,6 +768,7 @@
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
+														LIMIT #v_PAGESIZE2#
 														)D 
 														]]>
                      			</isNotEqual>
@@ -1304,6 +1311,7 @@
 <!-- 		{CALL EZSP_GETAPRLINEINFO(#v_DOCID#, #v_FLAG#, #v_USERID#, #v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_FLAG" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -1374,6 +1382,40 @@
 	            ORDER BY 
 	            	APRMEMBERSN DESC 
             ]]>
+		</isEqual>
+		</isNotEqual>
+		
+		<isEqual property="isUsed" compareValue="reuse">
+			SELECT 
+				#v_DOCID#, 
+				APRMEMBERSN, 
+				APRTYPE ,
+				'', 
+				APRMEMBERID, 
+				APRMEMBERISDEPTYN, 
+				APRMEMBERNAME, 
+				APRMEMBERJOBTITLE, 
+				APRMEMBERDEPTID, 
+				APRMEMBERDEPTNAME, 
+				APRMEMBERLDAPPATH,
+				'',
+				'',
+				ISPROPOSERYN,
+				ISBRIEFUSERYN,
+				REASONDONOTAPPROVAL,
+				APRMEMBERNAME2,
+				APRMEMBERJOBTITLE2,
+				APRMEMBERDEPTNAME2,
+				TENANT_ID,
+				COMPANYID
+			FROM 
+				TBL_ENDAPRLINEINFO
+            WHERE 
+            	DOCID = #beforeDocID#
+           	AND
+           		TENANT_ID = #v_TENANTID#
+	        AND
+	           	COMPANYID = #companyID#
 		</isEqual>
 	</select>
 
@@ -4426,6 +4468,7 @@
 <!-- 		{CALL EZSP_GETDOCINFO(#v_DOCID#, #v_MODE#, #v_COLS#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getDocInfo" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 					$v_COLS$ 
@@ -4466,6 +4509,28 @@
       	 	AND		
       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		</isNotEqual>
+		</isNotEqual>
+		
+		<isEqual property="isUsed" compareValue="reuse">
+			SELECT 
+					$v_COLS$ 
+			FROM 
+					TBL_ENDAPRDOCINFO 
+      		INNER JOIN 
+      				TBL_EXPENDAPRDOCINFO 
+      		ON 
+      				TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+      		AND
+      				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+      		AND
+      				TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+      		WHERE 
+      				TBL_ENDAPRDOCINFO.DOCID = #beforeDocID#
+      		AND
+      				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+      	 	AND		
+      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		</isEqual>
 	</select>
 	
 	<select id="EzApprovalG.getDocInfoS" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
@@ -6751,13 +6816,11 @@
 							   		ORDER BY 
 							   				ENDDATE DESC
 							   	</isEmpty>
-							   	<isEqual property="alFlag" compareValue="1">
-							   	LIMIT #v_PAGESIZE#,#v_PAGESIZE2#
-							   	</isEqual>
-							   	<isNotEqual property="alFlag" compareValue="1">
-							   	LIMIT #v_PAGESIZE#,#v_PAGESIZE3#
-							   	</isNotEqual>
+								<isNotEqual property="alFlag" compareValue="1">
+							   	LIMIT #v_PAGESIZE#
+								</isNotEqual>
 							   	 ) A 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
 <!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
 <!-- 				INNER JOIN TBL_CODELIST B   -->
@@ -6903,8 +6966,9 @@
 											ENDDATE DESC
 									</isEmpty>
 									 <![CDATA[
-									 LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+									 LIMIT #v_PAGESIZE#
 							   	 ) B 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">

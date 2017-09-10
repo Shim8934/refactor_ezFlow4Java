@@ -431,8 +431,18 @@
 		                            signWidth = 50;
 		                            
 		                            if (seumyung) {
-		                            	if (img[1].indexOf(strLang7) > -1) {
-		                            		signHeight = 28;
+		                            	if (img[1] != null) {
+			                            	if (img[1].indexOf(strLang7) > -1) {
+			                            		signHeight = 28;
+			                            	} else {
+			                            		signHeight = 50;
+			                            		
+			                            		if (SignName.indexOf("habyuisign") > -1) {
+			                            			if (!habyuiDate) {
+					                            		signHeight = 28;
+				                            		}
+			                            		}
+			                            	}
 		                            	} else {
 		                            		signHeight = 50;
 		                            		
@@ -628,7 +638,7 @@
 
 		            openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=" + escape(pListTypeValue) + "&aprState=" + escape(pArgument[6]);
-		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&isuesd=" +  editable;
+		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&isUsed=" +  editable;
 		        }
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;

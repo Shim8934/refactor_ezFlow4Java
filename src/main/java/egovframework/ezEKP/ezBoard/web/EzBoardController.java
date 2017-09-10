@@ -250,6 +250,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);
         modelMap.addAttribute("applyFlag",applyFlag);
         modelMap.addAttribute("questionAdmin", questionAdmin);
+        modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
         
 		return "ezBoard/boardLeft";
 	}

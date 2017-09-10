@@ -2974,11 +2974,17 @@ function OpenInformationUI_Complete() {
 function getDocInfo() {
 	var result = "";
 	
+	if (isUsed == "reuse") {
+		url = "/ezApprovalG/getDocInfo.do?isUsed=" + isUsed + "&beforeDocID=" + beforeDocID;
+	} else {
+		url = "/ezApprovalG/getDocInfo.do";
+	}
+	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getDocInfo.do",
+		url : url,
 		data : {
 			docID : pDocID
 		},
@@ -3170,8 +3176,8 @@ function setDrafterAddress() {
     message.DocumentBodySetAttribute("lastKyulName", lastKyulName);
     message.DocumentBodySetAttribute("lastKyuljikwee", lastKyuljiwee);
 }
-function setFirstDrafter() {
-    var ret = getAutoAprLine();
+function setFirstDrafter(type, beforDocID) {
+    var ret = getAutoAprLine(type, beforDocID);
 
     if (ret[0] != "NONE") {
         IsSkipDrafter = "FALSE";

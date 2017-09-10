@@ -162,8 +162,18 @@
 		                            signWidth = 50;
 		                            
 		                            if (seumyung) {
-		                            	if (img[1].indexOf(strLang7) > -1) {
-		                            		signHeight = 28;
+		                            	if (img[1] != null) {
+			                            	if (img[1].indexOf(strLang7) > -1) {
+			                            		signHeight = 28;
+			                            	} else {
+			                            		signHeight = 50;
+			                            		
+			                            		if (SignName.indexOf("habyuisign") > -1) {
+			                            			if (!habyuiDate) {
+					                            		signHeight = 28;
+				                            		}
+			                            		}
+			                            	}
 		                            	} else {
 		                            		signHeight = 50;
 		                            		
