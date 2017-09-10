@@ -210,10 +210,17 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			dataObject.put("scheduleInfo", vo);
 		
 			String itemID = vo.getContentPath();
+			LOGGER.debug("itemID: " + itemID);
 			String type = "SCHEDULECONTENT";
 			String realPath = commonUtil.getRealPath(request);
 	
 			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale);
+			LOGGER.debug("mhtToHtml: " + mhtToHtml);
+			
+			if(mhtToHtml.indexOf("<div>") < 0 || mhtToHtml.indexOf("</div>") < 0) {
+				mhtToHtml = "";
+			}
+			
 			LOGGER.debug("mhtToHtml: " + mhtToHtml);
 			vo.setContent(mhtToHtml);
 			
