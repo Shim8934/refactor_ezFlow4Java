@@ -27,9 +27,7 @@
         
         <![CDATA[    
             ORDER BY
-                EXTENSIONATTRIBUTE15 ASC,
                 DISPLAYNAME ASC)A
-                
         ]]>
         <isNotEmpty property="rowNum">
             <![CDATA[
@@ -61,7 +59,6 @@
         </isNotEmpty>
         <![CDATA[    
             ORDER BY
-                EXTENSIONATTRIBUTE15 ASC,
                 DISPLAYNAME ASC
         ]]> 
     </select>
