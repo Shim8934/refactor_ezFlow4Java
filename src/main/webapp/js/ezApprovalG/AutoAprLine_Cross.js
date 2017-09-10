@@ -1,10 +1,6 @@
 ﻿function getAutoAprLine(type, beforeDocID) {
     getFormRecv();
     
-    if (type == "reuse") {
-    	pDocID = beforeDocID;
-    }
-    
     var retvalue = new Array();
     retvalue[0] = "NONE";
     retvalue[1] = "NONE";
@@ -21,7 +17,8 @@
 				docID    : pDocID, 
 				userID 	 : pUserID,
 				formID   : pFormID,
-				isUsed   : type
+				isUsed   : type,
+				beforeDocID : beforeDocID
 				},
 		success: function(xml){
 			result = xml;

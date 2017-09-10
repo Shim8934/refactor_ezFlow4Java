@@ -1387,11 +1387,31 @@
 		
 		<isEqual property="isUsed" compareValue="reuse">
 			SELECT 
-				*
+				#v_DOCID#, 
+				APRMEMBERSN, 
+				APRTYPE ,
+				'', 
+				APRMEMBERID, 
+				APRMEMBERISDEPTYN, 
+				APRMEMBERNAME, 
+				APRMEMBERJOBTITLE, 
+				APRMEMBERDEPTID, 
+				APRMEMBERDEPTNAME, 
+				APRMEMBERLDAPPATH,
+				'',
+				'',
+				ISPROPOSERYN,
+				ISBRIEFUSERYN,
+				REASONDONOTAPPROVAL,
+				APRMEMBERNAME2,
+				APRMEMBERJOBTITLE2,
+				APRMEMBERDEPTNAME2,
+				TENANT_ID,
+				COMPANYID
 			FROM 
 				TBL_ENDAPRLINEINFO
             WHERE 
-            	DOCID = #v_DOCID#
+            	DOCID = #beforeDocID#
            	AND
            		TENANT_ID = #v_TENANTID#
 	        AND
@@ -4448,6 +4468,7 @@
 <!-- 		{CALL EZSP_GETDOCINFO(#v_DOCID#, #v_MODE#, #v_COLS#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getDocInfo" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 					$v_COLS$ 
@@ -4488,6 +4509,28 @@
       	 	AND		
       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		</isNotEqual>
+		</isNotEqual>
+		
+		<isEqual property="isUsed" compareValue="reuse">
+			SELECT 
+					$v_COLS$ 
+			FROM 
+					TBL_ENDAPRDOCINFO 
+      		INNER JOIN 
+      				TBL_EXPENDAPRDOCINFO 
+      		ON 
+      				TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+      		AND
+      				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+      		AND
+      				TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+      		WHERE 
+      				TBL_ENDAPRDOCINFO.DOCID = #beforeDocID#
+      		AND
+      				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+      	 	AND		
+      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		</isEqual>
 	</select>
 	
 	<select id="EzApprovalG.getDocInfoS" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">

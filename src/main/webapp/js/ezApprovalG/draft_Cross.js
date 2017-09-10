@@ -2975,8 +2975,7 @@ function getDocInfo() {
 	var result = "";
 	
 	if (isUsed == "reuse") {
-		pDocID = beforeDocID;
-		url = "/ezApprovalG/getDocInfo.do?isUsed=" + isUsed;
+		url = "/ezApprovalG/getDocInfo.do?isUsed=" + isUsed + "&beforeDocID=" + beforeDocID;
 	} else {
 		url = "/ezApprovalG/getDocInfo.do";
 	}

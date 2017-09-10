@@ -375,9 +375,6 @@
 		                    }
 		                }
 		                else {
-		                	if (isUsed == "reuse") {
-		                		getDocInfo();
-		                	}
 		                    SetBtnStateTrue();
 		                    pDraftFlag = "DRAFT";
 		                    GetExchInfo();
@@ -393,6 +390,10 @@
 		                            setClearSusinCellInfo();
 		                        }
 		                        pDocID = createNewDoc();
+		                        
+		                     	if (isUsed == "reuse") {
+			                		getDocInfo();
+			                	}
 		                    }
 		                }
 		            }
@@ -545,17 +546,22 @@
 						OpenInformationUI(pAlertContent, check_btnSendDraft2);
 		                return;
 		            }
-		            if (!checkLines())
+		            if (!checkLines()) {
 		                return;
+		            }
+		            
 		            if (pDocType == "003" && pSuSinFlag == "Y" && !btnReceivLineEnable) {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
 		                OpenInformationUI(pAlertContent, check_btnSendDraft3);
 		                return;
 		            }
-		            if (!SummaryFlag) {
-		                btnApprovalInfo(4);
-		                return;
+		            
+		            if (isUsed ==  "reuse") {
+		            	var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+		            	OpenInformationUI(pAlertContent, check_ReUsed);	
+		            	return;
 		            }
+		            
 		            setDrafterAddress();
 		            if (pDraftFlag == "REDRAFT")
 		                delOpinionInfo();
@@ -570,6 +576,13 @@
 		        }
 		    }
 		
+		    function check_ReUsed(ans) {
+		    	DivPopUpHidden();
+		    	if (ans) {
+		    		btnApprovalInfo(1);
+		    	} 
+		    }
+		    
 		    function CheckPassWord() {
 		    	var result = "";
 		    	$.ajax({
@@ -1333,6 +1346,7 @@
 		                }
 		                
 		                SummaryFlag = true;
+		                isUsed = ""; // 재사용 여부 초기화
 		
 		            }
 		            catch (e) {
