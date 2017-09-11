@@ -120,11 +120,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 			//String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 	    	//String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
 	    	
-	    	String ownerId = request.getParameter("ownerId");;
-	    	
-	    	String writerDt = info.getDeptId();
-	    	
+	    	String ownerId = request.getParameter("ownerId");;	    	
+	    	String writerDt = info.getDeptId();	    	
 	    	String offset = info.getOffSet();
+	    	String favoriteYn = "N";
 	    	
 	    	//LOGGER.debug("utcStartDate: " + utcStartDate);
 	    	//LOGGER.debug("utcEndDate: " + utcEndDate);
@@ -132,6 +131,24 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "");
 			
+	    	LOGGER.debug("ownerId: " + ownerId);
+	    	if(ownerId != null && !ownerId.equals("")) {
+	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(request.getParameter("userId"), companyId, tenantId);
+		    	if(list.size() > 0) {
+		    		for (MResourceScheduleVO mResourceScheduleVO : list) {
+		    			LOGGER.debug("mResourceScheduleVO.getOwnerId(): " + mResourceScheduleVO.getOwnerId());
+						if(mResourceScheduleVO.getResId() != null) {
+			    			if(mResourceScheduleVO.getResId().equals(ownerId)) {
+								favoriteYn = "Y";
+							}							
+						}
+
+					}
+		    	}
+	    	}
+	    	
+	    	resultMap.put("favoriteYn", favoriteYn);
+	    	
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", resultMap);

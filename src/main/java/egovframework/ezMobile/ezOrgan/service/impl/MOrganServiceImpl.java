@@ -85,7 +85,6 @@ public class MOrganServiceImpl implements MOrganService {
 
 	@Override
 	public List<MOrganListVO> getDeptInfo(String deptId, String lang, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
 		LOGGER.debug("getDeptInfo started");
 
 		//결과 조직도 리스트
@@ -131,6 +130,7 @@ public class MOrganServiceImpl implements MOrganService {
 		} while(deptId != null && !deptId.equals(""));
 
 		int resultSize = resultOrganListVOs.size();
+		
 		for (int i = 0; i < resultSize; i++) {
 			if (resultOrganListVOs.get(i).getDeptID().equals(orgDeptId)) {
 				resultOrganListVOs.addAll(i + 1, lowOrganListVOs);
@@ -142,6 +142,26 @@ public class MOrganServiceImpl implements MOrganService {
 		LOGGER.debug("getDeptInfo ended");
 		
 		return resultOrganListVOs;
+	}
+
+	@Override
+	public List<MOrganListVO> getDeptMemberList(String deptID, String lang, int tenantId) throws Exception {
+		LOGGER.debug("getDeptMemberList started");
+		
+		//mail, absentee
+		String orgType = "mail";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", orgType);
+		map.put("deptID", deptID);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
+		map.put("tenantID", tenantId);
+		
+		List<MOrganListVO> mOrganListVOs = mOrganDAO.getDeptMemberList(map);
+
+		LOGGER.debug("getDeptMemberList ended");
+		
+		return mOrganListVOs;
 	}
 	
 }

@@ -38,7 +38,7 @@
     <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
     	<![CDATA[
 	    	SELECT
-	    		a.tenant_id,
+	    		b.tenant_id,
 	    		a.lang,    	
 				a.timeZone,		    
 			    b.department,
@@ -55,11 +55,11 @@
                 b.extensionattribute1 as rollinfo,
                 b.extensionattribute2 as userFileUrl
 			FROM
-				TBL_USERLOCALINFO a inner join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
+				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
-				a.userid = #userId#
+				b.cn = #userId#
 			AND
-				a.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
+				b.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
 		]]>		
   	</select>
   	
