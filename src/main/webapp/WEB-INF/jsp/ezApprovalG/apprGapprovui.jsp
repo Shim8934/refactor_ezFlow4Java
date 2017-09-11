@@ -87,7 +87,7 @@
 		    var SignType = new Array();
 		    var SignName = new Array();
 		    var SignContent = new Array();
-		    var RootURL = document.location.protocol + "//" + document.location.hostname;  
+		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;
 		    var arr_userinfo = new Array();
 		    var onlydocinfiview;
 		    arr_userinfo[0]  = "user";

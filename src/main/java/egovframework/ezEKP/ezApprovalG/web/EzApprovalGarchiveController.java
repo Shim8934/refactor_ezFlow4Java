@@ -2209,7 +2209,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
         String fontFamily = request.getParameter("fontFamily");
 		String fontSize = request.getParameter("fontSize"); 
-		String content = "<![CDATA[" + request.getParameter("content") + "]]>";
+		String content = request.getParameter("content");
 
 		String result = ezApprovalGService.startXmlConvert(content, fontFamily, fontSize, userInfo);
 		logger.debug("getContentXml ended");
@@ -2241,7 +2241,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		saveXML.append(xmlPara.replace("\n", "").replace("\t", "").replace("&amp;nbsp;", " ").replace("&amp;gt;", "&gt;").replace("&amp;lt;", "&lt;"));
 		String realPath = commonUtil.getRealPath(request);
 		String savePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator	+ "sendXML"	+ commonUtil.separator + docID + "pubdoc.xml";
-		boolean saveFlag = false;
+ 		boolean saveFlag = false;
 		String result = null;
 		try {
 			char intxt[] = new char[saveXML.toString().length()];
@@ -2415,6 +2415,74 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		} catch (Exception e){
 		}
 		
+		logger.debug("getRelayDocInfo ended");
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/setHref.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setHref(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("getRelayDocInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String fileType = request.getParameter("fileType");
+		String mode = request.getParameter("mode");
+		
+		String result = ezApprovalGService.setHref(docID, fileType, mode, userInfo);
+		logger.debug("getRelayDocInfo ended");
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/setRecvDocInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setRecvDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("getRelayDocInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String fileType = request.getParameter("fileType");
+		String mode = request.getParameter("mode");
+		String publicFlag = request.getParameter("publicFlag");
+		String docNo = request.getParameter("docNo");
+		String docNumCode = request.getParameter("docNumCode");
+		String orgDocNumCode = request.getParameter("orgDocNumCode");
+
+		if (docNo == null) {
+			docNo = "";
+		}
+		
+		if (docNumCode == null) {
+			docNumCode = "";
+		}
+		String result = ezApprovalGService.setRecvDocInfo(docID, publicFlag, docNo, docNumCode, orgDocNumCode, mode, fileType, userInfo);
+		logger.debug("getRelayDocInfo ended");
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/setRecvComplete.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setRecvComplete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("getRelayDocInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("tempDocID");
+		String docNo = request.getParameter("tempDocNo");
+		String docNumCode = request.getParameter("tempDocNumCode");
+		String orgDocNumCode = request.getParameter("tempOrgDocNumCode");
+		String cabinetID = request.getParameter("tempCabinetID");
+		String taskCode = request.getParameter("tempTaskCode");
+		String userID = request.getParameter("tempUserID");
+		String userName = request.getParameter("tempUserName");
+        String userName2 = request.getParameter("tempUserName2");
+        String deptID = request.getParameter("tempDeptID");
+        String userTitle = request.getParameter("tempTitle");
+        String userTitle2 = request.getParameter("tempTitle2");
+        String deptName = request.getParameter("tempDeptName");
+        String deptName2 = request.getParameter("tempDeptName2");
+        String tempCompanyID = request.getParameter("tempCompanyID");
+        
+		String result = ezApprovalGService.updateRecvDocInfo(docID, docNo, docNumCode, orgDocNumCode, cabinetID, taskCode, userID, userName, userName2, deptID, userTitle, userTitle2, deptName, deptName2, tempCompanyID, userInfo, commonUtil.getRealPath(request));
 		logger.debug("getRelayDocInfo ended");
 		return result;
 	}

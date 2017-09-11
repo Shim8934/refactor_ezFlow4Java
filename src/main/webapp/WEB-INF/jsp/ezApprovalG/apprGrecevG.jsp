@@ -70,7 +70,7 @@
 		    var TaskCode = "";
 		    var pDocNumCode, pOrgDocNumCode, pDocNo;
 		    var maxwidth = 659;
-		    var RootURL = document.location.protocol + "//" + document.location.hostname;  
+		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
@@ -101,7 +101,8 @@
 		    var SignContent = new Array();
 		    var arrDelFiles = new Array();
 		    var junGyulFlag = "${junGyulFlag}";
-		
+			var dirPath = "${approvalROOT}";
+			
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -422,7 +423,7 @@
 		            var g_SelCabXml = rtn[1];
 		            var xmlCab = createXmlDom();
 		            xmlCab = loadXMLString(g_SelCabXml);
-		
+		alert(1); 
 		            cabinetID = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/CABINETID"));
 		            TaskCode = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/TASKCODE"));
 		        }
@@ -430,39 +431,45 @@
 		        if (cabinetID != "") {
 		            getRecvDocNumber(arr_userinfo[4]);
 		
-		            var xmlpara = createXmlDom();
-		            var xmlhttp = createXMLHttpRequest();
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "tempDocID", pDocID);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDocNo", pDocNo);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDocNumCode", pDocNumCode);
-		            createNodeAndInsertText(xmlpara, objNode, "tempOrgDocNumCode", pOrgDocNumCode);
-		            createNodeAndInsertText(xmlpara, objNode, "tempCabinetID", cabinetID);
-		            createNodeAndInsertText(xmlpara, objNode, "tempTaskCode", TaskCode);
-		            createNodeAndInsertText(xmlpara, objNode, "tempUserID", pUserID);
-		            createNodeAndInsertText(xmlpara, objNode, "tempUserName", arr_userinfo[11]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDeptID", arr_userinfo[4]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempTitle", arr_userinfo[3]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDeptName", arr_userinfo[5]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempCompanyID", arr_userinfo[9]);
-		            createNodeAndInsertText(xmlpara, objNode, "TEMPUSERNAME2", arr_userinfo[12]);
-		            createNodeAndInsertText(xmlpara, objNode, "TEMPTITLE2", arr_userinfo[14]);
-		            createNodeAndInsertText(xmlpara, objNode, "TEMPDEPTNAME2", arr_userinfo[16]);
-		
-		            xmlhttp.open("Post", "aspx/setRecvComplete.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            if (xmlhttp.responseText.indexOf("TRUE") > -1) {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1693'/>";
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-		            }
-		            else {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
-		                OpenAlertUI(pAlertContent);
-		            }
+		         	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/setRecvComplete.do",
+                		data : {
+        		            tempDocID : pDocID,
+        		            tempDocNo : pDocNo,
+        		            tempDocNumCode : pDocNumCode,
+        		            tempOrgDocNumCode : pOrgDocNumCode,
+        		            tempCabinetID : cabinetID,
+        		            tempTaskCode : TaskCode,
+        		            tempUserID : pUserID,
+        		            tempUserName : arr_userinfo[11],
+        		            tempDeptID : arr_userinfo[4],
+        		            tempTitle : arr_userinfo[3],
+        		            tempDeptName : arr_userinfo[5],
+        		            tempCompanyID : arr_userinfo[9],
+        		            tempUserName2 : arr_userinfo[12],
+        		            tempTitle2 : arr_userinfo[14],
+        		            tempDeptName2 : arr_userinfo[16]
+                		},
+                		success : function(result){
+	               			 if (result == "TRUE") {
+	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1693'/>";
+	       		                OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	        		         } else {
+	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
+	       		                OpenAlertUI(pAlertContent);
+	        		         }
+                		}, 
+                		error : function () {
+                			var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
+       		                OpenAlertUI(pAlertContent);
+                		}
+                	});
 		        }
 		    }
+		    
 		    function btnReAssign_onclick() {
 		        var ret = openOpinionUI("BanSong");
 		        if (ret != "cancel") {

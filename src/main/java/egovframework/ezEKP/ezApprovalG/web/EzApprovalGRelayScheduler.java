@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -72,7 +75,7 @@ public class EzApprovalGRelayScheduler {
 	@Scheduled(cron = "* 0/5 * * * *")
 	@RequestMapping(value = "/ezApprovalG/receiverMain.do")
 	public void receiverMain(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		logger.debug("receiverMain Started");
+		logger.debug("receiverSchedulerMain Started");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		 String strRelayFolderPath = "";
@@ -80,7 +83,7 @@ public class EzApprovalGRelayScheduler {
 
          try {
              strRelayFolderPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_relay.ROOT", userInfo.getTenantId());
-             strAprDocPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_relay.R_DocPath", userInfo.getTenantId()); 
+              strAprDocPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_relay.R_DocPath", userInfo.getTenantId()); 
              
              if (!strRelayFolderPath.substring(strRelayFolderPath.length() - 1).equals(commonUtil.separator)) {
             	 strRelayFolderPath = strRelayFolderPath + commonUtil.separator;
@@ -213,27 +216,27 @@ public class EzApprovalGRelayScheduler {
                 	  strCompanyID = ezOrganService.getPropertyValue(strReceiveID, "EXTENSIONATTRIBUTE2", userInfo.getTenantId());
                 	  
                 	  if (strReceiveID.equals("")) {
-                          strReceiveID = strFileName.substring(7, 7);
+                          strReceiveID = strFileName.substring(7, 14);
                 	  }
 
                       //수신기관코드가 회사ID랑 다를 경우 회사ID로 맞추어 준다.(보정처리)
                       boolean RecvIDCheck = false;
 //                      스케쥴러에서는 config 파일에 회사 정보가 S907000; 이런식으로 저장되어 있는데 어떤 의도인지 물어보기
-//                      if (userInfo.getCompanyID().indexOf(';') > -1) {
-//                          String[] RecvIDs = userInfo.getCompanyID().split(";");
-//                          for (int i = 0; i < RecvIDs.length; i++) {
-//                              if (strReceiveID.trim().equals(RecvIDs[i].toString().trim())) {
-//                                  RecvIDCheck = true;
-//                                  break;
-//                              }
-//                          }
-//                      }
-                      
-                      if (!userInfo.getCompanyID().trim().equals("")) {
-                    	  if (!strReceiveID.trim().equals(userInfo.getCompanyID().trim())){
-                    		  strReceiveID = userInfo.getCompanyID().trim();
-                    	  }
-                    	  RecvIDCheck = true;
+                      if (userInfo.getCompanyID().indexOf(";") > -1) {
+                          String[] RecvIDs = userInfo.getCompanyID().split(";");
+                          for (int i = 0; i < RecvIDs.length; i++) {
+                              if (strReceiveID.trim().equals(userInfo.getCompanyID().trim())) {
+                                  RecvIDCheck = true;
+                                  break;
+                              }
+                          }
+                      } else {
+                          if (!userInfo.getCompanyID().trim().equals("")) {
+                        	  if (!strReceiveID.trim().equals(userInfo.getCompanyID().trim())){
+                        		  strReceiveID = userInfo.getCompanyID().trim();
+                        	  }
+                        	  RecvIDCheck = true;
+                          }
                       }
                       
                       if (RecvIDCheck) {
@@ -297,7 +300,7 @@ public class EzApprovalGRelayScheduler {
                                           
                             			FileOutputStream fop = new FileOutputStream(gpkFile);
                             			// get the content in bytes
-                            			fop.write(commonUtil.convertDocumentToString(objXML).getBytes("EUC-KR"));
+                            			fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
                             			fop.flush();
                             			fop.close();
                             			
@@ -318,7 +321,7 @@ public class EzApprovalGRelayScheduler {
                                            
 	                             			FileOutputStream fop = new FileOutputStream(recFile);
 	                             			// get the content in bytes
-	                             			fop.write(commonUtil.convertDocumentToString(objXML).getBytes("EUC-KR"));
+	                             			fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
 	                             			fop.flush();
 	                             			fop.close();
                              			
@@ -342,7 +345,7 @@ public class EzApprovalGRelayScheduler {
                                                       ezApprovalGService.fieldUpdate("xmlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, userInfo);
                                                       break;
                                                   case "attach":
-                                                	  boolean WriteAttache = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+                                                	  boolean WriteAttache = WriteFileFromBase64(commonUtil.getRealPath(request), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
                                                 	  logger.debug("#attach생성=" + WriteAttache, "");
                                                       ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, userInfo);
                                                       break;
@@ -362,22 +365,22 @@ public class EzApprovalGRelayScheduler {
                                                 	  ezApprovalGService.addAttachInfo(strCont_Name, strCont_Name, strXDocID, Integer.toString(count), "XSL", strCompanyID, userInfo);
                                                       break;
                                                   case "seal":
-                                                	  boolean WriteSealFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
+                                                	  boolean WriteSealFile = WriteFileFromBase64(commonUtil.getRealPath(request), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
                                                       logger.debug("#seal생성=" + WriteSealFile, "");
                                                       ezApprovalGService.fieldUpdate("sealURL", strCont_Name, strXDocID, strReceiveID, strCompanyID, userInfo);
                                                       break;
                                                   case "sign":
-                                                	  boolean WriteSignFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+                                                	  boolean WriteSignFile = WriteFileFromBase64(commonUtil.getRealPath(request), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
                                                       logger.debug("#sign생성=" + WriteSignFile, "");
                                                       ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, userInfo);
                                                       break;
                                                   case "logo":
-                                                	  boolean WritetLogoFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+                                                	  boolean WritetLogoFile = WriteFileFromBase64(commonUtil.getRealPath(request), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
                                                       logger.debug("#logo생성=" + WritetLogoFile, "");
                                                       ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, userInfo);
                                                       break;
                                                   case "symbol":
-                                                	  boolean WriteSymbolFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+                                                	  boolean WriteSymbolFile = WriteFileFromBase64(commonUtil.getRealPath(request), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
                                                       logger.debug("#symbol생성=" + WriteSymbolFile, "");
                                                       ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, userInfo);
                                                       break;
@@ -442,6 +445,8 @@ public class EzApprovalGRelayScheduler {
                             		  File fileMove = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName);
                             		  receiveTempFile.renameTo(fileMove);
                             	  }
+                              } else {
+                            	  receiveTempFile.delete();
                               }
                               logger.debug("=============================================>수신종료.", "");
                     	  } else {
@@ -492,7 +497,7 @@ public class EzApprovalGRelayScheduler {
          }
 	}
 
-	private boolean WriteFileFromBase64(String strCont, String pFilePath, String fileName) {
+	private boolean WriteFileFromBase64(String realPath, String strCont, String pFilePath, String fileName) {
 		boolean result = false;
 		String content = new String(Base64.decodeBase64(strCont));
 		try {
@@ -502,16 +507,78 @@ public class EzApprovalGRelayScheduler {
 				dir.mkdirs();
 			}
 			
-			File file = new File(pFilePath + commonUtil.separator + fileName);
+//			File file = new File(pFilePath + commonUtil.separator + fileName);
 			
-			FileOutputStream fop = new FileOutputStream(file);
-			// get the content in bytes
-			fop.write(content.getBytes("EUC-KR"));
-			fop.flush();
-			fop.close();
+//			FileOutputStream fop = new FileOutputStream(file);
+//			// get the content in bytes
+//			fop.write(content.getBytes("UTF-8"));
+//			fop.flush();
+//			fop.close();
 
-			result = true;
+//	    	BASE64Decoder base64Decoder = new BASE64Decoder();
+//
+//	    	InputStream in = new FileInputStream(new File(pFilePath + commonUtil.separator + content));
+//
+//	        OutputStream out = new FileOutputStream(new File(pFilePath + commonUtil.separator + fileName));
+//
+//	        base64Decoder.decodeBuffer(in, out);
+//
+//	        in.close();
+//	        out.close();
+//		    BufferedReader in = new BufferedReader(new FileReader(realPath + commonUtil.separator + content));
+//
+//            String str = "";
+//            String line = null;
+//            while ((line = in.readLine()) != null) {
+//                str += line;
+//   // str += line + ",";
+//            }
+//
+//            //System.out.println(str);
+//            in.close();
+//
+//            char intxt[] = new char[str.length()];
+//
+//            str.getChars(0, str.length(), intxt, 0); // 입력하고자 하는 문자열을 문자배열
+//
+//            FileWriter fw = new FileWriter(pFilePath + commonUtil.separator + fileName);
+//            BufferedWriter bw = new BufferedWriter(fw); // 버퍼를 사용한 객체 bw 생성
+//
+//            bw.write(intxt); // 문자 배열의 내용을 파일에 출력
+//            bw.close();
+	         
+		        //1.파이 사이즈 알아내기
+		        File f = new File(realPath + content);
+		        int fileSize = (int)f.length();
+		        System.out.println("파일의 사이즈:" + fileSize);
+		         
+		        //2.파일 사이즈에 해당하는 배열 만들기
+		        byte[] b = new byte[fileSize];
+		         
+		        //3.스트림을 이용해서 배열에 데이터 채우기
+		        FileInputStream fis = new FileInputStream(realPath + content);
+		        int pos = 0;
+		        int size = 10;
+		        int temp;
+		        while((size=fis.read(b, pos, size)) > 0){
+		            pos += size;
+		            temp = b.length - pos;
+		            if(temp < 10){
+		                size = temp;
+		            }
+		        }
+		        fis.close();
+		        System.out.println("읽은 바이트 수:" + pos);
+		         
+		        //4.배열을 통째로 파일에 기록하기
+		        FileOutputStream fos = new FileOutputStream(pFilePath + commonUtil.separator + fileName);
+		        fos.write(b);
+		        fos.close();
+
+
+	        result = true;
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			result = false;
 		}
 		return result;
@@ -550,7 +617,7 @@ public class EzApprovalGRelayScheduler {
 	private boolean ReplaceFileText(String strFilePath, String pTargetText,	String pNewText, boolean pUseRegex, String pRegexPattern) throws Exception {
 
 		FileInputStream fis = new FileInputStream(new File(strFilePath)); 
-		InputStreamReader isr = new InputStreamReader(fis,"EUC-KR"); 
+		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
 		BufferedReader br = new BufferedReader(isr);	
 		String text = "";
 		
@@ -572,7 +639,7 @@ public class EzApprovalGRelayScheduler {
 			File file = new File(strFilePath);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
-			fop.write(text.getBytes("EUC-KR"));
+			fop.write(text.getBytes("UTF-8"));
 			fop.flush();
 			fop.close();
 			
@@ -590,18 +657,13 @@ public class EzApprovalGRelayScheduler {
 		String content = new String(Base64.decodeBase64(strCont));
 		try {
 			content = content.replace("xml:stylesheet", "xml-stylesheet");
+			String replaceStr = content.substring(content.indexOf("<title"), content.indexOf("</title>") + "</title>".length());
 			
-			Pattern pattern = Pattern.compile("<title.*?>");
+			replaceStr = "<title>" + replaceStr.replace("<title>", "").replace("</title>", "").replace("<", "&lt").replace(">", "&gt") + "</title>";
+			Pattern pattern = Pattern.compile("<title.*?>(.*?)</title>");
 			Matcher matcher = pattern.matcher(content);
 			
-			content = matcher.replaceAll("");
-			
-			pattern = Pattern.compile("</title>");
-			matcher = pattern.matcher(content);
-			
-			content = matcher.replaceAll("");
-			content.replace("<", "&lt").replace(">", "&gt;");
-			
+			content = matcher.replaceAll(replaceStr);
 			
 			File dir = new File( pFilePath);
 			

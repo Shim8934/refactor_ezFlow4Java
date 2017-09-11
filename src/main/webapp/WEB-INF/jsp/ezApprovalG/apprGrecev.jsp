@@ -63,7 +63,7 @@
 			var AppendFileAttach = "";
 			var AppenAprDocAttachList = "";
 			var pDocNumCode = "";
-			var RootURL = document.location.protocol + "//" + document.location.hostname;  
+			var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 			var arr_userinfo = new Array();
 			arr_userinfo[0]  = "user";								// 사용자-부서구분
 			arr_userinfo[1]  = "${userInfo.id}";              // 사용자ID

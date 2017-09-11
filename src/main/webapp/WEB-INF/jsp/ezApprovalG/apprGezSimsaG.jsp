@@ -258,9 +258,8 @@
 		                    pHref = objNodes[i].outerHTML;
 		                    pFilePath = pHref.substring(pHref.indexOf("DocHref=") + 8, pHref.indexOf("&amp;", pHref.indexOf("DocHref=")));
 		                    pFileExt = pFilePath.substring(pFilePath.lastIndexOf("."), pFilePath.length);
-		                }
-		                else {
-		                    pFilePath = pHref.substring(pHref.indexOf("filepath=") + 9, pHref.length);
+		                } else {
+		                    pFilePath = pHref.substring(pHref.indexOf("filePath=") + 9, pHref.length);
 		                }
 		                attachName[idx] = objNodes[i].innerText + pFileExt;
 		                attachPath[idx] = unescape(pFilePath);

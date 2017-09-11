@@ -487,4 +487,10 @@ public interface EzApprovalGService {
 	public boolean insFailMessage(String strXDocID, String strSendID, String strSendName, String message, String strCompanyID, LoginVO userInfo) throws Exception;
 
 	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception;
+
+	public String setHref(String docID, String fileType, String mode, LoginVO userInfo) throws Exception;
+
+	public String setRecvDocInfo(String docID, String publicFlag, String docNo, String docNumCode, String orgDocNumCode, String mode, String fileType, LoginVO userInfo) throws Exception;
+
+	public String updateRecvDocInfo(String docID, String docNo, String docNumCode, String orgDocNumCode, String cabinetID, 	String taskCode, String userID, String userName, String userName2, String deptID, String userTitle, String userTitle2, String deptName, String deptName2, String tempCompanyID, LoginVO userInfo, String realPath) throws Exception;
 }

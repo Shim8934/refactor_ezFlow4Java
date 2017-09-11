@@ -2108,6 +2108,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		insert("EzApprovalG.insertRelayFailMessage", map);
 	}
 	
+	public void insertRelayAprLineInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRelayAprLineInfo", map);
+	}
+
+	public void insertRelayExpAprLineInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRelayExpAprLineInfo", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -2468,6 +2476,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		update("EzApprovalG.updateRelaySusinState", map);
 	}
 	
+	public void upadateRelayDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.upadateRelayDocInfo", map);
+	}
+	
+	public void updateRecvDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateRecvDocInfo", map);
+	}
+	
+	public void updateRelayExpDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateRelayExpDocInfo", map);
+	}
+	
+	public void updateRelayCabinetDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateRelayCabinetDocInfo", map);
+	}
+
+	public void updateRelaycabinetExpDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateRelaycabinetExpDocInfo", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -2762,6 +2790,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public void deleteRelayAprDocInfo2(Map<String, Object> map) {
 		delete("EzApprovalG.deleteRelayAprDocInfo2", map);
+	}
+	
+	public void deleteRelayAprLineInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteRelayAprLineInfo", map);
+	}
+
+	public void deleteRelayExpAprLineInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteRelayExpAprLineInfo", map);
 	}
 	
 	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
