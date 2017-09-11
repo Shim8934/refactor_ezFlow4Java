@@ -74,11 +74,7 @@
 		        }
 
 				/* 의견카운트 */
-		        if (taskCommentListSize == 0) {
-		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
-		        } else { 
-		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
-		        }
+				getCommentList();
 		        
 				setTimeout(onloadchangtab, 100);
 				
@@ -274,31 +270,7 @@
 					success: function(result){
 						/* alert("<spring:message code='ezTask.t222' />"); */
 						
-						var list = result.taskCommentList;
-						taskCommentListSize = list.length;
-						
-						/* 탭의견 카운트 */
-						if (taskCommentListSize == 0) {
-							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
-						} else { 
-							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
-						}
-						
-						/* commentList */
-						taskCommentList = "<ul class='opinion_ul'>";
-						list.forEach(function(vo, index) {
-							commentorID = "\"" + vo.commentorID + "\"";
-							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
-							
-							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/popup_list_close.png' style='cursor:pointer;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
-// 							taskCommentList += "<span class='opinion_close' onclick='delete_comment(" + deleteCommentParam + ")'><img src='/images/popup_list_close.png' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
-							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
-						});
-						
-						taskCommentList += "</ul>";
-						
-						$("#taskCommentList").html(taskCommentList);
+						getCommentList();
 						$("#TextComment").val("");
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
@@ -375,6 +347,24 @@
 					success : function(result) {
 						/* alert("<spring:message code='ezTask.t148' />"); */
 						
+						getCommentList();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				});
+			}
+			
+			function getCommentList() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezTask/getTaskCommentList.do",
+					data : {
+							taskID : taskid
+					},
+					success: function(result){
 						var list = result.taskCommentList;
 						taskCommentListSize = list.length;
 						
@@ -393,12 +383,10 @@
 							
 							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
 							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/popup_list_close.png' style='cursor:pointer;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
-// 							taskCommentList += "<span class='opinion_close' onclick='delete_comment(" + deleteCommentParam + ")'><img src='/images/popup_list_close.png'></span>";
 							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
 						
 						taskCommentList += "</ul>";
-						
 						
 						$("#taskCommentList").html(taskCommentList);
 					},
@@ -887,18 +875,7 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="taskCommentList" style="overflow: auto; width:100%; height: 430px; background-color: white; padding-top:3px;">
-									<ul class="opinion_ul">
-										<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
-											<li>
-												<span class="opinion_dept" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
-												<span class="opinion_list"><c:out value='${taskCommentVO.comment}'/>&nbsp;<img src="/images/popup_list_close.png" style="cursor:pointer;" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"></span>
-<%-- 												<span class="opinion_close" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"><img src="/images/popup_list_close.png" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')"></span> --%>
-												<span class="opinion_date"><c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' /></span>
-											</li>
-										</c:forEach>
-									</ul>
-								</div>
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 430px; background-color: white; padding-top:3px;"></div>
 							</td>
 						</tr>
 					</table>
