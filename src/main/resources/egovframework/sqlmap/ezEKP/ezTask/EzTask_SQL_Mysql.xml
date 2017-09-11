@@ -338,7 +338,7 @@
     		WHERE
     			tenantid = #tenantID#
     		AND
-    			(taskid = #taskID# OR parentid = #taskID#)
+    			taskid = #taskID#
     	]]>
     </update>
     
@@ -662,27 +662,9 @@
 			DELETE FROM
 				TBL_TASK
 			WHERE
-		]]>
-		
-		<isEqual property="deleteType" compareValue="all">
-			<![CDATA[
-				taskid = #taskID# or parentid = #taskID#
-			]]>
-		</isEqual>
-		<isEqual property="deleteType" compareValue="task">
-			<![CDATA[
-				taskid = #taskID#
-			]]>
-		</isEqual>
-		<isEqual property="deleteType" compareValue="parent">
-			<![CDATA[
-				parentid = #taskID#
-			]]>
-		</isEqual>
-		
-		<![CDATA[
-			AND
 				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
 		]]>
 	</delete>
 

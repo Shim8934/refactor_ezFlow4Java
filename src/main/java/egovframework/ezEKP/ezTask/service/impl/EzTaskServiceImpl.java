@@ -368,10 +368,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
-		map.put("deleteType", "parent");
 		map.put("tenantID", tenantID);
 		
-		ezTaskDAO.taskDelete(map);
 		ezTaskDAO.taskDeleteShare(map);
 		
 		logger.debug("deleteTaskShare ended.");
@@ -677,20 +675,18 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("taskIDList : " + taskIDList + " | pDirPath : " + pDirPath + " | offset : " + offset + " | primary : " + primary);
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
 
-		String[] taskID = taskIDList.split(";");
-
-		for (int i=0; i<taskID.length; i++) {
-			map.put("taskID", taskID[i]);
-			map.put("offset", commonUtil.getMinuteUTC(offset));
-			map.put("primary", primary);
-			map.put("tenantID", tenantID);
+		for (String taskID : taskIDList.split(";")) {
+			map.put("taskID", taskID);
 
 			TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 
 			// 첨부파일이 있으면 첨부파일 삭제
 			if (vo.getHasAttach().equals("Y")) {
-				deleteDirectory(taskID[i], pDirPath, tenantID);
+				deleteDirectory(taskID, pDirPath, tenantID);
 			}
 
 			String mhtPath = vo.getContentPath();
@@ -705,10 +701,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				logger.debug("mhtFile Delete Success");
 			}
 
-			map.put("deleteType", "all");
-			
 			ezTaskDAO.taskDelete(map);
-			ezTaskDAO.taskDeleteShare(map);
+			deleteTaskShare(taskID, tenantID);
 			ezTaskDAO.taskDeleteAttach(map);
 		}
 
