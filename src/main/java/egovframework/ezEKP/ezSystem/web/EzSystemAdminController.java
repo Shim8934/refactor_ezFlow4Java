@@ -1,13 +1,18 @@
 package egovframework.ezEKP.ezSystem.web;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezStatistics.web.EzStatisticsMailMainController;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
-import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -33,7 +36,10 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Controller
 public class EzSystemAdminController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsMailMainController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzSystemAdminController.class);
+	
+	@Autowired
+	private Properties config;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -214,14 +220,14 @@ public class EzSystemAdminController {
 		return "json";
 	}
 	
-	/** 
-	 * 관리자->시스템 모니터링
-	 */
-	@RequestMapping(value="/admin/ezSystem/sysMonitor.do")
-	public String sysMonitor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("systemStatus started");
+	/**
+	 * 전체(현재 + config에 등록된) 서버 목록 가져오기.
+	 * */
+	@RequestMapping(value="/admin/ezSystem/sysREST.do")
+	public String sysREST(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request , Model model) throws Exception {
+		logger.debug("sysREST started.");
 		
-		//관리자 권한체크
+		//관리자 권한 체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -230,22 +236,48 @@ public class EzSystemAdminController {
 		
 		InetAddress local = InetAddress.getLocalHost();
 		String localIP = local.getHostAddress();		
-		logger.debug("localIP : " + localIP);
+		logger.debug("localIP : " + localIP);		
 		
-		String serverList = EzSystemUtil.getSysInfo(userInfo.getTenantId(), localIP);	
+		String serverName = request.getServerName();
 	
-		model.addAttribute("serverList", serverList);
-		logger.debug("systemStatus ended");
+		/**
+		 * config.properties에 있는 서버 목록 불러오기
+		 * */
+		int n = 1;
+		ArrayList<String> serverList = new ArrayList<String>();
+		ArrayList<String> getServerList = new ArrayList<String>();
+		while (true) {
+			// 1. 첫 번째 서버 정보의 갯수가 1, 정보가 존재하지 않는 경우
+			// 2. 정보가 더이상 존재하지 않는 경우
+			// 3. 그 외는 serverList에 저장
+			if (n == 1 && config.getProperty("config.SysServer" + n) == null) {
+				logger.debug("Empty serverlist in configProperties.");
+				getServerList.add("EMPTY");
+				break;
+			} else if (config.getProperty("config.SysServer" + n) == null) {
+				logger.debug("Searching serverlist is ending.");
+				break;
+			} else {
+				getServerList.add(config.getProperty("config.SysServer" + n));
+				n ++;
+			}
+		}
 		
+		serverList = ezSystemAdminService.getServerInfo(userInfo.getTenantId(), localIP, serverName, getServerList);
+
+		model.addAttribute("serverList", serverList);
+		
+		logger.debug("sysREST ended.");		
 		return "/ezSystem/sysMonitor";
 	}
-	
+
 	/**
-	 *  관리자->시스템 모니터링
+	 * 선택된 서버의 CPU, 메모리, 네트워크 등 정보 가져오기
 	 * */
-	@RequestMapping(value="/admin/ezSystem/sysMonitorInfo.do")
-	public String sysMonitorInfo(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("sysMonitorInfo started");
+	@RequestMapping(value="/admin/ezSystem/sysMonitorREST.do")
+	public String sysMonitorREST(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("sysMonitorREST started.");
+		logger.debug("<<<serverSN : " + request.getParameter("serverSN"));
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);	
@@ -256,25 +288,39 @@ public class EzSystemAdminController {
 		
 		InetAddress local = InetAddress.getLocalHost();
 		String localIP = local.getHostAddress();		
-		logger.debug("localIP : " + localIP);
+		logger.debug("localIP : " + localIP);		
 		
-		String osInfo = EzSystemUtil.getSysInfo(userInfo.getTenantId(), localIP);
-		String cpuInfo = EzSystemUtil.getCpuInfo(userInfo.getTenantId(), localIP);
-		String memoryInfo = EzSystemUtil.getMemoryInfo(userInfo.getTenantId(), localIP);
-		String fileSysInfoList  = EzSystemUtil.getFileSysInfo(userInfo.getTenantId(), localIP);
-		String diskioInfo = EzSystemUtil.getDiskioInfo(userInfo.getTenantId(), localIP);
-		String netTrafficList = EzSystemUtil.getNetDataInfo(userInfo.getTenantId(), localIP);
+		String serverName = request.getServerName();
+		String serverSN = request.getParameter("serverSN");
+		String hostInfo = "config.SysServer" + serverSN;
+		String address = config.getProperty(hostInfo);		
 		
-		model.addAttribute("osInfo", osInfo);
-		model.addAttribute("cpuInfo", cpuInfo);
-		model.addAttribute("memoryInfo", memoryInfo);
-		model.addAttribute("fileSysInfoList", fileSysInfoList);
-		model.addAttribute("diskioInfo", diskioInfo);
-		model.addAttribute("netTrafficList", netTrafficList);		
+		String result = ezSystemAdminService.getSysMonitorInfo(userInfo.getTenantId(), localIP, serverName, serverSN, address);
+
+		/**
+		 * RESTful API로 받아온 데이터를 가공해서 던짐
+		 * */
+		JSONParser parser = new JSONParser();
+		JSONObject jObj = (JSONObject) parser.parse(result);
+		JSONArray jArr = (JSONArray) jObj.get("getSysMonitorInfo");
+
+		logger.debug(jArr.get(0).toString());
+		logger.debug(jArr.get(1).toString());
+		logger.debug(jArr.get(2).toString());
+		logger.debug(jArr.get(3).toString());
+		logger.debug(jArr.get(4).toString());
+		logger.debug(jArr.get(5).toString());
 		
-		logger.debug("sysMonitorInfo ended");
+		model.addAttribute("osInfo", jArr.get(0).toString());
+		model.addAttribute("cpuInfo", jArr.get(1).toString());
+		model.addAttribute("memoryInfo", jArr.get(2).toString());
+		model.addAttribute("fileSysInfoList", jArr.get(3).toString());
+		model.addAttribute("diskioInfo", jArr.get(4).toString());
+		model.addAttribute("netTrafficList", jArr.get(5).toString());
+		
+		logger.debug("sysMonitorREST ended.");
 		
 		return "json";
 	}
-	
+
 }

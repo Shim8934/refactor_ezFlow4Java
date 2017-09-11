@@ -17,16 +17,16 @@
 
 	$(document).ready(function(){
 		var obj = JSON.parse('${serverList}');
-		var list = obj.getSysInfo;
+		var list = obj[0].getSysInfo;
 		var str = "";
 		
 		// 서버의 갯수만큼 checkbox 생성
-		for (var i = 0; i < list.length; i++) {
-			str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked >' + list[i].hostname;
+		for (var i = 0; i < obj.length; i++) {
+			var server = obj[i].getSysInfo;
+			str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked >' + server[0].hostname;
 			$("#serverList").append(str);
 			chkServerList_onclick(i);
 		}
-		//$("#serverList").append(str);
 	});
 	
 	/**
@@ -37,30 +37,28 @@
 		var checkedId = "chkVal_" + listNum;
 		var graphId = "graph_" + listNum;
 
- 		if (document.getElementById(checkedId).checked) {
+		if (document.getElementById(checkedId).checked) {
+ 			//console.log(graphId + "is checked.");
 			var str = "";
 			
 			str += "<div class='infoMain' id="+ graphId +" target="+ graphId +">";
-			str += "	<div class='serverInfo' name='serverInfo'>";
-			//str += "		<p id='serverName'></p>";
-			//str += "		<p id='osName'></p>";
-			//str += "		<p id='osVer'></p>";
-			str += "		<p id='osInfo'></p>";
+			str += "	<div class='serverInfo' id='serverInfo"+ listNum +"'>";
+			str += "		<p class='osInfo' id='osInfo_"+ listNum +"'></p>";
 			str += "	</div>";
-			str += "	<div class='graphInfo'>";
-			str += "		<div id='cpuMemInfo'>";						
+			str += "	<div class='graphInfo' id='graphInfo_"+ listNum +"'>";
+			str += "		<div class='cpuMemInfo' id='cpuMemInfo_"+ listNum +"'>";						
 			str += "		</div>";
-			str += "		<div id='diskioInfo'>";						
+			str += "		<div class='diskioInfo' id='diskioInfo_"+ listNum +"'>";						
 			str += "		</div>";
 			str += "	</div>";
 			str += "	<div class='graphInfo'>";
-			str += "		<div id='networkInfo'>";						
+			str += "		<div class='networkInfo' id='networkInfo_"+ listNum +"'>";						
 			str += "		</div>";
-			str += "		<div id='filesysInfo'>";
-			str += "			<div id='filesysGraph'></div>";
-			str += "			<div id='filesysUsed'>";			
-			str += "				<table class='filesys'>";
-			str += "					<tbody id='filesysBody'>";
+			str += "		<div class='filesysInfo' id='filesysInfo_"+ listNum +"'>";
+			str += "			<div class='filesysGraph' id='filesysGraph_"+ listNum +"'></div>";
+			str += "			<div class='filesysUsed' id='filesysUsed_"+ listNum +"'>";			
+			str += "				<table class='filesys' id='filesys_"+ listNum +"'>";
+			str += "					<tbody class='filesysBody' id='filesysBody_"+ listNum +"'>";
 			str += "					</tbody>";
 			str += "				</table>";
 			str += "			</div>";
@@ -68,8 +66,9 @@
 			str += "	</div>";
 			str += "</div>";				
 			
-			$("#monitoringForm").append(str);			
-			makingGraph(graphId);
+			$("#monitoringForm").append(str);		
+			
+			makingGraph(listNum, graphId);
 		} else {
 			monitoringForm.removeChild(document.getElementById(graphId));			
 		} 
@@ -79,13 +78,12 @@
 	 * 그래프 생성 함수
 	 * jui.ready()가 반드시 필요
 	 */
-	function makingGraph(graphId) {
+	function makingGraph(listNum, graphId) {
 		var fileSysData = [];
 		var cpuMemoryData = [];
 		var diskioData = [];
 		var networkData = [];
 		var diskMax = [];
-		//var diskioMax = 0;
 		
 		//범례 색상
 		var cpuMemoryColor = ['#77B0A8', '#E96359'];
@@ -112,7 +110,7 @@
 		    }, 2000);			
 			
 			// CPU & Memory 관련 그래프
-			var cpuMemoryChart = builder ("#cpuMemInfo", {	
+			var cpuMemoryChart = builder ("#cpuMemInfo_" + listNum, {	
 				axis: [{
 					x: {
 						type: "date",
@@ -162,7 +160,7 @@
 			});
 
 			// Disk I/O 관련 그래프
- 			var diskioChart = builder ("#diskioInfo", {
+ 			var diskioChart = builder ("#diskioInfo_" + listNum, {
 				axis: [{
 					x: {
 						type: "date",
@@ -179,7 +177,6 @@
 						step: 5,
 						line: true,
 						format: function(value) {
-							//return value + "KB/s";
 							return value + "MB/s"
 						}
 					}
@@ -206,7 +203,7 @@
 			});
 
 			// Network Traffic 관련 그래프
-			var networkChart = builder ("#networkInfo", {
+			var networkChart = builder ("#networkInfo_" + listNum, {
 				axis: [{
 					x: {
 						type: "date",
@@ -255,7 +252,7 @@
 			});
 
 			// Filesystem 용량 관련 그래프
-			var filesysChart = builder ("#filesysGraph", {
+			var filesysChart = builder ("#filesysGraph_" + listNum, {
 				axis: [{
 					area: {
 						height: 200
@@ -283,9 +280,12 @@
 			// 그래프에 필요한 데이터 가져오기
 	    	function getInfo() {
 	    		$.ajax ({
-	    			url : "/admin/ezSystem/sysMonitorInfo.do",
+	    			url : "/admin/ezSystem/sysMonitorREST.do",
 	    			type : "POST",
 	    			dataType : "json",
+	    			data : {
+	    				serverSN : parseInt(listNum)
+	    			},
 	    			success : function (data) {
 	    				getFileSysData(data.fileSysInfoList);
 	    				getCpuMemoryData(data.cpuInfo, data.memoryInfo);
@@ -300,20 +300,15 @@
 	    	function setOsInfo(list) {
 	    		var obj = JSON.parse(list);
 	    		var osInfo = obj.getSysInfo;
-/* 	    		var serverName = "<p id='serverName'>" + osInfo[0].hostname + "</p>"
-	    		var osName = "<p id='osName'><strong>OS : </strong>" + osInfo[0].os + "</p>";
-	    		var osVer = "<p id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</p>"; */
- 				var tab = "&emsp;&emsp;";
-	    		var serverName = tab + "<span id='serverName'>" + osInfo[0].hostname + "</span>"
-	    		var osName = tab + "<span id='osName'><strong>OS : </strong>" + osInfo[0].os + "</span>";
-	    		var osVer = tab + "<span id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</span>";
-	    		var cpuName = tab + "<span id='cpuName'><strong>CPU : </strong>" + osInfo[0].cpu + "</span>";
-	    		var memorySize = tab + "<span id='memorySize'><strong>Memory : </strong>" + (osInfo[0].memory / 1024 / 1024).toFixed(2) + " GB </span>";
 	    		
-	    		//$("#serverName").html(serverName);
-	    		//$("#osName").html(osName);
-	    		//$("#osVer").html(osVer);
-	    		$("#osInfo").html(osName + osVer + cpuName + memorySize);
+ 				var tab = "&emsp;&emsp;";
+	    		var serverName = tab + "<span class='serverName' id='serverName_" + listNum + "'>" + osInfo[0].hostname + "</span>"
+	    		var osName = tab + "<span class='osName' id='osName_" + listNum + "'><strong>OS : </strong>" + osInfo[0].os + "</span>";
+	    		var osVer = tab + "<span class='osVer' id='osVer_" + listNum + "'><strong>Version : </strong>" + osInfo[0].version + "</span>";
+	    		var cpuName = tab + "<span class='cpuName' id='cpuName_" + listNum + "'><strong>CPU : </strong>" + osInfo[0].cpu + "</span>";
+	    		var memorySize = tab + "<span class='memorySize' id='memorySize_" + listNum + "'><strong>Memory : </strong>" + (osInfo[0].memory / 1024 / 1024).toFixed(2) + " GB </span>";
+
+	    		$("#osInfo_"+ listNum).html(serverName + osName + osVer + cpuName + memorySize);
 	    	}
 	    	
 	    	// 네트워크 트래픽 속도 계산 공식
@@ -344,7 +339,6 @@
 	    		
 	    		networkData.push({
 	    			time: current,
-	    			//time: new Date(),
 	    			Receive: receive.toFixed(4),
 	    			Transfer: transfer.toFixed(4)			
 	    		});	    	
@@ -389,11 +383,9 @@
 	    		var mobj = JSON.parse(memory);
 
 	    		var cpu = cobj.getCpuInfo;
-	    		var memory = mobj.getMemoryInfo;	 
+	    		var memory = mobj.getMemoryInfo;	
+
 	       		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memavailable);
-	    		
-	       		//console.log(cobj);
-	       		//console.log(mobj);
 	       		
 	    		if (cpuMemoryData.length >= 30) {
 	    			cpuMemoryData.shift();
@@ -425,7 +417,7 @@
 	    			str += '<td id="tData">&emsp; ■ '+"<spring:message code='ezSystem.pjg07'/>"+' '+ fileSystem[i].avail +'</td>';
 	    			str += '</tr>';
 	    		}
-	    		$("#filesysBody").html(str);
+	    		$("#filesysBody_"+ listNum).html(str);
 	    	} 	    	
 
 			/**
@@ -572,12 +564,12 @@
 .serverInfo { float : left; width : 100%; height: 7%; color : #000000; background-color : #FFFFFF; }
 .graphInfo  { float : left; width : 100%; height : 46%; }
 
-#serverName { color : #000000; font-weight : bold; font-size : 20px; text-align : left; }
-#osName { font-size : 15px; }
-#osVer { font-size : 15px; }
-#cpuName { font-size : 15px; }
-#memorySize { font-size : 15px; }
-#cpuMemInfo { 
+.serverName { color : #000000; font-weight : bold; font-size : 20px; text-align : left; }
+.osName { font-size : 15px; }
+.osVer { font-size : 15px; }
+.cpuName { font-size : 15px; }
+.memorySize { font-size : 15px; }
+.cpuMemInfo { 
 	width : 50%; 
 	height: 100%; 
 	float : left; 
@@ -588,7 +580,7 @@
 	border-bottom: 5px solid; 
 	color : #f3f3f3;
 }
-#diskioInfo { 
+.diskioInfo { 
 	width : 50%; 
 	height: 100%; 
 	display : inline-block; 
@@ -599,7 +591,7 @@
 	border-bottom: 5px solid; 
 	color : #f3f3f3;
 }
-#networkInfo { 
+.networkInfo { 
 	width : 50%; 
 	height: 100%; 
 	float : left; 
@@ -610,7 +602,7 @@
 	border-top: 5px solid; 
 	color : #f3f3f3;
 }
-#filesysInfo { 
+.filesysInfo { 
 	width : 50%; 
 	height: 100%; 
 	display : inline-block; 
@@ -621,8 +613,8 @@
 	border-top: 5px solid;
 	color : #f3f3f3;
 }
-#filesysGraph { height: 60%; overflow: hidden; }
-#filesysUsed { height: 30%; padding-left: 5%; background-color : #FFFFFF; }
+.filesysGraph { height: 60%; overflow: hidden; }
+.filesysUsed { height: 30%; padding-left: 5%; background-color : #FFFFFF; }
 #tableRow {padding-left:5px;}
 #tData { padding-bottom: 2%; padding-right: 5px; }
 </style>

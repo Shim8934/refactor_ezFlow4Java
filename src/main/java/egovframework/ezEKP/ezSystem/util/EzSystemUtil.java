@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.icu.text.DecimalFormat;
 
-import egovframework.ezEKP.ezSystem.service.impl.EzSystemAdminServiceImpl;
-
 /** 
  * @Description [Utility] 시스템 모니터링 관련 유틸
  * @author 오픈솔루션팀 박종균
@@ -22,7 +20,7 @@ import egovframework.ezEKP.ezSystem.service.impl.EzSystemAdminServiceImpl;
 
 public class EzSystemUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(EzSystemAdminServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzSystemUtil.class);
 	
 	/**
 	 * 서버 및 OS 정보 
@@ -60,7 +58,7 @@ public class EzSystemUtil {
 			mbr = new BufferedReader(misr);
 			
 		} else {
-			String filePath = "D:/test/uname.txt";
+			String filePath = "D:/test/unamemain.txt";
 			String cpuFile = "D:/test/cpuinfo.txt";
 			String memFile = "D:/test/meminfo.txt";
 			FileReader fr = new FileReader(filePath);

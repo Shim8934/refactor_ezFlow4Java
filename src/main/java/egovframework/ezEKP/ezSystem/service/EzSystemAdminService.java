@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSystem.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,4 +18,6 @@ public interface EzSystemAdminService {
 			String keyword, String keycode, String lang, String startDate, String endDate) throws Exception;
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
 			String lang, String startDate, String endDate) throws Exception;
+	public ArrayList<String> getServerInfo(int tenantID, String ip, String serverName, ArrayList<String> getServerList) throws Exception;
+	public String getSysMonitorInfo(int tenantID, String ip, String serverName, String serverSN, String address) throws Exception;
 }

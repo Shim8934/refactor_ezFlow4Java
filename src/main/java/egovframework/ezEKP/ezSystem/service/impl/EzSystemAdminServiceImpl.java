@@ -9,13 +9,21 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -183,5 +191,106 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getLoginHistCount ended.");
 		
 		return ezSystemAdminDAO.getLoginHistCount(params);
+	}
+	
+	/**
+	 * 서버 리스트 가져오기
+	 * */
+	public ArrayList<String> getServerInfo(int tenantID, String ip, String serverName, ArrayList<String> getServerList) throws Exception {
+		
+		logger.debug("getSysIngo started.");
+		
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		ArrayList<String> serverList = new ArrayList<String>();
+		
+		headers.set("Accpet", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", serverName);
+
+		/**
+		 * 각 서버별 정보를 ArrayList에 저장.
+		 * 1. 메인서버 자신의 정보를 저장.
+		 * 2. getServerList에 저장된 정보를 바탕으로 RESTful로 받아오기.
+		 * */
+		
+		// 현재 메인 서버인 자신의 정보를 저장
+		serverList.add(EzSystemUtil.getSysInfo(tenantID, ip));	
+		
+		// config에 등록된 추가 서버 리스트가 있는 경우
+		if(!getServerList.get(0).equalsIgnoreCase("EMPTY")){
+
+			for (String address : getServerList) {
+				logger.debug(address);
+				
+				String sysInfoUrl = address + "/ezSystem/util/getSysInfo";
+				HttpEntity<?> entity = new HttpEntity<>(headers);
+				
+				ResponseEntity<String> sysInfo = rest.postForEntity(sysInfoUrl, entity, String.class);
+				serverList.add(sysInfo.getBody());
+				logger.debug("<<<sysInfo : " + sysInfo.getBody());
+			}
+			
+		}		
+		
+		logger.debug("getSysIngo ended.");
+		
+		return serverList;
+	}
+	
+	/**
+	 * 시스템의 정보 가져오기
+	 * */
+	@SuppressWarnings("unchecked")
+	public String getSysMonitorInfo(int tenantID, String ip, String serverName, String serverSN, String address) throws Exception {
+		
+		logger.debug("getSysMonitorInfo started.");
+		
+		String result ="";
+
+		if (serverSN.equalsIgnoreCase("0")) {
+			
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			
+			String osInfo = EzSystemUtil.getSysInfo(tenantID, ip);
+			String cpuInfo = EzSystemUtil.getCpuInfo(tenantID, ip);
+			String memoryInfo = EzSystemUtil.getMemoryInfo(tenantID, ip);
+			String fileSysInfoList  = EzSystemUtil.getFileSysInfo(tenantID, ip);
+			String diskioInfo = EzSystemUtil.getDiskioInfo(tenantID, ip);
+			String netTrafficList = EzSystemUtil.getNetDataInfo(tenantID, ip);
+			
+			jArr.add(osInfo);
+			jArr.add(cpuInfo);
+			jArr.add(memoryInfo);
+			jArr.add(fileSysInfoList);
+			jArr.add(diskioInfo);
+			jArr.add(netTrafficList);
+			
+			jObj.put("getSysMonitorInfo", jArr);
+			
+			result = jObj.toString();
+		} else {
+			RestTemplate rest = new RestTemplate();
+			HttpHeaders headers = new HttpHeaders();	
+			
+			headers.set("Accpet", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", serverName);		
+			/**
+			 * ajax로 해당 div의 순번을 가져온다.
+			 * div순번 -> config에 저장된 순번
+			 * config에 저장된 서버 정보로 데이터 가져오기.
+			 * */
+			String sysInfoUrl = address + "/ezSystem/util/getSysMonitorInfo";
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			
+			ResponseEntity<String> sysMonitorInfo = rest.postForEntity(sysInfoUrl, entity, String.class);
+			logger.debug("<<<sysMonitorInfo : " + sysMonitorInfo.getBody());
+			
+			result = sysMonitorInfo.getBody();
+		}
+
+		logger.debug("getSysMonitorInfo started.");
+		
+		return result;
 	}
 }

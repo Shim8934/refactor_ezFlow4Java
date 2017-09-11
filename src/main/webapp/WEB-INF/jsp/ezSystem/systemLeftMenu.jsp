@@ -47,7 +47,8 @@
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
 	    	case "SYSMONITOR":
-	    		parent.frames[1].location.href = "/admin/ezSystem/sysMonitor.do";
+	    		//parent.frames[1].location.href = "/admin/ezSystem/sysMonitor.do";
+	    		parent.frames[1].location.href = "/admin/ezSystem/sysREST.do";
 	    		break;	    		
 	    }
     }
