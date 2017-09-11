@@ -423,7 +423,7 @@
 		            var g_SelCabXml = rtn[1];
 		            var xmlCab = createXmlDom();
 		            xmlCab = loadXMLString(g_SelCabXml);
-		alert(1); 
+
 		            cabinetID = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/CABINETID"));
 		            TaskCode = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/TASKCODE"));
 		        }
