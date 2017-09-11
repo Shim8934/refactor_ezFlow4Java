@@ -92,7 +92,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 
 		if (configVO == null) {
-			ezTaskService.taskSaveConfig(userInfo.getId(), "#FF0000", "#008040", 0, userInfo.getTenantId());
+			ezTaskService.taskSaveConfig(userInfo.getId(), "#FF0000", "#008040", userInfo.getTenantId());
 			configVO = ezTaskService.getOriginColor(userID, tenantID);
 		}
 
@@ -535,14 +535,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String delayColor = request.getParameter("delayColor");
 		String completeColor = request.getParameter("completeColor");
-		int autoDelete = 0;
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("originDelayColor : " + configVO.getDelayColor() + " | originCompleteColor : " + configVO.getCompleteColor());
 		
 		if (configVO != null) {
-			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, completeColor, autoDelete, userInfo.getTenantId());
+			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, completeColor, userInfo.getTenantId());
 		}
 
 		logger.debug("taskSaveConfig ended.");
@@ -820,7 +819,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String filter = request.getParameter("filter");
     	String chkValue = request.getParameter("chkValue");
     	String searchClass = request.getParameter("searchClass");
-    	String taskStatus = request.getParameter("taskStatus");
+    	String taskStatusCount = request.getParameter("taskStatusCount");
     	String startDate = request.getParameter("startDate");
     	String endDate = request.getParameter("endDate");
     	String useDate = "";
@@ -848,7 +847,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		}
     	}
 
-    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatus, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, tenantID);
     	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());

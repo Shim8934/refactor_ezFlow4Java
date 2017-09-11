@@ -32,13 +32,13 @@ public interface EzTaskService {
 	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID) throws Exception;
 	
 	/* 정수현*/
-	public void taskSaveConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception;
+	public void taskSaveConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception;
 
 	public TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception;
 
-	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception;
+	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception;
 
-	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatus, int tenantID) throws Exception;
+	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception;
 
 	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception;
 

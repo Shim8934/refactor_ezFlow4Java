@@ -147,11 +147,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    if (type = 1) {
-				    document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
-			    } else {
-			    	document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt2 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
-			    }
+			    document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + totalcount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var totalPage = totalpage;
@@ -662,7 +658,7 @@
 						filter : filter,
 						chkValue : chkValue,
 						searchClass : searchClass,
-						taskStatus : taskStatusCount
+						taskStatusCount : taskStatusCount
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -676,8 +672,6 @@
 				strListIdInfo = "";
 		    }
 
-		    var cnt = "";
-		    var cnt2 = "";
 		    function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
@@ -698,17 +692,14 @@
 	                currentpage = 1;	            	
 	            }
 
-	            cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-	            cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 
 	            show_page();
 	            makePageSelPage();
 
-	            if (type == 1) {
-	            	
-	            }
-// 	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
-// 	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
+	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
+	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
 
 	            return;
 		    }

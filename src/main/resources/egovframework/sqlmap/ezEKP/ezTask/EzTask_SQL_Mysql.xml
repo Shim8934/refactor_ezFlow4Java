@@ -388,39 +388,39 @@
 				TBL_TASKSHARE B
 			ON
 				A.tenantid = B.tenantid
-			AND
-				A.taskid = B.taskid
 			WHERE
 				A.tenantid = #tenantID#
 		]]>
 
 		<isEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="0" prepend="AND">
+			<isEqual property="taskStatusCount" compareValue="0" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+			<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
 			<![CDATA[
 				AND
-					(personid = #userID# OR B.sharerid = #userID#)
+					((A.creatorid = #userID# AND A.tasktype = 1)
+				OR
+					(A.personid = #userID#)
+				OR	
+					(B.sharerid = #userID# and A.TASKID = B.TASKID))
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="0" prepend="AND">
+			<isEqual property="taskStatusCount" compareValue="0" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+			<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
 			<![CDATA[
 				AND
-					(creatorid = #userID#)
-				AND
-					tasktype != 1
+					(A.creatorid = #userID# AND A.tasktype != 1)
 			]]>
 		</isNotEqual>
 		
@@ -500,7 +500,9 @@
 			AND
 				(A.creatorid = #userID# and A.tasktype = 1)
 			OR
-				(B.sharerid = #userID# and A.taskid = B.taskid)
+				(A.personid = #userID#)
+			OR	
+				(B.sharerid = #userID# and A.TASKID = B.TASKID)
 		]]>
 
 		<isNotEqual property="filter" compareValue="">
@@ -554,9 +556,9 @@
 	<insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_TASKCONFIG
-                (userid, delaycolor, completecolor, autodelete, tenantid)
+                (userid, delaycolor, completecolor, tenantid)
             VALUES
-                (#memberID#, #delayColor#, #completeColor#, #autoDelete#, #tenantID#)
+                (#memberID#, #delayColor#, #completeColor#, #tenantID#)
         ]]>
     </insert>
 
@@ -575,8 +577,7 @@
                 TBL_TASKCONFIG
             SET
                 delaycolor = #delayColor#,
-                completecolor = #completeColor#,
-                autodelete = #autoDelete#
+                completecolor = #completeColor#
             WHERE 
                 userid = #memberID#
             AND

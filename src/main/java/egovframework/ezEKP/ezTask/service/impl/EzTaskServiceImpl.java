@@ -541,16 +541,15 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public void taskSaveConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception {
+	public void taskSaveConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception {
 		logger.debug("taskSaveConfig started.");
-		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | autoDelete : " + autoDelete);
+		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
 		map.put("delayColor", delayColor);
 		map.put("completeColor", completeColor);
-		map.put("autoDelete", autoDelete);
 		map.put("tenantID", tenantID);
 		
 		ezTaskDAO.taskSaveConfig(map);
@@ -559,16 +558,15 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, int autoDelete, int tenantID) throws Exception {
+	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception {
 		logger.debug("taskUpdateConfig started.");
-		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | autoDelete : " + autoDelete);
+		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("memberID", memberID);
 		map.put("delayColor", delayColor);
 		map.put("completeColor", completeColor);
-		map.put("autoDelete", autoDelete);
 		map.put("tenantID", tenantID);
 
 		ezTaskDAO.taskUpdateConfig(map);
@@ -592,9 +590,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatus, int tenantID) throws Exception {
+	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception {
 		logger.debug("getTaskList started.");
-		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatus : " + taskStatus);
+		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount);
 
 		if (!startDate.equals("")) {
 			startDate += " 00:00:00";
@@ -614,7 +612,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("filter", filter);
 		map.put("chkValue", chkValue);
 		map.put("searchClass", searchClass);
-		map.put("taskStatus", taskStatus);
+		map.put("taskStatusCount", taskStatusCount);
 		map.put("tenantID", tenantID);
 
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map); 
