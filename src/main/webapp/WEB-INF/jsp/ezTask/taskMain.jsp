@@ -44,7 +44,28 @@
 		    var primary = "${userInfo.primary}";
 		    var useTodoMemo = "${useTodoMemo }";
 		    
-		    document.onselectstart = function () { return false; };
+		    window.onload = function () {
+		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+		            document.body.style.MozUserSelect = 'none';
+		            document.body.style.WebkitUserSelect = 'none';
+		            document.body.style.khtmlUserSelect = 'none';
+		            document.body.style.oUserSelect = 'none';
+		            document.body.style.UserSelect = 'none';
+		        }
+
+		        var height = parseInt(document.documentElement.clientHeight - 200);
+
+		        document.getElementById("list").style.height = height + "px";
+		        ChangeTab(document.getElementById("1tab1"));
+		    }
+		    
+		    document.onselectstart = function () {
+		        event.cancelBubble = true;
+		        event.returnValue = false;
+		    }
+		    
+// 		    document.onselectstart = function () { return false; };
+		    
 		    function select_row(elem) {
 		    	// 전체체크박스 선택 후 목록에서 하나 선택 시 전체체크 해제
 				if ($("#checkboxAll").is(":checked")) {
@@ -89,12 +110,7 @@
 
 		    function ReadTask(elem) {
 		        var taskid = GetAttribute(elem.parentElement, "taskid");
-		        var parentid = GetAttribute(elem.parentElement, "parentid");
-		        var date = GetAttribute(elem.parentElement, "startdate")
 		        var feature = "";
-		        
-		        if (parentid != "0")
-		            taskid = parentid;
 		        
 	        	feature = GetOpenPosition(750, 740);
 	        	
@@ -298,7 +314,6 @@
 			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
 
 			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
-			        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
 			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
 		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
@@ -601,8 +616,7 @@
 					})
 				}
 		    }
-		</script>
-		<script>
+		    
 		    function v_AppendZero(v_str) {
 		        if (isNaN(v_str)) {
 		            switch (v_str.toString().length) {
@@ -640,12 +654,11 @@
 					data : {
 						startDate : startdate,
 						endDate : enddate,
-						app : 1,
 						type : type,
 						filter : filter,
 						chkValue : chkValue,
 						searchClass : searchClass,
-						taskStatusCount : taskStatusCount
+						taskStatus : taskStatusCount
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -691,24 +704,6 @@
 	            return;
 		    }
 
-		    window.onload = function () {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
-		            document.body.style.MozUserSelect = 'none';
-		            document.body.style.WebkitUserSelect = 'none';
-		            document.body.style.khtmlUserSelect = 'none';
-		            document.body.style.oUserSelect = 'none';
-		            document.body.style.UserSelect = 'none';
-		        }
-
-		        var height = parseInt(document.documentElement.clientHeight - 200);
-
-		        document.getElementById("list").style.height = height + "px";
-		        ChangeTab(document.getElementById("1tab1"));
-		    }
-		    document.onselectstart = function () {
-		        event.cancelBubble = true;
-		        event.returnValue = false;
-		    }
 		    function Tab1_NewTabIni(pTabNodeID) {
 		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 		            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
@@ -733,10 +728,12 @@
 		    function Tab1_MouserOver(obj) {
 		        obj.className = "tabover";
 		    }
+		    
 		    function Tab1_MouserOut(obj) {
 		        if (Tab1_SelectID != obj.id)
 		            obj.className = "";
 		    }
+		    
 		    function Tab1_MouseClick(obj) {
 		        obj.className = "tabon";
 		        if (obj.id != Tab1_SelectID) {
@@ -748,6 +745,7 @@
 		            ChangeTab(obj);
 		        }
 		    }
+		    
 		    function ChangeTab(obj) {
 		        var pSelectTab = GetAttribute(obj, "divname");
 
@@ -767,8 +765,8 @@
 		        if (evt.keyCode == "13") {
 		            search();
 		        }
-		
 		    }
+		    
 		    function keyword_Clear() {
 		        document.getElementById('txt_keyword').value = "";
 		    }
@@ -784,7 +782,6 @@
 		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
 		            if (document.getElementsByName("searchCheck")[i].checked == true)
 		                chkValue = document.getElementsByName("searchCheck")[i].value;
-		
 		        }
 
 		        filter = document.getElementById("txt_keyword").value;
@@ -793,7 +790,7 @@
 		            alert("'%'" + "<spring:message code='ezTask.jsh08' />");
 		            return;
 		        }
-
+		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -802,11 +799,10 @@
 					data : {
 						startDate : startdate,
 						endDate : enddate,
-						app : 1,
 						type : type,
 						filter : filter,
 						chkValue : chkValue,
-						taskStatusCount : taskStatusCount
+						taskStatus : taskStatusCount
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -816,6 +812,7 @@
 					}
 				});
 		    }
+		    
 		    function after_search() {
 		        if (xmlHTTP2.readyState == 4 && xmlHTTP2 != null) {
 		
@@ -893,12 +890,13 @@
 		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
 		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle"><spring:message code='ezTask.t118' /></label>
-		          <input name="searchCheck" id="Radio1" type="radio" value="TaskPersonName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle"><spring:message code='ezTask.t2005' /></label>
+		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle"><spring:message code='ezTask.t2005' /></label>
 				  &nbsp;
 				  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		          <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
 		    </span>
 		</h1>
+		
 		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="taskprog"><spring:message code='ezTask.t2007' /></span></p>
@@ -933,9 +931,11 @@
 
 			</ul>
 		</div>
+		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
+		
 		<table style="WIDTH: 100%;overflow:AUTO;" id="list">
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
@@ -993,8 +993,10 @@
 				<td style="vertical-align:top;width:182px"></td>
 			</tr>
 		</table>
+		
 		<div id="tblPageRayer"></div>
 	</body>
+	
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
 	</script>

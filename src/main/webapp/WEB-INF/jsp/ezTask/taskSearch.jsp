@@ -174,7 +174,6 @@
 					data : {
 						startDate : sdate,
 						endDate : edate,
-						app : 1,
 						filter : filter,
 						chkValue : chkValue,
 						searchClass : searchClass,

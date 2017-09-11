@@ -19,7 +19,6 @@
 				DATE_ADD(DATE_FORMAT(createdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as createDate,
 				taskstatus,
 				completerate,
-				DATE_ADD(DATE_FORMAT(completedate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as completedate,
 				importance,
 				hasshare,
 				hasattach,
@@ -409,7 +408,7 @@
 		]]>
 	</select>
 
-	<select id="EzTaskDAO.taskGetList" resultClass="TaskInfoVO">
+	<select id="EzTaskDAO.getTaskList" resultClass="TaskInfoVO">
 	   <![CDATA[
 		    SELECT
 		    	A.taskid,
@@ -427,7 +426,6 @@
 				tasktype,
 				taskstatus,
 				completerate,
-				completedate,
 				personid,
 				personname,
 				personname2,
@@ -438,21 +436,21 @@
 				memo
 			FROM
 				TBL_TASK A
-			JOIN
+			LEFT JOIN
 				TBL_TASKSHARE B
 			ON
 				A.tenantid = B.tenantid
 			AND
 				A.taskid = B.taskid
 			WHERE
-				tenantid = #tenantID#
+				A.tenantid = #tenantID#
 		]]>
 
-		<isEqual property="taskType" compareValue="1">
-			<isEqual property="selectTaskStatus" compareProperty="1" prepend="AND">
+		<isEqual property="type" compareValue="1">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="selectTaskStatus" compareProperty="2" prepend="AND">
+			<isEqual property="taskStatus" compareValue="2" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
@@ -463,11 +461,12 @@
 					tasktype = 1
 			]]>
 		</isEqual>
-		<isNotEqual property="taskType" compareValue="1">
-			<isEqual property="selectTaskStatus" compareProperty="1" prepend="AND">
+		
+		<isNotEqual property="type" compareValue="1">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="selectTaskStatus" compareProperty="2" prepend="AND">
+			<isEqual property="taskStatus" compareValue="2" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
@@ -529,7 +528,7 @@
 	           		(startdate < #startDate# and enddate >= #endDate#)
 	           	)
 	           	AND
-	           		(personid = #memberID# or ownerid = #memberID#)
+	           		(personid = #userID#)
            	]]>
         </isNotEqual>
 
@@ -543,14 +542,34 @@
 	<select id="EzTaskDAO.getTaskCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		    SELECT
-		    	COUNT(taskID)
+		    	COUNT(A.taskID)
 			FROM
-				TBL_TASK
+				TBL_TASK A
+			JOIN
+				TBL_TASKSHARE B
+			ON
+				A.tenantid = B.tenantid
+			AND
+				A.taskid = B.taskid
 			WHERE
-				((taskPersonid = #memberID# AND creatorid = ownerid)
-			OR
-				personid = #memberID#)
+				A.tenantid = #tenantID#
 		]]>
+		
+		<isEqual property="type" compareValue="1">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+				taskstatus != 3
+			</isEqual>
+			<isEqual property="taskStatus" compareValue="2" prepend="AND">
+				taskstatus = 3
+			</isEqual>
+			
+			<![CDATA[
+				AND
+					(personid = #userID# OR B.sharerid = #userID#)
+				AND
+					tasktype = 1
+			]]>
+		</isEqual>
 
 		<isNotEqual property="filter" compareValue="">
         	<isEqual property="chkValue" compareValue="title">
@@ -559,33 +578,46 @@
 	        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="chkValue" compareValue="TaskPersonName">
+        	<isEqual property="chkValue" compareValue="personName">
 	        	<![CDATA[
 	        		AND
 	        			taskpersonname LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
-
-		<![CDATA[
-			AND
-				tenantid = #tenantID#
-		]]>
 	</select>
 
 	<select id="EzTaskDAO.getTaskCount2" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		    SELECT
-		    	COUNT(taskID)
+		    	COUNT(A.taskID)
 			FROM
-				TBL_TASK
+				TBL_TASK A
+			JOIN
+				TBL_TASKSHARE B
+			ON
+				A.tenantid = B.tenantid
+			AND
+				A.taskid = B.taskid
 			WHERE
-				creatorid = #memberID#
-			AND
-				parentid = 0
-			AND
-				tasktype != 1
-						]]>
+				A.tenantid = #tenantID#
+		]]>
+		
+		<isNotEqual property="type" compareValue="1">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+				taskstatus != 3
+			</isEqual>
+			<isEqual property="taskStatus" compareValue="2" prepend="AND">
+				taskstatus = 3
+			</isEqual>
+			
+			<![CDATA[
+				AND
+					(creatorid = #userID#)
+				AND
+					tasktype != 1
+			]]>
+		</isNotEqual>
 
 		<isNotEqual property="filter" compareValue="">
         	<isEqual property="chkValue" compareValue="title">
@@ -594,18 +626,13 @@
 	        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="chkValue" compareValue="TaskPersonName">
+        	<isEqual property="chkValue" compareValue="personName">
 	        	<![CDATA[
 	        		AND
 	        			taskpersonname LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
-
-		<![CDATA[
-			AND
-				tenantid = #tenantID#
-		]]>
 	</select>
 
 	<insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">

@@ -613,9 +613,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception {
-		logger.debug("taskGetList started.");
-		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount);
+	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatus, int tenantID) throws Exception {
+		logger.debug("getTaskList started.");
+		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatus : " + taskStatus);
 
 		if (!startDate.equals("")) {
 			startDate += " 00:00:00";
@@ -627,7 +627,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("memberID", memberID);
+		map.put("userID", userID);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -635,24 +635,24 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("filter", filter);
 		map.put("chkValue", chkValue);
 		map.put("searchClass", searchClass);
-		map.put("taskStatusCount", taskStatusCount);
+		map.put("taskStatus", taskStatus);
 		map.put("tenantID", tenantID);
 
-		List<TaskInfoVO> list = ezTaskDAO.taskGetList(map); 
+		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map); 
 
-		logger.debug("taskGetList ended.");
+		logger.debug("getTaskList ended. listsize = " + list.size());
 
 		return list;
 	}
 
 	@Override
-	public String getTaskCount(String memberID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception {
+	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
 		logger.debug("type : " + type + " | filter : " + filter + " | chkValue : " + chkValue);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("memberID", memberID);
+		map.put("userID", userID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("type", type);
 		map.put("filter", filter);
