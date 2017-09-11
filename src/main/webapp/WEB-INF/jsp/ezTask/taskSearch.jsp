@@ -233,12 +233,8 @@
 			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
 
 			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
-			        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
 			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
 
-			        if (SelectSingleNode(node, "REPEATCOUNT") != null)
-			            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
-		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
 
@@ -401,11 +397,7 @@
 			function ReadTask(obj)
 			{
 				var taskid = $(obj).closest("tr").attr("taskid");
-				var parentid = $(obj).closest("tr").attr("parentid");
 				var feature = "";
-				
-				if (parentid != "0")
-		            taskid = parentid;
 
 				feature = GetOpenPosition(750, 740);
 	        	
@@ -467,7 +459,6 @@
 		</script>
 	</head>
 	<body class="mainbody">
-	<form method="post" runat="server">
 		<h1><spring:message code='ezTask.t180' /></h1>
 		<table class="content">
 			<tr>
@@ -475,7 +466,7 @@
 				<td>
 					<select id="search_field" name="search_field" style="WIDTH: 70px;vertical-align:middle">
 						<option  value="title" selected><spring:message code='ezTask.t182' /></option>
-						<option  value="TaskPersonName" ><spring:message code='ezTask.t2005' /></option>
+						<option  value="personName" ><spring:message code='ezTask.t2005' /></option>
 					</select>
 					<select name="search_class" id="search_class" style="WIDTH: 80px;vertical-align:middle">
 						<option  value="" selected ><spring:message code='ezTask.t240' /></option>
@@ -549,6 +540,5 @@
 		</table>
 		<br>
 		<br>
-	</form>
 	</body>
 </html>
