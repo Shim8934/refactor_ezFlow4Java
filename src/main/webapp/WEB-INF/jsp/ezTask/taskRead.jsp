@@ -709,7 +709,7 @@
 		
 		<div class="wrap_progress">
 			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"><c:out value = '${taskInfoVO.title }' /></h4>
-			<div class="circle progress_graph">
+			<div class="circle progress_graph" style="width:30%; margin: 10px 20px;">
 				<strong></strong>
 			</div>
 			
