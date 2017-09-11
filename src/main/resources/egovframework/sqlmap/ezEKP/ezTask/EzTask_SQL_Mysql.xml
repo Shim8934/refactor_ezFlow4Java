@@ -392,16 +392,15 @@
 				A.tenantid = #tenantID#
 		]]>
 
-		<isEqual property="type" compareValue="1">
-			<isEqual property="taskStatusCount" compareValue="0" prepend="AND">
-				taskstatus != 3
-			</isEqual>
-			<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
-				taskstatus = 3
-			</isEqual>
-			
+		<isEqual property="taskStatusCount" compareValue="0" prepend="AND">
+			taskstatus != 3
+		</isEqual>
+		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
+			taskstatus = 3
+		</isEqual>
+
+		<isEqual property="type" compareValue="1" prepend="AND">			
 			<![CDATA[
-				AND
 					((A.creatorid = #userID# AND A.tasktype = 1)
 				OR
 					(A.personid = #userID#)
@@ -410,16 +409,8 @@
 			]]>
 		</isEqual>
 		
-		<isNotEqual property="type" compareValue="1">
-			<isEqual property="taskStatusCount" compareValue="0" prepend="AND">
-				taskstatus != 3
-			</isEqual>
-			<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
-				taskstatus = 3
-			</isEqual>
-			
+		<isNotEqual property="type" compareValue="1" prepend="AND">
 			<![CDATA[
-				AND
 					(A.creatorid = #userID# AND A.tasktype != 1)
 			]]>
 		</isNotEqual>
@@ -498,24 +489,22 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				(A.creatorid = #userID# and A.tasktype = 1)
+				((A.creatorid = #userID# and A.tasktype = 1)
 			OR
 				(A.personid = #userID#)
 			OR	
-				(B.sharerid = #userID# and A.TASKID = B.TASKID)
+				(B.sharerid = #userID# and A.TASKID = B.TASKID))
 		]]>
 
 		<isNotEqual property="filter" compareValue="">
-        	<isEqual property="chkValue" compareValue="title">
+        	<isEqual property="chkValue" compareValue="title" prepend="AND">
 	        	<![CDATA[
-	        		AND
-	        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="chkValue" compareValue="personName">
+        	<isEqual property="chkValue" compareValue="personName" prepend="AND">
 	        	<![CDATA[
-	        		AND
-	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>

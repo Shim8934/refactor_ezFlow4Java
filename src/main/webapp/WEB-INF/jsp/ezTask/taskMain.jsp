@@ -802,7 +802,7 @@
 						type : type,
 						filter : filter,
 						chkValue : chkValue,
-						taskStatus : taskStatusCount
+						taskStatusCount : taskStatusCount
 					},
 					success : function(xml) {
 						after_DateChange(xml);
