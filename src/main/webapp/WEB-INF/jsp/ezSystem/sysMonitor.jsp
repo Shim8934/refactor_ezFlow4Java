@@ -284,7 +284,8 @@
 	    			type : "POST",
 	    			dataType : "json",
 	    			data : {
-	    				serverSN : parseInt(listNum)
+	    				serverSN : parseInt(listNum) + 1,
+	    				curServer : '${curServer}'
 	    			},
 	    			success : function (data) {
 	    				getFileSysData(data.fileSysInfoList);

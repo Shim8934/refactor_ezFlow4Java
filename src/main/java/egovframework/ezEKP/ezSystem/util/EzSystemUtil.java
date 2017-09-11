@@ -26,9 +26,9 @@ public class EzSystemUtil {
 	 * 서버 및 OS 정보 
 	 **/
 	@SuppressWarnings("unchecked")
-	public static String getSysInfo(int tenantID, String ip) throws Exception {
+	public static String getSysInfo(String ip) throws Exception {
 		
-		logger.debug("getSysInfo started. : " + tenantID);
+		logger.debug("getSysInfo started." );
 
 		BufferedReader br = null;
 		BufferedReader cbr = null;
@@ -127,9 +127,9 @@ public class EzSystemUtil {
 	 * CPU 관련 정보 
 	 **/
 	@SuppressWarnings("unchecked")
-	public static String getCpuInfo(int tenantID, String ip) throws Exception {
+	public static String getCpuInfo(String ip) throws Exception {
 		
-		logger.debug("getCpuInfo started. : " + tenantID);
+		logger.debug("getCpuInfo started.");
 
 		BufferedReader br = null;
 		/**
@@ -196,9 +196,9 @@ public class EzSystemUtil {
 	 * 메모리 관련 정보
 	 * */	
 	@SuppressWarnings("unchecked")
-	public static String getMemoryInfo(int tenantID, String ip) throws Exception {
+	public static String getMemoryInfo(String ip) throws Exception {
 		
-		logger.debug("getMemoryInfo started. : " + tenantID);
+		logger.debug("getMemoryInfo started." );
 
 		BufferedReader br = null;
 		/**
@@ -251,9 +251,9 @@ public class EzSystemUtil {
 	 * 파일 시스템 정보 관련
 	 * */
 	@SuppressWarnings("unchecked")
-	public static String getFileSysInfo(int tenantID, String ip) throws Exception {
+	public static String getFileSysInfo(String ip) throws Exception {
 		
-		logger.debug("getFileSysInfo started. : " + tenantID);
+		logger.debug("getFileSysInfo started.");
 	
 		BufferedReader br = null;
 		/**
@@ -309,9 +309,9 @@ public class EzSystemUtil {
 	 * 디스크 I/O 관련 정보
 	 * */
 	@SuppressWarnings("unchecked")
-	public static String getDiskioInfo(int tenantID, String ip) throws Exception {
+	public static String getDiskioInfo(String ip) throws Exception {
 		
-		logger.debug("getDiskioInfo started. : " + tenantID);
+		logger.debug("getDiskioInfo started.");
 		
 		BufferedReader br = null;
 		/**
@@ -391,9 +391,9 @@ public class EzSystemUtil {
 	 *  네트워크 트래픽 정보
 	 **/	
 	@SuppressWarnings("unchecked")
-	public static String getNetDataInfo(int tenantID, String ip) throws Exception {
+	public static String getNetDataInfo(String ip) throws Exception {
 		
-		logger.debug("getNetDataInfo started. : " + tenantID);
+		logger.debug("getNetDataInfo started.");
 		
 		BufferedReader br = null;
 		/**

@@ -21,12 +21,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -221,7 +223,8 @@ public class EzSystemAdminController {
 	}
 	
 	/**
-	 * 전체(현재 + config에 등록된) 서버 목록 가져오기.
+	 * 전체 서버 목록 가져오기.
+	 * config.properties에 현재 포함 다른 서버 목록 전부 저장
 	 * */
 	@RequestMapping(value="/admin/ezSystem/sysREST.do")
 	public String sysREST(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request , Model model) throws Exception {
@@ -239,6 +242,7 @@ public class EzSystemAdminController {
 		logger.debug("localIP : " + localIP);		
 		
 		String serverName = request.getServerName();
+		String curServer = config.getProperty("config.curServer");
 	
 		/**
 		 * config.properties에 있는 서버 목록 불러오기
@@ -263,9 +267,10 @@ public class EzSystemAdminController {
 			}
 		}
 		
-		serverList = ezSystemAdminService.getServerInfo(userInfo.getTenantId(), localIP, serverName, getServerList);
+		serverList = ezSystemAdminService.getServerInfo(localIP, config.getProperty("config." + curServer) ,serverName, getServerList);
 
 		model.addAttribute("serverList", serverList);
+		model.addAttribute("curServer", curServer);
 		
 		logger.debug("sysREST ended.");		
 		return "/ezSystem/sysMonitor";
@@ -291,11 +296,20 @@ public class EzSystemAdminController {
 		logger.debug("localIP : " + localIP);		
 		
 		String serverName = request.getServerName();
-		String serverSN = request.getParameter("serverSN");
-		String hostInfo = "config.SysServer" + serverSN;
+		String serverSN = request.getParameter("serverSN"); //0부터 찍힘
+		String hostInfo = "config.SysServer" + serverSN; 
 		String address = config.getProperty(hostInfo);		
+		String curServer = request.getParameter("curServer");
+		boolean chkServer; 
 		
-		String result = ezSystemAdminService.getSysMonitorInfo(userInfo.getTenantId(), localIP, serverName, serverSN, address);
+		// 현재 서버와 조회하는 서버가 같을 경우
+		if (curServer.equalsIgnoreCase("SysServer"+serverSN)) {
+			chkServer = true;
+		} else {
+			chkServer = false;
+		}
+		
+		String result = ezSystemAdminService.getSysMonitorInfo(localIP, serverName, address, chkServer);
 
 		/**
 		 * RESTful API로 받아온 데이터를 가공해서 던짐
@@ -321,6 +335,65 @@ public class EzSystemAdminController {
 		logger.debug("sysMonitorREST ended.");
 		
 		return "json";
+	}
+	
+	@RequestMapping(value="/ezSystem/util/getSysInfo", method=RequestMethod.POST)
+	@ResponseBody
+	public String getSysInfo () throws Exception {
+		
+		logger.debug("getSysInfo start.");
+		
+		String result = "";
+		InetAddress local = InetAddress.getLocalHost();
+		String localIP = local.getHostAddress();		
+		logger.debug("localIP : " + localIP);		
+		
+		String serverList = EzSystemUtil.getSysInfo(localIP);
+		
+		if (serverList.equalsIgnoreCase(null)) {
+			result ="FALSE";
+		} else {
+			result = serverList;
+		}
+		
+		logger.debug("getSysInfo end.");
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/util/getSysMonitorInfo", method=RequestMethod.POST)
+	@ResponseBody
+	public String getSysMonitorInfo () throws Exception {
+		
+		logger.debug("getSysMonitorInfo start.");
+		
+		JSONObject jObj = new JSONObject();
+		JSONArray jArr = new JSONArray();
+		
+		InetAddress local = InetAddress.getLocalHost();
+		String localIP = local.getHostAddress();		
+		logger.debug("localIP : " + localIP);
+		
+		String osInfo = EzSystemUtil.getSysInfo(localIP);
+		String cpuInfo = EzSystemUtil.getCpuInfo(localIP);
+		String memoryInfo = EzSystemUtil.getMemoryInfo(localIP);
+		String fileSysInfoList  = EzSystemUtil.getFileSysInfo(localIP);
+		String diskioInfo = EzSystemUtil.getDiskioInfo(localIP);
+		String netTrafficList = EzSystemUtil.getNetDataInfo(localIP);
+		
+		jArr.add(osInfo);
+		jArr.add(cpuInfo);
+		jArr.add(memoryInfo);
+		jArr.add(fileSysInfoList);
+		jArr.add(diskioInfo);
+		jArr.add(netTrafficList);
+		
+		jObj.put("getSysMonitorInfo", jArr);
+		
+		logger.debug("getSysMonitorInfo end.");
+		
+		return jObj.toString();
 	}
 
 }

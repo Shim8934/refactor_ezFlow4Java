@@ -18,6 +18,6 @@ public interface EzSystemAdminService {
 			String keyword, String keycode, String lang, String startDate, String endDate) throws Exception;
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
 			String lang, String startDate, String endDate) throws Exception;
-	public ArrayList<String> getServerInfo(int tenantID, String ip, String serverName, ArrayList<String> getServerList) throws Exception;
-	public String getSysMonitorInfo(int tenantID, String ip, String serverName, String serverSN, String address) throws Exception;
+	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception;
+	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
 }

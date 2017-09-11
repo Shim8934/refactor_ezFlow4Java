@@ -196,7 +196,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	/**
 	 * 서버 리스트 가져오기
 	 * */
-	public ArrayList<String> getServerInfo(int tenantID, String ip, String serverName, ArrayList<String> getServerList) throws Exception {
+	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception {
 		
 		logger.debug("getSysIngo started.");
 		
@@ -209,19 +209,19 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		/**
 		 * 각 서버별 정보를 ArrayList에 저장.
-		 * 1. 메인서버 자신의 정보를 저장.
-		 * 2. getServerList에 저장된 정보를 바탕으로 RESTful로 받아오기.
+		 * 1. 자신의 정보 및 기타 서버 정보 저장.
+		 * 2. 기타 서버 정보는 getServerList에 저장된 정보를 바탕으로 RESTful로 받아오기.
 		 * */
-		
-		// 현재 메인 서버인 자신의 정보를 저장
-		serverList.add(EzSystemUtil.getSysInfo(tenantID, ip));	
-		
-		// config에 등록된 추가 서버 리스트가 있는 경우
-		if(!getServerList.get(0).equalsIgnoreCase("EMPTY")){
-
-			for (String address : getServerList) {
-				logger.debug(address);
-				
+		for (String address : getServerList) {
+			logger.debug(address);
+			/**
+			 * 현재 서버와 serverList의 값이 같은 경우
+			 *               OR
+			 * config에 서버 정보를 저장하지 않은 경우(자신에 대한 작업만 하면 됨)
+			 * */
+			if (curServer.equalsIgnoreCase(address) || getServerList.get(0).equalsIgnoreCase("EMPTY")) {
+				serverList.add(EzSystemUtil.getSysInfo(ip));					
+			} else {					
 				String sysInfoUrl = address + "/ezSystem/util/getSysInfo";
 				HttpEntity<?> entity = new HttpEntity<>(headers);
 				
@@ -229,9 +229,8 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 				serverList.add(sysInfo.getBody());
 				logger.debug("<<<sysInfo : " + sysInfo.getBody());
 			}
+		}			
 			
-		}		
-		
 		logger.debug("getSysIngo ended.");
 		
 		return serverList;
@@ -241,23 +240,23 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	 * 시스템의 정보 가져오기
 	 * */
 	@SuppressWarnings("unchecked")
-	public String getSysMonitorInfo(int tenantID, String ip, String serverName, String serverSN, String address) throws Exception {
+	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception {
 		
 		logger.debug("getSysMonitorInfo started.");
 		
 		String result ="";
 
-		if (serverSN.equalsIgnoreCase("0")) {
+		if (chkServer) {
 			
 			JSONObject jObj = new JSONObject();
 			JSONArray jArr = new JSONArray();
 			
-			String osInfo = EzSystemUtil.getSysInfo(tenantID, ip);
-			String cpuInfo = EzSystemUtil.getCpuInfo(tenantID, ip);
-			String memoryInfo = EzSystemUtil.getMemoryInfo(tenantID, ip);
-			String fileSysInfoList  = EzSystemUtil.getFileSysInfo(tenantID, ip);
-			String diskioInfo = EzSystemUtil.getDiskioInfo(tenantID, ip);
-			String netTrafficList = EzSystemUtil.getNetDataInfo(tenantID, ip);
+			String osInfo = EzSystemUtil.getSysInfo(ip);
+			String cpuInfo = EzSystemUtil.getCpuInfo(ip);
+			String memoryInfo = EzSystemUtil.getMemoryInfo(ip);
+			String fileSysInfoList  = EzSystemUtil.getFileSysInfo(ip);
+			String diskioInfo = EzSystemUtil.getDiskioInfo(ip);
+			String netTrafficList = EzSystemUtil.getNetDataInfo(ip);
 			
 			jArr.add(osInfo);
 			jArr.add(cpuInfo);
