@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -343,7 +345,7 @@ public class MBoardServiceImpl implements MBoardService {
 //    }
 	
 	@Override
-	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add) throws Exception {
+	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		logger.debug("getBoardItemList started.");
 		
 		String boardID = mBoardInfoVO.getBoardID();
@@ -356,10 +358,10 @@ public class MBoardServiceImpl implements MBoardService {
 		List<MBoardItemVO> mBoardNoticeItemList = getNoticePostItemList(boardID, userID, gubun, page, tenantID, offset);
 		
 		//임시로 10으로 지정
-		int listSize = 10;
+		int listSize = 30;
         
-		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
-		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset);
+		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
+		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -373,7 +375,7 @@ public class MBoardServiceImpl implements MBoardService {
 		}
 		
 		//스크롤 페이징할 때 공지사항 추가 안되게 add를 받아옴
-		if (add == null || add.equals("")) {
+		if ((add == null || add.equals("")) && (pSearchText == null || pSearchText.equals(""))) {
 			for (MBoardItemVO vo : mBoardNoticeItemList) {
 				mBoardItemList.add(0, vo);
 			}
@@ -386,7 +388,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 
 	@Override
-	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception {
+	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText) throws Exception {
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
@@ -404,7 +406,7 @@ public class MBoardServiceImpl implements MBoardService {
 		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
         int endRow = (mobileListSize * page) - noticeCount;
 		
-        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
+        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
         
         List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
         
@@ -505,14 +507,14 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		MBoardInfoVO vo = mBoardDAO.getBoardProperty(map);
 		
+		if (vo.getGuBun().equals("4") || vo.getGuBun().equals("3")) {
+			vo.setType("photoBoardItem");
+		}
+		
 		if (vo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 			vo.setType("newBoardItemList");
 		} else {
 			vo.setType("boardItemList");
-		}
-		
-		if (vo.getGuBun().equals("4")) {
-			vo.setType("photoBoardItem");
 		}
 		
 		logger.debug("getBoardProperty ended.");
@@ -536,7 +538,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return vo;
 	}
 	
-	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset) throws Exception {
+	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		logger.debug("getBoarditemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID + " || lastDate = " + lastDate);
 		
@@ -549,6 +551,9 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
+		map.put("parentWriteDate", parentWriteDate);
+		map.put("upperitemidtree", upperitemidtree);
 		
 		List<MBoardItemVO> list = mBoardDAO.getBoardItemList(map);
 		
@@ -616,7 +621,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 	
 	@Override
-	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
+	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID, String pSearchText) throws Exception {
 		logger.debug("getBoardItemListCount started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
 		
@@ -625,6 +630,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("userID", userID);
 		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText);
 		map.put("tenantID", tenantID);
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
@@ -716,9 +722,9 @@ public class MBoardServiceImpl implements MBoardService {
 		//모바일에서는 영구게시만 지원
 		map.put("endDate", "9999-12-30 14:59:59");
 		map.put("abstract", boardListVO.get("abstract"));
-		map.put("hasAttach", boardListVO.get("hasAttach"));
 		
-		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
+		//모바일에서는 답변을 달기가 없기 때문에, itemID로 들어감
+		map.put("upperItemIDTree", boardListVO.get("itemID"));
 		//새로 작성할때는 1로 fix
 		map.put("itemLevel", "1");
 		//리플이나 수정일때는 값받아와야함.
@@ -740,8 +746,100 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//mht파일저장
 		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);
-
+		
+		//첨부파일 저장
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId())) {
+				//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
+			}
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
+		
 		mBoardDAO.insertBrdItem(map);
+	}
+	
+	/**
+	 * 게시판 게시물 첨부파일저장 실행 Method
+	 */
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception{
+        long fileSize = 0;
+        boolean rtnValue = false;
+        String filePath = "";
+        String filePath2 = "";
+        String fileName = "";
+        
+        try {
+        	if (!strAttachments.substring(strAttachments.length() - 1).equals("|")) {
+        		strAttachments += "|";
+        	}
+        	
+        	for (int i = 0; i < strAttachments.split("\\|").length; i++) {
+        		if (strType.equals("BOARD")) {
+        			if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
+        				filePath = strAttachments.split("\\|")[i];
+        			} else {
+        				filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+        			}
+        			File file = new File(realPath + filePath);
+        			fileSize = file.length();
+        			
+        			if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
+        				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
+        				
+        				File fileinfo = new File(realPath + filePath2);
+        				
+        				if (!fileinfo.exists()) {
+        					FileUtils.moveFile(file, fileinfo);
+        				}
+        			} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
+        				filePath2 = strAttachments.split("\\|")[i];
+        			} else {
+        				filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+        			}
+        			file = null;
+        		} else {
+        			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
+        			fileSize = file.length();
+        			
+        			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
+        			
+        			File fileinfo = new File(realPath + filePath2);
+        			
+        			if (!fileinfo.exists()) {
+        				FileUtils.moveFile(file, fileinfo);
+        				file.delete();
+        			}
+        			file = null;
+        		}
+        		
+        		fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
+        		
+        		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
+        	}
+        	
+        	rtnValue = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnValue = false;
+		}
+        
+        return rtnValue;
+	}
+	
+	public void saveAttachInfo(String strItemID, int seqNum, String filePath, long fileSize, String fileName, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_STRITEMID", strItemID);
+		map.put("seqNum", seqNum);
+		map.put("v_STRATTACHMENTS", filePath);
+		map.put("v_FILESIZE", fileSize);
+		map.put("v_FILENAME", fileName);
+		map.put("v_TENANTID", tenantID);
+		
+		mBoardDAO.saveAttachInfo(map);
 	}
 	
 	@Override
@@ -756,7 +854,11 @@ public class MBoardServiceImpl implements MBoardService {
 		//map.put("startDate", boardListVO.get("startDate"));
 		//map.put("endDate", boardListVO.get("endDate"));
 		map.put("abstract", boardListVO.get("abstract"));
-		map.put("hasAttach", boardListVO.get("hasAttach"));
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
 		map.put("writerName", boardListVO.get("writerName"));
 		map.put("writerName2", boardListVO.get("writerName2"));
 		map.put("extensionAttribute2", boardListVO.get("notice"));
@@ -1016,10 +1118,24 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		});
 	    
-	    //자식존재여부 체크
+	    
+	    Map<String, Object> map = new HashMap<String, Object>();
+		
 	    for (int i=0; i< brdBoardTreeList.size(); i++) {
+	    	//자식존재여부 체크
 	    	String isLeaf = checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID);
 	    	brdBoardTreeList.get(i).setIsLeaf(isLeaf);
+	    	
+	    	map.put("boardID", brdBoardTreeList.get(i).getBoardId());
+			map.put("userID", info.getUserId());
+			map.put("gubun", (brdBoardTreeList.get(i).getGuBun() == null || !brdBoardTreeList.get(i).getGuBun().equals("2") || !brdBoardTreeList.get(i).getGuBun().equals("3")) ? "1" : brdBoardTreeList.get(i).getGuBun());
+			map.put("nowDate", commonUtil.getTodayUTCTime(""));
+			map.put("pSearchText", "");
+			map.put("tenantID", tenantID);
+		    
+	    	int listCount = mBoardDAO.getBoardItemListCount(map);
+	    	
+	    	brdBoardTreeList.get(i).setListCount(listCount);
 	    }
 
 		return brdBoardTreeList;
@@ -1161,7 +1277,14 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		}
 	}
-	
-	
+
+	@Override
+	public String checkFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.checkFavorite(map);
+	}
 	
 }

@@ -15,13 +15,15 @@ public interface MScheduleService {
 
 	public void deleteSchedule(String scheduleId, int tenantId) throws Exception;
 
-	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception;
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception;
+	
+	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId, String realPath, Locale locale) throws Exception;
 
 	public String scheduleContentPath(String scheduleId, int tenantId) throws Exception;
 
 	public MScheduleInfoVO scheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception;
 	
-	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate) throws Exception;
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception;
 	
 	public JSONObject scheduleMainList(MCommonVO info, String listCnt) throws Exception;	
 	

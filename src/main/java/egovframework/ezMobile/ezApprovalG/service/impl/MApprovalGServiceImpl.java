@@ -24,6 +24,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -140,11 +141,15 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale) throws Exception {
+	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type) throws Exception {
 		LOGGER.debug("getMHTBody started");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
+		map.put("approvalFlag", approvalFlag);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
@@ -180,11 +185,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public String getOpinionCount(String pDocID, MCommonVO userInfo) throws Exception {
+	public String getOpinionCount(String pDocID, String type, MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getAprCommentCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
@@ -196,11 +202,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, MCommonVO userInfo) throws Exception {
+	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String type, MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getOpinionInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
@@ -348,9 +355,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAprDocInfo started");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docId);
 		map.put("type", type);
+		map.put("approvalFlag", approvalFlag);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyId);
@@ -378,6 +388,35 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		LOGGER.debug("getDocState ended");
 		
 		return docState;
+	}
+
+	@Override
+	public MApprovalGLeftVO getLeftCount(String userId, MCommonVO userInfo) throws Exception {
+		LOGGER.debug("getLeftCount started");
+		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
+		String userIDS = "'" + userInfo.getUserId() + "'";
+		String proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
+		
+		if (proxyOption.equals("1")) {
+			userIDS = ezApprovalGService.getProxyUser(userInfo.getUserId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffSet());
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", userIDS);
+		map.put("userId", userId);
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyId());
+		map.put("approvalFlag", approvalFlag);
+		map.put("mainViewYN", mainViewYN);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		MApprovalGLeftVO approvalGLeftVO = mApprovalGDAO.getLeftCount(map);
+
+		LOGGER.debug("getLeftCount ended");
+		
+		return approvalGLeftVO;
 	}
 	
 }

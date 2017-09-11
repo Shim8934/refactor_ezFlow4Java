@@ -25,6 +25,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -216,7 +217,7 @@ public class MApprovalGGWController {
 			String realPath = commonUtil.getRealPath(request);
 			String domain = request.getServerName() + ":" + request.getServerPort();
 			//본문
-			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale);
+			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type);
 			//결재문서정보
 			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, userInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
 			//회수 가능여부
@@ -289,14 +290,16 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
+			String type = request.getParameter("type");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("type : " + type);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			//의견갯수
-			String commentCount = mApprovalGService.getOpinionCount(docId, userInfo);
+			String commentCount = mApprovalGService.getOpinionCount(docId, type, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -358,13 +361,14 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
+			String type = request.getParameter("type");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGService.getOpinionInfo(docId, userInfo);
+			List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGService.getOpinionInfo(docId, type, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -413,7 +417,6 @@ public class MApprovalGGWController {
 				result.put("code", "0");
 				result.put("data", "");
 			}
-			
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -720,6 +723,35 @@ public class MApprovalGGWController {
 		}
 
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/mobile/ezapproval/left-count/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mApprovalLeftCount(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			MApprovalGLeftVO approvalGLeftVO = mApprovalGService.getLeftCount(userId, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", approvalGLeftVO);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] ended.");
 		
 		return result;
 	}

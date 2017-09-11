@@ -87,6 +87,16 @@ public class MBoardDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public String checkFavorite(Map<String, Object> map) throws Exception{
+		int ret = (int) select("MBoardDAO.checkFavorite", map);
+		
+		if (ret > 0 ) {
+			return "OK";
+		} else {
+			return "NO";
+		}
+	}
+	
 	public String getDeptPathCode(Map<String, Object> map) throws Exception{
 		return (String) select("MBoardDAO.getDeptPathCode", map);
 	}
@@ -129,6 +139,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void setAsRead(Map<String, Object> map) throws Exception{
 		insert("MBoardDAO.setAsRead", map);
+	}
+	
+	public void saveAttachInfo(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.saveAttachInfo", map);
 	}
 	
 	public void setAsRead2(Map<String, Object> map) throws Exception{

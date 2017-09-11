@@ -9,6 +9,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -84,6 +85,10 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 
 	public String getDocState(Map<String, Object> map) throws Exception {
 		return (String) select("MApprovalG.getDocState", map);
+	}
+
+	public MApprovalGLeftVO getLeftCount(Map<String, Object> map) throws Exception {
+		return (MApprovalGLeftVO) select("MApprovalG.getLeftCount", map);
 	}
 
 }

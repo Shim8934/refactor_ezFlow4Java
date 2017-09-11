@@ -77,6 +77,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
 			contentPath += schedulePath;
 
+System.out.println("contentPath: " + contentPath);
 			byte[] ct = Base64.decode(jsonParam.get("content").toString());
 			String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
 			
@@ -170,7 +171,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}	
 
 	@Override
-	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception {
+	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId, String realPath, Locale locale) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
 		
@@ -200,7 +201,12 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		try {
 			byte[] ct = Base64.decode(jsonParam.get("content").toString());
-			stream = new ByteArrayInputStream(ct);
+			//stream = new ByteArrayInputStream(ct);
+			
+			String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
+			
+			stream = new ByteArrayInputStream(mhtData.getBytes());
+			
 			bos = new FileOutputStream(defaultPath);
 			
 			int bytesRead = 0;
@@ -243,9 +249,16 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	public void deleteSchedule(String scheduleId, int tenantId) throws Exception {
 		// TODO Auto-generated method stub
 		ezScheduleService.deleteSchedule(scheduleId, tenantId);				
-		ezScheduleService.deleteScheduleRepe(scheduleId, tenantId);
-		
+
 		/*ezScheduleService.deleteResource(scheduleId, tenantId);*/		
+	}
+
+	
+	@Override
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception {
+		// TODO Auto-generated method stub
+		ezScheduleService.insertScheduleRepeDel(scheduleId, startDate, tenantId);
+		
 	}
 
 	@Override
@@ -269,7 +282,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate) throws Exception {								
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception {								
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
 		
@@ -290,7 +303,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			}	
 		}
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, searchTitle, info.getTenantId());
 		
 		Collections.sort(sList, new EzScheduleCompareUtil());
 		
@@ -308,7 +321,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String startDate = sdf.format(cal.getTime()) + " 00:00:00";
 		String endDate = sdf.format(cal.getTime()) + " 23:59:59";
 		
-		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate);
+		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate, "");
 		int listSize = sList.size();
 		
 		jo.put("cnt", listSize);

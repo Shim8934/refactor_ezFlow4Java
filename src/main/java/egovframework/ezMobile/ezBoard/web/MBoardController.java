@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -408,21 +408,19 @@ System.out.println("mBoardItem:"+mBoardItem);
 		boardListVO.setUserID(userInfo.getId());
 		boardListVO.setBoardID(boardID);
 		boardListVO.setItemID("{"+UUID.randomUUID().toString()+"}");
-		Gson gson = new Gson();
-		JSONObject jsonParam = gson.fromJson(gson.toJson(boardListVO), JSONObject.class);
-		
-		HttpEntity<?> entity = new HttpEntity<>(jsonParam,headers);
+		//Gson gson = new Gson();
+		//JSONObject jsonParam = gson.fromJson(gson.toJson(boardListVO), JSONObject.class);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
+		//ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
 		//ResponseEntity<JSONObject> result = rest.exchange(url, HttpMethod.PUT, entity, JSONObject.class);
 		
-		JSONObject resultBody = result.getBody();
+		//JSONObject resultBody = result.getBody();
 		
-		String status = resultBody.get("status").toString();
+		//String status = resultBody.get("status").toString();
 		
-		LOGGER.debug("status : "+status);
+		//LOGGER.debug("status : "+status);
 		
 		LOGGER.debug("saveBoardItem ended.");
 		
@@ -548,8 +546,8 @@ System.out.println("mBoardItem:"+mBoardItem);
 		Object boardInfo = "";
 		if (status.equals("ok")) {
 System.out.println("newList:"+resultBody.get("data"));
-			Gson gson = new Gson();
-			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			//Gson gson = new Gson();
+			//list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			
 			LOGGER.debug("listSize:"+list.size());
 			

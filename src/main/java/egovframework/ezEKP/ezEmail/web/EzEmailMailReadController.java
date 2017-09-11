@@ -1701,7 +1701,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * MDN 메지시 전송 함수
 	 */
-	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName, int tenantId) {
+	public void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName, int tenantId) {
 		logger.debug("processAutoMDN started.");
 		
 		try {		

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezOrganMobile">
+    <typeAlias  alias="MOrganListVO"           type="egovframework.ezMobile.ezOrgan.vo.MOrganListVO"/>
+    <typeAlias  alias="MPersonListVO"           type="egovframework.ezMobile.ezOrgan.vo.MPersonListVO"/>
+    
+	<select id="MOrganDAO.getPersonList" parameterClass="Map" resultClass="MPersonListVO">
+        <![CDATA[
+            SELECT A.*
+            FROM
+            (SELECT
+                *,@rownum:=@rownum+1 as rowNum
+            FROM
+                tbl_usermaster, (select @rownum:=0) tmp
+            WHERE
+                PHYSICALDELIVERYOFFICENAME = #companyID#
+            AND
+                TENANT_ID = #tenantID#
+        ]]>        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
+        
+        <![CDATA[    
+            ORDER BY
+                DISPLAYNAME ASC)A
+        ]]>
+        <isNotEmpty property="rowNum">
+            <![CDATA[
+                WHERE
+                    rowNum > #rowNum#    
+            ]]>
+        </isNotEmpty>
+        <![CDATA[
+            LIMIT #listSize#
+        ]]>     
+    </select>
+    
+    <select id="MOrganDAO.getPersonListCount" parameterClass="Map" resultClass="Integer">
+        <![CDATA[
+            SELECT
+                COUNT(*)
+            FROM
+                tbl_usermaster
+            WHERE
+                PHYSICALDELIVERYOFFICENAME = #companyID#
+            AND
+                TENANT_ID = #tenantID#
+        ]]>        
+        <isNotEmpty property="pSearchText">
+            <![CDATA[
+                AND
+                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+            ]]>
+        </isNotEmpty>
+        <![CDATA[    
+            ORDER BY
+                DISPLAYNAME ASC
+        ]]> 
+    </select>
+    
+    <select id="MOrganDAO.getPersonInfo" parameterClass="Map" resultClass="MPersonListVO">
+        <![CDATA[
+            SELECT
+                *
+            FROM
+                tbl_usermaster
+            WHERE
+                TENANT_ID = #tenantID#
+            AND
+                cn = #userID#    
+        ]]>        
+    </select>
+    
+    <select id="MOrganDAO.getSameOrganList" parameterClass="Map" resultClass="MOrganListVO">
+    	<isEqual property="deptID" compareValue="Top">
+    		<![CDATA[
+    			SELECT 
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
+				    CASE
+				    	WHEN (USEFLAG = '' OR USEFLAG IS NULL) 
+		   				THEN '1'
+		   				ELSE '0'
+		   			END DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					CN = #deptID#
+			]]>
+    	</isEqual>
+    	<isNotEqual property="deptID" compareValue="Top">
+	    	<![CDATA[
+	    		SELECT 
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
+				    CASE
+				    	WHEN (USEFLAG = '' OR USEFLAG IS NULL) 
+		   				THEN '1'
+		   				ELSE '0'
+		   			END DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					EXTENSIONATTRIBUTE1 IN (SELECT
+												C.EXTENSIONATTRIBUTE1
+											FROM
+												TBL_DEPTMASTER C
+											WHERE
+												TENANT_ID = #tenantID#
+											AND
+												CN = #deptID#)
+				ORDER BY
+	        		A.EXTENSIONATTRIBUTE15, 
+	        		A.DISPLAYNAME
+			]]>
+    	</isNotEqual>
+    </select>
+    
+    <select id="MOrganDAO.getLowOrganList" parameterClass="Map" resultClass="MOrganListVO">
+    	<![CDATA[
+    		SELECT 
+				CN as DEPTID,
+				CASE
+					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+  					THEN DISPLAYNAME
+  					ELSE DISPLAYNAME$lang$
+  				END DEPTNAME,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
+			    CASE
+			    	WHEN (USEFLAG = '' OR USEFLAG IS NULL) 
+	   				THEN '1'
+	   				ELSE '0'
+	   			END DEPTTYPE,
+	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+			FROM
+				TBL_DEPTMASTER A
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				EXTENSIONATTRIBUTE1 = #deptID#
+			ORDER BY
+        		A.EXTENSIONATTRIBUTE15, 
+        		A.DISPLAYNAME
+		]]>
+    </select>
+</sqlMap>
+

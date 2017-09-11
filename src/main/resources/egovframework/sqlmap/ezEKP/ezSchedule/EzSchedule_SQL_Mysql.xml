@@ -278,6 +278,7 @@
             and
             	tenant_id = #v_TENANTID#
             ]]>
+            <isNotEmpty prepend="AND" property="v_SEARCHTITLE"> title like concat('%',#v_SEARCHTITLE#,'%')</isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
         	order by startdate asc
 	</select>

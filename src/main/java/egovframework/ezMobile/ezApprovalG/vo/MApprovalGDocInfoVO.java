@@ -17,6 +17,8 @@ public class MApprovalGDocInfoVO {
 	private String orgDocID;
 	/** 첨부여부*/
 	private String hasAttachYN;
+	/** 의견여부*/
+	private String hasOpinionYN;
 	/** 결재자아이디*/
 	private String aprMemberID;
 	/** 결재자 이름*/
@@ -29,8 +31,14 @@ public class MApprovalGDocInfoVO {
 	private String href;
 	/** 양식 아이디*/
 	private String formID;
-	/** */
+	/** 문서상태*/
 	private String docState;
+	/** 결재종류*/
+	private String aprType;
+	/** 결재상태*/
+	private String aprState;
+	/** 문서상태*/
+	private String functionType;
 	
 	public String getDocID() {
 		return docID;
@@ -122,4 +130,29 @@ public class MApprovalGDocInfoVO {
 	public void setDocState(String docState) {
 		this.docState = docState;
 	}
+	public String getHasOpinionYN() {
+		return hasOpinionYN;
+	}
+	public void setHasOpinionYN(String hasOpinionYN) {
+		this.hasOpinionYN = hasOpinionYN;
+	}
+	public String getAprType() {
+		return aprType;
+	}
+	public void setAprType(String aprType) {
+		this.aprType = aprType;
+	}
+	public String getAprState() {
+		return aprState;
+	}
+	public void setAprState(String aprState) {
+		this.aprState = aprState;
+	}
+	public String getFunctionType() {
+		return functionType;
+	}
+	public void setFunctionType(String functionType) {
+		this.functionType = functionType;
+	}
+	
 }

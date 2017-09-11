@@ -59,7 +59,15 @@ public class MResourceGetScheduleVO {
 	private String jobTitle;
 	/** 영문직급*/
 	private String jobTitle2;
-	
+	/** 승인자원여부 값*/
+	private String resApproveFlag;
+
+	public String getResApproveFlag() {
+		return resApproveFlag;
+	}
+	public void setResApproveFlag(String resApproveFlag) {
+		this.resApproveFlag = resApproveFlag;
+	}
 	public int getNum() {
 		return num;
 	}

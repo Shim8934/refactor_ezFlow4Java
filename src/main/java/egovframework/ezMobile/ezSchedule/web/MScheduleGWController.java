@@ -22,6 +22,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
@@ -64,6 +65,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 		
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
@@ -77,6 +81,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
+			String searchTitle = request.getParameter("searchTitle");
+			
+			LOGGER.debug("searchTitle: " + searchTitle);
 			
 			if (startDate != null && !startDate.equals("")) {
 				String[] sDate = startDate.split("-");
@@ -107,7 +114,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate);
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle);
 						
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -164,7 +171,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate);
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, "");
 						
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -184,7 +191,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 일정관리 [GET] 일정 상세데이터
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
+	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request, Locale locale) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -202,6 +209,22 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			MScheduleInfoVO vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, tenantId);
 			dataObject.put("scheduleInfo", vo);
 		
+			String itemID = vo.getContentPath();
+			LOGGER.debug("itemID: " + itemID);
+			String type = "SCHEDULECONTENT";
+			String realPath = commonUtil.getRealPath(request);
+	
+			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale);
+			LOGGER.debug("mhtToHtml: " + mhtToHtml);
+			
+			if(mhtToHtml.indexOf("<div>") < 0 || mhtToHtml.indexOf("</div>") < 0) {
+				mhtToHtml = "";
+			}
+			
+			LOGGER.debug("mhtToHtml: " + mhtToHtml);
+			vo.setContent(mhtToHtml);
+			
+			
 			//자원예약 정보
 	        int resourceCnt = ezScheduleService.getResourceCount(scheduleId, tenantId);
 	        
@@ -483,9 +506,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	    	String contentPath = mScheduleService.scheduleContentPath(scheduleId, info.getTenantId());
 	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-	    	String defaultPath = commonUtil.getRealPath(request) + contentPath;
+	    	String defaultPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId()) + contentPath;
     	
-	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId());
+	        String realPath = commonUtil.getRealPath(request);
+	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
+	    	
+	        LOGGER.debug("contentPath: " + contentPath);
+	        
+	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -513,8 +541,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-						
-			mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String dateType = request.getParameter("dateType");
+			
+			if(dateType.equals("3")) {
+				mScheduleService.insertScheduleRepeDel(scheduleId, startDate, info.getTenantId());
+			} else {
+				mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

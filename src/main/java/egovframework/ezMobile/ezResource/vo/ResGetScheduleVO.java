@@ -65,7 +65,23 @@ public class ResGetScheduleVO {
 	private String date;
 	/** 캘린더 값*/
 	private String value;
-	
+	/** 승인자원여부 값*/
+	private String resApproveFlag;
+	/** 중복여부 값*/
+	private String repeatYn;
+
+	public String getRepeatYn() {
+		return repeatYn;
+	}
+	public void setRepeatYn(String repeatYn) {
+		this.repeatYn = repeatYn;
+	}
+	public String getResApproveFlag() {
+		return resApproveFlag;
+	}
+	public void setResApproveFlag(String resApproveFlag) {
+		this.resApproveFlag = resApproveFlag;
+	}
 
 	public String getDate() {
 		return date;

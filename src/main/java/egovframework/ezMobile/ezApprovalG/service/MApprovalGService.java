@@ -7,6 +7,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -20,11 +21,11 @@ public interface MApprovalGService {
 
 	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, MCommonVO userInfo) throws Exception;
 
-	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale) throws Exception;
+	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type) throws Exception;
 
-	public String getOpinionCount(String pDocID, MCommonVO userInfo) throws Exception;
+	public String getOpinionCount(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
-	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, MCommonVO userInfo) throws Exception;
+	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
 	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType) throws Exception;
 
@@ -41,5 +42,7 @@ public interface MApprovalGService {
 	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId) throws Exception;
 
 	public String getDocState(String docId, String companyId, int tenantId) throws Exception;
+
+	public MApprovalGLeftVO getLeftCount(String userId, MCommonVO userInfo) throws Exception;
 
 }

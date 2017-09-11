@@ -125,6 +125,7 @@
 		<result property="brdNm"				column="BRDNM"				columnIndex="27"/>
 		<result property="date"				column="DATE"				columnIndex="28"/>
 		<result property="value"				column="VALUE"				columnIndex="29"/>
+		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="30"/>
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
@@ -190,6 +191,7 @@
 		<result property="tenantId"				column="TENANT_ID"				columnIndex="28"/>
 		<result property="brdNm"				column="BRDNM"				columnIndex="29"/>
 		<result property="content"				column="CONTENT"				columnIndex="30"		nullValue=""/>
+		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="31"/>
 	</resultMap>
     
     <select id="MResourceDAO.getAdmSubClsTree" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
@@ -535,6 +537,7 @@
                 A.ATTACHFLAG ,
                 A.CHARACTERID ,
                 A.APPROVEFLAG ,
+                C.APPROVEFLAG RESAPPROVEFLAG,
                 B.DISPLAYNAME OWNERNM  ,
                 B.DISPLAYNAME2 OWNERNM2  ,
                 B.DESCRIPTION DEPTNM  ,
@@ -762,7 +765,8 @@
 			AND
 				A.TENANT_ID = #tenantID#
 			AND 
-				A.RESCOMPANY = #v_PCOMPANYID#	
+				A.RESCOMPANY = #v_PCOMPANYID#
+			ORDER BY B.BRD_NM	
 		]]>
 
 		
@@ -815,6 +819,7 @@
                 A.ATTACHFLAG ,
                 A.CHARACTERID ,
                 A.APPROVEFLAG ,
+                C.APPROVEFLAG RESAPPROVEFLAG,
                 B.DISPLAYNAME OWNERNM  ,
                 B.DISPLAYNAME2 OWNERNM2  ,
                 B.DESCRIPTION DEPTNM  ,
@@ -885,6 +890,7 @@
             	A.companyID ,
             	A.CHARACTERID ,
             	A.APPROVEFLAG ,
+            	D.APPROVEFLAG RESAPPROVEFLAG,
             	B.DISPLAYNAME OWNERNM  ,
             	B.DISPLAYNAME2 OWNERNM2  ,
             	B.DESCRIPTION DEPTNM  ,
@@ -1192,6 +1198,22 @@
 			AND 
 				OWNERID = #v_OWNERID#
 		]]>
+	</select>
+  
+  	<select id="MResourceDAO.getResBrdDetail" parameterClass="Map" resultClass="MResourceScheduleVO">
+		<![CDATA[
+			SELECT
+				BRD_ID OWNERID,
+				APPROVEFLAG RESAPPROVEFLAG,
+				BRD_NM BRDNM
+			FROM 
+			    TBL_RS_BRD	
+			WHERE
+				BRD_ID = #v_PBRDID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	
 	</select>
   
 </sqlMap>
