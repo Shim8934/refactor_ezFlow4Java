@@ -447,10 +447,10 @@
 		]]>
 
 		<isEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+			<isEqual property="taskStatus" compareValue="0" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="taskStatus" compareValue="2" prepend="AND">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
@@ -463,10 +463,10 @@
 		</isEqual>
 		
 		<isNotEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+			<isEqual property="taskStatus" compareValue="0" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="taskStatus" compareValue="2" prepend="AND">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
@@ -556,10 +556,10 @@
 		]]>
 		
 		<isEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+			<isEqual property="taskStatus" compareValue="0" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="taskStatus" compareValue="2" prepend="AND">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
@@ -604,10 +604,10 @@
 		]]>
 		
 		<isNotEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
+			<isEqual property="taskStatus" compareValue="0" prepend="AND">
 				taskstatus != 3
 			</isEqual>
-			<isEqual property="taskStatus" compareValue="2" prepend="AND">
+			<isEqual property="taskStatus" compareValue="1" prepend="AND">
 				taskstatus = 3
 			</isEqual>
 			
