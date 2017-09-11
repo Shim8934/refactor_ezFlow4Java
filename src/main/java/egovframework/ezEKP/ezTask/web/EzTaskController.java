@@ -814,14 +814,11 @@ public class EzTaskController extends EgovFileMngUtil {
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();
     	
-    	String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
-    	
-    	String app = request.getParameter("app");
     	String type = request.getParameter("type");
     	String filter = request.getParameter("filter");
     	String chkValue = request.getParameter("chkValue");
     	String searchClass = request.getParameter("searchClass");
-    	String taskStatusCount = request.getParameter("taskStatusCount");
+    	String taskStatus = request.getParameter("taskStatus");
     	String startDate = request.getParameter("startDate");
     	String endDate = request.getParameter("endDate");
     	String useDate = "";
@@ -849,7 +846,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		}
     	}
 
-    	List<TaskInfoVO> list = ezTaskService.taskGetList(userID, startDate, endDate, offset, app, type, filter, chkValue, searchClass, taskStatusCount, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatus, tenantID);
     	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
@@ -858,47 +855,37 @@ public class EzTaskController extends EgovFileMngUtil {
     	
     	resultXML.append("<DATA>");
     	
-    	for (int i = 0; i < list.size(); i++) {
+    	for (TaskInfoVO vo : list) {
     		resultXML.append("<ROW>");
     		
-    		resultXML.append("<TASKID>" + list.get(i).getTaskID() + "</TASKID>");
-    		/*resultXML.append("<PARENTID>" + list.get(i).getParentID() + "</PARENTID>");
-    		resultXML.append("<OWNERID>" + list.get(i).getOwnerID() + "</OWNERID>");*/
-    		resultXML.append("<CREATORID>" + list.get(i).getCreatorID() + "</CREATORID>");
-    		resultXML.append("<CREATORNAME>" + list.get(i).getCreatorName() + "</CREATORNAME>");
-    		resultXML.append("<CREATORNAME2>" + list.get(i).getCreatorName2() + "</CREATORNAME2>");
-    		resultXML.append("<TASKSTATUS>" + list.get(i).getTaskStatus() + "</TASKSTATUS>");
-    		resultXML.append("<COMPLETERATE>" + list.get(i).getCompleteRate() + "</COMPLETERATE>");
-    		resultXML.append("<COMPLETEDATE>" + list.get(i).getCompleteDate() + "</COMPLETEDATE>");
-    		resultXML.append("<IMPORTANCE>" + list.get(i).getImportance() + "</IMPORTANCE>");
-    		resultXML.append("<STARTDATE>" + list.get(i).getStartDate() + "</STARTDATE>");
-    		resultXML.append("<ENDDATE>" + list.get(i).getEndDate() + "</ENDDATE>");
-    		resultXML.append("<TITLE>" + commonUtil.cleanValue(list.get(i).getTitle()) + "</TITLE>");
-    		resultXML.append("<HASATTACH>" + list.get(i).getHasAttach() + "</HASATTACH>");
+    		resultXML.append("<TASKID>" + vo.getTaskID() + "</TASKID>");
+    		resultXML.append("<CREATORID>" + vo.getCreatorID() + "</CREATORID>");
+    		resultXML.append("<CREATORNAME>" + vo.getCreatorName() + "</CREATORNAME>");
+    		resultXML.append("<CREATORNAME2>" + vo.getCreatorName2() + "</CREATORNAME2>");
+    		resultXML.append("<TASKSTATUS>" + vo.getTaskStatus() + "</TASKSTATUS>");
+    		resultXML.append("<COMPLETERATE>" + vo.getCompleteRate() + "</COMPLETERATE>");
+    		resultXML.append("<IMPORTANCE>" + vo.getImportance() + "</IMPORTANCE>");
+    		resultXML.append("<STARTDATE>" + vo.getStartDate() + "</STARTDATE>");
+    		resultXML.append("<ENDDATE>" + vo.getEndDate() + "</ENDDATE>");
+    		resultXML.append("<TITLE>" + commonUtil.cleanValue(vo.getTitle()) + "</TITLE>");
+    		resultXML.append("<HASATTACH>" + vo.getHasAttach() + "</HASATTACH>");
 
     		List<TaskCommentVO> taskCommentList = null;
     		int commentLength = 0;
 
-    		if (list.get(i).getHasComment().equals("Y")) {
-				taskCommentList = ezTaskService.getCommentList(list.get(i).getTaskID(), offset, primary, tenantID);
+    		if (vo.getHasComment().equals("Y")) {
+				taskCommentList = ezTaskService.getCommentList(vo.getTaskID(), offset, primary, tenantID);
 				commentLength = taskCommentList.size();
     		}
 
     		resultXML.append("<HASCOMMENT>" + commentLength + "</HASCOMMENT>");
-    		resultXML.append("<PERSONID>" + list.get(i).getPersonID() + "</PERSONID>");
-    		resultXML.append("<PERSONNAME>" + list.get(i).getPersonName() + "</PERSONNAME>");
-    		resultXML.append("<PERSONNAME2>" + list.get(i).getPersonName2() + "</PERSONNAME2>");
-    		resultXML.append("<TASKTYPE>" + list.get(i).getTaskType() + "</TASKTYPE>");
-    		/*resultXML.append("<TASKPERSONID>" + list.get(i).getTaskPersonID() + "</TASKPERSONID>");
-    		resultXML.append("<TASKPERSONNAME>" + list.get(i).getTaskPersonName() + "</TASKPERSONNAME>");
-    		resultXML.append("<TASKPERSONNAME2>" + list.get(i).getTaskPersonName2() + "</TASKPERSONNAME2>");*/
-    		resultXML.append("<MEMO>" + commonUtil.cleanValue(list.get(i).getMemo()) + "</MEMO>");
+    		resultXML.append("<PERSONID>" + vo.getPersonID() + "</PERSONID>");
+    		resultXML.append("<PERSONNAME>" + vo.getPersonName() + "</PERSONNAME>");
+    		resultXML.append("<PERSONNAME2>" + vo.getPersonName2() + "</PERSONNAME2>");
+    		resultXML.append("<TASKTYPE>" + vo.getTaskType() + "</TASKTYPE>");
+    		resultXML.append("<MEMO>" + commonUtil.cleanValue(vo.getMemo()) + "</MEMO>");
     		
     		resultXML.append("</ROW>");
-    		
-    		if (list.get(i).getTaskType().equals("1")) {
-    			
-    		}
     	}
 
     	resultXML.append("<CNT>" + cnt.split(",")[0] + "</CNT>");
