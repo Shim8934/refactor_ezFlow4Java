@@ -359,7 +359,7 @@
 	<select id="EzTaskDAO.getTaskList" resultClass="TaskInfoVO">
 	   <![CDATA[
 		    SELECT
-		    	A.taskid,
+		    	DISTINCT(A.taskid),
 				creatorid,
 				creatorname,
 				creatorname2,
@@ -490,7 +490,7 @@
 	<select id="EzTaskDAO.getTaskCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		    SELECT
-		    	COUNT(A.taskID)
+		    	COUNT(DISTINCT(A.taskID))
 			FROM
 				TBL_TASK A
 			JOIN
@@ -538,7 +538,7 @@
 	<select id="EzTaskDAO.getTaskCount2" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		    SELECT
-		    	COUNT(A.taskID)
+		    	COUNT(DISTINCT(A.taskID))
 			FROM
 				TBL_TASK A
 			JOIN
