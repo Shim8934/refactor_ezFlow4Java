@@ -148,4 +148,34 @@ public class MOrganGWController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/mobile/ezorgan/depts/{deptID}/userList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mGetDeptMemberList(HttpServletRequest request, @PathVariable String deptID) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userID");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, userInfo.getLang(), userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", mOrganListVOs);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}		
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] ended.");
+		
+		return result;
+	}
 }

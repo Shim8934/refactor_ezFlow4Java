@@ -13,6 +13,12 @@ public class MOrganListVO {
 	private String expand;
 	/** 상위부서아이디*/
 	private String highDeptID;
+	/** 유저명*/
+	private String userName;
+	/** 유저아이디*/
+	private String userID;
+	/** 유저 직급*/
+	private String title;
 	
 	public String getIsLast() {
 		return isLast;
@@ -49,5 +55,23 @@ public class MOrganListVO {
 	}
 	public void setHighDeptID(String highDeptID) {
 		this.highDeptID = highDeptID;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserID() {
+		return userID;
+	}
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }
