@@ -231,6 +231,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			shareVO.setSharerName2(map.get("sharerName2").toString() != null ? map.get("sharerName2").toString() : "");
 			shareVO.setSharerDeptName(map.get("sharerDeptName").toString());
 			shareVO.setSharerDeptName2(map.get("sharerDeptName2").toString() != null ? map.get("sharerDeptName2").toString() : "");
+			shareVO.setSharerEmail(map.get("sharerEmail").toString());
 			shareList.add(shareVO);
 		}
 		
@@ -762,7 +763,7 @@ public class EzTaskController extends EgovFileMngUtil {
 					strShareID.append(vo.getSharerID() + ";");
 					strShareDeptName.append(vo.getSharerDeptName() + ";");
 					strShareDeptName2.append(vo.getSharerDeptName2() + ";");
-					strShareEmail.append(vo.getEmail() + ";");
+					strShareEmail.append(vo.getSharerEmail() + ";");
                 }
 				
 				strShare.append(strShareName.toString() + "||" + strShareName1.toString() + "||" + strShareName2.toString() + "||" + strShareID.toString() + "||" + strShareDeptName.toString() + "||" + strShareDeptName2 + "||" + strShareEmail.toString());

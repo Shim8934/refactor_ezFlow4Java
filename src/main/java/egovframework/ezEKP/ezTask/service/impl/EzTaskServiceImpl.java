@@ -244,6 +244,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("creatorID", vo.getCreatorID());
 		map.put("creatorName", vo.getCreatorName());
 		map.put("creatorName2", vo.getCreatorName2());
+		map.put("creatorDeptName", vo.getCreatorDeptName());
+		map.put("creatorDeptName2", vo.getCreatorDeptName2());
+		map.put("creatorEmail", vo.getCreatorEmail());
 		map.put("nowDate", nowDate);
 		map.put("taskStatus", vo.getTaskStatus());
 		map.put("completeRate", 0);
@@ -261,15 +264,15 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("personName2", vo.getPersonName2());
 		map.put("personDeptName", vo.getPersonDeptName());
 		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("personEmail", vo.getPersonEmail());
 		map.put("memo", vo.getMemo());
 		map.put("tenantID", tenantID);
 		
 		String taskID = ezTaskDAO.insertTask(map);
-		vo.setTaskID(taskID);
 		
 		if (vo.getHasShare().equals("Y")) {
 			for (TaskShareVO shareVO : vo.getShareList()) {
-				insertTaskShare(vo, shareVO, nowDate, offset, tenantID);
+				insertTaskShare(taskID, shareVO, nowDate, tenantID);
 			}
 		}
 		
@@ -300,6 +303,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("personName2", vo.getPersonName2());
 		map.put("personDeptName", vo.getPersonDeptName());
 		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("personEmail", vo.getPersonEmail());
 		map.put("memo", vo.getMemo());
 		map.put("tenantID", tenantID);
 		
@@ -309,7 +313,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		if (vo.getHasShare().equals("Y")) {
 			for (TaskShareVO shareVO : vo.getShareList()) {
-				insertTaskShare(vo, shareVO, nowDate, offset, tenantID);
+				insertTaskShare(taskID, shareVO, nowDate, tenantID);
 			}
 		}
 		
@@ -319,45 +323,22 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	/* 공유자 추가 */
-	private void insertTaskShare(TaskInfoVO vo, TaskShareVO shareVO, String nowDate, String offset, int tenantID) throws Exception {
+	private void insertTaskShare(String taskID, TaskShareVO shareVO, String nowDate, int tenantID) throws Exception {
 		logger.debug("insertTaskShare started.");
-		logger.debug("taskID = " + vo.getTaskID() + " || sharerID = " + shareVO.getSharerID() + " || sharerDeptName = " + shareVO.getSharerDeptName());
+		logger.debug("taskID = " + taskID + " || sharerID = " + shareVO.getSharerID() + " || sharerDeptName = " + shareVO.getSharerDeptName());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("taskID", vo.getTaskID());
+		map.put("taskID", taskID);
 		map.put("sharerID", shareVO.getSharerID());
 		map.put("sharerName", shareVO.getSharerName());
 		map.put("sharerName2", shareVO.getSharerName2());
 		map.put("sharerDeptName", shareVO.getSharerDeptName());
 		map.put("sharerDeptName2", shareVO.getSharerDeptName2());
-		
-		map.put("parentID", vo.getTaskID());
-		map.put("creatorID", vo.getCreatorID());
-		map.put("creatorName", vo.getCreatorName());
-		map.put("creatorName2", vo.getCreatorName2());
+		map.put("sharerEmail", shareVO.getSharerEmail());
 		map.put("nowDate", nowDate);
-		map.put("taskStatus", vo.getTaskStatus());
-		map.put("completeRate", 0);
-		map.put("completeDate", "");
-		map.put("importance", vo.getImportance());
-		map.put("hasShare", vo.getHasShare());
-		map.put("hasAttach", vo.getHasAttach());
-		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
-		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
-		map.put("title", vo.getTitle());
-		map.put("contentPath", vo.getContentPath());
-		map.put("taskType", vo.getTaskType());
-		map.put("personID", vo.getPersonID());
-		map.put("personName", vo.getPersonName());
-		map.put("personName2", vo.getPersonName2());
-		map.put("personDeptName", vo.getPersonDeptName());
-		map.put("personDeptName2", vo.getPersonDeptName2());
-		map.put("memo", vo.getMemo());
-		map.put("insertType", "share");
 		map.put("tenantID", tenantID);
 		
 		ezTaskDAO.insertTaskShare(map);
-		ezTaskDAO.insertTask(map);
 		
 		logger.debug("insertTaskShare ended.");
 	}

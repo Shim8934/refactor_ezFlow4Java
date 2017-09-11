@@ -73,15 +73,9 @@
 				sharername2,
 				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname,
 				sharerdeptname2,
-				B.mail as email
+				shareremail
 			FROM
-				TBL_TASKSHARE A
-			JOIN
-				TBL_USERMASTER B
-			ON
-				A.tenantid = B.tenant_id
-			AND
-				A.sharerid = B.cn
+				TBL_TASKSHARE
 			WHERE
 				tenantid = #tenantID#
 			AND
@@ -111,15 +105,15 @@
 	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASK
-				(parentid,
-				ownerid,
-				creatorid,
+				(creatorid
 				creatorname,
 				creatorname2,
+				creatordeptname,
+				creatordeptname2,
+				creatoremail,
 				createdate,
 				taskstatus,
 				completerate,
-				completedate,
 				importance,
 				hasshare,
 				hasattach,
@@ -134,9 +128,7 @@
 				personname2,
 				persondeptname,
 				persondeptname2,
-				taskpersonid,
-				taskpersonname,
-				taskpersonname2,
+				personemail,
 				memo,
 				tenantid)
 			VALUES
@@ -144,15 +136,15 @@
 		
 		<isNull property="insertType">
 			<![CDATA[
-				(0,
-				#ownerID#,
-				#creatorID#,
+				(#creatorID#,
 				#creatorName#,
 				#creatorName2#,
+				#creatorDeptName#,
+				#creatorDeptName#2,
+				#creatorEmail#,
 				#nowDate#,
 				#taskStatus#,
 				0,
-				'',
 				#importance#,
 				#hasShare#,
 				#hasAttach#,
@@ -167,47 +159,12 @@
 				#personName2#,
 				#personDeptName#,
 				#personDeptName2#,
-				#personID#,
-				#personName#,
-				#personName2#,
+				#personEmail#,
 				#memo#,
 				#tenantID#)
 			]]>
 		</isNull>
 		
-		<isNotNull property="insertType">
-			<![CDATA[
-				(#parentID#,
-				#sharerID#,
-				#creatorID#,
-				#creatorName#,
-				#creatorName2#,
-				#nowDate#,
-				#taskStatus#,
-				0,
-				'',
-				#importance#,
-				#hasShare#,
-				#hasAttach#,
-				#startDate#,
-				#endDate#,
-				#title#,
-				#contentPath#,
-				#taskType#,
-				#nowDate#,
-				#sharerID#,
-				#sharerName#,
-				#sharerName2#,
-				#sharerDeptName#,
-				#sharerDeptName2#,
-				#personID#,
-				#personName#,
-				#personName2#,
-				#memo#,
-				#tenantID#)
-			]]>
-		</isNotNull>
-        
 		<selectKey keyProperty="taskID" resultClass="String">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -222,8 +179,8 @@
 				sharername2,
 				sharerdeptname,
 				sharerdeptname2,
+				shareremail,
 				updatetime,
-				neworder,
 				tenantid)
 			VALUES
 				(#taskID#,
@@ -232,8 +189,8 @@
 				#sharerName2#,
 				#sharerDeptName#,
 				#sharerDeptName2#,
+				#shareremail#,
 				#nowDate#,
-				'Y',
 				#tenantID#)
         ]]>
     </insert>
@@ -256,9 +213,7 @@
 				personname2 = #personName2#,
 				persondeptname = #personDeptName#,
 				persondeptname2 = #personDeptName2#,
-				taskpersonid = #personID#,
-				taskpersonname = #personName#,
-				taskpersonname2 = #personName2#,
+				personemail = #personEmail#,
 				memo = #memo#
     		WHERE
     			tenantID = #tenantID#

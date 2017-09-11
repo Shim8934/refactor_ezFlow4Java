@@ -184,7 +184,9 @@ function on_keydown(evt) {
     }
     check_name();
 }
+
 var retcheck = "";
+//어디에쓰는거지
 function check_name() {
     var name = document.getElementById("shareInput").value;
     name = ReplaceText(name, ",", ";");
@@ -292,40 +294,6 @@ function check_name() {
     document.getElementById("shareInput").value = "";
 }
 
-function retevent() {
-    if (document.nameValue.name.value != "") {
-        if (g_share == null)
-            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-        if (document.nameValue.id.value != userid) {
-            for (var j = 0; j < g_share["id"].length; j++)
-                if (g_share["id"][j] == document.nameValue.id.value) {
-                    alert("" + strLang18 + "");
-                    return;
-                }
-        }
-        else {
-            retcheck.alert("" + strLang20 + "");
-            retcheck.close();
-            return;
-        }
-        var length = g_share["name"].length;
-        g_share["name"][length] = document.nameValue.name.value;
-        g_share["name1"][length] = document.nameValue.name.value;
-        g_share["name2"][length] = document.nameValue.name2.value;
-        g_share["id"][length] = document.nameValue.id.value;
-        g_share["deptname"][length] = document.nameValue.deptname.value;
-        g_share["deptname2"][length] = document.nameValue.deptname2.value;
-        g_share["email"][length] = document.nameValue.email.value;
-        if (length == 0) {
-                setNodeText(document.getElementById("receiverlist"), g_share["name"][length]);
-        }
-        else {
-            setNodeText(document.getElementById("receiverlist"), getNodeText(document.getElementById("receiverlist")) + ", " + g_share["name"][length]);
-        }
-    }
-}
-
 var g_progresswin;
 var g_fileList;
 var g_fileNameList = new Array();
@@ -339,112 +307,6 @@ function status_change(fileinfo) {
     try {
         g_progresswin.document.Script.fileinfo_change(fileinfo);
     } catch (e) { }
-}
-function restore_deleted() {
-    if (repetitiondel == "") {
-        alert("" + strLang25 + "");
-        return;
-    }
-
-    if (!confirm("" + strLang26 + ""))
-        return;
-
-    var xmlHTTP = createXMLHttpRequest();
-    var xmlDom = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlDom, objNode, "DATA");
-    createNodeAndInsertText(xmlDom, objNode, "DATA", taskid);
-
-    xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_restore_delete.aspx", false);
-    xmlHTTP.send(xmlDom);
-
-    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-        alert("" + strLang27 + "");
-    else {
-        alert("" + strLang28 + "");
-
-        try { window.opener.document.Script.RefreshView() } catch (e) { }
-        repetitiondel = "";
-        show_repetition_info();
-    }
-}
-
-var g_sdate = null;
-var g_edate = null;
-var task_repetition_cross_dialogArguments = new Array();
-
-function config_repeat() {
-
-    var prameter = new Array();
-    if (g_sdate == null) {
-        prameter["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-        prameter["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-    }
-    else {
-        prameter["SDATE"] = g_sdate;
-        prameter["EDATE"] = g_edate;
-    }
-
-    prameter["REPETITION"] = repetition;
-
-    task_repetition_cross_dialogArguments[0] = prameter;
-    task_repetition_cross_dialogArguments[1] = config_repeat_Complete;
-
-    DivPopUpShow(450, 460, "/myoffice/ezTask/htm/task_repetition_Cross.aspx");
-}
-
-function config_repeat_Complete(retVal) {
-
-    if (retVal == "cancel" || typeof (retVal) == "undefined") {
-    }
-    else {
-        if (retVal["REPETITION"] == "") {
-            repetition = "";
-            document.getElementById("periodblock").style.display = "";
-            document.getElementById("repeatblock").style.display = "none";
-            document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-        }
-        else {
-            g_sdate = retVal["SDATE"];
-            g_edate = retVal["EDATE"];
-            repetition = retVal["REPETITION"];
-            show_repetition_info();
-        }
-    }
-    DivPopUpHidden();
-
-}
-
-
-function show_repetition_info() {
-
-    document.getElementById("periodblock").style.display = "none";
-    document.getElementById("repeatblock").style.display = "";
-
-    var info = repetition.split("|");
-    var repeatinfo = "" + strLang29 + "";
-
-    switch (info[2]) {
-        case "0":
-            repeatinfo += "" + strLang30 + "";
-            break;
-        case "1":
-            repeatinfo += "" + strLang31 + "";
-            break;
-        case "2":
-            repeatinfo += "" + strLang32 + "";
-            break;
-        case "3":
-            repeatinfo += "" + strLang33 + "";
-            break;
-        default:
-            break;
-    }
-
-    if (repetitiondel != "")
-        repeatinfo += ", " + strLang34 + "" + repetitiondel + " " + strLang35 + "";
-
-    document.getElementById("repeatinfo").innerHTML = repeatinfo;
 }
 
 function ReplaceText(orgStr, findStr, replaceStr) {
@@ -542,7 +404,8 @@ function save_task() {
     				"sharerName" : g_share["name"][i],
     	    		"sharerName2" : g_share["name2"][i],
     	    		"sharerDeptName" : g_share["deptname"][i],
-    	    		"sharerDeptName2" : g_share["deptname2"][i]};
+    	    		"sharerDeptName2" : g_share["deptname2"][i],
+    	    		"sharerEmail" : g_share["email"][i]};
     		shareList.push(share);
     	}
     }
