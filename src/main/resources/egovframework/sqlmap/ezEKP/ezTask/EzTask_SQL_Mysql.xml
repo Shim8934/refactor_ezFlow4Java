@@ -405,8 +405,6 @@
 			<![CDATA[
 				AND
 					(personid = #userID# OR B.sharerid = #userID#)
-				AND
-					tasktype = 1
 			]]>
 		</isEqual>
 		
@@ -497,27 +495,13 @@
 				TBL_TASKSHARE B
 			ON
 				A.tenantid = B.tenantid
-			AND
-				A.taskid = B.taskid
 			WHERE
 				A.tenantid = #tenantID#
+			AND
+				(A.creatorid = #userID# and A.tasktype = 1)
+			OR
+				(B.sharerid = #userID# and A.taskid = B.taskid)
 		]]>
-		
-		<isEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="0" prepend="AND">
-				taskstatus != 3
-			</isEqual>
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
-				taskstatus = 3
-			</isEqual>
-			
-			<![CDATA[
-				AND
-					(personid = #userID# OR B.sharerid = #userID#)
-				AND
-					tasktype = 1
-			]]>
-		</isEqual>
 
 		<isNotEqual property="filter" compareValue="">
         	<isEqual property="chkValue" compareValue="title">
@@ -545,27 +529,11 @@
 				TBL_TASKSHARE B
 			ON
 				A.tenantid = B.tenantid
-			AND
-				A.taskid = B.taskid
 			WHERE
 				A.tenantid = #tenantID#
+			AND
+				(A.creatorid = #userID# and A.tasktype != 1)
 		]]>
-		
-		<isNotEqual property="type" compareValue="1">
-			<isEqual property="taskStatus" compareValue="0" prepend="AND">
-				taskstatus != 3
-			</isEqual>
-			<isEqual property="taskStatus" compareValue="1" prepend="AND">
-				taskstatus = 3
-			</isEqual>
-			
-			<![CDATA[
-				AND
-					(creatorid = #userID#)
-				AND
-					tasktype != 1
-			]]>
-		</isNotEqual>
 
 		<isNotEqual property="filter" compareValue="">
         	<isEqual property="chkValue" compareValue="title">
