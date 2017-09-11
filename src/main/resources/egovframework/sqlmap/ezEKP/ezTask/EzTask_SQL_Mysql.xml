@@ -515,7 +515,7 @@
         	<isEqual property="chkValue" compareValue="personName">
 	        	<![CDATA[
 	        		AND
-	        			taskpersonname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -547,7 +547,7 @@
         	<isEqual property="chkValue" compareValue="personName">
 	        	<![CDATA[
 	        		AND
-	        			taskpersonname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
