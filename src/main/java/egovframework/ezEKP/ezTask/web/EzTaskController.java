@@ -226,6 +226,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			logger.debug("sharerName2 = " + map.get("sharerName2").toString());
 			logger.debug("sharerDeptName = " + map.get("sharerDeptName").toString());
 			logger.debug("sharerDeptName2 = " + map.get("sharerDeptName2").toString());
+			logger.debug("sharerEmail = " + map.get("sharerEmail").toString());
 			shareVO.setSharerID(map.get("sharerID").toString());
 			shareVO.setSharerName(map.get("sharerName").toString());
 			shareVO.setSharerName2(map.get("sharerName2").toString() != null ? map.get("sharerName2").toString() : "");

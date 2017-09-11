@@ -26,6 +26,7 @@
 			var username2 = "${userInfo.displayName2 }";
 			var deptname = "${userInfo.deptName1 }";
 			var deptname2 = "${userInfo.deptName2 }";
+			var useremail = "${userInfo.email }";
 			var taskid = "${taskInfoVO.taskID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";

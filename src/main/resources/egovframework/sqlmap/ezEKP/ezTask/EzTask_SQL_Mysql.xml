@@ -105,7 +105,7 @@
 	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASK
-				(creatorid
+				(creatorid,
 				creatorname,
 				creatorname2,
 				creatordeptname,
@@ -117,6 +117,7 @@
 				importance,
 				hasshare,
 				hasattach,
+				hascomment,
 				startdate,
 				enddate,
 				title,
@@ -129,6 +130,7 @@
 				persondeptname,
 				persondeptname2,
 				personemail,
+				personattach,
 				memo,
 				tenantid)
 			VALUES
@@ -140,7 +142,7 @@
 				#creatorName#,
 				#creatorName2#,
 				#creatorDeptName#,
-				#creatorDeptName#2,
+				#creatorDeptName2#,
 				#creatorEmail#,
 				#nowDate#,
 				#taskStatus#,
@@ -148,6 +150,7 @@
 				#importance#,
 				#hasShare#,
 				#hasAttach#,
+				'N',
 				#startDate#,
 				#endDate#,
 				#title#,
@@ -160,6 +163,7 @@
 				#personDeptName#,
 				#personDeptName2#,
 				#personEmail#,
+				'N',
 				#memo#,
 				#tenantID#)
 			]]>
@@ -189,7 +193,7 @@
 				#sharerName2#,
 				#sharerDeptName#,
 				#sharerDeptName2#,
-				#shareremail#,
+				#sharerEmail#,
 				#nowDate#,
 				#tenantID#)
         ]]>

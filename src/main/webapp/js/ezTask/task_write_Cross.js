@@ -369,17 +369,6 @@ function save_task() {
     importance = $(":input:radio[name=important]:checked").val();
 
     var sharelist = document.getElementById("sharelist").innerHTML;
-	var shareList2 = document.getElementById("shareList2").innerHTML;
-	var shareID = document.getElementById("shareID").innerHTML;
-	var shareDept = document.getElementById("shareDept").innerHTML;
-	var shareDept2 = document.getElementById("shareDept2").innerHTML;
-	
-	var taskPersonList = document.getElementById("personlist").innerHTML;
-	var taskpersonList2 = document.getElementById("personList2").innerHTML;
-	var taskpersonID = document.getElementById("personID").innerHTML;
-	var taskpersonDept = document.getElementById("personDept").innerHTML;
-	var taskpersonDept2 = document.getElementById("personDept2").innerHTML;
-	
 	var memo = "";
 
 	if (sharelist != "") {
@@ -416,6 +405,7 @@ function save_task() {
         personName2 = username2;
         personDeptName = deptname;
         personDeptName2 = deptname2;
+        personEmail = useremail;
     } else {
         if (g_person != null) {
         	personID =  g_person["id"][0];
@@ -423,6 +413,7 @@ function save_task() {
             personName2 = g_person["name2"][0];
             personDeptName = g_person["deptname"][0];
             personDeptName2 = g_person["deptname2"][0];
+            personEmail = g_person["email"][0];
         } else {
         	alert(strLang57);
         	return;
@@ -473,6 +464,7 @@ function save_task() {
 	        personName2 : personName2,
 	        personDeptName : personDeptName,
 	        personDeptName2 : personDeptName2,
+	        personEmail : personEmail,
 			hasShare : hasshare,
 			taskType : tasktype,
 			importance : importance,
