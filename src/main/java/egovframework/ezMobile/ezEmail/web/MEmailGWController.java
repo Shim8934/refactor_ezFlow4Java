@@ -16,12 +16,14 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -94,6 +96,7 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -616,56 +619,621 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	/**
-	 * 모바일 G/W 이메일 [GET] 서명 조회
+	 * 모바일 G/W 이메일 [GET] 쓰기
 	 */
-	@RequestMapping(value="/mobile/ezemail/sign/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object mMailSign(HttpServletRequest request, @PathVariable String userId){
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/sign/users/{userId}] started.");
+	@RequestMapping(value="/mobile/ezemail/write/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object mMailWrite(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject){
+		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/write/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
-
+		IMAPAccess ia = null;
+		
 		try{
-			int tenantID = 0;
+			String from = "";
+			String to = "";
+			String cc = "";
+			String bcc = "";
+			
+			//String body = "";
+			String tempBody = "";
+			String bodyValue = "";
+			
+			String subject = "";
+			String url = "";
+			String attach = "";
+			String importance = "1";
+			String isEach = "FALSE";
+			String bodyType = "0";
+			String replySendTime = "0";
+			String replyReadTime = "1";
+			String delaySendDate = "";
+			String unread = "";
+			String reSendFlag = "N";
+			String folderPath = "";
+			
+			String boardID = "";
+			String itemID = "";
+			String docHref = "";
+			String docID = "";
+			String docImagCnt = "";
+			String docTarget = "";
+			String retransType = "";
+			
+			String fileUploadType = "";
+			String newWindowId = "";
+			
+			String cmd = "";
+			String folderId = "";
+			String messageId = "";
+			
+			if (jsonObject.get("cmd") != null) {
+				cmd = (String) jsonObject.get("cmd");
+			}
+			
+			if (jsonObject.get("folderId") != null) {
+				folderId = (String) jsonObject.get("folderId");
+			}
+			
+			if (jsonObject.get("messageId") != null) {
+				messageId = (String) jsonObject.get("messageId");
+			}
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
-			
-			tenantID = info.getTenantId();
+			String password = jspw;
 
-			String mailSign1 = "";
-			String mailSign2 = "";
-			String mailSign3 = "";
-			String mailSignSel = "0";
+			int tenantID = 0;
+			tenantID = info.getTenantId();
 			
-			LOGGER.debug("tenantID" + tenantID + "userId" + userId);
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
 			
-			MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(tenantID, userId);
-	        
-	        if (mailSignatureVO != null) {
-	        	mailSign1 = mailSignatureVO.getContent1();
-	            mailSign2 = mailSignatureVO.getContent2();
-	            mailSign3 = mailSignatureVO.getContent3();
-	            mailSignSel = mailSignatureVO.getUseFlag().trim();
-	        }
-	        
-	        JSONObject data = new JSONObject();
-	        data.put("mailSignatureVO",mailSignatureVO);
+			String msgto = "";
+			if (request.getParameter("msgto") != null) {
+				msgto = request.getParameter("msgto").trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
+			}
+			
+			if (!messageId.equals("") && !folderId.equals("")){
+				long uid = 0;
+				
+				LOGGER.debug("cmd : " + cmd +", folderId : " + folderId + ", messageId : " +  messageId);
+				
+				folderPath = folderId;
+				uid = Long.parseLong(messageId);
+				
+				LOGGER.debug("tenantID" + tenantID + "userId" + userId);
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							userEmail, password, egovMessageSource, locale);
+					ia.makeTopLevelFolders();
+				} catch (Exception e){
+					e.printStackTrace();
+				} finally {
+					if (ia != null) {
+						ia.close();
+						ia = null;
+					}
+				}
+				
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale);
+				
+	    		Folder orgFolder = ia.getFolder(folderPath);
+	    		orgFolder.open(Folder.READ_ONLY);       
+	    		
+				// retrieve the Drafts folder name
+	        	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+	    		
+	        	// retrieve the Sent folder name
+	        	String sentFolderName = egovMessageSource.getMessage("ezEmail.t99000026", locale);
+	        	
+	    		// retrieve the specified message.
+				Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
+				
+				if (orgMessage != null) {				        	
+		        	// in case of editing a message in Drafts folder.
+		        	if (folderPath.equals(draftsFolderName) && cmd.equals("EDIT")) {
+		        		
+		        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
+		        			from = ((InternetAddress)orgMessage.getFrom()[0]).getAddress();
+		        		}
+		        		
+						// retrieve the TO addresses from the message.
+						Address[] addresses = orgMessage.getRecipients(Message.RecipientType.TO);
+						to = ezEmailUtil.getStringListOfAddresses(addresses, true);
+						
+						// retrieve the CC addresses from the message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+						cc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+						
+						// retrieve the BCC addresses from the message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
+						bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+						
+						// retrieve the subject from the message.
+						subject = ezEmailUtil.getSubject(orgMessage);
+						subject = (subject != null) ? subject : "";
+						
+						// analyze the message and retrieve the attached file list.
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale);					
+						tempBody = bodyInfoList.get(0);
+						
+						if (attachedFileList.size() > 0) {
+			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+			                
+							for (int i = 0; i < attachedFileList.size(); i++) {
+								Map<String, String> fileInfo = attachedFileList.get(i);
+								
+				                attachXmlList.append("<NODE>");
+				                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
+				                attachXmlList.append("<PUPLOADSN>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PUPLOADSN>");
+				                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
+				                attachXmlList.append("<PFILENAME>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PFILENAME>");
+				                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
+				                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
+				                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+				                attachXmlList.append("</NODE>");
+							}
+							
+			                attachXmlList.append("</NODES></ROOT>");						
+			                attach = attachXmlList.toString();	
+						}
+						
+		        	}
+		        	// in case of resending
+		        	else if (folderPath.equals(sentFolderName) && cmd.equals("RESEND") && !msgto.equals("")) {
+		        		//임시보관함에 메시지 임시저장
+		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+		        				userEmail, password);
+		        		MimeMessage resendMessage = sa.createMimeMessage();
+		        		
+		        		resendMessage.setFlag(Flags.Flag.SEEN, true);
+		        		
+		        		if (orgMessage.isMimeType("multipart/related")) {
+			        		MimeMultipart relatedPart = new MimeMultipart("related");
+			        		
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        			resendMessage.setContent(relatedPart);
+			        		}	        			
+			        		else {
+			        			resendMessage.setText("placeholder");
+			        		}	        					        		
+	        			}
+	        			else if (orgMessage.isMimeType("multipart/*")) {
+			                MimeMultipart mixedPart = new MimeMultipart();
+			                
+			                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
+			                
+			                resendMessage.setContent(mixedPart);	    
+	        			}
+	        			else {
+	        				resendMessage.setText("placeholder");
+	        			}
+		        		
+		        		Folder draftsFolder = ia.getFolder(draftsFolderName);
+		        		draftsFolder.open(Folder.READ_WRITE);       
+		        		long draftUID = 0;
+		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{resendMessage});
+		        		if (uids != null && uids[0] != null) {
+		        			draftUID = uids[0].uid;
+		        		} 	        		
+		        		url = String.valueOf(draftUID);
+		        		LOGGER.debug("draftUID=" + draftUID);
+		        		draftsFolder.close(true);
+		        		//END: 임시보관함에 메시지 임시저장
+		        		
+		        		reSendFlag = "Y";
+		        		
+		        		Address[] addresses = orgMessage.getAllRecipients();
+		        		for (Address address : addresses) {
+		        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
+								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
+								break;
+		        			}
+		        		}
+		        		
+		        		subject = orgMessage.getSubject();
+						subject = (subject != null) ? subject : "";
+		        		
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale);					
+						bodyValue = bodyInfoList.get(0);
+		        		
+		        		if (attachedFileList.size() > 0) {
+			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+			                
+							for (int i = 0; i < attachedFileList.size(); i++) {
+								Map<String, String> fileInfo = attachedFileList.get(i);
+								
+				                attachXmlList.append("<NODE>");
+				                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
+				                attachXmlList.append("<PUPLOADSN>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PUPLOADSN>");
+				                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
+				                attachXmlList.append("<PFILENAME>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PFILENAME>");
+				                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
+				                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
+				                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+				                attachXmlList.append("</NODE>");
+							}
+							
+			                attachXmlList.append("</NODES></ROOT>");						
+			                attach = attachXmlList.toString();				                
+						}
+		        		
+		                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
+		                
+		                //TODO: Sensitivity?
+		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
+		        		
+		        	}
+		        	// in case of replying
+		        	else if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
+		        		Message replyMessage = null; 
+		        		
+		        		// reply call is needed to create 'References' & 'In-Reply-To' headers.
+		        		if (cmd.equals("REPLY") || cmd.equals("FORWARD")) {
+		        			replyMessage = orgMessage.reply(false);
+		        		}
+		        		else {
+		        			replyMessage = orgMessage.reply(true);
+		        		}
+		        		
+		        		// ANSWERED flag needs to be cleared since the above reply method sets it.
+		        		orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+		        		
+		        		replyMessage.setFlag(Flags.Flag.SEEN, true);
+	
+		        		if (cmd.equals("FORWARD")) {
+		        			if (orgMessage.isMimeType("multipart/related")) {
+				        		MimeMultipart relatedPart = new MimeMultipart("related");
+				        		
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+				        			replyMessage.setContent(relatedPart);
+				        		}	        			
+				        		else {
+				        			replyMessage.setText("placeholder");
+				        		}	        					        		
+		        			}
+		        			else if (orgMessage.isMimeType("multipart/*")) {
+				                MimeMultipart mixedPart = new MimeMultipart();
+				                
+				                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
+				                
+				                replyMessage.setContent(mixedPart);	    
+		        			}
+		        			else {
+		        				replyMessage.setText("placeholder");
+		        			}
+		        		}
+		        		else {
+			        		MimeMultipart relatedPart = new MimeMultipart("related");
+			        		
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        			replyMessage.setContent(relatedPart);
+			        		}
+			        		else {
+			        			replyMessage.setText("placeholder");
+			        		}	        		
+		        		}
+	
+		        		Address[] addresses = null;
+		        		if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {
+							// retrieve the TO addresses from the reply message.
+							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+							String[] rawHeaders = orgMessage.getHeader("From");
+							String rawHeader = rawHeaders != null ? rawHeaders[0] : "";		
+							boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+							if (isPureAscii) {
+								rawHeaders = orgMessage.getHeader("To");
+								rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+								isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+							}
+							to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
+	
+							// retrieve the CC addresses from the reply message.
+							addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+							if (addresses != null) {
+								rawHeaders = orgMessage.getHeader("Cc");
+								rawHeader = rawHeaders != null ? rawHeaders[0] : "";																					
+								cc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
+							}
+							
+							// retrieve the BCC addresses from the reply message.
+							addresses = replyMessage.getRecipients(Message.RecipientType.BCC);
+							bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+		        		}
+						
+						// retrieve the subject from the message.
+						subject = ezEmailUtil.getSubject(orgMessage);
+						
+						if (subject != null && !subject.equals("")) {
+							String[] rawHeaders = orgMessage.getHeader("subject");
+							String rawHeader = rawHeaders[0];
+							
+							// if the subject contains Non-Ascii characters(violating the standard), 
+							// try to decode it by examining the characters.							
+							if (!ezEmailUtil.isPureAscii(rawHeader)) {
+								byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+								
+								subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+							}
+						}
+						
+						subject = (subject != null) ? subject : "";
+						String reStr = ""; 
+								
+						if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {		
+							reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+						}
+						else if (cmd.equals("FORWARD")) {
+							reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
+						}
+						
+						if (!subject.startsWith(reStr)) {
+							subject = reStr + ": " + subject;
+						}
+		        		
+						// retrieve the TO addresses from the original message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.TO);
+						String[] rawHeaders = orgMessage.getHeader("To");
+						String rawHeader = rawHeaders != null ? rawHeaders[0] : "";													
+						String orgTo = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
+						
+						// retrieve the CC addresses from the original message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+						rawHeaders = orgMessage.getHeader("Cc");
+						rawHeader = rawHeaders != null ? rawHeaders[0] : "";																			
+						String orgCc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
+						
+			            StringBuilder sb = new StringBuilder();
+			            sb.append("<hr tabindex=\"-1\">");
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+			            
+			            //set received date
+			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
+			            String offset = info.getOffSet();
+			            if (offset == null || offset.indexOf("|") == -1) {
+			    			LOGGER.error("Check the offset. Offset is null or offset format is wrong.");
+			    		} else {
+			    			String[] offsetArr = offset.split("\\|");
+			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+			    		}
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+			            
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+			            
+			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
+						if (orgMessageSubject != null && !orgMessageSubject.equals("")) {
+							rawHeaders = orgMessage.getHeader("subject");
+							rawHeader = rawHeaders[0];
+							
+							// if the subject contains Non-Ascii characters(violating the standard), 
+							// try to decode it by examining the characters.							
+							if (!ezEmailUtil.isPureAscii(rawHeader)) {
+								byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+								
+								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+							}
+						}			            
+			            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+						
+						// analyze the message and retrieve the attached file list.
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale);					
+						String tmphtmlbody = bodyInfoList.get(0);
+			            
+			            bodyValue = sb.toString() + tmphtmlbody;
+			            
+			            // 원본 메일 내용에 메일 서명 존재 시 변환 처리
+		                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
+		                	bodyValue = bodyValue.replaceAll("MailSignSent", "MailSignSent___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign1", "kaoni_sign1___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign2", "kaoni_sign2___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
+		                }
+		                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
+		                bodyValue = bodyValue.replaceAll("div id=\"MailSign\"", "div ");
+		                
+		                bodyValue = bodyValue.replaceAll("id=msgbody", "");
+	
+		                if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
+		                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
+		                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
+		                	bodyValue = "<body free>" + bodyValue + "</body>";
+		                }
+		                
+		                //임시보관함에 저장
+		        		Folder draftsFolder = ia.getFolder(draftsFolderName);
+		        		draftsFolder.open(Folder.READ_WRITE);       
+		        		
+		        		long draftUID = 0;
+		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{replyMessage});
+		        		if (uids != null && uids[0] != null) {
+		        			draftUID = uids[0].uid;
+		        		} 	        		
+		        		url = String.valueOf(draftUID);
+		        		
+		        		LOGGER.debug("draftUID=" + draftUID);
+		        		
+		        		draftsFolder.close(true);
+		                
+		        		//첨부파일 정보 추출
+		        		if (cmd.equals("FORWARD")) {
+							if (attachedFileList.size() > 0) {
+				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+				                
+								for (int i = 0; i < attachedFileList.size(); i++) {
+									Map<String, String> fileInfo = attachedFileList.get(i);
+									
+					                attachXmlList.append("<NODE>");
+					                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
+					                attachXmlList.append("<PUPLOADSN>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PUPLOADSN>");
+					                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
+					                attachXmlList.append("<PFILENAME>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PFILENAME>");
+					                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
+					                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
+					                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+					                attachXmlList.append("</NODE>");
+								}
+								
+				                attachXmlList.append("</NODES></ROOT>");						
+				                attach = attachXmlList.toString();				                
+							}											            	
+			            }
+		        		
+		        	}
+		        	
+		        	//set importance
+		        	if(cmd.equals("EDIT")) {
+		        		LOGGER.debug("EDIT MODE : set mail option start");
+		        		if (orgMessage.getHeader("X-Priority") != null) {
+		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+		        			if (tempImportance.equals("1")) {
+		        				importance = "2";
+		        			} else if (tempImportance.equals("5")) {
+		        				importance = "0";
+		        			} else {
+		        				importance = "1";
+		        			}
+		        		}
+		        		LOGGER.debug("importance=" + importance);
+		        	
+		        		//set isEachMail
+		        		if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
+		        			isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
+		        		}
+		        		//set bodyType
+		        		if (orgMessage.getHeader("Content-Type") != null) {
+		        			String tempBodyType = orgMessage.getHeader("Content-Type")[0];
+		        			
+		        			if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
+		        				bodyType = "1";
+		        			}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
+		        				bodyType = "0";
+		        			}
+		        		}
+		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
+		        			replySendTime = "1";
+		        		} else {
+		        			replySendTime = "0";
+		        		}
+		        		if (orgMessage.getHeader("Disposition-Notification-To") != null) {
+		        			replyReadTime = "1";
+		        		} else {
+		        			replyReadTime = "0";
+		        		}
+		        	
+		        		if (orgMessage.getHeader("Delivery-Date") != null) {
+		        			delaySendDate = orgMessage.getHeader("Delivery-Date")[0].trim();
+		        		} else {
+		        			delaySendDate = "";
+		        		}
+		        		
+		        		LOGGER.debug("EDIT MODE : set mail option end");
+		        	}
+				}
+				orgFolder.close(true);
+			}
+			
+			String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId());
+			String fromAddressHtml = "";
+			
+			if (useFromAddress != null) {
+				if (useFromAddress.equals("YES")) {
+					List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId());
+					
+					if (fromAddressList.size() < 2) {
+						useFromAddress = "NO";
+					} else {
+						StringBuilder sb = new StringBuilder();
+						sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
+						
+						boolean isValidFrom = false;
+						
+						for (String[] address : fromAddressList) {
+							if (from.equals(address[0])) {
+								isValidFrom = true;
+								break;
+							}
+						}
+						
+						if (!isValidFrom) {
+							from = userEmail;
+						}
+						
+						for (String[] address : fromAddressList) {
+							if (from.equals(address[0])) {
+								sb.append("<option value='" + address[0] + "' selected>" + address[0] + "</option>");
+							} else {
+								sb.append("<option value='" + address[0] + "'>" + address[0] + "</option>");
+							}
+						}
+						
+						sb.append("</select>");
+						sb.append("<label for='ex_select'>" + from + "</label>");
+						
+						fromAddressHtml = sb.toString();
+					}
+				}
+			} else {
+				useFromAddress = "NO";
+			}
+			
+	        String browser = ClientUtil.getClientInfo(request, "browser");
+			boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+			
+			
+			JSONObject data = new JSONObject();
 	        data.put("userEmail",userEmail);
-	        
+			data.put("to", to);
+			data.put("cc", cc);
+			data.put("bcc", bcc);
+			data.put("subject", subject);
+			data.put("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
+			data.put("url", url);
+			data.put("attach", attach);
+			data.put("folderPath", folderPath);
+			data.put("importance", importance);
+			data.put("isEach", isEach);
+			data.put("bodyType", bodyType);
+			data.put("replySendTime", replySendTime);
+			data.put("replyReadTime", replyReadTime);
+			data.put("delaySendDate", delaySendDate);
+			data.put("unread", unread);
+			data.put("bodyValue", bodyValue);
+			data.put("fileUploadType", fileUploadType);
+			data.put("tempBody", tempBody);
+			data.put("newWindowId", newWindowId);
+			data.put("serverName", serverName);
+			data.put("isCrossBrowser", isCrossBrowser);
+			data.put("useFromAddress", useFromAddress);
+			data.put("fromAddressHtml", fromAddressHtml);
+			
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", data);
-	        
+			
 		} catch (Exception e) {
+			if (e.getMessage().indexOf("NO APPEND failed.") > -1) {
+//				model.addAttribute("overQuota", true);
+				e.printStackTrace();
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			}
 			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");
+		} finally {
+			if (ia != null) {
+				ia.close();        	
+			}
 		}
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/sign/users/{userId}] ended.");	
+
+		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/write/users/{userId}] ended.");	
 		
 		return result;
 	}
@@ -883,7 +1451,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	            xmlList = strXML;
 	            
         	} catch(Exception e) {
-        		throw e;
+        		result.put("status", "error");
+    			result.put("code", 1);			
+    			result.put("data", "");	
         	} finally {
         		if (br != null) {
         			br.close();
@@ -906,7 +1476,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         		xmlList = strXML;
         		
         	} catch(Exception e) {
-        		throw e;
+        		e.printStackTrace();
         	} finally {
         		if (osw != null) {
         			osw.close();
@@ -926,6 +1496,89 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
+	
+	
+//	/**
+//	 * 임시저장메일 삭제 실행 함수
+//	 */
+//	
+//	@RequestMapping(value="/mobile/ezemail/mails/delDraft/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+//	public Object delDrafts(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+//		
+//		LOGGER.debug("delDrafts started.");
+//		
+//		try {
+//		
+//			String uidStr = "";
+//			String delid = "";
+//			
+//			if (jsonObject.get("uidStr") != null) {
+//				uidStr = (String) jsonObject.get("uidStr");
+//			}
+//			
+//			if (jsonObject.get("delid") != null) {
+//				delid = (String) jsonObject.get("delid");
+//			}
+//			
+//			String serverName = request.getHeader("x-user-host");
+//			
+//			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+//			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+//			String userEmail = info.getUserId() + "@" + domainName;
+//			String password = jspw;
+//			
+//			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+//			Locale locale = new Locale(ld);
+//			
+//			LOGGER.debug("uidStr=" + uidStr);
+//			
+//			long uid = 0;
+//			if (uidStr != null && !uidStr.equals("")) {
+//				uid = Long.parseLong(uidStr);
+//			}
+//			
+//			if (uid != 0) {
+//	    		
+//	    		IMAPAccess ia = null;
+//	    		try {
+//	    			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+//	    					userEmail, password, egovMessageSource, locale);
+//	    			
+//	    			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+//	    			folder.open(Folder.READ_WRITE);
+//	    			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+//	    			LOGGER.debug("message=" + message);
+//	    			
+//	    			if (message != null) {
+//	    				message.setFlag(Flags.Flag.DELETED, true);
+//	    			}
+//	    	        folder.close(true);
+//	    	        
+//	    		} catch (MessagingException e) {
+//	    			e.printStackTrace();
+//	    		} finally {
+//	    			if (ia != null) {
+//	    				ia.close();
+//	    			}
+//	    		}
+//			}
+//			
+//			//첨부파일 정보파일(templist) 삭제
+//			String delId = delid;
+//	        String realPath = commonUtil.getRealPath(request);
+//	        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
+//	        pDirPath += commonUtil.separator + delId + ".txt";
+//	        File f = new File(pDirPath);
+//	        if (f.exists()) {
+//	        	f.delete();
+//	        }
+//		} catch (Exception e) {
+//			
+//		}
+//        LOGGER.debug("delDrafts ended.");
+//        
+//		return "";
+//	}
 	
 	@RequestMapping(value="/mobile/ezemail/mails/attachsmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
@@ -2366,8 +3019,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			bcc = (String) jsonObject.get("bcc");
 		}
 		
-		if (jsonObject.get("textBody") != null) {
-			textBody = (String) jsonObject.get("textBody");
+		if (jsonObject.get("textbody") != null) {
+			textBody = (String) jsonObject.get("textbody");
 		}
 		
 		if (jsonObject.get("from") != null) {
@@ -3528,8 +4181,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								}
 							}
-							
-							toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+							if ( i == arrRecipientsTo.length - 1 ) {
+								toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+							} else {
+								toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "&nbsp;,&nbsp;";
+							}
 						}
 					}
 					

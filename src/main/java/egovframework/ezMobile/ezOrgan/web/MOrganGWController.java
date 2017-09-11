@@ -68,6 +68,7 @@ public class MOrganGWController {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			String filePath = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator;
 			
 			List <MPersonListVO> list = mOrganService.getPersonList(info.getCompanyId(), info.getTenantId(),pSearchText,rowNum);
 			int listCount = mOrganService.getPersonListCount(info.getCompanyId(), info.getTenantId(), pSearchText);
@@ -75,6 +76,7 @@ public class MOrganGWController {
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
+			result.put("filePath", filePath);
 			result.put("listCount", listCount);
 			
 		} catch (Exception e) {
@@ -100,21 +102,28 @@ public class MOrganGWController {
 		
 		try {
 			String userID = request.getParameter("userID");
-			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			String filePath = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator;
+			String imgSrc = "";
 			
 			MPersonListVO personInfo = mOrganService.getPersonInfo(userID, info.getTenantId());
+			
+			if (personInfo.getExtensionAttribute2() != null && !personInfo.getExtensionAttribute2().equals("")) {
+				imgSrc = filePath + personInfo.getExtensionAttribute2();
+			} else {
+				imgSrc = "";
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", personInfo);
+			result.put("imgSrc", imgSrc);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
-			result.put("listCount", "");
 		}
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezorgan/personDetail] ended.");
 		return result;

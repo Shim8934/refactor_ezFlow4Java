@@ -765,7 +765,8 @@
 			AND
 				A.TENANT_ID = #tenantID#
 			AND 
-				A.RESCOMPANY = #v_PCOMPANYID#	
+				A.RESCOMPANY = #v_PCOMPANYID#
+			ORDER BY B.BRD_NM	
 		]]>
 
 		
