@@ -24,9 +24,7 @@
 			var taskid = "${taskInfoVO.taskID }";
 			var contentpath = "${taskInfoVO.contentPath }";
 			var personContentpath = "${taskInfoVO.personContentPath }";
-			var ownerid = "${taskInfoVO.ownerID }";
 			var creatorid = "${taskInfoVO.creatorID }";
-			var parentid = "${taskInfoVO.parentID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
 			var duration = 500;
@@ -259,11 +257,6 @@
 			
 			/* 의견작성 */
 			function add_comment() {
-				var id = taskid;
-				if (parentid != "0") {
-					id = parentid;
-				}
-	
 				if (document.getElementById("TextComment").value == "") {
 					alert("<spring:message code='ezTask.t241' />");
 					return;
@@ -275,7 +268,7 @@
 					async : false,
 					url : "/ezTask/taskSaveComment.do",
 					data : {
-							taskID : id,
+							taskID : taskid,
 							textComment : $("#TextComment").val()
 					},
 					success: function(result){
@@ -320,12 +313,7 @@
 					return;
 				}
 	
-				var id = taskid;
-				if (parentid != "0") {
-					id = parentid;
-				}
-	
-				deltaskid = id + ";";
+				deltaskid = taskid + ";";
 				
 				$.ajax({
 					type : "POST",
@@ -348,23 +336,18 @@
 			
 			/* 업무수정 */
 			function edit_task() {
-			    var id = taskid;
-			    if (parentid != "0") {
-			    	id = parentid;
-			    }
-			    
 			    var win;
 			    
 				/* 레이어팝업으로 taskWrite 호출 */
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + taskid, "",
 			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
 					var feature = GetOpenPosition(760, 645);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + taskid, "",
 			                "height = 645px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 				
@@ -381,17 +364,12 @@
 				    return;
 				}
 				
-				var id = taskid;
-				if (parentid != "0") {
-				    id = parentid;
-				}
-				
 			    $.ajax({
 					type : "POST",
 					url : "/ezTask/taskDeleteComment.do",
 					dataType : "json",
 					data : {
-						taskID : id,
+						taskID : taskid,
 						commentID : commentid
 					},
 					success : function(result) {
@@ -491,13 +469,8 @@
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
 			            
-			            if (ownerid == userid) {
-				        	document.getElementById("editTask").style.display = "none";
-				        	document.getElementById("editTaskWork").style.display = "none";
-				        } else if (personid == userid) {
-				        	document.getElementById("editTask").style.display = "none";
-				        	document.getElementById("editTaskWork").style.display = "none";
-				        }
+			        	document.getElementById("editTask").style.display = "none";
+			        	document.getElementById("editTaskWork").style.display = "none";
 			            
 			            break;
 			        case "MailEnv_div1":
@@ -507,10 +480,10 @@
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
 			            
-			            if (ownerid == userid) {
+			            if (creatorid == userid) {
 				        	document.getElementById("editTask").style.display = "";
 				        	document.getElementById("editTaskWork").style.display = "none";
-				        } else if (personid == userid) {
+				        } else {
 				        	document.getElementById("editTask").style.display = "none";
 				        	document.getElementById("editTaskWork").style.display = "none";
 				        }
@@ -523,12 +496,12 @@
 			            document.getElementById("tablework").style.display = "";
 			            document.getElementById("tablecomment").style.display = "none";
 			            
-			            if (ownerid == userid) {
+			            if (personid == userid) {
+			            	document.getElementById("editTask").style.display = "none";
+				        	document.getElementById("editTaskWork").style.display = "";
+				        } else {
 				        	document.getElementById("editTask").style.display = "none";
 				        	document.getElementById("editTaskWork").style.display = "none";
-				        } else if (personid == userid) {
-				        	document.getElementById("editTask").style.display = "none";
-				        	document.getElementById("editTaskWork").style.display = "";
 				        }
 			            
 			            break;
@@ -553,14 +526,11 @@
 			
 			/* 진행사항 수정 스크립트 */
 			function edit_taskwrok() {
-				var id = taskid;
-			    if (parentid != "0")
-			        id = parentid;
 			    var win;
 			    
 				/* 레이어팝업으로 taskWorkWriteCross 호출 */
 				var feature = GetOpenPosition(760, 700);
-				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWorkWrite.do?taskID=" + id, "",
+				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWorkWrite.do?taskID=" + taskid, "",
 		                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 			}
 			

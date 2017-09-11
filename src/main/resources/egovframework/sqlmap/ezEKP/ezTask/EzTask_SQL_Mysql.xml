@@ -12,10 +12,10 @@
 	   <![CDATA[
 		    SELECT
 				taskid,
-				parentid,
-				ownerid,
 				creatorid,
 				case when #primary# = 1 then creatorname else creatorName2 end as creatorname,
+				case when #primary# = 1 then creatordeptname else creatordeptname2 end as creatordeptname,
+				creatoremail,
 				DATE_ADD(DATE_FORMAT(createdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as createDate,
 				taskstatus,
 				completerate,
@@ -25,31 +25,20 @@
 				hascomment,
 				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
 				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as enddate,
-				A.title as title,
+				title,
 				contentpath,
 				tasktype,
 				updatetime,
-				newanswer,
-				newrefer,
 				personid,
 				personname,
-				personname2,
-				persondeptname,
-				persondeptname2,
-				B.mail as personemail,
+				case when #primary# = 1 then personname else personname2 end as personname,
+				case when #primary# = 1 then persondeptname else persondeptname2 end as persondeptname,
+				personemail,
 				personattach,
 				personcontentpath,
-				taskpersonid,
-				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname,
 				memo
 			FROM
-				TBL_TASK A
-			JOIN
-				TBL_USERMASTER B
-			ON
-				A.tenantid = B.tenant_id
-			AND
-				A.personid = B.cn
+				TBL_TASK
 			WHERE
 				tenantid = #tenantID#
 			AND
@@ -335,7 +324,7 @@
     		WHERE
     			tenantid = #tenantID#
     		AND
-    			(taskid = #taskID# OR parentid = #taskID#)
+    			taskid = #taskID#
     	]]>
     </update>
     

@@ -20,7 +20,6 @@
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 	        var taskid = "${taskInfoVO.taskID }";
-	        var parentid = "${taskInfoVO.parentID }";
 	        var taskstatus = "${taskInfoVO.taskStatus }";
 	        var completerate = "${taskInfoVO.completeRate }";
 	        var creatorid = "${taskInfoVO.creatorID }";
@@ -123,17 +122,12 @@
 	        
 	        /* 진행상태 저장 스크립트*/
 			function taskUpdateInstance() {
-				var id = taskid;
-				if (parentid != "0") {
-				    id = parentid;
-				}
-				
 				$.ajax({
 					type : "POST",
 					url : "/ezTask/updateTaskStatus.do",
 					dataType : "json",
 					data : {
-						taskID : id,
+						taskID : taskid,
 						taskStatus : taskstatus,
 						completeRate : completerate
 					},
