@@ -435,9 +435,9 @@ function save_task() {
 			fileName = GetAttribute(filelist[i + 1], "data2");
 			fileSize = GetAttribute(filelist[i + 1], "data3");
 		} else {
-			fileList += "," + GetAttribute(filelist[i + 1], "data");
-			fileName += "," + GetAttribute(filelist[i + 1], "data2");
-			fileSize += "," + GetAttribute(filelist[i + 1], "data3");
+			fileList += "\\" + GetAttribute(filelist[i + 1], "data");
+			fileName += "\\" + GetAttribute(filelist[i + 1], "data2");
+			fileSize += "\\" + GetAttribute(filelist[i + 1], "data3");
 		}
 	}
 	

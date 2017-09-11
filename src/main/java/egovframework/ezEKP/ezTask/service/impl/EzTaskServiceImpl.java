@@ -206,12 +206,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			
 			logger.debug("fileList = " + fileList + " | fileName = " + fileNames + " | fileSize = " + fileSizes);
 
-			int fileListSize = fileList.split(",").length;
+			int fileListSize = fileList.split("\\\\").length;
 			
 			for (int i=0; i<fileListSize; i++) {
-				String filePath = fileList.split(",")[i];
-				String fileName = fileNames.split(",")[i];
-				String fileSize = fileSizes.split(",")[i];
+				String filePath = fileList.split("\\\\")[i];
+				String fileName = fileNames.split("\\\\")[i];
+				String fileSize = fileSizes.split("\\\\")[i];
 
 				if (filePath.contains(".")) {
 					filePath = filePath.split("\\.")[0];
@@ -248,6 +248,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("creatorDeptName2", vo.getCreatorDeptName2());
 		map.put("creatorEmail", vo.getCreatorEmail());
 		map.put("nowDate", nowDate);
+		
 		map.put("taskStatus", vo.getTaskStatus());
 		map.put("completeRate", 0);
 		map.put("completeDate", "");
