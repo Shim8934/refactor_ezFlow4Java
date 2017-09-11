@@ -701,7 +701,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				LOGGER.debug("cmd : " + cmd +", folderId : " + folderId + ", messageId : " +  messageId);
 				
-				folderPath = folderId;
+				folderPath = URLDecoder.decode(folderId, "UTF-8");
 				uid = Long.parseLong(messageId);
 				
 				LOGGER.debug("tenantID" + tenantID + "userId" + userId);
@@ -3002,6 +3002,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String displayName = "";
 		String stateName = "";
 		String url = "";
+		String orgFolderId = "";
+		String orgMessageId = "";
+		String cmd = "";
 		
 		if (jsonObject.get("subject") != null) {
 			subject = (String) jsonObject.get("subject");
@@ -3049,6 +3052,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		if (jsonObject.get("url") != null) {
 			url = (String) jsonObject.get("url");
+		}
+		
+		if (jsonObject.get("orgFolderId") != null) {
+			orgFolderId = (String) jsonObject.get("orgFolderId");
+		}
+		
+		if (jsonObject.get("orgMessageId") != null) {
+			orgMessageId = (String) jsonObject.get("orgMessageId");
+		}
+		
+		if (jsonObject.get("cmd") != null) {
+			cmd = (String) jsonObject.get("cmd");
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -3808,32 +3823,32 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			            }
 			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
-//			            if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL") || mailCmd.equals("FORWARD")) {
+			            if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
 //			    			int index = orgUrl.lastIndexOf("/");			
-//			    			
+			    			
 //			    			if (index != -1) {
-//			    				String orgMsgFolderPath = orgUrl.substring(0, index);
-//			    				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
-//		
-//			    				LOGGER.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
-//			    				
-//			    		        Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
-//			    		        orgMsgFolder.open(Folder.READ_WRITE);
-//			    				
-//			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
-//		    		        	
-//			    		        if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL")) {
-//			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-//			    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-//			    		        }
-//			    		        else {
-//			    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
-//			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
-//			    		        }
-//			    		        
-//			    		        orgMsgFolder.close(true);
+			    				String orgMsgFolderPath = orgFolderId;
+			    				long orgMsgUid = Long.parseLong(orgMessageId);
+		
+			    				LOGGER.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+			    				
+			    		        Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+			    		        orgMsgFolder.open(Folder.READ_WRITE);
+			    				
+			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
+		    		        	
+			    		        if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {
+			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+			    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+			    		        }
+			    		        else {
+			    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
+			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+			    		        }
+			    		        
+			    		        orgMsgFolder.close(true);
 //			    			}
-//			            }
+			            }
 			            
 //			        }
 			        
@@ -4250,7 +4265,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								}
 							}
-							ccMobileStr += getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+							if ( i == arrRecipientsCC.length - 1 ) {
+								ccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+							} else {
+								ccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "&nbsp;,&nbsp;";
+							}
 						}
 					}
 	
