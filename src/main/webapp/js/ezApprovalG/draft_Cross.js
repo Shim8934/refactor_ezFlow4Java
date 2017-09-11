@@ -2010,6 +2010,10 @@ function SetBtnStateTrue() {
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
             setMenuBar("btnSelForm", false);
         }
+        
+        if (pDraftFlag == "DRAFT" || DocSN != "") {
+            setMenuBar("btnSaveServer", true);
+        }
     } catch (e) {
         alert("SetBtnStateTrue()" + e.description);
     }
