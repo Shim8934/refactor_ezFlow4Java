@@ -2559,7 +2559,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			docList = getAprLineInfoDB(docID, "3", userID, formID, companyID, tenantID, isUsed, beforeDocID);
 			docXML = commonUtil.convertStringToDocument(docList);
 		} else {
-			if (dlength <= 0 || reDraftFlag.equals("REDRAFT")) {
+			if (dlength <= 0) {
 				String isLastAprLine = getCode2Name("A44", "001", companyID, lang, tenantID);
 
 				if (isLastAprLine != null && isLastAprLine.equals("1")) {
@@ -2569,11 +2569,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
-
-		
+		String resetDateFlag = "N";
 		String fieldName = "";
 		String fieldValue = "";
 		String primaryData = commonUtil.getPrimaryData(lang, tenantID);
+
+		if (docXML.getElementsByTagName("APRSTATE").getLength() > 0) {
+			for (int m = 0; m < docXML.getElementsByTagName("APRSTATE").getLength(); m++) {
+				if (docXML.getElementsByTagName("APRSTATE").item(m).getTextContent().equals(staASBanSong)) {
+					resetDateFlag = "Y";
+					break;
+				}
+			}
+		}
 		resultXML.append("<ROWS>");
 		
 		for (int k = 0; k < dlength; k++) {
@@ -2592,11 +2600,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
+				if (resetDateFlag.equals("Y") && fieldName.indexOf("DATE") > -1) {
+					fieldValue = "";
+				}
+				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(convertDate(docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent())) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(convertDate(docXML.getElementsByTagName("RECEIVEDDATE").item(k).getTextContent())) + "</DATA2>");
+					if (resetDateFlag.equals("N")) {
+						resultXML.append("<DATA1>" + makeListField(convertDate(docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent())) + "</DATA1>");
+						resultXML.append("<DATA2>" + makeListField(convertDate(docXML.getElementsByTagName("RECEIVEDDATE").item(k).getTextContent())) + "</DATA2>");
+					} else {
+						resultXML.append("<DATA1></DATA1>");
+						resultXML.append("<DATA2></DATA2>");
+					}
+					
 					resultXML.append("<DATA3>" + docID + "</DATA3>");
 					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
 					resultXML.append("<DATA5>" + docXML.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent() + "</DATA5>");
@@ -8487,15 +8505,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String result = "";
 		boolean rtnVal = true;
 
+		//재사용시 이전 docID 가져오기 위한 것
+		String beforeDocID = "";
+		String isUsed = "";
+		
+		if (strXML.getElementsByTagName("beforeDocID").getLength() > 0) {
+			beforeDocID = strXML.getElementsByTagName("beforeDocID").item(0).getTextContent();
+		}
+		
+		if (strXML.getElementsByTagName("isUsed").getLength() > 0) {
+			isUsed = strXML.getElementsByTagName("isUsed").item(0).getTextContent();
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
+		map.put("v_ISUSED", "");
+		
+		if (isUsed.equals("reuse")) {
+			map.put("v_ISUSED", isUsed);
+			map.put("v_DOCID", beforeDocID.trim());
+		}
+		
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
 		// 진행 or 보류인 결재라인 정보 호출 TBL_APRDOCINFO
 		int aprCount = ezApprovalGDAO.doProcessCount(map);
-	
+		//count만 이전 꺼 가져오고 다시 원복
+		map.put("v_DOCID", docID.trim());
 		logger.debug("doProcess value : aprCount =" + aprCount);
 		logger.debug("doProcess aprState =" + aprState);
 

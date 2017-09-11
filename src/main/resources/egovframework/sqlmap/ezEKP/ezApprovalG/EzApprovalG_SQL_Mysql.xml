@@ -9705,21 +9705,38 @@
 <!-- 		{CALL EZSP_DOPROCESS_COUNT(#v_DOCID#, #v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int">
-	  SELECT 
-	  		COUNT(DOCID)  
-      FROM 
-        	TBL_APRLINEINFO 
-      WHERE  
-      		DOCID = #v_DOCID#
-      AND 
-      		APRMEMBERID = #v_USERID#
-      AND ( 	APRSTATE = '002'
-            OR  
-            	APRSTATE = '005' ) 
-      AND
-      		TENANT_ID = #v_TENANTID#
-      AND
-      		COMPANYID = #companyID#
+	<isNotEqual property="v_ISUSED" compareValue="reuse">
+		  SELECT 
+		  		COUNT(DOCID)  
+	      FROM 
+	        	TBL_APRLINEINFO 
+	      WHERE  
+	      		DOCID = #v_DOCID#
+	      AND 
+	      		APRMEMBERID = #v_USERID#
+	      AND ( 	APRSTATE = '002'
+	            OR  
+	            	APRSTATE = '005' ) 
+	      AND
+	      		TENANT_ID = #v_TENANTID#
+	      AND
+	      		COMPANYID = #companyID#
+	</isNotEqual>
+	  
+	<isEqual property="v_ISUSED" compareValue="reuse">
+		  SELECT 
+		  		COUNT(DOCID)  
+	      FROM 
+	        	TBL_ENDAPRLINEINFO 
+	      WHERE  
+	      		DOCID = #v_DOCID#
+	      AND 
+	      		APRMEMBERID = #v_USERID#
+	      AND
+	      		TENANT_ID = #v_TENANTID#
+	      AND
+	      		COMPANYID = #companyID#
+	</isEqual>
 
 	</select>
 <!-- 	<procedure id="EzApprovalG.doApproveLineCnt" parameterClass="Map" resultClass="int"> -->

@@ -2749,9 +2749,34 @@ function GetAprDocFormID() {
     	});
 
         pFormID = SelectSingleNodeValueNew(loadXMLString(result), "DATA/FORMID");
+        
+        if (approvalFlag == "S") {
+        	if (pFormID == "") {
+            	isTmpDocID = MakeTmp2Ing(DocSN)
+                pDocID = isTmpDocID;
+                GetAprDocFormID();
+            }
+        }
+        
     } catch (e) {
         alert("GetAprDocFormID()" + e.description);
     }
+}
+
+function MakeTmp2Ing(tmpDocID) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/makeTmp2Ing.do",
+		data : {
+			tmpDocID : tmpDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+    return  getNodeText(loadXMLString(result).documentElement);
 }
 
 function trim(parm_str) {
@@ -3751,6 +3776,11 @@ function SaveTMPDocInfo(AutoSave) {
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+        
+        if (isUsed == "reuse") {
+            createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
+            createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
+        }
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
