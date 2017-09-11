@@ -317,9 +317,7 @@
 			        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
 
 					var span2 = document.createElement("SPAN");
-// 			        span2.style.width = "30px";
 			        span2.style.display = "inline-block";
-// 			        setNodeText(span2, completerate + "%");
 
 			        span.appendChild(span2);
 
@@ -344,7 +342,6 @@
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
-// 			    $(".percentCount").remove();
 			}
 
 			/* progressBar 조회 */

@@ -399,21 +399,23 @@
 			taskstatus = 3
 		</isEqual>
 
-		<isEqual property="type" compareValue="1" prepend="AND">			
-			<![CDATA[
-					((A.creatorid = #userID# AND A.tasktype = 1)
-				OR
-					(A.personid = #userID#)
-				OR	
-					(B.sharerid = #userID# and A.TASKID = B.TASKID))
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="type" compareValue="1" prepend="AND">
-			<![CDATA[
-					(A.creatorid = #userID# AND A.tasktype != 1)
-			]]>
-		</isNotEqual>
+		<isNotNull property="type">
+			<isEqual property="type" compareValue="1" prepend="AND">
+				<![CDATA[
+						((A.creatorid = #userID# AND A.tasktype = 1)
+					OR
+						(A.personid = #userID#)
+					OR	
+						(B.sharerid = #userID# and A.TASKID = B.TASKID))
+				]]>
+			</isEqual>
+
+			<isNotEqual property="type" compareValue="1" prepend="AND">
+				<![CDATA[
+						(A.creatorid = #userID# AND A.tasktype != 1)
+				]]>
+			</isNotEqual>
+		</isNotNull>
 		
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
@@ -457,22 +459,20 @@
         
         <isNotEqual property="startDate" compareValue="" prepend="AND">
         	<![CDATA[
-	        	(            		
-	           		(startdate >= #startDate# and startdate <= #endDate#) 
-	           		or
+	        		((startdate >= #startDate# and startdate <= #endDate#)
+	           	OR
 	           		(enddate >= #startDate# and enddate < #endDate#) 
-	           		or
-	           		(startdate < #startDate# and enddate >= #endDate#)
-	           	)
+	           	OR
+	           		(startdate < #startDate# and enddate >= #endDate#))
 	           	AND
-	           		(personid = #userID#)
+					(A.personid = #userID# or (B.sharerid = #userID# and A.taskid = B.taskid) or A.creatorid = #userID#)
            	]]>
         </isNotEqual>
 
 		<![CDATA[
 			ORDER BY
-				startdate DESC,
-				taskid DESC
+				A.startdate DESC,
+				A.taskid DESC
 		]]>
 	</select>
 
