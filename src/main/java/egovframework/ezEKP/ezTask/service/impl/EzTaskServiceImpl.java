@@ -100,7 +100,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("commentorID", commentorID);
 		map.put("commentorName", commentorName);
 		map.put("commentorName2", commentorName2);
-		map.put("comment", commonUtil.cleanValue(comment));
+		map.put("comment", comment);
 		map.put("hasComment", "Y");
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
@@ -470,7 +470,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		for (TaskAttachVO vo : list) {
 			String fileName = vo.getFileName();
 			String filePath = vo.getFilePath();
-			String fileSize = vo.getFileSize();
+			String fileSize = getProperSizeDisplay(Integer.parseInt(vo.getFileSize()));
 			String fileImage = null;
 
 			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
@@ -504,6 +504,16 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("getAttachListStr ended. listSize = " + list.size());
 		
 		return sb.toString();
+	}
+	
+	private String getProperSizeDisplay(int pSize) throws Exception {
+		if (pSize > 1048576) {
+			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
+		} else if (pSize > 1024) {
+			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
+		} else {
+			return Integer.toString(pSize) + " Byte";
+		}
 	}
 	
 	@Override

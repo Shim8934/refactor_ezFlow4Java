@@ -175,12 +175,32 @@ public class EzTaskController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 *  업무상세화면 의견목록 조회
+	 */
+	@RequestMapping(value = "/ezTask/getTaskCommentList.do")
+	public String getTaskCommentList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getTaskCommentList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String taskID = request.getParameter("taskID");
+		
+		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		
+		model.addAttribute("taskCommentList", taskCommentList);
+		
+		logger.debug("getTaskCommentList ended.");
+		
+		return "json";
+	}
+	
+	/**
 	 * 업무작성 저장 Method
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezTask/taskSave.do")
 	public String taskSave(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("taskSave1 started");
+		logger.debug("taskSave started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();
@@ -354,10 +374,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, tenantID);
 		
-		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
-		
 		model.addAttribute("result", result);
-		model.addAttribute("taskCommentList", taskCommentList);
 		
 		logger.debug("taskSaveComment ended.");
 		
@@ -370,18 +387,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskDeleteComment started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String offset = userInfo.getOffset();
-		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
 		
 		String taskID = request.getParameter("taskID");
 		String commentID = request.getParameter("commentID");
 		
 		ezTaskService.deleteComment(taskID, commentID, tenantID);
-		
-		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
-		
-		model.addAttribute("taskCommentList", taskCommentList);
 		
 		logger.debug("taskDeleteComment ended.");
 		
