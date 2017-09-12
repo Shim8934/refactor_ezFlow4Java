@@ -128,9 +128,9 @@
 			FROM
 				TBL_TASKCONFIG
 			WHERE
-					userid = #userID#
-				AND
-					tenantid = #tenantID#
+				userid = #userID#
+			AND
+				tenantid = #tenantID#
 		]]>
 	</select>
 
@@ -171,10 +171,14 @@
 		]]>
 
 		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
-			taskstatus = 3
+			<![CDATA[
+				taskstatus = 3
+			]]>
 		</isEqual>
 		<isEqual property="taskStatusCount" compareValue="2" prepend="AND">
-			taskstatus != 3
+			<![CDATA[
+				taskstatus != 3
+			]]>
 		</isEqual>
 
 		<isNotNull property="type">
@@ -485,14 +489,13 @@
 					taskid = #taskID#
 				AND
 					0 = (SELECT
-						COUNT(*)
-					FROM
-						TBL_TASKCOMMENT
-					WHERE
-						tenantid = #tenantID#
-					AND
-						taskid = #taskID#
-					)
+							COUNT(*)
+						FROM
+							TBL_TASKCOMMENT
+						WHERE
+							tenantid = #tenantID#
+						AND
+							taskid = #taskID#)
 	        ]]>
 		</isEqual>
 		
