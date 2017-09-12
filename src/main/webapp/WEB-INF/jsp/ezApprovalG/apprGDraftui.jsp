@@ -1484,7 +1484,7 @@
 		                <li id="btnPrint"><span  onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 		                <li id="btnhistory"><span  onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		                <li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
-		                <li id="btnSaveServer"><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
+		                <li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
 		            </ul>
 		        </div>        
 		      <div id="close">
