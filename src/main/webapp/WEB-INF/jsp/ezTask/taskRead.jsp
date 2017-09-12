@@ -253,7 +253,7 @@
 			
 			/* 의견작성 */
 			function add_comment() {
-				var taskComment = $("#TextComment").val();
+				var taskComment = ConvertCharToEntityReference($("#TextComment").val());
 
 				if (taskComment == "" || $.trim(taskComment) == "") {
 					alert("<spring:message code='ezTask.t241' />");
