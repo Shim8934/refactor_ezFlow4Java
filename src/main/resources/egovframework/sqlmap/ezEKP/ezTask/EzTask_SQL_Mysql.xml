@@ -395,11 +395,11 @@
 				A.tenantid = #tenantID#
 		]]>
 
-		<isEqual property="taskStatusCount" compareValue="0" prepend="AND">
-			taskstatus != 3
-		</isEqual>
 		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
 			taskstatus = 3
+		</isEqual>
+		<isEqual property="taskStatusCount" compareValue="2" prepend="AND">
+			taskstatus != 3
 		</isEqual>
 
 		<isNotNull property="type">

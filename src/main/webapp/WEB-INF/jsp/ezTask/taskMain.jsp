@@ -34,8 +34,8 @@
 			var isrefresh = false;
 			var selectelem = null;
 			var initdate = "";
-			var ownerid = "";
-		    var offSetNum = "timeZoneStr";
+// 			var ownerid = "";
+// 		    var offSetNum = "timeZoneStr";
 		    var startdate = "";
 		    var enddate = "";
 		    var type = "";
@@ -229,6 +229,10 @@
 		    		$(".row_body td").css("background", "");
 		    	}
 
+				// 페이지 이동 시 이전에 체크되어있던 값 삭제
+				strListIdInfo = "";
+				strListInfo = "";
+
 			    currentpage = Value;
 			    makePageSelPage();
 			    show_page();
@@ -375,42 +379,28 @@
 				        tr.cells[6].style.textOverflow = "ellipsis";
 				        tr.cells[6].setAttribute("title", SelectSingleNodeValue(node, "MEMO"));
 			        }
-		
+
+			        var div = document.createElement("DIV");
+			        div.style.width = "72px";
+	                div.style.lineHeight = "18px";
+	                div.style.height = "17px";
+	                div.style.textAlign = "center";
+	                div.style.color = "white";
+	                div.style.verticalAlign = "top";
+
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
-			                var div = document.createElement("DIV");
 			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
-			                div.style.width = "72px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                div.style.verticalAlign = "top";
-			                tr.cells[7].appendChild(div);
 			                break;
 			            case "2":
-			                var div = document.createElement("DIV");
 			                div.style.background = "url(/images/icon/section_orderbg.gif)";
-			                div.style.width = "72px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                div.style.verticalAlign = "top";
-			                tr.cells[7].appendChild(div);
 			                break;
 			            case "3":
-			                var div = document.createElement("DIV");
 			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
-			                div.style.width = "72px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                div.style.verticalAlign = "top";
-			                tr.cells[7].appendChild(div);
 			                break;
 			        }
+
+			        tr.cells[7].appendChild(div);
 
 			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
 			        var span = document.createElement("SPAN");
@@ -484,39 +474,18 @@
 			var taskStatusCount = "";
 			function selectTab(num) {
 				if (num == 3) {
-					taskStatusCount = 2;
-					filter = document.getElementById("txt_keyword").value
-
-					if (filter != "") {
-						search();
-					} else {
-						DateChange();
-					}
+					taskStatusCount = 3;
 				} else if (num == 2) {
-					taskStatusCount = 0;
-					filter = document.getElementById("txt_keyword").value
-
-					if (filter != "") {
-						search();
-					} else {
-						DateChange();
-					}
-				} else if (num == 1) {
-					taskStatusCount = 1;
-					filter = document.getElementById("txt_keyword").value
-
-					if (filter != "") {
-						search();
-					} else {
-						DateChange();
-					}
+					taskStatusCount = 2;
 				} else {
-					if ($("input[value=ongoing]").is(":checked")) {
-						taskStatusCount = 0;
-					} else {
-						taskStatusCount = 1;
-					}
+					taskStatusCount = 1;
+				}
 
+				filter = document.getElementById("txt_keyword").value;
+
+				if (filter != "") {
+					search();
+				} else {
 					DateChange();
 				}
 			}
@@ -619,28 +588,9 @@
 					})
 				}
 		    }
-		    
-		    function v_AppendZero(v_str) {
-		        if (isNaN(v_str)) {
-		            switch (v_str.toString().length) {
-		                case 0:
-		                    return "00";
-		                case 1:
-		                    return "0" + v_str.toString();
-		                default:
-		                    return v_str.toString();
-		            }
-		        }
-		
-		        if (v_str < 10) {
-		            return "0" + v_str.toString();
-		        }
-		
-		        return v_str.toString();
-		    }
 
 		    function DateChange() {
-		    	// 전체체크 후 다른거선택 후 다시 돌아왔을 때 체크되어있는것 해제
+		    	// 전체체크 후 다른탭 선택 후 다시 돌아왔을 때 체크되어있는것 해제
 		    	if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body td").css("background", "");
@@ -761,7 +711,7 @@
 		                break;
 		        }
 
-		        $("#radio3").click();
+		        $("#checkRadio2").click();
 		    }
 
 		    function onkeydown_start_search(evt) {
@@ -815,39 +765,7 @@
 					}
 				});
 		    }
-		    
-		    function after_search() {
-		        if (xmlHTTP2.readyState == 4 && xmlHTTP2 != null) {
-		
-		            listdom = loadXMLString(xmlHTTP2.responseText);
-		            totalcount = GetChildNodes(listdom.documentElement).length - 1;
-		            totalpage = Math.ceil(new Number(totalcount / pagesize));
-		
-		            if (isrefresh)
-		                isrefresh = false;
-		            else
-		                currentpage = 1;
-		
-		            if (currentpage > totalpage)
-		                currentpage = totalpage;
-		
-		            if (currentpage == 0)
-		                currentpage = 1;
-		
-		            makePageSelPage();
-		            show_page();
-		            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-		            if (type == "1") {
-		                document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
-		            } else {
-		                document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt + ")";   	
-		            }
 
-		            xmlHTTP2 = null;
-		            return;
-		        }
-		    }
-		    
 		    function selectAll() {
 		    	$(".row_body td").css("background", "");
 
@@ -916,20 +834,20 @@
 
 				<!-- 완료 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
-					<input name="check" id="radio4" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
-					<label for="radio4" style="vertical-align:middle"><spring:message code='ezTask.t99' /></label>
+					<input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
+					<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t99' /></label>
 				</li>
 
 				<!-- 진행중 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;">
-					<input name="check" id="radio3" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
-					<label for="radio3" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
+					<input name="check" id="checkRadio2" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
+					<label for="checkRadio2" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
 
 				<!-- 전체보기 -->
 				<li id="right" style="float:right;font-weight:normal;color:black;">
-					<input name="check" id="radio5" type="radio" value="ongoing" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
-					<label for="radio5" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
+					<input name="check" id="checkRadio3" type="radio" value="all" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
+					<label for="checkRadio3" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
 				</li>
 
 			</ul>
