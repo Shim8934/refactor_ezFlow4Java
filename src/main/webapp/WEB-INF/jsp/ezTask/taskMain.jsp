@@ -535,9 +535,6 @@
 		        DateChange();
 		    }
 
-		    var deltaskid = "";
-		    var delparentid = "";
-		    var delrepeatcount = "";
 		    function DeleteTask() {
 		        if (strListIdInfo == null || strListIdInfo == "") {
 		            alert("<spring:message code='ezTask.t104' />");
@@ -588,39 +585,10 @@
 		    }
 
 		    function DateChange() {
-		    	// 전체체크 후 다른탭 선택 후 다시 돌아왔을 때 체크되어있는것 해제
-		    	if ($("#checkboxAll").is(":checked")) {
-		    		$("#checkboxAll").prop("checked", false);
-		    		$(".row_body td").css("background", "");
-		    	}
-
 		        var filter = "";
 		        var chkValue = "";
-		        var searchClass = "";
-
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					url : "/ezTask/taskGetList.do",
-					data : {
-						startDate : startdate,
-						endDate : enddate,
-						type : type,
-						filter : filter,
-						chkValue : chkValue,
-						searchClass : searchClass,
-						taskStatusCount : taskStatusCount
-					},
-					success : function(xml) {
-						after_DateChange(xml);
-					},
-					error : function() {
-						alert("<spring:message code='ezTask.t992' />");
-					}
-				});
-
-				strListInfo = "";
-				strListIdInfo = "";
+				
+		        getTaskList();
 		    }
 
 		    function after_DateChange(xml) {
@@ -632,7 +600,7 @@
 	            if (isrefresh) {
 	                isrefresh = false;	            	
 	            } else {
-	                currentpage = 1;	            	
+	                currentpage = 1;
 	            }
 
 	            if (currentpage > totalpage) {
@@ -742,18 +710,29 @@
 		            return;
 		        }
 		        
-		        $.ajax({
+		        getTaskList();
+		    }
+		    
+		    function getTaskList() {
+		    	if ($("#checkboxAll").is(":checked")) {
+		    		$("#checkboxAll").prop("checked", false);
+		    		$(".row_body td").css("background", "");
+		    	}
+		    	
+		    	$.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskGetList.do",
 					data : {
-						startDate : startdate,
-						endDate : enddate,
+						startDate : "",
+						endDate : "",
 						type : type,
 						filter : filter,
 						chkValue : chkValue,
-						taskStatusCount : taskStatusCount
+						searchClass : "",
+						taskStatusCount : taskStatusCount,
+						useDate : ""
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -762,6 +741,9 @@
 						alert("<spring:message code='ezTask.t992' />");
 					}
 				});
+		    	
+				strListInfo = "";
+				strListIdInfo = "";
 		    }
 
 		    function selectAll() {
@@ -889,9 +871,9 @@
 							<th ><spring:message code='ezTask.t121' /></th>
 							<th ><spring:message code='ezTask.t122' /></th>
 						</tr>
-						<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this)">
+							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>

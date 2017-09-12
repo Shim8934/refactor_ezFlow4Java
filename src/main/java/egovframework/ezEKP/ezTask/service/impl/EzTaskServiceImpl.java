@@ -603,14 +603,14 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception {
 		logger.debug("getTaskList started.");
-		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount);
+		logger.debug("userID : " + userID + " | startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount);
 
 		if (!startDate.equals("")) {
 			startDate += " 00:00:00";
 			endDate += " 23:59:59";
-
-			startDate = commonUtil.getDateStringInUTC(startDate, offset, true).substring(0, 19);
-			endDate = commonUtil.getDateStringInUTC(endDate, offset, true).substring(0, 19);
+			
+			startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+			endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();

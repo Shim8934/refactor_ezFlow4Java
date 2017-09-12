@@ -833,30 +833,24 @@ public class EzTaskController extends EgovFileMngUtil {
     	String taskStatusCount = request.getParameter("taskStatusCount");
     	String startDate = request.getParameter("startDate");
     	String endDate = request.getParameter("endDate");
-    	String useDate = "";
-
-    	if (startDate != null || !startDate.equals("")) {
-    		useDate = request.getParameter("useDate");
-    	}
-
+    	String useDate = request.getParameter("useDate");
+    	
     	// 검색 시 날짜사용 안하면 최근 3개월이내 검색
-    	if (useDate != null) {
-    		if (!useDate.equals("true")) {
-    			String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-    			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    			Date now = sdf.parse(utcTime);
+		if (useDate.equals("false")) {
+			String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date now = sdf.parse(utcTime);
 
-    			Calendar cal = Calendar.getInstance();
-    			cal.setTime(now);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(now);
 
-    			cal.add(Calendar.MONTH, -3);
-    			startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);
+			cal.add(Calendar.MONTH, -3);
+			startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);
 
-    			cal.setTime(now);
-    			cal.add(Calendar.MONTH, 3);
-    			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);    			
-    		}
-    	}
+			cal.setTime(now);
+			cal.add(Calendar.MONTH, 3);
+			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);    			
+		}
 
     	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, tenantID);
     	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, tenantID);
