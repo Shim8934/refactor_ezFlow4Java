@@ -636,7 +636,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
-		logger.debug("type : " + type + " | filter : " + filter + " | chkValue : " + chkValue);
+		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 

@@ -485,7 +485,7 @@
 		    	COUNT(DISTINCT(A.taskID))
 			FROM
 				TBL_TASK A
-			JOIN
+			LEFT JOIN
 				TBL_TASKSHARE B
 			ON
 				A.tenantid = B.tenantid
@@ -519,7 +519,7 @@
 		    	COUNT(DISTINCT(A.taskID))
 			FROM
 				TBL_TASK A
-			JOIN
+			LEFT JOIN
 				TBL_TASKSHARE B
 			ON
 				A.tenantid = B.tenantid
