@@ -566,7 +566,7 @@
 	                    if (!bool3) {
 	                    	if (approvalFlag == "G") {
 		                        Cabinetinfo_ini();
-		                        Docinfo_ini();
+		                        //Docinfo_ini();
 		                        
 			                    bool3 = true;
 			                    bool4 = true;
