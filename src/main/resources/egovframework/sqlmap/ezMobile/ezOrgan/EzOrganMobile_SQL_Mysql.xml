@@ -186,7 +186,7 @@
 	  				END deptName,
 	  				'' as TITLE,
 	  				MAIL,
-				    '' as EXTENSIONATTRIBUTE15
+				    null as EXTENSIONATTRIBUTE15
 				FROM
 					TBL_DEPTMASTER
 				WHERE
@@ -237,7 +237,7 @@
   					ELSE DISPLAYNAME$lang$
   				END userName,
   				DESCRIPTION as deptName,
-  				TITLE,
+  				B.TITLE,
   				MAIL,
 			    EXTENSIONATTRIBUTE15
 			FROM
