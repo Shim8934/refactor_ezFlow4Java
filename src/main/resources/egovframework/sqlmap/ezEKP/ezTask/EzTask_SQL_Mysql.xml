@@ -105,231 +105,6 @@
 		]]>
 	</select>
 	
-	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_TASK
-				(creatorid,
-				creatorname,
-				creatorname2,
-				creatordeptname,
-				creatordeptname2,
-				creatoremail,
-				createdate,
-				taskstatus,
-				completerate,
-				importance,
-				hasshare,
-				hasattach,
-				hascomment,
-				startdate,
-				enddate,
-				title,
-				contentpath,
-				tasktype,
-				updatetime,
-				personid,
-				personname,
-				personname2,
-				persondeptname,
-				persondeptname2,
-				personemail,
-				personattach,
-				memo,
-				tenantid)
-			VALUES
-		]]>
-		
-		<isNull property="insertType">
-			<![CDATA[
-				(#creatorID#,
-				#creatorName#,
-				#creatorName2#,
-				#creatorDeptName#,
-				#creatorDeptName2#,
-				#creatorEmail#,
-				#nowDate#,
-				#taskStatus#,
-				0,
-				#importance#,
-				#hasShare#,
-				#hasAttach#,
-				'N',
-				#startDate#,
-				#endDate#,
-				#title#,
-				#contentPath#,
-				#taskType#,
-				#nowDate#,
-				#personID#,
-				#personName#,
-				#personName2#,
-				#personDeptName#,
-				#personDeptName2#,
-				#personEmail#,
-				'N',
-				#memo#,
-				#tenantID#)
-			]]>
-		</isNull>
-		
-		<selectKey keyProperty="taskID" resultClass="String">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
-    </insert>
-    
-    <insert id="EzTaskDAO.insertTaskShare" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_TASKSHARE
-				(taskid,
-				sharerid,
-				sharername,
-				sharername2,
-				sharerdeptname,
-				sharerdeptname2,
-				shareremail,
-				updatetime,
-				tenantid)
-			VALUES
-				(#taskID#,
-				#sharerID#,
-				#sharerName#,
-				#sharerName2#,
-				#sharerDeptName#,
-				#sharerDeptName2#,
-				#sharerEmail#,
-				#nowDate#,
-				#tenantID#)
-        ]]>
-    </insert>
-    
-    <update id="EzTaskDAO.updateTask" parameterClass="Map">
-    	<![CDATA[
-    		UPDATE
-    			TBL_TASK
-    		SET
-				importance = #importance#,
-				hasshare = #hasShare#,
-				hasattach = #hasAttach#,
-				startdate = #startDate#,
-				enddate = #endDate#,
-				title = #title#,
-				tasktype = #taskType#,
-				updatetime = #nowDate#,
-				personid = #personID#,
-				personname = #personName#,
-				personname2 = #personName2#,
-				persondeptname = #personDeptName#,
-				persondeptname2 = #personDeptName2#,
-				personemail = #personEmail#,
-				memo = #memo#
-    		WHERE
-    			tenantID = #tenantID#
-    		AND
-    			taskID = #taskID#
-    	]]>
-    </update>
-	
-	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
-		<isEqual property="hasComment" compareValue="Y">
-			<![CDATA[
-				UPDATE
-					TBL_TASK
-				SET
-					hascomment=#hasComment#
-				WHERE
-					tenantID = #tenantID#
-				AND
-					taskid = #taskID#
-	        ]]>
-		</isEqual>
-		<isEqual property="hasComment" compareValue="N">
-			<![CDATA[
-				UPDATE
-					TBL_TASK
-				SET
-					hascomment=#hasComment#
-				WHERE
-					tenantID = #tenantID#
-				AND
-					taskid = #taskID#
-				AND
-					0 = (SELECT
-						COUNT(*)
-					FROM
-						TBL_TASKCOMMENT
-					WHERE
-						tenantid = #tenantID#
-					AND
-						taskid = #taskID#
-					)
-	        ]]>
-		</isEqual>
-		
-    </update>
-    
-    <update id="EzTaskDAO.insertComment" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_TASKCOMMENT
-				(taskid, commentorid, commentorname, commentorname2, commentdate, comment, tenantID)
-			VALUES
-				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#, #tenantID#)
-        ]]>
-    </update>
-    
-    <update id="EzTaskDAO.updateTaskStatus" parameterClass="Map">
-    	<![CDATA[
-    		UPDATE
-    			TBL_TASK
-    		SET
-    			taskstatus = #taskStatus#,
-    			completerate = #completeRate#
-    		WHERE
-    			tenantid = #tenantID#
-    		AND
-    			taskid = #taskID#
-    	]]>
-    </update>
-    
-    <update id="EzTaskDAO.updateTaskWork" parameterClass="Map">
-    	<![CDATA[
-    		UPDATE
-    			TBL_TASK
-    		SET
-    			personattach = #personAttach#,
-    			personcontentpath = #personContentPath#
-    		WHERE
-    			tenantid = #tenantID#
-    		AND
-    			taskid = #taskID#
-    	]]>
-    </update>
-    
-    <delete id="EzTaskDAO.deleteComment" parameterClass="Map">
-    	<![CDATA[
-			DELETE FROM
-				TBL_TASKCOMMENT
-			WHERE
-				tenantid = #tenantID#
-			AND
-				taskid = #taskID#
-			AND
-				commentid = #commentID#
-        ]]>
-    </delete>
-    
-    <delete id="EzTaskDAO.deleteTaskAttach" parameterClass="Map">
-    	<![CDATA[
-    		DELETE FROM
-    			TBL_TASKATTACH
-    		WHERE
-    			tenantid = #tenantID#
-    		AND
-    			taskid = #taskID#
-    		AND
-    			type = #attachType#
-    	]]>
-    </delete>
-
 	<select id="EzTaskDAO.getOriginColor" parameterClass="Map" resultClass="TaskConfigVO">
 		<![CDATA[
 			SELECT
@@ -542,8 +317,105 @@
         	</isEqual>
         </isNotEqual>
 	</select>
-
-	<insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
+	
+	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASK
+				(creatorid,
+				creatorname,
+				creatorname2,
+				creatordeptname,
+				creatordeptname2,
+				creatoremail,
+				createdate,
+				taskstatus,
+				completerate,
+				importance,
+				hasshare,
+				hasattach,
+				hascomment,
+				startdate,
+				enddate,
+				title,
+				contentpath,
+				tasktype,
+				updatetime,
+				personid,
+				personname,
+				personname2,
+				persondeptname,
+				persondeptname2,
+				personemail,
+				personattach,
+				memo,
+				tenantid)
+			VALUES
+		]]>
+		
+		<isNull property="insertType">
+			<![CDATA[
+				(#creatorID#,
+				#creatorName#,
+				#creatorName2#,
+				#creatorDeptName#,
+				#creatorDeptName2#,
+				#creatorEmail#,
+				#nowDate#,
+				#taskStatus#,
+				0,
+				#importance#,
+				#hasShare#,
+				#hasAttach#,
+				'N',
+				#startDate#,
+				#endDate#,
+				#title#,
+				#contentPath#,
+				#taskType#,
+				#nowDate#,
+				#personID#,
+				#personName#,
+				#personName2#,
+				#personDeptName#,
+				#personDeptName2#,
+				#personEmail#,
+				'N',
+				#memo#,
+				#tenantID#)
+			]]>
+		</isNull>
+		
+		<selectKey keyProperty="taskID" resultClass="String">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+    </insert>
+    
+    <insert id="EzTaskDAO.insertTaskShare" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKSHARE
+				(taskid,
+				sharerid,
+				sharername,
+				sharername2,
+				sharerdeptname,
+				sharerdeptname2,
+				shareremail,
+				updatetime,
+				tenantid)
+			VALUES
+				(#taskID#,
+				#sharerID#,
+				#sharerName#,
+				#sharerName2#,
+				#sharerDeptName#,
+				#sharerDeptName2#,
+				#sharerEmail#,
+				#nowDate#,
+				#tenantID#)
+        ]]>
+    </insert>
+    
+    <insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_TASKCONFIG
                 (userid, delaycolor, completecolor, tenantid)
@@ -560,7 +432,109 @@
                 (#taskID#, #fileSize#, #fileName#, #filePath#, #taskType#, #tenantID#)
         ]]>
     </insert>
-
+    
+    <update id="EzTaskDAO.updateTask" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+				importance = #importance#,
+				hasshare = #hasShare#,
+				hasattach = #hasAttach#,
+				startdate = #startDate#,
+				enddate = #endDate#,
+				title = #title#,
+				tasktype = #taskType#,
+				updatetime = #nowDate#,
+				personid = #personID#,
+				personname = #personName#,
+				personname2 = #personName2#,
+				persondeptname = #personDeptName#,
+				persondeptname2 = #personDeptName2#,
+				personemail = #personEmail#,
+				memo = #memo#
+    		WHERE
+    			tenantID = #tenantID#
+    		AND
+    			taskID = #taskID#
+    	]]>
+    </update>
+	
+	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
+		<isEqual property="hasComment" compareValue="Y">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					taskid = #taskID#
+	        ]]>
+		</isEqual>
+		<isEqual property="hasComment" compareValue="N">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					taskid = #taskID#
+				AND
+					0 = (SELECT
+						COUNT(*)
+					FROM
+						TBL_TASKCOMMENT
+					WHERE
+						tenantid = #tenantID#
+					AND
+						taskid = #taskID#
+					)
+	        ]]>
+		</isEqual>
+		
+    </update>
+    
+    <update id="EzTaskDAO.insertComment" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKCOMMENT
+				(taskid, commentorid, commentorname, commentorname2, commentdate, comment, tenantID)
+			VALUES
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#, #tenantID#)
+        ]]>
+    </update>
+    
+    <update id="EzTaskDAO.updateTaskStatus" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+    			taskstatus = #taskStatus#,
+    			completerate = #completeRate#
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			taskid = #taskID#
+    	]]>
+    </update>
+    
+    <update id="EzTaskDAO.updateTaskWork" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+    			personattach = #personAttach#,
+    			personcontentpath = #personContentPath#
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			taskid = #taskID#
+    	]]>
+    </update>
+    
     <update id="EzTaskDAO.taskUpdateConfig" parameterClass="map">
         <![CDATA[
             UPDATE
@@ -574,6 +548,32 @@
                 tenantid = #tenantID#      
         ]]>
     </update>
+    
+    <delete id="EzTaskDAO.deleteComment" parameterClass="Map">
+    	<![CDATA[
+			DELETE FROM
+				TBL_TASKCOMMENT
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+			AND
+				commentid = #commentID#
+        ]]>
+    </delete>
+    
+    <delete id="EzTaskDAO.deleteTaskAttach" parameterClass="Map">
+    	<![CDATA[
+    		DELETE FROM
+    			TBL_TASKATTACH
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			taskid = #taskID#
+    		AND
+    			type = #attachType#
+    	]]>
+    </delete>
     
 	<delete id="EzTaskDAO.taskDelete" parameterClass="map">
 		<![CDATA[
