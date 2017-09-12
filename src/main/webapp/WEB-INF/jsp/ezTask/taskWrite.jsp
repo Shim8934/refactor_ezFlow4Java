@@ -49,8 +49,7 @@
 			var sharedept = "";
 			var sharedept2 = "";
 			var sharemail = "";
-			var isreadpage = false;
-			var FormProcSpelling = "FormProcSpelling";
+// 			var FormProcSpelling = "FormProcSpelling";
 			var personid = "${taskInfoVO.personID }";
 			var personname = "${taskInfoVO.personName }";
 			var personname2 = "${taskInfoVO.personName2 }";
@@ -59,122 +58,6 @@
 			var personemail = "${taskInfoVO.personEmail }";
 			var useTodoMemo = "${useTodoMemo }";
 			var primary = "${userInfo.primary}";
-
-			window.onload = function () {
-				if (taskid != "") {
-					document.getElementById("importantSelect").value = importance;
-					document.getElementById("taskstatusSelect").value = taskstatus;
-					document.getElementById("completerateSelect").value = completerate;
-					
-					if (hasattach == "Y") {
-			            setAttachFileInfo("${taskAttachList}");
-			        }
-					
-					Editor_Complete();
-				}
-				
-				if (useTodoMemo == 'YES') {
-					if (tasktype == "1") {
-						document.getElementById("P").click();
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					} else if (tasktype == "2") {
-						document.getElementById("I").click();
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
-					} else if (tasktype == "3") {
-						document.getElementById("C").click();
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
-					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					}
-				} else {
-					if (tasktype == "1") {
-						document.getElementById("P").click();
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
-					} else if (tasktype == "2") {
-						document.getElementById("I").click();
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					} else if (tasktype == "3") {
-						document.getElementById("C").click();
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
-					}
-				}
-				
-	
-				if (personid != "" && personid != creatorid) {
-					document.getElementById("personlist").innerHTML = personname;
-	                 
-					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-	
-					g_person["name"][0] = personname;
-					g_person["name1"][0] = personname;
-					g_person["name2"][0] = personname2;
-					g_person["id"][0] = personid;
-					g_person["deptname"][0] = persondept;
-					g_person["deptname2"][0] = persondept2;
-					g_person["email"][0] = personemail;
-				}
-	             
-	            if (shareliststr != "") {
-					sharename = shareliststr.split("||")[0];
-					sharename1 = shareliststr.split("||")[1];
-					sharename2 = shareliststr.split("||")[2];
-					shareid = shareliststr.split("||")[3];
-					sharedept = shareliststr.split("||")[4];
-					sharedept2 = shareliststr.split("||")[5];
-					sharemail = shareliststr.split("||")[6];
-					
-					g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-					
-					shareid = shareid.split(";");
-					sharename = sharename.split(";");
-					sharename2 = sharename2.split(";");
-					sharedept = sharedept.split(";");
-					sharedept2 = sharedept2.split(";");
-					sharemail = sharemail.split(";");
-					
-					for (var i = 0; i < shareid.length - 1; i++) {
-						g_share["name"][i] = sharename[i];
-						g_share["name1"][i] = sharename1[i];
-						g_share["name2"][i] = sharename2[i];
-						g_share["id"][i] = shareid[i];
-						g_share["deptname"][i] = sharedept[i];
-						g_share["deptname2"][i] = sharedept2[i];
-						g_share["email"][i] = sharemail[i];
-					}
-				}
-	            
-				if (document.getElementById("TextTitle").value == "") {
-					document.getElementById("TextTitle").focus();
-				}
-			}
-
-			window.onresize = function () {
-				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
-				
-				if (useTodoMemo == 'YES') {
-					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					} else if (tasktype == "2") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
-					} else if (tasktype == "3") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
-					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					}
-				} else {
-					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
-					} else if (tasktype == "2") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					} else if (tasktype == "3") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
-					}
-				}
-			}
 			
 			$(function () {
 				$("#Sdatepicker").datepicker({
@@ -230,46 +113,156 @@
 				
 				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 				$("#Edatepicker").datepicker('setDate', EDate);
-			});
-      
-			$(function () {
+				
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
-					closeText: "<spring:message code='main.t3' />",
-					prevText: "<spring:message code='main.t0604' />",
-					nextText: "<spring:message code='main.t0605' />",
-					currentText: "<spring:message code='main.t0606' />",
-					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-					             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-					             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-					             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-					                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-					                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-					                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-					           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
-					           "<spring:message code='main.t0627' />"],
-					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-					                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-					                "<spring:message code='main.t0627' />"],
-					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-					              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-					              "<spring:message code='main.t0627' />"],
-					weekHeader: "Wk",
-					dateFormat: "yy-mm-dd",
-					firstDay: 0,
-					isRTL: false,
-					duration: 200,
-					showAnim: "show",
-					showMonthAfterYear: true
-			  };
-			  
-			  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+						closeText: "<spring:message code='main.t3' />",
+						prevText: "<spring:message code='main.t0604' />",
+						nextText: "<spring:message code='main.t0605' />",
+						currentText: "<spring:message code='main.t0606' />",
+						monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+						             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+						             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+						             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+						monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+						                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+						                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+						                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+						dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+						           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+						           "<spring:message code='main.t0627' />"],
+						dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+						                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+						                "<spring:message code='main.t0627' />"],
+						dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+						              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+						              "<spring:message code='main.t0627' />"],
+						weekHeader: "Wk",
+						dateFormat: "yy-mm-dd",
+						firstDay: 0,
+						isRTL: false,
+						duration: 200,
+						showAnim: "show",
+						showMonthAfterYear: true
+				  };
+				  
+				  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+				  
+				  if (taskid != "") {
+						document.getElementById("importantSelect").value = importance;
+						
+						if (hasattach == "Y") {
+				            setAttachFileInfo("${taskAttachList}");
+				        }
+						
+						Editor_Complete();
+					}
+					
+					if (useTodoMemo == 'YES') {
+						if (tasktype == "1") {
+							document.getElementById("P").click();
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						} else if (tasktype == "2") {
+							document.getElementById("I").click();
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+						} else if (tasktype == "3") {
+							document.getElementById("C").click();
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+						} else {
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						}
+					} else {
+						if (tasktype == "1") {
+							document.getElementById("P").click();
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+						} else if (tasktype == "2") {
+							document.getElementById("I").click();
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						} else if (tasktype == "3") {
+							document.getElementById("C").click();
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						} else {
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+						}
+					}
+		
+					if (personid != "" && personid != creatorid) {
+						document.getElementById("personlist").innerHTML = personname;
+		                 
+						g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+		
+						g_person["name"][0] = personname;
+						g_person["name1"][0] = personname;
+						g_person["name2"][0] = personname2;
+						g_person["id"][0] = personid;
+						g_person["deptname"][0] = persondept;
+						g_person["deptname2"][0] = persondept2;
+						g_person["email"][0] = personemail;
+					}
+		             
+		            if (shareliststr != "") {
+						sharename = shareliststr.split("||")[0];
+						sharename1 = shareliststr.split("||")[1];
+						sharename2 = shareliststr.split("||")[2];
+						shareid = shareliststr.split("||")[3];
+						sharedept = shareliststr.split("||")[4];
+						sharedept2 = shareliststr.split("||")[5];
+						sharemail = shareliststr.split("||")[6];
+						
+						g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+						
+						shareid = shareid.split(";");
+						sharename = sharename.split(";");
+						sharename2 = sharename2.split(";");
+						sharedept = sharedept.split(";");
+						sharedept2 = sharedept2.split(";");
+						sharemail = sharemail.split(";");
+						
+						for (var i = 0; i < shareid.length - 1; i++) {
+							g_share["name"][i] = sharename[i];
+							g_share["name1"][i] = sharename1[i];
+							g_share["name2"][i] = sharename2[i];
+							g_share["id"][i] = shareid[i];
+							g_share["deptname"][i] = sharedept[i];
+							g_share["deptname2"][i] = sharedept2[i];
+							g_share["email"][i] = sharemail[i];
+						}
+					}
+		            
+					if (document.getElementById("TextTitle").value == "") {
+						document.getElementById("TextTitle").focus();
+					}
 			});
+
+			window.onresize = function () {
+				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
+				
+				if (useTodoMemo == 'YES') {
+					if (tasktype == "1") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					}
+				} else {
+					if (tasktype == "1") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					}
+				}
+			}
       
 			function attach_Add() {
 			    document.form.file1.click();
 			}
+			
 			var AttachLimit = 5;
 			function btn_AttachAdd_onclick() {
 			    if (document.form.file1.value != "") {
@@ -315,17 +308,17 @@
 			function Editor_Complete() {
 			    if (taskid != "") {
 			        $.ajax({
-			        type : "POST",
-			        dataType : "text",
-			        async : false,
-			        url : "/ezCommon/mhtToHTMLContent.do",
-			        data : {
-			              type : "TASKCONTENT",
-			              itemID : contentPath
-			        },
-			        success: function(result){
-			           message.SetEditorContent(result);
-			        }
+				        type : "POST",
+				        dataType : "text",
+				        async : false,
+				        url : "/ezCommon/mhtToHTMLContent.do",
+				        data : {
+				              type : "TASKCONTENT",
+				              itemID : contentPath
+				        },
+				        success: function(result){
+				           message.SetEditorContent(result);
+				        }
 			        });
 			        
 			        try {
@@ -414,7 +407,6 @@
 				}
 				
 				setNodeText(document.getElementById("printTasktype"), tasktypename);
-				setNodeText(document.getElementById("printCompleteRate"), document.getElementById("completerateSelect").value + "%");
 				
 				var important = document.getElementsByName("important");
 				var importantname;
@@ -440,8 +432,6 @@
 	
 				setNodeText(document.getElementById("printImportance"), importantname);
 	
-				var taskstatus = document.getElementById("taskstatusSelect").value;
-
 				switch (taskstatus) {
 					case "1":
 						taskstatus = "<spring:message code = 'ezTask.t97' />";
@@ -514,174 +504,148 @@
 	<body class="popup" style="overflow: hidden;">
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>   
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-         <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-      </div>
-      <div id="main_body">
-         <table id="normalScreen" class="layout">
-            <tr>
-               <td height="20" id="menuTable">
-                  <div id="menu">
-                     <ul>
-                        <c:choose>
-                           <c:when test="${taskID == ''}">
-                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
-                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
-                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
-                           </c:when>
-                           <c:otherwise>
-                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
-                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
-                           </c:otherwise>
-                        </c:choose>
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		<div id="main_body">
+			<table id="normalScreen" class="layout">
+				<tr>
+					<td height="20" id="menuTable">
+						<div id="menu">
+							<ul>
+		                        <c:choose>
+		                           <c:when test="${taskID == ''}">
+		                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
+		                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
+		                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
+		                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
+		                           </c:when>
+		                           <c:otherwise>
+		                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
+		                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
+		                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
+		                           </c:otherwise>
+		                        </c:choose>
                         
-                        <li class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;display:none">
-                           <select id="importantSelect" name="importantSelect" style="vertical-align:top;">
-                              <option value='1'><spring:message code='ezTask.t171' /></option>
-                              <option value='2' selected><spring:message code='ezTask.t172' /></option>
-                              <option value='3'><spring:message code='ezTask.t173' /></option>
-                           </select>
-                        </li>
-                        
-                        <li id="taskstatusname" class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle"><spring:message code='ezTask.t210' /></li>
-                        <li id="taskstatus" class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;display:none">
-                           <select name="taskstatusSelect" id="taskstatusSelect" onChange="taskstatus_change()" style="vertical-align:top;" >
-                              <option value='1' selected><spring:message code='ezTask.t97' /></option>
-                              <option value='2'><spring:message code='ezTask.t98' /></option>
-                              <option value='3'><spring:message code='ezTask.t99' /></option>
-                              <option value='4'><spring:message code='ezTask.t100' /></option>
-                           </select>
-                        </li>
-                        
-                        <li id="completeratename" class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle"><spring:message code='ezTask.t120' /></li>
-                        <li id="completerate" class="sel"style="background: none; border: none; padding-top: 4px; padding-right: 4px;display:none">
-                           <select name="completerateSelect" id="completerateSelect"  onChange="rate_change()" style="vertical-align:top;" >
-                              <option value='0' selected>0%</option>
-                              <option value='10'>10%</option>
-                              <option value='20'>20%</option>
-                              <option value='30'>30%</option>
-                              <option value='40'>40%</option>
-                              <option value='50'>50%</option>
-                              <option value='60'>60%</option>
-                              <option value='70'>70%</option>
-                              <option value='80'>80%</option>
-                              <option value='90'>90%</option>
-                              <option value='100'>100%</option>
-                           </select>
-                        </li>
-                     </ul>
-                  </div>
-                  <div id="close">
-                     <ul>
-                        <li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
-                     </ul>
-                  </div>
-                  <script type="text/javascript">
-                     selToggleList(document.getElementById("menu"), "ul", "li", "0");
-                     selToggleList(document.getElementById("close"), "ul", "li", "0");
-                  </script>
-               </td>
-            </tr>
+								<li class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;display:none">
+									<select id="importantSelect" name="importantSelect" style="vertical-align:top;">
+										<option value='1'><spring:message code='ezTask.t171' /></option>
+										<option value='2' selected><spring:message code='ezTask.t172' /></option>
+										<option value='3'><spring:message code='ezTask.t173' /></option>
+									</select>
+								</li>
+							</ul>
+						</div>
+						<div id="close">
+							<ul>
+								<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+							</ul>
+						</div>
+						<script type="text/javascript">
+							selToggleList(document.getElementById("menu"), "ul", "li", "0");
+							selToggleList(document.getElementById("close"), "ul", "li", "0");
+						</script>
+					</td>
+				</tr>
 
-            <tr>
-               <td height="20">
-                  <table class="content">
-                     <tr>
-                        <th><spring:message code='ezTask.t118' /></th>
-                        <td colspan="3"><input type="text" id="TextTitle" style="width:100%; maxlength:100;" value = "<c:out value = '${taskInfoVO.title }' />"></td>
-                     </tr>
-                     <tr>
-                        <th><spring:message code='ezTask.t2003' /></th>
-                        <td style="width:300px">
-                           <c:choose>
-                              <c:when test="${taskInfoVO.taskType == '2'}">
-                                 <input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="P"><spring:message code='ezTask.t2000' /></label>
-                                 <input type ="radio" id="I" name="tasktypesel" value ="2" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="I"><spring:message code='ezTask.t2001' /></label>
-                                 <input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="C"><spring:message code='ezTask.t2002' /></label>
-                              </c:when>
-                              <c:when test="${taskInfoVO.taskType == '3'}">
-                                 <input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="P"><spring:message code='ezTask.t2000' /></label>
-                                 <input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="I"><spring:message code='ezTask.t2001' /></label>
-                                 <input type ="radio" id="C" name="tasktypesel" value ="3" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="C"><spring:message code='ezTask.t2002' /></label>
-                              </c:when>
-                              <c:otherwise>
-                                 <input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="P"><spring:message code='ezTask.t2000' /></label>
-                                 <input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="I"><spring:message code='ezTask.t2001' /></label>
-                                 <input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
-                                 <label for ="C"><spring:message code='ezTask.t2002' /></label>
-                              </c:otherwise>
-                           </c:choose>
-                        </td>
-                        <th><spring:message code='ezTask.t2004' /></th>
-                        <td style="width:300px">
-                           <c:choose>
-                              <c:when test="${taskInfoVO.importance == '1' }">
-                                 <input type ="radio" id="important1" name="important" value ="1" checked="checked" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important1"><spring:message code='ezTask.t171' /></label>
-                                 <input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important2"><spring:message code='ezTask.t172' /></label>
-                                 <input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important3"><spring:message code='ezTask.t173' /></label>
-                              </c:when>
-                              <c:when test="${taskInfoVO.importance == '3' }">
-                                 <input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important1"><spring:message code='ezTask.t171' /></label>
-                                 <input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important2"><spring:message code='ezTask.t172' /></label>
-                                 <input type ="radio" id="important3" name="important" value ="3" checked="checked" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important3"><spring:message code='ezTask.t173' /></label>
-                              </c:when>
-                              <c:otherwise>
-                                 <input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important1"><spring:message code='ezTask.t171' /></label>
-                                 <input type ="radio" id="important2" name="important" value ="2" checked="checked" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important2"><spring:message code='ezTask.t172' /></label>
-                                 <input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
-                                 <label for ="important3"><spring:message code='ezTask.t173' /></label>
-                              </c:otherwise>
-                           </c:choose>
-                        </td>
-                     </tr>
-                     <tr id="personinputtr" style="display:none">
-                        <th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
-                        <td colspan ="3">
-                        	<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
-                        	<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-		  					<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-		  					<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-		  					<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-                        </td>
-                     </tr>
-                     <tr id="shareinputtr">
-                        <th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
-                           <td colspan ="3">
-                           		<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"><c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}"><c:out value = '${taskShareVO.sharerName }' /><c:if test="${not status.last }">,&nbsp;</c:if></c:forEach></div>
-                           		<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-	         					<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-	         					<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-	         					<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-                           </td>
-                     </tr>
-                     <tr>
-                        <th><spring:message code='ezTask.t158' /></th>
-                        <td colspan="3"><span id="periodblock">
-                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
-                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-                        </span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span> </td>
-                     </tr>
-                  </table>
-               </td>
-            </tr>
-            <tr>
+				<tr>
+					<td height="20">
+						<table class="content">
+							<tr>
+								<th><spring:message code='ezTask.t118' /></th>
+								<td colspan="3"><input type="text" id="TextTitle" style="width:100%; maxlength:100;" value = "<c:out value = '${taskInfoVO.title }' />"></td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezTask.t2003' /></th>
+								<td style="width:300px">
+									<c:choose>
+										<c:when test="${taskInfoVO.taskType == '2'}">
+											<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+											<label for ="P"><spring:message code='ezTask.t2000' /></label>
+											<input type ="radio" id="I" name="tasktypesel" value ="2" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+											<label for ="I"><spring:message code='ezTask.t2001' /></label>
+											<input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+											<label for ="C"><spring:message code='ezTask.t2002' /></label>
+										</c:when>
+									<c:when test="${taskInfoVO.taskType == '3'}">
+										<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+										<label for ="P"><spring:message code='ezTask.t2000' /></label>
+										<input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+										<label for ="I"><spring:message code='ezTask.t2001' /></label>
+										<input type ="radio" id="C" name="tasktypesel" value ="3" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+										<label for ="C"><spring:message code='ezTask.t2002' /></label>
+									</c:when>
+									<c:otherwise>
+										<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+										<label for ="P"><spring:message code='ezTask.t2000' /></label>
+										<input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+										<label for ="I"><spring:message code='ezTask.t2001' /></label>
+										<input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+										<label for ="C"><spring:message code='ezTask.t2002' /></label>
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<th><spring:message code='ezTask.t2004' /></th>
+							<td style="width:300px">
+								<c:choose>
+									<c:when test="${taskInfoVO.importance == '1' }">
+										<input type ="radio" id="important1" name="important" value ="1" checked="checked" style="margin:0px 0px 0px 3px" />
+										<label for ="important1"><spring:message code='ezTask.t171' /></label>
+										<input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
+										<label for ="important2"><spring:message code='ezTask.t172' /></label>
+										<input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
+										<label for ="important3"><spring:message code='ezTask.t173' /></label>
+									</c:when>
+									<c:when test="${taskInfoVO.importance == '3' }">
+										<input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
+										<label for ="important1"><spring:message code='ezTask.t171' /></label>
+										<input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
+										<label for ="important2"><spring:message code='ezTask.t172' /></label>
+										<input type ="radio" id="important3" name="important" value ="3" checked="checked" style="margin:0px 0px 0px 3px" />
+										<label for ="important3"><spring:message code='ezTask.t173' /></label>
+									</c:when>
+									<c:otherwise>
+										<input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
+										<label for ="important1"><spring:message code='ezTask.t171' /></label>
+										<input type ="radio" id="important2" name="important" value ="2" checked="checked" style="margin:0px 0px 0px 3px" />
+										<label for ="important2"><spring:message code='ezTask.t172' /></label>
+										<input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
+										<label for ="important3"><spring:message code='ezTask.t173' /></label>
+									</c:otherwise>
+								</c:choose>
+							</td>
+						</tr>
+						<tr id="personinputtr" style="display:none">
+							<th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
+							<td colspan ="3">
+								<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+								<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+								<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+								<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+								<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+							</td>
+						</tr>
+						<tr id="shareinputtr">
+							<th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
+							<td colspan ="3">
+								<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"><c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}"><c:out value = '${taskShareVO.sharerName }' /><c:if test="${not status.last }">,&nbsp;</c:if></c:forEach></div>
+								<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+								<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+								<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+								<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+							</td>
+						</tr>
+						<tr>
+	                        <th><spring:message code='ezTask.t158' /></th>
+	                        <td colspan="3"><span id="periodblock">
+		                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+		                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+	                        	</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
                 <td id="EdtorSize" style="height:100%;">
                      <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
                 </td>
