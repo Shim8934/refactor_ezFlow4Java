@@ -51,10 +51,14 @@ public class TaskInfoVO {
 	private String personID;
 	/** 담당자 이름 */
 	private String personName;
+	/** 담당자 이름 */
+	private String personName1;
 	/** 담당자 이름2*/
 	private String personName2;
 	/** 담당자 부서명*/
 	private String personDeptName;
+	/** 담당자 부서명*/
+	private String personDeptName1;
 	/** 담당자 부서명2*/
 	private String personDeptName2;
 	/** 담당자 email */
@@ -213,6 +217,12 @@ public class TaskInfoVO {
 	public void setPersonName(String personName) {
 		this.personName = personName;
 	}
+	public String getPersonName1() {
+		return personName1;
+	}
+	public void setPersonName1(String personName1) {
+		this.personName1 = personName1;
+	}
 	public String getPersonName2() {
 		return personName2;
 	}
@@ -224,6 +234,12 @@ public class TaskInfoVO {
 	}
 	public void setPersonDeptName(String personDeptName) {
 		this.personDeptName = personDeptName;
+	}
+	public String getPersonDeptName1() {
+		return personDeptName1;
+	}
+	public void setPersonDeptName1(String personDeptName1) {
+		this.personDeptName1 = personDeptName1;
 	}
 	public String getPersonDeptName2() {
 		return personDeptName2;
