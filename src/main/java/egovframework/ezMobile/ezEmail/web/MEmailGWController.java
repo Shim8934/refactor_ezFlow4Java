@@ -4077,6 +4077,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String ccHiddenStr = null;
 		String ccMobileStr = "";
 		String bccStr = "";
+		String bccMobileStr = "";
 		String subject = null;
 		String dateStr = null;
 		String title = null;
@@ -4292,6 +4293,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								bccStr += ", ";
 							}
 							bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+							
+							if ( i == arrRecipientsBCC.length - 1 ) {
+								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+							} else {
+								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress()) + "&nbsp;,&nbsp;";
+							}
 						}
 					}
 					
@@ -4382,6 +4389,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("ccHiddenStr", ccHiddenStr);
 			mail.put("ccMobileStr", ccMobileStr);
 			mail.put("bccStr", bccStr);
+			mail.put("bccMobileStr", bccMobileStr);
 			mail.put("dateStr", dateStr);
 			mail.put("subject", subject);
 			mail.put("title", title);
