@@ -332,7 +332,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		for (TaskAttachVO vo : list) {
 			String fileName = vo.getFileName();
 			String filePath = vo.getFilePath();
-			String fileSize = getProperSizeDisplay(Integer.parseInt(vo.getFileSize()));
+			String fileSize = commonUtil.byteCalculation(vo.getFileSize());
 			String fileImage = null;
 
 			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
@@ -674,16 +674,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		ezTaskDAO.deleteTaskAttach(map);
 		
 		logger.debug("deleteTaskAttach ended.");
-	}
-	
-	private String getProperSizeDisplay(int pSize) throws Exception {
-		if (pSize > 1048576) {
-			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
-		} else if (pSize > 1024) {
-			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
-		} else {
-			return Integer.toString(pSize) + " Byte";
-		}
 	}
 	
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
