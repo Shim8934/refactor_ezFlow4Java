@@ -167,5 +167,96 @@
         		A.DISPLAYNAME
 		]]>
     </select>
+    
+    <select id="MOrganDAO.getDeptMemberList" parameterClass="Map" resultClass="MOrganListVO">
+    	<isEqual property="type" compareValue="mail">
+	    	<![CDATA[
+	    		(SELECT
+	    			CN as userID,
+				    CN as deptID,
+	  				CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END userName,
+				    CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END deptName,
+	  				'' as TITLE,
+	  				MAIL,
+				    '' as EXTENSIONATTRIBUTE15
+				FROM
+					TBL_DEPTMASTER
+				WHERE
+					CN = #deptID#
+				AND
+					TENANT_ID = #tenantID#)
+				
+				UNION ALL
+			]]>
+    	</isEqual>
+    	<![CDATA[
+    		(SELECT 
+				CN as userID,
+			    DEPARTMENT as deptID,
+			    CASE
+					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+  					THEN DISPLAYNAME
+  					ELSE DISPLAYNAME$lang$
+  				END userName,
+  				DESCRIPTION as deptName,
+  				TITLE,
+  				MAIL,
+			    EXTENSIONATTRIBUTE15
+			FROM
+				TBL_USERMASTER
+			WHERE
+				DEPARTMENT = #deptID#
+			AND
+				CN <> 'masteradmin'
+			AND
+				CN NOT IN (SELECT 
+								CN
+							FROM
+								TBL_USERMASTER_RETIRE
+							WHERE
+								TENANT_ID = #tenantID#)
+			AND
+				TENANT_ID = #tenantID#)
+			    
+			UNION ALL
+			
+			(SELECT
+				B.CN as userID,
+			    DEPARTMENT as deptID,
+			    CASE
+					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+  					THEN DISPLAYNAME
+  					ELSE DISPLAYNAME$lang$
+  				END userName,
+  				DESCRIPTION as deptName,
+  				TITLE,
+  				MAIL,
+			    EXTENSIONATTRIBUTE15
+			FROM
+				TBL_ADDJOBMASTER A
+			JOIN
+				TBL_USERMASTER B
+			ON
+				A.CN = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.DEPTID = #deptID#
+			AND
+				A.TENANT_ID = #tenantID#)
+				
+			ORDER BY 
+				EXTENSIONATTRIBUTE15,
+			    userName
+		]]>
+    </select>
 </sqlMap>
 

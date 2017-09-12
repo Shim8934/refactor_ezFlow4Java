@@ -69,7 +69,16 @@ public class ResGetScheduleVO {
 	private String resApproveFlag;
 	/** 중복여부 값*/
 	private String repeatYn;
+	/** 즐겨찾기여부*/
+	private String favoriteYn;
 
+	public String getFavoriteYn() {
+		return favoriteYn;
+	}
+	public void setFavoriteYn(String favoriteYn) {
+		this.favoriteYn = favoriteYn;
+	}
+	
 	public String getRepeatYn() {
 		return repeatYn;
 	}
