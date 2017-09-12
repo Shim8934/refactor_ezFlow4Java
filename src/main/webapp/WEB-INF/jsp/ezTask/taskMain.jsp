@@ -34,8 +34,6 @@
 			var isrefresh = false;
 			var selectelem = null;
 			var initdate = "";
-// 			var ownerid = "";
-// 		    var offSetNum = "timeZoneStr";
 		    var startdate = "";
 		    var enddate = "";
 		    var type = "";

@@ -434,31 +434,29 @@
         	</isEqual>
         </isNotEqual>
         
-        <isNotEqual property="searchClass" compareValue="" prepend="AND">
-        	<isEqual property="searchClass" compareValue="1">
-	        	<![CDATA[
-	        			taskstatus = 1
-	        	]]>
-        	</isEqual>
-        	
-        	<isEqual property="searchClass" compareValue="2">
-	        	<![CDATA[
-	        			taskstatus = 2
-	        	]]>
-        	</isEqual>
-        	
-        	<isEqual property="searchClass" compareValue="3">
-	        	<![CDATA[
-	        			taskstatus = 3
-	        	]]>
-        	</isEqual>
-        	
-        	<isEqual property="searchClass" compareValue="4">
-	        	<![CDATA[
-	        			taskstatus = 4
-	        	]]>
-        	</isEqual>
-        </isNotEqual>
+       	<isEqual property="searchClass" compareValue="1" prepend="AND">
+        	<![CDATA[
+        			taskstatus = 1
+        	]]>
+       	</isEqual>
+       	
+       	<isEqual property="searchClass" compareValue="2" prepend="AND">
+        	<![CDATA[
+        			taskstatus = 2
+        	]]>
+       	</isEqual>
+       	
+       	<isEqual property="searchClass" compareValue="3" prepend="AND">
+        	<![CDATA[
+        			taskstatus = 3
+        	]]>
+       	</isEqual>
+       	
+       	<isEqual property="searchClass" compareValue="4" prepend="AND">
+        	<![CDATA[
+        			taskstatus = 4
+        	]]>
+       	</isEqual>
         
         <isNotEqual property="startDate" compareValue="" prepend="AND">
         	<![CDATA[
