@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -1047,7 +1048,6 @@ System.out.println("strFilePath:"+strFilePath);
 	public List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception {
 		String rollInfo = info.getRollInfo();
 		int tenantID = info.getTenantId();
-		String strForbiddenBoardIDList = "";
 		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
 		
 	    if (rollInfo != null && (boardGroupAdminFg.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
@@ -1057,17 +1057,11 @@ System.out.println("strFilePath:"+strFilePath);
 	    }
 	    
 	    String accessID = info.getUserId() + "," + ezOrganService.getDeptFullPath(info.getDeptId(), tenantID) + ",everyone";
-	    String strLang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 		
-	    
-	    //String pAccessID = userId + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
-        //String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
-	    
-		//List<MBoardTreeVO> list = brdBoardTree(rootBoardID, userId, mode, selectBy, excludeBoardID, info.getTenantId());
+	    logger.debug("accessID:"+accessID);
 	    
 	    List<MBoardTreeVO> brdBoardTreeList = new ArrayList<MBoardTreeVO>();
 	    for (int i = 0; i < accessID.split(",").length; i++) {
-            String boardID = "";
             
             if (mode == 0) {
             	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);
@@ -1078,10 +1072,11 @@ System.out.println("strFilePath:"+strFilePath);
             	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
             		for (MBoardTreeVO k : tempBrdBoardTreeList) {
             			if (brdBoardTreeList.size() > 0) {
+            				
             				int tempCnt = 0;
             				
             				for (MBoardTreeVO h : brdBoardTreeList) {
-            					if (h.equals(k)) {
+            					if (h.getBoardId().equals(k.getBoardId())) {
             						tempCnt++;
             					}
             				}
@@ -1095,21 +1090,8 @@ System.out.println("strFilePath:"+strFilePath);
             		}
             	}
             }
-            
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("accessID", accessID.split(",")[i].trim());
-            map.put("rootBoardID", rootBoardID);
-            map.put("tenantID", tenantID);
-            List<MBoardInfoVO> boardTreeList = mBoardDAO.getBoardTreeGet2(map);
-            
-            if (boardTreeList.size() > 0) {
-                for (int r = 0; r < boardTreeList.size(); r++) {
-            		boardID = boardTreeList.get(r).getBoardID().split(",")[0];
-        			strForbiddenBoardIDList += boardID.trim();
-                }
-            }
         }
-	    
+	  
 	    //오름차순 정렬
 	    Collections.sort(brdBoardTreeList, new Comparator<MBoardTreeVO>() {
 			@Override
@@ -1117,7 +1099,6 @@ System.out.println("strFilePath:"+strFilePath);
 				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
 			}
 		});
-	    
 	    
 	    Map<String, Object> map = new HashMap<String, Object>();
 		
