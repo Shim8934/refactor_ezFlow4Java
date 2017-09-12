@@ -615,7 +615,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
 		int cnt = multiFile.size();
 		
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String[] pFileName = new String[cnt];
         Long[] fileSize = new Long[cnt];        
         String[] resultUpload = new String[cnt];
@@ -922,10 +922,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		String primary = userInfo.getPrimary();
 		String taskIDList = request.getParameter("taskIDList");
 
-		String pDirPath = "";
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 
-		pDirPath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
+		String pDirPath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath;
 
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {

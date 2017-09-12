@@ -427,12 +427,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			attachMap.put("taskType", 2);
 			attachMap.put("tenantID", tenantID);
 			
-			int fileListSize = attachList.split(",").length;
+			int fileListSize = attachList.split("\\\\").length;
 
 			for (int i=0; i<fileListSize; i++) {
-				String filePath = attachList.split(",")[i];
-				String fileName = fileNames.split(",")[i];
-				String fileSize = fileSizes.split(",")[i];
+				String filePath = attachList.split("\\\\")[i];
+				String fileName = fileNames.split("\\\\")[i];
+				String fileSize = fileSizes.split("\\\\")[i];
 
 				if (filePath.contains(".")) {
 					filePath = filePath.split("\\.")[0];

@@ -186,7 +186,6 @@ function on_keydown(evt) {
 }
 
 var retcheck = "";
-//어디에쓰는거지
 function check_name() {
     var name = document.getElementById("shareInput").value;
     name = ReplaceText(name, ",", ";");
@@ -299,7 +298,7 @@ var g_fileList;
 var g_fileNameList = new Array();
 var g_fileInfoList = new Array();
 
-function show_progress(fileinfo) {
+/*function show_progress(fileinfo) {
     g_progresswin = window.showModelessDialog("/myoffice/ezTask/task_progress.aspx?fileinfo=" + escape(fileinfo), "", "dialogWidth=390; dialogHeight:170; center:yes; status:no; help:no; edge:sunken");
 }
 
@@ -307,7 +306,7 @@ function status_change(fileinfo) {
     try {
         g_progresswin.document.Script.fileinfo_change(fileinfo);
     } catch (e) { }
-}
+}*/
 
 function ReplaceText(orgStr, findStr, replaceStr) {
     var re = new RegExp(findStr, "gi");
@@ -638,9 +637,9 @@ function save_taskWork() {
 			fileName = GetAttribute(filelist[i + 1], "data2");
 			fileSize = GetAttribute(filelist[i + 1], "data3");
 		} else {
-			fileList += "," + GetAttribute(filelist[i + 1], "data");
-			fileName += "," + GetAttribute(filelist[i + 1], "data2");
-			fileSize += "," + GetAttribute(filelist[i + 1], "data3");
+			fileList += "\\" + GetAttribute(filelist[i + 1], "data");
+			fileName += "\\" + GetAttribute(filelist[i + 1], "data2");
+			fileSize += "\\" + GetAttribute(filelist[i + 1], "data3");
 		}
 	}
 
