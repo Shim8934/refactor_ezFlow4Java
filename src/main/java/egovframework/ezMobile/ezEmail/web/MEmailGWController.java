@@ -698,10 +698,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			if (!messageId.equals("") && !folderId.equals("")){
 				long uid = 0;
+
+				folderPath = URLDecoder.decode(folderId, "UTF-8");
 				
 				LOGGER.debug("cmd : " + cmd +", folderId : " + folderId + ", messageId : " +  messageId);
 				
-				folderPath = URLDecoder.decode(folderId, "UTF-8");
 				uid = Long.parseLong(messageId);
 				
 				LOGGER.debug("tenantID" + tenantID + "userId" + userId);
@@ -733,7 +734,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	    		// retrieve the specified message.
 				Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
 				
-				if (orgMessage != null) {				        	
+				if (orgMessage != null) {
+					LOGGER.debug("orgMessage not null");
 		        	// in case of editing a message in Drafts folder.
 		        	if (folderPath.equals(draftsFolderName) && cmd.equals("EDIT")) {
 		        		
@@ -3070,7 +3072,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 		LOGGER.debug("subject = " + subject + ", to = " + to + ", cc = " + cc + ", bcc = " + bcc + ", textBody = " 
 		+ textBody + ", from = " + from + ", charset = " + charset + ", htmlbody = " + htmlbody + ", htmlbody = " + htmlbody
-		+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url); 
+		+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url + "cmd" + cmd); 
 				
 		String serverName = request.getHeader("x-user-host");
 		
@@ -3129,7 +3131,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					    // 보낸편지함에 저장된 이후 Exception이 발생하여 Retry하는 경우 보낸편지함에 있는 메시지를 삭제한다.
 					    if (sentFolderMessageUID != 0) {
 	                        Folder sentFolder = null;
-	                        
 	                        try {
 	                            sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 	                            sentFolder.open(Folder.READ_WRITE);
@@ -3674,30 +3675,30 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        	throw new Exception("OVERMESSAGESIZE:" + maxMessageSizeD + "MB:" + messageSizeD + "MB");
 		        }
 		        
-//		        if (cmd.equalsIgnoreCase("SAVE")) {
-//		        	LOGGER.debug("Saving the message");
-//		        	
+		        if (cmd.equalsIgnoreCase("SAVE")) {
+		        	LOGGER.debug("Saving the message");
+		        	
 //		    		Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
-//		    		
+		    		
 //		    		if (isEachMailB) {
 //	                	message.setHeader("X-JMocha-Each-Mail", "true");
 //                    }
 //		    		if (delaySendTime != ""){
 //		    			message.setHeader("Delivery-Date", delaySendTime);
 //		    		}
-//		    		message.setFlag(Flags.Flag.SEEN, true);
-//		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
-//		    		if (uids != null && uids[0] != null) {
-//		    			draftUID = uids[0].uid;
-//		    		} 
-//		    	
-//		            // this deletion code block has been moved here because
-//		            // it needs to be kept in Drafts if an error occurs during the above process.
-//		            if (oldMessage != null) {
-//		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
-//		            }
-		            
-//		        } else if (cmd.equalsIgnoreCase("SEND")) {
+		    		message.setFlag(Flags.Flag.SEEN, true);
+		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
+		    		if (uids != null && uids[0] != null) {
+		    			draftUID = uids[0].uid;
+		    		} 
+		    	
+		            // this deletion code block has been moved here because
+		            // it needs to be kept in Drafts if an error occurs during the above process.
+		            if (oldMessage != null) {
+		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
+		            }
+		        
+		        } else if (cmd.equalsIgnoreCase("SEND")) {
 		        	LOGGER.debug("Sending the message");
 		        	
                     Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
@@ -3711,7 +3712,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			                            
                     message.setFlag(Flags.Flag.SEEN, true);
 		            
-                    // 예약 발송의 경우
+                    // 예약 발송의 경우는 지원하지 않기 때문에 false로 고정해 놓았다.
+                    if (false) {
 //			        if (!delaySendTime.equals("")) {
 //			            // 편지함 용량 초과 메세지 확인을 위해 임시저장
 //	                    AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
@@ -3738,7 +3740,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //                            oldMessage.setFlag(Flags.Flag.DELETED, true);
 //                        }		        		
 //		        	// 즉시 발송의 경우	
-//			        } else {         
+			        } else {         
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
@@ -3854,7 +3856,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			    			}
 			            }
 			            
-//			        }
+			        }
 			        
 			        //file system의 templist txt파일 삭제
 			        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
@@ -3864,7 +3866,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        	f.delete();
 			        }
 			        
-//		        }
+		        }
 		        
 		        // file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제
 		        // 발송의 경우에만 삭제하고 저장의 경우에는 쓰기 창이 계속 표시되어 있는 상태이므로 삭제하지 않고 유지한다.
