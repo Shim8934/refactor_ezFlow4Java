@@ -358,10 +358,13 @@
 		            tr.cells[3].style.overflow = "hidden";
 		            tr.cells[3].style.textOverflow = "ellipsis";
 
+		            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
+			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font>";
+			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        } else {
 			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
+			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        }
 			        tr.cells[4].style.overflow = "hidden";
 			        tr.cells[4].style.textOverflow = "ellipsis";

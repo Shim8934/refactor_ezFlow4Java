@@ -255,7 +255,7 @@
 			function add_comment() {
 				var taskComment = $("#TextComment").val();
 
-				if (taskComment == "") {
+				if (taskComment == "" || $.trim(taskComment) == "") {
 					alert("<spring:message code='ezTask.t241' />");
 					return;
 				}
