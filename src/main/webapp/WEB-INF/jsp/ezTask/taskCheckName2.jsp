@@ -153,10 +153,6 @@
 		                <NAME><spring:message code='ezTask.t1006' /></NAME> 
 		                <WIDTH>100</WIDTH> 
 		             </HEADER>
-		             <HEADER>
-		                <NAME></NAME> 
-		                <WIDTH>1</WIDTH> 
-		             </HEADER>
 		        </HEADERS>
 		    </LISTVIEWDATA> 
 		</xml> 
