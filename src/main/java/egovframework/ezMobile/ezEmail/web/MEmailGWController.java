@@ -3422,9 +3422,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        
 		        LOGGER.debug("url=" + url);
 		        
-		        if (!url.trim().equals("")) {
-		        	uid = Long.parseLong(url);
-		        
+		        if (!url.trim().equals("") || !orgMessageId.trim().equals("")) {
+		        	if (!url.trim().equals("")){
+		        		uid = Long.parseLong(url);
+		        	} else if (!orgMessageId.trim().equals("")){
+		        		uid = Long.parseLong(orgMessageId);
+		        	}
+		        	
 		        	MimeMultipart mixedPart = new MimeMultipart();
 					
 					if (uid != 0) {
@@ -4077,6 +4081,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String ccHiddenStr = null;
 		String ccMobileStr = "";
 		String bccStr = "";
+		String bccMobileStr = "";
 		String subject = null;
 		String dateStr = null;
 		String title = null;
@@ -4100,7 +4105,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				
 				if (message == null) {
+					//to-do 메일이 없습니다. 와 같은 문구를  보내주고 싶은데 아마 메일이 있는지 체크하는 메소드를 다시 만들어야 할 거 같다.
 					LOGGER.error("Message not found. uid=" + uid);
+					result.put("status", "ok");
+					result.put("code", 0);			
+					result.put("data", "");
+					
+					return result;
 				} else {
 					FetchProfile fp = new FetchProfile();
 					
@@ -4292,6 +4303,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								bccStr += ", ";
 							}
 							bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+							
+							if ( i == arrRecipientsBCC.length - 1 ) {
+								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+							} else {
+								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress()) + "&nbsp;,&nbsp;";
+							}
 						}
 					}
 					
@@ -4382,6 +4399,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("ccHiddenStr", ccHiddenStr);
 			mail.put("ccMobileStr", ccMobileStr);
 			mail.put("bccStr", bccStr);
+			mail.put("bccMobileStr", bccMobileStr);
 			mail.put("dateStr", dateStr);
 			mail.put("subject", subject);
 			mail.put("title", title);
