@@ -74,8 +74,6 @@ public class EzTaskController extends EgovFileMngUtil {
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 
-	/* 이효진*/
-
 	/**
 	 * 업무관리 메인화면
 	 */
@@ -138,7 +136,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		//업무공유자목록조회
 		List<TaskShareVO> taskShareList = null;
 		if (taskInfoVO.getHasShare().equals("Y")) {
-			taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
+			taskShareList = ezTaskService.getShareList(taskID, primary, tenantID);
 		}
 		
 		//task첨부파일목록조회
@@ -381,7 +379,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "json";
 	}
 	
-	/** 의견삭제 Method*/
+	/** 
+	 * 의견삭제 Method
+	 */
 	@RequestMapping(value = "/ezTask/taskDeleteComment.do")
 	public String taskDeleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskDeleteComment started.");
@@ -500,8 +500,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		return "json";
 	}
-	
-	/* 정수현*/
 	
 	/**
 	 * 업무관리 환경설정
@@ -757,7 +755,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			taskInfoVO.setMemo(taskInfoVO.getMemo().replace("<br>", "\n"));
 			//업무공유자목록조회
 			if (taskInfoVO.getHasShare().equals("Y")) {
-				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
+				taskShareList = ezTaskService.getShareList(taskID, primary, tenantID);
 				
 				StringBuilder strShareName = new StringBuilder();
 				StringBuilder strShareName1 = new StringBuilder();
@@ -813,7 +811,6 @@ public class EzTaskController extends EgovFileMngUtil {
 	
 	/**
      * 지시화면 목록 조회
-     * 
      */
     @RequestMapping(value = "/ezTask/taskGetList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody

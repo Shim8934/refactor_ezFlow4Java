@@ -33,7 +33,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Autowired
 	private EzTaskDAO ezTaskDAO;
 	
-	/* 이효진*/
 	@Override
 	public TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception {
 		logger.debug("getTaskInfo started.");
@@ -72,14 +71,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception {
-		//TaskShareVO 내부에 completeDate 있어서 우선 offset 가져오긴하는데 completeDate 사용안할시 VO에서 삭제 및 offset파라미터 제거. 이효진
+	public List<TaskShareVO> getShareList(String taskID, String primary, int tenantID) throws Exception {
 		logger.debug("getShareList started.");
-		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
+		logger.debug("taskID = " + taskID + " || primary = " + primary + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
@@ -94,6 +91,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception {
 		logger.debug("insertComment started.");
+		logger.debug("taskID = " + taskID + " || commentorID = " + commentorID + " || commentorName = " + commentorName + " || commentorName2 = " + commentorName2 + " || comment = " + comment);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -115,7 +113,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	
 	@Override
 	public void deleteComment(String taskID, String commentID, int tenantID) throws Exception {
-		logger.debug("insertComment started.");
+		logger.debug("deleteComment started.");
+		logger.debug("taskID = " + taskID + " || commentID = " + commentID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -126,12 +125,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		ezTaskDAO.deleteComment(map);
 		ezTaskDAO.updateHasComment(map);
 		
-		logger.debug("insertComment ended.");
+		logger.debug("deleteComment ended.");
 	}
 	
 	@Override
 	public void updateTaskStatus(String taskID, String taskStatus, String completeRate, int tenantID) throws Exception {
 		logger.debug("updateTaskStatus started.");
+		logger.debug("taskID = " + taskID + " || taskStatus = " + taskStatus + " || completeRate = " + completeRate);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -248,7 +248,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("creatorDeptName2", vo.getCreatorDeptName2());
 		map.put("creatorEmail", vo.getCreatorEmail());
 		map.put("nowDate", nowDate);
-		
 		map.put("taskStatus", vo.getTaskStatus());
 		map.put("completeRate", 0);
 		map.put("completeDate", "");
@@ -288,6 +287,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		String taskID = vo.getTaskID();
 		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		logger.debug("taskID = " + taskID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -347,6 +348,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	/* 공유자 삭제 */
 	private void deleteTaskShare(String taskID, int tenantID) throws Exception {
 		logger.debug("deleteTaskShare started.");
+		logger.debug("taskID = " + taskID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -361,7 +363,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	private void deleteTaskAttach(String taskID, int type, String realPath, String uploadTaskPath, int tenantID) throws Exception {
 		logger.debug("deleteTaskAttach started.");
 		logger.debug("taskID = " + taskID + " || attachType = " + type + " || tenantID = " + tenantID);
-		//닷넷 파일은 그대로 두고 DB만 날림
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -407,7 +408,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
-		map.put("personAttach", personAttach);// 파일첨부이후 추가
+		map.put("personAttach", personAttach);
 		map.put("personContentPath", contentPath);
 		map.put("tenantID", tenantID);
 		
@@ -459,6 +460,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public String getAttachListStr(String taskID, String folderPath, String type, int tenantID) throws Exception {
 		logger.debug("getAttachListStr started.");
+		logger.debug("taskID = " + taskID + " || folderPath = " + folderPath + " || type = " + type);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -520,6 +522,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception {
 		logger.debug("getAttachList started");
+		logger.debug("taskID = " + taskID + " || type = " + type);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -533,7 +536,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		return list;
 	}
 
-	/* 정수현*/
 	@Override
 	public TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception {
 		logger.debug("getOriginColor started.");
@@ -662,7 +664,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception {
 		logger.debug("taskDelete started.");
-		logger.debug("taskIDList : " + taskIDList + " | pDirPath : " + pDirPath + " | offset : " + offset + " | primary : " + primary);
+		logger.debug("memberID = " + memberID + " | taskIDList : " + taskIDList + " | pDirPath : " + pDirPath + " | offset : " + offset + " | primary : " + primary);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("offset", commonUtil.getMinuteUTC(offset));
