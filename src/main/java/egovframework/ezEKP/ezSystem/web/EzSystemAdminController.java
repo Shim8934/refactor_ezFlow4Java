@@ -337,11 +337,15 @@ public class EzSystemAdminController {
 		return "json";
 	}
 	
+	/**
+	 * 타 서버에서 이 서버로 RESTful로 접근할 때 발생
+	 * 서버리스트 정보 가져오기
+	 * */
 	@RequestMapping(value="/ezSystem/util/getSysInfo", method=RequestMethod.POST)
 	@ResponseBody
 	public String getSysInfo () throws Exception {
 		
-		logger.debug("getSysInfo start.");
+		logger.debug("inner getSysInfo start.");
 		
 		String result = "";
 		InetAddress local = InetAddress.getLocalHost();
@@ -366,7 +370,7 @@ public class EzSystemAdminController {
 	@ResponseBody
 	public String getSysMonitorInfo () throws Exception {
 		
-		logger.debug("getSysMonitorInfo start.");
+		logger.debug("inner getSysMonitorInfo start.");
 		
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();

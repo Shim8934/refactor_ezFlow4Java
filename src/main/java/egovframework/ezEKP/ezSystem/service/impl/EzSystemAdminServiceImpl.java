@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -224,14 +225,19 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			} else {					
 				String sysInfoUrl = address + "/ezSystem/util/getSysInfo";
 				HttpEntity<?> entity = new HttpEntity<>(headers);
-				
-				ResponseEntity<String> sysInfo = rest.postForEntity(sysInfoUrl, entity, String.class);
-				serverList.add(sysInfo.getBody());
-				logger.debug("<<<sysInfo : " + sysInfo.getBody());
+				try {
+					ResponseEntity<String> sysInfo = rest.postForEntity(sysInfoUrl, entity, String.class);
+					serverList.add(sysInfo.getBody());
+					logger.debug("<<<sysInfo : " + sysInfo.getBody());
+				} catch(ResourceAccessException e) {
+					String errorMsg = "{\"getSysInfo\":[{\"hostname\":\""+ address +" is Down\",\"memory\":\"NULL\",\"os\":\"NULL\",\"cpu\":\"NULL\",\"version\":\"NULL\"}]}";
+					serverList.add(errorMsg);
+					logger.debug("<<<sysInfo : " + errorMsg);
+				}
 			}
 		}			
 			
-		logger.debug("getSysIngo ended.");
+		logger.debug("getSysInfo ended.");
 		
 		return serverList;
 	}

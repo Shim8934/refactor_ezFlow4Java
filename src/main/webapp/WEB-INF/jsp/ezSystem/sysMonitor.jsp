@@ -23,7 +23,11 @@
 		// 서버의 갯수만큼 checkbox 생성
 		for (var i = 0; i < obj.length; i++) {
 			var server = obj[i].getSysInfo;
-			str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked >' + server[0].hostname;
+			if (server[0].hostname.indexOf("is Down") > -1) {
+				str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked ><strong style="color : red;">' + server[0].hostname + '</strong>';	
+			} else {
+				str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked >' + server[0].hostname;	
+			}			
 			$("#serverList").append(str);
 			chkServerList_onclick(i);
 		}
