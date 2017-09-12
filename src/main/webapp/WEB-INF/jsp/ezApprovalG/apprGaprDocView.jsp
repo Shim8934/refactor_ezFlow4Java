@@ -93,6 +93,7 @@
 		            LoadpzFormDocInfo();
 		            SignCheck();
 		            cancelYN();
+			      	setAttachInfo(DocID, "TMP", lstAttachLink); // 임시 저장 첨부파일 리스트 출력
 		        }
 		    }
 		    
