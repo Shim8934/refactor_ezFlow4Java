@@ -199,6 +199,7 @@
 						g_person["email"][0] = personemail;
 					}
 					
+
 		            if (shareliststr != "") {
 						sharename = shareliststr.split("||")[0];
 						sharename1 = shareliststr.split("||")[1];

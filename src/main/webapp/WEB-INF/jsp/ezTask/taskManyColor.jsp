@@ -53,7 +53,7 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code="ezTask.jsh06" /></h1>
-	    <table  onClick="select_color(event)" id="ColorTable" style="width:256px;" class="box">
+	    <table onClick="select_color(event)" border="1" cellspacing="2" id="ColorTable" style="width:256px;" class="box">
 			<tr>
 			    <td style="width:32px; background-color: #ff8080" title="#ff8080">&nbsp;</td>
 			    <td style="width:32px; background-color: #ffff80" title="#ffff80">&nbsp;</td>
@@ -119,8 +119,8 @@
 		    <table>
 		        <tr>
 		            <td id="Td1" style="padding-right:10px">Color : </td>
-		            <td id="selColorShow" style="width:50px"></td>
-		            <td id="selColor" style="padding-left:10px"></td>
+		            <td><div id=selColorShow style="background-color:black; width:20px; height:21px; border:1px inset gray"></div></td>
+		            <td style="padding-left:10px"><input type="text" id=selColor></td>
 		        </tr>
 		    </table>
 		</div>
