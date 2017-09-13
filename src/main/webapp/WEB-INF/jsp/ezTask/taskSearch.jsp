@@ -59,12 +59,46 @@
 		    }
 
 		    function select_row(elem) {
+		    	// 전체체크박스 선택 후 목록에서 하나 선택 시 전체체크 해제
+				if ($("#checkboxAll").is(":checked")) {
+					$("input[type=checkbox]").prop("checked", false);
+		    		$(".row_body td").css("background", "");
+				}
+
+				// 목록에서 하나씩 다른거 선택할 때
+		    	if (selectelem != null) {
+			    	if (selectelem != elem) {
+						$("input[type=checkbox]").prop("checked", false);
+						$(selectelem).css("background", "#ffffff");
+						$(selectelem).siblings().css("background", "#ffffff");
+
+			        	selectelem = null;
+			    	}
+		    	}
+
+				// 체크 후 체크박스 눌러서 체크 해제할 때
 		        if (selectelem != null) {
-		            selectelem.style.backgroundColor = "#ffffff";
+		        	selectelem.style.backgroundColor = "#ffffff";
+		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
+		            selectelem = null;
+		            return;
 		        }
 
 		        selectelem = elem;
-		        selectelem.style.backgroundColor = "#DBE1E7";
+		        elem.style.backgroundColor = "rgb(233, 241, 244)";
+		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
+		    }
+		    
+		    function selectAll() {
+		    	$(selectelem).css("background", "#ffffff");
+
+				if ($("#checkboxAll").is(":checked")) {
+					$(":checkbox[name=myCheckbox]").prop("checked", true);
+					$(".row_body td").css("background", "rgb(233, 241, 244)");
+				} else {
+					$(":checkbox[name=myCheckbox]").prop("checked", false);
+					$(".row_body td").css("background", "");
+				}
 		    }
 
 		    $(function () {
@@ -240,7 +274,7 @@
 
 			        tr.setAttribute("startdate", startdate);
 
-			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -277,38 +311,26 @@
 			        tr.cells[6].style.overflow = "hidden";
 			        tr.cells[6].style.textOverflow = "ellipsis";
 		
+	                var div = document.createElement("DIV");
+	                div.style.width = "72px";
+	                div.style.lineHeight = "18px";
+	                div.style.height = "17px";
+	                div.style.textAlign = "center";
+	                div.style.color = "white";
+
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
-			                var div = document.createElement("DIV");
 			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
-			                div.style.width = "72px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                tr.cells[7].appendChild(div);
 			                break;
 			            case "2":
-			                var div = document.createElement("DIV");
 			                div.style.background = "url(/images/icon/section_orderbg.gif)";
-			                div.style.width = "72px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";			                
-			                tr.cells[7].appendChild(div);
 			                break;
 			            case "3":
-			                var div = document.createElement("DIV");
 			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
-			                div.style.width = "72px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                tr.cells[7].appendChild(div);
 			                break;
 			        }
+
+	                tr.cells[7].appendChild(div);
 
 			        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
 			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
@@ -409,11 +431,6 @@
 		        }
 			}
 
-			function RefreshView()
-			{
-// 			    window.location.reload(true);
-			}
-
 			function onmouseOver(elem)
 			{
 				elem.style.color = "blue";
@@ -452,6 +469,10 @@
 		            $("#Sdatepicker").datepicker('enable');
 		            $("#Edatepicker").datepicker('enable');
 		        }
+		    }
+
+		    function RefreshView() {
+		        search();
 		    }
 		</script>
 	</head>
@@ -506,7 +527,7 @@
 			<col style ="width:80px;">
 			<col style ="width:97px;">
 			<tr>
-				<th ><input id="checkboxAll" type="checkbox" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+				<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 				<th ><spring:message code='ezTask.t156' /></th>
 				<th ><img src="/images/newAttach.gif"></th>
 				<th ><spring:message code='ezTask.t2005' /></th>

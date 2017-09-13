@@ -74,7 +74,7 @@
 				}
 
 				// 목록에서 하나씩 다른거 선택할 때
-		    	if (selectelem != null) { 		
+		    	if (selectelem != null) {
 			    	if (selectelem != elem) {
 						$("input[type=checkbox]").prop("checked", false);
 						$(selectelem).css("background", "#ffffff");
@@ -747,7 +747,8 @@
 		    }
 
 		    function selectAll() {
-		    	$(".row_body td").css("background", "");
+// 		    	$(".row_body td").css("background", "");
+				$(selectelem).css("background", "#ffffff");
 
 				var deleteList = [];
 				var deleteListID = [];			
@@ -755,15 +756,9 @@
 					strListIdInfo = "";
 					strListInfo = "";
 
-					if ($("#checkboxAll").is(":checked")) {
-						$(":checkbox[name=myCheckbox]").prop("checked", true);
-						$(".row_body td").css("background", "rgb(233, 241, 244)");
-					} else {
-						$(":checkbox[name=myCheckbox]").prop("checked", false);
-						$(".row_body td").css("background", "");
-						selectelem = null;
-					}
-					
+					$(":checkbox[name=myCheckbox]").prop("checked", true);
+					$(".row_body td").css("background", "rgb(233, 241, 244)");
+
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
 						deleteListID.push($(this).attr("taskID") + ";")
@@ -776,8 +771,9 @@
 				} else {		
 					strListIdInfo = "";
 					strListInfo = "";
-					$("input[type=checkbox]").prop("checked", false);
-					$(".row_body").css("background", "");
+
+					$(":checkbox[name=myCheckbox]").prop("checked", false);
+					$(".row_body td").css("background", "");
 				}
 		    }
 		</script>
