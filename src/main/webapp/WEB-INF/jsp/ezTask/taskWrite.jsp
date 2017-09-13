@@ -146,6 +146,7 @@
 				  };
 				  
 				  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+				  
 				  if (taskid != "") {
 						document.getElementById("importantSelect").value = importance;
 						
@@ -153,9 +154,9 @@
 				            setAttachFileInfo("${taskAttachList}");
 				        }
 						
-						Editor_Complete();
+// 						Editor_Complete();
 					}
-
+					
 					if (useTodoMemo == 'YES') {
 						if (tasktype == "1") {
 							document.getElementById("P").click();
@@ -197,6 +198,7 @@
 						g_person["deptname2"][0] = persondept2;
 						g_person["email"][0] = personemail;
 					}
+					
 
 		            if (shareliststr != "") {
 						sharename = shareliststr.split("||")[0];
@@ -309,14 +311,13 @@
 			        $.ajax({
 				        type : "POST",
 				        dataType : "text",
-				        async : false,
 				        url : "/ezCommon/mhtToHTMLContent.do",
 				        data : {
 				              type : "TASKCONTENT",
 				              itemID : contentPath
 				        },
 				        success: function(result){
-				           message.SetEditorContent(result);
+							message.SetEditorContent(result);
 				        }
 			        });
 			        

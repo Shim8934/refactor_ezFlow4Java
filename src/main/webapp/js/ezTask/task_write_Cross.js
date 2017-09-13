@@ -370,12 +370,12 @@ function save_task() {
     var sharelist = document.getElementById("sharelist").innerHTML;
 	var memo = "";
 
-	if (sharelist != "") {
+	if ($.trim(sharelist) != "") {
 		hasshare = "Y";
 	} else {
 		hasshare = "N";
 	}
-
+	
     if (!check_length($("#TextTitle").val(), 100, "" + strLang11 + "")) {
     	return;
     }
