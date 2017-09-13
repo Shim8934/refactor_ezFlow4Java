@@ -14,5 +14,5 @@ public interface MOrganService {
 
 	public List<MOrganListVO> getDeptInfo(String deptId, String lang, int tenantId) throws Exception;
 
-	public List<MOrganListVO> getDeptMemberList(String deptID, String lang, int tenantId) throws Exception;
+	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String lang, int tenantId) throws Exception;
 }

@@ -167,13 +167,14 @@ public class MOrganGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userID");
+			String searchFlag = request.getParameter("searchFlag");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, userInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, userInfo.getLang(), userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", "0");

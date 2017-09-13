@@ -145,14 +145,15 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getDeptMemberList(String deptID, String lang, int tenantId) throws Exception {
+	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String lang, int tenantId) throws Exception {
 		LOGGER.debug("getDeptMemberList started");
 		
-		//mail, absentee
-		String orgType = "mail";
+		//single, multi
+		String orgType = "multi";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("type", orgType);
+		map.put("searchFlag", searchFlag);
 		map.put("deptID", deptID);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
