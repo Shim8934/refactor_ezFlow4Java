@@ -1405,5 +1405,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (OrganProxyVO) select("EzOrganDAO.getProxyInfo", map);
 	}
 	
-
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getExtension4ID(Map<String, Object> map) throws Exception {
+		return (List<OrganDeptVO>) list("EzOrganDAO.getExtension4ID", map);
+	}
 }

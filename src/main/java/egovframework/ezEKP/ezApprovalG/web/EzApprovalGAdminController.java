@@ -1978,7 +1978,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
-		String result = ezApprovalGAdminService.getSealList(listFlag, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGAdminService.getSealList(commonUtil.getRealPath(request), listFlag, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}

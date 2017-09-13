@@ -1634,6 +1634,20 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getOrgInfo started");
 		return str.toString();
 	}
+
+	@Override
+	//문서유통에서 해당 부서의 문서과 정보를 가지고 부서정보 가져오기.
+	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID, LoginVO userInfo) throws Exception {
+		logger.debug("getExtensionAttr4ID started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("extension4", strReceiveID);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<OrganDeptVO> list = ezOrganDAO.getExtension4ID(map);
+		logger.debug("getExtensionAttr4ID started");
+		return list;
+	}
 }
 
 

@@ -846,8 +846,8 @@ function makeExtinfo(psihangXML, newDocID, mode) {
             SetAttribute(tempNode, "filename", sealName); // btoa
             SetAttribute(tempNode, "content-transfer-encoding", "base64");
             SetAttribute(tempNode, "content-type", "");
-            SetAttribute(tempNode, "charset", "");
-            setNodeText(tempNode, sealPath.replace(pDomainName, ""));                        
+            SetAttribute(tempNode, "charset", "UTF-8");
+            setNodeText(tempNode, sealPath);                        
         }
 
 

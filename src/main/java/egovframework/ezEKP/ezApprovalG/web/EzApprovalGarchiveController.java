@@ -2291,8 +2291,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
  
 		String extXML = request.getParameter("extXML");
 		Document xmlDom = commonUtil.convertStringToDocument(extXML);
-		String mapPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) ;
-		
+		String mapPath = commonUtil.getRealPath(request);
+
 		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("UTF-8")));
 		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("UTF-8")));
 		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")));

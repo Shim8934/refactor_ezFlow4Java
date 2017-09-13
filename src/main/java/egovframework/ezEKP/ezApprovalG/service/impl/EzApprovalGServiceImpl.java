@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -22124,9 +22125,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //                        CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
 //                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
 
-                        xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().getBytes("UTF-8")));
-//						strPath = strAttachPath.replace(strFolderUrl, strFolderPath)
-					}
+                    		File file = new File(mapPath + strPath);
+                    		InputStream is = new FileInputStream(file);
+
+                    	    long length = file.length();
+                    	    if (length > Integer.MAX_VALUE) {
+                    	        // File is too large
+                    	    }
+                    	    byte[] bytes = new byte[(int)length];
+                    	    
+                    	    int offset = 0;
+                    	    int numRead = 0;
+                    	    while (offset < bytes.length
+                    	           && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+                    	        offset += numRead;
+                    	    }
+
+                    	    if (offset < bytes.length) {
+                    	        throw new IOException("Could not completely read file "+file.getName());
+                    	    }
+
+                    	    is.close();
+                    	    
+                    		byte[] encoded = Base64.encodeBase64(bytes);
+                    		String encodedString = new String(encoded);
+                            
+                            xmlDom.getElementsByTagName("content").item(i).setTextContent(encodedString);
+
+    					}
+                    		
 				}
 			}
 			 strRtnXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";

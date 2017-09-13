@@ -524,7 +524,7 @@ function getExtInfo() {
                     field.style.width = signWidth
                     field.style.height = signHeight
 
-                    var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filePath=" + escape(sealPath) + "' border=0 embedding='1' ";
+                    var strimg = "<img src='" + escape(sealPath) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + ">";
 
@@ -537,7 +537,7 @@ function getExtInfo() {
                 if (field) {
                     var signWidth = 105;
                     var signHeight = 35;
-                    var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filePath=" + escape(dirPath +"/sealImg/nostamp.gif") + "' border=0 embedding='1' >";
+                    var strimg = "<img src='" + escape(dirPath +"/sealImg/nostamp.gif") + "' border=0 embedding='1' >";
                     var field2 = message.GetListItem(fields, "chief");
                     var chiefwidth = 1;
                     if (field2) {

@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -213,27 +214,34 @@ public class EzApprovalGRelayScheduler {
                 	  strSendOrgCode = objXML.getElementsByTagName("send-orgcode").item(0).getTextContent();
                 	  strSendID = objXML.getElementsByTagName("send-id").item(0).getTextContent();
                 	  
-                	  strCompanyID = ezOrganService.getPropertyValue(strReceiveID, "EXTENSIONATTRIBUTE2", userInfo.getTenantId());
-                	  
                 	  if (strReceiveID.equals("")) {
                           strReceiveID = strFileName.substring(7, 14);
                 	  }
 
                       //수신기관코드가 회사ID랑 다를 경우 회사ID로 맞추어 준다.(보정처리)
                       boolean RecvIDCheck = false;
-//                      스케쥴러에서는 config 파일에 회사 정보가 S907000; 이런식으로 저장되어 있는데 어떤 의도인지 물어보기
-                      if (userInfo.getCompanyID().indexOf(";") > -1) {
-                          String[] RecvIDs = userInfo.getCompanyID().split(";");
-                          for (int i = 0; i < RecvIDs.length; i++) {
-                              if (strReceiveID.trim().equals(userInfo.getCompanyID().trim())) {
+                      List <OrganDeptVO> extensionAttr4ID = ezOrganService.getExtensionAttr4ID(strReceiveID, userInfo);
+                      
+                      if (extensionAttr4ID.size() > 0) {
+                    	  for (int m = 0; m < extensionAttr4ID.size(); m++) {
+                    		  strCompanyID = extensionAttr4ID.get(m).getExtensionAttribute2();
+                    	  }
+                      } else {
+                    	  strCompanyID = userInfo.getCompanyID();
+                      }
+                      
+                      if (extensionAttr4ID.size() > 0) {
+                    	  for (int m = 0; m < extensionAttr4ID.size(); m++) {
+                    		  if (strReceiveID.trim().equals(extensionAttr4ID.get(m).getExtensionAttribute4())) {
+                    			  strReceiveID = extensionAttr4ID.get(m).getCn();
                                   RecvIDCheck = true;
                                   break;
                               }
-                          }
+                    	  }
                       } else {
-                          if (!userInfo.getCompanyID().trim().equals("")) {
-                        	  if (!strReceiveID.trim().equals(userInfo.getCompanyID().trim())){
-                        		  strReceiveID = userInfo.getCompanyID().trim();
+                          if (!strCompanyID.trim().equals("")) {
+                        	  if (!strReceiveID.trim().equals(strCompanyID.trim())){
+                        		  strReceiveID = strCompanyID.trim();
                         	  }
                         	  RecvIDCheck = true;
                           }

@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezOrgan.service;
 
+import java.util.List;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -61,4 +63,6 @@ public interface EzOrganService {
 	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception;
 
 	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception;
+
+	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID, LoginVO userInfo) throws Exception;
 }

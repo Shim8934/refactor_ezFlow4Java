@@ -70,7 +70,7 @@
 		    var isGPKI = new Array();
 		    var sendCNT = new Array();
 		    var pDocInfoXML = createXmlDom();
-		    var pDomainName = document.location.protocol + "//" + document.location.hostname;
+		    var pDomainName = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;
 		    var symbolPath = "";
 		    var symbolName = "";
 		    var logoPath = "";
