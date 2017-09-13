@@ -3947,6 +3947,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						pResult = e.getMessage();
 					}
 				}
+				
+				return result;
 			} finally {
 				if (ia != null) {
 					ia.close();
