@@ -260,7 +260,7 @@
 					return;
 				}
 
-				taskComment = trim(ReplaceText(taskComment, "\n", "<br>"));
+				taskComment = $.trim(taskComment);
 
 				$.ajax({
 					type : "POST",
@@ -959,7 +959,7 @@
 							<tr>
 								<th><spring:message code='ezTask.t157' /></th>
 								<td colspan="3" style="width:100%">
-									<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
+									<div id="taskShareList" style="overflow-Y: auto; line-height: 1.5em;">
 										<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 											<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
 												<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
