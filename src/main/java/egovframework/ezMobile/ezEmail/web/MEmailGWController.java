@@ -3007,6 +3007,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String orgFolderId = "";
 		String orgMessageId = "";
 		String cmd = "";
+		String mailcmd = "";
 		
 		if (jsonObject.get("subject") != null) {
 			subject = (String) jsonObject.get("subject");
@@ -3066,6 +3067,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		if (jsonObject.get("cmd") != null) {
 			cmd = (String) jsonObject.get("cmd");
+		}
+		
+		if (jsonObject.get("mailcmd") != null) {
+			mailcmd = (String) jsonObject.get("mailcmd");
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -3829,7 +3834,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			            }
 			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
-			            if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
+			            if (mailcmd.equals("REPLY") || mailcmd.equals("REPLYALL") || mailcmd.equals("FORWARD")) {
 //			    			int index = orgUrl.lastIndexOf("/");			
 			    			
 //			    			if (index != -1) {
@@ -3843,7 +3848,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			    				
 			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
 		    		        	
-			    		        if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {
+			    		        if (mailcmd.equals("REPLY") || mailcmd.equals("REPLYALL")) {
 			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 			    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
 			    		        }
