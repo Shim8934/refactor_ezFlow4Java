@@ -579,6 +579,22 @@ public class MBoardGWController {
 			
 			List<MBoardAttachVO> list = mBoardService.getAttachList(contentId, info.getTenantId());
 			
+			//파일사이즈 단위 수정
+			String fileSize = "";
+			for (int i=0; i<list.size(); i++) {
+				fileSize = list.get(i).getFileSize();
+				
+				if (Integer.parseInt(fileSize) / 1024 / 1024 > 1) {
+					fileSize = ((Integer.parseInt(fileSize) / 1024 / 1024 * 10) / 10) + "MB";
+				} else if ((Integer.parseInt(fileSize) / 1024) > 1) {
+					fileSize = (Integer.parseInt(fileSize)/1024) + "KB"; 
+				} else {
+					fileSize = fileSize + "B";
+				}
+				
+				list.get(i).setFileSize(fileSize);
+			}
+
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
@@ -715,7 +731,7 @@ public class MBoardGWController {
 	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
 	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
 	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
-	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
+	            strXML.append("<FILESIZE>" + (fileSize[i]/(1024*1024))+"MB" + "</FILESIZE>");
 	            strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
 	            strXML.append("</NODE>");
 	            
