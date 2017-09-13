@@ -478,7 +478,7 @@
                 <p id="Permission_sub7" <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
                 <p id="Permission_sub8" <c:if test="${IsJMochaStandAlone == 'YES' || approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
                 <p id="Permission_sub9" <c:if test="${IsJMochaStandAlone == 'YES' || approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
-                <p id="Permission_sub10" <c:if test="${IsJMochaStandAlone == 'YES' || approvalFlag == 'S'}">"</c:if>><span divname="f" id="1tab9"><spring:message code='ezOrgan.lhj1' /></span></p>
+                <p id="Permission_sub10" <c:if test="${IsJMochaStandAlone == 'YES' || approvalForDoc == 'N'}">style="display:none;"</c:if>><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	        </div>
 	    </div>
 	
