@@ -154,7 +154,7 @@
 				            setAttachFileInfo("${taskAttachList}");
 				        }
 						
-						Editor_Complete();
+// 						Editor_Complete();
 					}
 					
 					if (useTodoMemo == 'YES') {
@@ -198,7 +198,7 @@
 						g_person["deptname2"][0] = persondept2;
 						g_person["email"][0] = personemail;
 					}
-		             
+					
 		            if (shareliststr != "") {
 						sharename = shareliststr.split("||")[0];
 						sharename1 = shareliststr.split("||")[1];
@@ -310,14 +310,13 @@
 			        $.ajax({
 				        type : "POST",
 				        dataType : "text",
-				        async : false,
 				        url : "/ezCommon/mhtToHTMLContent.do",
 				        data : {
 				              type : "TASKCONTENT",
 				              itemID : contentPath
 				        },
 				        success: function(result){
-				           message.SetEditorContent(result);
+							message.SetEditorContent(result);
 				        }
 			        });
 			        
