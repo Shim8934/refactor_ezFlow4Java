@@ -53,6 +53,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -133,14 +134,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         userInfo = commonUtil.aprUserInfo(loginCookie);
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String hideCabinet = config.getProperty("config.hideCabinet");
 		String listType = request.getParameter("listType");
 		String userSendOut = "";
 		String firstContainerID = "";
 		String subTitleString = "";
 		boolean isSubTitle = false;
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String hideCabinet = config.getProperty("config.hideCabinet");
 		String userCont = "";
+		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", userInfo.getTenantId());
+		
 		StringBuffer containers = new StringBuffer();
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
@@ -210,6 +213,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("firstContainerID", firstContainerID);
 		model.addAttribute("szRoleInfo", userInfo.getRollInfo());
 		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("approvalForDoc", approvalForDoc);
 		
         logger.debug("apprGLeft Value : listType=" + listType + "containers=" + containers.toString() + "viewLeftCount=" + viewLeftCount);       
         logger.debug("apprGLeft Ended");       
@@ -7268,4 +7272,47 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 전자결재 결재문서조회 진행문서
+	 */
+	@RequestMapping(value = "/ezApprovalG/userForAprDoc.do")
+	public String forAprDoc(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("userForAprDoc started.");
+		
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("userForAprDoc ended.");
+		
+		return "/ezApprovalG/apprGUserForAprDoc";
+	}
+	
+	/**
+	 * 전자결재 결재문서조회 완료문서
+	 */
+	@RequestMapping(value = "/ezApprovalG/userForDoc.do")
+	public String forDoc(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("userForDoc started.");
+		
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("forDoc ended.");
+		
+		return "/ezApprovalG/apprGUserForDoc";
+	}
 }

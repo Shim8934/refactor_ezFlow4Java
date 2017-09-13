@@ -293,6 +293,9 @@
 		                    break;
 		                case "m10":
 		                    break;
+		                case "approvalForDoc":
+		                	window.open("/ezApprovalG/userForAprDoc.do", "right");
+		                	break;
 		                case "ApprovalConfig":
 		                    PresentOpen = "CONFIG";
 		                    window.open("/ezPersonal/ezApprovalConfig.do", "right");
@@ -773,6 +776,14 @@
 		                    PresentOpen = "DOC_ADMIN";
 		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
 		                    break;
+		                case "approvalForDoc_sub01":
+// 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do";
+		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForAprDoc.do";
+		                	break;
+		                case "approvalForDoc_sub02":
+// 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do";
+		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForDoc.do";
+		                	break;
 		            }
 		        } catch (e) { }
 		    }
@@ -975,6 +986,13 @@
 				<li><span style="width:100%;display:inline-block;" id="admin_sub04" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t520'/></span></li>
 			</ul>
 			</c:if>
+			</c:if>
+			<c:if test="${approvalForDoc == 'Y' }">
+				<h2><span  style="width:100%;display:inline-block;" id="approvalForDoc" onClick="Open_Func(this)"><spring:message code='ezApprovalG.lhj13'/></span></h2>
+				<ul>
+					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub01" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj14'/></span></li>
+					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub02" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj15'/></span></li>
+				</ul>
 			</c:if>
 	        <h3><span  style="width:100%;display:inline-block;" id="ApprovalConfig" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t1800'/></span></h3>
 		</div>
