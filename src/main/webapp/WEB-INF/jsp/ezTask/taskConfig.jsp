@@ -11,42 +11,16 @@
 		<script type="text/javascript">
 			var delaycolor = "";
 			var completecolor = "";
-// 			var autodelete = "_autodelete";
 
 			document.onselectstart = function () { return false; };
 
 			window.onload = function(){
-// 				if (delaycolor != "") {
-// 					if (autodelete != "0") {
-// 						document.getElementById("CheckDelete").checked = false;
-// 						document.getElementById("TextDelete").value = autodelete;
-// 					}
-// 				}
+
 			}
 
-// 			function CheckDeleteClick() {
-// 				if (document.getElementById("CheckDelete").checked == true) {
-// 					document.getElementById("TextDelete").value = "";
-// 					document.getElementById("TextDelete").readOnly = true;
-// 				} else {
-// 					document.getElementById("TextDelete").readOnly = false;				
-// 				}
-// 			}
-
 			function save_info() {
-// 				if (document.getElementById("TextDelete").value != "" && parseInt(document.getElementById("TextDelete").value) != document.getElementById("TextDelete").value ||
-// 					parseInt(document.getElementById("TextDelete").value) > 5000) {
-// 						alert("<spring:message code='ezTask.t85' />");
-// 						document.getElementById("TextDelete").focus();
-// 						return;
-// 				}
 				var delayColor = $("#DelayColor").text();
 				var completeColor = $("#CompleteColor").text();
-
-// 				if (getNodeText(document.getElementById("DelayColor")) == "") {
-// 					alert("<spring:message code='ezTask.t86' />");
-// 					return;
-// 				}
 
 				$.ajax({
 					type : "POST",
@@ -63,36 +37,6 @@
 						alert("<spring:message code='ezTask.t992' />");
 					}
 				});
-// 				if (getNodeText(document.getElementById("CompleteColor")) == "") {
-// 					alert("<spring:message code='ezTask.t87' />");
-// 					return;
-// 				}
-
-// 				var xmlDom = createXmlDom();
-// 				var xmlHTTP = createXMLHttpRequest();
-// 				var objRoot;
-
-// 				createNodeInsert(xmlDom, xmlDom, "DATA");
-// 				createNodeAndInsertText(xmlDom, xmlDom, "DELAYCOLOR", getNodeText(document.getElementById("DelayColor")));
-// 				createNodeAndInsertText(xmlDom, xmlDom, "COMPLETECOLOR", getNodeText(document.getElementById("CompleteColor")));
-				
-// 				if (document.getElementById("TextDelete").value == "") {
-// 					createNodeAndInsertText(xmlDom, xmlDom, "AUTODELETE", "0");					
-// 				} else {
-// 					createNodeAndInsertText(xmlDom, xmlDom, "AUTODELETE", document.getElementById("TextDelete").value);					
-// 				}
-
-// 				xmlHTTP.open("POST", "/ezTask/taskSaveConfig.do", false);
-// 				xmlHTTP.send(xmlDom);
-
-// 				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-// 					alert("<spring:message code='ezTask.t88' />");					
-// 				} else {
-// 					alert("<spring:message code='ezTask.t89' />");
-// 					document.location.reload();
-// 				}
-				
-// 				xmlHTTP = null;
 			}
 
 			var manycolor_dialogArguments = new Array();
@@ -112,15 +56,8 @@
 	                    document.getElementById(pID).innerText = retValue;
 	                }
 	            }
-// 				var color = showModalDialog("/ezTask/taskManyColor.do", null, "dialogHeight:290px; dialogWidth:286px; status:no;scroll:no; help:no; edge:sunken");
-
-// 				if(typeof(color) != "undefined") {
-// 					document.getElementById(pID + "Display").style.backgroundColor = color;
-// 					document.getElementById(pID + "Value").innerText = color;
-// 					setNodeText(document.getElementById(pID), color);
-// 				}
 			}
-			
+
 			function SelectColor_Complete(retValue) {
 	            if (typeof (retValue) != "undefined" && retValue != null) {
 	                document.getElementById(Name_Complete + "Display").style.backgroundColor = retValue;
@@ -169,14 +106,6 @@
 						</table>
 					</td>
 				</tr>
-
-<!-- 				<tr style="display:none"> -->
-<%-- 					<th><spring:message code='ezTask.t93' /></th> --%>
-<!-- 					<td> -->
-<%-- 						<input type="text" id="TextDelete" name="TextDelete" value="" size="8" readonly><spring:message code='ezTask.t94' /> --%>
-<%-- 						<input type="checkbox" id="CheckDelete" value="radiobutton" onClick="CheckDeleteClick()" checked><spring:message code='ezTask.t95' /> --%>
-<!-- 					</td> -->
-<!-- 				</tr> -->
 			</table>
 			<br />
 			<div align="center" style="width:465px;">
