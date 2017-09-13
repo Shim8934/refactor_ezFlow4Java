@@ -58,9 +58,9 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 375 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 385 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -82,9 +82,9 @@
 		    });
 		    
 		    window.onresize = function () {
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 375 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 375 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 385 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -728,7 +728,7 @@
 
 		
 		 
-		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px; border-top: 0px;">
+		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 10px; margin-bottom: 3px; border-top: 0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
 				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0"><spring:message code='ezTask.lhj02' /></span></p>
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
