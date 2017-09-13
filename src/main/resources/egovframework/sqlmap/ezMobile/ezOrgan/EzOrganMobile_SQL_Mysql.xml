@@ -186,7 +186,9 @@
 	  				END deptName,
 	  				'' as TITLE,
 	  				MAIL,
-				    null as EXTENSIONATTRIBUTE15
+				    null as EXTENSIONATTRIBUTE15,
+				    'deptImage.hyj' as imageName,
+				    TENANT_ID
 				FROM
 					TBL_DEPTMASTER
 				WHERE
@@ -209,7 +211,9 @@
   				DESCRIPTION as deptName,
   				TITLE,
   				MAIL,
-			    EXTENSIONATTRIBUTE15
+			    EXTENSIONATTRIBUTE15,
+			    EXTENSIONATTRIBUTE2 as imageName,
+			    TENANT_ID
 			FROM
 				TBL_USERMASTER
 			WHERE
@@ -239,7 +243,9 @@
   				DESCRIPTION as deptName,
   				B.TITLE,
   				MAIL,
-			    EXTENSIONATTRIBUTE15
+			    EXTENSIONATTRIBUTE15,
+			    B.EXTENSIONATTRIBUTE2 as imageName,
+			    B.TENANT_ID
 			FROM
 				TBL_ADDJOBMASTER A
 			JOIN
