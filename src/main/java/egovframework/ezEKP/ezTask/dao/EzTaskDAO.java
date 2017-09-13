@@ -30,20 +30,49 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		return (List<TaskAttachVO>) list("EzTaskDAO.getAttachList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<TaskInfoVO> getTaskList(Map<String, Object> map) throws Exception {
+		return (List<TaskInfoVO>) list("EzTaskDAO.getTaskList", map);
+	}
+	
 	public TaskInfoVO getTaskInfo(Map<String, Object> map) {
 		return (TaskInfoVO) select("EzTaskDAO.getTaskInfo", map);
 	}
 	
-	public void updateHasComment(Map<String, Object> map) {
-		update("EzTaskDAO.updateHasComment", map);
+	public TaskConfigVO getOriginColor(Map<String, Object> map) throws Exception {
+		return (TaskConfigVO) select("EzTaskDAO.getOriginColor", map);
+	}
+	
+	public String getTaskCount(Map<String, Object> map) throws Exception {
+		return (String) select("EzTaskDAO.getTaskCount", map);
+	}
+
+	public String getTaskCount2(Map<String, Object> map) throws Exception {
+		return (String) select("EzTaskDAO.getTaskCount2", map);
+	}
+	
+	public String insertTask(Map<String, Object> map) throws Exception {
+		return (String) insert("EzTaskDAO.insertTask", map);
 	}
 	
 	public int insertComment(Map<String, Object> map) {
 		return update("EzTaskDAO.insertComment", map);
 	}
 	
-	public void deleteComment(Map<String, Object> map) {
-		delete("EzTaskDAO.deleteComment", map);
+	public void insertTaskShare(Map<String, Object> map) throws Exception {
+		insert("EzTaskDAO.insertTaskShare", map);
+	}
+	
+	public void taskSaveConfig(Map<String, Object> map) throws Exception {
+		insert("EzTaskDAO.taskSaveConfig", map);
+	}
+	
+	public void insertTaskAttach(Map<String, Object> map) throws Exception {
+		insert("EzTaskDAO.insertTaskAttach", map);
+	}
+	
+	public void updateHasComment(Map<String, Object> map) {
+		update("EzTaskDAO.updateHasComment", map);
 	}
 	
 	public void updateTaskStatus(Map<String, Object> map) {
@@ -54,52 +83,22 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		update("EzTaskDAO.updateTaskWork", map);
 	}
 	
-	public String insertTask(Map<String, Object> map) throws Exception {
-		return (String) insert("EzTaskDAO.insertTask", map);
-	}
-	
 	public void updateTask(Map<String, Object> map) throws Exception {
 		update("EzTaskDAO.updateTask", map);
 	}
 	
-	public void insertTaskShare(Map<String, Object> map) throws Exception {
-		insert("EzTaskDAO.insertTaskShare", map);
+	public void taskUpdateConfig(Map<String, Object> map) throws Exception {
+		update("EzTaskDAO.taskUpdateConfig", map);
+	}
+	
+	public void deleteComment(Map<String, Object> map) {
+		delete("EzTaskDAO.deleteComment", map);
 	}
 	
 	public void deleteTaskAttach(Map<String, Object> map) throws Exception {
 		delete("EzTaskDAO.deleteTaskAttach", map);
 	}
 	
-	/* 정수현*/
-	public void taskSaveConfig(Map<String, Object> map) throws Exception {
-		insert("EzTaskDAO.taskSaveConfig", map);
-	}
-
-	public TaskConfigVO getOriginColor(Map<String, Object> map) throws Exception {
-		return (TaskConfigVO) select("EzTaskDAO.getOriginColor", map);
-	}
-
-	public void taskUpdateConfig(Map<String, Object> map) throws Exception {
-		update("EzTaskDAO.taskUpdateConfig", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<TaskInfoVO> getTaskList(Map<String, Object> map) throws Exception {
-		return (List<TaskInfoVO>) list("EzTaskDAO.getTaskList", map);
-	}
-
-	public String getTaskCount(Map<String, Object> map) throws Exception {
-		return (String) select("EzTaskDAO.getTaskCount", map);
-	}
-
-	public String getTaskCount2(Map<String, Object> map) throws Exception {
-		return (String) select("EzTaskDAO.getTaskCount2", map);
-	}
-
-	public void insertTaskAttach(Map<String, Object> map) throws Exception {
-		insert("EzTaskDAO.insertTaskAttach", map);
-	}
-
 	public void taskDelete(Map<String, Object> map) throws Exception {
 		delete("EzTaskDAO.taskDelete", map);
 	}
@@ -111,5 +110,4 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public void taskDeleteAttach(Map<String, Object> map) throws Exception {
 		delete("EzTaskDAO.taskDeleteAttach", map);
 	}
-
 }

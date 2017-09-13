@@ -33,7 +33,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Autowired
 	private EzTaskDAO ezTaskDAO;
 	
-	/* 이효진*/
 	@Override
 	public TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception {
 		logger.debug("getTaskInfo started.");
@@ -72,14 +71,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception {
-		//TaskShareVO 내부에 completeDate 있어서 우선 offset 가져오긴하는데 completeDate 사용안할시 VO에서 삭제 및 offset파라미터 제거. 이효진
+	public List<TaskShareVO> getShareList(String taskID, String primary, int tenantID) throws Exception {
 		logger.debug("getShareList started.");
-		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
+		logger.debug("taskID = " + taskID + " || primary = " + primary + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
@@ -94,6 +91,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception {
 		logger.debug("insertComment started.");
+		logger.debug("taskID = " + taskID + " || commentorID = " + commentorID + " || commentorName = " + commentorName + " || commentorName2 = " + commentorName2 + " || comment = " + comment);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -115,7 +113,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	
 	@Override
 	public void deleteComment(String taskID, String commentID, int tenantID) throws Exception {
-		logger.debug("insertComment started.");
+		logger.debug("deleteComment started.");
+		logger.debug("taskID = " + taskID + " || commentID = " + commentID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -126,12 +125,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		ezTaskDAO.deleteComment(map);
 		ezTaskDAO.updateHasComment(map);
 		
-		logger.debug("insertComment ended.");
+		logger.debug("deleteComment ended.");
 	}
 	
 	@Override
 	public void updateTaskStatus(String taskID, String taskStatus, String completeRate, int tenantID) throws Exception {
 		logger.debug("updateTaskStatus started.");
+		logger.debug("taskID = " + taskID + " || taskStatus = " + taskStatus + " || completeRate = " + completeRate);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -233,146 +233,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("taskSave ended.");
 	}
 	
-	/** 업무작성 */
-	private String insertTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
-		logger.debug("insertTask started.");
-		
-		String nowDate = commonUtil.getTodayUTCTime("");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("parentID", 0);
-		map.put("creatorID", vo.getCreatorID());
-		map.put("creatorName", vo.getCreatorName());
-		map.put("creatorName2", vo.getCreatorName2());
-		map.put("creatorDeptName", vo.getCreatorDeptName());
-		map.put("creatorDeptName2", vo.getCreatorDeptName2());
-		map.put("creatorEmail", vo.getCreatorEmail());
-		map.put("nowDate", nowDate);
-		
-		map.put("taskStatus", vo.getTaskStatus());
-		map.put("completeRate", 0);
-		map.put("completeDate", "");
-		map.put("importance", vo.getImportance());
-		map.put("hasShare", vo.getHasShare());
-		map.put("hasAttach", vo.getHasAttach());
-		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
-		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
-		map.put("title", vo.getTitle());
-		map.put("contentPath", vo.getContentPath());
-		map.put("taskType", vo.getTaskType());
-		map.put("personID", vo.getPersonID());
-		map.put("personName", vo.getPersonName());
-		map.put("personName2", vo.getPersonName2());
-		map.put("personDeptName", vo.getPersonDeptName());
-		map.put("personDeptName2", vo.getPersonDeptName2());
-		map.put("personEmail", vo.getPersonEmail());
-		map.put("memo", vo.getMemo());
-		map.put("tenantID", tenantID);
-		
-		String taskID = ezTaskDAO.insertTask(map);
-		
-		if (vo.getHasShare().equals("Y")) {
-			for (TaskShareVO shareVO : vo.getShareList()) {
-				insertTaskShare(taskID, shareVO, nowDate, tenantID);
-			}
-		}
-		
-		logger.debug("insertTask ended. taskID = " + taskID);
-		
-		return taskID;
-	}
-	
-	/** 업무수정 */
-	private String updateTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
-		logger.debug("updateTask started.");
-		
-		String taskID = vo.getTaskID();
-		String nowDate = commonUtil.getTodayUTCTime("");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("taskID", taskID);
-		map.put("nowDate", nowDate);
-		map.put("importance", vo.getImportance());
-		map.put("hasShare", vo.getHasShare());
-		map.put("hasAttach", vo.getHasAttach());
-		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
-		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
-		map.put("title", vo.getTitle());
-		map.put("taskType", vo.getTaskType());
-		map.put("personID", vo.getPersonID());
-		map.put("personName", vo.getPersonName());
-		map.put("personName2", vo.getPersonName2());
-		map.put("personDeptName", vo.getPersonDeptName());
-		map.put("personDeptName2", vo.getPersonDeptName2());
-		map.put("personEmail", vo.getPersonEmail());
-		map.put("memo", vo.getMemo());
-		map.put("tenantID", tenantID);
-		
-		ezTaskDAO.updateTask(map);
-		
-		deleteTaskShare(taskID, tenantID);
-		
-		if (vo.getHasShare().equals("Y")) {
-			for (TaskShareVO shareVO : vo.getShareList()) {
-				insertTaskShare(taskID, shareVO, nowDate, tenantID);
-			}
-		}
-		
-		logger.debug("updateTask ended. taskID = " + taskID);
-		
-		return taskID;
-	}
-	
-	/* 공유자 추가 */
-	private void insertTaskShare(String taskID, TaskShareVO shareVO, String nowDate, int tenantID) throws Exception {
-		logger.debug("insertTaskShare started.");
-		logger.debug("taskID = " + taskID + " || sharerID = " + shareVO.getSharerID() + " || sharerDeptName = " + shareVO.getSharerDeptName());
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("taskID", taskID);
-		map.put("sharerID", shareVO.getSharerID());
-		map.put("sharerName", shareVO.getSharerName());
-		map.put("sharerName2", shareVO.getSharerName2());
-		map.put("sharerDeptName", shareVO.getSharerDeptName());
-		map.put("sharerDeptName2", shareVO.getSharerDeptName2());
-		map.put("sharerEmail", shareVO.getSharerEmail());
-		map.put("nowDate", nowDate);
-		map.put("tenantID", tenantID);
-		
-		ezTaskDAO.insertTaskShare(map);
-		
-		logger.debug("insertTaskShare ended.");
-	}
-	
-	/* 공유자 삭제 */
-	private void deleteTaskShare(String taskID, int tenantID) throws Exception {
-		logger.debug("deleteTaskShare started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("taskID", taskID);
-		map.put("tenantID", tenantID);
-		
-		ezTaskDAO.taskDeleteShare(map);
-		
-		logger.debug("deleteTaskShare ended.");
-	}
-	
-	/* 첨부파일 삭제 */
-	private void deleteTaskAttach(String taskID, int type, String realPath, String uploadTaskPath, int tenantID) throws Exception {
-		logger.debug("deleteTaskAttach started.");
-		logger.debug("taskID = " + taskID + " || attachType = " + type + " || tenantID = " + tenantID);
-		//닷넷 파일은 그대로 두고 DB만 날림
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("taskID", taskID);
-		map.put("attachType", type);
-		map.put("tenantID", tenantID);
-		
-		ezTaskDAO.deleteTaskAttach(map);
-		
-		logger.debug("deleteTaskAttach ended.");
-	}
-	
 	@Override
 	public String taskWorkSave(String taskID, String content, String attachList, String fileNames, String fileSizes, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception {
 		logger.debug("taskWorkSave started.");
@@ -407,7 +267,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
-		map.put("personAttach", personAttach);// 파일첨부이후 추가
+		map.put("personAttach", personAttach);
 		map.put("personContentPath", contentPath);
 		map.put("tenantID", tenantID);
 		
@@ -459,6 +319,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public String getAttachListStr(String taskID, String folderPath, String type, int tenantID) throws Exception {
 		logger.debug("getAttachListStr started.");
+		logger.debug("taskID = " + taskID + " || folderPath = " + folderPath + " || type = " + type);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -471,7 +332,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		for (TaskAttachVO vo : list) {
 			String fileName = vo.getFileName();
 			String filePath = vo.getFilePath();
-			String fileSize = getProperSizeDisplay(Integer.parseInt(vo.getFileSize()));
+			String fileSize = commonUtil.byteCalculation(vo.getFileSize());
 			String fileImage = null;
 
 			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
@@ -507,19 +368,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		return sb.toString();
 	}
 	
-	private String getProperSizeDisplay(int pSize) throws Exception {
-		if (pSize > 1048576) {
-			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
-		} else if (pSize > 1024) {
-			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
-		} else {
-			return Integer.toString(pSize) + " Byte";
-		}
-	}
-	
 	@Override
 	public List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception {
 		logger.debug("getAttachList started");
+		logger.debug("taskID = " + taskID + " || type = " + type);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -533,7 +385,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		return list;
 	}
 
-	/* 정수현*/
 	@Override
 	public TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception {
 		logger.debug("getOriginColor started.");
@@ -583,21 +434,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		ezTaskDAO.taskUpdateConfig(map);
 
 		logger.debug("taskUpdateConfig ended.");
-	}
-	
-	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
-		logger.debug("fileMove started.");
-		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
-
-		File file = new File(beforeFilePath);
-
-		try {
-			file.renameTo(new File(afterFilePath));			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		logger.debug("fileMove ended.");
 	}
 
 	@Override
@@ -662,7 +498,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception {
 		logger.debug("taskDelete started.");
-		logger.debug("taskIDList : " + taskIDList + " | pDirPath : " + pDirPath + " | offset : " + offset + " | primary : " + primary);
+		logger.debug("memberID = " + memberID + " | taskIDList : " + taskIDList + " | pDirPath : " + pDirPath + " | offset : " + offset + " | primary : " + primary);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -697,6 +533,162 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		}
 
 		logger.debug("taskDelete ended.");
+	}
+	
+	/** 업무작성 */
+	private String insertTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
+		logger.debug("insertTask started.");
+		
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parentID", 0);
+		map.put("creatorID", vo.getCreatorID());
+		map.put("creatorName", vo.getCreatorName());
+		map.put("creatorName2", vo.getCreatorName2());
+		map.put("creatorDeptName", vo.getCreatorDeptName());
+		map.put("creatorDeptName2", vo.getCreatorDeptName2());
+		map.put("creatorEmail", vo.getCreatorEmail());
+		map.put("nowDate", nowDate);
+		map.put("taskStatus", vo.getTaskStatus());
+		map.put("completeRate", 0);
+		map.put("completeDate", "");
+		map.put("importance", vo.getImportance());
+		map.put("hasShare", vo.getHasShare());
+		map.put("hasAttach", vo.getHasAttach());
+		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
+		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
+		map.put("title", vo.getTitle());
+		map.put("contentPath", vo.getContentPath());
+		map.put("taskType", vo.getTaskType());
+		map.put("personID", vo.getPersonID());
+		map.put("personName", vo.getPersonName());
+		map.put("personName2", vo.getPersonName2());
+		map.put("personDeptName", vo.getPersonDeptName());
+		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("personEmail", vo.getPersonEmail());
+		map.put("memo", vo.getMemo());
+		map.put("tenantID", tenantID);
+		
+		String taskID = ezTaskDAO.insertTask(map);
+		
+		if (vo.getHasShare().equals("Y")) {
+			for (TaskShareVO shareVO : vo.getShareList()) {
+				insertTaskShare(taskID, shareVO, nowDate, tenantID);
+			}
+		}
+		
+		logger.debug("insertTask ended. taskID = " + taskID);
+		
+		return taskID;
+	}
+	
+	/** 업무수정 */
+	private String updateTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
+		logger.debug("updateTask started.");
+		
+		String taskID = vo.getTaskID();
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		logger.debug("taskID = " + taskID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("nowDate", nowDate);
+		map.put("importance", vo.getImportance());
+		map.put("hasShare", vo.getHasShare());
+		map.put("hasAttach", vo.getHasAttach());
+		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
+		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
+		map.put("title", vo.getTitle());
+		map.put("taskType", vo.getTaskType());
+		map.put("personID", vo.getPersonID());
+		map.put("personName", vo.getPersonName());
+		map.put("personName2", vo.getPersonName2());
+		map.put("personDeptName", vo.getPersonDeptName());
+		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("personEmail", vo.getPersonEmail());
+		map.put("memo", vo.getMemo());
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.updateTask(map);
+		
+		deleteTaskShare(taskID, tenantID);
+		
+		if (vo.getHasShare().equals("Y")) {
+			for (TaskShareVO shareVO : vo.getShareList()) {
+				insertTaskShare(taskID, shareVO, nowDate, tenantID);
+			}
+		}
+		
+		logger.debug("updateTask ended. taskID = " + taskID);
+		
+		return taskID;
+	}
+	
+	/* 공유자 추가 */
+	private void insertTaskShare(String taskID, TaskShareVO shareVO, String nowDate, int tenantID) throws Exception {
+		logger.debug("insertTaskShare started.");
+		logger.debug("taskID = " + taskID + " || sharerID = " + shareVO.getSharerID() + " || sharerDeptName = " + shareVO.getSharerDeptName());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("sharerID", shareVO.getSharerID());
+		map.put("sharerName", shareVO.getSharerName());
+		map.put("sharerName2", shareVO.getSharerName2());
+		map.put("sharerDeptName", shareVO.getSharerDeptName());
+		map.put("sharerDeptName2", shareVO.getSharerDeptName2());
+		map.put("sharerEmail", shareVO.getSharerEmail());
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.insertTaskShare(map);
+		
+		logger.debug("insertTaskShare ended.");
+	}
+	
+	/* 공유자 삭제 */
+	private void deleteTaskShare(String taskID, int tenantID) throws Exception {
+		logger.debug("deleteTaskShare started.");
+		logger.debug("taskID = " + taskID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.taskDeleteShare(map);
+		
+		logger.debug("deleteTaskShare ended.");
+	}
+	
+	/* 첨부파일 삭제 */
+	private void deleteTaskAttach(String taskID, int type, String realPath, String uploadTaskPath, int tenantID) throws Exception {
+		logger.debug("deleteTaskAttach started.");
+		logger.debug("taskID = " + taskID + " || attachType = " + type + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("attachType", type);
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.deleteTaskAttach(map);
+		
+		logger.debug("deleteTaskAttach ended.");
+	}
+	
+	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
+		logger.debug("fileMove started.");
+		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
+
+		File file = new File(beforeFilePath);
+
+		try {
+			file.renameTo(new File(afterFilePath));			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("fileMove ended.");
 	}
 
 	private void deleteDirectory(String taskID, String pDirpath, int tenantID) throws Exception {
