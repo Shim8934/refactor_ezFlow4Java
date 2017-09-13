@@ -90,7 +90,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 
 		if (configVO == null) {
-			ezTaskService.taskSaveConfig(userInfo.getId(), "#ff0000", "#00ff00", userInfo.getTenantId());
+			ezTaskService.taskSaveConfig(userInfo.getId(), "#FF0000", "#00FF00", userInfo.getTenantId());
 			configVO = ezTaskService.getOriginColor(userID, tenantID);
 		}
 
