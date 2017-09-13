@@ -38,7 +38,6 @@
 		    var enddate = "";
 		    var type = "";
 		    var userlang = "${userInfo.lang}";
-		    var pUse_Editor = "Use_Editor";
 		    var primary = "${userInfo.primary}";
 		    var useTodoMemo = "${useTodoMemo }";
 		    
@@ -112,15 +111,7 @@
 		        
 	        	feature = GetOpenPosition(750, 740);
 	        	
-	        	if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        } else {
-		            if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            } else {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            }
-		        }
+                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
 		    function WriteTask() {
