@@ -90,10 +90,10 @@
 		                document.getElementById("btnGongRam").style.display = "";
 		                pOpinionType = "";
 		            }
-		            LoadpzFormDocInfo();
+		          	setAttachInfo(DocID, "TMP", lstAttachLink); // 임시 저장 첨부파일 리스트 출력
+		            LoadpzFormDocInfo(); // setAttachInfo(DocID, "APR", lstAttachLink);
 		            SignCheck();
-		            cancelYN();
-			      	setAttachInfo(DocID, "TMP", lstAttachLink); // 임시 저장 첨부파일 리스트 출력
+		            cancelYN();			      	
 		        }
 		    }
 		    

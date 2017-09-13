@@ -1941,8 +1941,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String sn = "";
 		String docSN = "";
 		String newDocID = "";
-		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID);
-		
+		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID);		
 
 		String docNo = "";
 		String orgDocNumCode = "";
