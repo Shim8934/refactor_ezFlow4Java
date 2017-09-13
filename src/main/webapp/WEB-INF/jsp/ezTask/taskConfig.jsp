@@ -47,10 +47,10 @@
 				
 				if (CrossYN()) {
 	                manycolor_dialogArguments[1] = SelectColor_Complete;
-	                var OpenWin = window.open("/ezTask/taskManyColor.do", "manyColor", GetOpenWindowfeature(294, 260));
+	                var OpenWin = window.open("/ezTask/taskManyColor.do", "manyColor", GetOpenWindowfeature(280, 230));
 	                try { OpenWin.focus(); } catch (e) { }
 	            } else {
-	                var retValue = window.showModalDialog("/ezTask/taskManyColor.do", "", "dialogHeight:260px; dialogWidth:294px; status:no;scroll:no; help:no; edge:sunken");
+	                var retValue = window.showModalDialog("/ezTask/taskManyColor.do", "", "dialogHeight:230px; dialogWidth:280px; status:no;scroll:no; help:no; edge:sunken");
 	                if (typeof (retValue) != "undefined" && retValue != null) {
 	                    document.getElementById(pID + "Display").style.backgroundColor = retValue;
 	                    document.getElementById(pID).innerText = retValue;
@@ -80,14 +80,14 @@
 			<br />
 			<h2 class="h2_dot"><spring:message code='ezTask.t239' /></h2> 
 			<p>
-			<table class="content" style="width:450px;margin-left:15px;">
+			<table class="content" style="width:250px;margin-left:15px;">
 				<tr> 
 					<th><spring:message code='ezTask.t90' /></th>
 					<td>
 						<table style="table-layout:fixed;">
 							<tr>
-								<td id="DelayColorDisplay" style="background-color:${delayColor};width:100px"></td>
-								<td id="DelayColor" style="width:70px; padding-left:10px">${delayColor}</td>
+								<td><div id=DelayColorDisplay style="background-color:${delayColor}; height:21px; border:1px inset gray"></div></td>
+								<td id="DelayColor" style="display:none;">${delayColor}</td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('DelayColor')"><spring:message code='ezTask.t91' /></span></a></td>
 							</tr>
 						</table>
@@ -99,8 +99,8 @@
 					<td>
 						<table style="table-layout:fixed">
 							<tr>
-								<td id="CompleteColorDisplay" style="background-color:${completeColor};width:100px"></td>
-								<td id="CompleteColor" style="width:70px; padding-left:10px">${completeColor}</td>
+								<td><div id=CompleteColorDisplay style="background-color:${completeColor}; height:21px; border:1px inset gray"></div></td>
+								<td id="CompleteColor" style="display:none;">${completeColor}</td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('CompleteColor')"><spring:message code='ezTask.t91' /></span></a></td>
 							</tr>
 						</table>
@@ -108,7 +108,7 @@
 				</tr>
 			</table>
 			<br />
-			<div align="center" style="width:465px;">
+			<div align="center" style="width:265px;">
 				<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezTask.t96' /></span></a>
 				<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezTask.t20' /></span></a>
 			</div>

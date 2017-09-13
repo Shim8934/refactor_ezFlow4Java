@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code="ezTask.jsh06" /></title>
+		<title><spring:message code="ezTask.t91" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
 	    <link rel="stylesheet" href='<spring:message code="ezTask.e2" />' type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -52,7 +52,7 @@
 	    </script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code="ezTask.jsh06" /></h1>
+	    <h1><spring:message code="ezTask.t91" /></h1>
 	    <table onClick="select_color(event)" border="1" cellspacing="2" id="ColorTable" style="width:256px;" class="box">
 			<tr>
 			    <td style="width:32px; background-color: #ff8080" title="#ff8080">&nbsp;</td>
