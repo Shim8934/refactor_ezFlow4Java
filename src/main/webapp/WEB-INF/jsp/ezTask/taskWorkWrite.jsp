@@ -24,6 +24,7 @@
 	        var taskid = "${taskInfoVO.taskID }";
 	        var hasattach = "${taskInfoVO.personAttach }";
 	        var personContentpath = "${taskInfoVO.personContentPath }";
+	        var AttachLimit = 1024;
 	        
 	        window.onload = function () {
 	        	if (hasattach == "Y") {

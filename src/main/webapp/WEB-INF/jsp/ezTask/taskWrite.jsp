@@ -264,7 +264,7 @@
 			    document.form.file1.click();
 			}
 			
-			var AttachLimit = 5;
+			var AttachLimit = 1024;
 			function btn_AttachAdd_onclick() {
 			    if (document.form.file1.value != "") {
 			        document.getElementById("maxsize").value = parseInt(AttachLimit) * 1024 * 1024;
