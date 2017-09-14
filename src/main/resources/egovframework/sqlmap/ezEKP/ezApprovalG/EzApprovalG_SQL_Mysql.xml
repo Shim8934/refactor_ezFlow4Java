@@ -1416,6 +1416,8 @@
            		TENANT_ID = #v_TENANTID#
 	        AND
 	           	COMPANYID = #companyID#
+	        ORDER BY 
+	            APRMEMBERSN DESC 
 		</isEqual>
 	</select>
 
