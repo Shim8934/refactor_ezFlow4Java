@@ -59,46 +59,36 @@ function rate_change() {
 
 var task_select_entity_cross_dialogArguments = new Array();
 var m_type;
+var OpenWin;
 function manage_share(type) {
     switch (type) {
         case 1:
             m_type = 1;
             task_select_entity_cross_dialogArguments[0] = g_person;
             task_select_entity_cross_dialogArguments[1] = manage_share_Complete;
-            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
+            OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
             try { OpenWin.focus(); } catch (e) { }
             break;
         case 2:
             m_type = 2;
             task_select_entity_cross_dialogArguments[0] = g_share;
             task_select_entity_cross_dialogArguments[1] = manage_share_Complete;
-            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
+            OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
             try { OpenWin.focus(); } catch (e) { }
             break;
     }
 }
 
+var alertLoc;
 function manage_share_Complete(retVal) {
     switch (m_type) {
         case 1:
             if (typeof (retVal) != "undefined") {
-                if (retVal["id"].length > 1) {
-                    alert(strLang54);
-                    return;
-                }
-
-                if (retVal["id"][0] == userid) {
-                	alert("" + strLang20 + "");
-                	retVal = null;
-                	
-                	return;
-                }
-
                 if (g_share != null) {
                     for (var i = 0; i < g_share["email"].length; i++) {
                         if (retVal["email"][0] == g_share["email"][i]) {
-                            alert(retVal["name"][0] + strLang55);
-                            return;
+                        	alertLoc = 1 + "," + retVal["name"][0];
+                            return alertLoc;
                         }
                     }
                 }
@@ -134,7 +124,8 @@ function manage_share_Complete(retVal) {
                 var j = 0;
                 for (var i = 0; i < retVal["id"].length; i++) {
                     if (g_person != null && g_person["email"][0] == retVal["email"][i]) {
-                        alert(retVal["name"][i] + strLang56);
+                    	alertLoc = 2 + "," + retVal["name"][i];
+                        return alertLoc;
                     } else {
                         if (getNodeText(document.getElementById("sharelist")) == "") {
                         	if (primary == 1) {
@@ -163,6 +154,8 @@ function manage_share_Complete(retVal) {
                 break;
             }
     }
+
+    OpenWin.close();
 }
 
 

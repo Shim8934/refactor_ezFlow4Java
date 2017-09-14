@@ -46,14 +46,16 @@
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + dialogArguments["deptname2"][i] + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + dialogArguments["id"][i] + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + dialogArguments["email"][i] + "]]></DATA6>";
+	                if (type == 1) {
+		                pparsingXML = pparsingXML + "<NAME><![CDATA[" + "MsgToList" + "]]></NAME>";	                	
+	                }
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + dialogArguments["name"][i] + " <" + dialogArguments["email"][i] + ">" + "]]></VALUE></CELL></ROW>";
 	            }
 	            
 	            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	            returnval = loadXMLString(pparsingXML2);
 	        }
-	        
-	        
+
 	        var strQuery = "<DATA><DEPTID>${userinfo.deptID }</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
 	        var xmlHTTP = createXMLHttpRequest();
 	        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -104,17 +106,6 @@
 	        listContentArry = new Array();
 	    }
 	    function event_displayUserList(xml) {
-	        /* if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	            if (g_xmlHTTP.statusText == "OK") {
-	                pListXML_Info = loadXMLString(g_xmlHTTP.responseText);
-	                DisplayUserImageList();
-	                makePageSelPage();
-	            } else {
-	                alert("<spring:message code='ezTask.t193' />" + g_xmlHTTP.statusText);
-	            }
-
-                g_xmlHTTP = null;
-            } */
             if (xml != null) {
 	            pListXML_Info = xml;
 	            xml = null;
@@ -180,23 +171,6 @@
 						alert("spring:message code='ezTask.t193' />");
 					}
   			});
-	    	
-	    	
-	        /* var xmlpara = createXmlDom();
-	        g_xmlHTTP = createXMLHttpRequest();
-	        var objNode;
-	        if (DeptID != undefined)
-	            tempDeptID = DeptID;
-	        createNodeInsert(xmlpara, objNode, "DATA");
-	        createNodeAndInsertText(xmlpara, objNode, "DEPTID", tempDeptID);
-	        createNodeAndInsertText(xmlpara, objNode, "CELL", "company;description;displayName;title;telephoneNumber");
-	        createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2");
-	        createNodeAndInsertText(xmlpara, objNode, "PAGE", CurPage);
-	        createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-
-	        g_xmlHTTP.open("POST", "/ezOrgan/getDeptMemberList.do", true);
-	        g_xmlHTTP.onreadystatechange = event_displayUserList;
-	        g_xmlHTTP.send(xmlpara); */
 	    }
 	    function search_press(evt) {
 	        if (window.event) {
@@ -412,6 +386,8 @@
 	            }
 	        }
 	    }
+
+		var checkReturn;
 	    function close_onclick() {
 	        var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
@@ -429,12 +405,16 @@
 	        }
 
 	        if (ReturnFunction != null) {
-	            ReturnFunction(rtn);
-	        }
-	        else {
+	        	checkReturn = ReturnFunction(rtn);
+	        } else {
 	            window.returnValue = rtn;
 	        }
-	        window.close();
+	        
+	        if (checkReturn.split(",")[0] == 1) {
+	        	alert(checkReturn.split(",")[1] + "<spring:message code='ezTask.jsh10' />");
+	        } else if (checkReturn.split(",")[0] == 2) {
+	        	alert(checkReturn.split(",")[1] + "<spring:message code='ezTask.jsh11' />");
+	        }
 	    }
 
 	    function DisplayUserImageList() {
@@ -839,60 +819,128 @@
 	    }
 
 	    function InsertUser() {
-	        for (var i = 0; i < listContentArry.length; i++) {
-	            var strUserid = GetAttribute(document.getElementById(listContentArry[i]),"_data2");
-	            var strName = GetAttribute(document.getElementById(listContentArry[i]),"_data10");
-	            var strName2 = GetAttribute(document.getElementById(listContentArry[i]),"_data11");
-	            var strDeptNM = GetAttribute(document.getElementById(listContentArry[i]),"_data12");
-	            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[i]),"_data13");
-	            var strEmail = GetAttribute(document.getElementById(listContentArry[i]),"_data3");
+	    	// 공유자
+	    	if (type == 2) {
+		        for (var i = 0; i < listContentArry.length; i++) {
+		            var strUserid = GetAttribute(document.getElementById(listContentArry[i]),"_data2");
+		            var strName = GetAttribute(document.getElementById(listContentArry[i]),"_data10");
+		            var strName2 = GetAttribute(document.getElementById(listContentArry[i]),"_data11");
+		            var strDeptNM = GetAttribute(document.getElementById(listContentArry[i]),"_data12");
+		            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[i]),"_data13");
+		            var strEmail = GetAttribute(document.getElementById(listContentArry[i]),"_data3");
+		            var getlistview = new ListView();
+		            getlistview.LoadFromID("MsgToList");
+		            var bFlag = getlistview.ExistRow("DATA6", strEmail);
+
+		            if (bFlag) {
+		                continue;
+		            } else if (strUserid == "${userInfo.id }"){
+		                alert("<spring:message code='ezTask.t199' />");
+		            } else {
+		                pparsingXML2 = "";
+		                pparsingXML = "";
+		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+		                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName2) + "</DATA2>";
+		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strDeptNM) + "</DATA3>";
+		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
+		                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
+		                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
+		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                Resultxml = loadXMLString(pparsingXML2);
+
+		                var listview = new ListView();
+		                listview.LoadFromID("MsgToList");
+
+		                var MaxID = 0;
+		                var InitTr = listview.GetDataRows();
+		                var MaxCntNum = 0;
+		                for (var j = 0  ; j < InitTr.length  ; j++) {
+		                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                    if (MaxID < curnum) {
+		                        MaxID = curnum;
+		                        MaxCntNum = j;
+		                    }
+		                }
+
+		                var objTr = listview.AddRow(InitTr.length);
+		                if (MaxCntNum != 0)
+		                    MaxCntNum = MaxCntNum + 1;
+		                var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+		                SetAttribute(objTr, "id", trid);
+		                listview.AddDataRow(objTr, Resultxml);
+		                document.getElementById(trid).style.whiteSpace = "nowrap";
+		            }
+		        }
+		    // 담당자
+	    	} else {
+	    		if (listContentArry.length > 1 ) {
+	    			alert("<spring:message code='ezTask.jsh09' />");
+	        		return;
+	    		}
+
+	            var strUserid = GetAttribute(document.getElementById(listContentArry[0]),"_data2");
+	            var strName = GetAttribute(document.getElementById(listContentArry[0]),"_data10");
+	            var strName2 = GetAttribute(document.getElementById(listContentArry[0]),"_data11");
+	            var strDeptNM = GetAttribute(document.getElementById(listContentArry[0]),"_data12");
+	            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[0]),"_data13");
+	            var strEmail = GetAttribute(document.getElementById(listContentArry[0]),"_data3");
 	            var getlistview = new ListView();
 	            getlistview.LoadFromID("MsgToList");
-	            var bFlag = getlistview.ExistRow("DATA6", strEmail);
 
-	            if (bFlag) {
-	                continue;
-	            }
-	            else if (strUserid == "${userInfo.id }"){
+	            if (strUserid == "${userInfo.id }"){
 	                alert("<spring:message code='ezTask.t199' />");
+	                return;
 	            }
-	            else {
-	                pparsingXML2 = "";
-	                pparsingXML = "";
-	                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
-	                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName2) + "</DATA2>";
-	                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strDeptNM) + "</DATA3>";
-	                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
-	                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
-	                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
-	                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
-	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                Resultxml = loadXMLString(pparsingXML2);
 
-	                var listview = new ListView();
-	                listview.LoadFromID("MsgToList");
+	    		var listid = "MsgToList";
+		        var selList = new ListView();
+		        selList.LoadFromID(listid);
 
-	                var MaxID = 0;
-	                var InitTr = listview.GetDataRows();
-	                var MaxCntNum = 0;
-	                for (var j = 0  ; j < InitTr.length  ; j++) {
-	                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                    if (MaxID < curnum) {
-	                        MaxID = curnum;
-	                        MaxCntNum = j;
-	                    }
-	                }
+		        var arrRows = selList.GetDataRows();
 
-	                var objTr = listview.AddRow(InitTr.length);
-	                if (MaxCntNum != 0)
-	                    MaxCntNum = MaxCntNum + 1;
-	                var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
-	                SetAttribute(objTr, "id", trid);
-	                listview.AddDataRow(objTr, Resultxml);
-	                document.getElementById(trid).style.whiteSpace = "nowrap";
-	            }
-	        }
+	            // 담당자로 한명을 선택 후 다른 사람을 다시 선택하면 기존의 값 삭제
+	            if (arrRows.length > 0) {
+	    			$("tr[name=MsgToList]").remove();
+	    		}
+
+                pparsingXML2 = "";
+                pparsingXML = "";
+                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName2) + "</DATA2>";
+                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strDeptNM) + "</DATA3>";
+                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
+                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
+                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
+                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+                Resultxml = loadXMLString(pparsingXML2);
+
+                var listview = new ListView();
+                listview.LoadFromID("MsgToList");
+
+                var MaxID = 0;
+                var InitTr = listview.GetDataRows();
+                var MaxCntNum = 0;
+                for (var j = 0  ; j < InitTr.length  ; j++) {
+                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+                    if (MaxID < curnum) {
+                        MaxID = curnum;
+                        MaxCntNum = j;
+                    }
+                }
+
+                var objTr = listview.AddRow(InitTr.length);
+                if (MaxCntNum != 0)
+                    MaxCntNum = MaxCntNum + 1;
+                var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+                SetAttribute(objTr, "id", trid);
+                SetAttribute(objTr, "name", "MsgToList");
+                listview.AddDataRow(objTr, Resultxml);
+                document.getElementById(trid).style.whiteSpace = "nowrap";
+	    	}
 	    }
 
 	    function recevieListview(pID, pListView) {
@@ -901,10 +949,12 @@
 	        listview.SetSelectFlag(false);
 	        listview.SetMulSelectable(true);
 	        listview.SetRowOnDblClick("DeleteUser");
-	        if (returnval != null)
+	        if (returnval != null) {
 	            listview.DataSource(returnval);
-	            else
-	        listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
+	        } else {
+		        listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
+	        }
+
 	        listview.DataBind(pListView);
 	        listview.RowDataBind();
 
@@ -949,80 +999,6 @@
 	        document.getElementById("tblPageRayer").innerHTML = strtext;
 	    }
 	    function makePageSelPage() {
-	       /*  var strtext;
-	        var PagingHTML = "";
-	        document.getElementById("tblPageRayer").innerHTML = "";
-	        strtext = "<div class='pagenavi'>";
-	        PagingHTML += strtext;
-	        var pageNum = CurPage;
-	        if (totalPage > 1 && pageNum != 1) {
-	            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
-	            PagingHTML += strtext;
-	        }
-	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
-	            PagingHTML += strtext;
-	        }
-	        if (totalPage > BlockSize) {
-	            if (pageNum > BlockSize) {
-	                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-	                PagingHTML += strtext;
-	            }
-	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-	                PagingHTML += strtext;
-	            }
-	        }
-	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-	            PagingHTML += strtext;
-	        }
-	        var MaxNum;
-	        var i;
-	        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-	        if (totalPage >= (startNum + parseInt(BlockSize))) {
-	            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-	        }
-	        else {
-	            MaxNum = totalPage;
-	        }
-	        for (i = startNum; i <= MaxNum; i++) {
-	            if (i == pageNum) {
-	                strtext = "<span class='on'>" + i + "</span>";
-	                PagingHTML += strtext;
-	            }
-	            else {
-	                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-	                PagingHTML += strtext;
-	            }
-	        }
-	        if (totalPage > BlockSize) {
-	            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
-	                PagingHTML += strtext;
-	            }
-	            else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-	                PagingHTML += strtext;
-	            }
-	        }
-	        else {
-	            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        PagingHTML += "</div>";
-	        td_Create1(PagingHTML); */
 	    	var strtext;
 	        var PagingHTML = "";
 	        document.getElementById("tblPageRayer").innerHTML = "";
@@ -1156,8 +1132,6 @@
 	                displayUserList();
 	        }
 	    }
-
-
 	</script>
 	</head>
 	<body class="popup">

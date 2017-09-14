@@ -186,10 +186,10 @@
 					}
 		
 					if (personid != "" && personid != creatorid) {
-						document.getElementById("personlist").innerHTML = personname;
-		                 
+						document.getElementById("personlist").innerHTML = personname + " (" + persondept + ")";
+
 						g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-		
+
 						g_person["name"][0] = personname;
 						g_person["name1"][0] = personname;
 						g_person["name2"][0] = personname2;
@@ -198,7 +198,6 @@
 						g_person["deptname2"][0] = persondept2;
 						g_person["email"][0] = personemail;
 					}
-					
 
 		            if (shareliststr != "") {
 						sharename = shareliststr.split("||")[0];

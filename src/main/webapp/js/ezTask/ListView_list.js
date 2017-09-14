@@ -834,7 +834,7 @@ function ListView() {
                 else {
                     
                     if(!_SetHeightFree)
-                        objTd.height = "24";                    
+//                        objTd.height = "24";                    
                         
                     if (_titleIdx == null) { //하단정보탭일경우                       
                         if (_Align[j] == 0)
