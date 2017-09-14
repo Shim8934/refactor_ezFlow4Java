@@ -115,7 +115,7 @@
 						WHERE
 							tenantid = #tenantID#
 						AND
-							userid = #userID#), '##ff0000') as delaycolor,
+							userid = #userID#), '##FF0000') as delaycolor,
 				IFNULL((SELECT
 							completecolor
 						FROM
@@ -123,7 +123,7 @@
 						WHERE
 							tenantid = #tenantID#
 						AND
-							userid = #userID#), '##00ff00') as completecolor,
+							userid = #userID#), '##00FF00') as completecolor,
 				userid
 			FROM
 				TBL_TASKCONFIG

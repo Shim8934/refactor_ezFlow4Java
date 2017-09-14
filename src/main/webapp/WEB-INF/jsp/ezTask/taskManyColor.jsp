@@ -22,7 +22,7 @@
 		            }
 		        }
 
-				selColor.value = "#ffffff";
+				selColor.value = "#FFFFFF";
 				document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").value;
 			}
 			
@@ -55,44 +55,44 @@
 	    <h1><spring:message code="ezTask.t91" /></h1>
 	    <table onClick="select_color(event)" border="1" cellspacing="2" id="ColorTable" style="width:259px;" class="box">
 			<tr>
-			    <td style="width:32px; background-color: #ff8080" title="#ff8080">&nbsp;</td>
-			    <td style="width:32px; background-color: #ffff80" title="#ffff80">&nbsp;</td>
-			    <td style="width:32px; background-color: #80ff80" title="#80ff80">&nbsp;</td>
-			    <td style="width:32px; background-color: #00ff80" title="#00ff80">&nbsp;</td>
-			    <td style="width:32px; background-color: #80ffff" title="#80ffff">&nbsp;</td>
-			    <td style="width:32px; background-color: #0080ff" title="#0080ff">&nbsp;</td>
-			    <td style="width:32px; background-color: #ff80c0" title="#ff80c0">&nbsp;</td>
-			    <td style="width:32px; background-color: #ff80ff" title="#ff80ff">&nbsp;</td>
+			    <td style="width:32px; background-color: #FF8080" title="#FF8080">&nbsp;</td>
+			    <td style="width:32px; background-color: #FFFF80" title="#FFFF80">&nbsp;</td>
+			    <td style="width:32px; background-color: #80FF80" title="#80FF80">&nbsp;</td>
+			    <td style="width:32px; background-color: #00FF80" title="#00FF80">&nbsp;</td>
+			    <td style="width:32px; background-color: #80FFFF" title="#80FFFF">&nbsp;</td>
+			    <td style="width:32px; background-color: #0080FF" title="#0080FF">&nbsp;</td>
+			    <td style="width:32px; background-color: #FF80C0" title="#FF80C0">&nbsp;</td>
+			    <td style="width:32px; background-color: #FF80FF" title="#FF80FF">&nbsp;</td>
 		  	</tr>
 		  	<tr>
-			    <td style="background-color: #ff0000" title="#ff0000">&nbsp;</td>
-			    <td style="background-color: #ffff00" title="#ffff00">&nbsp;</td>
-			    <td style="background-color: #80ff00" title="#80ff00">&nbsp;</td>
-			    <td style="background-color: #00ff40" title="#00ff40">&nbsp;</td>
-			    <td style="background-color: #00ffff" title="#00ffff">&nbsp;</td>
-			    <td style="background-color: #0080c0" title="#0080c0">&nbsp;</td>
-			    <td style="background-color: #8080c0" title="#8080c0">&nbsp;</td>
-			    <td style="background-color: #ff00ff" title="#ff00ff">&nbsp;</td>
+			    <td style="background-color: #FF0000" title="#FF0000">&nbsp;</td>
+			    <td style="background-color: #FFFF00" title="#FFFF00">&nbsp;</td>
+			    <td style="background-color: #80FF00" title="#80FF00">&nbsp;</td>
+			    <td style="background-color: #00FF40" title="#00FF40">&nbsp;</td>
+			    <td style="background-color: #00FFFF" title="#00FFFF">&nbsp;</td>
+			    <td style="background-color: #0080C0" title="#0080C0">&nbsp;</td>
+			    <td style="background-color: #8080C0" title="#8080C0">&nbsp;</td>
+			    <td style="background-color: #FF00FF" title="#FF00FF">&nbsp;</td>
 		  	</tr>
 		  	<tr>
 			    <td style="background-color: #804040" title="#804040">&nbsp;</td>
-			    <td style="background-color: #ff8040" title="#ff8040">&nbsp;</td>
-			    <td style="background-color: #00ff00" title="#00ff00">&nbsp;</td>
+			    <td style="background-color: #FF8040" title="#FF8040">&nbsp;</td>
+			    <td style="background-color: #00FF00" title="#00FF00">&nbsp;</td>
 			    <td style="background-color: #008080" title="#008080">&nbsp;</td>
 			    <td style="background-color: #004080" title="#004080">&nbsp;</td>
-			    <td style="background-color: #8080ff" title="#8080ff">&nbsp;</td>
+			    <td style="background-color: #8080FF" title="#8080FF">&nbsp;</td>
 			    <td style="background-color: #800040" title="#800040">&nbsp;</td>
-			    <td style="background-color: #ff0080" title="#ff0080">&nbsp;</td>
+			    <td style="background-color: #FF0080" title="#FF0080">&nbsp;</td>
 		  	</tr>
 		  	<tr>
 			    <td style="background-color: #800000" title="#800000">&nbsp;</td>
-			    <td style="background-color: #ff8000" title="#ff8000">&nbsp;</td>
+			    <td style="background-color: #FF8000" title="#FF8000">&nbsp;</td>
 			    <td style="background-color: #008000" title="#008000">&nbsp;</td>
 			    <td style="background-color: #008040" title="#008040">&nbsp;</td>
-			    <td style="background-color: #0000ff" title="#0000ff">&nbsp;</td>
-			    <td style="background-color: #0000a0" title="#0000a0">&nbsp;</td>
+			    <td style="background-color: #0000FF" title="#0000FF">&nbsp;</td>
+			    <td style="background-color: #0000A0" title="#0000A0">&nbsp;</td>
 			    <td style="background-color: #800080" title="#800080">&nbsp;</td>
-			    <td style="background-color: #8000ff" title="#8000ff">&nbsp;</td>
+			    <td style="background-color: #8000FF" title="#8000FF">&nbsp;</td>
 		  	</tr>
 		  	<tr>
 			    <td style="background-color: #400000" title="#400000">&nbsp;</td>
@@ -110,9 +110,9 @@
 			    <td style="background-color: #808040" title="#808040">&nbsp;</td>
 			    <td style="background-color: #808080" title="#808080">&nbsp;</td>
 			    <td style="background-color: #408080" title="#408080">&nbsp;</td>
-			    <td style="background-color: #c0c0c0" title="#c0c0c0">&nbsp;</td>
+			    <td style="background-color: #C0C0C0" title="#C0C0C0">&nbsp;</td>
 			    <td style="background-color: #400040" title="#400040">&nbsp;</td>
-			    <td style="background-color: #ffffff" title="#ffffff">&nbsp;</td>
+			    <td style="background-color: #FFFFFF" title="#FFFFFF">&nbsp;</td>
 		  </tr>
 		</table>
 		<div class="box" style="width:256px;margin-top:2px">		
