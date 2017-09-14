@@ -38,4 +38,14 @@ public class MOrganDAO extends EgovAbstractDAO {
 	public List<MOrganListVO> getDeptMemberList(Map<String, Object> map) throws Exception {
 		return (List<MOrganListVO>) list("MOrganDAO.getDeptMemberList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<MOrganListVO> getOrganList(Map<String, Object> map) throws Exception {
+		return (List<MOrganListVO>) list("MOrganDAO.getOrganList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MOrganListVO> getLowDeptInfo(Map<String, Object> map) throws Exception {
+		return (List<MOrganListVO>) list("MOrganDAO.getLowDeptInfo", map);
+	}
 }
