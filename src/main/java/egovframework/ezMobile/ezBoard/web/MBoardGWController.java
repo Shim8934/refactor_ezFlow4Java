@@ -321,7 +321,7 @@ public class MBoardGWController {
 			
 			for (MBoardAttachVO photo : photoList) {
 				//임시로 localhost:8080
-				photo.setFilePath("http://localhost:8080"+photo.getFilePath());
+				photo.setFilePath(photo.getFilePath());
 			}
 				
 			LOGGER.debug("photoList:"+photoList);
