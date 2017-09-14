@@ -799,7 +799,7 @@
 							<td colspan="3" style="width:100%">
 								<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
 									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
-										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
+										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
 											<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
 										</span>
 										<c:if test="${not status.last }">,&nbsp;</c:if>
