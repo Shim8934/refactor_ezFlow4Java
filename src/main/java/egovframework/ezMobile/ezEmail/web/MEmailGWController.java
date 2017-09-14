@@ -334,14 +334,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale(ld);
 			
 			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
-			String sendName = egovMessageSource.getMessage("ezEmail.t644", locale);
-			String tempName = egovMessageSource.getMessage("ezEmail.t644", locale);
+			String sendName = egovMessageSource.getMessage("ezEmail.t645", locale);
+			String tempName = egovMessageSource.getMessage("ezEmail.t646", locale);
 		
 	        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
-	        	        
-	        senderReceiverFlag = folderId.equals(sendName) ? true : false;
-	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
-	        
+	        LOGGER.debug("sendName : " + sendName + ", tempName : " + tempName);	        
+//to-do     senderReceiverFlag = folderId.equals(sendName) ? true : false;
+//	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
+	        LOGGER.debug("folderId : " + folderId + ", senderReceiverFlag : " + senderReceiverFlag);
 	        if (endDate == null) {
 	        	endDate = "";
 	        }
