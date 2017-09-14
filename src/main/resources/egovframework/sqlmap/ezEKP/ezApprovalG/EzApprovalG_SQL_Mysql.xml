@@ -1390,7 +1390,7 @@
 				#v_DOCID#, 
 				APRMEMBERSN, 
 				APRTYPE ,
-				'', 
+				APRSTATE, 
 				APRMEMBERID, 
 				APRMEMBERISDEPTYN, 
 				APRMEMBERNAME, 
