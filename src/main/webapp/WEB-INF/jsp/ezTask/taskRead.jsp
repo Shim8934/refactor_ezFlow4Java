@@ -18,7 +18,12 @@
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-		
+		<style title="ezform_style_1">
+		P {
+			MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm
+			}
+		</style>
+
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
@@ -140,13 +145,13 @@
 					},
 					success: function(result){
 						html = result;
-						
 						var doc = document.getElementById('message').contentWindow.document;
 						doc.open();
 						doc.write(html);
 						doc.close();
-				        
+
 						$("#message").contents().find("body").css("word-wrap", "break-word");
+						$("#message").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
 					}
 				});
 			}
@@ -170,8 +175,9 @@
 							doc.open();
 							doc.write(html);
 							doc.close();
-					        
+
 							$("#message2").contents().find("body").css("word-wrap", "break-word");
+							$("#message2").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
 						}
 					});
 					

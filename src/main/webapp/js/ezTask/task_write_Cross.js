@@ -120,10 +120,11 @@ function manage_share_Complete(retVal) {
                 g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
                 setNodeText(document.getElementById("sharelist"), "");
+                type = $(":input:radio[name=tasktypesel]:checked").val();
 
                 var j = 0;
                 for (var i = 0; i < retVal["id"].length; i++) {
-                    if (g_person != null && g_person["email"][0] == retVal["email"][i]) {
+                    if (g_person != null && g_person["email"][0] == retVal["email"][i] && type != 1) {
                     	alertLoc = 2 + "," + retVal["name"][i];
                         return alertLoc;
                     } else {
