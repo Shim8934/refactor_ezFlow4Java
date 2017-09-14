@@ -531,11 +531,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Date receivedDate = message.getReceivedDate();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				
 				String receivedDateStr = sdf.format(receivedDate);
 				
 				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffSet(), false);
 				
+				String receivedDateStr2 = receivedDateStr.substring(0,receivedDateStr.length()-3);
+				
 				messageJson.put("receivedt",receivedDateStr);
+				messageJson.put("receivedt2",receivedDateStr2);
 				
 				// size
 				messageJson.put("size",message.getSize());
@@ -3792,9 +3796,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			            	
 //			                // this deletion code block has been moved here because
 //			                // it needs to be kept in Drafts if an error occurs during the above process.
-//			                if (oldMessage != null) {
-//			                	oldMessage.setFlag(Flags.Flag.DELETED, true);
-//			                }
+			                if (oldMessage != null) {
+			                	oldMessage.setFlag(Flags.Flag.DELETED, true);
+			                }
 //			            } else {
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
