@@ -226,7 +226,7 @@
 			function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
-	            totalcount = GetChildNodes(listdom.documentElement).length - 2;
+	            totalcount = GetChildNodes(listdom.documentElement).length - 3;
 	            totalpage = Math.ceil(new Number(totalcount / pagesize));
 
                 currentpage = 1;
