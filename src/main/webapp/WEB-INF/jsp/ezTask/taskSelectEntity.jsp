@@ -26,6 +26,7 @@
 	    var returnval = null;
 	    var strLang_1 = "<spring:message code='ezTask.t190' />";
 	    var type = "${type }";
+	    var primary = "${userInfo.primary}";
 	    var CurPage = "1";
 	    var ReturnFunction;
 	        
@@ -846,7 +847,11 @@
 		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
 		                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
 		                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
-		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                if (primary == 1) {
+			                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                } else {
+		                	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName2) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                }
 		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                Resultxml = loadXMLString(pparsingXML2);
 
@@ -914,7 +919,11 @@
                 pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
                 pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
                 pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                if (primary == 1) {
+	                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                } else {
+                	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName2) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                }
                 pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                 Resultxml = loadXMLString(pparsingXML2);
 
