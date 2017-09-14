@@ -91,7 +91,8 @@
 		
 		//범례 색상
 		var cpuMemoryColor = ['#77B0A8', '#E96359'];
-		var diskioColor = ['#4641D9', '#2F9D27', '#FF5E00', '#FFBB00', '#99004C', '#000093', '#FF0000'];
+		var diskioColor = ['#4641D9', '#2F9D27', '#FF5E00', '#FFBB00', '#99004C', 
+		                   '#000093', '#FF0000', '#BDBDBD', '#476600', '#FF00DD'];
 		var networkColor = ['#000093', '#FF0000'];
 		
 		var oldTx = 0;
@@ -102,6 +103,7 @@
 		
 		jui.ready(["chart.builder"], function (builder) {
 			var diskTarget = [];
+			//var networkMax = 0;
 			
 			// 2초마다 그래프 재생성
 	      	var refreshIntervalID = setInterval(function() {
@@ -335,7 +337,7 @@
 	    		var receive;
 	    		var transfer;
 	    		
-	    		if (networkData.length >= 30) {
+	    		if (networkData.length > 30) {
 	    			networkData.shift();
 	    		}
 
@@ -359,13 +361,13 @@
 	    		var maxInfo = obj.diskioMax;	
 	    		var current = new Date();
 
-	    		if (diskMax.length >= 30) {
+	    		if (diskMax.length > 30) {
 	    			diskMax.shift();
 	    		}	    		
 	    		// diskio 관련 최대값을 저장
 	    		diskMax.push(parseInt(maxInfo));
 	    		
-	    		if (diskioData.length >= 30) {
+	    		if (diskioData.length > 30) {
 	    			diskioData.shift();
 	    		}
 	    		
@@ -392,7 +394,7 @@
 
 	       		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memavailable);
 	       		
-	    		if (cpuMemoryData.length >= 30) {
+	    		if (cpuMemoryData.length > 30) {
 	    			cpuMemoryData.shift();
 	    		}
 	    		
@@ -516,17 +518,17 @@
 			    	 */
 		    		for (var i = 0; i < networkData.length; i++) {
 		    			
-		    			if (networkData[i].Receive > networkData[i].Transfer) {
+		    			if (parseFloat(networkData[i].Receive) > parseFloat(networkData[i].Transfer)) {
 		    				networkTmp = networkData[i].Receive;
 		    			} else {
 		    				networkTmp = networkData[i].Transfer;
 		    			}	    			
-		    			if (networkTmp > networkMax) {
+		    			if (parseFloat(networkTmp) >= parseFloat(networkMax)) {	    				
 		    				networkMax = networkTmp;
 		    			}
-		    		}	
+		    		}				    	
 			    	
-			    	if (networkMax > 50) { 				    		
+			    	if (50 < networkMax && networkMax< 100) { 				    		
 			    		/** 
 			    		 * 최대값의 10의 자리를 기준으로 + 10
 			    		 * 예) 최대값이 63인 경우 70Mbps를 y축으로 설정 
@@ -536,6 +538,15 @@
 
 				        networkDomain = [0, result];
 				        networkStep = step + 1;
+				        
+			    	} else if (100 <= networkMax  && networkMax < 1000) {
+			    		
+			    		var step = parseInt(networkMax / 100);
+			    		var result = (step * 100) + 100 ;
+
+				        networkDomain = [0, result];
+				        networkStep = step + 1;
+				        
 			    	} else {
 			    		networkDomain = [0, 50];
 			    		networkStep = 5;	    		
