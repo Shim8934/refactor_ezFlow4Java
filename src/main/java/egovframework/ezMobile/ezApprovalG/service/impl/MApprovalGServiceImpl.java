@@ -123,11 +123,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, MCommonVO userInfo) throws Exception {
+	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, String type, MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getAprLineInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
 		map.put("tenantID", userInfo.getTenantId());

@@ -253,15 +253,17 @@ public class MApprovalGGWController {
 		
 		try {
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("type : " + type);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			//결재선
-			List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGService.getAprLineInfo(docId, userInfo);
+			List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGService.getAprLineInfo(docId, type, userInfo);
 			String photoPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId());
 			
 			result.put("status", "ok");

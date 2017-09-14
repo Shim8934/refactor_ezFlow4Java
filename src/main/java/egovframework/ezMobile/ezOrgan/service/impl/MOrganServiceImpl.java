@@ -84,59 +84,83 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getDeptInfo(String deptId, String lang, int tenantId) throws Exception {
+	public List<MOrganListVO> getDeptInfo(String organType, String companyID, String deptId, String lang, int tenantId) throws Exception {
 		LOGGER.debug("getDeptInfo started");
 
 		//결과 조직도 리스트
 		List<MOrganListVO> resultOrganListVOs = new ArrayList<MOrganListVO>();
-		String orgDeptId = deptId;
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("deptID", deptId);
-		map.put("lang", commonUtil.getMultiData(lang, tenantId));
-		map.put("tenantID", tenantId);
 		
-		//유저부서의 하위한개만
-		List<MOrganListVO> lowOrganListVOs = mOrganDAO.getLowOrganList(map);
-		
-		do {
-			//유저와 같은레벨의 조직들
-			List<MOrganListVO> sameOrganListVOs = mOrganDAO.getSameOrganList(map);
+		switch (organType) {
+		case "top/unselected":
+			//top일때는 deptlevel 1만 가져오기
 			
-			int sameSize = sameOrganListVOs.size();
+			map.put("deptID", deptId);
+			map.put("organType", "top");
+			map.put("lang", commonUtil.getMultiData(lang, tenantId));
+			map.put("tenantID", tenantId);
 			
-			if (sameSize > 0) {
-				if (resultOrganListVOs.size() > 0) {
-					for (int i = 0; i < sameSize; i++) {
-						if (sameOrganListVOs.get(i).getDeptID().equals(deptId)) {
-							deptId = sameOrganListVOs.get(0).getHighDeptID();
-							
-							map.put("deptID", deptId);
-							
-							sameOrganListVOs.addAll(i + 1, resultOrganListVOs);
-							resultOrganListVOs.clear();
-							resultOrganListVOs.addAll(sameOrganListVOs);
-							
-							break;
+			resultOrganListVOs = mOrganDAO.getOrganList(map);
+			break;
+		case "top/selected":
+			String orgDeptId = deptId;
+			
+			map.put("deptID", deptId);
+			map.put("lang", commonUtil.getMultiData(lang, tenantId));
+			map.put("tenantID", tenantId);
+			
+			//유저부서의 하위한개만
+			List<MOrganListVO> lowOrganListVOs = mOrganDAO.getLowOrganList(map);
+			
+			do {
+				//유저와 같은레벨의 조직들
+				List<MOrganListVO> sameOrganListVOs = mOrganDAO.getSameOrganList(map);
+				
+				int sameSize = sameOrganListVOs.size();
+				
+				if (sameSize > 0) {
+					if (resultOrganListVOs.size() > 0) {
+						for (int i = 0; i < sameSize; i++) {
+							if (sameOrganListVOs.get(i).getDeptID().equals(deptId)) {
+								deptId = sameOrganListVOs.get(0).getHighDeptID();
+								
+								map.put("deptID", deptId);
+								
+								sameOrganListVOs.addAll(i + 1, resultOrganListVOs);
+								resultOrganListVOs.clear();
+								resultOrganListVOs.addAll(sameOrganListVOs);
+								
+								break;
+							}
 						}
+					} else {
+						resultOrganListVOs.addAll(sameOrganListVOs);
+						deptId = sameOrganListVOs.get(0).getHighDeptID();
+						
+						map.put("deptID", deptId);
 					}
-				} else {
-					resultOrganListVOs.addAll(sameOrganListVOs);
-					deptId = sameOrganListVOs.get(0).getHighDeptID();
+				}
+			} while(deptId != null && !deptId.equals(""));
+
+			int resultSize = resultOrganListVOs.size();
+			
+			for (int i = 0; i < resultSize; i++) {
+				if (resultOrganListVOs.get(i).getDeptID().equals(orgDeptId)) {
+					resultOrganListVOs.addAll(i + 1, lowOrganListVOs);
 					
-					map.put("deptID", deptId);
+					break;
 				}
 			}
-		} while(deptId != null && !deptId.equals(""));
-
-		int resultSize = resultOrganListVOs.size();
-		
-		for (int i = 0; i < resultSize; i++) {
-			if (resultOrganListVOs.get(i).getDeptID().equals(orgDeptId)) {
-				resultOrganListVOs.addAll(i + 1, lowOrganListVOs);
-				
-				break;
-			}
+			
+			break;
+		case "company/unselected":
+			
+			break;
+		case "company/selected":
+			
+			break;
+		default:
+			break;
 		}
 		
 		LOGGER.debug("getDeptInfo ended");
@@ -149,7 +173,7 @@ public class MOrganServiceImpl implements MOrganService {
 		LOGGER.debug("getDeptMemberList started");
 		
 		//single, multi
-		String orgType = "multi";
+		String orgType = "single";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("type", orgType);
@@ -163,6 +187,23 @@ public class MOrganServiceImpl implements MOrganService {
 		LOGGER.debug("getDeptMemberList ended");
 		
 		return mOrganListVOs;
+	}
+
+	@Override
+	public List<MOrganListVO> getLowDeptInfo(String deptID, String lang, int tenantId) throws Exception {
+		// TODO Auto-generated method stub
+		LOGGER.debug("getLowDeptInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptID", deptID);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
+		map.put("tenantID", tenantId);
+
+		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getLowDeptInfo(map);
+		
+		LOGGER.debug("getLowDeptInfo ended");
+		
+		return resultOrganListVOs;
 	}
 	
 }
