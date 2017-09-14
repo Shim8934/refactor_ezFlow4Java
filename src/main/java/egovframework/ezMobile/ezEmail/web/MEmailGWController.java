@@ -531,11 +531,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Date receivedDate = message.getReceivedDate();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				
 				String receivedDateStr = sdf.format(receivedDate);
 				
 				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffSet(), false);
 				
+				String receivedDateStr2 = receivedDateStr.substring(0,receivedDateStr.length()-3);
+				
 				messageJson.put("receivedt",receivedDateStr);
+				messageJson.put("receivedt2",receivedDateStr2);
 				
 				// size
 				messageJson.put("size",message.getSize());
