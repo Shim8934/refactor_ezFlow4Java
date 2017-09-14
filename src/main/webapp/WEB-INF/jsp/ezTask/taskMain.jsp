@@ -118,13 +118,12 @@
 		    	var feature = "";
 		    	
 		    	if (useTodoMemo == 'YES') {
-		    		feature = GetOpenPosition(780, 940);
-	                window.open("/ezTask/taskWrite.do", "", "height=940px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    		feature = GetOpenPosition(780, 740);
+	                window.open("/ezTask/taskWrite.do", "", "height=740px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	} else {
-		    		feature = GetOpenPosition(780, 885);
-	                window.open("/ezTask/taskWrite.do", "", "height=885px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    		feature = GetOpenPosition(780, 685);
+	                window.open("/ezTask/taskWrite.do", "", "height=685px, width=780px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	}
-                
 		    }
 	
 			var BlockSize = 10;
