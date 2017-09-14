@@ -49,7 +49,7 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText);
 		map.put("rowNum", rowNum);
-		map.put("listSize", 30);
+		map.put("listSize", 50);
 
 		LOGGER.debug("getPersonList ended");
 		
