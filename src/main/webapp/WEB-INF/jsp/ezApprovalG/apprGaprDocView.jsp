@@ -64,6 +64,7 @@
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
 		    var signImageType = "${signImageType}";
+		    var pMode = "${mode}";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -90,7 +91,6 @@
 		                document.getElementById("btnGongRam").style.display = "";
 		                pOpinionType = "";
 		            }
-		          	setAttachInfo(DocID, "TMP", lstAttachLink); // 임시 저장 첨부파일 리스트 출력
 		            LoadpzFormDocInfo(); // setAttachInfo(DocID, "APR", lstAttachLink);
 		            SignCheck();
 		            cancelYN();			      	
