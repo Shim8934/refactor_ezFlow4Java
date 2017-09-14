@@ -146,93 +146,92 @@
 				  };
 				  
 				  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-				  
-				  if (taskid != "") {
-						document.getElementById("importantSelect").value = importance;
-						
-						if (hasattach == "Y") {
-				            setAttachFileInfo("${taskAttachList}");
-				        }
-						
-// 						Editor_Complete();
-					}
-					
-					if (useTodoMemo == 'YES') {
-						if (tasktype == "1") {
-							document.getElementById("P").click();
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-						} else if (tasktype == "2") {
-							document.getElementById("I").click();
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
-						} else if (tasktype == "3") {
-							document.getElementById("C").click();
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
-						} else {
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-						}
-					} else {
-						if (tasktype == "1") {
-							document.getElementById("P").click();
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
-						} else if (tasktype == "2") {
-							document.getElementById("I").click();
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-						} else if (tasktype == "3") {
-							document.getElementById("C").click();
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
-						} else {
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
-						}
-					}
-		
-					if (personid != "" && personid != creatorid) {
-						document.getElementById("personlist").innerHTML = personname + " (" + persondept + ")";
-
-						g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-						g_person["name"][0] = personname;
-						g_person["name1"][0] = personname;
-						g_person["name2"][0] = personname2;
-						g_person["id"][0] = personid;
-						g_person["deptname"][0] = persondept;
-						g_person["deptname2"][0] = persondept2;
-						g_person["email"][0] = personemail;
-					}
-
-		            if (shareliststr != "") {
-						sharename = shareliststr.split("||")[0];
-						sharename1 = shareliststr.split("||")[1];
-						sharename2 = shareliststr.split("||")[2];
-						shareid = shareliststr.split("||")[3];
-						sharedept = shareliststr.split("||")[4];
-						sharedept2 = shareliststr.split("||")[5];
-						sharemail = shareliststr.split("||")[6];
-						
-						g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-						
-						shareid = shareid.split(";");
-						sharename = sharename.split(";");
-						sharename2 = sharename2.split(";");
-						sharedept = sharedept.split(";");
-						sharedept2 = sharedept2.split(";");
-						sharemail = sharemail.split(";");
-						
-						for (var i = 0; i < shareid.length - 1; i++) {
-							g_share["name"][i] = sharename[i];
-							g_share["name1"][i] = sharename1[i];
-							g_share["name2"][i] = sharename2[i];
-							g_share["id"][i] = shareid[i];
-							g_share["deptname"][i] = sharedept[i];
-							g_share["deptname2"][i] = sharedept2[i];
-							g_share["email"][i] = sharemail[i];
-						}
-					}
-		            
-					if (document.getElementById("TextTitle").value == "") {
-						document.getElementById("TextTitle").focus();
-					}
 			});
 
+			$(window).load(function() {
+				if (taskid != "") {
+					document.getElementById("importantSelect").value = importance;
+					
+					if (hasattach == "Y") {
+			            setAttachFileInfo("${taskAttachList}");
+			        }
+				}
+				
+				if (useTodoMemo == 'YES') {
+					if (tasktype == "1") {
+						document.getElementById("P").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("I").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("C").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					}
+				} else {
+					if (tasktype == "1") {
+						document.getElementById("P").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					} else if (tasktype == "2") {
+						document.getElementById("I").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else if (tasktype == "3") {
+						document.getElementById("C").click();
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					}
+				}
+	
+				if (personid != "" && personid != creatorid) {
+					document.getElementById("personlist").innerHTML = personname + " (" + persondept + ")";
+
+					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+
+					g_person["name"][0] = personname;
+					g_person["name1"][0] = personname;
+					g_person["name2"][0] = personname2;
+					g_person["id"][0] = personid;
+					g_person["deptname"][0] = persondept;
+					g_person["deptname2"][0] = persondept2;
+					g_person["email"][0] = personemail;
+				}
+
+	            if (shareliststr != "") {
+					sharename = shareliststr.split("||")[0];
+					sharename1 = shareliststr.split("||")[1];
+					sharename2 = shareliststr.split("||")[2];
+					shareid = shareliststr.split("||")[3];
+					sharedept = shareliststr.split("||")[4];
+					sharedept2 = shareliststr.split("||")[5];
+					sharemail = shareliststr.split("||")[6];
+					
+					g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+					
+					shareid = shareid.split(";");
+					sharename = sharename.split(";");
+					sharename2 = sharename2.split(";");
+					sharedept = sharedept.split(";");
+					sharedept2 = sharedept2.split(";");
+					sharemail = sharemail.split(";");
+					
+					for (var i = 0; i < shareid.length - 1; i++) {
+						g_share["name"][i] = sharename[i];
+						g_share["name1"][i] = sharename1[i];
+						g_share["name2"][i] = sharename2[i];
+						g_share["id"][i] = shareid[i];
+						g_share["deptname"][i] = sharedept[i];
+						g_share["deptname2"][i] = sharedept2[i];
+						g_share["email"][i] = sharemail[i];
+					}
+				}
+	            
+				if (document.getElementById("TextTitle").value == "") {
+					document.getElementById("TextTitle").focus();
+				}
+			})
 			window.onresize = function () {
 				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
 				
