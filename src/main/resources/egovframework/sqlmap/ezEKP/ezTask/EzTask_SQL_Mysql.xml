@@ -274,6 +274,8 @@
 				(A.personid = #userID#)
 			OR	
 				(B.sharerid = #userID# and A.TASKID = B.TASKID))
+			AND
+				A.taskstatus != 3
 		]]>
 
 		<isNotEqual property="filter" compareValue="">
@@ -304,6 +306,46 @@
 				A.tenantid = #tenantID#
 			AND
 				(A.creatorid = #userID# and A.tasktype != 1)
+			AND
+				A.taskstatus != 3
+		]]>
+
+		<isNotEqual property="filter" compareValue="">
+        	<isEqual property="chkValue" compareValue="title">
+	        	<![CDATA[
+	        		AND
+	        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="personName">
+	        	<![CDATA[
+	        		AND
+	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+	</select>
+	
+	<select id="EzTaskDAO.getTaskAllCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		    SELECT
+		    	COUNT(DISTINCT(A.taskID))
+			FROM
+				TBL_TASK A
+			LEFT JOIN
+				TBL_TASKSHARE B
+			ON
+				A.tenantid = B.tenantid
+			WHERE
+				A.tenantid = #tenantID#
+			AND
+				((A.creatorid = #userID# and A.tasktype != 1)
+			OR
+				((A.creatorid = #userID# and A.tasktype = 1)
+			OR
+				(A.personid = #userID#)
+			OR
+				(B.sharerid = #userID# and A.TASKID = B.TASKID)))
 		]]>
 
 		<isNotEqual property="filter" compareValue="">

@@ -893,6 +893,7 @@ public class EzTaskController extends EgovFileMngUtil {
 
     	resultXML.append("<CNT>" + cnt.split(",")[0] + "</CNT>");
     	resultXML.append("<CNT2>" + cnt.split(",")[1]+ "</CNT2>");
+    	resultXML.append("<ALLCNT>" + cnt.split(",")[2]+ "</ALLCNT>");
 
     	resultXML.append("</DATA>");
 

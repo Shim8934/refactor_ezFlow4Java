@@ -484,10 +484,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 
 		String rtnCnt = "";
-		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 count
-		String cnt2 = ezTaskDAO.getTaskCount2(map); // 지시,협조 count
-		
-		rtnCnt = cnt + "," + cnt2;
+		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count
+		String cnt2 = ezTaskDAO.getTaskCount2(map); // 지시,협조 중 진행중 count
+		String allCnt = ezTaskDAO.getTaskAllCount(map); // 개인 + 지시,협조 count
+
+		rtnCnt = cnt + "," + cnt2 + "," + allCnt;
 
 		logger.debug("rtnCnt : " + rtnCnt);
 		logger.debug("getTaskCount ended.");

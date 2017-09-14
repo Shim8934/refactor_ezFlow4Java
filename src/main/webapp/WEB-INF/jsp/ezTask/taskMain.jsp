@@ -28,7 +28,7 @@
 			var userid = "${userInfo.id}";
 			var listdom = "";
 			var pagecount = 0;
-			var totalcount = 0;
+			var allCnt = 0;
 			var currentpage = 0;
 			var pagesize = 10;
 			var isrefresh = false;
@@ -136,7 +136,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + totalcount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+			    document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + allCnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var totalPage = totalpage;
@@ -295,7 +295,7 @@
 			    var onTaskCount = 0;
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
-			    	if (totalcount == 0 || i == totalcount) {
+			    	if (currentCount == 0 || i == currentCount) {
 			            break;
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
@@ -585,8 +585,9 @@
 		    function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
-	            totalcount = GetChildNodes(listdom.documentElement).length - 2;
-	            totalpage = Math.ceil(new Number(totalcount / pagesize));
+// 	            totalcount = GetChildNodes(listdom.documentElement).length - 3;
+	            currentCount = GetChildNodes(listdom.documentElement).length - 3;
+	            totalpage = Math.ceil(new Number(currentCount / pagesize));
 
 	            if (isrefresh) {
 	                isrefresh = false;	            	
@@ -604,12 +605,18 @@
 
 	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+	            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
+
+	            if ($(".tabon").attr("divname") == "taskprog") {
+	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + currentCount + ")";
+		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
+	            } else {
+	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
+		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + currentCount + ")";
+	            }
 
 	            show_page();
 	            makePageSelPage();
-
-	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
-	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
 
 	            return;
 		    }
