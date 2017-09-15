@@ -50,7 +50,11 @@
 	                if (type == 1) {
 		                pparsingXML = pparsingXML + "<NAME><![CDATA[" + "MsgToList" + "]]></NAME>";	                	
 	                }
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + dialogArguments["name"][i] + " <" + dialogArguments["email"][i] + ">" + "]]></VALUE></CELL></ROW>";
+	                if (primary == 1) {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + dialogArguments["name"][i] + " <" + dialogArguments["email"][i] + ">" + "]]></VALUE></CELL></ROW>";
+	                } else {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + dialogArguments["name2"][i] + " <" + dialogArguments["email"][i] + ">" + "]]></VALUE></CELL></ROW>";
+	                }
 	            }
 	            
 	            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
