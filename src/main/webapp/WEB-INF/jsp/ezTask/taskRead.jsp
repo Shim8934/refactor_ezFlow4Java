@@ -824,7 +824,7 @@
 			
 		</table>
 		
-		<table id="normalScreen" class="layout" style="height:100%">
+		<table id="normalScreen" class="layout" style="height:100%; display:none;">
 			<tr>
 				<td style="padding-bottom:4px;height: 440px;">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
@@ -850,7 +850,7 @@
 			</tr>
 		</table>
 		
-		<table id="tablework" class="layout" style="height:100%; display:none;" >
+		<table id="tablework" class="layout" style="height:100%; display:none;">
 			<tr style="vertical-align:top">
 				<td colspan="3" style="padding-bottom:4px; height:440px;">
 					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
