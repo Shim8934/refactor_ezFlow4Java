@@ -99,7 +99,6 @@ function getPasswdEnd() {
 }
 
 function getPasswdEnd_Complete(ret) {
-	alert(20);
 	 DivPopUpHidden();
 	    if (ret[0]) {
 	        encodePass = ret[1];
@@ -147,7 +146,10 @@ function makeXML(newDocID) {
 	    var fields = message.GetFieldsList();
 	    var field;
 	    var tempNode;
-
+	    var mhtBody = "";
+	    
+	    mhtBody = message.Get_EditorBodyHTML();
+	    
 	    field = message.GetListItem(fields, "opinions");
 	    if (field) {
 	        var bodyfield = message.GetListItem(fields, "body");
@@ -156,7 +158,6 @@ function makeXML(newDocID) {
 	            field.innerHTML = "";
 	        }
 	    }
-	    var a = field.innerHTML;
 
 	    sihangXML = loadXMLFile("/xml/ezApprovalG/pubdocsample.xml");
 	    var eNodes = sihangXML.documentElement;
@@ -165,8 +166,7 @@ function makeXML(newDocID) {
 	    field = message.GetListItem(fields, "organ");
 	    if (field) {
 	        setNodeText(Nodes.item(0), getNodeText(field))
-	    }
-	    else {
+	    } else {
 	        setNodeText(Nodes.item(0), "")
 	    }
 
@@ -180,9 +180,9 @@ function makeXML(newDocID) {
 	                tempNode = eNodes.getElementsByTagName("rec");
 	                setNodeText(tempNode.item(0), getNodeText(field));
 	            }
-	        }
-	        else {
-	            Nodes.item(0).setAttribute("refer", "true");
+	        } else {
+//	            Nodes.item(0).setAttribute("refer", "true");
+	        	SetAttribute(Nodes[0], "refer", "true");    
 	            tempNode = eNodes.getElementsByTagName("rec");
 	            setNodeText(tempNode.item(0), getNodeText(field).replace(strLang177, ""))
 	        }
@@ -219,12 +219,12 @@ function makeXML(newDocID) {
 	    if (field) {
 	        var defaultFontFamily = "";
 	        var defaultFontSize = "";
-	        if (field.style.fontFamily !== null) {
-	            defaultFontFamily = field.style.fontFamily;
+	        if (field.fontFamily !== null) {
+	            defaultFontFamily = field.fontFamily;
 	        }
 
-	        if (field.style.fontSize !== null) {
-	            defaultFontSize = field.style.fontSize;
+	        if (field.fontSize !== null) {
+	            defaultFontSize = field.fontSize;
 	        }
 
 	        var strBody = Document_Encode(field.innerHTML, defaultFontFamily, defaultFontSize);
@@ -232,14 +232,20 @@ function makeXML(newDocID) {
 	        if (strBody === "") {
 	            return false;
 	        }
-
-	        var objChildNodes;
-	        createNodeAndAppandNodeText(sihangXML, Nodes.item(0), objChildNodes, "content", strBody);
+	        
+	        strBody = covBody(strBody);        
+	        Nodes[0].appendChild(strBody);
 	    }
 	    else {
-	        var objChildNodes;
-	        createNodeAndAppandNodeText(sihangXML, Nodes.item(0), objChildNodes, "content", "");
+	        setNodeText(Nodes[0], "");
 	    }
+//	        var objChildNodes;
+//	        createNodeAndAppandNodeText(sihangXML, Nodes.item(0), objChildNodes, "content", strBody);
+//	    }
+//	    else {
+//	        var objChildNodes;
+//	        createNodeAndAppandNodeText(sihangXML, Nodes.item(0), objChildNodes, "content", "");
+//	    }
 
 	    var Nodes = eNodes.getElementsByTagName("sendername");
 	    field = message.GetListItem(fields, "chief");

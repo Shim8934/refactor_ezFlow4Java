@@ -1017,7 +1017,8 @@ function getExtInfo() {
         if (Nodes.length > 0) {
             field = message.GetListItem(fields, "symbol");
             if (field) {
-                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
+//                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
+                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + GetAttribute(GetChildNodes(Nodes[0])[0], "src");
                 if (GetAttribute(GetChildNodes(Nodes[0])[0], "width") == "" || GetAttribute(GetChildNodes(Nodes[0])[0], "width") == null)
                     var signWidth = 70;
                 else
@@ -1054,7 +1055,8 @@ function getExtInfo() {
         if (Nodes.length > 0) {
             field = message.GetListItem(fields, "logo");
             if (field) {
-                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
+//                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
+                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + GetAttribute(GetChildNodes(Nodes[0])[0], "src");
 
                 if (GetAttribute(GetChildNodes(Nodes[0])[0], "width") == "" || GetAttribute(GetChildNodes(Nodes[0])[0], "width") == null)
                     var signWidth = 70;
