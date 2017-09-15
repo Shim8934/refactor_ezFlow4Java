@@ -59,4 +59,4 @@ var strLang60	=	"データが指定されていません。";
 var strLang61	=	"リストのIDが指定されていません。";
 var strLang62	=	"データが指定されていません。";
 var strLang63	=	"ノードが存在しません。";
-var strLang64	=	"메모";
+var strLang64	=	"メモ";
