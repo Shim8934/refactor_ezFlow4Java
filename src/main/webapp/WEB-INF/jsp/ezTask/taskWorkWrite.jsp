@@ -33,7 +33,7 @@
 	        }
 	        
 	        window.onresize = function () {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 230 + "PX";
+	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
 	         }
 	        
 			function Editor_Complete() {
@@ -149,7 +149,7 @@
 			</table>
 		</div>
 		<script>
-			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 230 + "PX";
+			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
 		</script>
 	</body>
 </html>
