@@ -539,7 +539,8 @@
 				        networkDomain = [0, result];
 				        networkStep = step + 1;
 				        
-			    	} else if (100 <= networkMax  && networkMax < 1000) {
+			    	//} else if (100 <= networkMax  && networkMax < 1000) {
+			    	} else if (100 <= networkMax) {	
 			    		
 			    		var step = parseInt(networkMax / 100);
 			    		var result = (step * 100) + 100 ;
