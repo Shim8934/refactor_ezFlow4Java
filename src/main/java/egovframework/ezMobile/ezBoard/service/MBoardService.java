@@ -19,7 +19,7 @@ public interface MBoardService {
 	
 	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 
-	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText) throws Exception;
+	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 	
 	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
 	
@@ -27,7 +27,7 @@ public interface MBoardService {
 	
 	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception;
 	
-	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID) throws Exception;
+	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID, String offset, String pSearchText) throws Exception;
 	
 	List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception;
 	
@@ -49,7 +49,7 @@ public interface MBoardService {
 	
 	String checkFavorite(String userID, String boardID, int tenantID) throws Exception;
 	
-	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
+	Integer getNewBoardListCount(String userID, String startDate, int tenantID, String pSearchText) throws Exception;
 	
 	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
 	

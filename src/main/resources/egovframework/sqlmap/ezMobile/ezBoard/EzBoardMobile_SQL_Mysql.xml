@@ -588,8 +588,8 @@
               A.WRITERNAME,         
               A.WRITERDEPTNAME,     
               A.WRITERCOMPANYNAME,  
-              A.WRITEDATE,          
-              A.STARTDATE,          
+              DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+			  DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,   
               A.PARENTWRITEDATE,    
               A.IMPORTANCE,         
               A.TITLE,            
@@ -650,7 +650,7 @@
             <isNotEmpty property="lastDate">
                 <![CDATA[
                     AND 
-                        A.STARTDATE < #lastDate#
+                        A.writedate < #lastDate#
                     AND 
                         A.ENDDATE > #nowDate#
                 ]]>
@@ -658,11 +658,20 @@
             <isEmpty property="lastDate">
                 <![CDATA[
                     AND 
-                        A.STARTDATE <= #nowDate#
+                        A.writedate < #nowDate#
                     AND 
                         A.ENDDATE > #nowDate#
                 ]]>
             </isEmpty>
+            
+            <isNotEmpty property="pSearchText">
+                <![CDATA[
+                    AND
+                        (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+                            OR
+                        A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                ]]>
+            </isNotEmpty>
             
             <![CDATA[
                        
@@ -1177,6 +1186,17 @@
                                   itemid = A.itemid
                                AND 
                                   ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY) ) )
+            ]]>
+            <isNotEmpty property="pSearchText">
+                <![CDATA[
+                    AND
+                        (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+                            OR
+                        A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                ]]>
+            </isNotEmpty>
+            
+            <![CDATA[                                  
             AND 
               A.StartDate < #nowDate#
             AND 
@@ -1186,7 +1206,7 @@
             AND 
               ( A.APPRFLAG = 'Y'
                   OR A.APPRFLAG IS NULL )
-    ]]>
+            ]]>
   </select>
   
     <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
