@@ -113,7 +113,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 			
 			//새게시물 리스트
-			List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId());
+			List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId(), info.getOffSet());
 			
 			//새게시물 리스트 카운트
 			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");

@@ -1034,11 +1034,12 @@ System.out.println("strFilePath:"+strFilePath);
 	}
 
 	@Override
-	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
+	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("listSize", listCnt);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getNewItemList(map);
 	}
