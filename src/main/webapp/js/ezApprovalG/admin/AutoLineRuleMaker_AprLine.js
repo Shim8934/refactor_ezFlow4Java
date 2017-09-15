@@ -1140,8 +1140,8 @@ function AprLineTypeCheck(p_AprLineValueName, p_AprLineValueCode, CurSelRow) {
                 var pAprLineRowLen = pAprLineRow.length;
 
                 for (i = 0; i < pAprLineRowLen; i++) {
-                    var templinevalue = parseInt(getNodeText(pAprLineRow[i].cells[0]));
-                    var temprowvalue = parseInt(getNodeText(CurSelRow[0].cells[0]));
+                    var templinevalue = Number(getNodeText(pAprLineRow[i].cells[0]));
+                    var temprowvalue = Number(getNodeText(CurSelRow[0].cells[0]));
                     
 
                     if (templinevalue > temprowvalue) {

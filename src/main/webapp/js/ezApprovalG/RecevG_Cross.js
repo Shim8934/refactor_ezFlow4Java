@@ -508,21 +508,21 @@ function getExtInfo() {
                     var field2 = message.GetListItem(fields, "chief");
                     var chiefwidth = 1;
                     if (field2) {
-                        cheifwidth = parseInt(field2.style.offsetWidth);
-                        field2.style.height = signHeight;
+                        cheifwidth = (GetByte(field2.innerText) / 2) *20;
+                        message.GetListItem(fields, "chief").height = signHeight;
                     }
 
-                    var sealwidth = (maxwidth + cheifwidth) / 2 - 60;
+                    var sealwidth = (maxwidth + cheifwidth) / 2 - 5;
                     var field2 = message.GetListItem(fields, "sealwidth");
                     if (field2)
-                        field2.style.width = sealwidth;
+                        field2.width = sealwidth;
 
                     var field2 = message.GetListItem(fields, "noseal");
                     if (field2)
-                        field2.style.width = (maxwidth - sealwidth - signWidth);
+                        field2.width = (maxwidth - sealwidth - signWidth);
 
-                    field.style.width = signWidth
-                    field.style.height = signHeight
+                    field.width = signWidth
+                    field.height = signHeight
 
                     var strimg = "<img src='" + escape(sealPath) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
@@ -541,20 +541,20 @@ function getExtInfo() {
                     var field2 = message.GetListItem(fields, "chief");
                     var chiefwidth = 1;
                     if (field2) {
-                        cheifwidth = parseInt(field2.style.offsetWidth);
-                        field2.style.height = signHeight;
+                        cheifwidth = Number(field2.offsetWidth);
+                        field2.height = signHeight;
                     }
 
                     var sealwidth = (maxwidth + cheifwidth) / 2 + 20;
                     var field2 = message.GetListItem(fields, "sealwidth");
                     if (field2)
-                        field2.style.width = sealwidth;
+                        field2.width = sealwidth;
 
                     var field2 = message.GetListItem(fields, "sealsign");
                     if (field2)
-                        field2.style.width = "1";
+                        field2.width = "1";
 
-                    field.style.width = maxwidth - sealwidth - 1;
+                    field.width = maxwidth - sealwidth - 1;
                     field.innerHTML = strimg;
                 }
             }
@@ -682,7 +682,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/approvalinfo/assist");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/assist");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/assist");
@@ -747,24 +747,28 @@ function getExtInfo() {
                 }
             }
 
+            alert(33333);
             if (message.GetListItem(fields, "linehab")) {
                 if (Nodes.length > 4) {
                 	message.GetListItem(fields, "linehab").style.display = "";
-                    for (i = 0; i < fields["linehab"].childNodes.length; i++)
+                    for (i = 0; i < fields["linehab"].childNodes.length; i++) {
                     	message.GetListItem(fields, "linehab").childNodes[i].style.display = "";
+                    }
                 }
                 else {
                 	message.GetListItem(fields, "linehab").style.display = "none";
-                    for (i = 0; i < fields["linehab"].childNodes.length; i++)
+                    for (i = 0; i < fields["linehab"].childNodes.length; i++) {
                     	message.GetListItem(fields, "linehab").childNodes[i].style.display = "none";
+                    }
                 }
             }
         }
         else {
             if (message.GetListItem(fields, "linehab")) {
             	message.GetListItem(fields, "linehab").style.display = "none";
-                for (i = 0; i < fields["linehab"].childNodes.length; i++)
+                for (i = 0; i < message.GetListItem(fields, "linehab").childNodes.length; i++) {
                 	message.GetListItem(fields, "linehab").childNodes[i].style.display = "none";
+                }
             }
         }
     } catch (e) { }
@@ -773,7 +777,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/processinfo/regnumber");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/regnumber");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/regnumber");
@@ -810,7 +814,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/processinfo/enforcedate");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/enforcedate");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/enforcedate");
@@ -827,7 +831,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/processinfo/receipt");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/receipt");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/receipt");
@@ -887,7 +891,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/zipcode");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/zipcode");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/zipcode");
@@ -904,7 +908,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/address");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/address");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/address");
@@ -921,7 +925,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/homeurl");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/homeurl");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/homeurl");
@@ -938,7 +942,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/telephone");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/telephone");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/telephone");
@@ -955,7 +959,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/fax");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/fax");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/fax");
@@ -972,7 +976,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/email");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/email");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/email");
@@ -989,7 +993,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/publication");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/publication");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/publication");
@@ -1006,7 +1010,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/symbol");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/symbol");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/symbol");
@@ -1043,7 +1047,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/sendinfo/logo");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/logo");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/logo");
@@ -1082,7 +1086,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/campaign/headcampaign");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/headcampaign");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/headcampaign");
@@ -1104,7 +1108,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "foot/campaign/footcampaign");
+            Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/footcampaign");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/footcampaign");
@@ -1127,7 +1131,7 @@ function getExtInfo() {
     try {
         var Nodes = null;
         if (CrossYN()) {
-            Nodes = SelectNodes(eNodes, "attach/title");
+            Nodes = SelectNodes(eNodes, "pubdoc/attach/title");
         }
         else {
             Nodes = SelectNodes(eNodes, "pubdoc/attach/title");
@@ -1159,6 +1163,33 @@ function getExtInfo() {
     SaveFile();
     SendAckForSend("", "accept");
     return true;
+}
+
+function getPixel(pLength) {
+    try {
+        var tempLength = Number(pLength);
+        tempLength = tempLength * 7 / 2;
+        return tempLength;
+    } catch (e) {
+        return 30;
+    }
+}
+
+function GetByte(pStr) {
+    var len = pStr.length;
+    var tot = 0;
+
+    for (var i = 0 ; i < len ; i++) {
+        var temp = pStr.charAt(i);
+
+        if (escape(temp).length > 4) {
+            tot += 2;
+        }
+        else {
+            tot++;
+        }
+    }
+    return tot;
 }
 
 function SetHref(mode) {
@@ -1891,7 +1922,7 @@ function SetPropertyValue() {
         }
 
         if (pSusinSN)
-            pSusinNextSN = parseInt(pSusinSN) + 1;
+            pSusinNextSN = Number(pSusinSN) + 1;
         else
             pSusinNextSN = 1;
 

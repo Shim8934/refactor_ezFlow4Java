@@ -265,10 +265,10 @@ function makeXML(newDocID) {
 	                var len = sealPath.lastIndexOf("/");
 	                var filelength = sealPath.length - (len + 1);
 	                sealName = sealPath.substr(len + 1, filelength);
-	                objChildNodes.setAttribute("src", sealName)
-	                objChildNodes.setAttribute("alt", strLang178)
-	                objChildNodes.setAttribute("height", Conversion(parseInt(field.childNodes.item(0).height)).toString() + "mm")
-	                objChildNodes.setAttribute("width", Conversion(parseInt(field.childNodes.item(0).width)).toString() + "mm")
+	                objChildNodes.setAttribute("src", sealName);
+	                objChildNodes.setAttribute("alt", strLang178);
+	                objChildNodes.setAttribute("height", Conversion(Number(field.childNodes.item(0).height)).toString() + "mm");
+	                objChildNodes.setAttribute("width", Conversion(Number(field.childNodes.item(0).width)).toString() + "mm");
 	            }
 	        }
 	    }
@@ -393,10 +393,10 @@ function makeXML(newDocID) {
 	                    var len = signPath.lastIndexOf("/");
 	                    var filelength = signPath.length - (len + 1);
 	                    var signName = signPath.substr(len + 1, filelength);
-	                    tempNode4.setAttribute("src", signName)
-	                    tempNode4.setAttribute("alt", strLang179)
-	                    tempNode4.setAttribute("height", Conversion(field.childNodes.item(0).height).toString() + "mm")
-	                    tempNode4.setAttribute("width", Conversion(field.childNodes.item(0).width).toString() + "mm")
+	                    tempNode4.setAttribute("src", signName);
+	                    tempNode4.setAttribute("alt", strLang179);
+	                    tempNode4.setAttribute("height", Conversion(field.childNodes.item(0).height).toString() + "mm");
+	                    tempNode4.setAttribute("width", Conversion(field.childNodes.item(0).width).toString() + "mm");
 
 	                    psignName[psignCount] = signName;
 	                    psignPath[psignCount] = signPath;
@@ -513,10 +513,9 @@ function makeXML(newDocID) {
 	                var tempNode3;
 	                tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "img", "");
 
-	                symbolPath = GetAttribute(field.childNodes.item(0),"web");
+	                symbolPath = GetAttribute(field.childNodes.item(0),"src");
 	                var len = symbolPath.lastIndexOf("/");
-	                var filelength = symbolPath.length - (len + 1);
-	                symbolName = symbolPath.substr(len + 1, filelength);
+	                symbolName = symbolPath.substr(len + 1, symbolPath.length);
 	                tempNode3.setAttribute("src", symbolName)
 	                tempNode3.setAttribute("alt", strLang180)
 	                tempNode3.setAttribute("height", Conversion(field.childNodes.item(0).height).toString() + "mm")
@@ -528,7 +527,7 @@ function makeXML(newDocID) {
 	    if (field) {
 	        if (field.childNodes.length > 0) {
 	            if (field.childNodes.item(0).tagName == "IMG") {
-	                logoPath = GetAttribute(field.childNodes.item(0),"web");
+	                logoPath = GetAttribute(field.childNodes.item(0),"src");
 	                if (logoPath) {
 	                    var tempNode2;
 	                    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "logo", "");
@@ -537,8 +536,7 @@ function makeXML(newDocID) {
 	                    tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "img", "");
 
 	                    var len = logoPath.lastIndexOf("/");
-	                    var filelength = logoPath.length - (len + 1);
-	                    logoName = logoPath.substr(len + 1, filelength);
+	                    logoName = logoPath.substr(len + 1, logoPath.length);
 	                    tempNode3.setAttribute("src", logoName)
 	                    tempNode3.setAttribute("alt", strLang181)
 	                    tempNode3.setAttribute("height", Conversion(field.childNodes.item(0).height).toString() + "mm")
@@ -847,7 +845,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
             SetAttribute(tempNode, "content-transfer-encoding", "base64");
             SetAttribute(tempNode, "content-type", "");
             SetAttribute(tempNode, "charset", "UTF-8");
-            setNodeText(tempNode, sealPath);                        
+            setNodeText(tempNode, sealPath.replace(pDomainName, ""));                        
         }
 
 
@@ -864,7 +862,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
             SetAttribute(tempNode, "content-transfer-encoding", "base64");
             SetAttribute(tempNode, "content-type", "");
             SetAttribute(tempNode, "charset", "");
-            setNodeText(tempNode, attachPath[i]);                        
+            setNodeText(tempNode, attachPath[i].replace(pDomainName, ""));                        
         }
 
         if (attachxmlPath != "") {
@@ -877,7 +875,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
             SetAttribute(tempNode, "content-transfer-encoding", "base64");
             SetAttribute(tempNode, "content-type", "html/xml");
             SetAttribute(tempNode, "charset", "");
-            setNodeText(tempNode, attachxmlPath);
+            setNodeText(tempNode, attachxmlPath.replace(pDomainName, ""));
         }
 
         if (attachxslPath != "") {
@@ -890,7 +888,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
             SetAttribute(tempNode, "content-transfer-encoding", "base64");
             SetAttribute(tempNode, "content-type", "html/xsl");
             SetAttribute(tempNode, "charset", "");
-            setNodeText(tempNode, attachxslPath);
+            setNodeText(tempNode, attachxslPath.replace(pDomainName, ""));
         }
 
         for (i = 1; i < psignCount; i++) {
@@ -903,7 +901,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
             SetAttribute(tempNode, "content-transfer-encoding", "base64");
             SetAttribute(tempNode, "content-type", "");
             SetAttribute(tempNode, "charset", "");
-            setNodeText(tempNode, psignPath[i]);
+            setNodeText(tempNode, psignPath[i].replace(pDomainName, ""));
         }
 
         if (symbolName != "") {

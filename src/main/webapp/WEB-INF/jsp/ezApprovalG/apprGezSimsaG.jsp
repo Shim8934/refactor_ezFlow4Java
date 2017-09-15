@@ -611,8 +611,8 @@
 		            }
 
 		            var SealHref = getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[0], "DATA2"));
-		            var SealWidth = parseInt(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[1], "VALUE")));
-		            var SealHeight = parseInt(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[2], "VALUE")));
+		            var SealWidth = Number(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[1], "VALUE")));
+		            var SealHeight = Number(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[2], "VALUE")));
 		            field = message.GetListItem(fields, "sealsign");
 		            if (field) {
 		                var signWidth = getPixel(SealWidth) + "px";
@@ -775,7 +775,7 @@
 		    }
 		    function getPixel(pLength) {
 		        try {
-		            var tempLength = parseInt(pLength);
+		            var tempLength = Number(pLength);
 		            tempLength = tempLength * 7 / 2;
 		            return tempLength;
 		        } catch (e) {
@@ -806,7 +806,8 @@
 		        return result;
 		    }
 		    function Conversion(pixel) {
-		        return parseInt(pixel * (35 / 100));
+// 		        return Number(pixel * (35 / 100));
+		        return Number(pixel * (26.4583 / 100));
 		    }
 		
 		    function SizeConvert(size) {
