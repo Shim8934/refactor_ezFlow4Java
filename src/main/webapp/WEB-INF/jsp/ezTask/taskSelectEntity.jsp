@@ -50,7 +50,11 @@
 	                if (type == 1) {
 		                pparsingXML = pparsingXML + "<NAME><![CDATA[" + "MsgToList" + "]]></NAME>";	                	
 	                }
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + dialogArguments["name"][i] + " <" + dialogArguments["email"][i] + ">" + "]]></VALUE></CELL></ROW>";
+	                if (primary == 1) {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + dialogArguments["name"][i] + " <" + dialogArguments["email"][i] + ">" + "]]></VALUE></CELL></ROW>";
+	                } else {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + dialogArguments["name2"][i] + " <" + dialogArguments["email"][i] + ">" + "]]></VALUE></CELL></ROW>";
+	                }
 	            }
 	            
 	            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -1186,7 +1190,7 @@
                       <table style="margin-top: 3px;">
                           <tr>
                               <td class="box">
-                                  <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+                                  <div style="width: 220px; height: 500px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
                               </td>
                               <td></td>
                               <td class="listview" style="width: 426px" id="orglistView">
