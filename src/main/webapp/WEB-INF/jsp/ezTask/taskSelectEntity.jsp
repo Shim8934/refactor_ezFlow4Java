@@ -1048,6 +1048,13 @@
 	                PagingHTML += strtext;
 	            }
 	        }
+
+	        // 페이지에 아무것도 없을 때 1 나오게 수정
+	        if (i == 1) {
+            	strtext = "<span class='on'>" + i + "</span>";
+                PagingHTML += strtext;
+            }
+
 	        if (totalPage > BlockSize) {
 	            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
