@@ -341,7 +341,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
 	        LOGGER.debug("sendName : " + sendName + ", tempName : " + tempName);	        
 //to-do     senderReceiverFlag = folderId.equals(sendName) ? true : false;
-//	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
+	        senderReceiverFlag = folderId.equals(sendName) || folderId.equals(tempName) ? true : false;
 	        LOGGER.debug("folderId : " + folderId + ", senderReceiverFlag : " + senderReceiverFlag);
 	        if (endDate == null) {
 	        	endDate = "";
@@ -384,6 +384,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				LOGGER.debug("search field not null");
 
 				String searchField = "SUBJECT&FROM";
+				
+				if (senderReceiverFlag) {
+					searchField = "SUBJECT&TO";
+				}
+				
 				final String searchValue = search;
 				
 				LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue + ",endDate=" + endDate);

@@ -1307,6 +1307,29 @@ public class EzEmailUtil {
 				    }
 				};					
 			}
+			
+			if (searchField.equalsIgnoreCase("SUBJECT&TO")) {
+				logger.debug("if SUBJECT&TO start");
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				        try {
+				        	String subject = getSubject(message);				        	
+				        	String from = getFullFromAddressOfMessage(message);
+				        	
+				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
+				        	boolean toFlag = toSearch(message, searchValue);
+				        	
+				            if (subjectFlag || toFlag) {
+				                return true;
+				            }
+				        } 
+				        catch (Exception e) {
+				        }
+				        
+				        return false;
+				    }
+				};					
+			}
 		}
 		
 		if (sTerm != null) {
@@ -2605,6 +2628,60 @@ public class EzEmailUtil {
 		return result.toString();		
 	}	
 	
+	public boolean toSearch (Message message, String searchValue) {
+		if (",<>@".contains(searchValue)) {
+			return false;
+		}
+			
+		try {
+			StringBuilder sb = new StringBuilder();
+			
+			// retrieve the TO addresses from the message.
+			Address[] addresses = message.getRecipients(Message.RecipientType.TO);
+			String[] rawHeaders = message.getHeader("To");
+			String rawHeader = rawHeaders != null ? rawHeaders[0] : "";							
+			String to = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
+			
+			if (!to.equals("")) {
+				sb.append(to);
+			}
+			
+			// retrieve the CC addresses from the message.
+			addresses = message.getRecipients(Message.RecipientType.CC);
+			rawHeaders = message.getHeader("Cc");
+			rawHeader = rawHeaders != null ? rawHeaders[0] : "";														
+			String cc = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
+			
+			if (!cc.equals("")) {
+				if (!to.equals("")) {
+					sb.append(",");
+				}
+				
+				sb.append(cc);
+			}
+			
+			// retrieve the BCC addresses from the message.
+			addresses = message.getRecipients(Message.RecipientType.BCC);
+			String bcc = getStringListOfAddresses(addresses, true);
+
+			if (!bcc.equals("")) {
+				if (!to.equals("") || !cc.equals("")) {
+					sb.append(",");
+				}
+				
+				sb.append(bcc);
+			}							
+			
+			if (sb.toString().toLowerCase().contains(searchValue.toLowerCase())) {
+				return true;
+			}
+		}
+
+		catch (MessagingException e) {					    		
+		}
+			
+		return false;
+		}
 }
 
 
