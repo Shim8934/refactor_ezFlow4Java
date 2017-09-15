@@ -870,6 +870,7 @@
 		                if (MaxCntNum != 0)
 		                    MaxCntNum = MaxCntNum + 1;
 		                var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+	                
 		                SetAttribute(objTr, "id", trid);
 		                listview.AddDataRow(objTr, Resultxml);
 		                document.getElementById(trid).style.whiteSpace = "nowrap";
@@ -877,75 +878,80 @@
 		        }
 		    // 담당자
 	    	} else {
-	    		if (listContentArry.length > 1 ) {
+	    		if (listContentArry.length > 1) {
 	    			alert("<spring:message code='ezTask.jsh09' />");
 	        		return;
 	    		}
 
-	            var strUserid = GetAttribute(document.getElementById(listContentArry[0]),"_data2");
-	            var strName = GetAttribute(document.getElementById(listContentArry[0]),"_data10");
-	            var strName2 = GetAttribute(document.getElementById(listContentArry[0]),"_data11");
-	            var strDeptNM = GetAttribute(document.getElementById(listContentArry[0]),"_data12");
-	            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[0]),"_data13");
-	            var strEmail = GetAttribute(document.getElementById(listContentArry[0]),"_data3");
-	            var getlistview = new ListView();
-	            getlistview.LoadFromID("MsgToList");
-
-	            if (strUserid == "${userInfo.id }"){
-	                alert("<spring:message code='ezTask.t199' />");
-	                return;
-	            }
-
-	    		var listid = "MsgToList";
-		        var selList = new ListView();
-		        selList.LoadFromID(listid);
-
-		        var arrRows = selList.GetDataRows();
-
-	            // 담당자로 한명을 선택 후 다른 사람을 다시 선택하면 기존의 값 삭제
-	            if (arrRows.length > 0) {
-	    			$("tr[name=MsgToList]").remove();
+	    		if (listContentArry.length != 0) {
+		            var strUserid = GetAttribute(document.getElementById(listContentArry[0]),"_data2");
+		            var strName = GetAttribute(document.getElementById(listContentArry[0]),"_data10");
+		            var strName2 = GetAttribute(document.getElementById(listContentArry[0]),"_data11");
+		            var strDeptNM = GetAttribute(document.getElementById(listContentArry[0]),"_data12");
+		            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[0]),"_data13");
+		            var strEmail = GetAttribute(document.getElementById(listContentArry[0]),"_data3");
+		            var getlistview = new ListView();
+		            getlistview.LoadFromID("MsgToList");
+		            var bFlag = getlistview.ExistRow("DATA6", strEmail);
+	
+		            if (bFlag) {
+	// 	                continue;
+		            } else if (strUserid == "${userInfo.id }"){
+		                alert("<spring:message code='ezTask.t199' />");
+		            } else {
+			    		var listid = "MsgToList";
+				        var selList = new ListView();
+				        selList.LoadFromID(listid);
+		
+				        var arrRows = selList.GetDataRows();
+		
+			            // 담당자로 한명을 선택 후 다른 사람을 다시 선택하면 기존의 값 삭제
+			            if (arrRows.length > 0) {
+			    			$("tr[name=MsgToList]").remove();
+			    		}
+		
+		                pparsingXML2 = "";
+		                pparsingXML = "";
+		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+		                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName2) + "</DATA2>";
+		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strDeptNM) + "</DATA3>";
+		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
+		                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
+		                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
+		                if (primary == 1) {
+			                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                } else {
+		                	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName2) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                }
+		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                Resultxml = loadXMLString(pparsingXML2);
+		
+		                var listview = new ListView();
+		                listview.LoadFromID("MsgToList");
+		
+		                var MaxID = 0;
+		                var InitTr = listview.GetDataRows();
+		                var MaxCntNum = 0;
+		                for (var j = 0  ; j < InitTr.length  ; j++) {
+		                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                    if (MaxID < curnum) {
+		                        MaxID = curnum;
+		                        MaxCntNum = j;
+		                    }
+		                }
+	
+		                var objTr = listview.AddRow(InitTr.length);
+		                if (MaxCntNum != 0)
+		                    MaxCntNum = MaxCntNum + 1;
+		                var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+		                
+		                SetAttribute(objTr, "id", trid);
+		                SetAttribute(objTr, "name", "MsgToList");
+		                listview.AddDataRow(objTr, Resultxml);
+		                document.getElementById(trid).style.whiteSpace = "nowrap";
+		            }
 	    		}
-
-                pparsingXML2 = "";
-                pparsingXML = "";
-                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
-                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName2) + "</DATA2>";
-                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strDeptNM) + "</DATA3>";
-                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
-                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
-                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
-                if (primary == 1) {
-	                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
-                } else {
-                	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName2) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
-                }
-                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-                Resultxml = loadXMLString(pparsingXML2);
-
-                var listview = new ListView();
-                listview.LoadFromID("MsgToList");
-
-                var MaxID = 0;
-                var InitTr = listview.GetDataRows();
-                var MaxCntNum = 0;
-                for (var j = 0  ; j < InitTr.length  ; j++) {
-                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                    if (MaxID < curnum) {
-                        MaxID = curnum;
-                        MaxCntNum = j;
-                    }
-                }
-
-                var objTr = listview.AddRow(InitTr.length);
-                if (MaxCntNum != 0)
-                    MaxCntNum = MaxCntNum + 1;
-                var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
-                SetAttribute(objTr, "id", trid);
-                SetAttribute(objTr, "name", "MsgToList");
-                listview.AddDataRow(objTr, Resultxml);
-                document.getElementById(trid).style.whiteSpace = "nowrap";
 	    	}
 	    }
 
