@@ -87,6 +87,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -574,9 +575,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			folder.close(false);
 			
+			// set importanceColor
+			String importanceColor = "#ff0000";
+			MailColorVO mailColor = ezEmailService.getMailColor(info.getTenantId());
+			
+			if (mailColor != null && mailColor.getImportanceColor() != null) {
+				importanceColor = mailColor.getImportanceColor();
+			}
+			
 			JSONObject data = new JSONObject();
 			
 			data.put("messageJsonArray", messageJsonArray);
+			data.put("importanceColor", importanceColor);
 			data.put("unreadCount", folder.getUnreadMessageCount());
 			data.put("fullCount", folder.getMessageCount());
 			data.put("optionCount", messages.length);
