@@ -388,7 +388,6 @@
 	        }
 	    }
 
-		var checkReturn;
 	    function close_onclick() {
 	        var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
@@ -406,15 +405,9 @@
 	        }
 
 	        if (ReturnFunction != null) {
-	        	checkReturn = ReturnFunction(rtn);
+	        	ReturnFunction(rtn);
 	        } else {
 	            window.returnValue = rtn;
-	        }
-	        
-	        if (checkReturn.split(",")[0] == 1) {
-	        	alert(checkReturn.split(",")[1] + "<spring:message code='ezTask.jsh10' />");
-	        } else if (checkReturn.split(",")[0] == 2) {
-	        	alert(checkReturn.split(",")[1] + "<spring:message code='ezTask.jsh11' />");
 	        }
 	    }
 

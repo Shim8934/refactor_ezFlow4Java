@@ -87,8 +87,8 @@ function manage_share_Complete(retVal) {
                 if (g_share != null) {
                     for (var i = 0; i < g_share["email"].length; i++) {
                         if (retVal["email"][0] == g_share["email"][i]) {
-                        	alertLoc = 1 + "," + retVal["name"][0];
-                            return alertLoc;
+                        	alert(retVal["name"][0] + strLang55);
+                            return;
                         }
                     }
                 }
@@ -124,9 +124,9 @@ function manage_share_Complete(retVal) {
 
                 var j = 0;
                 for (var i = 0; i < retVal["id"].length; i++) {
-                    if (g_person != null && g_person["email"][0] == retVal["email"][i] && type != 1) {
-                    	alertLoc = 2 + "," + retVal["name"][i];
-                        return alertLoc;
+                    if (g_person != null && g_person["email"][0] == retVal["email"][i]) {
+                    	alert(retVal["name"][i] + strLang56);
+                    	return;
                     } else {
                         if (getNodeText(document.getElementById("sharelist")) == "") {
                         	if (primary == 1) {
