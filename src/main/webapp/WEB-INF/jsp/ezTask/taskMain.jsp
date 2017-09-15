@@ -646,8 +646,11 @@
 		    }
 		    
 		    function Tab1_MouserOut(obj) {
-		        if (Tab1_SelectID != obj.id)
+		        if (Tab1_SelectID != obj.id) {
 		            obj.className = "";
+		        } else {
+		        	obj.className = "tabon";
+		        }
 		    }
 		    
 		    function Tab1_MouseClick(obj) {
