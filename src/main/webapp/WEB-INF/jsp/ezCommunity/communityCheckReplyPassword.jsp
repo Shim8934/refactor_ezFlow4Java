@@ -86,14 +86,6 @@
 				window.returnValue = "cancel";
 // 				gUserID = dialogArguments;
 	
-			    try {
-			        var ua = navigator.userAgent;
-			        
-			        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) { 
-			            KeEventControl(document.getElementById("inpPassword"));
-			        }
-			    } catch(e){
-			    }
 			}
 	
 			function KeEventControl(obj) {

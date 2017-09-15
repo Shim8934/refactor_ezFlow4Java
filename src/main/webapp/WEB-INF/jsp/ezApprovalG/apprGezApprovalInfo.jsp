@@ -302,15 +302,6 @@
 	                 }
 	                 catch (e) {
 	                 }
-	                 try {
-	                     var ua = navigator.userAgent;
-	                     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                         KeEventControl(document.getElementById("textUser"));
-	                         KeEventControl(document.getElementById("textUser2"));
-	                     }
-	                 }
-	                 catch (e)
-	                 { }
 	                     if (pHapYuiCount == 0) {
 	                         document.getElementById("deptaddbtn").style.display = "none";
 	                 }

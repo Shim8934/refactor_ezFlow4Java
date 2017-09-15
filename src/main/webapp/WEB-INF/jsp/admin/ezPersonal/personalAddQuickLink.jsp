@@ -49,20 +49,7 @@
 	                ArgQuickID = RetValue;
 	                initQuickLink();
 	                initQuickLinkACL();
-	            }
-	
-	            try {
-	                var ua = navigator.userAgent;
-	                
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    KeEventControl(document.getElementById("Title1"));
-	                    KeEventControl(document.getElementById("Title2"));
-	                    KeEventControl(document.getElementById("Title3"));
-	                    //KeEventControl(document.getElementById("Title4"));
-	                    KeEventControl(document.getElementById("txtURL"));
-	                }
-	            } catch (e){
-	            }
+	            }	
 	        });
 	
 	        function KeEventControl(obj) {
