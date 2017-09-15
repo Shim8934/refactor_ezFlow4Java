@@ -356,7 +356,6 @@
 			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        } else {
 			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
-			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        }
 			        tr.cells[4].style.overflow = "hidden";
 			        tr.cells[4].style.textOverflow = "ellipsis";
