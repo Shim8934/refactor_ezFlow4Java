@@ -18,11 +18,6 @@
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-		<style title="ezform_style_1">
-		P {
-			MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm
-			}
-		</style>
 
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
