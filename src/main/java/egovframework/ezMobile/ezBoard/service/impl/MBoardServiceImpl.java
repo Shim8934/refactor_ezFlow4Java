@@ -1024,7 +1024,7 @@ System.out.println("strFilePath:"+strFilePath);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		//mainList 임시 10까지
-		map.put("listSize", 10);
+		map.put("listSize", 50);
 		map.put("lastDate", lastDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
