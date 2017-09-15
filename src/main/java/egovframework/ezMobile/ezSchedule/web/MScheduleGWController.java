@@ -217,9 +217,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale);
 			LOGGER.debug("mhtToHtml: " + mhtToHtml);
 			
-			if(mhtToHtml.indexOf("<div>") < 0 || mhtToHtml.indexOf("</div>") < 0) {
-				mhtToHtml = "";
-			}
+			//if(mhtToHtml.indexOf("<div>") < 0 || mhtToHtml.indexOf("</div>") < 0) {
+			//	mhtToHtml = "";
+			//}
 			
 			LOGGER.debug("mhtToHtml: " + mhtToHtml);
 			vo.setContent(mhtToHtml);
@@ -250,6 +250,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        		avo.setFileType(fileType);        		
 	        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
 	        		
+	        		String filePath = commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId()) + avo.getFilePath();
+	        		avo.setFilePath(filePath);
 	        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
 	        		avo.setFileTranSize(fileSize);
 	        	}
@@ -290,6 +292,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
         		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
         		avo.setFileType(fileType);        		
         		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+        		
+        		String filePath = commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId());
+        		avo.setFilePath(filePath);
         		
         		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
         		avo.setFileTranSize(fileSize);
