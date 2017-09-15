@@ -359,7 +359,7 @@ public class MBoardServiceImpl implements MBoardService {
 		List<MBoardItemVO> mBoardNoticeItemList = getNoticePostItemList(boardID, userID, gubun, page, tenantID, offset);
 		
 		//임시로 10으로 지정
-		int listSize = 5;
+		int listSize = 50;
         
 		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
 		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
