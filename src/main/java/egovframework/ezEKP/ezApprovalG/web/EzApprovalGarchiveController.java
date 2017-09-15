@@ -2486,4 +2486,25 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("getRelayDocInfo ended");
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/sendAckforReSend.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String sendAckforReSend(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("getRelayDocInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String type = request.getParameter("type");
+		String userName = request.getParameter("userName");
+		String userDeptName = request.getParameter("userDeptName");
+		String errMsg = request.getParameter("tempCabinetID");
+		
+		if (userDeptName == null) {
+			userDeptName = "";
+		}
+
+		String result = ezApprovalGService.sendAck(commonUtil.getRealPath(request), docID, type, userName, userDeptName, errMsg, userInfo);
+		logger.debug("getRelayDocInfo ended");
+		return result;
+	}
 }

@@ -256,13 +256,13 @@
 		                var pFileExt = "";
 		                if (pHref == "") {
 		                    pHref = objNodes[i].outerHTML;
-		                    pFilePath = pHref.substring(pHref.indexOf("DocHref=") + 8, pHref.indexOf("&amp;", pHref.indexOf("DocHref=")));
+		                    pFilePath = pHref.substring(pHref.indexOf("docHref=") + 8, pHref.indexOf("&amp;", pHref.indexOf("docHref=")));
 		                    pFileExt = pFilePath.substring(pFilePath.lastIndexOf("."), pFilePath.length);
 		                } else {
 		                    pFilePath = pHref.substring(pHref.indexOf("filePath=") + 9, pHref.length);
 		                }
 		                attachName[idx] = objNodes[i].innerText + pFileExt;
-		                attachPath[idx] = unescape(pFilePath);
+		                attachPath[idx] = decodeURIComponent(pFilePath);
 		                attachType[idx] = "";
 		                idx++;
 		            }
@@ -741,7 +741,7 @@
 		                var field2 = message.GetListItem(fields, "chief");
 		                var chiefwidth = 1;
 		                if (field2) {
-		                    chiefwidth = parseInt(field2.width);
+		                    chiefwidth = Number(field2.width);
 		                    field2.height = signHeight;
 		                }
 		                var sealwidth = (maxwidth + chiefwidth) / 2 + 20;

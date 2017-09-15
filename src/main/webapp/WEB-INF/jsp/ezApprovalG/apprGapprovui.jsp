@@ -459,14 +459,12 @@
 		    {
 		        ChangeBtnState();
 		    }
-		    function process_AfterOpen()
-		    {
+		    function process_AfterOpen() {
 		        getCurApproverAprLine();
 		        pGubun = "8";
 		        
 		        if (approvalFlag == "S") {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)  {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -488,8 +486,7 @@
 			            pGubun = "14";
 			        }
 		        } else {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -501,8 +498,7 @@
 			            setMenuBar("btnSetTaskCode", false);
 			            setMenuBar("btnAddSepAttach", false); 
 			            pGubun = "10";
-			        }
-			        else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			        } else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			            setMenuBar("btnModAprLine", false);
 			            pGubun = "5";
 			        }
@@ -517,27 +513,25 @@
 		                pGubun = "7";
 		            }
 		        }
-		        if(pDraftFlag == "SUSIN")
-		        {
+		        if(pDraftFlag == "SUSIN") {
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "susinbody");
-		            if(field)
+		            if(field) {
 		                setMenuBar("btnEdit", true);
-		            else
+		            } else {
 		                setMenuBar("btnEdit", false);
+		            }
 		
 		            setMenuBar("btnModAprDept", false);
 		            setMenuBar("btnFileAttach", false);
 		            setMenuBar("btnAprDocAttach", false);
 		            pGubun = "6";
 		        }
-		        else
-		        {
+		        else {
 		            pSuSinFlag = "N";		
 		            var fields = message.GetFieldsList(); 
 		            var RtnVal = message.GetListItem(fields, "recipient");
-		            if(RtnVal != null)
-		            { 
+		            if(RtnVal != null) { 
 		                pSuSinFlag = "Y";
 		                setMenuBar("btnModAprDept", true);
 		                
@@ -546,11 +540,13 @@
 		                setMenuBar("btnModAprDept", false);
 		                if (pGubun == "5") {
 		                    pGubun = "7";
-		                }
-		                else {
+		                } else {
 		                    pGubun = "6";
 		                }
 		            }		
+		        }
+		        if (pDraftFlag == "HABYUI") {
+		            setMenuBar("btntotaldocinfo", false);
 		        }
 		        SignCheck();
 		    }

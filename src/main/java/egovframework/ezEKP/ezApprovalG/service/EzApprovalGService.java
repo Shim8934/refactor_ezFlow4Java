@@ -492,5 +492,7 @@ public interface EzApprovalGService {
 
 	public String setRecvDocInfo(String docID, String publicFlag, String docNo, String docNumCode, String orgDocNumCode, String mode, String fileType, LoginVO userInfo) throws Exception;
 
-	public String updateRecvDocInfo(String docID, String docNo, String docNumCode, String orgDocNumCode, String cabinetID, 	String taskCode, String userID, String userName, String userName2, String deptID, String userTitle, String userTitle2, String deptName, String deptName2, String tempCompanyID, LoginVO userInfo, String realPath) throws Exception;
+	public String updateRecvDocInfo(String docID, String docNo, String docNumCode, String orgDocNumCode, String cabinetID, String taskCode, String userID, String userName, String userName2, String deptID, String userTitle, String userTitle2, String deptName, String deptName2, String tempCompanyID, LoginVO userInfo, String realPath) throws Exception;
+
+	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, LoginVO userInfo) throws Exception;
 }

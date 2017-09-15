@@ -2,6 +2,7 @@
 var strLang2 = "合議"
 var strLang3 = "協議"
 var strLang4 = "差し戻し"
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "専決"
 var strLang7 = "代決"
 var strLang8 = "代 "

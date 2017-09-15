@@ -2,6 +2,7 @@
 var strLang2 = "Agreement"
 var strLang3 = "Cooperation"
 var strLang4 = "Returning"
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "Pre-approval"
 var strLang7 = "Deputy"
 var strLang8 = "for "

@@ -22810,66 +22810,74 @@
 	  </update>
 	  
 	  <update  id="EzApprovalG.updateRecRelayInfoRollback" parameterClass="Map">
-	  UPDATE TBL_RECRELAYINFO
-	  SET DOCID = ''
-	  WHERE 
-	  	TENANT_ID = #v_TENANTID#
-	  AND
-	  	COMPANYID = #companyID#
-	  AND
-	  	XDOCID = #XDOCID# 
-	  AND 
-	  	XTOCODE = #XTOCODE#
+		  UPDATE 
+		  		TBL_RECRELAYINFO
+		  SET 
+		  		DOCID = ''
+		  WHERE 
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		  AND
+		  	XDOCID = #XDOCID# 
+		  AND 
+		  	XTOCODE = #XTOCODE#
 	  </update>
 	  
 	  <update  id="EzApprovalG.updateRecExchInfoRollback" parameterClass="Map">
-	  UPDATE TBL_RECEXCHINFO
-	  SET DOCID = ''
-	  WHERE
-	  	TENANT_ID = #v_TENANTID#
-	  AND
-	  	COMPANYID = #companyID#
-	  AND 
-	  	PACKDOCID = #XDOCID#
+		  UPDATE 
+		  		TBL_RECEXCHINFO
+		  SET 
+		  		DOCID = ''
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		PACKDOCID = #XDOCID#
 	  </update>
 	  
 	  <delete  id="EzApprovalG.deleteRelayReceiptProcessInfo" parameterClass="Map">
-	  DELETE FROM TBL_APRRECEIPTPROCESSINFO 
-	  WHERE
-	  	TENANT_ID = #v_TENANTID#
-	  AND
-	  	COMPANYID = #companyID#
-	  AND 
-	  	DOCID = #NEWID#
+		  DELETE FROM 
+		  		TBL_APRRECEIPTPROCESSINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		DOCID = #NEWID#
 	  </delete>
 	  <delete  id="EzApprovalG.deleteRelayAttachInfo" parameterClass="Map">
-	  DELETE FROM TBL_APRATTACHINFO 
-	  WHERE
-	  	TENANT_ID = #v_TENANTID#
-	  AND
-	  	COMPANYID = #companyID#
-	  AND
-	  	DOCID = #NEWID#
+		  DELETE 
+		  		FROM TBL_APRATTACHINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND
+		  		DOCID = #NEWID#
 	  </delete>
 	  
 	  <delete  id="EzApprovalG.deleteRelayExpAprDocInfo" parameterClass="Map">
-	  DELETE FROM TBL_EXPAPRDOCINFO 
-	  WHERE
-	  	TENANT_ID = #v_TENANTID#
-	  AND
-	  	COMPANYID = #companyID#
-	  AND 
-	  	DOCID = #NEWID#
+		  DELETE 
+		  		FROM TBL_EXPAPRDOCINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		DOCID = #NEWID#
 	  </delete>
 	  
 	  <delete id="EzApprovalG.deleteRelayAprDocInfo2" parameterClass="Map">
-	  DELETE FROM TBL_APRDOCINFO 
-	  WHERE
-	  	TENANT_ID = #v_TENANTID#
-	  AND
-	  	COMPANYID = #companyID#
-	  AND 
-	  	DOCID = #NEWID#
+		  DELETE 
+		  		FROM TBL_APRDOCINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		DOCID = #NEWID#
 	  </delete>
 	  
 	  <update id="EzApprovalG.updateRelaySusinState" parameterClass="Map">
@@ -23094,6 +23102,18 @@
 	  		(DOCID, APRMEMBERSN, ORGUSERID, PROXYUSERID, PROXYUSERNAME, PROXYUSERNAME2, PROXYUSERJOBTITLE, PROXYUSERJOBTITLE2, PROXYUSERDEPTID, PROXYUSERDEPTNAME, PROXYUSERDEPTNAME2, COMPANYID, TENANT_ID)
 			VALUES 
 			(#v_DOCID#, 1,        #v_USERID#,     '',          '',            '',             '',                 '',              '',                '',                    '',         #companyID#, #v_TENANTID#)
-	  
 	  </insert>
+	  
+	  <select id="EzApprovalG.getSendAckDocInfo" parameterClass="Map" resultClass="ApprGRelayVO">
+	  		SELECT 
+	  			*
+			FROM 
+				TBL_RECRELAYINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID# 
+			AND	
+				DOCID = #v_DOCID#
+	  </select>
 </sqlMap>

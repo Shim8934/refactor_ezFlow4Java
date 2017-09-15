@@ -2,6 +2,7 @@
 var strLang2 = "协议"
 var strLang3 = "协议"
 var strLang4 = "返还"
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "批准前"
 var strLang7 = "代理"
 var strLang8 = "代 "

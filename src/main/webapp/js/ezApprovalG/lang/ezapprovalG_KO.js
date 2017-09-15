@@ -2,6 +2,7 @@
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "전결";
 var strLang7 = "대결";
 var strLang8 = "代 ";

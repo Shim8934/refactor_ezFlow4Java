@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,17 +17,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -42,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -21685,7 +21677,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //					hasBRTag = false;
 //				}
 //			} while(hasBRTag);
-			String strRtnHtml = doc.body().outerHtml();
+			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
 			strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
 			
@@ -22136,8 +22128,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     	    
                     	    int offset = 0;
                     	    int numRead = 0;
-                    	    while (offset < bytes.length
-                    	           && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+                    	    while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
                     	        offset += numRead;
                     	    }
 
@@ -22559,7 +22550,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          String strTimeStamp;
 
          try {
-             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
+             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
              strTimeStamp = strTime.replace("-", "");
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
@@ -22626,7 +22617,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private String getFileName(String realPath, String strFileName, String strFolderName, int tenantID) {
-		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "DATA" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
 		String strResult = "";
 		boolean exist;
 		String result = "";
@@ -22930,16 +22921,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             	   userID = userInfo.getId();
                }
                if (userName.equals("")) {
-            	   userName = userInfo.getDisplayName1();
+            	   userName = userInfo.getDisplayName();
                }
                if (userTitle.equals("")) {
-            	   userTitle = userInfo.getTitle1();
+            	   userTitle = userInfo.getTitle();
                }
                if (deptID.equals("")) {
                    deptID = userInfo.getDeptID();
                }
                if (deptName.equals("")) {
-                   deptName = userInfo.getDeptName1();
+                   deptName = userInfo.getDeptName();
                }
                if (userName2.equals("")) {
                    userName2 = userInfo.getDisplayName2();
@@ -22967,5 +22958,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                doApprove(docID, userID, staASSungIn, userName, userName2, dirPath, deptID, "", tempCompanyID, userInfo.getLang(), userInfo);
                chkDocDelete(docID, docID, true, userID, deptID, dirPath, tempCompanyID, userInfo.getTenantId());
 		return "TRUE";
+	}
+
+	@Override
+	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, LoginVO userInfo) throws Exception {
+		String result = "";
+		Map <String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<ApprGRelayVO> relayDocList = ezApprovalGDAO.getSendAckDocInfo(map);
+		
+		if(relayDocList.size() < 1) {
+			result = "<RESULT>NONE</RESULT>";
+		} else {
+			String strXDocID = relayDocList.get(0).getxDocID();
+			String strXToCode = relayDocList.get(0).getxToCode();
+			String strXFromCode = relayDocList.get(0).getxFromCode();
+			String strSubject = relayDocList.get(0).getSubject();
+			
+	/*	1. recRelayInfo 테이블에서 해당 문서의 정보를 조회함
+            1) 수신부서의 ID            : xFromCode (원문발신부서코드)
+            2) 원문상의 문서ID          : xDocID
+            3) 원문상의 문서제목        : subject
+        2. 원본 통합문서 sample xml를 로딩 (값이 없는 샘플문서를 미리 생성하여 둠)
+        3. 입력값 Assign
+        4. sendtemp 폴더에 저장 : 발신부서코드(7) + 수신부서코드(7) + 시간스탬프(YYYYMMDDhhmmss) + 일련번호(2)*/
+			boolean rtnVal = sendAck(realPath, strXDocID, strXToCode, strXFromCode, strSubject, type, userDeptName, userName, errMsg, userInfo.getCompanyID(), userInfo);
+			
+			if (rtnVal) {
+				result = "<RESLUT>TRUE</RESULT>";
+			} else {
+				result = "<RESULT>FALSE</RESULT>";
+			}
+		}
+		return result;
 	}
 }

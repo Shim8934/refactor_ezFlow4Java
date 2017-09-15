@@ -747,7 +747,6 @@ function getExtInfo() {
                 }
             }
 
-            alert(33333);
             if (message.GetListItem(fields, "linehab")) {
                 if (Nodes.length > 4) {
                 	message.GetListItem(fields, "linehab").style.display = "";

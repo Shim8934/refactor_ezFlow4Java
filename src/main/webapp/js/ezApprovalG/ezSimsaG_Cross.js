@@ -156,6 +156,7 @@ function makeXML(newDocID) {
 	            field.innerHTML = "";
 	        }
 	    }
+	    var a = field.innerHTML;
 
 	    sihangXML = loadXMLFile("/xml/ezApprovalG/pubdocsample.xml");
 	    var eNodes = sihangXML.documentElement;
@@ -620,6 +621,16 @@ function makeXML(newDocID) {
 	        }
 	    }
 	}
+
+function Conversion(pixel) {
+    //return parseInt(pixel * (35 / 100));
+    return Number(pixel * (26.4583 / 100));
+}
+
+function SizeConvert(size) {
+    //return Math.round(parseFloat(size) * parseFloat("0.35")).toFixed(2);
+    return Math.floor(parseFloat(size) * parseFloat("0.264583")).toFixed(4);
+}
 
 function covBody(pbody) {
     var compSTR, subcompSTR, compChar, startIdx, findIdx, nextIdx, endIdx;
