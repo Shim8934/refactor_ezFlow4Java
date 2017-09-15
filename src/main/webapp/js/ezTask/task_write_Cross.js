@@ -374,6 +374,10 @@ function save_task() {
     	return;
     }
 
+    if (!check_length($("#TextMemo").val(), 100, "" + strLang64 + "")) {
+    	return;
+    }
+
     if (taskid == "") {
     	contentPath = "";
     }
