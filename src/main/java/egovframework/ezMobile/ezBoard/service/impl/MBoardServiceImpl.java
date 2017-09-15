@@ -359,7 +359,7 @@ public class MBoardServiceImpl implements MBoardService {
 		List<MBoardItemVO> mBoardNoticeItemList = getNoticePostItemList(boardID, userID, gubun, page, tenantID, offset);
 		
 		//임시로 10으로 지정
-		int listSize = 50;
+		int listSize = 5;
         
 		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
 		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
@@ -389,7 +389,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 
 	@Override
-	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText) throws Exception {
+	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
@@ -409,7 +409,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
         int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
         
-        List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
+        List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
         
 		return mBoardItemList;
 	}
@@ -596,7 +596,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return list;
 	}
 	
-	private List<MBoardNewListVO> getNewBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset) throws Exception {
+	private List<MBoardNewListVO> getNewBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		logger.debug("getNewBoardItemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || startRow = " + startRow + " || endRow = " + endRow + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID);
 		
@@ -604,15 +604,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("boardID", boardID);
 		map.put("userID", userID);
 		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
-		//Oracle
-		map.put("startRow", startRow);
-		map.put("endRow", endRow);
-		//Maria
-		map.put("rowCount", endRow - (startRow - 1));
-		map.put("limit", startRow - 1);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
+		map.put("parentWriteDate", parentWriteDate);
+		map.put("upperitemidtree", upperitemidtree);
 		
 		List<MBoardNewListVO> list = mBoardDAO.getNewItemList(map);
 		
@@ -1023,14 +1020,16 @@ System.out.println("strFilePath:"+strFilePath);
 	}
 
 	@Override
-	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID) throws Exception {
+	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID, String offset,String pSearchText) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		//mainList 임시 10까지
 		map.put("listSize", 10);
 		map.put("lastDate", lastDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
 		return mBoardDAO.getNewItemList(map);
 	}
 
@@ -1137,12 +1136,13 @@ System.out.println("strFilePath:"+strFilePath);
 	}
 
 	@Override
-	public Integer getNewBoardListCount(String userID, String startDate,int tenantID) throws Exception {
+	public Integer getNewBoardListCount(String userID, String startDate,int tenantID, String pSearchText) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
 		map.put("startDate", startDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText);
 		return mBoardDAO.getNewBoardListCount(map);
 	}
 
