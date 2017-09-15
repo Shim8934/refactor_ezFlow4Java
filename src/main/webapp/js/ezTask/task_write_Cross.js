@@ -331,7 +331,6 @@ function TrimText(orgStr) {
 
 function check_length(chkstr, maxlength, fieldname) {
     var length = 0;
-    var i;
 
     length = chkstr.length;
 

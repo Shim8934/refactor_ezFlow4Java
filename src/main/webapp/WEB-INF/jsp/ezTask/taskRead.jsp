@@ -58,9 +58,9 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 385 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 390 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 390 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 390 + "PX");
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -82,9 +82,9 @@
 		    });
 		    
 		    window.onresize = function () {
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 385 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 385 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 390 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 390 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 390 + "PX");
 	         }
 		    
 			function scrollTop() {
@@ -713,7 +713,7 @@
 		</script>
 		
 		<div class="wrap_progress">
-			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;"><c:out value = '${taskInfoVO.title }' /></h4>
+			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="<c:out value = '${taskInfoVO.title }' />"><c:out value = '${taskInfoVO.title }' /></h4>
 			<div class="circle progress_graph" style="width:30%; margin: 10px 20px;">
 				<strong></strong>
 			</div>
@@ -832,12 +832,12 @@
 			</tr>
 			
 			<tr>
-				<td style="padding-top:4px;height:20px">
+				<td style="padding-top:4px;">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
 							<td class="pos1">
-								<div id="attachedfileDIV" style="overflow:auto;height:50px;background-color:white;text-align:left"></div>
+								<div id="attachedfileDIV" style="overflow:auto;height:57px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2">
 								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
@@ -857,12 +857,12 @@
 				</td>
 			</tr>
 			<tr style="vertical-align:top">
-				<td style="padding-top:4px" colspan="3">
+				<td style="padding-top:4px">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
 							<td class="pos1">
-								<div id="attachedfileDIV2" style="overflow: auto;height: 50px;background-color:white;text-align:left"></div>
+								<div id="attachedfileDIV2" style="overflow: auto;height: 57px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2"><a class="imgbtn">
 								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
