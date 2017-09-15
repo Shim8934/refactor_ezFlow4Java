@@ -58,6 +58,8 @@
 			var personemail = "${taskInfoVO.personEmail }";
 			var useTodoMemo = "${useTodoMemo }";
 			var primary = "${userInfo.primary}";
+			var defaultFont = "<spring:message code='main.t246' />";
+			var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 			
 			$(function () {
 				$("#Sdatepicker").datepicker({
@@ -316,6 +318,7 @@
 				        },
 				        success: function(result){
 							message.SetEditorContent(result);
+							$("#message").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
 				        }
 			        });
 			        
@@ -328,6 +331,8 @@
 			            }
 			        }
 			        catch (e) { }
+			    } else {
+			    	message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P>");
 			    }
 			}
 
