@@ -970,30 +970,30 @@
 									</div>
 								</td>
 							</tr>
-							<tr>
-								<th><spring:message code='ezTask.t121' /></th>
-								<td>
-									<div>
-										<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' />
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<th><spring:message code='ezTask.t122' /></th>
-								<td>
-									<div>
-										<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' />
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<th><spring:message code='ezTask.t118' /></th>
-								<td colspan="3">
-									<div style="overflow-y:auto;padding-top:2px">
-										<c:out value = '${taskInfoVO.title }' />
-									</div>
-								</td>
-							</tr>
+<!-- 							<tr> -->
+<%-- 								<th><spring:message code='ezTask.t121' /></th> --%>
+<!-- 								<td> -->
+<!-- 									<div> -->
+<%-- 										<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /> --%>
+<!-- 									</div> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<%-- 								<th><spring:message code='ezTask.t122' /></th> --%>
+<!-- 								<td> -->
+<!-- 									<div> -->
+<%-- 										<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /> --%>
+<!-- 									</div> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<%-- 								<th><spring:message code='ezTask.t118' /></th> --%>
+<!-- 								<td colspan="3"> -->
+<!-- 									<div style="overflow-y:auto;padding-top:2px"> -->
+<%-- 										<c:out value = '${taskInfoVO.title }' /> --%>
+<!-- 									</div> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
 							
 							<c:if test="${useTodoMemo == 'YES'}">
 								<tr>
