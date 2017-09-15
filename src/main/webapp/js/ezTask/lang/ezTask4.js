@@ -64,3 +64,4 @@ var strLang60 = "데이터가 지정되지 않았습니다.";
 var strLang61 = "리스트의 ID가 지정되지 않았습니다.";
 var strLang62 = "데이터가 지정되지 않았습니다.";
 var strLang63 = "노드가 존재하지 않습니다.";
+var strLang64 =	"메모";

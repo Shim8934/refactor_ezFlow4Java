@@ -388,7 +388,6 @@
 	        }
 	    }
 
-		var checkReturn;
 	    function close_onclick() {
 	        var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
@@ -406,15 +405,9 @@
 	        }
 
 	        if (ReturnFunction != null) {
-	        	checkReturn = ReturnFunction(rtn);
+	        	ReturnFunction(rtn);
 	        } else {
 	            window.returnValue = rtn;
-	        }
-	        
-	        if (checkReturn.split(",")[0] == 1) {
-	        	alert(checkReturn.split(",")[1] + "<spring:message code='ezTask.jsh10' />");
-	        } else if (checkReturn.split(",")[0] == 2) {
-	        	alert(checkReturn.split(",")[1] + "<spring:message code='ezTask.jsh11' />");
 	        }
 	    }
 
@@ -1055,6 +1048,13 @@
 	                PagingHTML += strtext;
 	            }
 	        }
+
+	        // 페이지에 아무것도 없을 때 1 나오게 수정
+	        if (i == 1) {
+            	strtext = "<span class='on'>" + i + "</span>";
+                PagingHTML += strtext;
+            }
+
 	        if (totalPage > BlockSize) {
 	            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
