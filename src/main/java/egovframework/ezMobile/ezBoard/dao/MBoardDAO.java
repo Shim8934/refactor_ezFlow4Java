@@ -157,6 +157,14 @@ public class MBoardDAO extends EgovAbstractDAO {
 		update("MBoardDAO.updateItem", map);
 	}
 	
+	public void setApprFlag(Map<String, Object> map) throws Exception{
+		update("MBoardDAO.setApprFlag", map);
+	}
+	
+	public void setInitReadCount(Map<String, Object> map) throws Exception{
+		update("MBoardDAO.setInitReadCount", map);
+	}
+	
 	public void deleteBoardItem(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.deleteBoardItem", map);
 	}
@@ -175,6 +183,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void deleteFavorite(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.deleteFavorite", map);
+	}
+	
+	public void newItem(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.newItem", map);
 	}
 	
 }

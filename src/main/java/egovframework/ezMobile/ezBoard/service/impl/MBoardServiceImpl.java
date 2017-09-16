@@ -859,11 +859,6 @@ public class MBoardServiceImpl implements MBoardService {
 		//map.put("startDate", boardListVO.get("startDate"));
 		//map.put("endDate", boardListVO.get("endDate"));
 		map.put("abstract", boardListVO.get("abstract"));
-		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
-			map.put("hasAttach", "1");
-		} else {
-			map.put("hasAttach", "0");
-		}
 		map.put("writerName", boardListVO.get("writerName"));
 		map.put("writerName2", boardListVO.get("writerName2"));
 		map.put("extensionAttribute2", boardListVO.get("notice"));
@@ -880,7 +875,27 @@ public class MBoardServiceImpl implements MBoardService {
 		//mht파일저장
 		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);
 		
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
+		
 		mBoardDAO.updateItem(map);
+		mBoardDAO.setApprFlag(map);
+		mBoardDAO.newItem(map);
+		
+		//첨부파일 저장
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId())) {
+				//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
+			}
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
+	
+		
 	}
 	
 	/**

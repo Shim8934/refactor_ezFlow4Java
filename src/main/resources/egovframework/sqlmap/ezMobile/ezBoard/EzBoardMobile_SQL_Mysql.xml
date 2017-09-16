@@ -1362,5 +1362,42 @@
                 boardid = #boardID#
         ]]>
     </select>
+    
+    <delete id="MBoardDAO.newItem" parameterClass="Map">
+        <![CDATA[
+            DELETE FROM
+                TBL_BOARD_ITEM_ATTACHMENTS
+            WHERE  
+                tenant_id = #tenantID#
+            AND
+                itemid = #itemID#
+        ]]>
+    </delete>
+    
+    <update id="MBoardDAO.setApprFlag" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                APPRFLAG = 'N'
+            WHERE
+                TENANT_ID = #tenantID#
+            AND  
+                apprFlag = 'C'
+            AND
+                ItemID = #itemID#
+        ]]>
+    </update>
+    
+    <update id="MBoardDAO.setInitReadCount" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                ReadCount = 0
+            WHERE
+                TENANT_ID = #tenantID#
+            AND
+                ItemID = #itemID#
+        ]]>
+    </update>
 </sqlMap>
 
