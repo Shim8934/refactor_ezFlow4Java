@@ -399,7 +399,7 @@
 				AND
 					BOARDID = #boardID#
 				AND
-					STARTDATE < #nowDate#
+					STARTDATE <= #nowDate#
 				AND
 					ENDDATE > #nowDate#
 				AND
@@ -465,7 +465,7 @@
 				AND
 					boardid = #boardID#
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate > #nowDate#
 			]]>
@@ -517,7 +517,7 @@
 				AND
 					boardid = #boardID#
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate > #nowDate#
 				AND
@@ -543,7 +543,7 @@
 				AND
 					boardid = #boardDd#
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate < #nowDate#
 			]]>
