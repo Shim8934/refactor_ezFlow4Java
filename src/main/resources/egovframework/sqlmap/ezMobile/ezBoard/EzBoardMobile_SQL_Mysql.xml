@@ -1349,5 +1349,18 @@
             )
         ]]>
     </insert>
+    
+    <select id="MBoardDAO.getApprFlag" parameterClass="Map" resultClass="String">
+        <![CDATA[
+            SELECT
+                APPRFLAG
+            FROM 
+                TBL_Board_BoardInfo
+            WHERE 
+                TENANT_ID = #tenantID#
+            AND
+                boardid = #boardID#
+        ]]>
+    </select>
 </sqlMap>
 

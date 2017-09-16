@@ -77,6 +77,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (String) select("MBoardDAO.getBoardApprFlag", map);
 	}
 	
+	public String getApprFlag(Map<String, Object> map) throws Exception {
+		return (String) select("MBoardDAO.getApprFlag", map);
+	}
+	
 	public String checkIfBoardGroupAdmin(Map<String, Object> map) throws Exception{
 		int ret = (int) select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
 		

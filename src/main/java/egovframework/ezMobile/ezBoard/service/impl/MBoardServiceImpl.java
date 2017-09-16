@@ -755,7 +755,14 @@ public class MBoardServiceImpl implements MBoardService {
 			map.put("hasAttach", "0");
 		}
 		
-		mBoardDAO.insertBrdItem(map);
+		String tempString = mBoardDAO.getApprFlag(map);
+		
+		if (tempString != null && tempString.equals("Y")) {
+			mBoardDAO.insertBrdItem(map);
+		} else {
+			mBoardDAO.insertBrdItem2(map);
+		}
+		
 	}
 	
 	/**
