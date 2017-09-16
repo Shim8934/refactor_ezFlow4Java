@@ -733,18 +733,19 @@ System.out.println("@@@lastDate:"+lastDate);
 	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
 	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
 	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
-	            strXML.append("<FILESIZE>" + (fileSize[i]/(1024*1024))+"MB" + "</FILESIZE>");
+	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
 	            strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
 	            strXML.append("</NODE>");
 	            
 	            
-	            attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
+	            //attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
 	            
 	        }
 	        
 	        strXML.append("</NODES></ROOT>");
 	        
 	        result.put("data", strXML);
+	        //result.put("attachments", attachment);
 			result.put("status", "ok");
 			result.put("code", 0);
 			
