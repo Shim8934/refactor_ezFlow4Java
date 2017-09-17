@@ -221,7 +221,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 					extend = fileName.substring(fileName.lastIndexOf(".") + 1);
 				}
 				
-				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + extend);
+				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + "." + extend);
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
