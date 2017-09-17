@@ -7829,6 +7829,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (isUsed.equals("reuse")) {
 			apprGDocListVOList.get(0).setDocID(docID);
+			apprGDocListVOList.get(0).setHasOpinionYn("N");;
 		}
 		
   		if (apprGDocListVOList.size() == 0) {
