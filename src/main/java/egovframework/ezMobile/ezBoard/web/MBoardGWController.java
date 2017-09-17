@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.sql.PseudoColumnUsage;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -97,6 +98,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			String boardId = request.getParameter("boardID");
 			String lastDate = request.getParameter("lastDate");
+			String pSearchText = request.getParameter("pSearchText");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
@@ -108,10 +110,10 @@ public class MBoardGWController {
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+System.out.println("@@@lastDate:"+lastDate);
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId(), info.getOffSet(),pSearchText);
 			
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId());
-			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), pSearchText);
 			LOGGER.debug("listCount ="+listCount);
 			
 			result.put("status", "ok");
@@ -484,9 +486,9 @@ public class MBoardGWController {
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
+			String list= mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -731,18 +733,19 @@ public class MBoardGWController {
 	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
 	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
 	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
-	            strXML.append("<FILESIZE>" + (fileSize[i]/(1024*1024))+"MB" + "</FILESIZE>");
+	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
 	            strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
 	            strXML.append("</NODE>");
 	            
 	            
-	            attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
+	            //attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
 	            
 	        }
 	        
 	        strXML.append("</NODES></ROOT>");
 	        
-	        result.put("data", attachment);
+	        result.put("data", strXML);
+	        //result.put("attachments", attachment);
 			result.put("status", "ok");
 			result.put("code", 0);
 			

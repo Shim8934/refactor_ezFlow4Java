@@ -419,5 +419,21 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		return approvalGLeftVO;
 	}
+
+	@Override
+	public int delAbsenteeInfo(String userId, int tenantId) throws Exception {
+		LOGGER.debug("delAbsenteeInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantID", tenantId);
+		
+		int result = mApprovalGDAO.delAbsenteeInfo(map);
+
+		LOGGER.debug("delAbsenteeInfo ended");
+		
+		return result;
+	}
+
 	
 }

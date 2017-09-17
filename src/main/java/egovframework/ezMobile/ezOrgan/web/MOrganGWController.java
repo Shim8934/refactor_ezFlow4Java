@@ -191,6 +191,38 @@ public class MOrganGWController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/mobile/ezorgan/high-dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mGetHighDeptInfo(HttpServletRequest request, @PathVariable String userId) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String deptID = request.getParameter("deptID");
+			String deptType = request.getParameter("deptType");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("deptID : " + deptID);
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			List<MOrganListVO> mOrganListVOs = mOrganService.getHighDeptInfo(deptID, deptType, userInfo.getLang(), userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", mOrganListVOs);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] ended.");
+		
+		return result;
+	}
+	
 	@RequestMapping(value = "/mobile/ezorgan/depts/{deptID}/userList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetDeptMemberList(HttpServletRequest request, @PathVariable String deptID) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] started.");

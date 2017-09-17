@@ -92,7 +92,7 @@ public class MOrganServiceImpl implements MOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		switch (organType) {
-		case "top/unselected":
+		case "top":
 			//top일때는 deptlevel 1만 가져오기
 			
 			map.put("deptID", deptId);
@@ -102,7 +102,7 @@ public class MOrganServiceImpl implements MOrganService {
 			
 			resultOrganListVOs = mOrganDAO.getOrganList(map);
 			break;
-		case "top/selected":
+			/*		case "top/selected":
 			String orgDeptId = deptId;
 			
 			map.put("deptID", deptId);
@@ -152,11 +152,8 @@ public class MOrganServiceImpl implements MOrganService {
 				}
 			}
 			
-			break;
-		case "company/unselected":
-			
-			break;
-		case "company/selected":
+			break;*/
+		case "company":
 			
 			break;
 		default:
@@ -191,7 +188,6 @@ public class MOrganServiceImpl implements MOrganService {
 
 	@Override
 	public List<MOrganListVO> getLowDeptInfo(String deptID, String lang, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
 		LOGGER.debug("getLowDeptInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -202,6 +198,23 @@ public class MOrganServiceImpl implements MOrganService {
 		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getLowDeptInfo(map);
 		
 		LOGGER.debug("getLowDeptInfo ended");
+		
+		return resultOrganListVOs;
+	}
+
+	@Override
+	public List<MOrganListVO> getHighDeptInfo(String deptID, String deptType, String lang, int tenantId) throws Exception {
+		LOGGER.debug("getHighDeptInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptID", deptID);
+		map.put("deptType", deptType);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
+		map.put("tenantID", tenantId);
+		
+		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getHighDeptInfo(map);
+
+		LOGGER.debug("getHighDeptInfo ended");
 		
 		return resultOrganListVOs;
 	}

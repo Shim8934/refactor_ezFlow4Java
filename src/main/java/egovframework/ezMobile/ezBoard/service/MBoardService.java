@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
@@ -19,27 +20,31 @@ public interface MBoardService {
 	
 	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 
-	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText) throws Exception;
+	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 	
 	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
 	
 	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception;
 	
-	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception;
+	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID, String offset) throws Exception;
 	
-	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID) throws Exception;
-	
-	List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception;
+	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID, String offset, String pSearchText) throws Exception;
 	
 	List<MBoardAttachVO> getAttachList(String itemID, int tenantID) throws Exception;
 	
 	List<MBoardAttachVO> photoViewDB(String itemID, String boardID,int tenantID) throws Exception;
+	
+	List<MBoardTreeVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
 	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception;
 	
 	MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception;
+	
+	String getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception;
+	
+	String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception;
 	
 	String checkIfBoardGroupAdmin(String rootBoardID, String userID, String deptID, String companyID, int tenantID) throws Exception;
 	
@@ -49,7 +54,7 @@ public interface MBoardService {
 	
 	String checkFavorite(String userID, String boardID, int tenantID) throws Exception;
 	
-	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
+	Integer getNewBoardListCount(String userID, String startDate, int tenantID, String pSearchText) throws Exception;
 	
 	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
 	
@@ -68,4 +73,8 @@ public interface MBoardService {
 	void insertFavorite(String userID, String boardID, int tenantID) throws Exception;
 	
 	void deleteFavorite(String userID, String boardID, int tenantID) throws Exception;
+	
+	void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception;
+	
+	void getBoardTree_Set(String pStrLang, String query, String result, int tenantID) throws Exception;
 }

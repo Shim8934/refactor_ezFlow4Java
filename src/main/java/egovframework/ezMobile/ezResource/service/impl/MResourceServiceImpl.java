@@ -255,6 +255,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
 
+		startDateLimit = commonUtil.getDateStringInUTC(startDateLimit, offset, false);
+		endDateLimit = commonUtil.getDateStringInUTC(endDateLimit, offset, false);
 		LOGGER.debug("");
 		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
@@ -1155,8 +1157,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		String writerDt = "";
 		int tenantId = 0;
 		String offset = "";
-		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		//String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 
+		String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		
 		companyId = info.getCompanyId();
 		offset = info.getOffSet();
 		writerDt = info.getDeptId();
