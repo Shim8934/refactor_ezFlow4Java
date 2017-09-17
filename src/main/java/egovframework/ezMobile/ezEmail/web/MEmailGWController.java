@@ -1320,212 +1320,212 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-		String strXML = "";
-		String strXML2 = "";
-//		String folderDate = "";
-//		String tempFolderName = "";
-		String xmlList = "";
-//		String isBigYN = "N";
-//		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
-//		int cnt = 0;
-//		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
-//			cnt = Integer.parseInt(request.getParameter("cnt"));
-//		}
-		String realPath = commonUtil.getRealPath(request);
-		String[] pFileName = new String[cnt];
-		Long[] fileSize = new Long[cnt];
-		String[] fileLocation = new String[cnt];
-		String[] resultUpload = new String[cnt];
-		String[] sGUID = new String[cnt];
-//		String pBigFileUpload = "";
-		String[] sFileTitle = new String[cnt];
-		String[] sExt = new String[cnt];
-		String pDirTempPath = "";
-//		long bigMaxSize = 0;
-//		long changeSize = 0;
+			String strXML = "";
+			String strXML2 = "";
+	//		String folderDate = "";
+	//		String tempFolderName = "";
+			String xmlList = "";
+	//		String isBigYN = "N";
+	//		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
+	//		int cnt = 0;
+	//		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
+	//			cnt = Integer.parseInt(request.getParameter("cnt"));
+	//		}
+			String realPath = commonUtil.getRealPath(request);
+			String[] pFileName = new String[cnt];
+			Long[] fileSize = new Long[cnt];
+			String[] fileLocation = new String[cnt];
+			String[] resultUpload = new String[cnt];
+			String[] sGUID = new String[cnt];
+	//		String pBigFileUpload = "";
+			String[] sFileTitle = new String[cnt];
+			String[] sExt = new String[cnt];
+			String pDirTempPath = "";
+	//		long bigMaxSize = 0;
+	//		long changeSize = 0;
+	//
+	//		if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
+	//			tempFolderName = request.getParameter("STATUS");
+	//		} else {
+	//			return "NODATA";
+	//		}
+	//		
+	//		if (multiFile == null) {
+	//			return "NODATA";
+	//		}
+	//		
+	//		if (request.getParameter("isbigyn") != null) {
+	//			isBigYN = request.getParameter("isbigyn");
+	//		}
+	//		
+	//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	//		
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+	//		
+			if (useExtension == null) {
+				useExtension = "";
+			}
+			//		
+			if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))){
+				boolean isEmpty = false;
+				String _pFileName = "";
+				for (int i=0; i<cnt; i++) {
+					_pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
+					if (_pFileName.indexOf(commonUtil.separator) > 0) {
+						_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
+					}
+					pFileName[i] = _pFileName;
+					if (pFileName[i].lastIndexOf(".") > -1) {
+						sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
+						sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+					} else {
+						sFileTitle[i] = pFileName[i];
+						sExt[i] = "";
+					}
+					
+					if ( ((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
+						isEmpty = true;
+					}
+				}
+				if (isEmpty) {
+					return "OVERFLOW";
+				}
+			}
 //
-//		if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
-//			tempFolderName = request.getParameter("STATUS");
-//		} else {
-//			return "NODATA";
-//		}
-//		
-//		if (multiFile == null) {
-//			return "NODATA";
-//		}
-//		
-//		if (request.getParameter("isbigyn") != null) {
-//			isBigYN = request.getParameter("isbigyn");
-//		}
-//		
-//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-//		
-		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
-//		
-		if (useExtension == null) {
-			useExtension = "";
-		}
-//		
-		if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))){
-			boolean isEmpty = false;
-			String _pFileName = "";
 			for (int i=0; i<cnt; i++) {
-				_pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
-				if (_pFileName.indexOf(commonUtil.separator) > 0) {
-					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
-				}
-				pFileName[i] = _pFileName;
-				if (pFileName[i].lastIndexOf(".") > -1) {
-					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
-					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-				} else {
-					sFileTitle[i] = pFileName[i];
-					sExt[i] = "";
-				}
+				sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
+			}
+	//
+	//		if (request.getParameter("bigmaxsize") != null) {
+	//			bigMaxSize = Long.parseLong(request.getParameter("bigmaxsize"));
+	//		}
+	//		if (request.getParameter("changesize") != null) {
+	//			changeSize = Long.parseLong(request.getParameter("changesize"));
+	//		}
+	//
+			strXML = "<ROOT><NODES>";
+			String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
+			pDirPath = realPath + pDirPath;
+	//		
+	//		// check the upload mail root folder and create it if it isn't exist.
+			File uploadMailRootFolder = new File(pDirPath);
+			if (!uploadMailRootFolder.exists()) {
+				LOGGER.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
+				uploadMailRootFolder.mkdirs();
+			}
+
+			for (int i=0; i<cnt; i++) {
+				fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
+	            pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
 				
-				if ( ((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
-					isEmpty = true;
-				}
-			}
-			if (isEmpty) {
-				return "OVERFLOW";
-			}
-		}
-//
-		for (int i=0; i<cnt; i++) {
-			sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
-		}
-//
-//		if (request.getParameter("bigmaxsize") != null) {
-//			bigMaxSize = Long.parseLong(request.getParameter("bigmaxsize"));
-//		}
-//		if (request.getParameter("changesize") != null) {
-//			changeSize = Long.parseLong(request.getParameter("changesize"));
-//		}
-//
-		strXML = "<ROOT><NODES>";
-		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
-		pDirPath = realPath + pDirPath;
-//		
-//		// check the upload mail root folder and create it if it isn't exist.
-		File uploadMailRootFolder = new File(pDirPath);
-		if (!uploadMailRootFolder.exists()) {
-			LOGGER.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
-			uploadMailRootFolder.mkdirs();
-		}
-
-		for (int i=0; i<cnt; i++) {
-			fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
-            pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
-			
-			File f = new File(pDirTempPath);
-			if (!f.exists()) {
-				f.mkdirs();
-            }
-
-			if (fileSize[i] > maxsize && maxsize != 0) {
-                resultUpload[i] = "overflow";
-            } else {
-                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
-                    resultUpload[i] = "denied";
-                } else {
-                    mobileMailWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i], pDirTempPath);
-                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
-                    resultUpload[i] = "true";
-                }
-                String pBigFileUpload = "N";
-                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
-                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
-                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
-                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-                strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
-                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
-                strXML2 += "</NODE>";
-            }
-            pDirTempPath = "";
-		}
-		strXML += strXML2 + "</NODES></ROOT>";
-
-		String xmlPath = pDirPath + commonUtil.separator + "templist";
-        File f = new File(xmlPath);
-        if (!f.exists()) {
-			f.mkdirs();
-        }
-
-        xmlPath += commonUtil.separator + tempFolderName + ".txt";
-        LOGGER.debug("###" + xmlPath + "###");
-        f = new File(xmlPath);
-        if (f.exists()) {
-        	String tempXmlList = "";
-        	InputStreamReader isr = null;
-        	BufferedReader br = null;
-        	OutputStreamWriter osw = null;
-        	try {
-	        	isr = new InputStreamReader(new FileInputStream(f));
-	        	br = new BufferedReader(isr);
-	        	int read = 0;
-				while ((read = br.read()) != -1) {
-					tempXmlList += (char)read;
-				}
-				Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
-				Document xmldom2 = commonUtil.convertStringToDocument(strXML);
-
-	            NodeList nodeList = xmldom.getElementsByTagName("NODES");
-	            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
-	            for (int i=0; i<nodeList2.getLength(); i++) {
-	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
+				File f = new File(pDirTempPath);
+				if (!f.exists()) {
+					f.mkdirs();
 	            }
-            	osw = new OutputStreamWriter(new FileOutputStream(f));
-            	osw.write(commonUtil.convertDocumentToString(xmldom));
-            	String crlf = System.getProperty("line.separator");
-        		osw.append(crlf+crlf);
-	            
-	            xmlList = strXML;
-	            
-        	} catch(Exception e) {
-        		result.put("status", "error");
-    			result.put("code", 1);			
-    			result.put("data", "");	
-        	} finally {
-        		if (br != null) {
-        			br.close();
-        		}
-        		if (isr != null) {
-        			isr.close();
-        		}
-        		if (osw != null) {
-        			osw.close();
-        		}
-        	}
-        	
-        } else {
-        	OutputStreamWriter osw = null;
-        	try {
-        		osw = new OutputStreamWriter(new FileOutputStream(f));
-        		osw.write(strXML);
-        		String crlf = System.getProperty("line.separator");
-        		osw.append(crlf+crlf);
-        		xmlList = strXML;
-        		
-        	} catch(Exception e) {
-        		e.printStackTrace();
-        	} finally {
-        		if (osw != null) {
-        			osw.close();
-        		}
-        	}
-        }
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", xmlList);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");	
-		}
+	
+				if (fileSize[i] > maxsize && maxsize != 0) {
+	                resultUpload[i] = "overflow";
+	            } else {
+	                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+	                    resultUpload[i] = "denied";
+	                } else {
+	                    mobileMailWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i], pDirTempPath);
+	                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
+	                    resultUpload[i] = "true";
+	                }
+	                String pBigFileUpload = "N";
+	                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+	                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+	                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+	                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
+	                strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
+	                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+	                strXML2 += "</NODE>";
+	            }
+	            pDirTempPath = "";
+			}
+			strXML += strXML2 + "</NODES></ROOT>";
+
+			String xmlPath = pDirPath + commonUtil.separator + "templist";
+	        File f = new File(xmlPath);
+	        if (!f.exists()) {
+				f.mkdirs();
+	        }
+
+	        xmlPath += commonUtil.separator + tempFolderName + ".txt";
+	        LOGGER.debug("###" + xmlPath + "###");
+	        f = new File(xmlPath);
+	        if (f.exists()) {
+	        	String tempXmlList = "";
+	        	InputStreamReader isr = null;
+	        	BufferedReader br = null;
+	        	OutputStreamWriter osw = null;
+	        	try {
+		        	isr = new InputStreamReader(new FileInputStream(f));
+		        	br = new BufferedReader(isr);
+		        	int read = 0;
+					while ((read = br.read()) != -1) {
+						tempXmlList += (char)read;
+					}
+					Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
+					Document xmldom2 = commonUtil.convertStringToDocument(strXML);
+	
+		            NodeList nodeList = xmldom.getElementsByTagName("NODES");
+		            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
+		            for (int i=0; i<nodeList2.getLength(); i++) {
+		            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
+		            }
+	            	osw = new OutputStreamWriter(new FileOutputStream(f));
+	            	osw.write(commonUtil.convertDocumentToString(xmldom));
+	            	String crlf = System.getProperty("line.separator");
+	        		osw.append(crlf+crlf);
+		            
+		            xmlList = strXML;
+		            
+	        	} catch(Exception e) {
+	        		result.put("status", "error");
+	    			result.put("code", 1);			
+	    			result.put("data", "");	
+	        	} finally {
+	        		if (br != null) {
+	        			br.close();
+	        		}
+	        		if (isr != null) {
+	        			isr.close();
+	        		}
+	        		if (osw != null) {
+	        			osw.close();
+	        		}
+	        	}
+	        	
+	        } else {
+	        	OutputStreamWriter osw = null;
+	        	try {
+	        		osw = new OutputStreamWriter(new FileOutputStream(f));
+	        		osw.write(strXML);
+	        		String crlf = System.getProperty("line.separator");
+	        		osw.append(crlf+crlf);
+	        		xmlList = strXML;
+	        		
+	        	} catch(Exception e) {
+	        		e.printStackTrace();
+	        	} finally {
+	        		if (osw != null) {
+	        			osw.close();
+	        		}
+	        	}
+	        }
+				result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", xmlList);
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");	
+			}
 		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] ended.");
-		
+			
 		return result;
 	}
 	
