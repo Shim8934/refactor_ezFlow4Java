@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
@@ -61,6 +62,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (List<MBoardAttachVO>) list("MBoardDAO.photoViewDB", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MBoardTreeVO> getBoardTree_Get2(Map<String, Object> map) throws Exception {		
+		return (List<MBoardTreeVO>) list("MBoardDAO.getBoardTree_Get2", map);
+	}
+	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {
 		return (MBoardItemVO) select("MBoardDAO.getBrdItemInfo", map);
 	}
@@ -112,6 +118,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public String getWriterID(Map<String, Object> map) throws Exception{
 		return (String) select("MBoardDAO.getWriterID", map);
 	}
+	
+	public String getBoardTree_Get1(Map<String, Object> map) throws Exception{		
+		return (String) select("MBoardDAO.getBoardTree_Get1", map);
+	}
 
 	public Integer getBoardItemListCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("MBoardDAO.getBoardItemListCount", map);
@@ -148,6 +158,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public void saveAttachInfo(Map<String, Object> map) throws Exception{
 		insert("MBoardDAO.saveAttachInfo", map);
 	}
+	
+	public void getBoardTree_Set(Map<String, Object> map) throws Exception{		
+		update("MBoardDAO.getBoardTree_Set", map);
+	}	
 	
 	public void setAsRead2(Map<String, Object> map) throws Exception{
 		update("MBoardDAO.setAsRead2", map);
@@ -187,6 +201,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void newItem(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.newItem", map);
+	}
+	
+	public void getBoardTree_Set_D(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.getBoardTree_Set_D", map);
 	}
 	
 }
