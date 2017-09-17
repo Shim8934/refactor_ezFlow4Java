@@ -64,6 +64,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,15 +83,19 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -123,6 +128,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
@@ -2012,7 +2023,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		JSONObject result = new JSONObject();
 		
 		try{
-		
+			
 		boolean retryFlag = false;
 		int retryCount = 1; //메일 발송 실패 시 재시도 횟수
 		long draftUID = 0;
@@ -4861,8 +4872,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public Object mMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
-		
-				
+			
 		JSONObject result = new JSONObject();
 		
 		IMAPAccess ia = null;
@@ -4935,6 +4945,199 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
+	 
+	@RequestMapping(value="/mobile/ezemail/write/checkname/users/{userId}", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public Object mailNameCheck(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
+		
+		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
+		
+		String organXML = "";
+        String dlXML = "";
+        String addressXML = "";
+		
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+        
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+		
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			String pOrganSearchList = "";
+			String pOrganCellList = "displayname";
+			String pOrganPropList = "company;description;title;mail;extensionAttribute3";
+			String pOrganListType = "all";
+			String pDLSearchList = "";
+			String pDLCellList = "displayname";
+			String pDLPropList = "mail";
+			String pDLListType = "group";
+			String pAddressFilter = "";
+	
+			if (jsonObject.get("pOrganSearchList") != null) {
+				pOrganSearchList = (String) jsonObject.get("pOrganSearchList");
+			}
+			
+			if (jsonObject.get("pOrganCellList") != null) {
+				pOrganCellList = (String) jsonObject.get("pOrganCellList");
+			}
+			
+			if (jsonObject.get("pOrganPropList") != null) {
+				pOrganPropList = (String) jsonObject.get("pOrganPropList");
+			}
+			
+			if (jsonObject.get("pOrganListType") != null) {
+				pOrganListType = (String) jsonObject.get("pOrganListType");
+			}
+			
+			if (jsonObject.get("pDLSearchList") != null) {
+				pDLSearchList = (String) jsonObject.get("pDLSearchList");
+			}
+			
+			if (jsonObject.get("pDLCellList") != null) {
+				pDLCellList = (String) jsonObject.get("pDLCellList");
+			}
+			
+			if (jsonObject.get("pDLPropList") != null) {
+				pDLPropList = (String) jsonObject.get("pDLPropList");
+			}
+			
+			if (jsonObject.get("pDLPropList") != null) {
+				pDLPropList = (String) jsonObject.get("pDLPropList");
+			}
+			
+			if (jsonObject.get("pDLListType") != null) {
+				pDLListType = (String) jsonObject.get("pDLListType");
+			}
+			
+			if (jsonObject.get("pAddressFilter") != null) {
+				pAddressFilter = (String) jsonObject.get("pAddressFilter");
+			}
+			
+			LOGGER.debug("pOrganSearchList : " + pOrganSearchList + ", pOrganCellList : " + pOrganCellList 
+					+ ", pOrganPropList : " + pOrganPropList +", pOrganListType : " + pOrganListType);
+			
+	        organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info);
+	        dlXML = getOrganDLSearch(pDLSearchList, info);
+	        addressXML = getAddressSearch(pAddressFilter, info);
+	        
+	        data.put("organXML", organXML);
+	        data.put("dlXML", dlXML);
+	        data.put("addressXML",addressXML);
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+			
+		}
+        LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");
+        
+        return result;
+	}
+	
+	/**
+	 * 사원 Organ 정보 호출 함수
+	 */
+	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, MCommonVO userInfo) {
+		String pResult = "";
+        try {
+            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId());
+        } catch (Exception e) {
+        	e.printStackTrace();
+            pResult = "EXCEPTION";
+        }
+        return pResult;
+    }
+	
+	/**
+	 * 공용배포그룹 정보 호출 함수
+	 */
+	private String getOrganDLSearch(String pSearchList, MCommonVO userInfo) {
+        String returnData = "";
+        
+        try {
+        	String searchValue = pSearchList.split("::")[1];
+        	
+			List<MailDistributionVO> distributionList = ezEmailService.getDistributionSearchList(userInfo.getCompanyId(), userInfo.getTenantId(), searchValue);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailDistributionVO vo : distributionList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>group</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getId()));
+				sb.append("</DATA2>");
+				
+				sb.append("<DATA3>");
+				sb.append(commonUtil.cleanValue(vo.getMail()));
+				sb.append("</DATA3>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "EXCEPTION";
+			e.printStackTrace();
+		}
+        
+        return returnData;
+    }
+	
+	/**
+	 * 주소록 정보 호출 함수
+	 */
+	private String getAddressSearch(String pFilter, MCommonVO userInfo) {
+        String returnValue = "";
+        try {
+            String[] ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};
+            pFilter = "S_NAME," + pFilter;
+            
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
+            
+            StringBuilder sb = new StringBuilder();
+            
+            for (AddressVO addressInfo : addressInfoList) {
+            	sb.append("<ROW>");
+            	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
+            	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
+            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
+            	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
+            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
+            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
+            	sb.append("</ROW>");
+            }
+            
+            returnValue = sb.toString();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	returnValue = "EXCEPTION";
+        }
+        return returnValue;
+    }
 	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
