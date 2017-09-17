@@ -212,15 +212,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				String filePath = fileList.split("\\\\")[i];
 				String fileName = fileNames.split("\\\\")[i];
 				String fileSize = fileSizes.split("\\\\")[i];
-				String extend = null;
+				String extend = "";
 
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				
-				if (fileName.lastIndexOf(".") > -1) {
+				if (fileName.contains(".")) {
 					extend = fileName.substring(fileName.lastIndexOf(".") + 1);
-				} else {
-					extend = "";
 				}
 				
 				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + extend);
@@ -228,7 +226,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
 				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath;
-				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + extend;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + "." + extend;
 			
 				fileMove(beforePath, afterPath);
 			}
