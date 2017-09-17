@@ -91,4 +91,8 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		return (MApprovalGLeftVO) select("MApprovalG.getLeftCount", map);
 	}
 
+	public int delAbsenteeInfo(Map<String, Object> map) throws Exception {
+		return update("MApprovalG.delAbsenteeInfo", map);
+	}
+
 }

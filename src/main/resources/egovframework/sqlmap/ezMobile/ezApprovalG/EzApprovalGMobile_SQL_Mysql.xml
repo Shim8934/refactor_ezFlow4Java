@@ -1120,6 +1120,19 @@
 		]]>
    </update>
    
+   <update id="MApprovalG.delAbsenteeInfo" parameterClass="Map">
+   		<![CDATA[
+   			UPDATE
+   				TBL_USERMASTER
+   			SET
+   				EXTENSIONATTRIBUTE5 = NULL
+   			WHERE
+   				TENANT_ID = #tenantID#
+   			AND
+   				CN = #userId#
+		]]>
+   </update>
+   
    <delete id="MApprovalG.deleteOpinionInfo" parameterClass="Map">
    		<![CDATA[
    			DELETE FROM 

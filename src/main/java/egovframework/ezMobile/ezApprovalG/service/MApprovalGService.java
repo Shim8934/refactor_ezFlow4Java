@@ -45,4 +45,6 @@ public interface MApprovalGService {
 
 	public MApprovalGLeftVO getLeftCount(String userId, MCommonVO userInfo) throws Exception;
 
+	public int delAbsenteeInfo(String userId, int tenantId) throws Exception;
+
 }
