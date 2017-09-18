@@ -363,6 +363,8 @@ System.out.println("@@@lastDate:"+lastDate);
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
 			String realPath = commonUtil.getRealPath(request);
 			String content = jsonParam.get("mainContent").toString();
+			content = content.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			content = content.replaceAll("\\+", "%2B");
 			content = URLDecoder.decode(content, "utf-8");
 			
 			String scheme = "http://";
