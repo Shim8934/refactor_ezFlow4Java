@@ -155,6 +155,7 @@ public class MOrganServiceImpl implements MOrganService {
 			break;*/
 		case "company":
 			map.put("deptID", deptId);
+			map.put("companyID", companyID);
 			map.put("organType", "company");
 			map.put("lang", commonUtil.getMultiData(lang, tenantId));
 			map.put("tenantID", tenantId);
@@ -172,14 +173,11 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String lang, int tenantId) throws Exception {
+	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String selectType, String lang, int tenantId) throws Exception {
 		LOGGER.debug("getDeptMemberList started");
 		
-		//single, multi
-		String orgType = "single";
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("type", orgType);
+		map.put("type", selectType);
 		map.put("searchFlag", searchFlag);
 		map.put("deptID", deptID);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
@@ -209,13 +207,15 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getHighDeptInfo(String deptID, String deptType, String lang, int tenantId) throws Exception {
+	public List<MOrganListVO> getHighDeptInfo(String deptID, String deptType, String organType, String lang, String companyID, int tenantId) throws Exception {
 		LOGGER.debug("getHighDeptInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("deptID", deptID);
 		map.put("deptType", deptType);
+		map.put("organType", organType);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantId);
 		
 		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getHighDeptInfo(map);

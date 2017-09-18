@@ -201,6 +201,7 @@ public class MOrganGWController {
 			String serverName = request.getHeader("x-user-host");
 			String deptID = request.getParameter("deptID");
 			String deptType = request.getParameter("deptType");
+			String organType = request.getParameter("organType");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
@@ -208,7 +209,7 @@ public class MOrganGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getHighDeptInfo(deptID, deptType, userInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getHighDeptInfo(deptID, deptType, organType, userInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -233,13 +234,16 @@ public class MOrganGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userID");
 			String searchFlag = request.getParameter("searchFlag");
+			String selectType = request.getParameter("selectType");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("selectType : " + selectType);
+			LOGGER.debug("searchFlag : " + searchFlag);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, userInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, selectType, userInfo.getLang(), userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", "0");
