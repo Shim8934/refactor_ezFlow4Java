@@ -200,6 +200,11 @@
 					filter = document.getElementById("keyword").value;					
 				}
 
+				if (filter.indexOf("%") != -1) {
+		            alert("'%'" + "<spring:message code='ezTask.jsh08' />");
+		            return;
+		        }
+
 				var searchClass = $("#search_class").val();
 				var chkValue = $("#search_field").val();
 
@@ -225,7 +230,7 @@
 				});
 			}
 
-			var pagesize = 30;
+			var pagesize = 500;
 			function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 

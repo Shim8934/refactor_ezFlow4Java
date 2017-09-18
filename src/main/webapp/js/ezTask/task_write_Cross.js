@@ -79,40 +79,39 @@ function manage_share(type) {
     }
 }
 
-var alertLoc;
 function manage_share_Complete(retVal) {
     switch (m_type) {
         case 1:
             if (typeof (retVal) != "undefined") {
-                if (g_share != null) {
-                    for (var i = 0; i < g_share["email"].length; i++) {
-                        if (retVal["email"][0] == g_share["email"][i]) {
-                        	alert(retVal["name"][0] + strLang55);
-                            return;
-                        }
-                    }
-                }
+				if (retVal["id"].length != 0) {
+					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
-                g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+					if (g_share != null) {
+						for (var i = 0; i < g_share["email"].length; i++) {
+							if (retVal["email"][0] == g_share["email"][i]) {
+								alert(retVal["name"][0] + strLang55);
+								return;
+							}
+						}
+					}
 
-                if (retVal["id"].length == 0) {
-                    setNodeText(document.getElementById("personlist"), "");
-                    return;
-                }
+					if (primary == 1) {
+						setNodeText(document.getElementById("personlist"), retVal["name"][0] + " (" + retVal["deptname"][0] + ")");
+					} else {
+						setNodeText(document.getElementById("personlist"), retVal["name2"][0] + " (" + retVal["deptname2"][0] + ")");
+					}
 
-                if (primary == 1) {
-                	setNodeText(document.getElementById("personlist"), retVal["name"][0] + " (" + retVal["deptname"][0] + ")");                	
-                } else {
-                	setNodeText(document.getElementById("personlist"), retVal["name2"][0] + " (" + retVal["deptname2"][0] + ")");
-                }
-
-                g_person["name"][0] = retVal["name"][0];
-                g_person["id"][0] = retVal["id"][0];
-                g_person["name1"][0] = retVal["name1"][0];
-                g_person["name2"][0] = retVal["name2"][0];
-                g_person["deptname"][0] = retVal["deptname"][0];
-                g_person["deptname2"][0] = retVal["deptname2"][0];
-                g_person["email"][0] = retVal["email"][0];
+					g_person["name"][0] = retVal["name"][0];
+					g_person["id"][0] = retVal["id"][0];
+					g_person["name1"][0] = retVal["name1"][0];
+					g_person["name2"][0] = retVal["name2"][0];
+					g_person["deptname"][0] = retVal["deptname"][0];
+					g_person["deptname2"][0] = retVal["deptname2"][0];
+					g_person["email"][0] = retVal["email"][0];
+				} else {
+					g_person = null;
+					setNodeText(document.getElementById("personlist"), "");
+				}
             }
             break;
         case 2:
