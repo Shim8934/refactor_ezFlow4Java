@@ -51,7 +51,6 @@
 		                },
 		                success: function(result){
 		                	message.SetEditorContent(result);
-		                	$("#message").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
 		                }
 	                });
 	                

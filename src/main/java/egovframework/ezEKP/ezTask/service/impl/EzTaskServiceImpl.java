@@ -196,6 +196,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			String pDirPath = realPath + uploadTaskPath + commonUtil.separator;
 			File uploadFileFolder = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID);
 			
+			logger.debug("fileList = " + fileList);
+			logger.debug("fileNamse = " + fileNames);
+			
 			if (!uploadFileFolder.exists()) {
 				uploadFileFolder.mkdirs();
 			}
@@ -204,29 +207,23 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			attachMap.put("taskType", 1);
 			attachMap.put("tenantID", tenantID);
 			
-			logger.debug("fileList = " + fileList + " | fileName = " + fileNames + " | fileSize = " + fileSizes);
-
 			int fileListSize = fileList.split("\\\\").length;
 			
 			for (int i=0; i<fileListSize; i++) {
 				String filePath = fileList.split("\\\\")[i];
 				String fileName = fileNames.split("\\\\")[i];
 				String fileSize = fileSizes.split("\\\\")[i];
-				String extend = "";
 
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath);
 				
-				if (fileName.contains(".")) {
-					extend = fileName.substring(fileName.lastIndexOf(".") + 1);
-				}
-				
-				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + "." + extend);
+				logger.debug("fileName = " + fileName + " || filePath = " + filePath + " || fileSize = " + fileSize);
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
 				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath;
-				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + "." + extend;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath;
 			
 				fileMove(beforePath, afterPath);
 			}
@@ -295,22 +292,15 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				String filePath = attachList.split("\\\\")[i];
 				String fileName = fileNames.split("\\\\")[i];
 				String fileSize = fileSizes.split("\\\\")[i];
-				String extend = null;
-
-				if (fileName.lastIndexOf(".") > -1) {
-					extend = fileName.substring(fileName.lastIndexOf(".") + 1);
-				} else {
-					extend = "";
-				}
 
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + extend);
+				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath);
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
 				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath;
-				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + extend;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath;
 				
 				fileMove(beforePath, afterPath);
 			}

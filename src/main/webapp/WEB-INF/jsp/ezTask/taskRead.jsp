@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-
+		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
@@ -146,7 +146,7 @@
 						doc.close();
 
 						$("#message").contents().find("body").css("word-wrap", "break-word");
-						$("#message").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
+						$("#message").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
 					}
 				});
 			}
@@ -172,7 +172,7 @@
 							doc.close();
 
 							$("#message2").contents().find("body").css("word-wrap", "break-word");
-							$("#message2").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
+							$("#message2").contents().find("style").html("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ");
 						}
 					});
 					
@@ -970,30 +970,6 @@
 									</div>
 								</td>
 							</tr>
-<!-- 							<tr> -->
-<%-- 								<th><spring:message code='ezTask.t121' /></th> --%>
-<!-- 								<td> -->
-<!-- 									<div> -->
-<%-- 										<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /> --%>
-<!-- 									</div> -->
-<!-- 								</td> -->
-<!-- 							</tr> -->
-<!-- 							<tr> -->
-<%-- 								<th><spring:message code='ezTask.t122' /></th> --%>
-<!-- 								<td> -->
-<!-- 									<div> -->
-<%-- 										<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /> --%>
-<!-- 									</div> -->
-<!-- 								</td> -->
-<!-- 							</tr> -->
-<!-- 							<tr> -->
-<%-- 								<th><spring:message code='ezTask.t118' /></th> --%>
-<!-- 								<td colspan="3"> -->
-<!-- 									<div style="overflow-y:auto;padding-top:2px"> -->
-<%-- 										<c:out value = '${taskInfoVO.title }' /> --%>
-<!-- 									</div> -->
-<!-- 								</td> -->
-<!-- 							</tr> -->
 							
 							<c:if test="${useTodoMemo == 'YES'}">
 								<tr>
@@ -1057,12 +1033,12 @@
 						<spring:message code='ezTask.t2013' />
 					</td>
 				</tr>
+				
 				<tr id="printCommentView" style="display:none">
 					<td style="height:20px">
 						<table class="file">
 							<tr>
-								<th><spring:message code='ezTask.t2013' /></th>
-								<td style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
+								<td colspan='2' style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
 							</tr>
 						</table>
 					</td>
