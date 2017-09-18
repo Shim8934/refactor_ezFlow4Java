@@ -615,20 +615,23 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String realPath = commonUtil.getRealPath(request);
 		String[] pFileName = new String[cnt];
-        Long[] fileSize = new Long[cnt];        
-        String[] resultUpload = new String[cnt];
-        String[] sGUID = new String[cnt];
-        String[] pUploadSN = new String[cnt];
+		String[] extend = new String[cnt];
         
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
 
-        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {
             for (int i = 0; i < cnt; i++) {
                 String _pFileName = multiFile.get(i).getOriginalFilename();
                 if (_pFileName.indexOf(commonUtil.separator) > 0) {
                     _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
                 }
                 pFileName[i] = _pFileName;
+                
+                if (pFileName[i].lastIndexOf(".") > -1) {
+					extend[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+				} else {
+					extend[i] = "";
+				}
             }
         }
         
@@ -657,28 +660,21 @@ public class EzTaskController extends EgovFileMngUtil {
         strXML.append("<ROOT><NODES>");
         
         for (int i = 0; i < cnt; i++) {
-        	resultUpload[i] = "false";
-            sGUID[i] = UUID.randomUUID().toString();
-            pUploadSN[i] = "{" + sGUID[i] + "}";
+            pFileName[i] = pFileName[i].replace("%2b", "+").replace("%3b", ";");
             
-            pFileName[i] = pFileName[i].replace("%2b", "+");
-            pFileName[i] = pFileName[i].replace("%3b", ";");
-            
-        	fileSize[i] = multiFile.get(i).getSize();
-            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-            String newFileName = pUploadSN[i];
+            String newFileName = "{" + UUID.randomUUID().toString() + "}";
 
-            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
+            if (useExtension.toLowerCase().indexOf(extend[i].toLowerCase()) == -1 && !useExtension.equals("*")) {           	
 				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA3><![CDATA[" + multiFile.get(i).getSize() + "]]></DATA3>");
 				strXML.append("<DATA4><![CDATA[denied]]></DATA4>");
             } else {
             	writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "tempUploadFile");
             	
 				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA3><![CDATA[" + multiFile.get(i).getSize() + "]]></DATA3>");
 				strXML.append("<DATA4><![CDATA[OK]]></DATA4>");
             }
         }
