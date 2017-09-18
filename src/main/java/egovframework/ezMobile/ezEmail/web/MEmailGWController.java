@@ -3844,6 +3844,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
     			            	try {
     			            		Transport.send(message);
     			            	} catch (MessagingException e){
+    			            		e.printStackTrace();
     			            		result.put("status", "error");
     			        			result.put("code", 1);			
     			        			result.put("data", "");
