@@ -154,6 +154,12 @@ public class MOrganServiceImpl implements MOrganService {
 			
 			break;*/
 		case "company":
+			map.put("deptID", deptId);
+			map.put("organType", "company");
+			map.put("lang", commonUtil.getMultiData(lang, tenantId));
+			map.put("tenantID", tenantId);
+			
+			resultOrganListVOs = mOrganDAO.getOrganList(map);
 			
 			break;
 		default:
