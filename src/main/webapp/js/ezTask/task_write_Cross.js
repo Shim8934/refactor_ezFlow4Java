@@ -417,7 +417,7 @@ function save_task() {
     }
     
     var strBody = message.GetEditorContent();
-    strBody = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"></HEAD><BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    strBody = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
     
 	var listtable = dadiframe.document.getElementById("filelist");
 	var filelist = GetChildNodes(listtable);
@@ -616,7 +616,7 @@ function setAttachFileInfo(strXML) {
 
 function save_taskWork() {
     var content = message.GetEditorContent();
-    content = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"></HEAD><BODY>" + EmbedContentIntoXML(content) + "</BODY>" + "</HTML>");
+    content = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + EmbedContentIntoXML(content) + "</BODY>" + "</HTML>");
 
     if (taskid == "") {
     	personContentpath = "";
