@@ -466,7 +466,7 @@ function save_task() {
 			importance : importance,
 			startDate : startdate + " 00:00:00",
 			endDate : enddate + " 23:59:59",
-			title : document.getElementById("TextTitle").value,
+			title : ConvertCharToEntityReference(document.getElementById("TextTitle").value),
 			content : strBody,
 			contentPath : contentPath,
 			hasAttach : hasattach,

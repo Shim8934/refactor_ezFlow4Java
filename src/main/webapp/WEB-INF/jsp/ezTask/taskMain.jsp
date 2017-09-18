@@ -73,17 +73,15 @@
 				}
 
 				// 목록에서 하나씩 다른거 선택할 때
-		    	if (selectelem != null) {
-			    	if (selectelem != elem) {
-						$("input[type=checkbox]").prop("checked", false);
-						$(selectelem).css("background", "#ffffff");
-						$(selectelem).siblings().css("background", "#ffffff");
+		    	if (selectelem != null && selectelem != elem) {
+					$("input[type=checkbox]").prop("checked", false);
+					$(selectelem).css("background", "#ffffff");
+					$(selectelem).siblings().css("background", "#ffffff");
 
-						strListInfo = $(elem).attr("taskID") + ";";
-			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
-						
-			        	selectelem = null;
-			    	}
+					strListInfo = $(elem).attr("taskID") + ";";
+		            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
+
+		        	selectelem = null;
 		    	}
 
 				// 체크 후 체크박스 눌러서 체크 해제할 때
@@ -355,7 +353,7 @@
 			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font>";
 			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        } else {
-			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
+			        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
 			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE"));
 			        }
 			        tr.cells[4].style.overflow = "hidden";
