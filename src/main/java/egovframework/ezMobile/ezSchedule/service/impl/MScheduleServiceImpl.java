@@ -189,6 +189,7 @@ System.out.println("contentPath: " + contentPath);
 		map.put("v_STARTDATE", utcStartDate);
 		map.put("v_ENDDATE", utcEndDate);
 		map.put("v_REPETITION", "");
+		map.put("v_SCHEDULETYPE", jsonParam.get("scheduleType").toString());
 		map.put("v_TITLE", jsonParam.get("title").toString());
 		map.put("v_LOCATION", jsonParam.get("location").toString());
 		map.put("v_TENANTID", tenantId);
