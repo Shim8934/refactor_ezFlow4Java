@@ -518,6 +518,16 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	    	
 	        LOGGER.debug("contentPath: " + contentPath);
 	        
+	        List<AttachListVO> aList = ezScheduleService.getAttachList(scheduleId, info.getTenantId());
+	        
+	        LOGGER.debug("aList.size: " + aList.size());
+	        
+	        if(aList.size() > 0) {
+	        	jsonParam.put("hasAttach", "Y");
+	        } else {
+	        	jsonParam.put("hasAttach", "N");
+	        }
+	        
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        
 	        result.put("status", "ok");

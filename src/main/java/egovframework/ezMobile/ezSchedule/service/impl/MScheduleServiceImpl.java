@@ -183,7 +183,7 @@ System.out.println("contentPath: " + contentPath);
 		map.put("v_MODIFIERNAME", jsonParam.get("modifierName").toString());
 		map.put("v_MODIFIERNAME2", jsonParam.get("modifierName2").toString());
 		map.put("v_IMPORTANCE", jsonParam.get("importance").toString());
-		map.put("v_HASATTACH", hasattach);
+		map.put("v_HASATTACH", jsonParam.get("hasAttach").toString());
 		map.put("v_ISPUBLIC", jsonParam.get("isPublic").toString());
 		map.put("v_DATETYPE", jsonParam.get("dateType").toString());
 		map.put("v_STARTDATE", utcStartDate);
