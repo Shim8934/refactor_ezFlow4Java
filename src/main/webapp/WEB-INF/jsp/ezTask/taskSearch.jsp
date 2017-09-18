@@ -56,6 +56,9 @@
 // 		            if (pSearchType == "person")
 // 		                document.getElementById("search_field").selectedIndex = 1;
 // 		        }
+
+		        $("#Sdatepicker").datepicker('disable');
+		        $("#Edatepicker").datepicker('disable');
 		    }
 
 		    function select_row(elem) {
