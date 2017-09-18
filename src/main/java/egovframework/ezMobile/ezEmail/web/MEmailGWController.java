@@ -3021,6 +3021,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		long sentFolderMessageUID = 0;
 		boolean mailSendCompleted = false;
 		
+		LOGGER.debug(jsonObject.toJSONString());
+		
 		String importance = "3";
 		
 		String subject = "";
@@ -3105,35 +3107,35 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mailcmd = (String) jsonObject.get("mailcmd");
 		}
 		
-		if (jsonObject.get("replySendTime") != null) {
-			replySendTime = (String) jsonObject.get("replySendTime");
-		}
+//		if (jsonObject.get("replySendTime") != null) {
+//			replySendTime = (String) jsonObject.get("replySendTime");
+//		}
 		
 		if (jsonObject.get("replyReadTime") != null) {
-			replyReadTime = (String) jsonObject.get(replyReadTime);
+			replyReadTime = ((Long) jsonObject.get(replyReadTime))+"";
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
 
 		LOGGER.debug("subject = " + subject + ", to = " + to + ", cc = " + cc + ", bcc = " + bcc + ", textBody = " 
 		+ textBody + ", from = " + from + ", charset = " + charset + ", htmlbody = " + htmlbody + ", htmlbody = " + htmlbody
-		+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url + "cmd" + cmd); 
+		+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url + ", cmd" + cmd + ", replyReadTime" + replyReadTime); 
 				
 		String serverName = request.getHeader("x-user-host");
+	
+		MCommonVO info = mOptionService.commonInfo(serverName, userId);
+		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+		String userEmail = info.getUserId() + "@" + domainName;
+		String password = jspw;
 		
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
-			String userEmail = info.getUserId() + "@" + domainName;
-			String password = jspw;
-			
-			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
-			Locale locale = new Locale(ld);
-			
-			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
+		String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+		Locale locale = new Locale(ld);
 		
-			String pResult = null;
-			IMAPAccess ia = null;
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				userEmail, password);
+	
+		String pResult = null;
+		IMAPAccess ia = null;
 		
 			do {
 				try {
