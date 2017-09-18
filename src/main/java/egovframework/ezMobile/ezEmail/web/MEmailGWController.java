@@ -3038,6 +3038,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String orgMessageId = "";
 		String cmd = "";
 		String mailcmd = "";
+		String replySendTime = "0";
+		String replyReadTime = "1";
 		
 		if (jsonObject.get("subject") != null) {
 			subject = (String) jsonObject.get("subject");
@@ -3101,6 +3103,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		if (jsonObject.get("mailcmd") != null) {
 			mailcmd = (String) jsonObject.get("mailcmd");
+		}
+		
+		if (jsonObject.get("replySendTime") != null) {
+			replySendTime = (String) jsonObject.get("replySendTime");
+		}
+		
+		if (jsonObject.get("replyReadTime") != null) {
+			replyReadTime = (String) jsonObject.get(replyReadTime);
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -3351,10 +3361,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //		        }
 //		
 //		        // 추적(수신확인)
-//		        LOGGER.debug("replyReadTime=" + replyReadTime);
-//		        if (replyReadTime.equals("1")) {
-//		        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-//		        }
+		        LOGGER.debug("replyReadTime=" + replyReadTime);
+		        if (replyReadTime.equals("1")) {
+		        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+		        }
 		        
 //		        SentDate 설정
 		        message.setSentDate(Calendar.getInstance().getTime());
