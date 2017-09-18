@@ -65,11 +65,16 @@
 		    
 		    function select_row(elem) {
 		    	// 전체체크박스 선택 후 목록에서 하나 선택 시 전체체크 해제
-				if ($("#checkboxAll").is(":checked")) {
-					$("input[type=checkbox]").prop("checked", false);
-		    		$(".row_body td").css("background", "");
-		    		strListInfo = "";
-		    		strListIdInfo = "";
+				if ($("#checkboxAll").is(":checked") && $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked")) {
+					if (typeof($("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked")) == "undefined") {
+						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
+						$(".row_body[taskid='" + $(elem).attr("taskid") + "'] td").css("background", "rgb(233, 241, 244)");
+					} else {
+						$("input[type=checkbox]").prop("checked", false);
+			    		$(".row_body td").css("background", "");
+			    		strListInfo = "";
+			    		strListIdInfo = "";
+					}
 				}
 
 				// 목록에서 하나씩 다른거 선택할 때
@@ -86,10 +91,16 @@
 
 				// 체크 후 체크박스 눌러서 체크 해제할 때
 		        if (selectelem != null) {
-		        	selectelem.style.backgroundColor = "#ffffff";
-		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
-		            selectelem = null;
-		            return;
+					if ($("#checkboxAll").is(":checked")) {
+			        	$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
+			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "'] td").css("background", "#ffffff");
+						return;
+					} else {
+			        	selectelem.style.backgroundColor = "#ffffff";
+			        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
+			            selectelem = null;
+			            return;
+					}
 		        }
 
 		        selectelem = elem;

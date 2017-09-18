@@ -15,7 +15,7 @@ public interface EzTaskService {
 	
 	List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception;
 	
-	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception;
+	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, int tenantID) throws Exception;
 	
 	TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception;
 	
@@ -25,7 +25,7 @@ public interface EzTaskService {
 	
 	String taskWorkSave(String taskID, String content, String attachList, String fileName, String fileSize, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception;
 	
-	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception;
+	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int tenantID) throws Exception;
 	
 	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception;
 	

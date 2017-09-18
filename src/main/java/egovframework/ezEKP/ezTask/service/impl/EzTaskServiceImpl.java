@@ -442,7 +442,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, int tenantID) throws Exception {
+	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, int tenantID) throws Exception {
 		logger.debug("getTaskList started.");
 		logger.debug("userID : " + userID + " | startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount);
 
@@ -465,6 +465,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("chkValue", chkValue);
 		map.put("searchClass", searchClass);
 		map.put("taskStatusCount", taskStatusCount);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map); 
@@ -475,7 +476,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception {
+	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
 		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
 
@@ -486,6 +487,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("type", type);
 		map.put("filter", filter);
 		map.put("chkValue", chkValue);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 
 		String rtnCnt = "";

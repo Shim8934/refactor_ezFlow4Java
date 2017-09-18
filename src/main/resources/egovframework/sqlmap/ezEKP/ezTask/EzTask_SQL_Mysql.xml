@@ -207,9 +207,16 @@
         	</isEqual>
         	
         	<isEqual property="chkValue" compareValue="personName">
-	        	<![CDATA[
-        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
-	        	]]>
+        		<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
+	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -278,16 +285,23 @@
 				A.taskstatus != 3
 		]]>
 
-		<isNotEqual property="filter" compareValue="">
-        	<isEqual property="chkValue" compareValue="title" prepend="AND">
+		<isNotEqual property="filter" compareValue="" prepend="AND">
+        	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
         			title LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="chkValue" compareValue="personName" prepend="AND">
-	        	<![CDATA[
-        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
-	        	]]>
+        	<isEqual property="chkValue" compareValue="personName">
+	        	<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
+	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
         	</isEqual>
         </isNotEqual>
 	</select>
@@ -310,18 +324,23 @@
 				A.taskstatus != 3
 		]]>
 
-		<isNotEqual property="filter" compareValue="">
+		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
-	        		AND
-	        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
         	<isEqual property="chkValue" compareValue="personName">
-	        	<![CDATA[
-	        		AND
+	        	<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
 	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
-	        	]]>
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
         	</isEqual>
         </isNotEqual>
 	</select>
@@ -348,18 +367,23 @@
 				(B.sharerid = #userID# and A.TASKID = B.TASKID)))
 		]]>
 
-		<isNotEqual property="filter" compareValue="">
+		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
-	        		AND
-	        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
 	        	]]>
         	</isEqual>
         	<isEqual property="chkValue" compareValue="personName">
-	        	<![CDATA[
-	        		AND
+	        	<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
 	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
-	        	]]>
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
         	</isEqual>
         </isNotEqual>
 	</select>
