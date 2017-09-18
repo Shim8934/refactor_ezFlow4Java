@@ -78,8 +78,7 @@
 				}
 
 				if ((selectelem == null && $("#checkboxAll").is(":checked") == true)) {
-					$("input[type=checkbox]").prop("checked", false);
-		    		$(".row_body").css("background", "#ffffff");
+					selectelem = "";
 				}
 
 				// 목록에서 하나씩 다른거 선택할 때
@@ -783,6 +782,7 @@ alert(strListIdInfo + " / " + strListInfo);
 				} else {		
 					strListIdInfo = "";
 					strListInfo = "";
+					selectelem = null;
 
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
 					$(".row_body").css("background", "");
