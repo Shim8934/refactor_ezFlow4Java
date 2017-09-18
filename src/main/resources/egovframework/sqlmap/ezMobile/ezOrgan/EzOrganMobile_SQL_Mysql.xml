@@ -370,7 +370,7 @@
     <select id="MOrganDAO.getOrganList" parameterClass="Map" resultClass="MOrganListVO">
     	<isEqual property="organType" compareValue="top">
 	    	<![CDATA[
-	    		SELECT 
+	    		(SELECT 
 					CN as DEPTID,
 					CASE
 						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
@@ -384,13 +384,14 @@
 		   				THEN '1'
 		   				ELSE '0'
 		   			END DEPTTYPE,
-		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			EXTENSIONATTRIBUTE15
 				FROM
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
-					CN = 'Top'
+					CN = 'Top')
 					
 				UNION ALL
 				
@@ -408,16 +409,18 @@
 		   				THEN '1'
 		   				ELSE '0'
 		   			END DEPTTYPE,
-		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			EXTENSIONATTRIBUTE15
 				FROM
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
-					EXTENSIONATTRIBUTE1 = 'Top'
-				ORDER BY
-	        		A.EXTENSIONATTRIBUTE15, 
-	        		A.DISPLAYNAME)
+					EXTENSIONATTRIBUTE1 = 'Top')
+				ORDER BY 
+					FIELD(DEPTID, 'Top') desc, 
+					EXTENSIONATTRIBUTE15, 
+					DEPTNAME
 			]]>
     	</isEqual>
     	<isNotEqual property="organType" compareValue="top">
@@ -447,14 +450,14 @@
 					CN != 'Top'
 				ORDER BY
 	        		A.EXTENSIONATTRIBUTE15, 
-	        		A.DISPLAYNAME
+	        		DEPTNAME
 			]]>
     	</isNotEqual>
     </select>
     
     <select id="MOrganDAO.getLowDeptInfo" parameterClass="Map" resultClass="MOrganListVO">
     	<![CDATA[
-    		SELECT
+    		(SELECT
 				CN as DEPTID,
 				CASE
 					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
@@ -468,13 +471,14 @@
 	   				THEN '1'
 	   				ELSE '0'
 	   			END DEPTTYPE,
-	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+	   			EXTENSIONATTRIBUTE15
 			FROM
 				TBL_DEPTMASTER A
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
-				CN = #deptID#
+				CN = #deptID#)
 				
 			UNION ALL
 			
@@ -492,16 +496,18 @@
 	   				THEN '1'
 	   				ELSE '0'
 	   			END DEPTTYPE,
-	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+	   			EXTENSIONATTRIBUTE15
 			FROM
 				TBL_DEPTMASTER A
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
-				EXTENSIONATTRIBUTE1 = #deptID#
-			ORDER BY
-        		A.EXTENSIONATTRIBUTE15,
-        		A.DISPLAYNAME)
+				EXTENSIONATTRIBUTE1 = #deptID#)
+			ORDER BY 
+				FIELD(DEPTID, #deptID#) desc, 
+				EXTENSIONATTRIBUTE15, 
+				DEPTNAME
 		]]>
     </select>
     
@@ -531,12 +537,12 @@
 					EXTENSIONATTRIBUTE1 = 'Top'
 				ORDER BY
 	        		A.EXTENSIONATTRIBUTE15,
-	        		A.DISPLAYNAME
+	        		DEPTNAME
 			]]>
     	</isEqual>
     	<isNotEqual property="deptType" compareValue="1">
 	    	<![CDATA[
-	    		SELECT
+	    		(SELECT
 					CN as DEPTID,
 					CASE
 						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
@@ -550,7 +556,8 @@
 		   				THEN '1'
 		   				ELSE '0'
 		   			END DEPTTYPE,
-		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			EXTENSIONATTRIBUTE15
 				FROM
 					TBL_DEPTMASTER A
 				WHERE
@@ -563,7 +570,7 @@
 							WHERE
 								TENANT_ID = #tenantID#
 							AND
-								CN = #deptID#)
+								CN = #deptID#))
 					
 				UNION ALL
 				
@@ -581,7 +588,8 @@
 		   				THEN '1'
 		   				ELSE '0'
 		   			END DEPTTYPE,
-		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			EXTENSIONATTRIBUTE15
 				FROM
 					TBL_DEPTMASTER A
 				WHERE
@@ -594,10 +602,18 @@
 											WHERE
 												TENANT_ID = #tenantID#
 											AND
-												CN = #deptID#)
-				ORDER BY
-	        		A.EXTENSIONATTRIBUTE15,
-	        		A.DISPLAYNAME)
+												CN = #deptID#))
+				ORDER BY 
+					FIELD(DEPTID, ( SELECT
+										EXTENSIONATTRIBUTE1
+									FROM
+										TBL_DEPTMASTER
+									WHERE
+										TENANT_ID = #tenantID#
+									AND
+										CN = #deptID#)) desc, 
+					EXTENSIONATTRIBUTE15, 
+					DEPTNAME
 			]]>
     	</isNotEqual>
     </select>
