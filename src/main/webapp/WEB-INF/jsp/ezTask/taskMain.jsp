@@ -68,20 +68,24 @@
 				if ($("#checkboxAll").is(":checked") && $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked")) {
 					if (typeof($("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked")) == "undefined") {
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
-						$(".row_body[taskid='" + $(elem).attr("taskid") + "'] td").css("background", "rgb(233, 241, 244)");
+						$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "rgb(233, 241, 244)");
 					} else {
 						$("input[type=checkbox]").prop("checked", false);
-			    		$(".row_body td").css("background", "");
+			    		$(".row_body").css("background", "#ffffff");
 			    		strListInfo = "";
 			    		strListIdInfo = "";
 					}
 				}
 
-				// 목록에서 하나씩 다른거 선택할 때
-		    	if (selectelem != null && selectelem != elem) {
+				if ((selectelem == null && $("#checkboxAll").is(":checked") == true)) {
 					$("input[type=checkbox]").prop("checked", false);
-					$(selectelem).css("background", "#ffffff");
-					$(selectelem).siblings().css("background", "#ffffff");
+		    		$(".row_body").css("background", "#ffffff");
+				}
+
+				// 목록에서 하나씩 다른거 선택할 때
+		    	if ((selectelem != null && selectelem != elem)) {
+					$("input[type=checkbox]").prop("checked", false);
+					$(".row_body").css("background", "#ffffff");
 
 					strListInfo = $(elem).attr("taskID") + ";";
 		            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
@@ -93,7 +97,7 @@
 		        if (selectelem != null) {
 					if ($("#checkboxAll").is(":checked")) {
 			        	$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
-			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "'] td").css("background", "#ffffff");
+			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
 						return;
 					} else {
 			        	selectelem.style.backgroundColor = "#ffffff";
@@ -564,7 +568,7 @@
 			            return;
 			        }
 				}
-
+alert(strListIdInfo + " / " + strListInfo);
 				if (confirm("<spring:message code='ezTask.t106' />")) {
 					$.ajax({
 						type : "POST",
@@ -765,7 +769,7 @@
 					strListInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body td").css("background", "rgb(233, 241, 244)");
+					$(".row_body").css("background", "rgb(233, 241, 244)");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
@@ -781,7 +785,7 @@
 					strListInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
-					$(".row_body td").css("background", "");
+					$(".row_body").css("background", "");
 				}
 		    }
 		</script>
