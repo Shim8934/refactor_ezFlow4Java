@@ -64,7 +64,7 @@
 // 		    document.onselectstart = function () { return false; };
 		    
 		    function select_row(elem) {
-		    	// 전체체크박스 선택 후 목록에서 하나 선택 시 전체체크 해제
+				//전체 선택 후 개별 선택 시
 				if ($("#checkboxAll").is(":checked") && $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked")) {
 					if (typeof($("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked")) == "undefined") {
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
@@ -77,7 +77,7 @@
 					}
 				}
 
-				if ((selectelem == null && $("#checkboxAll").is(":checked") == true)) {
+				if ((selectelem == null && $("#checkboxAll").is(":checked") == true)) { //전체 선택 후 개별 선택 시
 					selectelem = "";
 				}
 
