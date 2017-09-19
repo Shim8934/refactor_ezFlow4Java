@@ -349,7 +349,22 @@ function check_length(chkstr, maxlength, fieldname) {
     return true;
 }
 
+//버튼 중복클릭 방지
+var doubleSubmitFlag = false;
+function doubleSubmitCheck() {
+	if (doubleSubmitFlag) {
+		return doubleSubmitFlag;
+	} else {
+		doubleSubmitFlag = true;
+		return false;
+	}
+}
+
 function save_task() {
+	if (doubleSubmitCheck()){
+		return;
+	}
+
 	if (document.getElementById("TextTitle").value == "" || $.trim($("#TextTitle").val()) == "") {
     	alert(strLang9);
         document.getElementById("TextTitle").focus();

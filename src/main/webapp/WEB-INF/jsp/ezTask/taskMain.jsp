@@ -567,7 +567,7 @@
 			            return;
 			        }
 				}
-alert(strListIdInfo + " / " + strListInfo);
+
 				if (confirm("<spring:message code='ezTask.t106' />")) {
 					$.ajax({
 						type : "POST",
