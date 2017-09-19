@@ -28,6 +28,7 @@
 	        var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
 	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        var SearchCond = new Array();
+	        var type = "<c:out value ='${type}' />";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -41,7 +42,11 @@
 	            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 	            var reheight = document.documentElement.clientHeight - parseInt(height);
 	            document.getElementById('div_AprLine').style.height = reheight + "px";
-	            document.getElementById("SCompID").value = pCompanyID;
+	            
+	            if (type == 'admin') {
+	            	document.getElementById("SCompID").value = pCompanyID;
+	            }
+	            
 	            GetDocList();
 	        });
 	
@@ -794,12 +799,14 @@
 
     	<div id="mainmenu">
         	<ul>
+        		<c:if test="${type == 'admin' }">
             	<b><spring:message code = 'ezApprovalG.t1276' /></b>
 	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 		        </select><br /><br />
+		        </c:if>
             	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
         	</ul>
     	</div>

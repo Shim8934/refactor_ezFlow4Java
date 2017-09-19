@@ -7270,48 +7270,4 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("selectExpCabDocInfo ended");
 		return result;
 	}
-	
-	/**
-	 * 전자결재 결재문서조회 진행문서
-	 */
-	@RequestMapping(value = "/ezApprovalG/userForAprDoc.do")
-	public String forAprDoc(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("userForAprDoc started.");
-		
-		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("approvalFlag", approvalFlag);
-		
-		logger.debug("userForAprDoc ended.");
-		
-		return "/ezApprovalG/apprGUserForAprDoc";
-	}
-	
-	/**
-	 * 전자결재 결재문서조회 완료문서
-	 */
-	@RequestMapping(value = "/ezApprovalG/userForDoc.do")
-	public String forDoc(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("userForDoc started.");
-		
-		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("approvalFlag", approvalFlag);
-		
-		logger.debug("forDoc ended.");
-		
-		return "/ezApprovalG/apprGUserForDoc";
-	}
 }

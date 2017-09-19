@@ -294,7 +294,7 @@
 		                case "m10":
 		                    break;
 		                case "approvalForDoc":
-		                	window.open("/ezApprovalG/userForAprDoc.do", "right");
+		                	window.open("/admin/ezApprovalG/forAprDoc.do?type=user", "right");
 		                	break;
 		                case "ApprovalConfig":
 		                    PresentOpen = "CONFIG";
@@ -777,12 +777,12 @@
 		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
 		                    break;
 		                case "approvalForDoc_sub01":
-// 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do";
-		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForAprDoc.do";
+		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do?type=user";
+// 		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForAprDoc.do";
 		                	break;
 		                case "approvalForDoc_sub02":
-// 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do";
-		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForDoc.do";
+		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
+// 		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForDoc.do";
 		                	break;
 		            }
 		        } catch (e) { }
@@ -987,12 +987,14 @@
 			</ul>
 			</c:if>
 			</c:if>
-			<c:if test="${approvalForDoc == 'Y' }">
+			<c:if test="${approvalForDoc == 'Y'}">
+			<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'f=1')}">
 				<h2><span  style="width:100%;display:inline-block;" id="approvalForDoc" onClick="Open_Func(this)"><spring:message code='ezApprovalG.lhj13'/></span></h2>
 				<ul>
 					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub01" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj14'/></span></li>
 					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub02" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj15'/></span></li>
 				</ul>
+			</c:if>
 			</c:if>
 	        <h3><span  style="width:100%;display:inline-block;" id="ApprovalConfig" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t1800'/></span></h3>
 		</div>
