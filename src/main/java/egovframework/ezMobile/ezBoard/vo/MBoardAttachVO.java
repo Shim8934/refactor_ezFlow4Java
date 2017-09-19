@@ -23,6 +23,8 @@ public class MBoardAttachVO {
 	private String flag;
 	/** 이미지명*/
 	private String imageName;
+	/** 인코딩 파일명*/
+	private String encodeFileName;
 	
 	public String getItemID() {
 		return itemID;
@@ -90,4 +92,11 @@ public class MBoardAttachVO {
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
 	}
+	public String getEncodeFileName() {
+		return encodeFileName;
+	}
+	public void setEncodeFileName(String encodeFileName) {
+		this.encodeFileName = encodeFileName;
+	}
+	
 }

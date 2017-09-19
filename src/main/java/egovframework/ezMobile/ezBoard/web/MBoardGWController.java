@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.PseudoColumnUsage;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -597,8 +598,13 @@ System.out.println("@@@lastDate:"+lastDate);
 				}
 				
 				list.get(i).setFileSize(fileSize);
+				//filePath 및 fileName 인코딩
+				list.get(i).setFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
+				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
+				
 			}
 
+			
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
