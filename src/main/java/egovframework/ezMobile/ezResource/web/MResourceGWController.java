@@ -194,13 +194,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			String brdId = request.getParameter("brdId");
 			String brdCompany = info.getCompanyId();
+			String userCompany = info.getCompanyId();
+			String userDept = info.getDeptId();
 			
 			LOGGER.debug("brdId: " + brdId);
 			LOGGER.debug("brdCompany: " + brdCompany);
 			LOGGER.debug("tenantId: " + tenantId);
 			
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, tenantId);
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId);
 			
 			LOGGER.debug("size of result: " + list.size());
 			

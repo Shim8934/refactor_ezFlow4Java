@@ -95,7 +95,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId,
-			String brdCompany, int tenantId) {
+			String brdCompany, String userId, String userCompany, String userDept, int tenantId) {
 		
 		LOGGER.debug("brdId: " + brdId);
 		LOGGER.debug("brdCompany: " + brdCompany);
@@ -104,7 +104,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDID", brdId);
 		map.put("v_PBRDCOMPANY", brdCompany);
+		map.put("v_PUSERID", userId);
+		map.put("v_PUSERCOMPANY", userCompany);
+		map.put("v_PUSERDEPT", userDept);
 		map.put("tenantID", tenantId);
+		
+		LOGGER.debug("map: " + map);
+		
 		return mResourceDAO.getResBrdList(map);
 	}
 
