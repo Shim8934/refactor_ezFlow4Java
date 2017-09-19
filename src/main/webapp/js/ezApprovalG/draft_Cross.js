@@ -1628,11 +1628,11 @@ function SendDraftMappingSign(ret) {
 
         field = message.GetListItem(fields, psigncell);
         
-        if (singImageType == "NAME") {
-        	if (message.GetListItem(fields, "1sign1")) {
+       if (singImageType == "IMAGE") {
+       	if (message.GetListItem(fields, "1sign1")) {
         		message.GetListItem(fields, "1sign1").height = "65";
-        	}
-        }
+      	}
+     }
         
         var signWidth = parseInt(field.offsetWidth) - 4;
         var signHeight = parseInt(field.offsetHeight) - 4;

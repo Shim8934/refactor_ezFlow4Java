@@ -122,7 +122,13 @@ function APRLINEXMLParsing(APRLINE) {
             GetXml = GetXml + "<DATA name='isBriefUserYN'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA9")) + "</DATA>";
             GetXml = GetXml + "<DATA name='isCompanyID'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA10")) + "</DATA>";
             GetXml = GetXml + "<DATA name='AprType'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA11")) + "</DATA>";
-            GetXml = GetXml + "<DATA name='AprState'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA12")) + "</DATA>";
+            if (i == CurListLen - 1) {
+	            if (MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA12")) == "001") {
+	              GetXml = GetXml + "<DATA name='AprState'>002</DATA>"; //기안자는 진행으로 표시
+	            } 
+            } else {
+              GetXml = GetXml + "<DATA name='AprState'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA12")) + "</DATA>";
+            }
             GetXml = GetXml + "<DATA name='PMemberName'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA13")) + "</DATA>";		
             GetXml = GetXml + "<DATA name='SMemberName'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA14")) + "</DATA>";		
             GetXml = GetXml + "<DATA name='PMemberDeptName'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA15")) + "</DATA>";		
