@@ -777,12 +777,12 @@
 		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
 		                    break;
 		                case "approvalForDoc_sub01":
+		                	PresentOpen = "DOC_ADMIN";
 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do?type=user";
-// 		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForAprDoc.do";
 		                	break;
 		                case "approvalForDoc_sub02":
+		                	PresentOpen = "DOC_ADMIN";
 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
-// 		                	window.parent.frames.right.document.location.href = "/ezApprovalG/userForDoc.do";
 		                	break;
 		            }
 		        } catch (e) { }

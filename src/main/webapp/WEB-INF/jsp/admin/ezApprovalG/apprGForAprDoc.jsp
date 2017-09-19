@@ -824,7 +824,7 @@
             		<span onclick="pDocInfoValue='2'; MM_swapImagesub('2', event);Recipent_onclick()">
             			<c:choose>
             				<c:when test="${approvalFlag == 'S' }">
-            					<spring:message code = 'ezApprovalG.t999932' />            					
+            					<spring:message code = 'ezApprovalG.t999932' />
             				</c:when>
             				<c:otherwise>
             					<spring:message code = 'ezApprovalG.t950' />
