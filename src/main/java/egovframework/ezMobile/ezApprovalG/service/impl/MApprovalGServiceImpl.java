@@ -249,7 +249,17 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			}
 		} else if (pType.equals("UPDATE")) {
 			if (resultRow > 0) {
-				mApprovalGDAO.insertOpinionInfo(map);
+				if (pContent != null && !pContent.equals("")) {
+					map.put("hasOpinionYN", "Y");
+					
+					mApprovalGDAO.insertOpinionInfo(map);
+					
+					result = mApprovalGDAO.updateDocOpinionInfo(map);
+				} else {
+					map.put("hasOpinionYN", "N");
+					
+					result = mApprovalGDAO.updateDocOpinionInfo(map);
+				}
 			}
 		} else if (pType.equals("DELETE")) {
 			if (resultRow > 0) {
