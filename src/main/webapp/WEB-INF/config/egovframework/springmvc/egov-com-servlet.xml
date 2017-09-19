@@ -51,6 +51,7 @@
             <mvc:exclude-mapping path="/admin/ezApprovalG/componentListTransfer.do"/>
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>      
             <mvc:exclude-mapping path="/ezTalkGate/main.do"/>      
+            <mvc:exclude-mapping path="/ezConn/mailMain.do"/>      
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
