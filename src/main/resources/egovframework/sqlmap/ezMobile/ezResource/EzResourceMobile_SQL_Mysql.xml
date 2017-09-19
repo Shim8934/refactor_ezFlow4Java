@@ -588,20 +588,12 @@
                        A.BRD_EXPLAIN
       			FROM
                 	TBL_RS_BRD A
-                LEFT JOIN
-                	TBL_RS_RESACL B
-      			ON
-                	A.BRD_ID = B.RESID
-                AND
-                	A.TENANT_ID = B.TENANT_ID
       			WHERE
 					A.BRD_UPPER = #v_PBRDID#
 				AND
 					A.BRD_COMPANY = #v_PBRDCOMPANY#
       			AND
                 	A.BRD_GB = '1'
-      			AND
-               		(B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone' OR B.MEMBER_ID IS NULL)
 				AND
                 	A.TENANT_ID = #tenantID#		
 				
