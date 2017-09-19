@@ -22,7 +22,9 @@ public class MOrganListVO {
 	/** 테넌트아이디*/
 	private int tenant_ID;
 	/** 유저사진경로*/
-	private String imageName; 
+	private String imageName;
+	/** 유저 메일*/
+	private String mail;
 	
 	public String getIsLast() {
 		return isLast;
@@ -89,5 +91,11 @@ public class MOrganListVO {
 	}
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 }
