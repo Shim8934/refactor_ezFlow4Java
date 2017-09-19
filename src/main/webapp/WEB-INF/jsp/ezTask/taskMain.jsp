@@ -123,7 +123,7 @@
 		        
 	        	feature = GetOpenPosition(750, 740);
 	        	
-                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
 		    function WriteTask() {
@@ -131,10 +131,10 @@
 		    	
 		    	if (useTodoMemo == 'YES') {
 		    		feature = GetOpenPosition(750, 740);
-	                window.open("/ezTask/taskWrite.do", "", "height=740px, width=750px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	                window.open("/ezTask/taskWrite.do", "", "height=810px, width=750px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	} else {
 		    		feature = GetOpenPosition(750, 685);
-	                window.open("/ezTask/taskWrite.do", "", "height=685px, width=750px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	                window.open("/ezTask/taskWrite.do", "", "height=755px, width=750px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	}
 		    }
 	
