@@ -190,6 +190,9 @@
 	    }
 	    var issearch = false;
 	    function search_click(type) {
+	    	// 목록에서 선택만 한 후 검색하여 추가 시 error 수정
+	    	listContentArry = new Array();
+
 	        if (document.getElementById("keyword").value == "" || $.trim($("#keyword").val()) == "") {
 	            alert("<spring:message code='ezTask.t990' />");
 	            document.getElementById("keyword").focus();
