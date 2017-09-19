@@ -627,7 +627,7 @@
 			AND 
 				A.BRD_GB = '2'	
       		AND
-            	(B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone' OR B.MEMBER_ID IS NULL)
+            	(B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone')
 			AND
                 A.TENANT_ID = #tenantID#
       	   ORDER BY
