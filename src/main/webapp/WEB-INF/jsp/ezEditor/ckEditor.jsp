@@ -234,7 +234,7 @@
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
 	        } else {
-	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
+	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 	        }
 			
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
