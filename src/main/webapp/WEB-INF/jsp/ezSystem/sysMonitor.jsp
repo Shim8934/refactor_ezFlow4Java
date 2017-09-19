@@ -19,6 +19,7 @@
 		var obj = JSON.parse('${serverList}');
 		var list = obj[0].getSysInfo;
 		var str = "";
+		var setDiv = "";
 		
 		// 서버의 갯수만큼 checkbox 생성
 		for (var i = 0; i < obj.length; i++) {
@@ -29,6 +30,11 @@
 				str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked >' + server[0].hostname;	
 			}			
 			$("#serverList").append(str);
+			
+			//서버 갯수만큼 빈 div 생성
+ 			setDiv = '<div name="gForm_'+ i +'" id="gForm_'+ i +'"></div>';
+			$("#monitoringForm").append(setDiv); 		
+			
 			chkServerList_onclick(i);
 		}
 	});
@@ -70,11 +76,13 @@
 			str += "	</div>";
 			str += "</div>";				
 			
-			$("#monitoringForm").append(str);		
+			//$("#monitoringForm").append(str);		
+			$("#gForm_"+ listNum).append(str);
 			
 			makingGraph(listNum, graphId);
 		} else {
-			monitoringForm.removeChild(document.getElementById(graphId));			
+			//monitoringForm.removeChild(document.getElementById(graphId));	
+			document.getElementById("gForm_"+listNum).removeChild(document.getElementById(graphId));
 		} 
 	}	
 
