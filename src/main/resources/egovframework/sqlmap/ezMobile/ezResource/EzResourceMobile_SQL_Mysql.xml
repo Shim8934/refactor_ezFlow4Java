@@ -611,15 +611,7 @@
                        A.BRD_URL,
                        A.BRD_EXPLAIN
 			FROM
-				TBL_RS_BRD A
-            LEFT JOIN
-                TBL_RS_RESACL B
-            ON
-               A.BRD_ID = B.RESID
-            AND
-               A.BRD_COMPANY = B.COMPANYID
-            AND
-               A.TENANT_ID = B.TENANT_ID   	
+				TBL_RS_BRD A  	
 			WHERE
 				A.BRD_UPPER = #v_PBRDID#
 			AND
@@ -627,7 +619,7 @@
 			AND 
 				A.BRD_GB = '2'	
       		AND
-            	(B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone')
+            	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID )
 			AND
                 A.TENANT_ID = #tenantID#
       	   ORDER BY
