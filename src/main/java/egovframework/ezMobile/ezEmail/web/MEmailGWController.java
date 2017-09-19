@@ -3841,17 +3841,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
 			                if (mailSendCompleted == false) {
-    			            	try {
-    			            		Transport.send(message);
-    			            	} catch (MessagingException e){
-    			            		e.printStackTrace();
-    			            		result.put("status", "error");
-    			        			result.put("code", 1);			
-    			        			result.put("data", "");
-    			        			
-    			        			return result;
-    			            	}
-    			            	
+			                	Transport.send(message);
     			            	sentFolderMessageUID = 0;
     			            	mailSendCompleted = true;
 			                }
@@ -3950,9 +3940,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        
 			} catch (Exception e) {
 				e.printStackTrace();
-				result.put("status", "error");
-    			result.put("code", 1);			
-    			result.put("data", "");
 				if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
 					LOGGER.error("mailInterSend : " + e.getMessage());
 					pResult = e.getMessage();
@@ -3978,6 +3965,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					}
 					
 					pResult = pResult.substring(0, pResult.length() - 1);
+					result.put("status", "error");
+	    			result.put("code", 1);			
+	    			result.put("data", pResult);
 				} else { // retry
 					e.printStackTrace();
 					
