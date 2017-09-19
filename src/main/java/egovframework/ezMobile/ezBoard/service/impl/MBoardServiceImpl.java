@@ -1111,7 +1111,7 @@ System.out.println("strFilePath:"+strFilePath);
             				int tempCnt = 0;
             				
             				for (MBoardTreeVO h : brdBoardTreeList) {
-            					if (h.equals(k)) {
+            					if (h.getBoardId().equals(k.getBoardId())) {
             						tempCnt++;
             					}
             				}

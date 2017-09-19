@@ -3112,7 +3112,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //		}
 		
 		if (jsonObject.get("replyReadTime") != null) {
-			replyReadTime = ((Long) jsonObject.get(replyReadTime))+"";
+			replyReadTime = (String) jsonObject.get("replyReadTime");
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
