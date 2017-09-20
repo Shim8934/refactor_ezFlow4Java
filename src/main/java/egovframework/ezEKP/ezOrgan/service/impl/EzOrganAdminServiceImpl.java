@@ -1,9 +1,6 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,8 +10,6 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -65,6 +61,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
     @Autowired
     private EzCommonService ezCommonService;
+    
+    @Autowired
+    private EzEmailUtil ezEmailUtil;
     
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
@@ -997,5 +996,5 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
 	}
-	
+
 }
