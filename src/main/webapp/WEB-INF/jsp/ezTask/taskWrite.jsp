@@ -92,6 +92,11 @@
 		 			}
 				});
 
+				if (startdate == "") {
+					startdate = "${startDate}";
+					enddate = "${endDate}";
+				}
+
 				// IE에서  new Date 값이 Invalid Date 나와서 수정
 				var startYear = "";
 				var startTime = "";

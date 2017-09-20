@@ -740,10 +740,16 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<TaskAttachVO> taskAttachList = null;
 		StringBuilder strAttach = new StringBuilder();
 		StringBuilder strShare = new StringBuilder();
+		String startDate = "";
+		String endDate = "";
 		
 		if (taskID == null) {
 			/*업무작성*/
 			taskID = "";
+
+			String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+			startDate = nowDate.substring(0, 10) + " 00:00:00";
+			endDate = nowDate.substring(0, 10) + " 23:59:59";
 		} else {
 			/*업무수정*/
 			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
@@ -799,6 +805,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskShareList", taskShareList);
 		model.addAttribute("taskShareListStr", strShare.toString());
 		model.addAttribute("taskAttachList", strAttach.toString());
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
 		
 		logger.debug("taskWrite ended.");
 		
