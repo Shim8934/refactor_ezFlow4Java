@@ -199,15 +199,7 @@
 	
 		            }
 		        }
-		        
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("txtDisplayName"));
-		                KeEventControl(document.getElementById("txtDisplayName2"));
-		            }
-		        } catch (e) { }
-		        
+		        		        
 		        if (sliderid != "") {
 		            $.ajax({
 			        	type : "POST",

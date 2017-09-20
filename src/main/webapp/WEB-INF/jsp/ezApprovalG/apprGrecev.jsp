@@ -372,8 +372,7 @@
 			
 			
 			// 결재선지정 버튼 선택시 처리함수
-			function btnSetAprLine_onclick()
-			{
+			function btnSetAprLine_onclick() {
 				var ret = openAprLineUI();
 				if(ret[3] != "" && ret[3] != "cancel") 
 					pPublic = ret[3];

@@ -64,6 +64,7 @@
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
 		    var signImageType = "${signImageType}";
+		    var pMode = "${mode}";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -90,9 +91,9 @@
 		                document.getElementById("btnGongRam").style.display = "";
 		                pOpinionType = "";
 		            }
-		            LoadpzFormDocInfo();
+		            LoadpzFormDocInfo(); // setAttachInfo(DocID, "APR", lstAttachLink);
 		            SignCheck();
-		            cancelYN();
+		            cancelYN();			      	
 		        }
 		    }
 		    

@@ -122,19 +122,6 @@
 		    				}
 		    		}
 		    	}
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("txt_We"));
-		                KeEventControl(document.getElementById("txt_De"));
-		                KeEventControl(document.getElementById("list_MonthInterval"));
-		                KeEventControl(document.getElementById("list_MonthlyDays"));
-		                KeEventControl(document.getElementById("list_MonthInterval2"));
-		                KeEventControl(document.getElementById("list_YearlyDays"));
-		                KeEventControl(document.getElementById("list_ReCount"));		                
-		            }
-		        }
-		        catch (e) { }
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
