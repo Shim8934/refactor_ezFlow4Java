@@ -69,11 +69,11 @@
 						break;						
 					case 12:
 						//전체 문서 조회(진행문서)
-					    url = "/admin/ezApprovalG/forAprDoc.do";
+					    url = "/admin/ezApprovalG/forAprDoc.do?type=admin";
 						break;						
 					case 13:
 						//전체 문서 조회(완료문서)
-					    url = "/admin/ezApprovalG/forDoc.do";
+					    url = "/admin/ezApprovalG/forDoc.do?type=admin";
 						break;
 				}
 				

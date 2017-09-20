@@ -270,7 +270,7 @@
 		            return;
 		        }
 		        var url = "/admin/ezApprovalG/ezStatisticsSearch.do?ingFlag=END";
-		        var result = GetOpenWindow(url, "ezStatisticsSearch", 500, 330, "NO");
+		        var result = GetOpenWindow(url, "ezStatisticsSearch", 510, 350, "NO");
 		    }
 		    function SearchCondi_onclick_Complete(retVal) {
 		        if (retVal) {

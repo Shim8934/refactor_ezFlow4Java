@@ -1842,6 +1842,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
+		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
         String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
@@ -1864,6 +1865,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
         model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);	
         model.addAttribute("approvalFlag", approvalFlag);
+        model.addAttribute("approvalForDoc", approvalForDoc);
 		
 		logger.debug("permissionsList ended.");
 		
@@ -1970,6 +1972,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
+		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -1978,6 +1981,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("approvalForDoc", approvalForDoc);
 		
 		logger.debug("permissionsCheck ended.");
 		

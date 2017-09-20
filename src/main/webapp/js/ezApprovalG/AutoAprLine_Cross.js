@@ -124,8 +124,11 @@ function APRLINEXMLParsing(APRLINE) {
             GetXml = GetXml + "<DATA name='AprType'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA11")) + "</DATA>";
             if (i == CurListLen - 1) {
 	            if (MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA12")) == "001") {
-	              GetXml = GetXml + "<DATA name='AprState'>002</DATA>"; //기안자는 진행으로 표시
-	            } 
+	            	GetXml = GetXml + "<DATA name='AprState'>002</DATA>"; //기안자는 진행으로 표시
+//	            }
+	            } else {
+	            	GetXml = GetXml + "<DATA name='AprState'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA12")) + "</DATA>";
+	            }
             } else {
               GetXml = GetXml + "<DATA name='AprState'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA12")) + "</DATA>";
             }
