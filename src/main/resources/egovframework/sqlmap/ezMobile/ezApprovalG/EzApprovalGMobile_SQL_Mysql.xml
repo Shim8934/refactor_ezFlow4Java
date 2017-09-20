@@ -1138,11 +1138,13 @@
    			DELETE FROM 
 		  		TBL_APROPINIONINFO
 	    	WHERE  
-	    		DOCID = #docID#
-	    	AND
 	    		TENANT_ID = #tenantID#
 	    	AND
 	    		COMPANYID = #companyID#
+	    	AND
+	    		DOCID = #docID#
+	    	AND
+	    		USERID = #userID#
 		]]>
    </delete>
    
