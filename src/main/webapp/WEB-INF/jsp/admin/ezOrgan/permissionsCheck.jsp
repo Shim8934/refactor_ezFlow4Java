@@ -967,7 +967,7 @@
 			                <DATA1>l</DATA1>
 			            </CELL>
 			        </ROW>
-			        <c:if test="${approvalForDoc != 'N'}">
+			        <c:if test="${approvalForDoc == 'Y'}">
 			        <ROW>
 			            <CELL>
 			                <VALUE><spring:message code='ezOrgan.lhj1'/></VALUE>
