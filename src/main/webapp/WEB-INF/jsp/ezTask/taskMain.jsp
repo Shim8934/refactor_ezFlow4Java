@@ -65,43 +65,49 @@
 		    
 		    function select_row(elem) {
 				//전체 선택 후 개별 선택 시
-				if ($("#checkboxAll").is(":checked") && $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked")) {
-					if (typeof($("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked")) == "undefined") {
+				if ($("#checkboxAll").is(":checked")) {
+					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") != true) {
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 						$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "rgb(233, 241, 244)");
 					} else {
-						$("input[type=checkbox]").prop("checked", false);
-			    		$(".row_body").css("background", "#ffffff");
-			    		strListInfo = "";
-			    		strListIdInfo = "";
+						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
+						$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
+
+						chk_onselect(elem);
+			    		return;
 					}
+					
+					// 목록에서 하나씩 다른거 선택할 때
+			    	if ((selectelem != null && selectelem != elem)) {
+						strListInfo += $(elem).attr("taskID") + ";";
+			            strListIdInfo += $(elem).find("input").attr("creatorID") + ";";
+
+			        	selectelem = null;
+			    	}
+				} else {
+					// 목록에서 하나씩 다른거 선택할 때
+			    	if ((selectelem != null && selectelem != elem)) {
+	 					$("input[type=checkbox]").prop("checked", false);
+	 					$(".row_body").css("background", "#ffffff");
+						strListInfo = $(elem).attr("taskID") + ";";
+			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
+
+			        	selectelem = null;
+			    	}
 				}
-
-				if ((selectelem == null && $("#checkboxAll").is(":checked") == true)) { //전체 선택 후 개별 선택 시
-					selectelem = "";
-				}
-
-				// 목록에서 하나씩 다른거 선택할 때
-		    	if ((selectelem != null && selectelem != elem)) {
-					$("input[type=checkbox]").prop("checked", false);
-					$(".row_body").css("background", "#ffffff");
-
-					strListInfo = $(elem).attr("taskID") + ";";
-		            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
-
-		        	selectelem = null;
-		    	}
 
 				// 체크 후 체크박스 눌러서 체크 해제할 때
 		        if (selectelem != null) {
 					if ($("#checkboxAll").is(":checked")) {
 			        	$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
+
 						return;
 					} else {
 			        	selectelem.style.backgroundColor = "#ffffff";
 			        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
 			            selectelem = null;
+
 			            return;
 					}
 		        }
@@ -226,7 +232,7 @@
 				// 페이지 이동할 때 체크되어있는게 있으면 모두 해제
 				if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
-		    		$(".row_body td").css("background", "");
+		    		$(".row_body").css("background", "");
 		    	}
 
 				// 페이지 이동 시 이전에 체크되어있던 값 삭제
@@ -364,15 +370,13 @@
 
 		            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font>";
+			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font></span>";
 			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        } else {
 			        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
 			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE"));
 			        }
-			        tr.cells[4].style.overflow = "hidden";
-			        tr.cells[4].style.textOverflow = "ellipsis";
-			        
+
 			        if (useTodoMemo == "YES") {
 				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
 				        tr.cells[6].style.overflow = "hidden";
@@ -420,6 +424,12 @@
 			        onTaskCount++;
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+
+					if ($("#titleid" + i + "").outerWidth() > 900) {
+						$("#titleid" + i + "").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+					} else {
+				        $("#titleid" + i + "").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", $("#titleid" + i + "").outerWidth());
+					}
 				}
 
 			    if (onTaskCount == 0) {
@@ -728,7 +738,7 @@
 		    function getTaskList() {
 		    	if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
-		    		$(".row_body td").css("background", "");
+		    		$(".row_body").css("background", "");
 		    	}
 		    	
 		    	$.ajax({
@@ -758,7 +768,6 @@
 		    }
 
 		    function selectAll() {
-// 		    	$(".row_body td").css("background", "");
 				$(selectelem).css("background", "#ffffff");
 
 				var deleteList = [];
