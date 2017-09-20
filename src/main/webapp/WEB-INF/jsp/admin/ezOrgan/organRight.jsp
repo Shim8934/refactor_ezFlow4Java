@@ -21,6 +21,7 @@
 		    var g_xmlHTTP = null;
 		    var useBizmekaSpambox = "${useBizmekaSpambox}";
 		    var userinfo_dialogArguments = new Array();
+		    var useDisablePopImap = "";
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -1307,11 +1308,88 @@
 	            });		        
 		    }
 		    
+		    // POP3/IMAP 설정 함수
+		    var serUseDisablePopImap_dialogArguments = new Array();
+		    
+		    function mod_pop3Imap() {
+		    	var listview = new ListView();
+		    	listview.LoadFromID("lvUserList");
+		    	
+		    	var length = listview.GetSelectedRows().length;
+		    	
+		    	if (length == 0) {
+		    		alert("<spring:message code='ezOrgan.yjks5' />");
+		    		return;
+		    	} 
+		    	
+		    	if (length > 1) {
+	    			alert("<spring:message code='ezOrgan.yjks6' />");
+		    		return;
+	    		}
+
+		    	var data = "";
+
+		    	for (var i = 0; i < length; i++) {
+		    		data += listview.GetSelectedRows()[0].getAttribute("DATA2");
+		    	}
+		    	
+		    	serUseDisablePopImap_dialogArguments[1] = mod_pop3Imap_Complete;
+		    	
+		    	document.getElementById("userSend").value = data;
+		    	
+		    	var agent = navigator.userAgent.toLowerCase();
+		    
+		    	if (agent.indexOf("chrome") != -1) {
+		    		var OpenWin = window.open("/admin/ezOrgan/configPopImap.do?userId=" + data, "setUsePop3Imap", GetOpenWindowfeature(450, 185));
+		    	} else {
+			    	var OpenWin = window.open("/admin/ezOrgan/configPopImap.do?userId=" + data, "setUsePop3Imap", GetOpenWindowfeature(330, 185));
+		    	}
+		    	
+		    	try { OpenWin.focus(); } catch (e) { }
+				
+		    }
+		    
+		    
+		    function mod_pop3Imap_Complete(rtnValue) {
+		    	var propertyName = "disablePopImap";
+		    	
+		    	if (typeof (rtnValue) != "undefined") {
+		    		
+		    		var listview = new ListView();
+		    		listview.LoadFromID("lvUserList");
+		    		
+		    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
+		    		
+		    		$.ajax({
+		    			url: "/admin/ezOrgan/setUseDisablePop3Imap.do",
+		    			type: "POST",
+		    			dataType: "text",
+		    			data: {userId : data, propertyValue : rtnValue,
+		    					propertyName : propertyName},
+		    			success: function(res) {
+		    				
+		    				if (res == "SUCCESS") {
+			    				alert("<spring:message code='ezOrgan.yjks3' />");
+		    				} else {
+		    					alert("<spring:message code='ezOrgan.yjks4' />");
+		    				}
+		    			},
+		    			error: function(){
+		    				alert("<spring:message code='ezOrgan.yjks4' />");
+		    			}
+		 
+		    		});
+		    	}
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
 		<input type="hidden" name="selectedCN" id="selectedCN" />
 		<input type="hidden" name="selectedValue" id="selectedValue" />
+		<form name="sendForm">
+			<input type="hidden" name="userSend" id="userSend" />
+		</form>
 		
 		<xml id="listviewheader1" style="display:none">
 			<LISTVIEWDATA>
@@ -1430,6 +1508,11 @@
 						<tr>
 		                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 		                </tr>
+		                </c:if>
+		                <c:if test="${useDisablePopImap == 'NO'}">
+							<tr>
+			                	<td><a class="imgbtn" id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></a></td>
+			                </tr>
 		                </c:if>
 					</table>
 				</th>

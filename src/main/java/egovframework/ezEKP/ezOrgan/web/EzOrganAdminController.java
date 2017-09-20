@@ -137,7 +137,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
+		String useDisablePop3Imap = ezCommonService.getTenantConfig("useDisablePopImap", user.getTenantId());
 		
+		if (useDisablePop3Imap != null) {
+			useDisablePop3Imap = "NO";
+		}
+		
+		model.addAttribute("useDisablePopImap", useDisablePop3Imap);
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
@@ -2422,4 +2428,79 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
+	/**
+	 * POP3/IMAP 설정 화면을 출력한다.
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/configPopImap.do")
+	public String configPop3Imap(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest req, Model model) throws Exception {
+		logger.debug("configPop3Imap started.");
+		
+		String returnValue = "ERROR";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		int tenantIdNum = userInfo.getTenantId();
+		String userId = req.getParameter("userId");
+		String propertyName = "disablePopImap";
+		
+		String propertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
+		
+		if (propertyValue != null) {
+			returnValue = "SUCCESS";
+			model.addAttribute("propertyValue" , propertyValue);
+		} else {
+			returnValue = "NODATA";
+		}
+				
+		model.addAttribute("result", returnValue);
+		
+		logger.debug("configPop3Imap ended.");
+		
+		return "admin/ezOrgan/configPopImap";
+	}
+	
+	/**
+	 * POP3/IMAP 설정된 값을 추가 및 수정 한다.
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/setUseDisablePop3Imap.do")
+	@ResponseBody
+	public String setUseDisablePop3Imap(@CookieValue("loginCookie") String loginCookie
+			, HttpServletRequest req) throws Exception	 {
+		
+		logger.debug("setUseDisablePop3Imap started.");
+		
+		String returnValue = "ERROR"; 
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		int tenantIdNum = userInfo.getTenantId();
+		String userId = req.getParameter("userId");
+		String propertyValue = req.getParameter("propertyValue");
+		String propertyName = req.getParameter("propertyName");
+		
+		String getPropertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
+		
+		if (getPropertyValue != null) {
+			ezCommonService.updateUserConfigInfo(tenantIdNum, userId, propertyName, propertyValue);
+			returnValue = "SUCCESS";
+		} else {
+			ezCommonService.insertUserConfigInfo(tenantIdNum, userId, propertyName, propertyValue);
+			returnValue = "SUCCESS";
+		}
+		
+		logger.debug("setUseDisablePop3Imap ended.");
+		
+		return returnValue;
+	}
+	
+
 }
