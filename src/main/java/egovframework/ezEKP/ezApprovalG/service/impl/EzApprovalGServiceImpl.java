@@ -13856,7 +13856,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_USERJOBTITLE", userJobTitle);
 				map.put("v_USERJOBTITLE2", userJobTitle2);
 				map.put("v_DEPTID", deptID);
-				map.put("v_DEPTNAME2", deptName);
+				map.put("v_DEPTNAME", deptName);
 				map.put("v_DEPTNAME2", deptName2);
 				map.put("v_PCOMPANYID", pCompanyID);
 				
