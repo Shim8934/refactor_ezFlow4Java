@@ -61,14 +61,6 @@
 		        }
 		        document.getElementById("TxtAprDeptTempletName").value = RetValue;
 		        document.getElementById("TxtAprDeptTempletName").focus();
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("TxtAprDeptTempletName"));
-		            }
-		        }
-		        catch (e)
-		        { }
 		    };
 		    window.onunload = function () {
 		    };

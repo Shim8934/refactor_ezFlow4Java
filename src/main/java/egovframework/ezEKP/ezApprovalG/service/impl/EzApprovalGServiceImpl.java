@@ -1941,8 +1941,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String sn = "";
 		String docSN = "";
 		String newDocID = "";
-		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID);
-		
+		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID);		
 
 		String docNo = "";
 		String orgDocNumCode = "";
@@ -7830,6 +7829,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (isUsed.equals("reuse")) {
 			apprGDocListVOList.get(0).setDocID(docID);
+			apprGDocListVOList.get(0).setHasOpinionYn("N");;
 		}
 		
   		if (apprGDocListVOList.size() == 0) {
@@ -17174,6 +17174,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		// 진행중인 결재 리스트 추출
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfo(map);
 		
+		if (isUsed.equals("reuse")) {
+			for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+				apprGAprLineVOList.get(i).setAprState("");
+			}
+			apprGAprLineVOList.get(apprGAprLineVOList.size()-1).setAprState("002");
+		}
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         

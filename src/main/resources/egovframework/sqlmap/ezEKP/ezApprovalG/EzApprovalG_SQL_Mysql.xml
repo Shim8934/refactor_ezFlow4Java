@@ -1390,7 +1390,7 @@
 				#v_DOCID#, 
 				APRMEMBERSN, 
 				APRTYPE ,
-				'', 
+				APRSTATE, 
 				APRMEMBERID, 
 				APRMEMBERISDEPTYN, 
 				APRMEMBERNAME, 
@@ -1416,6 +1416,8 @@
            		TENANT_ID = #v_TENANTID#
 	        AND
 	           	COMPANYID = #companyID#
+	        ORDER BY 
+	            APRMEMBERSN DESC 
 		</isEqual>
 	</select>
 
@@ -6672,11 +6674,11 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DRAFTER">
 							   	 	 AND 
-							   	 	 	 WRITERNAME$v_LANGTYPE$ LIKE '%$v_DRAFTER$%'
+							   	 	 	 WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%'
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DEPTNAME">
 							   	 	AND 
-							   	 		 WRITERDEPTNAME$v_LANGTYPE$ LIKE '%$v_DEPTNAME$%'
+							   	 		 WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_FORMID">
 							   	 	 AND 
@@ -10615,11 +10617,11 @@
    		</isNotEmpty>
    		<isNotEmpty property="v_DRAFTER"> 
    		AND 
-   			WRITERNAME$v_LANGTYPE$ LIKE '%$v_DRAFTER$%' 
+   			WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%' 
    		</isNotEmpty>
    		<isNotEmpty property="v_DEPTNAME"> 
    		 AND 
-   		 	WRITERDEPTNAME$v_LANGTYPE$ LIKE '%$v_DEPTNAME$%'
+   		 	WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
    		</isNotEmpty>
    		<isNotEmpty property="v_FORMID"> 
    		 AND 
