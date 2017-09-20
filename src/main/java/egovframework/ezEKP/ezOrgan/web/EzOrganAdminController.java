@@ -137,9 +137,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
-		String useDisablePop3Imap = ezCommonService.getTenantConfig("useDisablePopImap", user.getTenantId());
+		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		
-		if (useDisablePop3Imap != null) {
+		if (useDisablePop3Imap.equals("")) {
 			useDisablePop3Imap = "NO";
 		}
 		

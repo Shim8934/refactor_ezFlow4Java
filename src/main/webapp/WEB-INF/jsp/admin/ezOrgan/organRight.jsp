@@ -1509,7 +1509,7 @@
 		                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 		                </tr>
 		                </c:if>
-		                <c:if test="${useDisablePopImap == 'NO'}">
+		                <c:if test="${useDisablePopImap == 'YES'}">
 							<tr>
 			                	<td><a class="imgbtn" id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></a></td>
 			                </tr>
