@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.sql.PseudoColumnUsage;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -97,6 +99,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			String boardId = request.getParameter("boardID");
 			String lastDate = request.getParameter("lastDate");
+			String pSearchText = request.getParameter("pSearchText");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
@@ -108,10 +111,10 @@ public class MBoardGWController {
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+System.out.println("@@@lastDate:"+lastDate);
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId(), info.getOffSet(),pSearchText);
 			
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId());
-			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), pSearchText);
 			LOGGER.debug("listCount ="+listCount);
 			
 			result.put("status", "ok");
@@ -321,7 +324,7 @@ public class MBoardGWController {
 			
 			for (MBoardAttachVO photo : photoList) {
 				//임시로 localhost:8080
-				photo.setFilePath("http://localhost:8080"+photo.getFilePath());
+				photo.setFilePath(photo.getFilePath());
 			}
 				
 			LOGGER.debug("photoList:"+photoList);
@@ -361,6 +364,8 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
 			String realPath = commonUtil.getRealPath(request);
 			String content = jsonParam.get("mainContent").toString();
+			content = content.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			content = content.replaceAll("\\+", "%2B");
 			content = URLDecoder.decode(content, "utf-8");
 			
 			String scheme = "http://";
@@ -405,6 +410,8 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
 			String realPath = commonUtil.getRealPath(request);
 			String content = jsonParam.get("mainContent").toString();
+			content = content.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			content = content.replaceAll("\\+", "%2B");
 			content = URLDecoder.decode(content, "utf-8");
 			
 			String scheme = "http://";
@@ -484,9 +491,9 @@ public class MBoardGWController {
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
+			String list= mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -578,6 +585,27 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
 			
 			List<MBoardAttachVO> list = mBoardService.getAttachList(contentId, info.getTenantId());
+			
+			//파일사이즈 단위 수정
+			String fileSize = "";
+			for (int i=0; i<list.size(); i++) {
+				fileSize = list.get(i).getFileSize();
+				
+				if (Integer.parseInt(fileSize) / 1024 / 1024 > 1) {
+					fileSize = ((Integer.parseInt(fileSize) / 1024 / 1024 * 10) / 10) + "MB";
+				} else if ((Integer.parseInt(fileSize) / 1024) > 1) {
+					fileSize = (Integer.parseInt(fileSize)/1024) + "KB"; 
+				} else {
+					fileSize = fileSize + "B";
+				}
+				
+				list.get(i).setFileSize(fileSize);
+				//filePath 및 fileName 인코딩
+				list.get(i).setFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
+				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
+				
+			}
+
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -720,13 +748,14 @@ public class MBoardGWController {
 	            strXML.append("</NODE>");
 	            
 	            
-	            attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
+	            //attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
 	            
 	        }
 	        
 	        strXML.append("</NODES></ROOT>");
 	        
-	        result.put("data", attachment);
+	        result.put("data", strXML);
+	        //result.put("attachments", attachment);
 			result.put("status", "ok");
 			result.put("code", 0);
 			

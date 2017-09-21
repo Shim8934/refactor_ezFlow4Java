@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -29,6 +28,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
@@ -358,7 +358,7 @@ public class MBoardServiceImpl implements MBoardService {
 		List<MBoardItemVO> mBoardNoticeItemList = getNoticePostItemList(boardID, userID, gubun, page, tenantID, offset);
 		
 		//임시로 10으로 지정
-		int listSize = 30;
+		int listSize = 50;
         
 		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
 		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
@@ -388,7 +388,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 
 	@Override
-	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText) throws Exception {
+	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
@@ -408,7 +408,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
         int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
         
-        List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
+        List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
         
 		return mBoardItemList;
 	}
@@ -595,7 +595,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return list;
 	}
 	
-	private List<MBoardNewListVO> getNewBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset) throws Exception {
+	private List<MBoardNewListVO> getNewBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		logger.debug("getNewBoardItemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || startRow = " + startRow + " || endRow = " + endRow + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID);
 		
@@ -603,15 +603,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("boardID", boardID);
 		map.put("userID", userID);
 		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
-		//Oracle
-		map.put("startRow", startRow);
-		map.put("endRow", endRow);
-		//Maria
-		map.put("rowCount", endRow - (startRow - 1));
-		map.put("limit", startRow - 1);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
+		map.put("parentWriteDate", parentWriteDate);
+		map.put("upperitemidtree", upperitemidtree);
 		
 		List<MBoardNewListVO> list = mBoardDAO.getNewItemList(map);
 		
@@ -757,7 +754,14 @@ public class MBoardServiceImpl implements MBoardService {
 			map.put("hasAttach", "0");
 		}
 		
-		mBoardDAO.insertBrdItem(map);
+		String tempString = mBoardDAO.getApprFlag(map);
+		
+		if (tempString != null && tempString.equals("Y")) {
+			mBoardDAO.insertBrdItem(map);
+		} else {
+			mBoardDAO.insertBrdItem2(map);
+		}
+		
 	}
 	
 	/**
@@ -854,11 +858,6 @@ public class MBoardServiceImpl implements MBoardService {
 		//map.put("startDate", boardListVO.get("startDate"));
 		//map.put("endDate", boardListVO.get("endDate"));
 		map.put("abstract", boardListVO.get("abstract"));
-		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
-			map.put("hasAttach", "1");
-		} else {
-			map.put("hasAttach", "0");
-		}
 		map.put("writerName", boardListVO.get("writerName"));
 		map.put("writerName2", boardListVO.get("writerName2"));
 		map.put("extensionAttribute2", boardListVO.get("notice"));
@@ -875,7 +874,27 @@ public class MBoardServiceImpl implements MBoardService {
 		//mht파일저장
 		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);
 		
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
+		
 		mBoardDAO.updateItem(map);
+		mBoardDAO.setApprFlag(map);
+		mBoardDAO.newItem(map);
+		
+		//첨부파일 저장
+		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
+			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId())) {
+				//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
+			}
+			map.put("hasAttach", "1");
+		} else {
+			map.put("hasAttach", "0");
+		}
+	
+		
 	}
 	
 	/**
@@ -1022,53 +1041,63 @@ System.out.println("strFilePath:"+strFilePath);
 	}
 
 	@Override
-	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID) throws Exception {
+	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID, String offset,String pSearchText) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		//mainList 임시 10까지
-		map.put("listSize", 10);
+		map.put("listSize", 50);
 		map.put("lastDate", lastDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText);
 		return mBoardDAO.getNewItemList(map);
 	}
 
 	@Override
-	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
+	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("listSize", listCnt);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getNewItemList(map);
 	}
 
 	@Override
-	public List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception {
-		String rollInfo = info.getRollInfo();
-		int tenantID = info.getTenantId();
+	public String getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception {
+		int count = 0;
 		String strForbiddenBoardIDList = "";
+		int tenantID = info.getTenantId();
+		String userID = info.getUserId();
+		String deptID = info.getDeptId();
+		String companyID = info.getCompanyId();
+		String strLang = commonUtil.getMultiData(info.getLang(), tenantID);
+		String rollInfo = info.getRollInfo();
 		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
 		
-	    if (rollInfo != null && (boardGroupAdminFg.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+		if (rollInfo != null && (boardGroupAdminFg.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
 	    	mode = 0;
 	    } else {
 	    	mode = 1;
 	    }
+		
+		String retValue = getBoardTree_Get1(strLang, rootBoardID + "," + userID + "," + deptID + "," + companyID + "," + mode + "," + subFlag + "," + selectBy + "," + excludeBoardID, tenantID);
+		
+		if (retValue != null && retValue.length() > 30) {
+    		return retValue;
+        }
 	    
 	    String accessID = info.getUserId() + "," + ezOrganService.getDeptFullPath(info.getDeptId(), tenantID) + ",everyone";
-	    String strLang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-		
+	    String strRollInfo = ezOrganService.getPropertyValue(userID, "extensionattribute1", tenantID);
 	    
-	    //String pAccessID = userId + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
-        //String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
-	    
-		//List<MBoardTreeVO> list = brdBoardTree(rootBoardID, userId, mode, selectBy, excludeBoardID, info.getTenantId());
+	    logger.debug("accessID:"+accessID);
 	    
 	    List<MBoardTreeVO> brdBoardTreeList = new ArrayList<MBoardTreeVO>();
 	    for (int i = 0; i < accessID.split(",").length; i++) {
-            String boardID = "";
-            
+	    	String boardID = "";
+	    	
             if (mode == 0) {
             	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);
             	
@@ -1078,10 +1107,11 @@ System.out.println("strFilePath:"+strFilePath);
             	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
             		for (MBoardTreeVO k : tempBrdBoardTreeList) {
             			if (brdBoardTreeList.size() > 0) {
+            				
             				int tempCnt = 0;
             				
             				for (MBoardTreeVO h : brdBoardTreeList) {
-            					if (h.equals(k)) {
+            					if (h.getBoardId().equals(k.getBoardId())) {
             						tempCnt++;
             					}
             				}
@@ -1096,18 +1126,23 @@ System.out.println("strFilePath:"+strFilePath);
             	}
             }
             
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("accessID", accessID.split(",")[i].trim());
-            map.put("rootBoardID", rootBoardID);
-            map.put("tenantID", tenantID);
-            List<MBoardInfoVO> boardTreeList = mBoardDAO.getBoardTreeGet2(map);
+            List<MBoardTreeVO> boardTreeList = getBoardTree_Get2(accessID.split(",")[i].trim(), rootBoardID, tenantID);
             
             if (boardTreeList.size() > 0) {
                 for (int r = 0; r < boardTreeList.size(); r++) {
-            		boardID = boardTreeList.get(r).getBoardID().split(",")[0];
+            		boardID = boardTreeList.get(r).getBoardId().split(",")[0];
         			strForbiddenBoardIDList += boardID.trim();
                 }
             }
+            
+        }
+	    
+	    StringBuilder result = new StringBuilder();
+	    
+	    if (subFlag == 1) {
+        	result.append("<NODES>");
+        } else {
+        	result.append("<TREEVIEWDATA>");
         }
 	    
 	    //오름차순 정렬
@@ -1118,16 +1153,15 @@ System.out.println("strFilePath:"+strFilePath);
 			}
 		});
 	    
-	    
-	    Map<String, Object> map = new HashMap<String, Object>();
+	    //Map<String, Object> map = new HashMap<String, Object>();
 		
-	    for (int i=0; i< brdBoardTreeList.size(); i++) {
+	  /*  for (int i=0; i< brdBoardTreeList.size(); i++) {
 	    	//자식존재여부 체크
 	    	String isLeaf = checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID);
 	    	brdBoardTreeList.get(i).setIsLeaf(isLeaf);
 	    	
 	    	map.put("boardID", brdBoardTreeList.get(i).getBoardId());
-			map.put("userID", info.getUserId());
+			map.put("userID", userID);
 			map.put("gubun", (brdBoardTreeList.get(i).getGuBun() == null || !brdBoardTreeList.get(i).getGuBun().equals("2") || !brdBoardTreeList.get(i).getGuBun().equals("3")) ? "1" : brdBoardTreeList.get(i).getGuBun());
 			map.put("nowDate", commonUtil.getTodayUTCTime(""));
 			map.put("pSearchText", "");
@@ -1136,11 +1170,113 @@ System.out.println("strFilePath:"+strFilePath);
 	    	int listCount = mBoardDAO.getBoardItemListCount(map);
 	    	
 	    	brdBoardTreeList.get(i).setListCount(listCount);
-	    }
+	    }*/
+	    
+	    for (int i = 0; i < brdBoardTreeList.size(); i++) {
+        	if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
+                if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
+                	continue;
+                }
+            }
+        	result.append("<NODE>");
+        	if (rootBoardID.equals("top")) {
+        		if (strLang.equals("")) {
+        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
+        		} else {
+        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
+        		}        	
+        	} else {
+        		if (strLang.equals("")) {
+        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
+        		} else {
+        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
+        		}        	
+        	}
+            result.append("<STYLE><![CDATA[]]></STYLE>");
+            result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
+            
+            if (rootBoardID.equals("top")) {
+            	if (strLang.equals("")) {
+            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
+            	} else {
+            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
+            	}            
+            } else {
+            	if (strLang.equals("")) {
+            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
+            	} else {
+            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
+            	}            
+            }
+            result.append("<DATA3>" + rootBoardID + "</DATA3>");
+            result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
+            result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
+            result.append("<EXPANDED>FALSE</EXPANDED>");
+            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID) + "</ISLEAF>");
+            result.append("<BOARDID>" + brdBoardTreeList.get(i).getBoardId() + "</BOARDID>");
+            
+            if (count == 0 && subFlag != 1) {
+            	result.append("<SELECT>TRUE</SELECT>");
+            }
+            result.append("</NODE>");
+            
+            count++;
+        }
+        
+        if (subFlag == 1) {
+        	result.append("</NODES>");
+        } else {
+        	result.append("</TREEVIEWDATA>");
+        }
+	    
+	    getBoardTree_Set_D(strLang, rootBoardID + "," + userID + "," + deptID + "," + companyID + "," + mode + "," + subFlag + "," + selectBy + "," + excludeBoardID, tenantID);
+	    getBoardTree_Set(strLang, rootBoardID + "," + userID + "," + deptID + "," + companyID + "," + mode + "," + subFlag + "," + selectBy + "," + excludeBoardID, result.toString(), tenantID);
 
-		return brdBoardTreeList;
+		return result.toString();
 	}
 	
+	@Override
+	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_STRLANG", pStrLang);
+		map.put("v_PQUERY", pQuery);
+		map.put("v_TENANTID", tenantID);
+		return mBoardDAO.getBoardTree_Get1(map);
+	}
+
+	@Override
+	public void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_STRLANG", pStrLang);
+		map.put("v_PQUERY", query);
+		map.put("v_TENANTID", tenantID);
+		
+		mBoardDAO.getBoardTree_Set_D(map);
+		
+	}
+
+	@Override
+	public void getBoardTree_Set(String pStrLang, String query, String result, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_STRLANG", pStrLang);
+		map.put("v_PQUERY", query);
+		map.put("v_RESULT", result);
+		map.put("v_TENANTID", tenantID);
+		mBoardDAO.getBoardTree_Set(map);
+	}
+
+	@Override
+	public List<MBoardTreeVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PACCESSID", pAccessID);
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_TENANTID", tenantID);
+		return mBoardDAO.getBoardTree_Get2(map);
+	}
+
 	public String checkIfLeafBoard(String pBoardID, int tenantID) {
 		try {
 	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID, tenantID);
@@ -1156,12 +1292,13 @@ System.out.println("strFilePath:"+strFilePath);
 	}
 
 	@Override
-	public Integer getNewBoardListCount(String userID, String startDate,int tenantID) throws Exception {
+	public Integer getNewBoardListCount(String userID, String startDate,int tenantID, String pSearchText) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
 		map.put("startDate", startDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText);
 		return mBoardDAO.getNewBoardListCount(map);
 	}
 

@@ -64,6 +64,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,14 +83,19 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -122,6 +128,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
@@ -334,14 +346,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale(ld);
 			
 			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
-			String sendName = egovMessageSource.getMessage("ezEmail.t644", locale);
-			String tempName = egovMessageSource.getMessage("ezEmail.t644", locale);
+			String sendName = egovMessageSource.getMessage("ezEmail.t645", locale);
+			String tempName = egovMessageSource.getMessage("ezEmail.t646", locale);
 		
 	        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
-	        	        
-	        senderReceiverFlag = folderId.equals(sendName) ? true : false;
-	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
-	        
+	        LOGGER.debug("sendName : " + sendName + ", tempName : " + tempName);	        
+//to-do     senderReceiverFlag = folderId.equals(sendName) ? true : false;
+	        senderReceiverFlag = folderId.equals(sendName) || folderId.equals(tempName) ? true : false;
+	        LOGGER.debug("folderId : " + folderId + ", senderReceiverFlag : " + senderReceiverFlag);
 	        if (endDate == null) {
 	        	endDate = "";
 	        }
@@ -383,6 +395,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				LOGGER.debug("search field not null");
 
 				String searchField = "SUBJECT&FROM";
+				
+				if (senderReceiverFlag) {
+					searchField = "SUBJECT&TO";
+				}
+				
 				final String searchValue = search;
 				
 				LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue + ",endDate=" + endDate);
@@ -531,11 +548,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Date receivedDate = message.getReceivedDate();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				
 				String receivedDateStr = sdf.format(receivedDate);
 				
 				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffSet(), false);
 				
+				String receivedDateStr2 = receivedDateStr.substring(0,receivedDateStr.length()-3);
+				
 				messageJson.put("receivedt",receivedDateStr);
+				messageJson.put("receivedt2",receivedDateStr2);
 				
 				// size
 				messageJson.put("size",message.getSize());
@@ -570,9 +591,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			folder.close(false);
 			
+			// set importanceColor
+			String importanceColor = "#ff0000";
+			MailColorVO mailColor = ezEmailService.getMailColor(info.getTenantId());
+			
+			if (mailColor != null && mailColor.getImportanceColor() != null) {
+				importanceColor = mailColor.getImportanceColor();
+			}
+			
 			JSONObject data = new JSONObject();
 			
 			data.put("messageJsonArray", messageJsonArray);
+			data.put("importanceColor", importanceColor);
 			data.put("unreadCount", folder.getUnreadMessageCount());
 			data.put("fullCount", folder.getMessageCount());
 			data.put("optionCount", messages.length);
@@ -698,10 +728,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			if (!messageId.equals("") && !folderId.equals("")){
 				long uid = 0;
+
+				folderPath = URLDecoder.decode(folderId, "UTF-8");
 				
 				LOGGER.debug("cmd : " + cmd +", folderId : " + folderId + ", messageId : " +  messageId);
 				
-				folderPath = URLDecoder.decode(folderId, "UTF-8");
 				uid = Long.parseLong(messageId);
 				
 				LOGGER.debug("tenantID" + tenantID + "userId" + userId);
@@ -733,7 +764,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	    		// retrieve the specified message.
 				Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
 				
-				if (orgMessage != null) {				        	
+				if (orgMessage != null) {
+					LOGGER.debug("orgMessage not null");
 		        	// in case of editing a message in Drafts folder.
 		        	if (folderPath.equals(draftsFolderName) && cmd.equals("EDIT")) {
 		        		
@@ -1288,212 +1320,212 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-		String strXML = "";
-		String strXML2 = "";
-//		String folderDate = "";
-//		String tempFolderName = "";
-		String xmlList = "";
-//		String isBigYN = "N";
-//		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
-//		int cnt = 0;
-//		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
-//			cnt = Integer.parseInt(request.getParameter("cnt"));
-//		}
-		String realPath = commonUtil.getRealPath(request);
-		String[] pFileName = new String[cnt];
-		Long[] fileSize = new Long[cnt];
-		String[] fileLocation = new String[cnt];
-		String[] resultUpload = new String[cnt];
-		String[] sGUID = new String[cnt];
-//		String pBigFileUpload = "";
-		String[] sFileTitle = new String[cnt];
-		String[] sExt = new String[cnt];
-		String pDirTempPath = "";
-//		long bigMaxSize = 0;
-//		long changeSize = 0;
+			String strXML = "";
+			String strXML2 = "";
+	//		String folderDate = "";
+	//		String tempFolderName = "";
+			String xmlList = "";
+	//		String isBigYN = "N";
+	//		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
+	//		int cnt = 0;
+	//		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
+	//			cnt = Integer.parseInt(request.getParameter("cnt"));
+	//		}
+			String realPath = commonUtil.getRealPath(request);
+			String[] pFileName = new String[cnt];
+			Long[] fileSize = new Long[cnt];
+			String[] fileLocation = new String[cnt];
+			String[] resultUpload = new String[cnt];
+			String[] sGUID = new String[cnt];
+	//		String pBigFileUpload = "";
+			String[] sFileTitle = new String[cnt];
+			String[] sExt = new String[cnt];
+			String pDirTempPath = "";
+	//		long bigMaxSize = 0;
+	//		long changeSize = 0;
+	//
+	//		if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
+	//			tempFolderName = request.getParameter("STATUS");
+	//		} else {
+	//			return "NODATA";
+	//		}
+	//		
+	//		if (multiFile == null) {
+	//			return "NODATA";
+	//		}
+	//		
+	//		if (request.getParameter("isbigyn") != null) {
+	//			isBigYN = request.getParameter("isbigyn");
+	//		}
+	//		
+	//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	//		
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+	//		
+			if (useExtension == null) {
+				useExtension = "";
+			}
+			//		
+			if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))){
+				boolean isEmpty = false;
+				String _pFileName = "";
+				for (int i=0; i<cnt; i++) {
+					_pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
+					if (_pFileName.indexOf(commonUtil.separator) > 0) {
+						_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
+					}
+					pFileName[i] = _pFileName;
+					if (pFileName[i].lastIndexOf(".") > -1) {
+						sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
+						sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+					} else {
+						sFileTitle[i] = pFileName[i];
+						sExt[i] = "";
+					}
+					
+					if ( ((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
+						isEmpty = true;
+					}
+				}
+				if (isEmpty) {
+					return "OVERFLOW";
+				}
+			}
 //
-//		if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
-//			tempFolderName = request.getParameter("STATUS");
-//		} else {
-//			return "NODATA";
-//		}
-//		
-//		if (multiFile == null) {
-//			return "NODATA";
-//		}
-//		
-//		if (request.getParameter("isbigyn") != null) {
-//			isBigYN = request.getParameter("isbigyn");
-//		}
-//		
-//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-//		
-		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
-//		
-		if (useExtension == null) {
-			useExtension = "";
-		}
-//		
-		if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))){
-			boolean isEmpty = false;
-			String _pFileName = "";
 			for (int i=0; i<cnt; i++) {
-				_pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
-				if (_pFileName.indexOf(commonUtil.separator) > 0) {
-					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
-				}
-				pFileName[i] = _pFileName;
-				if (pFileName[i].lastIndexOf(".") > -1) {
-					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
-					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-				} else {
-					sFileTitle[i] = pFileName[i];
-					sExt[i] = "";
-				}
+				sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
+			}
+	//
+	//		if (request.getParameter("bigmaxsize") != null) {
+	//			bigMaxSize = Long.parseLong(request.getParameter("bigmaxsize"));
+	//		}
+	//		if (request.getParameter("changesize") != null) {
+	//			changeSize = Long.parseLong(request.getParameter("changesize"));
+	//		}
+	//
+			strXML = "<ROOT><NODES>";
+			String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
+			pDirPath = realPath + pDirPath;
+	//		
+	//		// check the upload mail root folder and create it if it isn't exist.
+			File uploadMailRootFolder = new File(pDirPath);
+			if (!uploadMailRootFolder.exists()) {
+				LOGGER.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
+				uploadMailRootFolder.mkdirs();
+			}
+
+			for (int i=0; i<cnt; i++) {
+				fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
+	            pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
 				
-				if ( ((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
-					isEmpty = true;
-				}
-			}
-			if (isEmpty) {
-				return "OVERFLOW";
-			}
-		}
-//
-		for (int i=0; i<cnt; i++) {
-			sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
-		}
-//
-//		if (request.getParameter("bigmaxsize") != null) {
-//			bigMaxSize = Long.parseLong(request.getParameter("bigmaxsize"));
-//		}
-//		if (request.getParameter("changesize") != null) {
-//			changeSize = Long.parseLong(request.getParameter("changesize"));
-//		}
-//
-		strXML = "<ROOT><NODES>";
-		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId());
-		pDirPath = realPath + pDirPath;
-//		
-//		// check the upload mail root folder and create it if it isn't exist.
-		File uploadMailRootFolder = new File(pDirPath);
-		if (!uploadMailRootFolder.exists()) {
-			LOGGER.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
-			uploadMailRootFolder.mkdirs();
-		}
-
-		for (int i=0; i<cnt; i++) {
-			fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
-            pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
-			
-			File f = new File(pDirTempPath);
-			if (!f.exists()) {
-				f.mkdirs();
-            }
-
-			if (fileSize[i] > maxsize && maxsize != 0) {
-                resultUpload[i] = "overflow";
-            } else {
-                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
-                    resultUpload[i] = "denied";
-                } else {
-                    mobileMailWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i], pDirTempPath);
-                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
-                    resultUpload[i] = "true";
-                }
-                String pBigFileUpload = "N";
-                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
-                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
-                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
-                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-                strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
-                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
-                strXML2 += "</NODE>";
-            }
-            pDirTempPath = "";
-		}
-		strXML += strXML2 + "</NODES></ROOT>";
-
-		String xmlPath = pDirPath + commonUtil.separator + "templist";
-        File f = new File(xmlPath);
-        if (!f.exists()) {
-			f.mkdirs();
-        }
-
-        xmlPath += commonUtil.separator + tempFolderName + ".txt";
-        LOGGER.debug("###" + xmlPath + "###");
-        f = new File(xmlPath);
-        if (f.exists()) {
-        	String tempXmlList = "";
-        	InputStreamReader isr = null;
-        	BufferedReader br = null;
-        	OutputStreamWriter osw = null;
-        	try {
-	        	isr = new InputStreamReader(new FileInputStream(f));
-	        	br = new BufferedReader(isr);
-	        	int read = 0;
-				while ((read = br.read()) != -1) {
-					tempXmlList += (char)read;
-				}
-				Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
-				Document xmldom2 = commonUtil.convertStringToDocument(strXML);
-
-	            NodeList nodeList = xmldom.getElementsByTagName("NODES");
-	            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
-	            for (int i=0; i<nodeList2.getLength(); i++) {
-	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
+				File f = new File(pDirTempPath);
+				if (!f.exists()) {
+					f.mkdirs();
 	            }
-            	osw = new OutputStreamWriter(new FileOutputStream(f));
-            	osw.write(commonUtil.convertDocumentToString(xmldom));
-            	String crlf = System.getProperty("line.separator");
-        		osw.append(crlf+crlf);
-	            
-	            xmlList = strXML;
-	            
-        	} catch(Exception e) {
-        		result.put("status", "error");
-    			result.put("code", 1);			
-    			result.put("data", "");	
-        	} finally {
-        		if (br != null) {
-        			br.close();
-        		}
-        		if (isr != null) {
-        			isr.close();
-        		}
-        		if (osw != null) {
-        			osw.close();
-        		}
-        	}
-        	
-        } else {
-        	OutputStreamWriter osw = null;
-        	try {
-        		osw = new OutputStreamWriter(new FileOutputStream(f));
-        		osw.write(strXML);
-        		String crlf = System.getProperty("line.separator");
-        		osw.append(crlf+crlf);
-        		xmlList = strXML;
-        		
-        	} catch(Exception e) {
-        		e.printStackTrace();
-        	} finally {
-        		if (osw != null) {
-        			osw.close();
-        		}
-        	}
-        }
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", xmlList);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");	
-		}
+	
+				if (fileSize[i] > maxsize && maxsize != 0) {
+	                resultUpload[i] = "overflow";
+	            } else {
+	                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+	                    resultUpload[i] = "denied";
+	                } else {
+	                    mobileMailWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i], pDirTempPath);
+	                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
+	                    resultUpload[i] = "true";
+	                }
+	                String pBigFileUpload = "N";
+	                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+	                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+	                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+	                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
+	                strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
+	                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+	                strXML2 += "</NODE>";
+	            }
+	            pDirTempPath = "";
+			}
+			strXML += strXML2 + "</NODES></ROOT>";
+
+			String xmlPath = pDirPath + commonUtil.separator + "templist";
+	        File f = new File(xmlPath);
+	        if (!f.exists()) {
+				f.mkdirs();
+	        }
+
+	        xmlPath += commonUtil.separator + tempFolderName + ".txt";
+	        LOGGER.debug("###" + xmlPath + "###");
+	        f = new File(xmlPath);
+	        if (f.exists()) {
+	        	String tempXmlList = "";
+	        	InputStreamReader isr = null;
+	        	BufferedReader br = null;
+	        	OutputStreamWriter osw = null;
+	        	try {
+		        	isr = new InputStreamReader(new FileInputStream(f));
+		        	br = new BufferedReader(isr);
+		        	int read = 0;
+					while ((read = br.read()) != -1) {
+						tempXmlList += (char)read;
+					}
+					Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
+					Document xmldom2 = commonUtil.convertStringToDocument(strXML);
+	
+		            NodeList nodeList = xmldom.getElementsByTagName("NODES");
+		            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
+		            for (int i=0; i<nodeList2.getLength(); i++) {
+		            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
+		            }
+	            	osw = new OutputStreamWriter(new FileOutputStream(f));
+	            	osw.write(commonUtil.convertDocumentToString(xmldom));
+	            	String crlf = System.getProperty("line.separator");
+	        		osw.append(crlf+crlf);
+		            
+		            xmlList = strXML;
+		            
+	        	} catch(Exception e) {
+	        		result.put("status", "error");
+	    			result.put("code", 1);			
+	    			result.put("data", "");	
+	        	} finally {
+	        		if (br != null) {
+	        			br.close();
+	        		}
+	        		if (isr != null) {
+	        			isr.close();
+	        		}
+	        		if (osw != null) {
+	        			osw.close();
+	        		}
+	        	}
+	        	
+	        } else {
+	        	OutputStreamWriter osw = null;
+	        	try {
+	        		osw = new OutputStreamWriter(new FileOutputStream(f));
+	        		osw.write(strXML);
+	        		String crlf = System.getProperty("line.separator");
+	        		osw.append(crlf+crlf);
+	        		xmlList = strXML;
+	        		
+	        	} catch(Exception e) {
+	        		e.printStackTrace();
+	        	} finally {
+	        		if (osw != null) {
+	        			osw.close();
+	        		}
+	        	}
+	        }
+				result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", xmlList);
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");	
+			}
 		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] ended.");
-		
+			
 		return result;
 	}
 	
@@ -1991,7 +2023,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		JSONObject result = new JSONObject();
 		
 		try{
-		
+			
 		boolean retryFlag = false;
 		int retryCount = 1; //메일 발송 실패 시 재시도 횟수
 		long draftUID = 0;
@@ -2989,6 +3021,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		long sentFolderMessageUID = 0;
 		boolean mailSendCompleted = false;
 		
+		LOGGER.debug(jsonObject.toJSONString());
+		
 		String importance = "3";
 		
 		String subject = "";
@@ -3005,6 +3039,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String orgFolderId = "";
 		String orgMessageId = "";
 		String cmd = "";
+		String mailcmd = "";
+		String replySendTime = "0";
+		String replyReadTime = "1";
 		
 		if (jsonObject.get("subject") != null) {
 			subject = (String) jsonObject.get("subject");
@@ -3066,27 +3103,39 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			cmd = (String) jsonObject.get("cmd");
 		}
 		
+		if (jsonObject.get("mailcmd") != null) {
+			mailcmd = (String) jsonObject.get("mailcmd");
+		}
+		
+//		if (jsonObject.get("replySendTime") != null) {
+//			replySendTime = (String) jsonObject.get("replySendTime");
+//		}
+		
+		if (jsonObject.get("replyReadTime") != null) {
+			replyReadTime = (String) jsonObject.get("replyReadTime");
+		}
+		
 		String realPath = commonUtil.getRealPath(request);
 
 		LOGGER.debug("subject = " + subject + ", to = " + to + ", cc = " + cc + ", bcc = " + bcc + ", textBody = " 
 		+ textBody + ", from = " + from + ", charset = " + charset + ", htmlbody = " + htmlbody + ", htmlbody = " + htmlbody
-		+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url); 
+		+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url + ", cmd" + cmd + ", replyReadTime" + replyReadTime); 
 				
 		String serverName = request.getHeader("x-user-host");
+	
+		MCommonVO info = mOptionService.commonInfo(serverName, userId);
+		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+		String userEmail = info.getUserId() + "@" + domainName;
+		String password = jspw;
 		
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
-			String userEmail = info.getUserId() + "@" + domainName;
-			String password = jspw;
-			
-			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
-			Locale locale = new Locale(ld);
-			
-			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
+		String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+		Locale locale = new Locale(ld);
 		
-			String pResult = null;
-			IMAPAccess ia = null;
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				userEmail, password);
+	
+		String pResult = null;
+		IMAPAccess ia = null;
 		
 			do {
 				try {
@@ -3129,7 +3178,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					    // 보낸편지함에 저장된 이후 Exception이 발생하여 Retry하는 경우 보낸편지함에 있는 메시지를 삭제한다.
 					    if (sentFolderMessageUID != 0) {
 	                        Folder sentFolder = null;
-	                        
 	                        try {
 	                            sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 	                            sentFolder.open(Folder.READ_WRITE);
@@ -3315,10 +3363,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //		        }
 //		
 //		        // 추적(수신확인)
-//		        LOGGER.debug("replyReadTime=" + replyReadTime);
-//		        if (replyReadTime.equals("1")) {
-//		        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-//		        }
+		        LOGGER.debug("replyReadTime=" + replyReadTime);
+		        if (replyReadTime.equals("1")) {
+		        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+		        }
 		        
 //		        SentDate 설정
 		        message.setSentDate(Calendar.getInstance().getTime());
@@ -3422,9 +3470,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        
 		        LOGGER.debug("url=" + url);
 		        
-		        if (!url.trim().equals("")) {
-		        	uid = Long.parseLong(url);
-		        
+		        if (!url.trim().equals("") || !orgMessageId.trim().equals("")) {
+		        	if (!url.trim().equals("")){
+		        		uid = Long.parseLong(url);
+		        	} else if (!orgMessageId.trim().equals("")){
+		        		uid = Long.parseLong(orgMessageId);
+		        	}
+		        	
 		        	MimeMultipart mixedPart = new MimeMultipart();
 					
 					if (uid != 0) {
@@ -3670,30 +3722,30 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        	throw new Exception("OVERMESSAGESIZE:" + maxMessageSizeD + "MB:" + messageSizeD + "MB");
 		        }
 		        
-//		        if (cmd.equalsIgnoreCase("SAVE")) {
-//		        	LOGGER.debug("Saving the message");
-//		        	
+		        if (cmd.equalsIgnoreCase("SAVE")) {
+		        	LOGGER.debug("Saving the message");
+		        	
 //		    		Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
-//		    		
+		    		
 //		    		if (isEachMailB) {
 //	                	message.setHeader("X-JMocha-Each-Mail", "true");
 //                    }
 //		    		if (delaySendTime != ""){
 //		    			message.setHeader("Delivery-Date", delaySendTime);
 //		    		}
-//		    		message.setFlag(Flags.Flag.SEEN, true);
-//		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
-//		    		if (uids != null && uids[0] != null) {
-//		    			draftUID = uids[0].uid;
-//		    		} 
-//		    	
-//		            // this deletion code block has been moved here because
-//		            // it needs to be kept in Drafts if an error occurs during the above process.
-//		            if (oldMessage != null) {
-//		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
-//		            }
-		            
-//		        } else if (cmd.equalsIgnoreCase("SEND")) {
+		    		message.setFlag(Flags.Flag.SEEN, true);
+		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
+		    		if (uids != null && uids[0] != null) {
+		    			draftUID = uids[0].uid;
+		    		} 
+		    	
+		            // this deletion code block has been moved here because
+		            // it needs to be kept in Drafts if an error occurs during the above process.
+		            if (oldMessage != null) {
+		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
+		            }
+		        
+		        } else if (cmd.equalsIgnoreCase("SEND")) {
 		        	LOGGER.debug("Sending the message");
 		        	
                     Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
@@ -3707,7 +3759,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			                            
                     message.setFlag(Flags.Flag.SEEN, true);
 		            
-                    // 예약 발송의 경우
+                    // 예약 발송의 경우는 지원하지 않기 때문에 false로 고정해 놓았다.
+                    if (false) {
 //			        if (!delaySendTime.equals("")) {
 //			            // 편지함 용량 초과 메세지 확인을 위해 임시저장
 //	                    AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
@@ -3734,7 +3787,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //                            oldMessage.setFlag(Flags.Flag.DELETED, true);
 //                        }		        		
 //		        	// 즉시 발송의 경우	
-//			        } else {         
+			        } else {         
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
@@ -3781,9 +3834,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			            	
 //			                // this deletion code block has been moved here because
 //			                // it needs to be kept in Drafts if an error occurs during the above process.
-//			                if (oldMessage != null) {
-//			                	oldMessage.setFlag(Flags.Flag.DELETED, true);
-//			                }
+			                if (oldMessage != null) {
+			                	oldMessage.setFlag(Flags.Flag.DELETED, true);
+			                }
 //			            } else {
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
@@ -3791,6 +3844,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
     			            	try {
     			            		Transport.send(message);
     			            	} catch (MessagingException e){
+    			            		e.printStackTrace();
     			            		result.put("status", "error");
     			        			result.put("code", 1);			
     			        			result.put("data", "");
@@ -3823,7 +3877,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			            }
 			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
-			            if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
+			            if (mailcmd.equals("REPLY") || mailcmd.equals("REPLYALL") || mailcmd.equals("FORWARD")) {
 //			    			int index = orgUrl.lastIndexOf("/");			
 			    			
 //			    			if (index != -1) {
@@ -3837,7 +3891,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			    				
 			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
 		    		        	
-			    		        if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {
+			    		        if (mailcmd.equals("REPLY") || mailcmd.equals("REPLYALL")) {
 			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 			    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
 			    		        }
@@ -3850,7 +3904,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			    			}
 			            }
 			            
-//			        }
+			        }
 			        
 			        //file system의 templist txt파일 삭제
 			        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
@@ -3860,7 +3914,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        	f.delete();
 			        }
 			        
-//		        }
+		        }
 		        
 		        // file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제
 		        // 발송의 경우에만 삭제하고 저장의 경우에는 쓰기 창이 계속 표시되어 있는 상태이므로 삭제하지 않고 유지한다.
@@ -3941,6 +3995,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						pResult = e.getMessage();
 					}
 				}
+				
+				return result;
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -4077,6 +4133,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String ccHiddenStr = null;
 		String ccMobileStr = "";
 		String bccStr = "";
+		String bccMobileStr = "";
 		String subject = null;
 		String dateStr = null;
 		String title = null;
@@ -4100,7 +4157,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				
 				if (message == null) {
+					//to-do 메일이 없습니다. 와 같은 문구를  보내주고 싶은데 아마 메일이 있는지 체크하는 메소드를 다시 만들어야 할 거 같다.
 					LOGGER.error("Message not found. uid=" + uid);
+					result.put("status", "ok");
+					result.put("code", 0);			
+					result.put("data", "");
+					
+					return result;
 				} else {
 					FetchProfile fp = new FetchProfile();
 					
@@ -4292,6 +4355,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								bccStr += ", ";
 							}
 							bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+							
+							if ( i == arrRecipientsBCC.length - 1 ) {
+								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+							} else {
+								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress()) + "&nbsp;,&nbsp;";
+							}
 						}
 					}
 					
@@ -4382,6 +4451,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("ccHiddenStr", ccHiddenStr);
 			mail.put("ccMobileStr", ccMobileStr);
 			mail.put("bccStr", bccStr);
+			mail.put("bccMobileStr", bccMobileStr);
 			mail.put("dateStr", dateStr);
 			mail.put("subject", subject);
 			mail.put("title", title);
@@ -4815,8 +4885,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public Object mMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
-		
-				
+			
 		JSONObject result = new JSONObject();
 		
 		IMAPAccess ia = null;
@@ -4889,6 +4958,199 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
+	 
+	@RequestMapping(value="/mobile/ezemail/write/checkname/users/{userId}", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public Object mailNameCheck(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
+		
+		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
+		
+		String organXML = "";
+        String dlXML = "";
+        String addressXML = "";
+		
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+        
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+		
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			String pOrganSearchList = "";
+			String pOrganCellList = "displayname";
+			String pOrganPropList = "company;description;title;mail;extensionAttribute3";
+			String pOrganListType = "all";
+			String pDLSearchList = "";
+			String pDLCellList = "displayname";
+			String pDLPropList = "mail";
+			String pDLListType = "group";
+			String pAddressFilter = "";
+	
+			if (jsonObject.get("pOrganSearchList") != null) {
+				pOrganSearchList = (String) jsonObject.get("pOrganSearchList");
+			}
+			
+			if (jsonObject.get("pOrganCellList") != null) {
+				pOrganCellList = (String) jsonObject.get("pOrganCellList");
+			}
+			
+			if (jsonObject.get("pOrganPropList") != null) {
+				pOrganPropList = (String) jsonObject.get("pOrganPropList");
+			}
+			
+			if (jsonObject.get("pOrganListType") != null) {
+				pOrganListType = (String) jsonObject.get("pOrganListType");
+			}
+			
+			if (jsonObject.get("pDLSearchList") != null) {
+				pDLSearchList = (String) jsonObject.get("pDLSearchList");
+			}
+			
+			if (jsonObject.get("pDLCellList") != null) {
+				pDLCellList = (String) jsonObject.get("pDLCellList");
+			}
+			
+			if (jsonObject.get("pDLPropList") != null) {
+				pDLPropList = (String) jsonObject.get("pDLPropList");
+			}
+			
+			if (jsonObject.get("pDLPropList") != null) {
+				pDLPropList = (String) jsonObject.get("pDLPropList");
+			}
+			
+			if (jsonObject.get("pDLListType") != null) {
+				pDLListType = (String) jsonObject.get("pDLListType");
+			}
+			
+			if (jsonObject.get("pAddressFilter") != null) {
+				pAddressFilter = (String) jsonObject.get("pAddressFilter");
+			}
+			
+			LOGGER.debug("pOrganSearchList : " + pOrganSearchList + ", pOrganCellList : " + pOrganCellList 
+					+ ", pOrganPropList : " + pOrganPropList +", pOrganListType : " + pOrganListType);
+			
+	        organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info);
+	        dlXML = getOrganDLSearch(pDLSearchList, info);
+	        addressXML = getAddressSearch(pAddressFilter, info);
+	        
+	        data.put("organXML", organXML);
+	        data.put("dlXML", dlXML);
+	        data.put("addressXML",addressXML);
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+			
+		}
+        LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");
+        
+        return result;
+	}
+	
+	/**
+	 * 사원 Organ 정보 호출 함수
+	 */
+	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, MCommonVO userInfo) {
+		String pResult = "";
+        try {
+            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId());
+        } catch (Exception e) {
+        	e.printStackTrace();
+            pResult = "EXCEPTION";
+        }
+        return pResult;
+    }
+	
+	/**
+	 * 공용배포그룹 정보 호출 함수
+	 */
+	private String getOrganDLSearch(String pSearchList, MCommonVO userInfo) {
+        String returnData = "";
+        
+        try {
+        	String searchValue = pSearchList.split("::")[1];
+        	
+			List<MailDistributionVO> distributionList = ezEmailService.getDistributionSearchList(userInfo.getCompanyId(), userInfo.getTenantId(), searchValue);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailDistributionVO vo : distributionList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>group</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getId()));
+				sb.append("</DATA2>");
+				
+				sb.append("<DATA3>");
+				sb.append(commonUtil.cleanValue(vo.getMail()));
+				sb.append("</DATA3>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "EXCEPTION";
+			e.printStackTrace();
+		}
+        
+        return returnData;
+    }
+	
+	/**
+	 * 주소록 정보 호출 함수
+	 */
+	private String getAddressSearch(String pFilter, MCommonVO userInfo) {
+        String returnValue = "";
+        try {
+            String[] ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};
+            pFilter = "S_NAME," + pFilter;
+            
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
+            
+            StringBuilder sb = new StringBuilder();
+            
+            for (AddressVO addressInfo : addressInfoList) {
+            	sb.append("<ROW>");
+            	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
+            	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
+            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
+            	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
+            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
+            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
+            	sb.append("</ROW>");
+            }
+            
+            returnValue = sb.toString();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	returnValue = "EXCEPTION";
+        }
+        return returnValue;
+    }
 	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";

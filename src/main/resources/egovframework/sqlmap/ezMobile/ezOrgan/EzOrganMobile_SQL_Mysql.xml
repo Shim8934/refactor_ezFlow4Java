@@ -88,11 +88,7 @@
 	  				END DEPTNAME,
 				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
 				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
-				    CASE
-				    	WHEN (USEFLAG = '' OR USEFLAG IS NULL) 
-		   				THEN '1'
-		   				ELSE '0'
-		   			END DEPTTYPE,
+				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
 				FROM
 					TBL_DEPTMASTER A
@@ -113,11 +109,7 @@
 	  				END DEPTNAME,
 				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
 				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
-				    CASE
-				    	WHEN (USEFLAG = '' OR USEFLAG IS NULL) 
-		   				THEN '1'
-		   				ELSE '0'
-		   			END DEPTTYPE,
+				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
 				FROM
 					TBL_DEPTMASTER A
@@ -150,11 +142,7 @@
   				END DEPTNAME,
 			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
 			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
-			    CASE
-			    	WHEN (USEFLAG = '' OR USEFLAG IS NULL) 
-	   				THEN '1'
-	   				ELSE '0'
-	   			END DEPTTYPE,
+			    DEPTLEVEL as DEPTTYPE,
 	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
 			FROM
 				TBL_DEPTMASTER A
@@ -169,94 +157,514 @@
     </select>
     
     <select id="MOrganDAO.getDeptMemberList" parameterClass="Map" resultClass="MOrganListVO">
-    	<isEqual property="type" compareValue="mail">
+    	<isEqual property="searchFlag" compareValue="1">
+	    	<isEqual property="type" compareValue="multi">
+		    	<![CDATA[
+		    		(SELECT
+		    			CN as userID,
+					    CN as deptID,
+		  				CASE
+							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+		  					THEN DISPLAYNAME
+		  					ELSE DISPLAYNAME$lang$
+		  				END userName,
+					    CASE
+							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+		  					THEN DISPLAYNAME
+		  					ELSE DISPLAYNAME$lang$
+		  				END deptName,
+		  				'' as TITLE,
+		  				MAIL,
+					    null as EXTENSIONATTRIBUTE15,
+					    'deptImage.hyj' as imageName,
+					    TENANT_ID
+					FROM
+						TBL_DEPTMASTER
+					WHERE
+						DISPLAYNAME$lang$ LIKE CONCAT('%', #deptID#, '%')
+					AND
+						TENANT_ID = #tenantID#)
+					
+					UNION ALL
+				]]>
+	    	</isEqual>
 	    	<![CDATA[
-	    		(SELECT
-	    			CN as userID,
-				    CN as deptID,
-	  				CASE
-						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-	  					THEN DISPLAYNAME
-	  					ELSE DISPLAYNAME$lang$
-	  				END userName,
+	    		(SELECT 
+					CN as userID,
+				    DEPARTMENT as deptID,
 				    CASE
 						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
-	  				END deptName,
-	  				'' as TITLE,
+	  				END userName,
+	  				DESCRIPTION as deptName,
+	  				TITLE,
 	  				MAIL,
-				    '' as EXTENSIONATTRIBUTE15
+				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				    EXTENSIONATTRIBUTE2 as imageName,
+				    TENANT_ID
 				FROM
-					TBL_DEPTMASTER
+					TBL_USERMASTER
 				WHERE
-					CN = #deptID#
+					(DISPLAYNAME$lang$ LIKE CONCAT('%', #deptID#, '%')
+				OR
+					DESCRIPTION$lang$ LIKE CONCAT('%', #deptID#, '%'))
+				AND
+					CN <> 'masteradmin'
+				AND
+					CN NOT IN (SELECT 
+									CN
+								FROM
+									TBL_USERMASTER_RETIRE
+								WHERE
+									TENANT_ID = #tenantID#)
 				AND
 					TENANT_ID = #tenantID#)
-				
+				    
 				UNION ALL
+				
+				(SELECT
+					B.CN as userID,
+				    DEPARTMENT as deptID,
+				    CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END userName,
+	  				DESCRIPTION as deptName,
+	  				A.TITLE,
+	  				MAIL,
+				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				    B.EXTENSIONATTRIBUTE2 as imageName,
+				    B.TENANT_ID
+				FROM
+					TBL_ADDJOBMASTER A
+				JOIN
+					TBL_USERMASTER B
+				ON
+					A.CN = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					(B.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptID#, '%')
+				OR
+					B.DESCRIPTION$lang$ LIKE CONCAT('%', #deptID#, '%'))
+				AND
+					A.TENANT_ID = #tenantID#)
+					
+				ORDER BY 
+					EXTENSIONATTRIBUTE15,
+				    userName
 			]]>
     	</isEqual>
+    	<isNotEqual property="searchFlag" compareValue="1">
+	    	<isEqual property="type" compareValue="multi">
+		    	<![CDATA[
+		    		(SELECT
+		    			CN as userID,
+					    CN as deptID,
+		  				CASE
+							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+		  					THEN DISPLAYNAME
+		  					ELSE DISPLAYNAME$lang$
+		  				END userName,
+					    CASE
+							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+		  					THEN DISPLAYNAME
+		  					ELSE DISPLAYNAME$lang$
+		  				END deptName,
+		  				'' as TITLE,
+		  				MAIL,
+					    null as EXTENSIONATTRIBUTE15,
+					    'deptImage.hyj' as imageName,
+					    TENANT_ID
+					FROM
+						TBL_DEPTMASTER
+					WHERE
+						CN = #deptID#
+					AND
+						TENANT_ID = #tenantID#)
+					
+					UNION ALL
+				]]>
+	    	</isEqual>
+	    	<![CDATA[
+	    		(SELECT 
+					CN as userID,
+				    DEPARTMENT as deptID,
+				    CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END userName,
+	  				DESCRIPTION as deptName,
+	  				TITLE,
+	  				MAIL,
+				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				    EXTENSIONATTRIBUTE2 as imageName,
+				    TENANT_ID
+				FROM
+					TBL_USERMASTER
+				WHERE
+					DEPARTMENT = #deptID#
+				AND
+					CN <> 'masteradmin'
+				AND
+					CN NOT IN (SELECT 
+									CN
+								FROM
+									TBL_USERMASTER_RETIRE
+								WHERE
+									TENANT_ID = #tenantID#)
+				AND
+					TENANT_ID = #tenantID#)
+				    
+				UNION ALL
+				
+				(SELECT
+					B.CN as userID,
+				    DEPARTMENT as deptID,
+				    CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END userName,
+	  				DESCRIPTION as deptName,
+	  				B.TITLE,
+	  				MAIL,
+				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				    B.EXTENSIONATTRIBUTE2 as imageName,
+				    B.TENANT_ID
+				FROM
+					TBL_ADDJOBMASTER A
+				JOIN
+					TBL_USERMASTER B
+				ON
+					A.CN = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.DEPTID = #deptID#
+				AND
+					A.TENANT_ID = #tenantID#)
+					
+				ORDER BY 
+					EXTENSIONATTRIBUTE15,
+				    userName
+			]]>
+    	</isNotEqual>
+    </select>
+    
+    <select id="MOrganDAO.getOrganList" parameterClass="Map" resultClass="MOrganListVO">
+    	<isEqual property="organType" compareValue="top">
+	    	<![CDATA[
+	    		(SELECT 
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    0 AS EXPAND,
+				    DEPTLEVEL as DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					CN = 'Top')
+					
+				UNION ALL
+				
+	    		(SELECT 
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    0 AS EXPAND,
+				    DEPTLEVEL as DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					EXTENSIONATTRIBUTE1 = 'Top')
+				ORDER BY 
+					FIELD(DEPTID, 'Top') desc, 
+					EXTENSIONATTRIBUTE15, 
+					DEPTNAME
+			]]>
+    	</isEqual>
+    	<isNotEqual property="organType" compareValue="top">
+	    	<![CDATA[
+	    		(SELECT 
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    0 AS EXPAND,
+				    DEPTLEVEL as DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					CN = #companyID#)
+					
+				UNION ALL
+				
+	    		(SELECT 
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    0 AS EXPAND,
+				    DEPTLEVEL as DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					EXTENSIONATTRIBUTE1 = #companyID#)
+				ORDER BY 
+					FIELD(DEPTID, #companyID#) desc, 
+					EXTENSIONATTRIBUTE15, 
+					DEPTNAME
+			]]>
+    	</isNotEqual>
+    </select>
+    
+    <select id="MOrganDAO.getLowDeptInfo" parameterClass="Map" resultClass="MOrganListVO">
     	<![CDATA[
-    		(SELECT 
-				CN as userID,
-			    DEPARTMENT as deptID,
-			    CASE
+    		(SELECT
+				CN as DEPTID,
+				CASE
 					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
   					THEN DISPLAYNAME
   					ELSE DISPLAYNAME$lang$
-  				END userName,
-  				DESCRIPTION as deptName,
-  				TITLE,
-  				MAIL,
-			    EXTENSIONATTRIBUTE15
+  				END DEPTNAME,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
+	   			DEPTLEVEL as DEPTTYPE,
+	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+	   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
 			FROM
-				TBL_USERMASTER
+				TBL_DEPTMASTER A
 			WHERE
-				DEPARTMENT = #deptID#
+				TENANT_ID = #tenantID#
 			AND
-				CN <> 'masteradmin'
-			AND
-				CN NOT IN (SELECT 
-								CN
-							FROM
-								TBL_USERMASTER_RETIRE
-							WHERE
-								TENANT_ID = #tenantID#)
-			AND
-				TENANT_ID = #tenantID#)
-			    
+				CN = #deptID#)
+				
 			UNION ALL
 			
-			(SELECT
-				B.CN as userID,
-			    DEPARTMENT as deptID,
-			    CASE
+    		(SELECT
+				CN as DEPTID,
+				CASE
 					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
   					THEN DISPLAYNAME
   					ELSE DISPLAYNAME$lang$
-  				END userName,
-  				DESCRIPTION as deptName,
-  				TITLE,
-  				MAIL,
-			    EXTENSIONATTRIBUTE15
+  				END DEPTNAME,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
+			    DEPTLEVEL as DEPTTYPE,
+	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+	   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
 			FROM
-				TBL_ADDJOBMASTER A
-			JOIN
-				TBL_USERMASTER B
-			ON
-				A.CN = B.CN
-			AND
-				A.TENANT_ID = B.TENANT_ID
+				TBL_DEPTMASTER A
 			WHERE
-				A.DEPTID = #deptID#
+				TENANT_ID = #tenantID#
 			AND
-				A.TENANT_ID = #tenantID#)
-				
+				EXTENSIONATTRIBUTE1 = #deptID#)
 			ORDER BY 
-				EXTENSIONATTRIBUTE15,
-			    userName
+				FIELD(DEPTID, #deptID#) desc, 
+				EXTENSIONATTRIBUTE15, 
+				DEPTNAME
 		]]>
+    </select>
+    
+    <select id="MOrganDAO.getHighDeptInfo" parameterClass="Map" resultClass="MOrganListVO">
+    	<isEqual property="organType" compareValue="top">
+	    	<isEqual property="deptType" compareValue="1">
+	    		<![CDATA[
+	    			SELECT
+						CN as DEPTID,
+						CASE
+							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+		  					THEN DISPLAYNAME
+		  					ELSE DISPLAYNAME$lang$
+		  				END DEPTNAME,
+					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+					    0 AS EXPAND,
+					    DEPTLEVEL as DEPTTYPE,
+			   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
+					FROM
+						TBL_DEPTMASTER A
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						EXTENSIONATTRIBUTE1 = 'Top'
+					ORDER BY
+		        		A.EXTENSIONATTRIBUTE15,
+		        		DEPTNAME
+				]]>
+	    	</isEqual>
+	    	<isNotEqual property="deptType" compareValue="1">
+		    	<![CDATA[
+		    		(SELECT
+						CN as DEPTID,
+						CASE
+							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+		  					THEN DISPLAYNAME
+		  					ELSE DISPLAYNAME$lang$
+		  				END DEPTNAME,
+					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+					    1 AS EXPAND,
+					    DEPTLEVEL as DEPTTYPE,
+			   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+			   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+					FROM
+						TBL_DEPTMASTER A
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						CN IN ( SELECT
+									EXTENSIONATTRIBUTE1
+								FROM
+									TBL_DEPTMASTER
+								WHERE
+									TENANT_ID = #tenantID#
+								AND
+									CN = #deptID#))
+						
+					UNION ALL
+					
+		    		(SELECT
+						CN as DEPTID,
+						CASE
+							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+		  					THEN DISPLAYNAME
+		  					ELSE DISPLAYNAME$lang$
+		  				END DEPTNAME,
+					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+					    0 AS EXPAND,
+					    DEPTLEVEL as DEPTTYPE,
+			   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+			   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+					FROM
+						TBL_DEPTMASTER A
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						EXTENSIONATTRIBUTE1 IN ( SELECT
+													EXTENSIONATTRIBUTE1
+												FROM
+													TBL_DEPTMASTER
+												WHERE
+													TENANT_ID = #tenantID#
+												AND
+													CN = #deptID#))
+					ORDER BY 
+						FIELD(DEPTID, ( SELECT
+											EXTENSIONATTRIBUTE1
+										FROM
+											TBL_DEPTMASTER
+										WHERE
+											TENANT_ID = #tenantID#
+										AND
+											CN = #deptID#)) desc, 
+						EXTENSIONATTRIBUTE15, 
+						DEPTNAME
+				]]>
+	    	</isNotEqual>
+    	</isEqual>
+    	<isNotEqual property="organType" compareValue="top">
+	    	<![CDATA[
+	    		(SELECT
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    1 AS EXPAND,
+				    DEPTLEVEL as DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					CN IN ( SELECT
+								EXTENSIONATTRIBUTE1
+							FROM
+								TBL_DEPTMASTER
+							WHERE
+								TENANT_ID = #tenantID#
+							AND
+								CN = #deptID#)
+				AND
+					CN != #companyID#)
+					
+				UNION ALL
+				
+	    		(SELECT
+					CN as DEPTID,
+					CASE
+						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+	  					THEN DISPLAYNAME
+	  					ELSE DISPLAYNAME$lang$
+	  				END DEPTNAME,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    0 AS EXPAND,
+				    DEPTLEVEL as DEPTTYPE,
+		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
+		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+				FROM
+					TBL_DEPTMASTER A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					EXTENSIONATTRIBUTE1 IN ( SELECT
+												EXTENSIONATTRIBUTE1
+											FROM
+												TBL_DEPTMASTER
+											WHERE
+												TENANT_ID = #tenantID#
+											AND
+												CN = #deptID#))
+				ORDER BY 
+					FIELD(DEPTID, ( SELECT
+										EXTENSIONATTRIBUTE1
+									FROM
+										TBL_DEPTMASTER
+									WHERE
+										TENANT_ID = #tenantID#
+									AND
+										CN = #deptID#)) desc, 
+					EXTENSIONATTRIBUTE15, 
+					DEPTNAME
+			]]>
+    	</isNotEqual>
     </select>
 </sqlMap>
 

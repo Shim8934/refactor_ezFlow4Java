@@ -586,16 +586,44 @@
                        A.BRD_GB,
                        A.BRD_URL,
                        A.BRD_EXPLAIN
+      			FROM
+                	TBL_RS_BRD A
+      			WHERE
+					A.BRD_UPPER = #v_PBRDID#
+				AND
+					A.BRD_COMPANY = #v_PBRDCOMPANY#
+      			AND
+                	A.BRD_GB = '1'
+				AND
+                	A.TENANT_ID = #tenantID#		
+				
+			UNION
+			
+			SELECT
+					   A.BRD_ID,
+                       A.BRD_NM,
+                       A.BRD_NM2,
+                       A.BRD_LEVEL,
+                       A.BRD_STEP,
+                       A.BRD_POSTTERM,
+                       A.BRD_UPPER,
+                       A.BRD_GB,
+                       A.BRD_URL,
+                       A.BRD_EXPLAIN
 			FROM
-				TBL_RS_BRD A
+				TBL_RS_BRD A  	
 			WHERE
 				A.BRD_UPPER = #v_PBRDID#
 			AND
 				A.BRD_COMPANY = #v_PBRDCOMPANY#
+			AND 
+				A.BRD_GB = '2'	
+      		AND
+            	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID )
 			AND
-				A.TENANT_ID = #tenantID#		
-           	ORDER BY
-				BRD_GB, BRD_STEP 
+                A.TENANT_ID = #tenantID#
+      	   ORDER BY
+           BRD_GB, BRD_STEP		
 		]]>
 	</select>
   

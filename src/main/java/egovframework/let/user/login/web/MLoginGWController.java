@@ -229,7 +229,14 @@ public class MLoginGWController {
     				map.put("tenantId", tenantId+"");
     				map.put("mainType", maintype);
     				map.put("listCnt", listCnt);    				
-    				map.put("useSecurity", useSecurity);    				
+    				map.put("useSecurity", useSecurity);    		
+    				map.put("companyID", resultVO.getCompanyID());
+    				
+    				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
+    					map.put("userName", resultVO.getDisplayName1());
+    				} else {
+    					map.put("userName", resultVO.getDisplayName2());
+    				}
 				    				    				
     				result.put("status", "ok");
     				result.put("code", "0");

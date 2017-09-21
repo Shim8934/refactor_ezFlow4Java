@@ -123,11 +123,12 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, MCommonVO userInfo) throws Exception {
+	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, String type, MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getAprLineInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
+		map.put("type", type);
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
 		map.put("tenantID", userInfo.getTenantId());
@@ -248,7 +249,17 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			}
 		} else if (pType.equals("UPDATE")) {
 			if (resultRow > 0) {
-				mApprovalGDAO.insertOpinionInfo(map);
+				if (pContent != null && !pContent.equals("")) {
+					map.put("hasOpinionYN", "Y");
+					
+					mApprovalGDAO.insertOpinionInfo(map);
+					
+					result = mApprovalGDAO.updateDocOpinionInfo(map);
+				} else {
+					map.put("hasOpinionYN", "N");
+					
+					result = mApprovalGDAO.updateDocOpinionInfo(map);
+				}
 			}
 		} else if (pType.equals("DELETE")) {
 			if (resultRow > 0) {
@@ -418,5 +429,21 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		return approvalGLeftVO;
 	}
+
+	@Override
+	public int delAbsenteeInfo(String userId, int tenantId) throws Exception {
+		LOGGER.debug("delAbsenteeInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantID", tenantId);
+		
+		int result = mApprovalGDAO.delAbsenteeInfo(map);
+
+		LOGGER.debug("delAbsenteeInfo ended");
+		
+		return result;
+	}
+
 	
 }

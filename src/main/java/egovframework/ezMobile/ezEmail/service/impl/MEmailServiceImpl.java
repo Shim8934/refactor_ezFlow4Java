@@ -176,40 +176,9 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				messageJson.put("attach",attached);
 				
 				String addressStr = "";
-				Address[] addresses = null;
-
-				// in case of Sent mailbox
-
-					addresses = message.getRecipients(Message.RecipientType.TO);
-					if (addresses != null) {
-						String toHeader = message.getHeader("To")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
-						
-						StringBuilder addressBuilder = new StringBuilder();
-						for (Address address : addresses) {
-							addressStr = ((InternetAddress)address).getPersonal(); // name part
-							if (addressStr == null) {
-								addressStr = ((InternetAddress)address).getAddress(); // email address part
-							}
-							else {
-								if (!isAscii) {
-									byte[] rawBytes = addressStr.getBytes("iso-8859-1");
-									
-									addressStr = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {
-									// decoding is needed for the name part
-									addressStr = MimeUtility.decodeText(addressStr);
-								}
-							}						
-							addressBuilder.append(addressStr);
-							addressBuilder.append("; ");
-						}
-						addressStr = addressBuilder.toString();
-						addressStr = addressStr.substring(0, addressStr.length() - 2);
-					}								
-				
-					messageJson.put("sender",addressStr);
+							
+				addressStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+				messageJson.put("sender",addressStr);
 							
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								

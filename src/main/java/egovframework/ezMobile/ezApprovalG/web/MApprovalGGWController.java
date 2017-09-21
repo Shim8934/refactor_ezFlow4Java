@@ -253,15 +253,17 @@ public class MApprovalGGWController {
 		
 		try {
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("type : " + type);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			//결재선
-			List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGService.getAprLineInfo(docId, userInfo);
+			List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGService.getAprLineInfo(docId, type, userInfo);
 			String photoPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId());
 			
 			result.put("status", "ok");
@@ -573,6 +575,45 @@ public class MApprovalGGWController {
 		}
 		
 		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 전자결재 [DELETE] 부재자설정 삭제
+	 */
+	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject mApprovalDelAbsenteeInfo(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			int resultCode = mApprovalGService.delAbsenteeInfo(userId, userInfo.getTenantId());
+			
+			//resultCode 가 0이면 업데이트를 했는데 업데이트가 안된 경우 잘못된 경우지만 흐름은 정상적으로 흘러가기에 코드로 구분 프론트단에서 업데이트가 안됐다고 알려줘야하는데 안될리가 없을듯 하지만 한치앞을 내다볼수없는 세상이라 만들어놓음
+			if (resultCode == 0) {
+				result.put("status", "ok");
+				result.put("code", "2");
+				result.put("data", "");
+			} else {
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", "");
+			}
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] ended.");
 		
 		return result;
 	}

@@ -19,6 +19,12 @@ public class MOrganListVO {
 	private String userID;
 	/** 유저 직급*/
 	private String title;
+	/** 테넌트아이디*/
+	private int tenant_ID;
+	/** 유저사진경로*/
+	private String imageName;
+	/** 유저 메일*/
+	private String mail;
 	
 	public String getIsLast() {
 		return isLast;
@@ -73,5 +79,23 @@ public class MOrganListVO {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public int getTenant_ID() {
+		return tenant_ID;
+	}
+	public void setTenant_ID(int tenant_ID) {
+		this.tenant_ID = tenant_ID;
+	}
+	public String getImageName() {
+		return "/fileroot/" + tenant_ID + "/files/upload_personal/photo/" + imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 }

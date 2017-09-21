@@ -29,7 +29,7 @@ public interface MResourceService {
 	
 	public MResourceScheduleVO getResScheduleDetail(String resourceId, String scheduleId, String companyId, int tenantId);
 	
-	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany, int tenantId);
+	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany,  String userId, String userCompany, String userDept , int tenantId);
 	
 	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId);
 	

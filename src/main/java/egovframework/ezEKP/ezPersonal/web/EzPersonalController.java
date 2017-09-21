@@ -321,7 +321,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			startDate = cDate + " " + cTime + ":00:00";
 			
 			cDate = cDate.substring(0, 10);
-			endDate = cDate + " " + cTime + ":30:00";
+			endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
 		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {

@@ -191,7 +191,7 @@
 		<isEqual property="gubun" compareValue="1">
             <![CDATA[
                 AND
-                    startdate < #nowDate#
+                    startdate <= #nowDate#
                 AND
                     enddate > #nowDate#
             ]]>
@@ -200,7 +200,7 @@
 		<isEqual property="gubun" compareValue="2">
 			 <![CDATA[
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate > #nowDate#
 				AND
@@ -211,7 +211,7 @@
 		<isEqual property="gubun" compareProperty="3">
 			<![CDATA[
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate < #nowDate#
 			]]>
@@ -324,7 +324,7 @@
             
             <![CDATA[
                 AND
-                    startdate < #nowDate#
+                    startdate <= #nowDate#
                 AND
                     enddate > #nowDate#
             ]]>        
@@ -399,7 +399,7 @@
 				AND
 					BOARDID = #boardID#
 				AND
-					STARTDATE < #nowDate#
+					STARTDATE <= #nowDate#
 				AND
 					ENDDATE > #nowDate#
 				AND
@@ -465,7 +465,7 @@
 				AND
 					boardid = #boardID#
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate > #nowDate#
 			]]>
@@ -517,7 +517,7 @@
 				AND
 					boardid = #boardID#
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate > #nowDate#
 				AND
@@ -543,7 +543,7 @@
 				AND
 					boardid = #boardDd#
 				AND
-					startdate < #nowDate#
+					startdate <= #nowDate#
 				AND
 					enddate < #nowDate#
 			]]>
@@ -588,8 +588,8 @@
               A.WRITERNAME,         
               A.WRITERDEPTNAME,     
               A.WRITERCOMPANYNAME,  
-              A.WRITEDATE,          
-              A.STARTDATE,          
+              DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+			  DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,   
               A.PARENTWRITEDATE,    
               A.IMPORTANCE,         
               A.TITLE,            
@@ -650,7 +650,7 @@
             <isNotEmpty property="lastDate">
                 <![CDATA[
                     AND 
-                        A.STARTDATE < #lastDate#
+                        A.writedate < #lastDate#
                     AND 
                         A.ENDDATE > #nowDate#
                 ]]>
@@ -658,11 +658,20 @@
             <isEmpty property="lastDate">
                 <![CDATA[
                     AND 
-                        A.STARTDATE <= #nowDate#
+                        A.writedate < #nowDate#
                     AND 
                         A.ENDDATE > #nowDate#
                 ]]>
             </isEmpty>
+            
+            <isNotEmpty property="pSearchText">
+                <![CDATA[
+                    AND
+                        (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+                            OR
+                        A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                ]]>
+            </isNotEmpty>
             
             <![CDATA[
                        
@@ -1177,6 +1186,17 @@
                                   itemid = A.itemid
                                AND 
                                   ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY) ) )
+            ]]>
+            <isNotEmpty property="pSearchText">
+                <![CDATA[
+                    AND
+                        (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+                            OR
+                        A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                ]]>
+            </isNotEmpty>
+            
+            <![CDATA[                                  
             AND 
               A.StartDate < #nowDate#
             AND 
@@ -1186,7 +1206,7 @@
             AND 
               ( A.APPRFLAG = 'Y'
                   OR A.APPRFLAG IS NULL )
-    ]]>
+            ]]>
   </select>
   
     <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
@@ -1329,5 +1349,118 @@
             )
         ]]>
     </insert>
+    
+    <select id="MBoardDAO.getApprFlag" parameterClass="Map" resultClass="String">
+        <![CDATA[
+            SELECT
+                APPRFLAG
+            FROM 
+                TBL_Board_BoardInfo
+            WHERE 
+                TENANT_ID = #tenantID#
+            AND
+                boardid = #boardID#
+        ]]>
+    </select>
+    
+    <delete id="MBoardDAO.newItem" parameterClass="Map">
+        <![CDATA[
+            DELETE FROM
+                TBL_BOARD_ITEM_ATTACHMENTS
+            WHERE  
+                tenant_id = #tenantID#
+            AND
+                itemid = #itemID#
+        ]]>
+    </delete>
+    
+    <update id="MBoardDAO.setApprFlag" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                APPRFLAG = 'N'
+            WHERE
+                TENANT_ID = #tenantID#
+            AND  
+                apprFlag = 'C'
+            AND
+                ItemID = #itemID#
+        ]]>
+    </update>
+    
+    <update id="MBoardDAO.setInitReadCount" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                ReadCount = 0
+            WHERE
+                TENANT_ID = #tenantID#
+            AND
+                ItemID = #itemID#
+        ]]>
+    </update>
+    
+    <select id="MBoardDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
+         SELECT 
+            <isEqual property="v_STRLANG" compareValue="2"> result2 </isEqual> 
+            <isEqual property="v_STRLANG" compareValue=""> result </isEqual>
+         FROM 
+            TBL_Board_TreeCache 
+         WHERE 
+            TENANT_ID = #v_TENANTID#
+         AND 
+            QUERY = #v_PQUERY#
+    </select>
+    
+    <insert id="MBoardDAO.getBoardTree_Set" parameterClass="Map">
+        <isEqual property="v_STRLANG" compareValue="2">
+            <![CDATA[
+                INSERT INTO TBL_Board_TreeCache ( 
+                    QUERY,      RESULT2 ,   TENANT_ID 
+                )
+                VALUES ( 
+                    #v_PQUERY#, #v_RESULT#, #v_TENANTID#
+                )
+            ]]>
+        </isEqual>
+        <isNotEqual property="v_STRLANG" compareValue="2">
+            <![CDATA[
+                INSERT INTO TBL_Board_TreeCache ( 
+                    QUERY,      RESULT,     TENANT_ID 
+                )
+                VALUES (
+                    #v_PQUERY#, #v_RESULT#, #v_TENANTID# 
+                )
+            ]]>
+        </isNotEqual>
+    </insert>
+    
+    <delete id="MBoardDAO.getBoardTree_Set_D" parameterClass="Map" >
+        <![CDATA[
+            DELETE FROM
+                TBL_Board_TreeCache
+            WHERE
+                TENANT_ID = #v_TENANTID#
+            AND  
+                QUERY = #v_PQUERY#
+        ]]>
+    </delete>
+    
+    <select id="MBoardDAO.getBoardTree_Get2" parameterClass="Map" resultClass="String" remapResults="true">
+        <![CDATA[
+            SELECT 
+                CONCAT(BOARDID, ';') BOARDID  
+            FROM 
+                TBL_Board_BoardManage 
+            WHERE
+                TENANT_ID = #v_TENANTID#
+            AND  
+                ACCESS_ = 0
+            AND 
+                ACCESSID = #v_PACCESSID#
+            AND 
+                PARENTBOARDID = #v_PROOTBOARDID#
+        ]]>
+    </select>
 </sqlMap>
 

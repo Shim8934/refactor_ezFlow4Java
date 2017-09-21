@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +55,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 
-		
+	@Autowired
+	private Properties config;	
+	
 	@Resource(name="MResourceService")
 	private MResourceService mResourceService;
 		
@@ -187,13 +194,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			String brdId = request.getParameter("brdId");
 			String brdCompany = info.getCompanyId();
+			String userCompany = info.getCompanyId();
+			String userDept = info.getDeptId();
 			
 			LOGGER.debug("brdId: " + brdId);
 			LOGGER.debug("brdCompany: " + brdCompany);
 			LOGGER.debug("tenantId: " + tenantId);
 			
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, tenantId);
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId);
 			
 			LOGGER.debug("size of result: " + list.size());
 			
@@ -268,6 +277,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			String offset = info.getOffSet();
 			String companyId = info.getCompanyId();
+			String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 			
 			LOGGER.debug("resourceId: " + resourceId);
 			LOGGER.debug("scheduleId: " + scheduleId);
@@ -277,6 +287,20 @@ public class MResourceGWController extends EgovFileMngUtil {
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
 
+			String content = resVO.getContent();
+			
+			Document doc = Jsoup.parse(content);
+			Elements elems = doc.select("[src]");
+			
+			if(elems.size() > 0) {
+				for (Element element : elems) {
+					element.attr("src", "/mobile/ezCommon/mFileDown.do?filePath=" + element.attr("src") + "&fileName=*.INLINE.*");
+				}
+			}
+	        content = doc.toString();
+			
+	        resVO.setContent(content);
+			//content = content.replaceAll(gwServerUrl, "/mobile/ezCommon/mFileDown.do?filePath=").replaceAll("&fileName=", "&fileName=*.INLINE.*\"").replaceAll(":80", "");
 			String reFlag = resVO.getReFlag();
 			
 			if(reFlag.equals("1")){

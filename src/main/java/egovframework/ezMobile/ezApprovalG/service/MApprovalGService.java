@@ -19,7 +19,7 @@ public interface MApprovalGService {
 
 	public int getDoApproveListCount(MCommonVO userInfo, String type, String pSearchText) throws Exception;
 
-	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, MCommonVO userInfo) throws Exception;
+	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
 	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type) throws Exception;
 
@@ -44,5 +44,7 @@ public interface MApprovalGService {
 	public String getDocState(String docId, String companyId, int tenantId) throws Exception;
 
 	public MApprovalGLeftVO getLeftCount(String userId, MCommonVO userInfo) throws Exception;
+
+	public int delAbsenteeInfo(String userId, int tenantId) throws Exception;
 
 }
