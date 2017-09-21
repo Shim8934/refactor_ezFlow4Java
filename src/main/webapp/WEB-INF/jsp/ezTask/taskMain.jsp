@@ -742,6 +742,7 @@
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
+					async : false,
 					url : "/ezTask/taskGetList.do",
 					data : {
 						startDate : "",
