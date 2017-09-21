@@ -4824,8 +4824,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		StringBuilder sbStr = new StringBuilder();
-		int cnt = 0;
+		int cnt = 0;	
 		Document xmlDom = commonUtil.convertStringToDocument(request.getParameter("APPXML"));
+		logger.debug("<<<xmlDom : " + commonUtil.convertDocumentToString(xmlDom));		
 		String useAdditionalRole = ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId());
 		String listType = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 //		String docType = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
@@ -4841,12 +4842,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		Document xmlDomSub = null;
-				
+		//<SEARCHQUERy> > 10인 경우	
 		if (xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent().length() > 10) {
 			String tempQuery = "";
 			String returnQuery = "(1 = 1) ";
 			xmlDomSub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent());
-
+			
 			tempQuery = xmlDomSub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
 			
 			if (tempQuery.indexOf("DOCNO;") != -1)
@@ -4880,7 +4881,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 }
             }
 
-
+            // STARTDATE -> 기안일자
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
             	if (!dbType.equals("mysql")) {
             		returnQuery += " AND STARTDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), false)+"','YYYY-MM-DD HH24:MI:SS') ";
@@ -4895,6 +4896,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             		returnQuery += " AND STARTDATE <=  STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), false)+"','%Y-%m-%d %H:%i:%s') ";
             	}
             }
+            // FormID -> 양식아이디
             if (tempQuery.indexOf("FORMID;") != -1) {
                 returnQuery += " AND FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
             }
@@ -4904,17 +4906,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
             if (tempQuery.indexOf("KEND;") != -1) {
                 returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
             }
+            // itemcode -> 분류코드
             if (tempQuery.indexOf("CAPR;") != -1) {
                 returnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
             }
             if (tempQuery.indexOf("CEND;") != -1) {
                 returnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
             }
+            // URGENTAPPROVAL -> 긴급결재 여부
             if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
                 returnQuery += " AND URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
             }
             returnQuery += " AND TENANT_ID = " + userInfo.getTenantId() ; 
             searchQuery = returnQuery;
+            logger.debug("<<<searchQuery : " + searchQuery);
 		}
 		
 		String result = ezApprovalGService.aprDocList(listType, userID, deptID, pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), searchQuery, xmlDomSub, userInfo.getTenantId(), userInfo.getOffset());
@@ -4929,7 +4934,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			for (int k = 0; k < docListNode.getLength(); k++) {
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
-				
+				// docState : 공람, aprState : 대기, aprState : 보류
 				if (strDocState.equals("015") || (!strAprState.equals("002") && !strAprState.equals("005"))) {
 					docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
 				} else {
@@ -4945,7 +4950,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						if (href.substring(href.length() - 4).toUpperCase().equals(".HWP")) {
 							mhtOrHwp = "HWP";
 						}
-						
+						// aprType -> 001(결재), 019(검토), 004(전결)
+						// 결재, 검토, 전결 제외 모두 제거
 						if (!aprType_aprState.split("/")[0].equals("001") && !aprType_aprState.split("/")[0].equals("019") && !aprType_aprState.split("/")[0].equals("004")) {
 							docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
 						} else {
@@ -4968,7 +4974,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("sbStr", sbStr.toString());
 		model.addAttribute("approvalPWD", approvalPWD);
-		
+		logger.debug("<<<sbStr : " + sbStr.toString());
 		logger.debug("doApprovAllselect ended");
 		
 		return "ezApprovalG/apprGdoApprovAllselect";
@@ -6029,7 +6035,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String rtnVal = "OK/0/0/0";
+		String rtnVal = "OK/0/0/0"; // OK or ERR/ totalCount / trueCount / falseCount
 		int totCnt = 0, trueCnt = 0, falseCnt = 0;
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -6041,10 +6047,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgUID = "";
 		
 		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
-			totCnt = xmlDom.getElementsByTagName("DOCID").getLength();
+			totCnt = xmlDom.getElementsByTagName("DOCID").getLength(); // 결재 체크된 문서 갯수 확인
 			
 			for (int k = xmlDom.getElementsByTagName("DOCID").getLength() - 1; k > -1; k--) {
-				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent();
+				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent(); // 원결재자
 				
 				if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
 					if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("MHT")) {

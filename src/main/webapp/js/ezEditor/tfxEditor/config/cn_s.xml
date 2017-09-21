@@ -5,6 +5,7 @@
 	<newfile visible="true">新文件</newfile>	
 	<savefile visible="true">保存文件</savefile>
 	<print visible="true">打印</print>
+	<pagebreak visible="true">页拆分</pagebreak>
 	
 	<split/>
 		
@@ -30,13 +31,17 @@
 	<split/>
 		
 	<InsertFlash visible="true">插入Flash</InsertFlash>	
+	<InsertMedia visible="true">插入视频</InsertMedia>
 	<InsertMediaLink visible="true">将外部视频</InsertMediaLink>
-	<InsertChart visible="false">插入图表</InsertChart>
+	<Background visible="false">插入背景图片</Background>
+	<InsertGrid visible="false">将电网</InsertGrid>
+	
 	
 	<split/>
 		
 	<InsertSymbol visible="true">插入符号</InsertSymbol>
 	<HorizontalRule visible="true">插入横线</HorizontalRule>
+	<Bookmark visible="false">插入书签</Bookmark>	
 	
 	<split/>
 	
@@ -53,7 +58,7 @@
 	<split/>
 	
 	<FullScreen visible="true">全屏</FullScreen>
-	<TagDiet visible="false">格式保护</TagDiet>
+	
 	
 </menu1>
 <menu2>	
@@ -124,7 +129,7 @@
 		<!--<item title="출장품의서" show="true"></item>-->		
 	</Template>
 			
-	<Format visible="true">格式样式</Format>
+	
 	<Fontfamily visible="true">字体类型</Fontfamily>
 	<Fontsize visible="true">字号</Fontsize>
 	<LineHeight visible="true">行间距</LineHeight>
@@ -135,12 +140,12 @@
 		<Italic visible="true">倾斜</Italic>
 		<Underline visible="true">下划线</Underline>
 		<Strikethrough visible="true">删除线</Strikethrough>
-		<RemoveFormatting visible="true">清除格式</RemoveFormatting>
 	</group>
 	
 	<group>	
 		<fontcolor visible="true">字体颜色</fontcolor>
-		<fontbgcolor visible="true">字体背景色</fontbgcolor>		
+		<fontbgcolor visible="true">字体背景色</fontbgcolor>
+		<RemoveFormatting visible="true">清除格式</RemoveFormatting>
 	</group>
 	
 	<AdminLock visible="true">写入区域设置</AdminLock>

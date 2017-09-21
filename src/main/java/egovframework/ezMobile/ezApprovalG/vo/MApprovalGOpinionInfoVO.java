@@ -43,9 +43,17 @@ public class MApprovalGOpinionInfoVO {
 		case "001": 
 			opinionGB = "일반의견"; 
 			break;
-
+		case "002":
+			opinionGB = "반송의견";
+			break;
+		case "003":
+			opinionGB = "보류의견";
+			break;
+		case "004":
+			opinionGB = "회송의견";
+			break;
 		default:
-			opinionGB = "랜덤의견";
+			opinionGB = "기타의견";
 			break;
 		}
 		return opinionGB;
