@@ -1,40 +1,37 @@
 package egovframework.ezMobile.ezOption.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezMobile.ezOption.dao.MOptionDAO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
-import egovframework.ezMobile.ezPortal.web.MPortalController;
+import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MOptionService")
 public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOptionService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MOptionServiceImpl.class);
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MPortalController.class);
-
+	@Autowired
+	private CommonUtil commonUtil;
+	
 	@Resource(name = "MOptionDAO")
 	private MOptionDAO mOptionDAO;	
 	
-	@Override
-	public String saveOption(String id, String langFlag, String dpBoardCnt, String resourceChk, String resourceYN, int tenantId) throws Exception {
-		LOGGER.debug("saveOption started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		mOptionDAO.insertOption(map);
-		
-		LOGGER.debug("saveOption ended");
-		
-		return null;
-	}
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
 
 	@Override
 	public MCommonVO commonInfo(String serverName, String userId) throws Exception {
@@ -86,7 +83,6 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 
 	@Override
 	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception {
-		
 		LOGGER.debug("updateOption started");	
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -101,9 +97,35 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		mOptionDAO.updateOption(map);
 		
 		LOGGER.debug("updateOption ended");	
-		
 	}
-	
-	
-	
+
+	@Override
+	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate) throws Exception {
+		LOGGER.debug("getTimeLineList started");
+
+		if (sessionDate == null || sessionDate.equals("")) {
+			sessionDate = commonUtil.getTodayUTCTime("");
+		}
+		
+		String userIDS = "'" + info.getUserId() + "'";
+		String proxyOption = ezApprovalGService.getIsUse("A23", "001", info.getCompanyId(), info.getLang(), info.getTenantId());
+		
+		if (proxyOption.equals("1")) {
+			userIDS = ezApprovalGService.getProxyUser(info.getUserId(), info.getLang(), info.getTenantId(), info.getOffSet());
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sessionDate", sessionDate);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("userID", info.getUserId());
+		map.put("userIDS", userIDS);
+		map.put("tenantID", info.getTenantId());
+		map.put("companyID", info.getCompanyId());
+		
+		List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionDAO.getTimeLineList(map);
+
+		LOGGER.debug("getTimeLineList ended");
+		
+		return mPortalTimeLineVOs;
+	}
 }

@@ -1,5 +1,7 @@
 package egovframework.ezMobile.ezPortal.web;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
@@ -27,9 +30,11 @@ import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -69,6 +74,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name="MResourceService")
 	private MResourceService mResourceService;
+	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
+	
+	@Resource(name = "jspw")
+    private String jspw;
 		
 	/**
 	 * 모바일 G/W 포탈 [GET] 메인 리스트 (일반/폴더/포탈/타임라인)
@@ -89,56 +100,90 @@ public class MPortalGWController extends EgovFileMngUtil {
 			
 			String listCnt = request.getParameter("listCnt");			
 			
-			//받은결재함 리스트
-			String today = commonUtil.getTodayUTCTime("");
-			List<MApprovalGDocInfoVO> apprList = mApprovalGService.getDoApproveList(info, "DO", "", listCnt, today);
+			if (type != null && !type.equals("T")) {
+				//받은결재함 리스트
+				String today = commonUtil.getTodayUTCTime("");
+				List<MApprovalGDocInfoVO> apprList = mApprovalGService.getDoApproveList(info, "DO", "", listCnt, today);
+				
+				//받은결재함 리스트 카운트
+				int apprCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
+				
+				//오늘의일정 리스트			
+				JSONObject scheduleInfo = mScheduleService.scheduleMainList(info, listCnt);
+				Object scheduleList = scheduleInfo.get("list");
+				
+				//오늘의일정 리스트 카운트
+				Object scheduleCnt = scheduleInfo.get("cnt");
+				
+				//안읽은메일 리스트
+				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+				Locale locale = new Locale(ld);
+				
+				JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
+				
+				//안읽은메일 리스트 카운트
+				int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+				
+				//새게시물 리스트
+				List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId(), info.getOffSet());
+				
+				//새게시물 리스트 카운트
+				int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
+				
+				//오늘의자원 리스트
+				Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt);
+				Object resourceList = resourceMap.get("scheduleList");
+				
+				//오늘의자원 리스트 카운트
+				Object resourceCnt = resourceMap.get("count");			
+				
+				dataObject.put("apprList", apprList);
+				dataObject.put("apprCnt", apprCnt+"");
+				
+				dataObject.put("scheduleList", scheduleList);
+				dataObject.put("scheduleCnt", scheduleCnt+"");
+				
+				dataObject.put("mailList", mailList);
+				dataObject.put("mailCnt", mailCnt+"");
+				
+				dataObject.put("boardList", boardList);
+				dataObject.put("boardCnt", boardCnt+"");
+				
+				dataObject.put("resourceList", resourceList);
+				dataObject.put("resourceCnt", resourceCnt+"");
+			} else {//timeline
+				String sessionDate = request.getParameter("sessionDate");
+				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+				Locale locale = new Locale(ld);
+				LoginVO userInfo = new LoginVO();
+				
+				userInfo.setId(info.getUserId());
+				userInfo.setLocale(locale);
+				userInfo.setTenantId(info.getTenantId());
+				userInfo.setOffset(info.getOffSet());
+				
+				List<MPortalTimeLineVO> mApprovalGTLVOs = mOptionService.getTimeLineList(info, sessionDate);
 		
-			//받은결재함 리스트 카운트
-			int apprCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
-			
-			//오늘의일정 리스트			
-			JSONObject scheduleInfo = mScheduleService.scheduleMainList(info, listCnt);
-			Object scheduleList = scheduleInfo.get("list");
-			
-			//오늘의일정 리스트 카운트
-			Object scheduleCnt = scheduleInfo.get("cnt");
-			
-			//안읽은메일 리스트
-			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
-			Locale locale = new Locale(ld);
-			
-			JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-
-			//안읽은메일 리스트 카운트
-			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
-			
-			//새게시물 리스트
-			List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId(), info.getOffSet());
-			
-			//새게시물 리스트 카운트
-			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
-			
-			//오늘의자원 리스트
-			Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt);
-			Object resourceList = resourceMap.get("scheduleList");
-			
-			//오늘의자원 리스트 카운트
-			Object resourceCnt = resourceMap.get("count");			
-			
-			dataObject.put("apprList", apprList);
-			dataObject.put("apprCnt", apprCnt+"");
-			
-			dataObject.put("scheduleList", scheduleList);
-			dataObject.put("scheduleCnt", scheduleCnt+"");
-			
-			dataObject.put("mailList", mailList);
-			dataObject.put("mailCnt", mailCnt+"");
-			
-			dataObject.put("boardList", boardList);
-			dataObject.put("boardCnt", boardCnt+"");
-			
-			dataObject.put("resourceList", resourceList);
-			dataObject.put("resourceCnt", resourceCnt+"");
+				List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, 20);
+				//sender, receivedDate, title
+				
+				for (Map<String, String> maps : mailList) {
+					MPortalTimeLineVO mApprovalGTLVO = new MPortalTimeLineVO();
+					mApprovalGTLVO.setTitle(maps.get("subject"));
+					mApprovalGTLVO.setStartDate(maps.get("receivedDate"));
+					mApprovalGTLVO.setModule("메일");
+					mApprovalGTLVO.setWriterName(maps.get("sender"));
+					
+					mApprovalGTLVOs.add(mApprovalGTLVO);
+				}
+				
+				Collections.sort(mApprovalGTLVOs, new Comparator<MPortalTimeLineVO>() {
+					@Override
+					public int compare(MPortalTimeLineVO o1, MPortalTimeLineVO o2) {
+						return o2.getStartDate().compareTo(o1.getStartDate());
+					}
+				});
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

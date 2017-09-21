@@ -11,7 +11,6 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -51,11 +50,6 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 
 	public int updateDocOpinionInfo(Map<String, Object> map) throws Exception {
 		return update("MApprovalG.updateDocOpinionInfo", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<MApprovalGTLVO> getTimeLineList(Map<String, Object> map) throws Exception {
-		return (List<MApprovalGTLVO>) list("MApprovalG.getTimeLineList", map);
 	}
 
 	@SuppressWarnings("unchecked")

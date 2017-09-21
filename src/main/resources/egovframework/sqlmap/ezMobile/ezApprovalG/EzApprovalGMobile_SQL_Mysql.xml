@@ -181,6 +181,16 @@
                 AND 
                 	A.COMPANYID = G.COMPANYID              
 		   	</isEqual>
+		   	<isEqual property="approvalFlag" compareValue="G">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+		   	</isEqual>
 		   	<![CDATA[
 	   			WHERE
 	   				A.TENANT_ID = #tenantID#
@@ -198,6 +208,10 @@
 					E.CODE1 ='SA02'
 				AND  
 					F.CODE1 ='A04'
+		   	</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				AND  
+					E.CODE1 ='A02'
 		   	</isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
@@ -1147,80 +1161,4 @@
 	    		USERID = #userID#
 		]]>
    </delete>
-   
-   <select id="MApprovalG.getTimeLineList" parameterClass="Map" resultClass="MApprGTLVO">
-   		<![CDATA[
-   			(SELECT 
-				DOCTITLE as title,
-				STARTDATE,
-				'결재' as module,
-				WRITERNAME
-			FROM 
-				VAPRDOINGDOCLIST 
-			WHERE
-				TENANT_ID = #tenantID#
-			AND
-				COMPANYID = #companyID#
-			AND 
-				APRMEMBERID IN (#userID#) 
-			AND 
-				APRTYPE <> '015' 
-			AND
-				STARTDATE < #sessionDate#)
-			
-			UNION
-			
-			(SELECT A.TITLE,	A.STARTDATE, '게시판' as module, WRITERNAME
-			  FROM 
-				TBL_BOARD_ITEM A 
-			  INNER JOIN 
-					( SELECT 
-						BOARDID, 
-						BOARDNAME, 
-						BOARDNAME2,
-						TENANT_ID 
-					  FROM 
-						TBL_BOARD_MYBOARDS 
-					  WHERE   
-						TENANT_ID = #tenantID#
-					  AND
-						USERID = #userID# ) B 
-			  ON 
-				A.TENANT_ID = B.TENANT_ID
-			  AND
-				A.BOARDID = B.BOARDID                
-			  INNER JOIN 
-				TBL_BOARD_BOARDINFO P  
-			  ON 
-				A.TENANT_ID = P.TENANT_ID
-			  AND
-				A.BOARDID = P.BOARDID
-			  AND 
-				A.TENANT_ID = #tenantID#
-			  AND
-				(A.APPRFLAG = 'Y' 
-				 OR A.APPRFLAG IS NULL)
-			  AND
-				A.STARTDATE < #sessionDate#)
-								
-			UNION
-			
-			(select 
-				title, startdate, '일정관리' as module, OWNERNAME as writername
-			from 
-				tbl_schedule
-			where  
-				ownerid in (#userID#)
-			and 
-				tenant_id = #tenantID#
-			and
-				STARTDATE < #sessionDate#
-			and
-				STARTDATE > STR_TO_DATE(substring(now(), 1, 10),'%Y-%m-%d'))
-			ORDER BY
-				startdate desc
-			LIMIT 
-				20
-		]]>
-   </select>
 </sqlMap>

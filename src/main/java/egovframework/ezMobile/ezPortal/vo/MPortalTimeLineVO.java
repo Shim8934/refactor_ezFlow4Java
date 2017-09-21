@@ -1,6 +1,6 @@
-package egovframework.ezMobile.ezApprovalG.vo;
+package egovframework.ezMobile.ezPortal.vo;
 
-public class MApprovalGTLVO {
+public class MPortalTimeLineVO {
 	/** 타임라인 타이틀*/
 	private String title;
 	/** 타임라인 시작*/
@@ -34,5 +34,4 @@ public class MApprovalGTLVO {
 	public void setWriterName(String writerName) {
 		this.writerName = writerName;
 	}
-
 }

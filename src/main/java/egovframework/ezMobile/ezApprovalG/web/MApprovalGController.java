@@ -1,14 +1,9 @@
 package egovframework.ezMobile.ezApprovalG.web;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,7 +27,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
