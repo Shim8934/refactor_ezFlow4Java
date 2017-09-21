@@ -207,10 +207,10 @@ System.out.println("contentPath: " + contentPath);
 		OutputStream bos = null;		
 		
 		try {
-			byte[] ct = Base64.decode(jsonParam.get("content").toString());
-			//stream = new ByteArrayInputStream(ct);
+			String content = jsonParam.get("content").toString();
 			
-			String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
+			//html -> mht변환
+			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
 			
 			stream = new ByteArrayInputStream(mhtData.getBytes());
 			
