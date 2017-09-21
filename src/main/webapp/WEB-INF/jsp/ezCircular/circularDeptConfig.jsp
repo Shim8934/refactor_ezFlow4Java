@@ -16,17 +16,6 @@
 		
 		<script type="text/javascript">
 			$(function() {
-				// 전체 체크박스 선택, 해제
-				$("#checkboxAll").on("click", function() {
-					if ($("#checkboxAll").is(":checked")) {
-						$(".myCheckbox").prop("checked", true);
-						$("#circularDeptList tr").css("background", "#EDEDED");
-					} else {
-						$(".myCheckbox").prop("checked", false);
-						$("#circularDeptList tr").css("background", "#FFFFFF");
-					}
-				})
-				
 				getCircularDeptList();
 			});
 			
@@ -188,6 +177,17 @@
 			        });					
 				}
 			}
+
+			function selectAll() {
+				// 전체 체크박스 선택, 해제
+				if ($("#checkboxAll").prop("checked") == true) {
+					$(".myCheckbox").prop("checked", true);
+					$("#circularDeptList tr").css("background", "rgb(233, 241, 244)");
+				} else {
+					$(".myCheckbox").prop("checked", false);
+					$("#circularDeptList tr").css("background", "#FFFFFF");
+				}
+			}
 		</script>
 	</head>
 	<body> 
@@ -207,7 +207,7 @@
 		                    	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>
 		                    	
 		                        <tr>
-		                        	<th><input id="checkboxAll" type="checkbox"></th>
+									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
 		                            <th><spring:message code='ezCircular.t32' /></th>
 		                            <th><spring:message code='ezCircular.t33' /></th>
 		                            <th><spring:message code='ezCircular.t34' /></th>
