@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
-import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
@@ -361,7 +359,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 				
 			}
 		}
-		
+				
 		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
 		int count = getScheduleList.size();
@@ -409,7 +407,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		}
 		
 		LOGGER.debug("resultList: " + resultList);
-				
+			
 		result.put("scheduleList", resultList);
 		result.put("count", count);
 		result.put("repeatYn", repeatYn);
