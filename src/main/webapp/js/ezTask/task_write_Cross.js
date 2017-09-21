@@ -366,6 +366,7 @@ function save_task() {
 	}
 
 	if (document.getElementById("TextTitle").value == "" || $.trim($("#TextTitle").val()) == "") {
+		doubleSubmitFlag = false;
     	alert(strLang9);
         document.getElementById("TextTitle").focus();
         return;
@@ -375,6 +376,7 @@ function save_task() {
     var enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
     if (startdate > enddate) {
+    	doubleSubmitFlag = false;
     	alert(strLang45);
         return;
     }
@@ -392,11 +394,13 @@ function save_task() {
 	}
 	
     if (!check_length($("#TextTitle").val(), 100, "" + strLang11 + "")) {
+    	doubleSubmitFlag = false;
     	return;
     }
 
     if (useTodoMemo == 'YES') {
     	if (!check_length($("#TextMemo").val(), 100, "" + strLang64 + "")) {
+    		doubleSubmitFlag = false;
     		return;
     	}
     }
