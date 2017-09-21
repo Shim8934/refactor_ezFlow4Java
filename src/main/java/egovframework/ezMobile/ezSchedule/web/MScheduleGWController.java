@@ -541,6 +541,20 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        	jsonParam.put("hasAttach", "N");
 	        }
 	        
+			String content = jsonParam.get("content").toString();
+			content = content.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			content = content.replaceAll("\\+", "%2B");
+			content = URLDecoder.decode(content, "utf-8");
+			
+			String scheme = "http://";
+			if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+				scheme = "https://";
+			}
+			
+			content = content.replace("replace_" + scheme, scheme);
+	        
+			jsonParam.put("content", content);
+	        
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        
 	        result.put("status", "ok");
