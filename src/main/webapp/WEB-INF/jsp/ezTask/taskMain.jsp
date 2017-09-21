@@ -66,10 +66,7 @@
 		    function select_row(elem) {
 				//전체 선택 후 개별 선택 시
 				if ($("#checkboxAll").is(":checked")) {
-					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") != true) {
-						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
-						$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "rgb(233, 241, 244)");
-					} else {
+					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") == true) {
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 						$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
 
@@ -286,7 +283,7 @@
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
 		            selectelem = null;
-		        } else {	        	
+		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
 		            strListIdInfo = ReplaceText(strListIdInfo, $(obj).attr("creatorID") + ";", "");
 		            selectelem = obj.parentNode.parentNode;
