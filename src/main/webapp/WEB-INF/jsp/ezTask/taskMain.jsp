@@ -424,9 +424,9 @@
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 
 					if ($("#titleid" + i + "").outerWidth() > 900) {
-						$("#titleid" + i + "").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+						$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
 					} else {
-				        $("#titleid" + i + "").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", $("#titleid" + i + "").outerWidth());
+				        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
 					}
 				}
 
