@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,8 +79,13 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			contentPath += schedulePath;
 
 System.out.println("contentPath: " + contentPath);
-			byte[] ct = Base64.decode(jsonParam.get("content").toString());
-			String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
+
+			String content = jsonParam.get("content").toString();
+			
+			//html -> mht변환
+			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
+			//byte[] ct = Base64.decode(jsonParam.get("content").toString());
+			//String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
 			
 			stream = new ByteArrayInputStream(mhtData.getBytes());
 			bos = new FileOutputStream(contentPath);
