@@ -423,11 +423,19 @@
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 
-					if ($("#titleid" + i + "").outerWidth() > 900) {
-						$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
-					} else {
-				        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
-					}
+			        if (useTodoMemo == 'YES') {
+						if ($("#titleid" + i + "").outerWidth() > 900) {
+							$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+						} else {
+					        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+						}
+			        } else {
+						if ($("#titleid" + i + "").outerWidth() > 1000) {
+							$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+						} else {
+					        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+						}
+			        }
 				}
 
 			    if (onTaskCount == 0) {
@@ -862,9 +870,16 @@
 						<col style ="width:50px;">
 						<col style ="width:20px;">
 						<col style ="width:100px;">
-						<col >
-						<col style ="width:50px;">
-						<col style ="width:140px;">
+						<c:if test="${useTodoMemo == 'YES'}">
+							<col >
+							<col style ="width:50px;">
+							<col style ="width:140px;">
+						</c:if>
+						<c:if test="${useTodoMemo == 'NO'}">
+							<col >
+							<col style ="width:50px;">
+							<col style ="width:30px;">
+						</c:if>
 		                <col style ="width:90px;">
 						<col style ="width:110px;">
 						<col style ="width:80px;">

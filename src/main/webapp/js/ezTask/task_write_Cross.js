@@ -395,8 +395,10 @@ function save_task() {
     	return;
     }
 
-    if (!check_length($("#TextMemo").val(), 100, "" + strLang64 + "")) {
-    	return;
+    if (useTodoMemo == 'YES') {
+    	if (!check_length($("#TextMemo").val(), 100, "" + strLang64 + "")) {
+    		return;
+    	}
     }
 
     if (taskid == "") {

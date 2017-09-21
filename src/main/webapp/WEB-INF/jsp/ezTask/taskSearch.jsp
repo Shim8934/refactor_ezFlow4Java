@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -307,18 +308,22 @@
 			        tr.cells[3].style.overflow = "hidden";
 		            tr.cells[3].style.textOverflow = "ellipsis";
 
+		            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
+			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font></span>";
+			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
+			        } else {
+						tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
+			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
 			        }
-			        else
-			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
-			        tr.cells[4].style.overflow = "hidden"
-			        tr.cells[4].style.textOverflow = "ellipsis"
-			        
-			        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
-			        tr.cells[6].style.overflow = "hidden";
-			        tr.cells[6].style.textOverflow = "ellipsis";
-		
+
+			        if (useTodoMemo == "YES") {
+				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
+				        tr.cells[6].style.overflow = "hidden";
+				        tr.cells[6].style.textOverflow = "ellipsis";
+				        tr.cells[6].setAttribute("title", SelectSingleNodeValue(node, "MEMO"));
+			        }
+
 	                var div = document.createElement("DIV");
 	                div.style.width = "72px";
 	                div.style.lineHeight = "18px";
@@ -360,6 +365,20 @@
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 			        
 			        searchCount++;
+
+			        if (useTodoMemo == 'YES') {
+						if ($("#titleid" + i + "").outerWidth() > 900) {
+							$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+						} else {
+					        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+						}
+			        } else {
+						if ($("#titleid" + i + "").outerWidth() > 1000) {
+							$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+						} else {
+					        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+						}
+			        }
 				}
 
 			    if (totalcount == 0) {
@@ -527,9 +546,16 @@
 			<col style ="width:50px;">
 			<col style ="width:20px;">
 			<col style ="width:100px;">
-			<col >
-			<col style ="width:50px;">
-			<col style ="width:140px;">
+			<c:if test="${useTodoMemo == 'YES'}">
+				<col >
+				<col style ="width:50px;">
+				<col style ="width:140px;">
+			</c:if>
+			<c:if test="${useTodoMemo == 'NO'}">
+				<col >
+				<col style ="width:50px;">
+				<col style ="width:30px;">
+			</c:if>
             <col style ="width:90px;">
 			<col style ="width:110px;">
 			<col style ="width:80px;">
@@ -541,7 +567,12 @@
 				<th ><spring:message code='ezTask.t2005' /></th>
 				<th ><spring:message code='ezTask.t118' /></th>
 				<th ></th>
-				<th ><spring:message code='ezTask.t170' /></th>
+				<c:if test="${useTodoMemo == 'YES'}">
+					<th ><spring:message code='ezTask.t170' /></th>
+				</c:if>
+				<c:if test="${useTodoMemo == 'NO'}">
+					<th ></th>
+				</c:if>
                 <th ><spring:message code='ezTask.t2003' /></th>
 				<th ><spring:message code='ezTask.t120' /></th>
 				<th ><spring:message code='ezTask.t121' /></th>
