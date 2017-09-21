@@ -54,6 +54,7 @@
 
 		        document.getElementById("list").style.height = height + "px";
 		        ChangeTab(document.getElementById("1tab1"));
+		        selectelem = "";
 		    }
 		    
 		    document.onselectstart = function () {
@@ -64,18 +65,18 @@
 // 		    document.onselectstart = function () { return false; };
 		    
 		    function select_row(elem) {
-				//전체 선택 후 개별 선택 시
 				if ($("#checkboxAll").is(":checked")) {
-					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") == true) {
+					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 						$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
 
-						chk_onselect(elem);
+						strListInfo = ReplaceText(strListInfo, $(elem).attr("taskID") + ";", "");
+			            strListIdInfo = ReplaceText(strListIdInfo, $("input[taskid='" + $(elem).attr("taskid") + "']").attr("creatorid") + ";", "");
 			    		return;
 					}
 					
 					// 목록에서 하나씩 다른거 선택할 때
-			    	if ((selectelem != null && selectelem != elem)) {
+					if ((selectelem != null && selectelem != elem)) {
 						strListInfo += $(elem).attr("taskID") + ";";
 			            strListIdInfo += $(elem).find("input").attr("creatorID") + ";";
 
@@ -296,7 +297,7 @@
 		    }
 
 			function show_page() {
-			    selectelem = null;
+// 			    selectelem = null;
 
 			    var length = list_body.children[1].rows.length;
 
@@ -785,7 +786,7 @@
 						strListIdInfo += deleteList[i];
 						strListInfo += deleteListID[i];
 					}
-				} else {		
+				} else {
 					strListIdInfo = "";
 					strListInfo = "";
 					selectelem = null;
