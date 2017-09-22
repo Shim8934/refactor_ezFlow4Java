@@ -5088,11 +5088,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			long[] uids = null;
 			
-			if (uniqueId.endsWith(";")) {
+			if (uniqueId.endsWith(",")) {
 				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
 			}
 			
-			String[] messageIdArray = uniqueId.split(";");
+			String[] messageIdArray = uniqueId.split(",");
 						
 			uids = new long[messageIdArray.length];
 			for (int i = 0; i < messageIdArray.length; i++) {
