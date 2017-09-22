@@ -33,8 +33,8 @@
 						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
 						
 						list.forEach(function(vo, index) {
-							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
-							circularDeptList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + vo.circularBMID + " type='checkbox'></td>";
+							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
+							circularDeptList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + vo.circularBMID + " type='checkbox' onclick='selectRow(this)'></td>";
 							circularDeptList += "<td style='color:gray;' title=" + vo.title + ">" + vo.title + "</td>";
 							circularDeptList += "<td style='color:gray;'>" + vo.regDate.substring(0,16) + "</td>";
 							
@@ -63,44 +63,27 @@
 					}
 				});
 			}
-			
-			function event_Mover(obj) {
-	            if (obj != _RowObject) {
-    	            obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
-        	        obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
-            	    obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
-            	    obj.childNodes.item(3).style.backgroundColor = "#EDEDED";
-            	    obj.childNodes.item(4).style.backgroundColor = "#EDEDED";
-            	}	
-        	}
-			
-        	function event_Mout(obj) {
-            	if (obj != _RowObject) {
-                	obj.childNodes.item(0).style.backgroundColor = "#FFFFFF";
-                	obj.childNodes.item(1).style.backgroundColor = "#FFFFFF";
-                	obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
-                	obj.childNodes.item(3).style.backgroundColor = "#FFFFFF";
-                	obj.childNodes.item(4).style.backgroundColor = "#FFFFFF";
-            	}
-        	}
-		    
+
 		    var _RowObject = null;
-		    
 		    function event_click(obj) {
-            	if (_RowObject != null) {
-                	_RowObject.childNodes.item(0).style.backgroundColor = "#FFFFFF";
-                	_RowObject.childNodes.item(1).style.backgroundColor = "#FFFFFF";
-                	_RowObject.childNodes.item(2).style.backgroundColor = "#FFFFFF";
-                	_RowObject.childNodes.item(3).style.backgroundColor = "#FFFFFF";
-                	_RowObject.childNodes.item(4).style.backgroundColor = "#FFFFFF";
-            	}
-            	
-            	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 244)";
+				if ($("#checkboxAll").prop("checked") == true) {
+					if ($(obj).find("input").prop("checked") == true) {
+						$(obj).find("input").prop("checked", false);
+						$(obj).css("backgroundColor", "#FFFFFF");
+					} else {
+						$(obj).find("input").prop("checked", true);
+						$(obj).css("backgroundColor", "rgb(233, 241, 244)");
+					}
+				} else {
+					if (_RowObject != null) {
+						$("input[name=myCheckbox]").prop("checked", false);
+						$("input[name=myCheckbox]").parent().parent().css("backgroundColor", "#FFFFFF");
+					}
+
+					_RowObject = obj;
+					$(obj).find("input").prop("checked", true);
+					$(obj).css("backgroundColor", "rgb(233, 241, 244)");
+				}
         	}
 
 		    function memberList() {
@@ -188,6 +171,20 @@
 					$("#circularDeptList tr").css("background", "#FFFFFF");
 				}
 			}
+
+			function selectRow(obj) {
+				var num = $(obj).attr("value");
+				if ($(obj).prop("checked") != true) {
+					$(obj).prop("checked", false);
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
+				} else {
+					$(obj).prop("checked", true);
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "rgb(233, 241, 244)");
+				}
+
+				event.stopPropagation();
+			}
+
 		</script>
 	</head>
 	<body> 
