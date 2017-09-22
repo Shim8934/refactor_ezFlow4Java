@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -4094,8 +4095,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		List<String> bodyInfoList = null;
 		
-		
-			
 		LOGGER.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -4131,6 +4130,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String isDelete = "BMOVE";
 		boolean isSentItems = false;
 		String pIsCCFg = "Y";
+		String flagged = "0";
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
@@ -4391,6 +4391,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						message.setFlag(Flag.SEEN, true);
 						LOGGER.debug("Message's seen flag changed to true.");
 					}
+					
+					if (message.isSet(Flags.Flag.FLAGGED)) {
+						flagged = "1";
+					}
+					mail.put("flag",flagged);
 					
 					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale);
 					double size = Double.parseDouble(bodyInfoList.get(2));
@@ -5038,14 +5043,116 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", data);
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");
 			
 		}
         LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");
         
         return result;
+	}
+	
+	/**
+	 * 메일 책갈피 지정 실행 함수
+	 */
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object mailSetFlag(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag] started.");
+
+		String returnData = "";
+		
+		JSONObject data = new JSONObject();
+	    JSONObject result = new JSONObject();
+	     
+	    IMAPAccess ia = null;
+	     
+	    String setCmd = "toggle";
+		
+		if (jsonObject.get("setCmd") != null) {
+			setCmd = (String) jsonObject.get("setCmd");
+		}
+	    
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			LOGGER.debug("userEmail=" + userEmail);
+			
+			String uniqueId = messageId;	
+			
+			long[] uids = null;
+			
+			if (uniqueId.endsWith(";")) {
+				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+			}
+			
+			String[] messageIdArray = uniqueId.split(";");
+						
+			uids = new long[messageIdArray.length];
+			for (int i = 0; i < messageIdArray.length; i++) {
+				String msgId = messageIdArray[messageIdArray.length - i - 1];
+				uids[i] = Long.parseLong(msgId);
+			}
+			
+			LOGGER.debug("folderId=" + folderId + "uniqueId=" + uniqueId);		
+
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userEmail, password, egovMessageSource, locale);
+				
+			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);		
+					
+			Message[] msgs = sourceFolder.getMessagesByUID(uids);
+			
+			for (int i = 0; i < msgs.length; i++) {
+				Message msg = msgs[i];
+				if (setCmd.equals("toggle")) {
+					if (msg.isSet(Flags.Flag.FLAGGED)) {
+						msg.setFlag(Flags.Flag.FLAGGED, false);
+						returnData = "DEL";
+					} else {
+						msg.setFlag(Flags.Flag.FLAGGED, true);
+						returnData = "NEW";
+					}
+				} else if (setCmd.equals("set")) {
+					msg.setFlag(Flags.Flag.FLAGGED, true);
+					returnData = "NEW";
+				} else if (setCmd.equals("reset")) {
+					msg.setFlag(Flags.Flag.FLAGGED, false);
+					returnData = "DEL";
+				}
+			}
+			
+			sourceFolder.close(true);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", returnData);
+			
+		} catch (Exception e) {
+			returnData = "ERROR : " + e.getMessage();
+			
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", returnData);
+			
+		}  finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag] ended.");
+		
+		return result;				
 	}
 	
 	/**
