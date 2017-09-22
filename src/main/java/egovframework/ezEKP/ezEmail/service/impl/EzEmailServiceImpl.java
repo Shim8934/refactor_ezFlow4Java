@@ -1325,8 +1325,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
-	        SearchTerm term = new ReceivedDateTerm(DateTerm.LT, sdf.parse(dateTime));
-	        Message[] messages = folder.search(term);
+	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, false, false);
 	        
 	        // sort the messages
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
