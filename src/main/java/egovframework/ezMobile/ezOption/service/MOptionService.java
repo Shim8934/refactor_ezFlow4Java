@@ -16,6 +16,6 @@ public interface MOptionService {
 
 	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception;
 
-	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate) throws Exception;
+	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt) throws Exception;
 	
 }

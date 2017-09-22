@@ -1314,7 +1314,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String userEmail = userInfo.getId() + "@" + domainName;
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
 		IMAPAccess ia = null;
 		

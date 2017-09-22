@@ -87,9 +87,13 @@
    		<![CDATA[
    			(SELECT 
 				DOCTITLE as title,
-				STARTDATE,
+				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 				1 as module,
-				WRITERNAME
+				WRITERNAME,
+				DOCID as APPRID,
+				'' as BOARDID,
+				'' as BOARDITEMID,
+				'' as BOARDGUBUN
 			FROM 
 				VAPRDOINGDOCLIST
 			WHERE
@@ -109,9 +113,13 @@
 			
 			( SELECT 
 				A.TITLE,	
-				A.STARTDATE, 
+				DATE_ADD(DATE_FORMAT(A.STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE, 
 				4 as module, 
-				WRITERNAME
+				WRITERNAME,
+				'' as APPRID,
+				A.BOARDID,
+				A.ITEMID as BOARDITEMID,
+				P.GUBUN as BOARDGUBUN
 			  FROM 
 				TBL_BOARD_ITEM A 
 			  INNER JOIN 
@@ -166,59 +174,10 @@
 		                  S.USERID = #userID# 
 		                 AND 
 		                  S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY))))
-								
-			UNION
-			
-			(select 
-				title, 
-				startdate, 
-				3 as module, 
-				OWNERNAME as writername
-			from 
-				tbl_schedule
-			where  
-				ownerid in (#userID#)
-			and 
-				tenant_id = #tenantID#
-			and
-				STARTDATE < #sessionDate#
-			and
-				STARTDATE > STR_TO_DATE(substring(now(), 1, 10),'%Y-%m-%d'))
-				
-			UNION
-			
-			(SELECT 
-                A.TITLE TITLE,
-                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE,
-                5 as module, 
-                A.WRITERID
-           	FROM 
-           		TBL_RS_SCHEDULE A
-			JOIN
-				TBL_USERMASTER B 
-			ON
-				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
-		    JOIN
-				TBL_RS_BRD C
-			ON
-				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
-          	WHERE
-				A.STARTDATE < STR_TO_DATE(#sessionDate#, '%Y-%m-%d %T')
-			AND
-				STR_TO_DATE(#nowDate#, '%Y-%m-%d %T') <= A.ENDDATE
-			AND 
-				A.COMPANYID = #companyID#
-			AND
-				REFLAG = '0'
-			AND 
-			    B.DEPARTMENT = #deptID#
-			AND
-				A.TENANT_ID = #tenantID#)
-			
 			ORDER BY
 				startdate desc
 			LIMIT 
-				20
+				#listCnt#
 		]]>
   	</select>
   	

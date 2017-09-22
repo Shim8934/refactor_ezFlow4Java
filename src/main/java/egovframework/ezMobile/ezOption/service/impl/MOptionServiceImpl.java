@@ -100,12 +100,8 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate) throws Exception {
+	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt) throws Exception {
 		LOGGER.debug("getTimeLineList started");
-
-		if (sessionDate == null || sessionDate.equals("")) {
-			sessionDate = commonUtil.getTodayUTCTime("");
-		}
 		
 		String userIDS = "'" + info.getUserId() + "'";
 		String proxyOption = ezApprovalGService.getIsUse("A23", "001", info.getCompanyId(), info.getLang(), info.getTenantId());
@@ -115,9 +111,12 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listCnt", Integer.parseInt(listCnt));
 		map.put("sessionDate", sessionDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("deptID", info.getDeptId());
 		map.put("userID", info.getUserId());
+		map.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
 		map.put("userIDS", userIDS);
 		map.put("tenantID", info.getTenantId());
 		map.put("companyID", info.getCompanyId());

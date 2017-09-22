@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
@@ -33,6 +34,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -52,7 +54,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @RestController
 public class MPortalGWController extends EgovFileMngUtil {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MPortalController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MPortalGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -88,9 +90,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{type}/main-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalMainList(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		logger.debug("portalMainList Start");
+		LOGGER.debug("portalMainList Start");
 		
 		JSONObject result = new JSONObject();
+		int code = 0;
 		
 		try {
 			Map<String, Object> dataObject = new HashMap<String, Object>();
@@ -153,6 +156,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 				dataObject.put("resourceCnt", resourceCnt+"");
 			} else {//timeline
 				String sessionDate = request.getParameter("sessionDate");
+				String nowDate = commonUtil.getTodayUTCTime("");
+
+				if (sessionDate == null || sessionDate.equals("")) {
+					sessionDate = nowDate;
+				}
+				
 				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 				Locale locale = new Locale(ld);
 				LoginVO userInfo = new LoginVO();
@@ -161,32 +170,79 @@ public class MPortalGWController extends EgovFileMngUtil {
 				userInfo.setLocale(locale);
 				userInfo.setTenantId(info.getTenantId());
 				userInfo.setOffset(info.getOffSet());
-				
-				List<MPortalTimeLineVO> mApprovalGTLVOs = mOptionService.getTimeLineList(info, sessionDate);
 		
+				long startTime = System.currentTimeMillis();
+				
+				//한번에 가져오긴 힘들고 귀찮다.
+				List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionService.getTimeLineList(info, sessionDate, listCnt);
+				
+				LOGGER.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+				startTime = System.currentTimeMillis();
+				//메일 조인
 				List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, 20);
-				//sender, receivedDate, title
 				
 				for (Map<String, String> maps : mailList) {
-					MPortalTimeLineVO mApprovalGTLVO = new MPortalTimeLineVO();
-					mApprovalGTLVO.setTitle(maps.get("subject"));
-					mApprovalGTLVO.setStartDate(maps.get("receivedDate"));
-					mApprovalGTLVO.setModule("메일");
-					mApprovalGTLVO.setWriterName(maps.get("sender"));
+					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
+					mPortalTimeLineVO.setTitle(maps.get("subject"));
+					mPortalTimeLineVO.setStartDate(maps.get("receivedDate"));
+					mPortalTimeLineVO.setModule("2");
+					mPortalTimeLineVO.setWriterName(maps.get("sender"));
+					mPortalTimeLineVO.setMailID(maps.get("uid"));
 					
-					mApprovalGTLVOs.add(mApprovalGTLVO);
+					mPortalTimeLineVOs.add(mPortalTimeLineVO);
 				}
 				
-				Collections.sort(mApprovalGTLVOs, new Comparator<MPortalTimeLineVO>() {
+				LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+				startTime = System.currentTimeMillis();
+				//자원관리 조인
+				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), sessionDate, nowDate, info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "");
+				List<ResGetScheduleVO> resList = (List<ResGetScheduleVO>) resMap.get("scheduleList");
+				
+				for (ResGetScheduleVO resGetScheduleVO : resList) {
+					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
+					mPortalTimeLineVO.setTitle(resGetScheduleVO.getTitle());
+					mPortalTimeLineVO.setStartDate(resGetScheduleVO.getStartDate().substring(0, 10) + " 00:00:00");
+					mPortalTimeLineVO.setModule("5");
+					mPortalTimeLineVO.setWriterName(resGetScheduleVO.getOwnerNm());
+					mPortalTimeLineVO.setResID(resGetScheduleVO.getOwnerId());
+					mPortalTimeLineVO.setResNum(resGetScheduleVO.getNum());
+				}
+				
+				LOGGER.debug("## 자원관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+				startTime = System.currentTimeMillis();
+				//일정관리 조인
+				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, sessionDate, nowDate, "");
+				
+				for (ScheduleInfoVO scheduleInfoVO : schList) {
+					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
+					mPortalTimeLineVO.setTitle(scheduleInfoVO.getTitle());
+					mPortalTimeLineVO.setStartDate(scheduleInfoVO.getStartDate().substring(0, 10) + " 00:00:00");
+					mPortalTimeLineVO.setModule("3");
+					mPortalTimeLineVO.setWriterName(scheduleInfoVO.getCreatorName());
+					mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
+				}
+				
+				LOGGER.debug("## 일정관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+				
+				Collections.sort(mPortalTimeLineVOs, new Comparator<MPortalTimeLineVO>() {
 					@Override
 					public int compare(MPortalTimeLineVO o1, MPortalTimeLineVO o2) {
 						return o2.getStartDate().compareTo(o1.getStartDate());
 					}
 				});
+				
+				mPortalTimeLineVOs = mPortalTimeLineVOs.subList(0, Integer.parseInt(listCnt));
+				sessionDate = mPortalTimeLineVOs.get(mPortalTimeLineVOs.size() - 1).getStartDate();
+				sessionDate = commonUtil.getDateStringInUTC(sessionDate, info.getOffSet(), true);
+				
+				dataObject.put("timeLineList", mPortalTimeLineVOs);
+				dataObject.put("sessionDate", sessionDate);
+				
+				code = 3;
 			}
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", code);			
 			result.put("data", dataObject);
 		} catch (Exception e) {
 			result.put("status", "error");
@@ -194,7 +250,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("data", "");		
 		}		
 		
-		logger.debug("portalMainList End");
+		LOGGER.debug("portalMainList End");
 		
 		return result;
 	}
@@ -202,7 +258,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		logger.debug("portalFooterList Start");
+		LOGGER.debug("portalFooterList Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -233,7 +289,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("data", "");		
 		}		
 		
-		logger.debug("portalFooterList End");
+		LOGGER.debug("portalFooterList End");
 		
 		return result;
 	}
@@ -245,7 +301,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalUserInfo(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		logger.debug("portalUserInfo Start");
+		LOGGER.debug("portalUserInfo Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -262,7 +318,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("data", "");		
 		}		
 		
-		logger.debug("portalUserInfo End");
+		LOGGER.debug("portalUserInfo End");
 		
 		return result;
 	}
@@ -274,7 +330,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{type}/right-panel/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalRightPanel(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		logger.debug("portalMainList Start");
+		LOGGER.debug("portalMainList Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -333,7 +389,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("data", "");		
 		}		
 		
-		logger.debug("portalMainList End");
+		LOGGER.debug("portalMainList End");
 		
 		return result;
 	}
