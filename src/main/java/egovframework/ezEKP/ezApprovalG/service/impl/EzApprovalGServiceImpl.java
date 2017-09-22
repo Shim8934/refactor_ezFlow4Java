@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -21614,16 +21615,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
  		    // 전체 태그 처리시 순서에 따라 꼬이는 부분이 존재하기 때문에 선처리가 필요한 태그들에 대해 먼저 처리한다.
  		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
-			Document xmlDom = commonUtil.convertStringToDocument(content);
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
-//			Node node = xmlDom.getDocumentElement();
 			String fontFamily = "";
 			String fontSize = "";
 			String strStyle = "";
 			String style = "";
+			
+			StringBuilder htmlStyle = new StringBuilder();
 			for (int i=0; i < doc.getElementsByTag("span").size(); i++) {
-				String strInnerHtml = doc.getElementsByTag("span").get(i).text();
+				String strInnerHtml = doc.getElementsByTag("span").get(i).html();
 				
 				if (doc.getElementsByTag("span").get(i).hasAttr("style")) {
 						
@@ -21654,29 +21655,191 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						fontSize = spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";",spanStyle.indexOf("font-size"))+1);
 					}
 				}
+			     // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+                if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("body")) {
+                    if (fontFamily != "") {
+                        strStyle = "font-family:" + fontFamily;
+                    }
+
+                    if (fontSize != "") {
+                        if (strStyle != "") {
+                            strStyle += ";";
+                        }
+
+                        strStyle = "font-size:" + fontSize;
+                    }
+
+                    if (strStyle != "") {
+                        strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
+                    } else {
+                        strInnerHtml = "<p>" + strInnerHtml + "</p>";
+                    }
+                } else if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("p")) {
+                	String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
+                	String parentSpanStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
+
+                    // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
+                    if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") && doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).equals("")) {
+                        if (doc.getElementsByTag("span").get(i).parent().text().trim() == doc.getElementsByTag("span").get(i).text().trim()) {
+                        	if (spanStyle.indexOf("font-family") > -1) {
+                        		if (parentSpanStyle.indexOf("font-family") > -1) {
+                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-family"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-family"))+1));
+                        		}
+        					}
+
+                            if (spanStyle.indexOf("font-size") > -1) {
+                        		if (parentSpanStyle.indexOf("font-size") > -1) {
+                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-size"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-size"))+1));
+                                }
+                            }
+
+                            if (spanStyle.indexOf("line-height") > -1) {
+                            	if (parentSpanStyle.indexOf("line-height") > -1) {
+                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("line-height"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("line-height"))+1));
+                                }
+                            }
+                            doc.getElementsByTag("span").get(i).parentNode().attr("style",htmlStyle.toString());
+    						htmlStyle.setLength(0);
+                        }
+                    }
+                }
+                doc.getElementsByTag("span").get(i).html(strInnerHtml);
 			}
 		       
 			boolean hasBRTag = true;
 			 
-//			do {
-// 				if(xmlDom.getElementsByTagName("br").getLength() > 0) {
-//					String strInnerHtml2 = xmlDom.getElementsByTagName("br").item(0).getTextContent();
-//					Node parentNode = xmlDom.getElementsByTagName("br").item(0).getParentNode();
-//					
-//					if (parentNode.getTextContent() != null) {
-//						if (parentNode.getTextContent().toLowerCase().equals("p")) {
-//							if (parentNode.getTextContent().toUpperCase().indexOf("<BR>") > -1 ) {
-//								
-//								String stringSeparators = "<BR>";
-//								String[] result = parentNode.getTextContent().split(stringSeparators);
-//							}
-//							
-//						}
-//					}
-//				} else {
-//					hasBRTag = false;
-//				}
-//			} while(hasBRTag);
+			do {
+ 				if(doc.getElementsByTag("br").size() > 0) {
+					Element strInnerHtml2 = doc.getElementsByTag("br").get(0);
+					
+					if (doc.getElementsByTag("br").get(0).parent().html() != null) {
+						if (doc.getElementsByTag("br").get(0).parent().tagName().toLowerCase().equals("p")) {
+							if (doc.getElementsByTag("br").get(0).parent().html().toUpperCase().indexOf("<BR>") > -1 ) {
+								
+								String stringSeparators ="<br>";
+								String[] result = doc.getElementsByTag("br").get(0).parent().html().split(stringSeparators);
+								
+								   boolean bAllEmpty = true;
+		                             String InnerHTML = "";
+		                             for (int i = 0; i < result.length; i++) {
+		                                 if (result[i] != null && !result[i].equals("")) {
+		                                     bAllEmpty = false;
+		                                 }
+		                             }
+
+		                             int lastItem = result.length;
+		                             int itemCnt = 0;
+		                             for (int j = 0; j < result.length; j++) {
+		                                 if (!bAllEmpty) {
+		                                     if (result[j] == null || result[j].equals("")) {
+		                                         if (itemCnt != (lastItem - 1)) {
+		                                        	 doc.getElementsByTag("br").get(0).parent().html("&nbsp;");
+		                                        	 doc.getElementsByTag("br").get(0).parent().before(doc.getElementsByTag("br").get(0).parent().outerHtml());
+		                                         } else {
+		                                             // p태그 내부에 BR태그가 존재하고 그 뒤에 아무런 문구가 없다면 줄바꿈 시키지 않는다.
+		                                         }
+		                                     } else {
+		                             			org.jsoup.nodes.Document doc2 = Jsoup.parse(doc.getElementsByTag("br").get(0).parent().outerHtml());
+		                             			System.out.println(doc2.getElementsByTag("body").get(0).children());
+		                             			doc2.getElementsByTag("body").get(0).children().html(result[j]);
+		                                    	 doc.getElementsByTag("br").get(0).parent().before(doc2.getElementsByTag("body").get(0).children().outerHtml());
+		                                     }
+		                                 } else {
+		                                     bAllEmpty = false;
+		                                 }
+
+		                                 itemCnt++;
+		                             }
+		                             doc.getElementsByTag("br").get(0).parent().remove();
+								}
+							} else {
+								// 상위태그가 P태그가 아니라면 P태그를 붙여서 줄바꿈한다.
+                                if (doc.getElementsByTag("br").get(0).parent().html().toUpperCase().indexOf("<BR>") > -1)
+                                {
+                                	String stringSeparators ="<BR>";
+    								String[] result = doc.getElementsByTag("br").get(0).parent().html().split(stringSeparators);
+
+                                    // br이 포함되었으나 아무 문구가 없는 경우 (ex. <p><br><p>) 화면상에는 한줄 줄바꿈이기 때문에 
+                                    // br태그 앞뒤로 모두 비어있을 경우 한칸은 줄바꿈에서 제외한다.
+    								 boolean bAllEmpty = true;
+		                             String InnerHTML = "";
+		                             for (int i = 0; i < result.length; i++) {
+		                                 if (result[i] != null && !result[i].equals("")) {
+		                                     bAllEmpty = false;
+		                                 }
+		                             }
+                                
+		                             doc.getElementsByTag("br").get(0).parent().html("");
+                                    for (int m = 0; m > result.length; m++) {
+                                        if (!bAllEmpty) {
+                                            if (result[m] == null && result[m].equals("")) {
+                                            	doc.getElementsByTag("br").get(0).parent().after("<p>&nbsp;</p>");
+                                            } else {
+                                            	doc.getElementsByTag("br").get(0).parent().after("<p>" + result[m] + "</p>");
+                                            }
+                                        } else {
+                                            bAllEmpty = false;
+                                        }
+                                    }
+                                }
+							}
+						}
+				} else {
+					hasBRTag = false;
+				}
+			} while(hasBRTag);
+			
+			
+			for (int k = 0; k < doc.getElementsByTag("strong").size(); k++) {
+				Element el = doc.createElement("B");
+				el.text(doc.getElementsByTag("strong").get(k).text());
+				doc.getElementsByTag("strong").get(k).replaceWith(el);
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("em").size(); k++) {
+				Element el = doc.createElement("i");
+				el.text(doc.getElementsByTag("em").get(k).text());
+				doc.getElementsByTag("em").get(k).replaceWith(el);
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("li").size(); k++) {
+				String outerHtmlContent = doc.getElementsByTag("li").get(k).outerHtml();
+				
+				if (!outerHtmlContent.substring(outerHtmlContent.length() - 2, 2).equals("/>") && !outerHtmlContent.toUpperCase().substring(outerHtmlContent.lastIndexOf("<")).equals("</LI>")) {
+					doc.getElementsByTag("li").get(k).html(doc.getElementsByTag("li").get(k).outerHtml() + "</LI>");
+				}
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("menu").size(); k++) {
+				Element el = doc.createElement("ul");
+				el.text(doc.getElementsByTag("menu").get(k).html());
+				doc.getElementsByTag("menu").get(k).replaceWith(el);
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h1").size(); k++) {
+				doc.getElementsByTag("h1").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h1").get(k), "h1"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h2").size(); k++) {
+				doc.getElementsByTag("h2").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h2").get(k), "h2"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h3").size(); k++) {
+				doc.getElementsByTag("h3").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h3").get(k), "h3"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h4").size(); k++) {
+				doc.getElementsByTag("h4").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h4").get(k), "h4"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h5").size(); k++) {
+				doc.getElementsByTag("h5").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h5").get(k), "h5"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h6").size(); k++) {
+				doc.getElementsByTag("h6").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h6").get(k), "h6"));
+			}
+			
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
 			strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
@@ -21689,9 +21852,67 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return strRtnContent;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
+	}
+
+	private org.jsoup.nodes.Node MakeHTagHTML(Element element, String tagType) {
+		org.jsoup.nodes.Document doc = Jsoup.parse("");
+
+		Element NewElP = doc.createElement("P");
+		Element NewElB = doc.createElement("B");
+		
+		String strInnerHtml = element.text();
+		StringBuilder htmlStyle = new StringBuilder();
+		
+		String pStyle = element.attr("style").toString();
+		if (pStyle.indexOf("font-family") > -1) {
+    		htmlStyle.append(element.attr("style").toString().substring(element.attr("style").toString().indexOf("font-family"), element.attr("style").toString().indexOf(";", element.attr("style").toString().indexOf("font-family"))+1));
+		} else {
+			htmlStyle.append("font-family : 굴립;");
+		}
+		
+	    switch (tagType.toLowerCase()) {
+			case "h1":
+				htmlStyle.append(" font-size : 24pt;");
+			break;
+			
+			case "h2":
+				htmlStyle.append(" font-size : 18pt;");
+			break;
+			
+			case "h3":
+				htmlStyle.append(" font-size : 14pt;");
+			break;
+			
+			case "h4":
+				htmlStyle.append(" font-size : 12pt;");
+			break;
+			
+			case "h5":
+				htmlStyle.append(" font-size : 10pt;");
+			break;
+			
+			case "h6":
+				htmlStyle.append(" font-size : 8pt;");
+			break;
+		}
+	    
+	    htmlStyle.append(" marginTop : 0.0000mm;");
+	    htmlStyle.append(" marginBottom : 0.0000mm;");
+	    
+	    if (strInnerHtml == null || strInnerHtml.equals("")) {
+	    	NewElB.text("&nbsp;");
+	    } else {
+	    	NewElB.text(strInnerHtml);
+	    }
+	    
+	    NewElP.text(NewElB.outerHtml());
+	    NewElP.attr("style",htmlStyle.toString());
+
+		return NewElP;
 	}
 
 	private String ReturnErrorContent(String strErrorMsg) {
@@ -21907,22 +22128,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 
-//		 StringWriter sw = new StringWriter();
-//	        TransformerFactory tf = TransformerFactory.newInstance();
-//	        Transformer transformer = tf.newTransformer();
-//	        transformer.transform(new DOMSource(xmlDom.getElementsByTagName("body").item(0)), new StreamResult(sw));
-//	       System.out.println(sw.toString());	   
-//	   
-//	    String result = commonUtil.convertDocumentToString(xmlDom);
-//	   	Pattern pattern = Pattern.compile("<body.*?>");
-//		Matcher matcher = pattern.matcher(result);
-//		
-//		result = matcher.replaceAll("");
-//		Pattern pattern2 = Pattern.compile("</body>");
-//		Matcher matcher2 = pattern2.matcher(result);
-//		
-//		result = matcher2.replaceAll("");
-		
 		String strRtnHTML = null;
 		
 		if (doc.body().childNodeSize() == 0) {
@@ -22179,7 +22384,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception {
-		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+		String strPath =  config.getProperty("upload_relay.ROOT") + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
 		String strResult = "";
 		boolean exist;
 		String result = "";
@@ -22226,7 +22431,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public boolean insertRelayDB(String strDocID, String strXDocID, String strRecDate, String strFrom, String strTo, String strSubject, String strXMailType, String strXFromCode, String strXToCode,
-			String strXGW, String strXDocType, String strXDTDVersion, String strXXSLVersion, String strContentType, String strSealURL, String strXmlURL, String strLastDate, String strCompanyID, LoginVO userInfo) throws Exception {
+			String strXGW, String strXDocType, String strXDTDVersion, String strXXSLVersion, String strContentType, String strSealURL, String strXmlURL, String strLastDate, String strCompanyID, int tenantID) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -22253,8 +22458,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("sealUrl", strSealURL);
 			map.put("xmlUrl", strContentType);
 			map.put("lastDate", strLastDate);
-			map.put("companyID", userInfo.getCompanyID());
-			map.put("v_TENANTID", userInfo.getTenantId());
+			map.put("companyID", strCompanyID);
+			map.put("v_TENANTID", tenantID);
 			
 			//string 인지 리스트로 받아오는지 확실치 않아서 일단 리스트, 확인 후 변경
 			List<ApprGRelayVO> apprGAttachInfoVOList = ezApprovalGDAO.recRelayInfo(map);
@@ -22273,28 +22478,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public void fieldUpdate(String strFieldName, String strValue, String strXDocID, String strDeptID, String strCompanyID, LoginVO userInfo) throws Exception {
+	public void fieldUpdate(String strFieldName, String strValue, String strXDocID, String strDeptID, String strCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("FIELDNAME", strFieldName);
 		map.put("VALUE", strValue);
 		map.put("XDOCID", strXDocID);
 		map.put("DEPTID", strDeptID);
-		map.put("companyID", userInfo.getCompanyID());
-		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("companyID", strCompanyID);
+		map.put("v_TENANTID", tenantID);
 		
 		ezApprovalGDAO.updateRelayFiled(map);
 	}
 
 	@Override
-	public void addAttachInfo(String strFileName, String strRealFileName, String strDocID, String strSN, String strType, String strCompanyID,	LoginVO userInfo) throws Exception {
+	public void addAttachInfo(String strFileName, String strRealFileName, String strDocID, String strSN, String strType, String strCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", strDocID);
 		map.put("TYPE", strType);
 		map.put("REALFILENAME", strRealFileName);
 		map.put("FILENAME", strFileName);
 		map.put("SN", strSN);
-		map.put("companyID", userInfo.getCompanyID());
-		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("companyID", strCompanyID);
+		map.put("v_TENANTID", tenantID);
 		
 		if (strType.equals("XML")) {
 			List<ApprGRelayVO> apprGRelayExchList = ezApprovalGDAO.recRelayExchInfo(map);
@@ -22331,13 +22536,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, LoginVO userInfo) throws Exception {
+	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", strDocID);
 		map.put("REALFILENAME", strRealFileName);
 		map.put("FILENAME", strFileName);
-		map.put("companyID", userInfo.getCompanyID());
-		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("companyID", strCompanyID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGRelayVO> apprGRelaySignList = ezApprovalGDAO.recRelaySignInfo(map);
 		
@@ -22348,7 +22553,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	// 중계문서 정보를 가져와서 진행문서 생성
 	@Override
-	public boolean createRelayDocInfo(String realPath, String strXDocID, String strXToCode, String strCompanyID, LoginVO userInfo) throws Exception {
+	public boolean createRelayDocInfo(String realPath, String strXDocID, String strXToCode, String strCompanyID, int tenantID) throws Exception {
 		String strFromDeptID = "";
 		String strFromDeptName = "";
 		String strToDeptID = "";
@@ -22366,18 +22571,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strXmlDirPath = "";
 		int iSIndex;
 		int iAttCnt;
-		
+		int nYear;
+		  
 		 Map<String, Object> map = new HashMap<String, Object>();
 		 
 		try {
+			Calendar calendar = new GregorianCalendar(Locale.KOREA);
+			nYear = calendar.get(Calendar.YEAR);
 			strAttachYN = "N";
-            strFormID = ezCommonService.getTenantConfig("Relay_FormID", userInfo.getTenantId());
-            strXmlDirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) ;
+            strFormID = ezCommonService.getTenantConfig("Relay_FormID", tenantID);
+            strXmlDirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) ;
 
     		map.put("XDOCID", strXDocID);
     		map.put("XTOCODE", strXToCode);
-    		map.put("companyID", userInfo.getCompanyID());
-    		map.put("v_TENANTID", userInfo.getTenantId());
+    		map.put("companyID", strCompanyID);
+    		map.put("v_TENANTID", tenantID);
     		
     		List<ApprGRelayVO> realyXDocList = ezApprovalGDAO.relayGetByXDocIDInfo(map);
     		
@@ -22401,7 +22609,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				throw new Exception();
 			}
 			
-			strToDeptName = ezOrganService.getPropertyValue(strToDeptID, "displayName", userInfo.getTenantId());
+			strToDeptName = ezOrganService.getPropertyValue(strToDeptID, "displayName", tenantID);
 			iSIndex = strFromDeptID.indexOf("/");
 			strFromDeptID = strFromDeptID.substring(iSIndex + 1).trim();
 		    
@@ -22428,7 +22636,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strAttachYN = "Y";
 			}
 			
-			strNewID = getNewID(strCompanyID, userInfo.getTenantId());
+			strNewID = getNewID(strCompanyID, tenantID);
 
 			map.put("NEWID", strNewID);
     		map.put("FORMID", strFormID);
@@ -22443,8 +22651,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				for( int i = 0 ; i < iAttCnt ; i++ ) {
 					if(!domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("")) {
 						strAttachName = domXML.getElementsByTagName("ATTACHNAME").item(i).getTextContent();
-                        strAttachURL = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" 
-						               + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true).substring(0,4) + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+                        strAttachURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" 
+						               + commonUtil.separator + nYear + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
 						strAttachDisplayName = strAttachName;
 
 						map.put("NEWID", strNewID);
@@ -22458,9 +22666,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 						if(!domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("") ) {
 							strSource = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocDown" + commonUtil.separator + domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent();
-                            strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true).substring(0,4) + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+                            strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
                             
-                            File dir = new File(strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true).substring(0,4) + commonUtil.separator  + getDocDir(strNewID));
+                            File dir = new File(strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID));
                             
                             if (!dir.exists()) {
                             	dir.mkdirs();
@@ -22530,7 +22738,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	// 수신,접수,반송 처리결과에 대한 ACK 통합문서 생성
 	@Override
-	public boolean sendAck(String realPath, String strDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, LoginVO userInfo) throws Exception {
+	public boolean sendAck(String realPath, String strDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception {
 		/*	1. recRelayInfo 테이블에서 해당 문서의 정보를 조회함
 		        1) 수신부서의 ID            : xFromCode (원문발신부서코드)
 		        2) 원문상의 문서ID          : xDocID
@@ -22550,19 +22758,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          String strTimeStamp;
 
          try {
-             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+    		long time = System.currentTimeMillis(); 
+    		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        	
+             strTime = dayTime.format(new Date(time));
              strTimeStamp = strTime.replace("-", "");
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = commonUtil.getUploadPath("upload_relay.ROOT", userInfo.getTenantId()) +commonUtil.separator + "sample.xml";
+             strSamplePath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) +commonUtil.separator + "sample.xml";
              strSendOrgCode = strCompanyID;
-             strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", userInfo.getTenantId());
+             strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
              Document objXML = commonUtil.xmlLod(realPath + commonUtil.separator + strSamplePath);
 
              strFileName = strSendID + strReceiveID + strTimeStamp;
-             strFileName = getFileName(realPath, strFileName, "send", userInfo.getTenantId());
+             strFileName = getFileName(realPath, strFileName, "send", tenantID);
 
              objXML.getElementsByTagName("send-orgcode").item(0).setTextContent(strSendOrgCode);
              objXML.getElementsByTagName("send-id").item(0).setTextContent(strSendID);
@@ -22597,7 +22808,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strResult = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
              strResult = strResult + strTemp.replace("&amp;", "&");
 
-             File ackFile = new File(realPath + commonUtil.getUploadPath("upload_relay.ROOT", userInfo.getTenantId())  + commonUtil.separator +"DATA" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
+             File ackFile = new File(config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
              
          	if( ackFile.exists()) {
          		ackFile.delete();
@@ -22645,14 +22856,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, LoginVO userInfo) throws Exception {
+	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception {
 		boolean result = false;
 		try {
 			String strRecDate = strPrecDate;
 			String strRecStates = "";
-
+			long time = System.currentTimeMillis(); 
+    		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        	
 			if( strRecDate.trim().equals("")) {
-				strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
+				strRecDate = dayTime.format(new Date(time));
 			} else {
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
@@ -22694,8 +22907,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyID", userInfo.getCompanyID());
-			map.put("v_TENANTID", userInfo.getTenantId());
+			map.put("companyID", strCompanyID);
+			map.put("v_TENANTID", tenantID);
 			map.put("DOCID", strDocID);
 			map.put("RECEIPTPOINTID", strDeptID);
 			map.put("PROCESSDATE", strRecDate);
@@ -22711,12 +22924,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public boolean insFailMessage(String docID, String sendID, String sendName, String message, String companyID, LoginVO userInfo) throws Exception {
+	public boolean insFailMessage(String docID, String sendID, String sendName, String message, String companyID, int tenantID) throws Exception {
 		
 		boolean result = false;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", userInfo.getCompanyID());
-		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
 		map.put("PDOCID", docID);
 		map.put("PSENDID", sendID);
 		map.put("PSENDNAME", sendName);
@@ -22961,12 +23174,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, LoginVO userInfo) throws Exception {
+	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception {
 		String result = "";
 		Map <String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
-		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("companyID", userInfo.getCompanyID());
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
 		
 		List<ApprGRelayVO> relayDocList = ezApprovalGDAO.getSendAckDocInfo(map);
 		
@@ -22985,7 +23198,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         2. 원본 통합문서 sample xml를 로딩 (값이 없는 샘플문서를 미리 생성하여 둠)
         3. 입력값 Assign
         4. sendtemp 폴더에 저장 : 발신부서코드(7) + 수신부서코드(7) + 시간스탬프(YYYYMMDDhhmmss) + 일련번호(2)*/
-			boolean rtnVal = sendAck(realPath, strXDocID, strXToCode, strXFromCode, strSubject, type, userDeptName, userName, errMsg, userInfo.getCompanyID(), userInfo);
+			boolean rtnVal = sendAck(realPath, strXDocID, strXToCode, strXFromCode, strSubject, type, userDeptName, userName, errMsg, companyID, tenantID);
 			
 			if (rtnVal) {
 				result = "<RESLUT>TRUE</RESULT>";
@@ -22994,5 +23207,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public List<OrganUserVO> getTenantID() throws Exception {
+		return ezApprovalGDAO.getTenantID();
 	}
 }

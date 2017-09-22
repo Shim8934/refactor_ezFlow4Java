@@ -1501,14 +1501,10 @@
 	
 	<select id="EzOrganDAO.getExtension4ID" parameterClass="Map" resultClass="OrganDeptVO">
 		SELECT 
-			CN, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE4
+			CN, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE4, TENANT_ID
 		FROM
 			TBL_DEPTMASTER
 		WHERE 
-			TENANT_ID = #v_TENANTID#
-		AND
-			EXTENSIONATTRIBUTE2 = #companyID#
-		AND
 			EXTENSIONATTRIBUTE4 = #extension4#
 	</select>
 </sqlMap>

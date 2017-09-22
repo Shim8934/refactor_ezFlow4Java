@@ -6,9 +6,6 @@
 	    <title></title>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <style>
-          P { margin-top: 0px;margin-bottom: 0px; } 
-   	 	</style>
 	    <script language="javascript" type="text/javascript">
 	        var XmlBodyATT = createXmlDom();
 	        document.onselectstart = function () { return false; };

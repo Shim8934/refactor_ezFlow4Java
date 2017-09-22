@@ -23116,4 +23116,11 @@
 			AND	
 				DOCID = #v_DOCID#
 	  </select>
+	  
+	  <select id="EzApprovalG.getTenantID" resultClass="OrganUserVO">
+	  	SELECT 
+	  		TENANT_ID AS tenantId
+	  	FROM
+	  		TBL_TENANT
+	  </select>
 </sqlMap>

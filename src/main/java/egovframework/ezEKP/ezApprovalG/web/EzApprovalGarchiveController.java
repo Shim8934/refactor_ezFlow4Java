@@ -2503,7 +2503,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			userDeptName = "";
 		}
 
-		String result = ezApprovalGService.sendAck(commonUtil.getRealPath(request), docID, type, userName, userDeptName, errMsg, userInfo);
+		String result = ezApprovalGService.sendAck(commonUtil.getRealPath(request), docID, type, userName, userDeptName, errMsg, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("getRelayDocInfo ended");
 		return result;
 	}

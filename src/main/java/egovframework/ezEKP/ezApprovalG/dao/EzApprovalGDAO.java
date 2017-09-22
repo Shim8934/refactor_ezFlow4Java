@@ -776,6 +776,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGRelayVO>) list("EzApprovalG.getSendAckDocInfo", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getTenantID() throws Exception {
+		return (List<OrganUserVO>) list("EzApprovalG.getTenantID");
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}

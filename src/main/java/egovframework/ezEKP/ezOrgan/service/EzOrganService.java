@@ -64,5 +64,5 @@ public interface EzOrganService {
 
 	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception;
 
-	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID, LoginVO userInfo) throws Exception;
+	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID) throws Exception;
 }

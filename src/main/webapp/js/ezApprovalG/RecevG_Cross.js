@@ -192,19 +192,23 @@ function UpdateAttachURL() {
 }
 
 function SendAckForSend(errMsg, type) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pType", type);
-    createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-    createNodeAndInsertText(xmlpara, objNode, "pDeptName", arr_userinfo[15]);
-    createNodeAndInsertText(xmlpara, objNode, "errMsg", errMsg);
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRRECEIVE/aspx/sendAckforReSend.aspx", false);
-    xmlhttp.send(xmlpara);
-
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/sendAckforReSend.do",
+		data : {
+				docID : pDocID,
+				type  : type,
+				userName : arr_userinfo[11],
+				userDeptName : arr_userinfo[15],
+				errMsg : errMsg
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
     if (type == "req-resend") {
         var pAlertContent = strLang725;
         OpenAlertUI(pAlertContent);
@@ -1029,7 +1033,7 @@ function getExtInfo() {
                 else
                     var signHeight = ConversionPt(GetAttribute(GetChildNodes(Nodes[0])[0], "height"));
 
-                var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath) + "' border=0 embedding='1' ";
+                var strimg = "<img src='" + escape(signPath) + "' border=0 embedding='1' ";
                 strimg = strimg + " width=" + signWidth;
                 strimg = strimg + " height=" + signHeight + ">";
                 field.innerHTML = strimg;
@@ -1068,7 +1072,7 @@ function getExtInfo() {
                 else
                     var signHeight = ConversionPt(GetAttribute(GetChildNodes(Nodes[0])[0], "height"));
 
-                var strimg = "<img src='" + RootURL + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath) + "' border=0 embedding='1' ";
+                var strimg = "<img src='" + escape(signPath) + "' border=0 embedding='1' ";
                 strimg = strimg + " width=" + signWidth;
                 strimg = strimg + " height=" + signHeight + ">";
 
