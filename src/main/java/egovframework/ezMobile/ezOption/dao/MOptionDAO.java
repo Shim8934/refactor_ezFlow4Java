@@ -1,11 +1,13 @@
 package egovframework.ezMobile.ezOption.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MOptionDAO")
@@ -25,6 +27,11 @@ public class MOptionDAO extends EgovAbstractDAO {
 
 	public void updateOption(Map<String, Object> map) throws Exception{
 		insert("EzOptionDAO.updateOption", map);		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MPortalTimeLineVO> getTimeLineList(Map<String, Object> map) throws Exception {
+		return (List<MPortalTimeLineVO>) list("EzOptionDAO.getTimeLineList", map);
 	}
 	
 }

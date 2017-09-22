@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezSchedule.web;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -9,6 +10,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,14 +218,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String realPath = commonUtil.getRealPath(request);
 	
 			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale);
-			LOGGER.debug("mhtToHtml: " + mhtToHtml);
-			
-			//if(mhtToHtml.indexOf("<div>") < 0 || mhtToHtml.indexOf("</div>") < 0) {
-			//	mhtToHtml = "";
-			//}
-			
-			LOGGER.debug("mhtToHtml: " + mhtToHtml);
-			vo.setContent(mhtToHtml);
+			LOGGER.debug("mhtToHtml: " + mhtToHtml);			
+	        Document doc = Jsoup.parse(mhtToHtml);	        
+	        String bodyHTML = doc.getElementsByTag("BODY").html();
+			vo.setContent(bodyHTML);
 			
 			
 			//자원예약 정보
@@ -459,7 +458,21 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        
 	        String realPath = commonUtil.getRealPath(request);
 	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
-	        	        	        
+	        
+			String content = jsonParam.get("content").toString();
+			content = content.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			content = content.replaceAll("\\+", "%2B");
+			content = URLDecoder.decode(content, "utf-8");
+			
+			String scheme = "http://";
+			if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+				scheme = "https://";
+			}
+			
+			content = content.replace("replace_" + scheme, scheme);
+	        
+			jsonParam.put("content", content);
+	        
 	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
 	        
 	        result.put("status", "ok");
@@ -527,6 +540,20 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        } else {
 	        	jsonParam.put("hasAttach", "N");
 	        }
+	        
+			String content = jsonParam.get("content").toString();
+			content = content.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			content = content.replaceAll("\\+", "%2B");
+			content = URLDecoder.decode(content, "utf-8");
+			
+			String scheme = "http://";
+			if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+				scheme = "https://";
+			}
+			
+			content = content.replace("replace_" + scheme, scheme);
+	        
+			jsonParam.put("content", content);
 	        
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        

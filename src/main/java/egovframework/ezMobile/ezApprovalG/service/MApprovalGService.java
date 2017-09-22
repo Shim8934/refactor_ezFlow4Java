@@ -9,9 +9,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface MApprovalGService {
 
@@ -28,8 +26,6 @@ public interface MApprovalGService {
 	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
 	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType) throws Exception;
-
-	public List<MApprovalGTLVO> getTimeLineList(LoginVO userInfo, String sessionDate) throws Exception;
 
 	public List<MApprovalGAttachInfoVO> getAttachList(String docId, String type, MCommonVO userInfo) throws Exception;
 
