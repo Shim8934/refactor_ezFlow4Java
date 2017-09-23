@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezPortal.web;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -155,15 +156,18 @@ public class MPortalGWController extends EgovFileMngUtil {
 				dataObject.put("resourceList", resourceList);
 				dataObject.put("resourceCnt", resourceCnt+"");
 			} else {//timeline
-				String sessionDate = request.getParameter("sessionDate");
-				String nowDate = commonUtil.getTodayUTCTime("");
+				String utcSessionDate = request.getParameter("sessionDate");
+				String utcNowDate = commonUtil.getTodayUTCTime("");
 				
 				//타임라인만 특별히 예외
-				listCnt = "50";
+				listCnt = "30";
 
-				if (sessionDate == null || sessionDate.equals("")) {
-					sessionDate = nowDate;
+				if (utcSessionDate == null || utcSessionDate.equals("")) {
+					utcSessionDate = utcNowDate;
 				}
+				
+				String nowDate = commonUtil.getDateStringInUTC(utcNowDate, info.getOffSet(), false);
+				String sessionDate = commonUtil.getDateStringInUTC(utcSessionDate, info.getOffSet(), false);
 				
 				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 				Locale locale = new Locale(ld);
@@ -177,12 +181,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 				long startTime = System.currentTimeMillis();
 				
 				//한번에 가져오긴 힘들고 귀찮다.
-				List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionService.getTimeLineList(info, sessionDate, listCnt);
+				List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionService.getTimeLineList(info, utcSessionDate, listCnt);
 				
 				LOGGER.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//메일 조인
-				List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, Integer.parseInt(listCnt));
+				List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, utcSessionDate, Integer.parseInt(listCnt));
 				
 				for (Map<String, String> maps : mailList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
@@ -198,31 +202,56 @@ public class MPortalGWController extends EgovFileMngUtil {
 				LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//자원관리 조인
-				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), sessionDate, nowDate, info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "");
+				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "");
 				List<ResGetScheduleVO> resList = (List<ResGetScheduleVO>) resMap.get("scheduleList");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				
 				for (ResGetScheduleVO resGetScheduleVO : resList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
 					mPortalTimeLineVO.setTitle(resGetScheduleVO.getTitle());
-					mPortalTimeLineVO.setStartDate(resGetScheduleVO.getStartDate().substring(0, 10) + " 00:00:00");
+					mPortalTimeLineVO.setStartDate(resGetScheduleVO.getStartDate());
 					mPortalTimeLineVO.setModule("5");
 					mPortalTimeLineVO.setWriterName(resGetScheduleVO.getOwnerNm());
 					mPortalTimeLineVO.setResID(resGetScheduleVO.getOwnerId());
 					mPortalTimeLineVO.setResNum(resGetScheduleVO.getNum());
+					
+					if (sdf.parse(resGetScheduleVO.getStartDate().substring(0, 10)).compareTo(sdf.parse(nowDate.substring(0, 10))) == 0) {
+						if (resGetScheduleVO.getStartDate().compareTo(sessionDate) == 1) {
+							if (sessionDate.equals(nowDate)) {
+								mPortalTimeLineVOs.add(mPortalTimeLineVO);
+							}
+						}
+					} else {
+						if (sdf.parse(resGetScheduleVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == -1) {
+							mPortalTimeLineVOs.add(mPortalTimeLineVO);
+						}
+					}
 				}
 				
 				LOGGER.debug("## 자원관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//일정관리 조인
-				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, sessionDate, nowDate, "");
+				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, nowDate, nowDate, "");
 				
 				for (ScheduleInfoVO scheduleInfoVO : schList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
 					mPortalTimeLineVO.setTitle(scheduleInfoVO.getTitle());
-					mPortalTimeLineVO.setStartDate(scheduleInfoVO.getStartDate().substring(0, 10) + " 00:00:00");
+					mPortalTimeLineVO.setStartDate(scheduleInfoVO.getStartDate());
 					mPortalTimeLineVO.setModule("3");
 					mPortalTimeLineVO.setWriterName(scheduleInfoVO.getCreatorName());
 					mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
+					
+					if (sdf.parse(scheduleInfoVO.getStartDate().substring(0, 10)).compareTo(sdf.parse(nowDate.substring(0, 10))) == 0) {
+						if (scheduleInfoVO.getStartDate().compareTo(sessionDate) == 1) {
+							if (sessionDate.equals(nowDate)) {
+								mPortalTimeLineVOs.add(mPortalTimeLineVO);
+							}
+						}
+					} else {
+						if (sdf.parse(scheduleInfoVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == -1) {
+							mPortalTimeLineVOs.add(mPortalTimeLineVO);
+						}
+					}
 				}
 				
 				LOGGER.debug("## 일정관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
@@ -236,12 +265,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 				
 				if (mPortalTimeLineVOs.size() > 0) {
 					mPortalTimeLineVOs = mPortalTimeLineVOs.subList(0, Integer.parseInt(listCnt) > mPortalTimeLineVOs.size() ? mPortalTimeLineVOs.size() : Integer.parseInt(listCnt));
-					sessionDate = mPortalTimeLineVOs.get(mPortalTimeLineVOs.size() - 1).getStartDate();
-					sessionDate = commonUtil.getDateStringInUTC(sessionDate, info.getOffSet(), true);
+					utcSessionDate = mPortalTimeLineVOs.get(mPortalTimeLineVOs.size() - 1).getStartDate();
+					utcSessionDate = commonUtil.getDateStringInUTC(utcSessionDate, info.getOffSet(), true);
 				}
 				
 				dataObject.put("timeLineList", mPortalTimeLineVOs);
-				dataObject.put("sessionDate", sessionDate);
+				dataObject.put("sessionDate", utcSessionDate);
 				
 				code = 3;
 			}
