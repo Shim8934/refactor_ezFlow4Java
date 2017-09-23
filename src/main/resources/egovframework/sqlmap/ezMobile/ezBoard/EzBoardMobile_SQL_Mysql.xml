@@ -1173,19 +1173,18 @@
               P.TENANT_ID = B.TENANT_ID
             AND
               P.BoardID = B.boardid
+            LEFT JOIN
+              TBL_Board_Item_Read C  
+            ON 
+              A.itemid = C.itemid
+            AND
+              C.ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+            AND
+              C.tenant_id = #tenantID#
+            AND
+              C.userid = #userID#
           WHERE  
-            ( NOT EXISTS ( SELECT 
-                      USERID
-                               FROM 
-                                  TBL_Board_Item_Read 
-                               WHERE
-                                  tenant_id = #tenantID#
-                               AND  
-                                  userid = #userID#
-                               AND 
-                                  itemid = A.itemid
-                               AND 
-                                  ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY) ) )
+            C.itemid IS NULL
             ]]>
             <isNotEmpty property="pSearchText">
                 <![CDATA[
