@@ -1336,9 +1336,9 @@ public class EzEmailServiceImpl implements EzEmailService {
  				count = unreadCount;
  			}
  			
- 			messages = Arrays.copyOfRange(messages, 0, count);
- 			
-	        // pre-fetch
+ 			messages = Arrays.copyOfRange(messages, 0, messages.length-1);
+
+ 			// pre-fetch
 	        FetchProfile fp = new FetchProfile();
 	        fp.add(UIDFolder.FetchProfileItem.UID);
 	        fp.add(FetchProfile.Item.ENVELOPE);
