@@ -157,6 +157,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			} else {//timeline
 				String sessionDate = request.getParameter("sessionDate");
 				String nowDate = commonUtil.getTodayUTCTime("");
+				
+				//타임라인만 특별히 예외
+				listCnt = "50";
 
 				if (sessionDate == null || sessionDate.equals("")) {
 					sessionDate = nowDate;
@@ -179,7 +182,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				LOGGER.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//메일 조인
-				List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, 20);
+				List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, commonUtil.getDateStringInUTC(sessionDate, userInfo.getOffset(), false), Integer.parseInt(listCnt));
 				
 				for (Map<String, String> maps : mailList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
@@ -231,9 +234,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 					}
 				});
 				
-				mPortalTimeLineVOs = mPortalTimeLineVOs.subList(0, Integer.parseInt(listCnt));
-				sessionDate = mPortalTimeLineVOs.get(mPortalTimeLineVOs.size() - 1).getStartDate();
-				sessionDate = commonUtil.getDateStringInUTC(sessionDate, info.getOffSet(), true);
+				if (mPortalTimeLineVOs.size() > 0) {
+					mPortalTimeLineVOs = mPortalTimeLineVOs.subList(0, Integer.parseInt(listCnt) > mPortalTimeLineVOs.size() ? mPortalTimeLineVOs.size() : Integer.parseInt(listCnt));
+					sessionDate = mPortalTimeLineVOs.get(mPortalTimeLineVOs.size() - 1).getStartDate();
+					sessionDate = commonUtil.getDateStringInUTC(sessionDate, info.getOffSet(), true);
+				}
 				
 				dataObject.put("timeLineList", mPortalTimeLineVOs);
 				dataObject.put("sessionDate", sessionDate);
@@ -245,6 +250,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("code", code);			
 			result.put("data", dataObject);
 		} catch (Exception e) {
+			e.printStackTrace();
+			
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		

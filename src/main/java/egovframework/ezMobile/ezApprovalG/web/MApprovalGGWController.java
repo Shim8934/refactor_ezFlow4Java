@@ -126,7 +126,7 @@ public class MApprovalGGWController {
 			LOGGER.debug("lastDate : " + lastDate);
 			
 			if (listSize == null || listSize.equals("")) {
-				listSize = "20";
+				listSize = "50";
 			}
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
