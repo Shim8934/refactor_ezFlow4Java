@@ -216,7 +216,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					mPortalTimeLineVO.setResNum(resGetScheduleVO.getNum());
 					
 					if (sdf.parse(resGetScheduleVO.getStartDate().substring(0, 10)).compareTo(sdf.parse(nowDate.substring(0, 10))) == 0) {
-						if (resGetScheduleVO.getStartDate().compareTo(sessionDate) == 1) {
+						if (sdf.parse(resGetScheduleVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == 1) {
 							if (sessionDate.equals(nowDate)) {
 								mPortalTimeLineVOs.add(mPortalTimeLineVO);
 							}
@@ -242,7 +242,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
 					
 					if (sdf.parse(scheduleInfoVO.getStartDate().substring(0, 10)).compareTo(sdf.parse(nowDate.substring(0, 10))) == 0) {
-						if (scheduleInfoVO.getStartDate().compareTo(sessionDate) == 1) {
+						if (sdf.parse(scheduleInfoVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == 1) {
 							if (sessionDate.equals(nowDate)) {
 								mPortalTimeLineVOs.add(mPortalTimeLineVO);
 							}
