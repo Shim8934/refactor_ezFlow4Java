@@ -277,6 +277,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					utcSessionDate = commonUtil.getDateStringInUTC(utcSessionDate, info.getOffSet(), true);
 				}
 				
+				dataObject.put("timeLineCount", mPortalTimeLineVOs.size());
 				dataObject.put("timeLineList", mPortalTimeLineVOs);
 				dataObject.put("sessionDate", utcSessionDate);
 				
