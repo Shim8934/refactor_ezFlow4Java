@@ -491,7 +491,7 @@ System.out.println("@@@lastDate:"+lastDate);
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String list= mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
+			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
 			
