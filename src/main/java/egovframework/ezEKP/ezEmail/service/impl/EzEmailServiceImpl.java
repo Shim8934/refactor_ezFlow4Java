@@ -1349,7 +1349,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        	
 	        	Date receivedDate = message.getReceivedDate();
 	        	String receivedDateStr = sdf.format(receivedDate);
-	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+//	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
 	        	
 	        	String subject = ezEmailUtil.getSubject(message);
 				subject = (subject != null) ? subject : "";
