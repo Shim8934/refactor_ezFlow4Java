@@ -204,7 +204,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 				//자원관리 조인
 				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "");
 				List<ResGetScheduleVO> resList = (List<ResGetScheduleVO>) resMap.get("scheduleList");
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat shotDF = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat longDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
 				for (ResGetScheduleVO resGetScheduleVO : resList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
@@ -215,14 +216,16 @@ public class MPortalGWController extends EgovFileMngUtil {
 					mPortalTimeLineVO.setResID(resGetScheduleVO.getOwnerId());
 					mPortalTimeLineVO.setResNum(resGetScheduleVO.getNum());
 					
-					if (sdf.parse(resGetScheduleVO.getStartDate().substring(0, 10)).compareTo(sdf.parse(nowDate.substring(0, 10))) == 0) {
-						if (sdf.parse(resGetScheduleVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == 1) {
+					if (shotDF.parse(resGetScheduleVO.getStartDate()).compareTo(shotDF.parse(nowDate)) == 0) {
+						if (longDF.parse(resGetScheduleVO.getStartDate()).compareTo(longDF.parse(sessionDate)) == 1) {
 							if (sessionDate.equals(nowDate)) {
 								mPortalTimeLineVOs.add(mPortalTimeLineVO);
 							}
+						} else {
+							mPortalTimeLineVOs.add(mPortalTimeLineVO);
 						}
 					} else {
-						if (sdf.parse(resGetScheduleVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == -1) {
+						if (longDF.parse(resGetScheduleVO.getStartDate()).compareTo(longDF.parse(sessionDate)) == -1) {
 							mPortalTimeLineVOs.add(mPortalTimeLineVO);
 						}
 					}
@@ -231,7 +234,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 				LOGGER.debug("## 자원관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//일정관리 조인
-				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, nowDate, nowDate, "");
+				String tempSDate = nowDate.substring(0, 10) + " 00:00:00";
+				String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
+				
+				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "");
 				
 				for (ScheduleInfoVO scheduleInfoVO : schList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
@@ -241,14 +247,16 @@ public class MPortalGWController extends EgovFileMngUtil {
 					mPortalTimeLineVO.setWriterName(scheduleInfoVO.getCreatorName());
 					mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
 					
-					if (sdf.parse(scheduleInfoVO.getStartDate().substring(0, 10)).compareTo(sdf.parse(nowDate.substring(0, 10))) == 0) {
-						if (sdf.parse(scheduleInfoVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == 1) {
+					if (shotDF.parse(scheduleInfoVO.getStartDate()).compareTo(shotDF.parse(nowDate)) == 0) {
+						if (longDF.parse(scheduleInfoVO.getStartDate()).compareTo(longDF.parse(sessionDate)) == 1) {
 							if (sessionDate.equals(nowDate)) {
 								mPortalTimeLineVOs.add(mPortalTimeLineVO);
 							}
+						} else {
+							mPortalTimeLineVOs.add(mPortalTimeLineVO);
 						}
 					} else {
-						if (sdf.parse(scheduleInfoVO.getStartDate()).compareTo(sdf.parse(sessionDate)) == -1) {
+						if (longDF.parse(scheduleInfoVO.getStartDate()).compareTo(longDF.parse(sessionDate)) == -1) {
 							mPortalTimeLineVOs.add(mPortalTimeLineVO);
 						}
 					}
