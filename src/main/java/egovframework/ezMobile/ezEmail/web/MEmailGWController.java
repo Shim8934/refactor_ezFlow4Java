@@ -4396,7 +4396,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						flagged = "1";
 					}
 					mail.put("flag",flagged);
-					
+					mail.put("folderName",f.getName());
 					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale);
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
