@@ -396,10 +396,10 @@
 		        		} else {
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue);
+				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&localValue=" + encodeURIComponent(localValue);
 				            }
 				            else {
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue);
+				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&localValue=" + encodeURIComponent(localValue);
 				            }
 				        }
 		        }
