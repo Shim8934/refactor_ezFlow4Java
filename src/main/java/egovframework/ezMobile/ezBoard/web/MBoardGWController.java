@@ -1,6 +1,5 @@
 package egovframework.ezMobile.ezBoard.web;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,8 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.sql.PseudoColumnUsage;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +36,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
@@ -111,7 +107,7 @@ public class MBoardGWController {
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
-System.out.println("@@@lastDate:"+lastDate);
+
 			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId(), info.getOffSet(),pSearchText);
 			
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), pSearchText);
@@ -130,6 +126,7 @@ System.out.println("@@@lastDate:"+lastDate);
 			result.put("data2", "");
 			result.put("listSize", "");
 		}
+		
 		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] ended.");
 		return result;
 	}
@@ -173,7 +170,6 @@ System.out.println("@@@lastDate:"+lastDate);
 				parentWriteDate = list.get(listSize-1).getParentWriteDate();
 				upperitemidtree = list.get(listSize-1).getUpperItemIDTree();
 			}
-			
 			
 			//즐겨찾기 여부
 			String favoriteYN = mBoardService.checkFavorite(userID, boardId, info.getTenantId());
