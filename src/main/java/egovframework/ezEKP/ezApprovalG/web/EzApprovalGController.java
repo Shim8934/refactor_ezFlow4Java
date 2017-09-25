@@ -341,7 +341,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
 		String subQuery = request.getParameter("SubQuery");
 		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId());
-		String localValue = request.getParameter("localValue");
 		
 		nowDate = nowDate.substring(0, 16);
 		
@@ -369,7 +368,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("listType", listType);
 		model.addAttribute("proxyInfo", proxyInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
-		model.addAttribute("localValue", localValue);
 		logger.debug("aprManage ended.");
 		
 		return "ezApprovalG/apprGManage";

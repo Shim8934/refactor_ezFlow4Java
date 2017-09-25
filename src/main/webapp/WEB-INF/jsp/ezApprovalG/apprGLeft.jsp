@@ -251,7 +251,8 @@
 		                    convMain('1', '');
 		                    break;
 		                case "MYCONT":
-		                    cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>",'');
+		                    //cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>",'');
+		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'');
 		                    break;
 		                case "MYDRAFTCONT":
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:EXACT");
@@ -310,12 +311,13 @@
 		    }
 		
 		    var localValue = "";
-		    function setPresentValue(tempValue) {
+ 		    function setPresentValue(tempValue) {
 		    	if(approvalFlag == 'G') {
-			        if (tempValue == "")
+			        if (tempValue == "") {
 			            tempValue = localValue;
-			        else
+			        } else {
 			            localValue = tempValue;
+			        }
 			        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
 			        try {
 			            if (CrossYN())
@@ -325,12 +327,25 @@
 			        }
 			        catch (e) { }
 		    	} else {
-		    	    if (tempValue == "")
+/* 		    	    if (tempValue == "")
 		    	        tempValue = localValue;
 		    	    else
-		    	        localValue = tempValue;
+		    	        localValue = tempValue;   */
+				        if (tempValue == "") {
+				            tempValue = localValue;
+				        } else {
+				            localValue = tempValue;
+				        }
+				        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
+				        try {
+				            if (CrossYN())
+				                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+				            else
+				                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+				        }
+				        catch (e) { }		    	        
 		    	}
-		    }
+		    } 
 		
 		    function convMain(listtype, SubQuery) {
 		        try {
@@ -396,10 +411,10 @@
 		        		} else {
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&localValue=" + encodeURIComponent(localValue);
+				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue);
 				            }
 				            else {
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&localValue=" + encodeURIComponent(localValue);
+				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue);
 				            }
 				        }
 		        }
@@ -924,7 +939,7 @@
 			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
 				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
-		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
+		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
 		        <ul>
 				</ul>
 			</c:if>
