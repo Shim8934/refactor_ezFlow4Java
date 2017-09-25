@@ -124,6 +124,44 @@ public class MBoardInfoVO {
 	/** 모바일 페이지(새게시물/리스트/글읽기) 구분 */
 	private String type;
 	
+	@Override
+	public String toString() {
+		return "MBoardInfoVO [loginVO=" + loginVO + ", boardID=" + boardID
+				+ ", boardName=" + boardName + ", boardName1=" + boardName1
+				+ ", boardName2=" + boardName2 + ", treeViewOrder="
+				+ treeViewOrder + ", boardLevel=" + boardLevel
+				+ ", parentBoardID=" + parentBoardID + ", boardDescription="
+				+ boardDescription + ", itemExpires=" + itemExpires
+				+ ", attachSizeLimit=" + attachSizeLimit + ", replyNotify="
+				+ replyNotify + ", boardGroupID=" + boardGroupID
+				+ ", boardGroupName=" + boardGroupName + ", boardGroupName2="
+				+ boardGroupName2 + ", alertPostItem=" + alertPostItem
+				+ ", guBun=" + guBun + ", url=" + url + ", deleteAfter="
+				+ deleteAfter + ", boardColor=" + boardColor + ", boardNo="
+				+ boardNo + ", portlet=" + portlet + ", oneLineReply="
+				+ oneLineReply + ", boardTreePath=" + boardTreePath
+				+ ", formLocation=" + formLocation + ", formFlag=" + formFlag
+				+ ", apprFlag=" + apprFlag + ", apprMailFlag=" + apprMailFlag
+				+ ", apprUserList=" + apprUserList + ", orgApprFlag="
+				+ orgApprFlag + ", attributeYN=" + attributeYN
+				+ ", ss_board_maxRows=" + ss_board_maxRows
+				+ ", ss_searchBoard_maxRows=" + ss_searchBoard_maxRows
+				+ ", boardGroupAdmin_FG=" + boardGroupAdmin_FG + ", accessID="
+				+ accessID + ", accessLevel=" + accessLevel + ", access_="
+				+ access_ + ", boardMin_FG=" + boardMin_FG + ", listView_FG="
+				+ listView_FG + ", read_FG=" + read_FG + ", write_FG="
+				+ write_FG + ", reply_FG=" + reply_FG + ", delete_FG="
+				+ delete_FG + ", inherit_FG=" + inherit_FG + ", postNotice="
+				+ postNotice + ", boardGroupACL=" + boardGroupACL
+				+ ", access_FG=" + access_FG + ", boardAdmin_FG="
+				+ boardAdmin_FG + ", expireDays=" + expireDays
+				+ ", apprMail_FG=" + apprMail_FG + ", boardType=" + boardType
+				+ ", adminType=" + adminType + ", buttonHidden=" + buttonHidden
+				+ ", sortBy=" + sortBy + ", page=" + page + ", totalPage="
+				+ totalPage + ", totalCount=" + totalCount + ", tenantID="
+				+ tenantID + ", displayName=" + displayName + ", type=" + type
+				+ "]";
+	}
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
 	}

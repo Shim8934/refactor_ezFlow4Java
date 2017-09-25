@@ -417,7 +417,12 @@ public class MBoardServiceImpl implements MBoardService {
 	public MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception {
 		mBoardInfoVO.setSs_board_maxRows(mobileListSize);
 		mBoardInfoVO.setSs_searchBoard_maxRows(mobileListSize);
-		
+
+		String boardName = mBoardInfoVO.getBoardName();
+		String guBun = mBoardInfoVO.getGuBun();
+		String boardID = mBoardInfoVO.getBoardID();
+		String type = mBoardInfoVO.getType();
+				
 		String deptPath = deptPathCode;
 	    String deptPathOrgan="";
 	    
@@ -430,13 +435,20 @@ public class MBoardServiceImpl implements MBoardService {
 	    }
 	    
 	    String userDeptPath = deptPathOrgan+",everyone";
-	    
-		for (String userDept : userDeptPath.split(",")) {
-			MBoardInfoVO aclVO = getACL(mBoardInfoVO, userDept.trim(), info.getTenantId());
+
+		//for (String userDept : userDeptPath.split(",")) {
+
+		for (int i=0; i<userDeptPath.split(",").length; i++) {	
+			MBoardInfoVO aclVO = getACL(mBoardInfoVO, userDeptPath.split(",")[i].trim(), info.getTenantId());
 			
-			if (aclVO == null) {
+			if (aclVO != null) {
+				mBoardInfoVO = aclVO;
+				mBoardInfoVO.setBoardName(boardName);
+				mBoardInfoVO.setGuBun(guBun);
+				mBoardInfoVO.setBoardID(boardID);
+				mBoardInfoVO.setType(type);
 				break;
-			} else {
+			}/* else {
 				mBoardInfoVO.setBoardID(aclVO.getBoardID());
 				mBoardInfoVO.setAccessID(aclVO.getAccessID());
 				mBoardInfoVO.setAccessLevel(aclVO.getAccessLevel());
@@ -451,7 +463,7 @@ public class MBoardServiceImpl implements MBoardService {
 				mBoardInfoVO.setInherit_FG(aclVO.getInherit_FG());
 				mBoardInfoVO.setPostNotice(aclVO.getPostNotice());
 				mBoardInfoVO.setBoardGroupACL(aclVO.getBoardGroupACL());
-			}
+			}*/
 		}
 		
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(mBoardInfoVO.getBoardID(), info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
