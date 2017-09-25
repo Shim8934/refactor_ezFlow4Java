@@ -418,7 +418,8 @@
 		   			AND 
 			         	DocState <> '017') as aprDraftCount,
 				(SELECT 
-						COUNT(DISTINCT DOCID)
+						COUNT(DISTINCT DOCID,
+								   APRTYPE)
 					FROM 
 						VAPRWILLDOCLIST 
 		   			WHERE
@@ -433,7 +434,8 @@
 		   				APRTYPE <> '015') as aprIngCount,
 		]]>
 			(SELECT
-				COUNT(DISTINCT A.DOCID)
+				COUNT(DISTINCT A.DOCID,
+					  		   B.APRTYPE)
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
