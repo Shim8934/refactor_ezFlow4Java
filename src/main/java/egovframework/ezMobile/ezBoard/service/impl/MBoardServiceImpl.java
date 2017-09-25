@@ -169,7 +169,8 @@ public class MBoardServiceImpl implements MBoardService {
 		String guBun = mBoardInfoVO.getGuBun();
 		String boardID = mBoardInfoVO.getBoardID();
 		String type = mBoardInfoVO.getType();
-				
+		String apprFlag = mBoardInfoVO.getApprFlag();
+		
 		String deptPath = deptPathCode;
 	    String deptPathOrgan="";
 	    
@@ -194,6 +195,7 @@ public class MBoardServiceImpl implements MBoardService {
 				mBoardInfoVO.setGuBun(guBun);
 				mBoardInfoVO.setBoardID(boardID);
 				mBoardInfoVO.setType(type);
+				mBoardInfoVO.setApprFlag(apprFlag);
 				break;
 			}/* else {
 				mBoardInfoVO.setBoardID(aclVO.getBoardID());
@@ -314,6 +316,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		
+		String apprFlag = mBoardDAO.getBoardApprFlag(map);
+		
+		if (apprFlag != null && apprFlag.equals("Y")) {
+			map.put("apprFlag", apprFlag);
+		}
+		
 		List<MBoardItemVO> list = mBoardDAO.getBoardItemList(map);
 		
 		logger.debug("getBoarditemList ended.");
@@ -342,7 +350,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		
     	String apprFlag = mBoardDAO.getBoardApprFlag(map);
-		
+
 		if (apprFlag != null && apprFlag.equals("Y")) {
 			map.put("apprFlag", apprFlag);
 		}

@@ -418,14 +418,14 @@
 			]]>
 		</isEqual>
 		
-		<isNotEqual property="apprFlag" compareValue="N">
+		<isEqual property="apprFlag" compareValue="N">
 			<![CDATA[
 				ORDER BY
 					A.notino ASC,
 					A.parentwritedate,
 					A.writedate DESC
 			]]>
-		</isNotEqual>
+		</isEqual>
 		
 		<![CDATA[
 			LIMIT
@@ -545,7 +545,7 @@
 				AND
 					startdate <= #nowDate#
 				AND
-					enddate < #nowDate#
+					enddate > #nowDate#
 			]]>
 			
 			<isEqual property="apprFlag" compareValue="Y">
