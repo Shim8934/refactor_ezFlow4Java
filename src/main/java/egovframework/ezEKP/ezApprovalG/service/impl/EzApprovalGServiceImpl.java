@@ -5751,6 +5751,34 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				                
 				                break;
 
+			                /* 단암 양식*/
+				            case "계약":
+				            	numHeader += "계약" + Tail;
+				        		break;
+				            case "교육기안":
+				            	numHeader += "교육기안" + Tail;
+				        		break;
+				            case "교육":
+				            	numHeader += "교육" + Tail;
+				        		break;
+				            case "기안":
+				            	numHeader += "기안" + Tail;
+				        		break;
+				            case "보고":
+				            	numHeader += "보고" + Tail;
+				        		break;
+				            case "휴가":
+				            	numHeader += "휴가" + Tail;
+				        		break;
+				            case "구매":
+				            	numHeader += "구매" + Tail;
+				        		break;
+				            case "품질검사":
+				            	numHeader += "품질검사" + Tail;
+				        		break;
+				            case "제":
+				            	numHeader += "제" + Tail;
+				        		break;
 				            default:
 				                numHeader += fieldValue;
 				                break;

@@ -25,28 +25,29 @@
 		    var Rtnval = new Array();
 		    
 		    window.onload = function () {
-		         try {
-		             RetValue = parent.getformcont_cross_dialogArguments[0];
-		             ReturnFunction = parent.getformcont_cross_dialogArguments[1];
-		         } catch (e) {
-		             try {
-		                 RetValue = opener.getformcont_cross_dialogArguments[0];
-		                 ReturnFunction = opener.getformcont_cross_dialogArguments[1];
-		             } catch (e) {
-		                 RetValue = window.dialogArguments;
-		             }
-		         }
-	
-		         ContID = RetValue[0];
-		         FormID = RetValue[1];
-		         companyID = RetValue[2];
-		         Tree_setconfig();
+				try {
+					RetValue = parent.formContMain_dialogArguments[0];
+					ReturnFunction = parent.formContMain_dialogArguments[1];
+				} catch (e) {
+				    try {
+				        RetValue = opener.formContMain_dialogArguments[0];
+				        ReturnFunction = opener.formContMain_dialogArguments[1];
+				    } catch (e) {
+				    	RetValue = window.dialogArguments;
+				    }
+				}
+				
+				ContID = RetValue[0];
+				FormID = RetValue[1];
+				companyID = RetValue[2];
+				Tree_setconfig();
 	
 		        InitFormCont();
 	
 		        Rtnval[0] = "cancel";
 		        Rtnval[1] = "cancel";
-		        window.returnValue = Rtnval;
+// 		        window.returnValue = Rtnval;
+		        ReturnFunction(Rtnval);
 		    }
 		    
 		    function Tree_setconfig() {
