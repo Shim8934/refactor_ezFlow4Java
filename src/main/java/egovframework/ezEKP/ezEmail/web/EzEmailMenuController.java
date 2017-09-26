@@ -5,12 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.ClosedChannelException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -18,16 +14,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -35,7 +26,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -44,10 +34,8 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +44,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
@@ -82,7 +69,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  *    수정일                       수정자              수정내용
  *    ----------    ------    -------------------
  *    2016.04.14    이효민              신규작성
- *    2017.08.25    김유진              일부 웹 소켓 적용
+ *    2017.08.25    김유진              웹 소켓 적용
  *
  * @see
  */
@@ -871,11 +858,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath);
 			
 			List<MultipartFile> multiFile = request.getFiles("file1");
-
 			if (multiFile == null || multiFile.get(0) == null) {
 				logger.error("Cannot find file.");
 				throw new Exception("Cannot find file.");
 			}
+			
+			logger.debug("file name=" + multiFile.get(0));
 
 			zis = new ZipInputStream(multiFile.get(0).getInputStream());	
 
@@ -940,7 +928,13 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						if (interval >= 2000) {
 							jsonObj.put(sessionKeyName, percent); 
 							String json2 = jsonObj.toJSONString();
-							handleMessage(json2, session);
+							
+							try {
+								handleMessage(json2, session);
+							} catch (IllegalStateException e) {
+								e.printStackTrace();
+								break;
+							}
 							lastTime = currTime; 
 						}
 						currCount = currCount + 1;
@@ -1045,6 +1039,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
 		
 		Session session = null;
+		boolean sessionFlag = true;
 		String userkey = request.getParameter("userkey");
 		String sessionKeyName = "percent";
 		
@@ -1075,6 +1070,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				Message[] messages = ((IMAPFolder)folder).getMessages();
 				
 				boolean isRead = false;
+		
 				int messageCount = messages.length; // 총 메일 갯수
 				int currCount = 1;
 				long lastTime = System.currentTimeMillis();
@@ -1143,9 +1139,35 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						jsonObj.put("userkey", userkey);
 						
 						if (interval >= 2000) {
+							
 							jsonObj.put(sessionKeyName, percent); // 현재 퍼센트
 							String json1 = jsonObj.toJSONString();
-							handleMessage(json1, session);
+
+							try {
+								
+								handleMessage(json1, session);
+							
+							} catch (IllegalStateException e) {
+								
+								if (zos != null) {
+									zos.flush();
+									zos.close();
+									zos = null;
+								}
+								
+								File file = new File(pDirTempPath + ".zip");
+								
+								if (file.exists() == true) {
+									file.delete();
+								}
+								
+								returnValue = "CANCEL";
+								sessionFlag = false;
+								
+								e.printStackTrace();
+								break;
+								
+							} 
 							lastTime = currTime;
 						}
 						currCount = currCount + 1; // 현재 메일 카운트
@@ -1154,8 +1176,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				
 				folder.close(true);
 			}
-			
-			returnValue = guid;
+
+			if (sessionFlag == true) {
+				returnValue = guid;
+			} 
 			
 		} catch (Exception e) {
 			if (zos != null) {
@@ -1171,7 +1195,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			e.printStackTrace();
-			
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1226,6 +1249,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("deleteZipFile started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String temp = request.getParameter("temp");
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -1233,6 +1257,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + temp;
 		
 		File file = new File(pDirTempPath + ".zip");
+		
 		if (file.exists()) {
 			file.delete();
 		}
@@ -1242,8 +1267,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 	/**
 	 * 웹소켓 처음 커넥션 맺을 때 호출되는 함수
-	 * @param session
-	 * @param getID
 	 */
     @SuppressWarnings("unchecked")
 	@OnOpen
@@ -1262,6 +1285,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("status", "start");
         jsonObj.put("userkey", userkey);
+        
         String jsonStr = jsonObj.toJSONString();
         
         try {
@@ -1272,17 +1296,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
         	e.printStackTrace();
         }
         
-        logger.info("[Websocket] UserKey="+ userkey + " sessionId=" + session.getId() + " sessionInfo=" + session.getBasicRemote() + " SessionMap Size=" + sessionMap.size());
-        logger.info("[Websocket] SessionMap Size=" + sessionMap.size() + " this=" + this);
+        logger.info("[Websocket] UserKey="+ userkey + " sessionId=" + session.getId() + " sessionInfo=" + session.getBasicRemote());
+        logger.info("[Websocket] SessionMap size=" + sessionMap.size() + " this=" + this);
         
     }
 
 
     /**
      * 웹소켓 클라이언트와 메세지 송수신시 호출되는 함수
-     * @param jsonStr
-     * @param session
-     * @throws Exception
      */
 	@SuppressWarnings("unchecked")
 	@OnMessage
@@ -1291,6 +1312,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		JSONObject sendObj = new JSONObject();
 		JSONObject recObj = new JSONObject();
 		JSONParser jsonParser = new JSONParser();
+		
 		recObj = (JSONObject) jsonParser.parse(jsonStr);
 		String userkey = (String) recObj.get("userkey");
 		
@@ -1299,8 +1321,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			sendObj.put("status", "transferStart");
 			sendObj.put("userkey", userkey);
 			jsonStr = sendObj.toJSONString();
+
 			session.getBasicRemote().sendText(jsonStr);
-			
 		} else if (recObj.get("status").equals("progress")) {
 			session.getBasicRemote().sendText(jsonStr);
 		} 
@@ -1309,8 +1331,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
     /**
      * 웹소켓 커넥션 종료시 호출 함수
-     * @param session
-     * @throws IOException 
      */
     @OnClose
     public void handleClose(Session session) throws IOException{
@@ -1331,11 +1351,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
     /**
      * 웹소켓 커넥션 에러시 호출 함수
-     * @param t
+     * @param e
      */
     @OnError
-    public void handleError(Throwable t){
-        t.printStackTrace();
+    public void handleError(Throwable e){
+        e.printStackTrace();
     }
 
 }

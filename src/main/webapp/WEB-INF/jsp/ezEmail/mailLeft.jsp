@@ -450,7 +450,7 @@
 	        function showProgress() {
 			    document.getElementById("progressPanel").style.display = "block";
 			    document.getElementById("progressPanel").style.opacity = 0.5;
-			    document.getElementById("progressPanel").style.backgroundColor = "#808080";
+			    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
 			}
 	        
 	        function hideProgress() {

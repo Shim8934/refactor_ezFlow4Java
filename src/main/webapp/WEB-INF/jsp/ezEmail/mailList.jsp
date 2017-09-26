@@ -2,8 +2,9 @@
 <%@ page session="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
-
+<%
+	out.clear();
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -395,18 +396,21 @@
 								url : "/ezEmail/mailboxExportZip.do",
 								data : { folderPath : '${url}', userkey : userkey },
 								success : function(result) {
-									if (result != "") {
+									if (result == "") {
+										alert("<spring:message code='ezEmail.lhm33' />");
+									} else if (result == "CANCEL") {
+										console.log('User Cancel');
+									} else {
 										var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
 												+ encodeURIComponent('${folderName}')
 												+ "&temp=" + result;
 										AttachDownFrame.location.href = fullpath;
 										AttachDownFrame.target = "_blank";
-									} else {
-										alert("<spring:message code='ezEmail.lhm33' />");
 									}
-									webSocket.close();
 					        		HiddenMailProgressNew();
+					        		webSocket.close();
 								}
+
 							});
 							
 			            } else if (obj.status == 'progress') {
@@ -419,10 +423,10 @@
 			        	webSocket = null;
 			        };
 			        
-			        // 연결되어있는 도중 다른 페이지로 전환시 소켓 연결 종료
-					window.onbeforeunload = function() {
-						webSocket.close();
-					}
+			        window.onbeforeunload = function(){
+			        	webSocket.close();
+			        }
+
 		    	}
 			}
 			
@@ -440,6 +444,7 @@
 		        webSocket = new WebSocket(host);
 				
 				var tempname = document.importMailboxform.file1.value;
+				
 				if (tempname == "") {
 					return;
 				}
@@ -474,35 +479,36 @@
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
 		        };
+		        
+		        window.onbeforeunload = function(){
+		        	webSocket.close();
+		        }
 		        				
-				window.onbeforeunload = function() {
-					webSocket.close();
-				}
 			}
 			
 	        function sendMessage(data) {
 	        	var sendObj = {};
 	            sendObj.status = encodeURIComponent(data);
 	            sendObj.userkey = encodeURIComponent(userkey);
+	            
 	            var json = JSON.stringify(sendObj);
 	            console.log(json);
+	            
 	            webSocket.send(json);
 	        }
 			
-	        function mailboxImportComplete(result, userkeyValue) {
+	        function mailboxImportComplete(result) {
 				document.importMailboxform.file1.value = "";
-				if (result == "OK") {
-					webSocket.close();
-					MailListRefresh();
-					HiddenMailProgressNew();
-				} else {
-					alert("<spring:message code='ezEmail.lhm35' />");
-					webSocket.close();
-					MailListRefresh();
-					HiddenMailProgressNew();
+				
+				if (result == "ERROR") {
+					alert("<spring:message code='ezEmail.lhm33' />");
 				}
+				
+				webSocket.close();
+				MailListRefresh();
+				HiddenMailProgressNew();
 			}
-			
+	        
 			function mailbox_import() {
 				document.getElementById("file1").click();
 			}
@@ -518,27 +524,39 @@
 			
 			function ShowPercent(data) {
 				$('#progressNum').text('');
-				$('#progressNum').text("<spring:message code='ezEmail.kyj01' /> : " + data + " / 100%");
+				$('#progressNum').text("<spring:message code='ezEmail.kyj01' /> : " + data + " %");
 			}
 			
 			function HiddenMailProgressNew() {
 				$('#progressNum').text('');
 				document.getElementById("mailPanel").style.display = "none";
+				document.getElementById("mailPanel").style.backgroundColor = "";
 				document.getElementById("MailProgress").style.backgroundColor = "";
 				document.getElementById("MailProgress").style.display = "none";
+			    document.getElementById("cancleProgressBtn").style.display = "none";
 				parent.document.getElementById("left").contentWindow.hideProgress();
+				parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 			}
 			
 			function ShowMailProgressNew() {
 			    document.getElementById("mailPanel").style.display = "block";
 			    document.getElementById("mailPanel").style.opacity = 0.5;
-			    document.getElementById("mailPanel").style.backgroundColor = "#808080";
+			    document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
 			    document.getElementById("MailProgress").style.backgroundColor = "#ffffff";
 			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
 			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 150 + "px";
 			    document.getElementById("MailProgress").style.display = "";
+			    document.getElementById("cancleProgressBtn").style.display = "block";
 			    parent.document.getElementById("left").contentWindow.showProgress();
+			    parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 			}
+
+			function cancleProgress(){
+	        	HiddenMailProgressNew();
+	        	webSocket.close();
+	        	location.reload();
+			}			
+			
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -630,9 +648,13 @@
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" >&nbsp;</div>
         <div style="width:8px;height:100%;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarH"></div>
         <div style="width:100px;height:8px;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarW"></div>
-        <div style="width:200px;height:80px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+        <div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
             <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
             <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+            <a class="btnposition" id="cancleProgressBtn" style="display: none; padding-top: 10px; width: 50px; height:20px; 
+      			cursor:pointer; margin:0 auto;" onclick="cancleProgress();">
+            <input type="button" value="<spring:message code="ezEmail.t39" />"/></a>
+           
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
             <table style="width:100%;border:1px solid #B6B6B6;" id="MailHeader" class="mainlist" >               

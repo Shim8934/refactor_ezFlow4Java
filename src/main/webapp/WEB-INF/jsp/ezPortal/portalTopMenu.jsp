@@ -1547,6 +1547,17 @@
 				}
 				window.open(url, location, option);
 			}
+			
+		    
+		    function showProgress() {
+			    document.getElementById("progressPanel").style.display = "block";
+			    document.getElementById("progressPanel").style.opacity = 0.5;
+			    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
+			}
+	        
+	        function hideProgress() {
+	        	document.getElementById("progressPanel").style.display = "none";
+	        }
 		</script>
 	</head>
 		<c:choose>
@@ -1629,5 +1640,6 @@
 			<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
 		</c:if>
 		<iframe id=ifmpopup style="display:none" src=""></iframe>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	</body>
 </html>
