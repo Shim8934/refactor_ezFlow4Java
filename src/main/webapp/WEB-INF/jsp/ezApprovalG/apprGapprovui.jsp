@@ -218,17 +218,16 @@
 		    }
 		    function LoadNextDocument(tempString)
 		    {
-		        if (allFlag == "1")
+		        if (allFlag == "1") {
 		            getNextDocInfo();
-		        else if (allFlag == "2")
+		        } else if (allFlag == "2") {
 		            getNextDocList();
+		        }
 		
-		        if (NextDocID == "")
-		        {
-		            if (tempString == "")
+		        if (NextDocID == "") {
+		            if (tempString == "") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t3'/>";
-		            else
-		            {
+		            } else {
 		                tempString = tempString.replace("\n" + "<spring:message code='ezApprovalG.t2'/>", "");
 		                tempString = tempString.replace("\n\n" + "<spring:message code='ezApprovalG.t4'/>", "");
 		                tempString = tempString.replace("\n", "");
@@ -237,9 +236,7 @@
 		            OpenAlertUI(pAlertContent);
 		            window.parent.close();
 		            btnClose_onclick();
-		        }
-		        else
-		        {
+		        } else {
 		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht")
 		            {
 		                openOtherApprovUI();
@@ -470,7 +467,7 @@
 		    }
 		    function process_AfterOpen()
 		    {
-		        getCurApproverAprLine();
+		        getCurApproverAprLine("${isUsed}");
 		        pGubun = "8";
 		        
 		        if (approvalFlag == "S") {
@@ -992,7 +989,7 @@
 		        var rtnVal = upDateAprLine();
 		        if(rtnVal == "TRUE")
 		        {
-		            getCurApproverAprLine();
+		            getCurApproverAprLine("${isUsed}");
 		            btnApprove_onclick();
 		        }
 		        else
@@ -1012,7 +1009,7 @@
 			            ReAprLineSingMapping(ret);
 		        	}
 		            SaveFile();
-		            getCurApproverAprLine();
+		            getCurApproverAprLine("${isUsed}");
 		        }
 		    }
 		    function btnModAprDept_onclick() {
@@ -1298,7 +1295,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1327,7 +1324,7 @@
 			                        SReAprLineSingMapping(ret);
 			                        IsSkipDrafter = "FALSE";
 			                        SaveFile();
-			                        getCurApproverAprLine();
+			                        getCurApproverAprLine("${isUsed}");
 			                    }
 			                    savexmlhttp = null;
 			                    savexmlhttp = createXMLHttpRequest();
@@ -1352,7 +1349,7 @@
 			                        btnSendDraftEnable = "true";
 			                        ReAprLineSingMapping(ret);
 			                        SaveFile();
-			                        getCurApproverAprLine();
+			                        getCurApproverAprLine("${isUsed}");
 			                    }
 			                    savexmlhttp = null;
 			                    savexmlhttp = createXMLHttpRequest();

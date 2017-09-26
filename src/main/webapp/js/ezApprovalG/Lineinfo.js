@@ -3544,8 +3544,7 @@ function Checkline() {
             var FrequencyFormList = new ListView();
             FrequencyFormList.LoadFromID("lvinfofrequencylist");
             var cnt2 = FrequencyFormList.GetSelectedRows().length;
-            if (cnt2 == 0 && pkeeperiod == "")
-            {
+            if (cnt2 == 0 && pkeeperiod == "") {
                 OpenAlertUI(strLangS599);
                 document.getElementById("1tab3").onclick();
                 return false;

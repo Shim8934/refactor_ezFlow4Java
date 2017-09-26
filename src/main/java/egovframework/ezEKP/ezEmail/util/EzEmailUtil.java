@@ -2006,6 +2006,78 @@ public class EzEmailUtil {
     	return encryptedValue;
     }
     
+    public String bizmekaAddSubtitle(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
+    					String deptId, String title1, String title2) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=SUBTITLEADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_USER";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");    	
+    	sb.append("<TITLE1>" + commonUtil.cleanValue(title1) + "</TITLE1>");
+    	sb.append("<TITLE2>" + commonUtil.cleanValue(title2) + "</TITLE2>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteSubtitle(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
+						String deptId) throws Exception {
+		String result = "ERROR";
+		
+		String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=SUBTITLEDEL" + "&CID=" + companyId
+			+ "&PFLAG=ORGAN_USER";
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<DATA>");
+		sb.append("<ROWS>");
+		sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+		sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");    	
+		sb.append("</ROWS>");
+		sb.append("</DATA>");
+		
+		String inputParams = sb.toString();
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		result = getWebServiceResult(urlString, inputParams);
+		
+		logger.debug("result=" + result);
+		
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+		
+		return result;
+    }
+    
     public String bizmekaAddUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
     		String userPw, String userName, String deptId) throws Exception {
     	String result = "ERROR";

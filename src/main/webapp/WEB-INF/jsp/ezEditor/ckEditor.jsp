@@ -41,7 +41,7 @@
 				try {
 	              	  CKEDITOR.instances.editor1.editable().setHtml(Data);
 	                	if (type == "APPROVAL" || type == "APPROVALG") {
-	                		if ("${isused}" != "reuse") {
+	                		if ("${isUsed}" != "reuse") {
 	                    		Set_CellLocked();
 	                		}
 	                	}

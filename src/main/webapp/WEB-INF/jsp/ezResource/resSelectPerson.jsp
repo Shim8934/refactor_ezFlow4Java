@@ -50,15 +50,6 @@
 
 		    TreeViewinitialize("${deptID}", "Top" , "", "${serverName}");
 		    ListTypeChangeIcon();
-		    try{ 
-		        var ua = navigator.userAgent;
-		        if(ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1){
-		            KeEventControl(document.getElementById("deptkeyword"));
-		            KeEventControl(document.getElementById("keyword"));
-		        }
-		    }
-		    catch(e)
-		    {}
 		}
 
 		    function KeEventControl(obj) {

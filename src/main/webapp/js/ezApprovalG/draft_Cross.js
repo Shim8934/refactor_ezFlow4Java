@@ -1628,11 +1628,11 @@ function SendDraftMappingSign(ret) {
 
         field = message.GetListItem(fields, psigncell);
         
-        if (singImageType == "NAME") {
-        	if (message.GetListItem(fields, "1sign1")) {
+       if (singImageType == "IMAGE") {
+       	if (message.GetListItem(fields, "1sign1")) {
         		message.GetListItem(fields, "1sign1").height = "65";
-        	}
-        }
+      	}
+     }
         
         var signWidth = parseInt(field.offsetWidth) - 4;
         var signHeight = parseInt(field.offsetHeight) - 4;
@@ -2009,6 +2009,10 @@ function SetBtnStateTrue() {
 
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
             setMenuBar("btnSelForm", false);
+        }
+        
+        if (pDraftFlag == "DRAFT" || DocSN != "") {
+            setMenuBar("btnSaveServer", true);
         }
     } catch (e) {
         alert("SetBtnStateTrue()" + e.description);
@@ -2749,9 +2753,34 @@ function GetAprDocFormID() {
     	});
 
         pFormID = SelectSingleNodeValueNew(loadXMLString(result), "DATA/FORMID");
+        
+        if (approvalFlag == "S") {
+        	if (pFormID == "") {
+            	isTmpDocID = MakeTmp2Ing(DocSN)
+                pDocID = isTmpDocID;
+                GetAprDocFormID();
+            }
+        }
+        
     } catch (e) {
         alert("GetAprDocFormID()" + e.description);
     }
+}
+
+function MakeTmp2Ing(tmpDocID) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/makeTmp2Ing.do",
+		data : {
+			tmpDocID : tmpDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+    return  getNodeText(loadXMLString(result).documentElement);
 }
 
 function trim(parm_str) {
@@ -2974,11 +3003,17 @@ function OpenInformationUI_Complete() {
 function getDocInfo() {
 	var result = "";
 	
+	if (isUsed == "reuse") {
+		url = "/ezApprovalG/getDocInfo.do?isUsed=" + isUsed + "&beforeDocID=" + beforeDocID;
+	} else {
+		url = "/ezApprovalG/getDocInfo.do";
+	}
+	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getDocInfo.do",
+		url : url,
 		data : {
 			docID : pDocID
 		},
@@ -3132,6 +3167,35 @@ function setDocNumFormat(pPrefix) {
                 numHeader += mdate + Tail;
                 
                 break;
+                
+            /* 단암 양식*/
+            case "계약":
+            	numHeader += "계약" + Tail;
+        		break;
+            case "교육기안":
+            	numHeader += "교육기안" + Tail;
+        		break;
+            case "교육":
+            	numHeader += "교육" + Tail;
+        		break;
+            case "기안":
+            	numHeader += "기안" + Tail;
+        		break;
+            case "보고":
+            	numHeader += "보고" + Tail;
+        		break;
+            case "휴가":
+            	numHeader += "휴가" + Tail;
+        		break;
+            case "구매":
+            	numHeader += "구매" + Tail;
+        		break;
+            case "품질검사":
+            	numHeader += "품질검사" + Tail;
+        		break;
+            case "제":
+            	numHeader += "제" + Tail;
+        		break;
 
             default:
                 numHeader += fieldValue;
@@ -3170,8 +3234,8 @@ function setDrafterAddress() {
     message.DocumentBodySetAttribute("lastKyulName", lastKyulName);
     message.DocumentBodySetAttribute("lastKyuljikwee", lastKyuljiwee);
 }
-function setFirstDrafter() {
-    var ret = getAutoAprLine();
+function setFirstDrafter(type, beforDocID) {
+    var ret = getAutoAprLine(type, beforDocID);
 
     if (ret[0] != "NONE") {
         IsSkipDrafter = "FALSE";
@@ -3745,6 +3809,11 @@ function SaveTMPDocInfo(AutoSave) {
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+        
+        if (isUsed == "reuse") {
+            createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
+            createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
+        }
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);

@@ -63,10 +63,6 @@
 		    window.onload = function () {
 // 		        initKey();
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
-		        var ua = navigator.userAgent;
-		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		           KeEventControl(document.getElementById("inpPassword"));
-		        }
 		        try {
 		            RetValue = parent.ezchkpasswd_all_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezchkpasswd_all_cross_dialogArguments[1];

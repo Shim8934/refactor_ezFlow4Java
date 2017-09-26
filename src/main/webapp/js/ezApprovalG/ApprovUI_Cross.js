@@ -1318,7 +1318,7 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
         alert("openwindow :: " + e.description);
     }
 }
-function getCurApproverAprLine() {
+function getCurApproverAprLine(type) {
 	var result = "";
     
     $.ajax({
@@ -1330,7 +1330,8 @@ function getCurApproverAprLine() {
 				docID    : pDocID, 
 				userID 	 : "",
 				formID   : "",
-				deptID   : arr_userinfo[4]
+				deptID   : arr_userinfo[4],
+				isUsed   : type
 				},
 		success: function(xml){
 			result = xml;
@@ -3582,7 +3583,36 @@ function setDocNumFormat(pPrefix) {
                 numHeader += mdate + Tail;
                 
                 break;
-
+                
+            /* 단암 양식*/
+            case "계약":
+            	numHeader += "계약" + Tail;
+        		break;
+            case "교육기안":
+            	numHeader += "교육기안" + Tail;
+        		break;
+            case "교육":
+            	numHeader += "교육" + Tail;
+        		break;
+            case "기안":
+            	numHeader += "기안" + Tail;
+        		break;
+            case "보고":
+            	numHeader += "보고" + Tail;
+        		break;
+            case "휴가":
+            	numHeader += "휴가" + Tail;
+        		break;
+            case "구매":
+            	numHeader += "구매" + Tail;
+        		break;
+            case "품질검사":
+            	numHeader += "품질검사" + Tail;
+        		break;
+            case "제":
+            	numHeader += "제" + Tail;
+        		break;
+        		
             default:
                 numHeader += fieldValue;
                 break;

@@ -3,8 +3,6 @@ package egovframework.ezEKP.ezApprovalG.web;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -587,7 +584,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String result = ezApprovalGAdminService.saveFormInfoHWP(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag);
 		
-//		logger.debug("formSaveHWP ended. result = " + result);
+		logger.debug("formSaveHWP ended. result = " + result);
 		
 		return "<DATA>OK</DATA>";
 	}
@@ -2503,13 +2500,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 전체문서조회(진행문서) 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forAprDoc.do")
-	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
+	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("forAprDoc started.");
 		
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		String type = request.getParameter("type");
+		
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2517,9 +2516,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
+			OrganDeptVO vo = list.get(i);
 			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
 				resultList.add(vo);
 			}
 		}
@@ -2527,6 +2526,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("type", type);
 		
 		logger.debug("forAprDoc ended.");
 		
@@ -2610,7 +2610,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "");
 		
 		return result;
 	}
@@ -2651,33 +2651,33 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 전체문서조회(완료문서) 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forDoc.do")
-	public String forDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
+	public String forDoc(@CookieValue ("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("forDoc started.");
 		
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		String type = request.getParameter("type");
+		
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
 			return "cmm/error/adminDenied";
 		}
-		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
+			OrganDeptVO vo = list.get(i);
 			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
 				resultList.add(vo);
 			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
-		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", resultList);
+		model.addAttribute("type", type);
 		
 		logger.debug("forDoc ended.");
 		
@@ -2729,11 +2729,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String result = "";
         if (approvalFlag.equals("S")) {
         	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear+draftFromMonth+draftFromDay, draftToYear+draftToMonth+draftToDay, apprFromYear+apprFromMonth+apprFromDay,
-        			apprToYear+apprToMonth+apprToDay, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+        			apprToYear+apprToMonth+apprToDay, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         } else {
         	result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
     				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-    				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+    				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         }
         
         logger.debug("result = " + result);

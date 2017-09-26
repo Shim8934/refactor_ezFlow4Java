@@ -64,16 +64,7 @@
 		    }
 		    var RetValue;
 		    var ReturnFunction;
-		    window.onload = function () {
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("TxtAprLineTempletName"));
-		            }
-		        }
-		        catch (e)
-		        { }
-		
+		    window.onload = function () {		
 		        try {
 		            RetValue = parent.aprlinetempletname_cross_dialogArguments[0];
 		            ReturnFunction = parent.aprlinetempletname_cross_dialogArguments[1];

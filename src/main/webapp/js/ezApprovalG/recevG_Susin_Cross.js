@@ -2349,7 +2349,7 @@ function chk_Passwd() {
 }
 
 function setFirstDrafter() {
-    var ret = getAutoAprLine();
+    var ret = getAutoAprLine("");
 
     if (ret[0] != "NONE") {
     	if (approvalFlag == "S") {
@@ -2593,8 +2593,12 @@ function putSignXML(SignXML) {
                         var signHeight = parseInt(field.offsetHeight) - 4
                         signWidth = 50;
                         if (seumyung) {
-                        	if (img[1].indexOf(strLang7) > -1) {
-                        		signHeight = 28;
+                        	if (img[1] != null) {
+	                        	if (img[1].indexOf(strLang7) > -1) {
+	                        		signHeight = 28;
+	                        	} else {
+	                        		signHeight = 50;
+	                        	}
                         	} else {
                         		signHeight = 50;
                         	}

@@ -1311,6 +1311,7 @@
 <!-- 		{CALL EZSP_GETAPRLINEINFO(#v_DOCID#, #v_FLAG#, #v_USERID#, #v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_FLAG" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -1381,6 +1382,42 @@
 	            ORDER BY 
 	            	APRMEMBERSN DESC 
             ]]>
+		</isEqual>
+		</isNotEqual>
+		
+		<isEqual property="isUsed" compareValue="reuse">
+			SELECT 
+				#v_DOCID#, 
+				APRMEMBERSN, 
+				APRTYPE ,
+				APRSTATE, 
+				APRMEMBERID, 
+				APRMEMBERISDEPTYN, 
+				APRMEMBERNAME, 
+				APRMEMBERJOBTITLE, 
+				APRMEMBERDEPTID, 
+				APRMEMBERDEPTNAME, 
+				APRMEMBERLDAPPATH,
+				'',
+				'',
+				ISPROPOSERYN,
+				ISBRIEFUSERYN,
+				REASONDONOTAPPROVAL,
+				APRMEMBERNAME2,
+				APRMEMBERJOBTITLE2,
+				APRMEMBERDEPTNAME2,
+				TENANT_ID,
+				COMPANYID
+			FROM 
+				TBL_ENDAPRLINEINFO
+            WHERE 
+            	DOCID = #beforeDocID#
+           	AND
+           		TENANT_ID = #v_TENANTID#
+	        AND
+	           	COMPANYID = #companyID#
+	        ORDER BY 
+	            APRMEMBERSN DESC 
 		</isEqual>
 	</select>
 
@@ -4433,6 +4470,7 @@
 <!-- 		{CALL EZSP_GETDOCINFO(#v_DOCID#, #v_MODE#, #v_COLS#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getDocInfo" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 					$v_COLS$ 
@@ -4473,6 +4511,28 @@
       	 	AND		
       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		</isNotEqual>
+		</isNotEqual>
+		
+		<isEqual property="isUsed" compareValue="reuse">
+			SELECT 
+					$v_COLS$ 
+			FROM 
+					TBL_ENDAPRDOCINFO 
+      		INNER JOIN 
+      				TBL_EXPENDAPRDOCINFO 
+      		ON 
+      				TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+      		AND
+      				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+      		AND
+      				TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+      		WHERE 
+      				TBL_ENDAPRDOCINFO.DOCID = #beforeDocID#
+      		AND
+      				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+      	 	AND		
+      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		</isEqual>
 	</select>
 	
 	<select id="EzApprovalG.getDocInfoS" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
@@ -6560,14 +6620,6 @@
 							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
 							   	AND 
 							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
-							   	LEFT OUTER JOIN 
-							   			 TBL_EXPENDAPRLINE 
-							   	ON 
-							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRLINE.DOCID
-							   	AND
-							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID
-							   	AND
-							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID
 							   	INNER JOIN 
 							   			 TBL_EXPENDAPRDOCINFO 
 							   	ON 
@@ -6622,11 +6674,11 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DRAFTER">
 							   	 	 AND 
-							   	 	 	 WRITERNAME$v_LANGTYPE$ LIKE '%$v_DRAFTER$%'
+							   	 	 	 WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%'
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_DEPTNAME">
 							   	 	AND 
-							   	 		 WRITERDEPTNAME$v_LANGTYPE$ LIKE '%$v_DEPTNAME$%'
+							   	 		 WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_FORMID">
 							   	 	 AND 
@@ -6634,22 +6686,22 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10), '%Y-%m-%d %H:%i:%s')
+							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 		   STARTDATE <= STR_TO_DATE(SUBSTR(#v_STARTDATE2#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 		   STARTDATE <= STR_TO_DATE(#v_STARTDATE2#,'%Y-%m-%d %H:%i:%s')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE1">
 							   	 	 AND 
-							   	 	       ENDDATE >= STR_TO_DATE(SUBSTR(#v_ENDDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 	       ENDDATE >= STR_TO_DATE(#v_ENDDATE1#,'%Y-%m-%d %H:%i:%s')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 	 		ENDDATE <= STR_TO_DATE(SUBSTR(#v_ENDDATE2#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 	 		ENDDATE <= STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE1">
@@ -6766,12 +6818,12 @@
 							   		ORDER BY 
 							   				ENDDATE DESC
 							   	</isEmpty>
-							   	<![CDATA[
+								<isNotEqual property="alFlag" compareValue="1">
 							   	LIMIT #v_PAGESIZE#
+								</isNotEqual>
 							   	 ) A 
 							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
-							   	 ]]>
 <!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
 <!-- 				INNER JOIN TBL_CODELIST B   -->
 <!-- 				ON A.DOCTYPE = B.CODE2 -->
@@ -6850,14 +6902,6 @@
 				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
 				   						AND
 				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
-				   						LEFT OUTER JOIN 
-				   							  TBL_EXPENDAPRLINE 
-				   						ON 
-				   							  TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRLINE.DOCID
-				   						AND
-				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID	
-				   						AND
-				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID
 				   						INNER JOIN 
 				   							  TBL_EXPENDAPRDOCINFO 
 				   						ON 
@@ -9663,21 +9707,38 @@
 <!-- 		{CALL EZSP_DOPROCESS_COUNT(#v_DOCID#, #v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int">
-	  SELECT 
-	  		COUNT(DOCID)  
-      FROM 
-        	TBL_APRLINEINFO 
-      WHERE  
-      		DOCID = #v_DOCID#
-      AND 
-      		APRMEMBERID = #v_USERID#
-      AND ( 	APRSTATE = '002'
-            OR  
-            	APRSTATE = '005' ) 
-      AND
-      		TENANT_ID = #v_TENANTID#
-      AND
-      		COMPANYID = #companyID#
+	<isNotEqual property="v_ISUSED" compareValue="reuse">
+		  SELECT 
+		  		COUNT(DOCID)  
+	      FROM 
+	        	TBL_APRLINEINFO 
+	      WHERE  
+	      		DOCID = #v_DOCID#
+	      AND 
+	      		APRMEMBERID = #v_USERID#
+	      AND ( 	APRSTATE = '002'
+	            OR  
+	            	APRSTATE = '005' ) 
+	      AND
+	      		TENANT_ID = #v_TENANTID#
+	      AND
+	      		COMPANYID = #companyID#
+	</isNotEqual>
+	  
+	<isEqual property="v_ISUSED" compareValue="reuse">
+		  SELECT 
+		  		COUNT(DOCID)  
+	      FROM 
+	        	TBL_ENDAPRLINEINFO 
+	      WHERE  
+	      		DOCID = #v_DOCID#
+	      AND 
+	      		APRMEMBERID = #v_USERID#
+	      AND
+	      		TENANT_ID = #v_TENANTID#
+	      AND
+	      		COMPANYID = #companyID#
+	</isEqual>
 
 	</select>
 <!-- 	<procedure id="EzApprovalG.doApproveLineCnt" parameterClass="Map" resultClass="int"> -->
@@ -10500,14 +10561,6 @@
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
    		AND	
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
-   		LEFT OUTER JOIN 
-   			TBL_EXPENDAPRLINE 
-   		ON 
-   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRLINE.DOCID
-   		AND 
-   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID
-   		AND
-   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID
    		INNER JOIN 
    			TBL_EXPENDAPRDOCINFO 
    		ON 
@@ -10564,11 +10617,11 @@
    		</isNotEmpty>
    		<isNotEmpty property="v_DRAFTER"> 
    		AND 
-   			WRITERNAME$v_LANGTYPE$ LIKE '%$v_DRAFTER$%' 
+   			WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%' 
    		</isNotEmpty>
    		<isNotEmpty property="v_DEPTNAME"> 
    		 AND 
-   		 	WRITERDEPTNAME$v_LANGTYPE$ LIKE '%$v_DEPTNAME$%'
+   		 	WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
    		</isNotEmpty>
    		<isNotEmpty property="v_FORMID"> 
    		 AND 
@@ -10577,25 +10630,25 @@
    		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   
-			STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10), '%Y-%m-%d %H:%i:%s')   
+			STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')   
     		]]>  
    		</isNotEmpty>
    		<isNotEmpty property="v_STARTDATE2"> 
    		<![CDATA[
     		 AND  
-     		 	STARTDATE <= STR_TO_DATE(SUBSTR(#v_STARTDATE2#  ,1,10), '%Y-%m-%d %H:%i:%s')
+     		 	STARTDATE <= STR_TO_DATE(#v_STARTDATE2# , '%Y-%m-%d %H:%i:%s')
  		 ]]>  
 		</isNotEmpty> 
    		<isNotEmpty property="v_ENDDATE1"> 
    		<![CDATA[
   		 AND   
-    		  	ENDDATE >= STR_TO_DATE(SUBSTR(#v_ENDDATE1#,1,10), '%Y-%m-%d %H:%i:%s')
+    		  	ENDDATE >= STR_TO_DATE(#v_ENDDATE1#, '%Y-%m-%d %H:%i:%s')
     		 ]]> 
    		</isNotEmpty>
    		<isNotEmpty property="v_ENDDATE2">  
   		<![CDATA[
      		AND  
-   			ENDDATE <= STR_TO_DATE(SUBSTR(#v_ENDDATE2# ,1,10), '%Y-%m-%d %H:%i:%s')   
+   			ENDDATE <= STR_TO_DATE(#v_ENDDATE2#, '%Y-%m-%d %H:%i:%s')   
      		 ]]>  
   		</isNotEmpty>
    		<isNotEmpty property="v_PROCESSDATE1"> 
@@ -10690,14 +10743,6 @@
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
    		AND
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
-   		LEFT OUTER JOIN 
-   			TBL_EXPENDAPRLINE 
-   		ON 
-   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRLINE.DOCID
-   		AND
-   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID
-   		AND
-   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID
    		INNER JOIN 
    			TBL_EXPENDAPRDOCINFO 
    		ON 
@@ -20825,130 +20870,6 @@
        		 tbl_Container.COMPANYID = #companyID#
    	</select>
    	
-   	<select id="EzApprovalG.getContDocListCountS" parameterClass="Map" resultClass="int">
-   		SELECT 
-   			COUNT(DISTINCT A.DOCID)
-   		FROM 
-   			TBL_ENDAPRDOCINFO A  
-   		LEFT OUTER JOIN 
-   			TBL_ENDAPRLINEINFO  
-   		ON 
-   			A.DOCID = TBL_ENDAPRLINEINFO.DOCID 
-   		AND
-   			A.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID 
-   		AND
-   			A.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID 
-       	LEFT OUTER JOIN 
-       		TBL_EXPENDAPRLINE  
-       	ON 
-       		A.DOCID = TBL_EXPENDAPRLINE.DOCID   
-       	AND
-       		A.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID   
-       	AND
-       		A.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID   
-   		INNER JOIN 
-   			TBL_EXPENDAPRDOCINFO  
-   		ON 
-   			A.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
-   		AND
-   			A.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
-   		AND
-   			A.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
-   		<isEqual property="v_CONTFLAG" compareValue="0">
-   			WHERE 
-   				TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
-   		</isEqual>
-   		<isEqual property="v_CONTFLAG" compareValue="1">
-   		<isEqual property="v_CONTID" compareValue="ADMIN">
-   		WHERE CONTAINERID IS NOT NULL
-   		</isEqual>
-   		<isNotEqual property="v_CONTID" compareValue="ADMIN">
-   		 WHERE CONTAINERID IN ($v_CONTID$)
-   		</isNotEqual>
-   		</isEqual>
-   		AND TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-   		AND
-   			TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#
-   		AND
-   			TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-   		<isNotEqual property="v_PUSERSECURITYCODE" compareValue="0">
-   		<isNotEqual property="v_PCONTID" compareValue="ADMIN">
-			<isEqual property="v_SECURITYLINEFLAG" compareValue="Y">
-			<![CDATA[
-				 AND ( $v_PUSERSECURITYCODE$ <= TBL_EXPENDAPRDOCINFO.SECURITYCODE OR (
-																						SELECT 
-																							CASE WHEN DOCID > 0 THEN 'Y' 
-																							ELSE 'N' 
-																							END AS DOCID 
-																						FROM(
-															                                   SELECT 
-															                                   		COUNT(DocID)  DocID 
-															                                   FROM 
-															                                   		TBL_ENDAPRLINEINFO 
-																   							   WHERE 
-																   							   		DOCID IN (SELECT 
-																										   			A.DOCID
-																										   	  FROM 
-																										   			TBL_ENDAPRDOCINFO A  
-																										   	  LEFT OUTER JOIN 
-																										   			TBL_ENDAPRLINEINFO  
-																										   	  ON 
-																										   			A.DOCID = TBL_ENDAPRLINEINFO.DOCID 
-																										   	  AND
-																										   			A.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID 
-																										   	  AND
-																										   			A.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID 
-																										      LEFT OUTER JOIN 
-																										       		TBL_EXPENDAPRLINE  
-																										      ON 
-																										       		A.DOCID = TBL_EXPENDAPRLINE.DOCID   
-																										      AND
-																										       		A.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID   
-																										      AND
-																										       		A.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID   
-																										      INNER JOIN 
-																										   			TBL_EXPENDAPRDOCINFO  
-																										   	  ON 
-																										   			A.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
-																										   	  AND
-																										   			A.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
-																										   	  AND
-																										   			A.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
-																										   	  AND 
-																										   	  		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-																										   	  AND 
-																										   	  		TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-																										      AND 
-																										      		TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#)
-																										      AND 
-																										      		TENANT_ID = #v_TENANTID#
-																										      AND 
-																										      		COMPANYID = #companyID#
-																											  AND 
-																											  		AprMemberID = #v_USERID#)B) = 'Y')
-			]]>
-			</isEqual>
-			<isNotEqual property="v_SECURITYLINEFLAG" compareValue="Y">
-			<![CDATA[
-			 AND 
-			 	$v_PUSERSECURITYCODE$ <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
-			 ]]>
-			</isNotEqual>
-   		</isNotEqual>
-   		</isNotEqual>
-   		
-   		<isEqual property="v_PUBLICFLAG" compareValue="Y">
-   		<isNotEmpty property="v_PUBLICFLAG">
-   		<![CDATA[
-   		 AND ( (A.ISPUBLIC <> 'N' OR A.ISPUBLIC IS NULL)
-      				OR (A.ISPUBLIC = 'N' AND TBl_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-      				]]>
-   		</isNotEmpty>
-   		</isEqual>
-   		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
-   		AND $v_PSUBQUERY$
-   		</isGreaterThan>
-   	</select>
    	
    	<select id="EzApprovalG.getUserContDocListCount" parameterClass="Map" resultClass="int">
    		SELECT 
@@ -21059,7 +20980,7 @@
    		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
    		ORDER BY LINKDATE DESC 
    		</isLessEqual>
-   			LIMIT $v_PQUERYSIZESUB$
+   			LIMIT #v_PQUERYSIZESUB#, #v_PLISTCOUNT#
    		) A 
          
       	<isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
@@ -21078,13 +20999,6 @@
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
    		ORDER BY LINKDATE DESC
    		</isLessEqual>
-   		LIMIT 
-   			<isGreaterEqual property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PLISTCOUNT$
-   			</isGreaterEqual>
-   			<isLessThan property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PQUERYSIZEMAIN$
-   			</isLessThan>
    	</select>
    	
    	   	<select id="EzApprovalG.getUserContListAll" parameterClass="Map" resultClass="ApprGDocListVO">
@@ -21211,214 +21125,7 @@
         AND 
         	PHYSICALDELIVERYOFFICENAME = #companyID#
    	</select>
-   	
-   	<select id="EzApprovalG.getContDocListS" parameterClass="Map" resultClass="ApprGDocListVO">
-   	 	SELECT 
-   	 		* 
-   	 	FROM 
-   	 		(SELECT 
-   	 				A.* 
-   					
-<!--    					GETSENDSTATUS' || v_PSTRLANG || '(A.DOCID) AS SENDFLAG -->
-   			FROM (
-			   	 	SELECT 
-			   	 		* 
-			   	 	FROM 
-			   	 		(
-			   	 			SELECT 
-			   	 				DISTINCT A.DOCID, 
-			   	 						 A.DOCTYPE, 
-			   	 						 A.DOCSTATE, 
-			   	 						 A.FUNCTIONTYPE, 
-			   	 						 A.HREF,   
-			   							 A.DOCTITLE, 
-			   							 A.DOCNO, 
-			   							 A.HASATTACHYN, 
-			   							 A.HASOPINIONYN, 
-			   							 A.STARTDATE, 
-			   							 A.ENDDATE, 
-			   							 A.WRITERID, 
-			   							 A.WRITERNAME , 
-			   							 A.WRITERNAME2, 
-			   							 A.WRITERJOBTITLE, 
-			   							 A.WRITERJOBTITLE2, 
-			   							 A.WRITERDEPTID, 
-			   							 A.WRITERDEPTNAME, 
-			   							 A.WRITERDEPTNAME2, 
-			   							 A.FORMID, 
-			   							 A.CONTAINERID, 
-			   							 TBL_EXPENDAPRDOCINFO.FORMNAME, 
-			   							 TBL_EXPENDAPRDOCINFO.FORMNAME2, 
-			   							 TBL_EXPENDAPRDOCINFO.STATUS,   
-			   							 A.ORGDOCID, 
-			   							 A.ISPUBLIC, 
-			   							 TBL_EXPENDAPRDOCINFO.EDMSYN  
-			   				FROM 
-			   						TBL_ENDAPRDOCINFO A  
-			   				LEFT OUTER JOIN 
-			   						TBL_ENDAPRLINEINFO  
-			   				ON 
-			   						A.DOCID = TBL_ENDAPRLINEINFO.DOCID
-			   				AND
-			   						A.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
-			   				AND
-			   						A.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID 
-			   				LEFT OUTER JOIN 
-			   						TBL_EXPENDAPRLINE  
-			   				ON 
-			   						A.DOCID = TBL_EXPENDAPRLINE.DOCID  
-			   				AND
-			   						A.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID  
-			   				AND
-			   						A.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID 
-			   				INNER JOIN 
-			   						TBL_EXPENDAPRDOCINFO  
-			   				ON 
-			   						A.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
-			   				AND
-			   						A.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
-			   				AND
-			   						A.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
-			   		<isEqual property="v_CONTFLAG" compareValue="0">
-			   			WHERE 
-			   				TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
-			   		</isEqual>
-			   		<isEqual property="v_CONTFLAG" compareValue="1">
-			   		<isEqual property="v_CONTID" compareValue="ADMIN">
-			   			WHERE 
-			   				CONTAINERID IS NOT NULL
-			   		</isEqual>
-			   		<isNotEqual property="v_CONTID" compareValue="ADMIN">
-			   		 	WHERE 
-			   		 		CONTAINERID IN ($v_CONTID$)
-			   		</isNotEqual>
-			   		</isEqual>			
-			   		 	AND 
-			   		 		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-			   		 	AND
-			   		 		TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-			   		 	AND
-			   		 		TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#
-			   		 <isNotEqual property="v_PUSERSECURITYCODE" compareValue="0">
-			   		 <isNotEqual property="v_PCONTID" compareValue="ADMIN">
-						<isEqual property="v_SECURITYLINEFLAG" compareValue="Y">
-						<![CDATA[
-							 AND ( $v_PUSERSECURITYCODE$ <= TBL_EXPENDAPRDOCINFO.SECURITYCODE OR (
-																									SELECT 
-																										CASE WHEN DOCID > 0 THEN 'Y' 
-																										ELSE 'N' 
-																										END AS DOCID 
-																									FROM(
-																		                                   SELECT 
-																		                                   		COUNT(DocID)  DocID 
-																		                                   FROM 
-																		                                   		TBL_ENDAPRLINEINFO 
-																			   							   WHERE 
-																			   							   		DOCID IN (SELECT 
-																													   			A.DOCID
-																													   	  FROM 
-																													   			TBL_ENDAPRDOCINFO A  
-																													   	  LEFT OUTER JOIN 
-																													   			TBL_ENDAPRLINEINFO  
-																													   	  ON 
-																													   			A.DOCID = TBL_ENDAPRLINEINFO.DOCID 
-																													   	  AND
-																													   			A.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID 
-																													   	  AND
-																													   			A.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID 
-																													      LEFT OUTER JOIN 
-																													       		TBL_EXPENDAPRLINE  
-																													      ON 
-																													       		A.DOCID = TBL_EXPENDAPRLINE.DOCID   
-																													      AND
-																													       		A.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID   
-																													      AND
-																													       		A.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID   
-																													      INNER JOIN 
-																													   			TBL_EXPENDAPRDOCINFO  
-																													   	  ON 
-																													   			A.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
-																													   	  AND
-																													   			A.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
-																													   	  AND
-																													   			A.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
-																													   	  AND 
-																													   	  		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-																													   	  AND 
-																													   	  		TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-																													      AND 
-																													      		TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#)
-																													      AND 
-																													      		TENANT_ID = #v_TENANTID#
-																													      AND 
-																													      		COMPANYID = #companyID#
-																														  AND 
-																														  		AprMemberID = #v_USERID#)Z) = 'Y')
-						]]>
-						</isEqual>
-						<isNotEqual property="v_SECURITYLINEFLAG" compareValue="Y">
-						<![CDATA[
-						 AND $v_PUSERSECURITYCODE$ <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
-						 ]]>
-						</isNotEqual>
-			   		</isNotEqual>
-			   		</isNotEqual>
-			   		<isEqual property="v_PUBLICFLAG" compareValue="Y">
-			   		<isNotEmpty property="v_PUBLICFLAG">
-			   		<![CDATA[
-			   		 AND ( (A.ISPUBLIC <> 'N' OR A.ISPUBLIC IS NULL)
-			      				OR (A.ISPUBLIC = 'N' AND TBl_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-			      				]]>
-			   		</isNotEmpty>
-			   		</isEqual>
-			   		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
-			   		AND $v_PSUBQUERY$
-			   		</isGreaterThan>
-			   		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
-			   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
-			   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
-			   			ORDER BY 
-			   				$v_ORDEROPTION$ 
-			   		</isEqual>
-			   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
-			   		ORDER BY 
-			   			$v_ORDEROPTION$, ENDDATE DESC 
-			   		</isNotEqual>
-			   		</isGreaterEqual>
-			   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="7">
-			   		ORDER BY  
-			   			$v_ORDEROPTION$ , ENDDATE DESC
-			   		</isLessThan>
-			   		</isGreaterThan>
-			   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
-			   		ORDER BY ENDDATE DESC 
-			   		</isLessEqual>
-			   		)H LIMIT $v_PQUERYSIZESUB$ ) A 
-				  
-				    <isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
-		   			<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
-			   		<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
-			   			ORDER BY $v_ORDEROPTION2$
-			   		</isEqual>
-			   		<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
-			   		ORDER BY $v_ORDEROPTION2$, ENDDATE
-			   		</isNotEqual>
-			   		</isGreaterEqual>
-			   		<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="8">
-			   		ORDER BY $v_ORDEROPTION2$, ENDDATE
-			   		</isLessThan>
-			   		</isGreaterThan>
-			   		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
-			   		ORDER BY ENDDATE DESC
-			   		</isLessEqual>
-			   		) F LIMIT 
-   			<isGreaterEqual property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PLISTCOUNT$
-   			</isGreaterEqual>
-   			<isLessThan property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PQUERYSIZEMAIN$
-   			</isLessThan>
-   	</select>
+
    	
    	<select id="EzApprovalG.getSearchDocListCountS" parameterClass="Map" resultClass="int">
    		SELECT 
@@ -21520,7 +21227,7 @@
 			</isNotEqual>
    		</isNotEqual>
    		</isNotEqual>
-   		<isEqual property="v_PUBLICFLAG" compareValue="Y">
+   		<isEqual property="v_PUBFLAG" compareValue="Y">
    		<isNotEmpty property="v_PCONTID">
    		<isNotNull property="v_PCONTID">
    		<isNotEqual property="v_PCONTID" compareValue="ADMIN">

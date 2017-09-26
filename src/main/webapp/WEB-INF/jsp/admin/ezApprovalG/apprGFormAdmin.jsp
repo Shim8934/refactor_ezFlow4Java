@@ -545,6 +545,7 @@
 		        }
 		    }
 
+		    var formContMain_dialogArguments = new Array(); 
 		    function MoveForm() {
 		        var para = new Array();
 		        var treeView = new TreeView();
@@ -563,13 +564,24 @@
 		            para[2] = companyID;
 
 		            var url = "/admin/ezApprovalG/formSelect.do";
-		            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
+		            formContMain_dialogArguments[0] = para;
+		            formContMain_dialogArguments[1] = moveForm_complete;
+		            
+		            window.open(url, "apprGFormAdmin", GetOpenWindowfeature(430, 580));
+// 		            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
 
-		            if (retVal[0] == "OK") {
-		                Tree_setconfig();
-		                InitFormCont();
-		            }
+// 		            if (retVal[0] == "OK") {
+// 		                Tree_setconfig();
+// 		                InitFormCont();
+// 		            }
 		        }
+		    }
+		    
+		    function moveForm_complete(retVal) {
+		    	if (retVal[0] == "OK") {
+	                Tree_setconfig();
+	                InitFormCont();
+	            }
 		    }
 		</script>
 	

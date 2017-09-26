@@ -183,6 +183,8 @@
 			//기안(DRAFT), 접수(RECV), 합의(HABYUI) 여부
 			var approvalType;
 			var chamjoAfterYN = "${chamjoAfterYN}";
+			var isUsed = "${isUsed}";
+			var beforeDocID = "${beforeDocID}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -300,15 +302,6 @@
 	                 }
 	                 catch (e) {
 	                 }
-	                 try {
-	                     var ua = navigator.userAgent;
-	                     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                         KeEventControl(document.getElementById("textUser"));
-	                         KeEventControl(document.getElementById("textUser2"));
-	                     }
-	                 }
-	                 catch (e)
-	                 { }
 	                     if (pHapYuiCount == 0) {
 	                         document.getElementById("deptaddbtn").style.display = "none";
 	                 }
@@ -564,7 +557,7 @@
 	                    if (!bool3) {
 	                    	if (approvalFlag == "G") {
 		                        Cabinetinfo_ini();
-		                        Docinfo_ini();
+		                        //Docinfo_ini();
 		                        
 			                    bool3 = true;
 			                    bool4 = true;
@@ -1715,8 +1708,8 @@
 	                                <td height="30" style="background-color: transparent">
 	                                <c:if test="${approvalFlag == 'G'}">
 	                                    <input id="txtDeptName" style="width: 150px" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
-	                                    <a style="margin-top: 2px" class="imgbtn"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
-	                                	<a class="imgbtn" style="margin-top: 2px; margin-right: 5px" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    <a class="imgbtn"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+	                                	<a class="imgbtn" style="margin-right: 5px" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
 	                                 	<input id="textUser2" style="width: 200px;" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">

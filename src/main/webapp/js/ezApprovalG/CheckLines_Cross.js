@@ -58,12 +58,14 @@ function OpenAlertUILong(pAlertContent) {
 
 function OpenAlertUILong_Complete() {
     DivPopUpHidden();
-    btnSetAprLine_onclick();
+//    btnSetAprLine_onclick();
+    btnApprovalInfo()
 }
 
 function OpenAlertUILong_Complete2() {
     DivPopUpHidden();
-    btnSetReceivLine_onclick();
+//    btnSetReceivLine_onclick();
+    btnApprovalInfo()
 }
 
 
