@@ -90,7 +90,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 
 		if (configVO == null) {
-			ezTaskService.taskSaveConfig(userInfo.getId(), "#FF0000", "#00FF00", userInfo.getTenantId());
+			ezTaskService.taskSaveConfig(userInfo.getId(), "#FF1B1B", "#8DFF1B", "", "", userInfo.getTenantId());
 			configVO = ezTaskService.getOriginColor(userID, tenantID);
 		}
 
@@ -512,10 +512,12 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
-		logger.debug("delayColor : " + configVO.getDelayColor() + " | completeColor : " + configVO.getCompleteColor());
+		logger.debug("delayColor : " + configVO.getDelayColor() + " | completeColor : " + configVO.getCompleteColor() + " | originColor : " + configVO.getOriginColor() + " | originColor2 : " + configVO.getOriginColor2());
 
 		model.addAttribute("delayColor", configVO.getDelayColor());
 		model.addAttribute("completeColor", configVO.getCompleteColor());
+		model.addAttribute("originColor", configVO.getOriginColor());
+		model.addAttribute("originColor2", configVO.getOriginColor2());
 
 		logger.debug("taskConfig ended.");
 
@@ -544,13 +546,15 @@ public class EzTaskController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String delayColor = request.getParameter("delayColor");
 		String completeColor = request.getParameter("completeColor");
+		String originColor = request.getParameter("originColor");
+		String originColor2 = request.getParameter("originColor2");
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("originDelayColor : " + configVO.getDelayColor() + " | originCompleteColor : " + configVO.getCompleteColor());
 		
 		if (configVO != null) {
-			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, completeColor, userInfo.getTenantId());
+			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, completeColor, originColor, originColor2, userInfo.getTenantId());
 		}
 
 		logger.debug("taskSaveConfig ended.");

@@ -35,9 +35,9 @@ public interface EzTaskService {
 	
 	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID) throws Exception;
 	
-	void taskSaveConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception;
+	void taskSaveConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception;
 	
-	void taskUpdateConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception;
+	void taskUpdateConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception;
 	
 	void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception;
 }

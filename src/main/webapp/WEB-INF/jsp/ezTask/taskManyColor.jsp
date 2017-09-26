@@ -7,26 +7,76 @@
 		<title><spring:message code="ezTask.t91" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
 	    <link rel="stylesheet" href='<spring:message code="ezTask.e2" />' type="text/css" />
+	    <link rel="stylesheet" href="/css/jquery-hex-colorpicker.css" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezTask/jquery-hex-colorpicker.js"></script>
 	    <script type="text/javascript">
+	    	var Name_Complete;
 		    var ReturnFunction;
+		    var currentColor;
+		    var originColor;
+		    var originColor2;
+// 		    var r, g, b;
+
 		    window.onload = function()
 		    {
 		        try {
+					Name_Complete = parent.manycolor_dialogArguments[0];
 		            ReturnFunction = parent.manycolor_dialogArguments[1];
+		            currentColor = parent.manycolor_dialogArguments[2];
+			        originColor = parent.manycolor_dialogArguments[3];
+			        originColor2 = parent.manycolor_dialogArguments[4];
 		        } catch (e) {
 		            try {
+						Name_Complete = opener.manycolor_dialogArguments[0];
 		                ReturnFunction = opener.manycolor_dialogArguments[1];
+		                currentColor = opener.manycolor_dialogArguments[2];
+		                originColor = opener.manycolor_dialogArguments[3];
+		                originColor2 = opener.manycolor_dialogArguments[4];
 		            } catch (e) {
 		                
 		            }
 		        }
+// 		        hexToRgb(currentColor);
+// 		        r = hexToRgb(currentColor).r;
+// 		        g = hexToRgb(currentColor).g;
+// 		        b = hexToRgb(currentColor).b;        
+// 				var rgbColor = "rgb(" + r + ", " + g + ", " + b + ")";
+        
+// 				selColor.value = "#FFFFFF";
+// 				document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").value;
+				$("#color-picker").hexColorPicker();
+				$("#color-picker").click();
 
-				selColor.value = "#FFFFFF";
-				document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").value;
+				if (Name_Complete == "DelayColor") {
+					if (originColor != "") {
+						$("div[color='" + originColor + "']").click();
+						$("div[color='" + currentColor + "']").click();
+					} else {
+						$("div[color='" + currentColor + "']").click();
+					}
+				} else {
+					if (originColor2 != "") {
+						$("div[color='" + originColor2 + "']").click();
+						$("div[color='" + currentColor + "']").click();
+					} else {
+						$("div[color='" + currentColor + "']").click();
+					}
+				}
 			}
-			
-			function select_color(e)
+
+		    /* function hexToRgb(hexColor) {
+	            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
+
+	            return result ? {
+	            r: parseInt(result[1], 16),
+	            g: parseInt(result[2], 16),
+	            b: parseInt(result[3], 16)
+	            } : null;
+			} */
+
+			/* function select_color(e)
 			{
 			    if (window.ActiveXObject) {
 				    selColor.value = event.srcElement.title;
@@ -36,15 +86,25 @@
 				    selColor.value = e.target.title;
 				    document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").value;
 				}
-			}
-		
-			function ok_onclick()
-			{
-			    if (ReturnFunction != null){
-		            ReturnFunction(selColor.value);
+			} */
+
+			var color;
+			function ok_onclick() {
+				var selectColor = $(".selected-color").val();
+
+				if (Name_Complete == "DelayColor") {
+					originColor = $(".color-block[color='" + selectColor + "']").siblings("div:eq(0)").attr("color");					
+					color = selectColor + "," + originColor;
+				} else {
+					originColor2 = $(".color-block[color='" + selectColor + "']").siblings("div:eq(0)").attr("color");
+					color = selectColor + "," + originColor2;
+				}
+
+				if (ReturnFunction != null){
+		            ReturnFunction(color);
 			    	
 			    } else {
-		            window.returnValue = selColor.value;
+		            window.returnValue = color;
 			    }
 			       
 				window.close();
@@ -53,7 +113,7 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code="ezTask.t91" /></h1>
-	    <table onClick="select_color(event)" border="1" cellspacing="2" id="ColorTable" style="width:259px;" class="box">
+	    <!-- <table onClick="select_color(event)" border="1" cellspacing="2" id="ColorTable" style="width:259px;" class="box">
 			<tr>
 			    <td style="width:32px; background-color: #FF8080" title="#FF8080">&nbsp;</td>
 			    <td style="width:32px; background-color: #FFFF80" title="#FFFF80">&nbsp;</td>
@@ -114,19 +174,20 @@
 			    <td style="background-color: #400040" title="#400040">&nbsp;</td>
 			    <td style="background-color: #FFFFFF" title="#FFFFFF">&nbsp;</td>
 		  </tr>
-		</table>
-		<div class="box" style="width:256px;margin-top:2px">		
-		    <table>
-		        <tr>
-		            <td id="Td1" style="padding-right:10px">Color : </td>
-		            <td><div id=selColorShow style="background-color:black; width:20px; height:21px; border:1px inset gray"></div></td>
-		            <td style="padding-left:10px"><input type="text" id=selColor></td>
-		        </tr>
-		    </table>
-		</div>
-		<div class="btnposition">
-		    <a class="imgbtn"><span onclick="ok_onclick()" ><spring:message code="ezTask.t19" /></span></a>
-		    <a class="imgbtn"><span onclick="window.close()" ><spring:message code="ezTask.t20" /></span></a>
-		</div>
+		</table> -->
+		<input type="text" id="color-picker" style="display:none;"></input>
+<!-- 		<div class="box" style="width:239px;margin-top:2px">		 -->
+<!-- 		    <table> -->
+<!-- 		        <tr> -->
+<!-- 		            <td id="Td1" style="padding-right:10px">Color : </td> -->
+<!-- 		            <td><div id=selColorShow style="background-color:black; width:20px; height:21px; border:1px inset gray"></div></td> -->
+<!-- 		            <td style="padding-left:10px"><input type="text" id=selColor></td> -->
+<!-- 		        </tr> -->
+<!-- 		    </table> -->
+<!-- 		</div> -->
+<!-- 		<div class="btnposition"> -->
+<%-- 		    <a class="imgbtn"><span onclick="ok_onclick()" ><spring:message code="ezTask.t19" /></span></a> --%>
+<%-- 		    <a class="imgbtn"><span onclick="window.close()" ><spring:message code="ezTask.t20" /></span></a> --%>
+<!-- 		</div> -->
 	</body>	
 </html>

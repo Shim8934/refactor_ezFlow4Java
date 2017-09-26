@@ -398,15 +398,17 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public void taskSaveConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception {
+	public void taskSaveConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception {
 		logger.debug("taskSaveConfig started.");
-		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor);
+		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | originColor : " + originColor + " | originColor2 : " + originColor2);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
 		map.put("delayColor", delayColor);
 		map.put("completeColor", completeColor);
+		map.put("originColor", originColor);
+		map.put("originColor2", originColor2);
 		map.put("tenantID", tenantID);
 		
 		ezTaskDAO.taskSaveConfig(map);
@@ -415,15 +417,17 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, int tenantID) throws Exception {
+	public void taskUpdateConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception {
 		logger.debug("taskUpdateConfig started.");
-		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor);
+		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | originColor : " + originColor);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("memberID", memberID);
 		map.put("delayColor", delayColor);
 		map.put("completeColor", completeColor);
+		map.put("originColor", originColor);
+		map.put("originColor2", originColor2);
 		map.put("tenantID", tenantID);
 
 		ezTaskDAO.taskUpdateConfig(map);

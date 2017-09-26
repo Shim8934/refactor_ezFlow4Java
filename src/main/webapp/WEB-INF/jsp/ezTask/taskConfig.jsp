@@ -11,6 +11,8 @@
 		<script type="text/javascript">
 			var delaycolor = "";
 			var completecolor = "";
+			var originColor = "${originColor}"; // 색상편집에서 지연된 업무의 상위색
+			var originColor2 = "${originColor2}"; // 색상편집에서 완료된 업무의 상위색
 
 			document.onselectstart = function () { return false; };
 
@@ -28,7 +30,9 @@
 					dataType : "json",
 					data : {
 						delayColor : delayColor,
-						completeColor : completeColor
+						completeColor : completeColor,
+						originColor : originColor,
+						originColor2 : originColor2
 					},
 					success : function() {
 						alert("<spring:message code='ezTask.t89' />");
@@ -41,13 +45,25 @@
 
 			var manycolor_dialogArguments = new Array();
 			var Name_Complete;
+			var currentColor;
 
 			function manyColorShow(pID) {
 				Name_Complete = pID;
-				
+
+				if (Name_Complete == "DelayColor") {
+					currentColor = $("#DelayColor").text();
+				} else {
+					currentColor = $("#CompleteColor").text();
+				}
+
 				if (CrossYN()) {
+					manycolor_dialogArguments[0] = Name_Complete;
 	                manycolor_dialogArguments[1] = SelectColor_Complete;
-	                var OpenWin = window.open("/ezTask/taskManyColor.do", "manyColor", GetOpenWindowfeature(280, 230));
+	                manycolor_dialogArguments[2] = currentColor;
+	                manycolor_dialogArguments[3] = originColor;
+	                manycolor_dialogArguments[4] = originColor2;
+
+	                var OpenWin = window.open("/ezTask/taskManyColor.do", "manyColor", GetOpenWindowfeature(265, 350));
 	                try { OpenWin.focus(); } catch (e) { }
 	            } else {
 	                var retValue = window.showModalDialog("/ezTask/taskManyColor.do", "", "dialogHeight:230px; dialogWidth:280px; status:no;scroll:no; help:no; edge:sunken");
@@ -60,8 +76,13 @@
 
 			function SelectColor_Complete(retValue) {
 	            if (typeof (retValue) != "undefined" && retValue != null) {
-	                document.getElementById(Name_Complete + "Display").style.backgroundColor = retValue;
-	                document.getElementById(Name_Complete).innerText = retValue;
+	                document.getElementById(Name_Complete + "Display").style.backgroundColor = retValue.split(",")[0];
+	                document.getElementById(Name_Complete).innerText = retValue.split(",")[0];
+	                if (Name_Complete == "DelayColor") {
+		                originColor = retValue.split(",")[1];
+	                } else {
+						originColor2 = retValue.split(",")[1];
+	                }
 	            }
 	        }
 

@@ -115,7 +115,7 @@
 						WHERE
 							tenantid = #tenantID#
 						AND
-							userid = #userID#), '##FF0000') as delaycolor,
+							userid = #userID#), '##FF1B1B') as delaycolor,
 				IFNULL((SELECT
 							completecolor
 						FROM
@@ -123,7 +123,23 @@
 						WHERE
 							tenantid = #tenantID#
 						AND
-							userid = #userID#), '##00FF00') as completecolor,
+							userid = #userID#), '##8DFF1B') as completecolor,
+				IFNULL((SELECT
+							origincolor
+						FROM
+							TBL_TASKCONFIG
+						WHERE
+							tenantid = #tenantID#
+						AND
+							userid = #userID#), '') as origincolor,
+				IFNULL((SELECT
+							origincolor2
+						FROM
+							TBL_TASKCONFIG
+						WHERE
+							tenantid = #tenantID#
+						AND
+							userid = #userID#), '') as origincolor2,
 				userid
 			FROM
 				TBL_TASKCONFIG
@@ -488,9 +504,9 @@
     <insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_TASKCONFIG
-                (userid, delaycolor, completecolor, tenantid)
+                (userid, delaycolor, completecolor, origincolor, origincolor2, tenantid)
             VALUES
-                (#memberID#, #delayColor#, #completeColor#, #tenantID#)
+                (#memberID#, #delayColor#, #completeColor#, #originColor#, #originColor2#, #tenantID#)
         ]]>
     </insert>
 
@@ -610,7 +626,9 @@
                 TBL_TASKCONFIG
             SET
                 delaycolor = #delayColor#,
-                completecolor = #completeColor#
+                completecolor = #completeColor#,
+                origincolor = #originColor#,
+                origincolor2 = #originColor2#
             WHERE 
                 userid = #memberID#
             AND

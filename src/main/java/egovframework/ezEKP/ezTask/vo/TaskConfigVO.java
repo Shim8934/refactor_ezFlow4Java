@@ -7,6 +7,10 @@ public class TaskConfigVO {
 	private String delayColor;
 	/** CompleteColor */
 	private String completeColor;
+	/** OriginColor */
+	private String originColor;
+	/** OriginColor2 */
+	private String originColor2;
 	public String getUserID() {
 		return userID;
 	}
@@ -24,5 +28,17 @@ public class TaskConfigVO {
 	}
 	public void setCompleteColor(String completeColor) {
 		this.completeColor = completeColor;
+	}
+	public String getOriginColor() {
+		return originColor;
+	}
+	public void setOriginColor(String originColor) {
+		this.originColor = originColor;
+	}
+	public String getOriginColor2() {
+		return originColor2;
+	}
+	public void setOriginColor2(String originColor2) {
+		this.originColor2 = originColor2;
 	}
 }
