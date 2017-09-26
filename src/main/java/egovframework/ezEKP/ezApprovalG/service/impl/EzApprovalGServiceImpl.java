@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21740,7 +21742,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                                         }
 		                                     } else {
 		                             			org.jsoup.nodes.Document doc2 = Jsoup.parse(doc.getElementsByTag("br").get(0).parent().outerHtml());
-		                             			System.out.println(doc2.getElementsByTag("body").get(0).children());
 		                             			doc2.getElementsByTag("body").get(0).children().html(result[j]);
 		                                    	 doc.getElementsByTag("br").get(0).parent().before(doc2.getElementsByTag("body").get(0).children().outerHtml());
 		                                     }
@@ -21840,6 +21841,160 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				doc.getElementsByTag("h6").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h6").get(k), "h6"));
 			}
 			
+			for (int k = 0; k < doc.getElementsByTag("table").size(); k++) {
+				String tableStyle = doc.getElementsByTag("table").get(k).attr("style").toString();
+				if (!doc.getElementsByTag("table").get(k).hasAttr("border")) {
+					doc.getElementsByTag("table").get(k).attr("bodrer","1");
+				}
+				
+				if (!doc.getElementsByTag("table").get(k).hasAttr("cellspacing")) {
+					doc.getElementsByTag("table").get(k).attr("cellspacing","0");
+				}
+				
+				if (!doc.getElementsByTag("table").get(k).hasAttr("cellpadding")) {
+					doc.getElementsByTag("table").get(k).attr("cellpadding","0");
+				}
+				
+//				if (tableStyle.indexOf("border-collapse") > 0) {
+//					System.out.println(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1));
+//					tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1), "");
+//				}
+				
+				if (!doc.getElementsByTag("table").get(k).hasAttr("width")) {
+					if (tableStyle.contains("width")) {
+						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1), "");
+						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+					} 
+				} else {
+					if (tableStyle.indexOf("width") > -1) {
+						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1), "");
+						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+					} else {
+						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1]);
+					}
+					doc.getElementsByTag("table").get(k).attr("width", "0");
+				}
+				
+				if (!doc.getElementsByTag("table").get(k).hasAttr("height")) {
+					if (tableStyle.indexOf("height") > -1) {
+						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1), "");
+						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+					} 
+				} else {
+					if (tableStyle.indexOf("height") > -1) {
+						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1), "");
+						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+					} else {
+						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+					}
+					doc.getElementsByTag("table").get(k).attr("height", "0");
+				}
+				
+//				if (doc.getElementsByTag("table").get(k).hasAttr("style")) {
+//					doc.getElementsByTag("table").get(k).removeAttr("style");
+//				}
+				
+				if (doc.getElementsByTag("table").get(k).hasAttr("align")) {
+					System.out.println(doc.getElementsByTag("table").get(k).attr("align").toString());
+					switch (doc.getElementsByTag("table").get(k).attr("align").toString()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    	System.out.println("2222");
+                    case "adjust":
+                        break;
+					default:
+						doc.getElementsByTag("table").get(k).attr("align", "adjust");
+						break;
+					}
+				}
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
+				String tbStyle = doc.getElementsByTag("td").get(k).attr("style").toString();
+				if (doc.getElementsByTag("td").get(k).hasAttr("align")) {
+					System.out.println(doc.getElementsByTag("td").get(k).attr("align").toString());
+					switch (doc.getElementsByTag("td").get(k).attr("align").toString().toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "adjust":
+                        break;
+					default:
+						doc.getElementsByTag("td").get(k).attr("align", "adjust");
+						break;
+					}
+				}
+				
+				if (doc.getElementsByTag("td").get(k).hasAttr("text-align")) {
+					switch (doc.getElementsByTag("td").get(k).attr("text-align").toString().toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "justify":
+                    case "char":
+                    	doc.getElementsByTag("td").get(k).attr("align", doc.getElementsByTag("td").get(k).attr("text-align").toString());
+                    	break;
+					default:
+						doc.getElementsByTag("td").get(k).attr("align", "justify");
+						break;
+					}
+				}
+				
+				if (doc.getElementsByTag("td").get(k).hasAttr("valign")) {
+					switch (doc.getElementsByTag("td").get(k).attr("valign").toString().toLowerCase()) {
+					case "top":
+                    case "middle":
+                    case "bottom":
+                    case "baseline":
+                        break;
+					default:
+						doc.getElementsByTag("td").get(k).attr("valign", "baseline");
+						break;
+					}
+				}
+				
+				if (!doc.getElementsByTag("td").get(k).hasAttr("width")) {
+					if (tbStyle.indexOf("width") > 0) {
+						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
+						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width"))), "");
+						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					} 
+				} else {
+					if (tbStyle.indexOf("width") > 0) {
+						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
+						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width"))), "");
+						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					} else {
+						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
+					}
+					doc.getElementsByTag("td").get(k).attr("width", "0");
+				}
+				
+				if (!doc.getElementsByTag("td").get(k).hasAttr("height")) {
+					if (tbStyle.indexOf("height") > 0) {
+						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
+						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height"))), "");
+						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					} 
+				} else {
+					if (tbStyle.indexOf("height") > 0) {
+						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
+						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height"))), "");
+						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					} else {
+						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
+					}
+					doc.getElementsByTag("td").get(k).attr("height", "0");
+				}
+				
+			}
+
+			
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
 			strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
@@ -21856,6 +22011,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
+	}
+
+	private String SizeConvertToMM(String pSize) {
+		  String strRtnVal = "";
+		  
+		  Pattern pattern = Pattern.compile("[^(0-9\\-\\.)]");
+			Matcher matcher = pattern.matcher(pSize);
+			
+          double pSizeNum = Integer.parseInt(matcher.replaceAll(""));
+          if (pSize.toUpperCase().indexOf("PX") > -1)
+          {
+              strRtnVal = Math.round(pSizeNum * 0.264583/1000.0) + "mm";
+          }
+          else if (pSize.toUpperCase().indexOf("PT") > -1)
+          {
+              strRtnVal = Math.round(pSizeNum * 0.352777/1000.0) + "mm";
+          }
+          else if (pSize.toUpperCase().indexOf("MM") > -1)
+          {
+              strRtnVal = pSizeNum + "mm";
+          }
+          else
+          {
+              strRtnVal = pSize;
+          }
+
+          return strRtnVal;
 	}
 
 	private org.jsoup.nodes.Node MakeHTagHTML(Element element, String tagType) {
@@ -22008,7 +22190,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} else {
 						m = i-1;
 					}
-						System.out.println(doc.body().getElementsByTag("div").get(i).outerHtml());
 					String parentText = doc.body().getElementsByTag("div").get(i).text();
 					String tempContext = doc.body().getElementsByTag("div").get(i).childNode(j).toString().replace("\n", "");
 					

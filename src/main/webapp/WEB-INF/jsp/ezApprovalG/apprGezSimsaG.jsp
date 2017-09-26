@@ -1011,6 +1011,7 @@
 	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
 	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
 	                                case "id":
+	                                case "style":
 	                                case "class":
 	                                case "summary":
 	                                case "width":

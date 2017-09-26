@@ -2553,11 +2553,20 @@ function Document_mmTopx(pBodyTag) {
 
                 //width
                 if (ElementsRows.item(Cnt).style.width != "") {
-                    ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth) + "px");
+                	if (ElementsRows.item(i).style.pixelWidth.indexOf("px") > -1) {
+                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth) + "px");
+                	} else {
+                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth + "px"));
+                	}
                     ElementsRows.item(Cnt).style.removeProperty("width");
                 }
+                
                 if (ElementsRows.item(Cnt).getAttribute("width") != null && ElementsRows.item(Cnt).getAttribute("width") != "") {
-                    ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
+                	if (ElementsRows.item(Cnt).getAttribute("width").indexOf("px") > -1) {
+                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
+                	} else {
+                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width") + "px"));
+                	}
                 }
 
                 //height
@@ -2585,11 +2594,22 @@ function Document_mmTopx(pBodyTag) {
 
                 //width
                 if (ElementsRows.item(Cnt).style.width != "") {
-                    ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth) + "px");
+                	if (ElementsRows.item(i).style.pixelWidth.indexOf("px") > -1) {
+                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth) + "px");
+                	} else {
+                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth  + "px"));
+                	}
+                    
                     ElementsRows.item(Cnt).style.removeProperty("width");
                 }
+                
                 if (ElementsRows.item(Cnt).getAttribute("width") != null && ElementsRows.item(Cnt).getAttribute("width") != "") {
-                    ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
+                	if (ElementsRows.item(Cnt).getAttribute("width").indexOf("px") > -1) {
+                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
+                	} else {
+                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width") + "px"));
+                	}
+                    
                 }
             }
             if (ElementsRows.item(Cnt).tagName == "TR") {
