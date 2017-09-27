@@ -352,7 +352,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		//관리자 권한 체크
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -394,7 +394,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		//관리자 권한 체크
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -411,27 +411,24 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
-		if (approvalFlag.equals("S")) {
-			String listHeader = ezApprovalGService.getListHeader("S110", companyID, userInfo.getLang(), userInfo.getTenantId());
-			String securityNode = ezApprovalGAdminService.getSecurityType("", userInfo, companyID, approvalFlag);
-			String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, companyID, approvalFlag);
-			String aprRule = "";
-			String aprRuleLine = "";
-			String aprTypeXML = ezApprovalGService.getAprType(approvalFlag, companyID, userInfo.getLang(), userInfo.getTenantId());
-			
-			if (formID != null && !formID.equals("")) {
-				aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
-				aprRuleLine = ezApprovalGAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
-			}
-			
-			model.addAttribute("listHeader", listHeader);
-			model.addAttribute("securityNode", securityNode);
-			model.addAttribute("periodNode", periodNode);
-			model.addAttribute("aprRule", aprRule);
-			model.addAttribute("aprRuleLine", aprRuleLine);
-			model.addAttribute("aprTypeXML", aprTypeXML);
+		String listHeader = ezApprovalGService.getListHeader("S110", companyID, userInfo.getLang(), userInfo.getTenantId());
+		String securityNode = ezApprovalGAdminService.getSecurityType("", userInfo, companyID, approvalFlag);
+		String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, companyID, approvalFlag);
+		String aprRule = "";
+		String aprRuleLine = "";
+		String aprTypeXML = ezApprovalGService.getAprType(approvalFlag, companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		if (formID != null && !formID.equals("")) {
+			aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
+			aprRuleLine = ezApprovalGAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
 		}
 		
+		model.addAttribute("listHeader", listHeader);
+		model.addAttribute("securityNode", securityNode);
+		model.addAttribute("periodNode", periodNode);
+		model.addAttribute("aprRule", aprRule);
+		model.addAttribute("aprRuleLine", aprRuleLine);
+		model.addAttribute("aprTypeXML", aprTypeXML);
 		model.addAttribute("formProcSpelling", formProcSpelling);
 		model.addAttribute("topID", userInfo.getCompanyID());
 		model.addAttribute("primary", primary);
@@ -479,7 +476,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
 			return "cmm/error/adminDenied";
 		}
 		

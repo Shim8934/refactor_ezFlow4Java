@@ -309,7 +309,8 @@
 									url = "/admin/ezApprovalG/formMain.do";
 								}
 							} else {
-								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+// 								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
 									url = "/admin/ezApprovalG/formMain.do";
@@ -371,7 +372,8 @@
 								url = "/admin/ezApprovalG/formMain.do";
 							}
 						} else {
-							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+// 							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";

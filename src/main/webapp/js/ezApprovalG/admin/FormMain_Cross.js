@@ -303,6 +303,12 @@ function MakeFormInfoXML_Detail() {
     } else {
         createNodeAndInsertText(xmlpara, objNode, "USEFLAG", "N"); 
     }
+    
+    if (document.getElementById('setConnFlag').checked) {
+    	createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "Y"); // 연동양식 체크 
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
+    }
 
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);

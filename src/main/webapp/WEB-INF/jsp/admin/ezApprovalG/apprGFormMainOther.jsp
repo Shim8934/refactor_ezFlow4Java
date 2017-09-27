@@ -87,7 +87,6 @@
 		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
-		            flag = false;
 		            get_FormInfo();
 		            if (useEditor != "HWP") {
 		                var tempXML = createXmlDom();
@@ -140,50 +139,46 @@
 		        }
 		    }
 		
-		    var flag = false;
 		    function Editor_Complete() {
-		        if (flag == false) {
-		            flag = true;
-		            if (formURL != "") {
-		                if (useEditor == "HWP") {
+	            if (formURL != "") {
+	                if (useEditor == "HWP") {
 // 		                    document.getElementById("btn_OpinionSave").style.display = "";
-		                    message.HWP_LoadFile(realPath + formURL);
+	                    message.HWP_LoadFile(realPath + formURL);
 		                    
-		                    if (message.HWP_GetDocumentElement() != "") {
-		                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
-		                        
-		                        if (connXML == "") {
-		                            return;
-		                        }
-		                        
-		                        g_XmlDoc = loadXMLString(connXML);
-		                        
-		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
-		                            if (i == 0) {
-		                                setNodeText(txt_OpinionContent, getXmlString(g_XmlDoc.documentElement.childNodes[i]));
-		                            } else {
-		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + getXmlString(g_XmlDoc.documentElement.childNodes[i]));
-		                            }
-		                        }
-		                    }
-		                } else {
-		                    document.getElementById("ApvForm_sub4").style.display = "";
-		                    //위임전결
+	                    if (message.HWP_GetDocumentElement() != "") {
+	                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
+	                        
+	                        if (connXML == "") {
+	                            return;
+	                        }
+	                        
+	                        g_XmlDoc = loadXMLString(connXML);
+	                        
+	                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
+	                            if (i == 0) {
+	                                setNodeText(txt_OpinionContent, getXmlString(g_XmlDoc.documentElement.childNodes[i]));
+	                            } else {
+	                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + getXmlString(g_XmlDoc.documentElement.childNodes[i]));
+	                            }
+	                        }
+	                    }
+	                } else {
+	                    document.getElementById("ApvForm_sub4").style.display = "";
+	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
-		                    document.getElementById("rootTD").style.display = "";
-		                    message.SetEditorContent(htmlData);
-		                }
-		            } else {
-		                if (useEditor != "HWP") {
-		                    document.getElementById("ApvForm_sub4").style.display = "";
-		                    //위임전결
+	                    document.getElementById("rootTD").style.display = "";
+	                    message.SetEditorContent(htmlData);
+	                }
+	            } else {
+	                if (useEditor != "HWP") {
+	                    document.getElementById("ApvForm_sub4").style.display = "";
+	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
-		                    document.getElementById("rootTD").style.display = "";
-		                } else {
+	                    document.getElementById("rootTD").style.display = "";
+	                } else {
 // 		                    document.getElementById("btn_OpinionSave").style.display = "";
-		                }
-		            }
-		        }
+	                }
+	            }
 		        
 		        add_doc_maker();
 		    }
@@ -204,12 +199,16 @@
 		        			companyID : companyID
 		        	},
 		        	success : function(result) {
-		        		if (result != "") {
+						if (result != "") {
 		        			tbFormName.value = result.vo.formName;
 		        			tbFormName2.value = result.vo.formName2;
 		        			tbDescript.value = result.vo.formDescription;
 		        			selFormKind.value = result.vo.formDocType;
 		        			formURL = encodeURI(result.vo.formFileLocation);
+		        			
+		        			if (result.vo.formConnFlag == "Y") {
+			                    document.getElementById("setConnFlag").checked = true;
+			                }
 			                
 			                if (approvalFlag == 'S') {
 				                if (result.vo.useFlag == "Y") {
@@ -817,11 +816,19 @@
                     <td style="width:40%;" colspan="5">
                         <select id="selFormKind" name="selFormKind" style="WIDTH: 170px;">${docType}</select>
                     </td>
-                </tr>    
-			</table>   
+                </tr>
+                <tr>
+					<td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
+						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
+					</td>
+				</tr>
+			</table>
             <br />
-            <div style="padding-bottom:5px; vertical-align:middle"><input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" /><span><spring:message code='ezApproval.t00004'/></span></div>
-            <table class="content" style="width:100%;">               
+            <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
+            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
+            	<span><spring:message code='ezApproval.t00004'/></span>
+            </div>
+            <table class="content" style="width:100%;">
 				<tr id="tr_setAutoItemCode">
 					<th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t1197'/></th>
                     <td style="width:400px;">
