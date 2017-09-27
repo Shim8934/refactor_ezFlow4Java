@@ -83,7 +83,18 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 			String temp = ezPersonalDAO.setApprovalPwd_S(map);
 			
 			if (temp != null && temp.equals("1")) {
-				ezPersonalDAO.setApprovalPwd_U(map);
+				/**
+				 * 1. 로그인 암호를 사용할 경우 -> pwdType, FLAG 업데이트
+				 * 2. 결재 암호를 사용할 경우 xml에서 분기
+				 * 2-1. v_PFLAG == Y -> FLAG, PWD, PWDTYPE 업데이트
+				 * 2-2. v_PFLAG == N -> FLAG만 업데이트
+				 * */
+				if (pwdType.equalsIgnoreCase("L")) {
+					ezPersonalDAO.setApprovalPwd_L(map);
+				} else {
+					ezPersonalDAO.setApprovalPwd_U(map);
+				}
+				
 			} else {
 				ezPersonalDAO.setApprovalPwd_I(map);
 			}
