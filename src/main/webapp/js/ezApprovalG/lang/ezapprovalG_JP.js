@@ -15,7 +15,7 @@ var strLang21 ="検討"//G
 var strLang22 ="決裁"
 var strLang26 ="一般的なコメント"
 var strLang27 ="コメントの内容]"
-var strLang28 ="職位"
+var strLang28 ="役職"
 var strLang29 ="氏名"
 var strLang30 ="内容"
 var strLang31 ="区分"
@@ -674,7 +674,7 @@ var strLang1022 ="内容を保存しないでページを閉じますか。";
 var strLang1023 ="内容を保存しないでページを閉じますか。";
 var strLang1024 ="フォームを確認してください。";
 var strLang1026 ="ファイルアップロード制限の延長。";
-var strLang1027 ="固定のコメント";
+var strLang1027 ="コメントを修正しました。";
 var strLang1028 ="年";
 var strLang1029 ="月";
 var strLang1030 ="日";
@@ -808,9 +808,9 @@ var strOpinionType4 = "004";
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strLangOpinionType1 = "一般意見";
-var strLangOpinionType2 = "差し戻し意見";
+var strLangOpinionType2 = "差し戻し";
 var strLangOpinionType3 = "保留意見";
-var strLangOpinionType4 = "差し戻し意見";
+var strLangOpinionType4 = "差し戻し";
 
 // 2011.06.17 추가
 
