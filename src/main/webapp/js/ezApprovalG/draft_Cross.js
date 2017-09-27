@@ -2466,7 +2466,7 @@ function openAaprDocAttachUI() {
             if(approvalFlag == "G") {
             	DivPopUpShow(820, 500, url);
             } else {
-            	DivPopUpShow(1050, 660, url);
+            	DivPopUpShow(1050, 550, url);
             }
         } else {
         	var feature;

@@ -2812,7 +2812,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 660, "/ezApprovalG/aprDocAttach.do");
+        	DivPopUpShow(1050, 550, "/ezApprovalG/aprDocAttach.do");
         }
     } catch (e) {
         alert(e.description);
