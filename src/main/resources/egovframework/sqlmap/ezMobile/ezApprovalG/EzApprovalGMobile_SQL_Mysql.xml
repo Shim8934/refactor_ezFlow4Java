@@ -35,7 +35,11 @@
 	   			AND
 	   				APRMEMBERID IN ($id$) 
 	   			AND 
-	   				APRTYPE <> '015' 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRTYPE <> '009'
+	   			AND
+	   				APRTYPE <> '008'	   				
 	   			AND
 	   				APRMEMBERSN <> 1
 			]]>
@@ -241,7 +245,11 @@
 	   			AND 
 	   				STARTDATE < #nowDate#
 	   			AND
-	   				APRTYPE <> '015' 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRTYPE <> '009'
+	   			AND
+	   				APRTYPE <> '008'
 	   			AND
 	   				APRMEMBERSN <> 1
 			]]>
@@ -397,6 +405,10 @@
 		   				STARTDATE < #nowDate#
 		   			AND
 		   				APRTYPE <> '015' 
+		   			AND
+		   				APRTYPE <> '009'
+		   			AND
+		   				APRTYPE <> '008'		   				
 		   			AND
 		   				APRMEMBERSN <> 1) as aprDoCount,
 				(SELECT 
