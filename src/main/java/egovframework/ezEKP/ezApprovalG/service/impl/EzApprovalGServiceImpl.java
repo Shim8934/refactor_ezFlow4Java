@@ -8394,11 +8394,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
-				
 				if (fieldName.equals("ATTACHUSERNAME")) {
 					fieldName = fieldName + langData;
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
@@ -8417,7 +8417,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
-		
+		logger.debug("resultXML : " + resultXML.toString());
 		return resultXML.toString();
 	}
 
@@ -16902,7 +16902,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 
 			case "ATTACHFILESIZE" :
-				rtnVal = fieldValue + " bytes";
+				/**
+				 * log를 이용한 첨부파일 단위 변환.
+				 * cnt값이 0인경우 바이트, 1인경우 KB...
+				 * Math.pow를 통해 1024의 cnt승을 구한 뒤 최초 fieldValue를 나누는데 사용.
+				 * */
+				int cnt = (int) (Math.log10(Double.parseDouble(fieldValue)) / Math.log10(1024));
+				String[] unit = {" bytes", " KB", " MB", " GB"};
+
+				double filesize = Double.parseDouble(fieldValue) / Math.pow(1024, cnt);
+				fieldValue = String.format("%.1f",filesize);
+				//rtnVal = fieldValue + " bytes";
+				rtnVal = fieldValue + unit[cnt];
 				break;
 
 			default : 

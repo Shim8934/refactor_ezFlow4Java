@@ -251,7 +251,8 @@
 		                    convMain('1', '');
 		                    break;
 		                case "MYCONT":
-		                    cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>",'');
+		                    //cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>",'');
+		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'');
 		                    break;
 		                case "MYDRAFTCONT":
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:EXACT");
@@ -310,22 +311,41 @@
 		    }
 		
 		    var localValue = "";
-		    function setPresentValue(tempValue) {
-		        if (tempValue == "") {
-		            tempValue = localValue;
-		        } else {
-		            localValue = tempValue;
-		        }
-		        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
-		        try {
-		            if (CrossYN()) {
-		                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
-		            } else {
-		                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
-		            }
-		        }
-		        catch (e) { }
-		    }
+ 		    function setPresentValue(tempValue) {
+		    	if(approvalFlag == 'G') {
+			        if (tempValue == "") {
+			            tempValue = localValue;
+			        } else {
+			            localValue = tempValue;
+			        }
+			        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
+			        try {
+			            if (CrossYN())
+			                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+			            else
+			                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+			        }
+			        catch (e) { }
+		    	} else {
+/* 		    	    if (tempValue == "")
+		    	        tempValue = localValue;
+		    	    else
+		    	        localValue = tempValue;   */
+				        if (tempValue == "") {
+				            tempValue = localValue;
+				        } else {
+				            localValue = tempValue;
+				        }
+				        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
+				        try {
+				            if (CrossYN())
+				                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+				            else
+				                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+				        }
+				        catch (e) { }		    	        
+		    	}
+		    } 
 		
 		    function convMain(listtype, SubQuery) {
 		        try {
@@ -919,7 +939,7 @@
 			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
 				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
-		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
+		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
 		        <ul>
 				</ul>
 			</c:if>
@@ -959,7 +979,7 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 20px; vertical-align: top; background-color: #ffffff;"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff;"></div>
             <h3><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>
