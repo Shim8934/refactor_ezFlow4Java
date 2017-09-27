@@ -439,6 +439,7 @@ function save_task() {
             personDeptName2 = g_person["deptname2"][0];
             personEmail = g_person["email"][0];
         } else {
+        	doubleSubmitFlag = false;
         	alert(strLang57);
         	return;
         }

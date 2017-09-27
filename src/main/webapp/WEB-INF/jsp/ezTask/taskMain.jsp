@@ -373,6 +373,9 @@
 			        } else {
 			        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
 			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
+
+			            tr.cells[4].style.overflow = "hidden";
+			            tr.cells[4].style.textOverflow = "ellipsis";
 			        }
 
 			        if (useTodoMemo == "YES") {
