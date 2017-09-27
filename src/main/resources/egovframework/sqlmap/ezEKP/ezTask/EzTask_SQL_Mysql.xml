@@ -7,6 +7,7 @@
 	<typeAlias alias="TaskCommentVO"				type="egovframework.ezEKP.ezTask.vo.TaskCommentVO"/>
 	<typeAlias alias="TaskAttachVO"					type="egovframework.ezEKP.ezTask.vo.TaskAttachVO"/>
 	<typeAlias alias="TaskConfigVO"					type="egovframework.ezEKP.ezTask.vo.TaskConfigVO"/>
+	<typeAlias alias="TaskGeneralVO"				type="egovframework.ezEKP.ezTask.vo.TaskGeneralVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
 	   <![CDATA[
@@ -403,7 +404,20 @@
         	</isEqual>
         </isNotEqual>
 	</select>
-	
+
+	<select id="EzTaskDAO.getTaskGeneral" parameterClass="Map" resultClass="TaskGeneralVO">
+		<![CDATA[
+			SELECT
+				userid, listcount, selecttaskstatus
+			FROM
+				TBL_TASKGENERAL
+			WHERE
+				userid = #userID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+
 	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASK
@@ -518,7 +532,16 @@
                 (#taskID#, #fileSize#, #fileName#, #filePath#, #taskType#, #tenantID#)
         ]]>
     </insert>
-    
+
+	<insert id="EzTaskDAO.taskSaveGeneral" parameterClass="map">
+        <![CDATA[
+            INSERT INTO TBL_TASKGENERAL
+                (userid, listcount, selecttaskstatus, tenantid) 
+            VALUES
+                (#userID#, #listCount#, #selectTaskStatus#, #tenantID#)
+        ]]>
+    </insert>
+
     <update id="EzTaskDAO.updateTask" parameterClass="Map">
     	<![CDATA[
     		UPDATE
@@ -633,6 +656,20 @@
                 userid = #memberID#
             AND
                 tenantid = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzTaskDAO.updateTaskGeneral" parameterClass="map">
+        <![CDATA[
+            UPDATE
+                TBL_TASKGENERAL
+            SET
+                listcount = #listCount#,
+                selecttaskstatus = #selectTaskStatus#
+            WHERE
+                userid = #userID#
+            AND
+                tenantid = #tenantID#
         ]]>
     </update>
     

@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
+import egovframework.ezEKP.ezTask.vo.TaskGeneralVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -717,4 +718,53 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("deleteDirectory ended.");
 	}
 
+	@Override
+	public void taskSaveGeneral(String userID, int listCount, String selectTaskStatus, int tenantID) throws Exception {
+		logger.debug("taskSaveGeneral started.");
+		logger.debug("listCount : " + listCount + " | selectTaskStatus : " + selectTaskStatus);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("listCount", listCount);
+		map.put("selectTaskStatus", selectTaskStatus);
+		map.put("tenantID", tenantID);
+
+		ezTaskDAO.taskSaveGeneral(map);
+
+		logger.debug("taskSaveGeneral ended.");
+	}
+
+	@Override
+	public TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception {
+		logger.debug("getTaskGeneral started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+
+		TaskGeneralVO taskGeneralVO = ezTaskDAO.getTaskGeneral(map);
+
+		logger.debug("getTaskGeneral ended.");
+		
+		return taskGeneralVO;
+	}
+
+	@Override
+	public void updateTaskGeneral(String userID, int listCount, String selectTaskStatus, int tenantID) throws Exception {
+		logger.debug("updatetaskGeneral started.");
+		logger.debug("listCount : " + listCount + " | selectTaskStatus : " + selectTaskStatus);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userID", userID);
+		map.put("listCount", listCount);
+		map.put("selectTaskStatus", selectTaskStatus);
+		map.put("tenantID", tenantID);
+
+		ezTaskDAO.updateTaskGeneral(map);
+		
+		logger.debug("updatetaskGeneral ended.");
+	}
 }

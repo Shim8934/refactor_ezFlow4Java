@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
+import egovframework.ezEKP.ezTask.vo.TaskGeneralVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -42,7 +43,11 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public TaskConfigVO getOriginColor(Map<String, Object> map) throws Exception {
 		return (TaskConfigVO) select("EzTaskDAO.getOriginColor", map);
 	}
-	
+
+	public TaskGeneralVO getTaskGeneral(Map<String, Object> map) {
+		return (TaskGeneralVO) select("EzTaskDAO.getTaskGeneral", map);
+	}
+
 	public String getTaskCount(Map<String, Object> map) throws Exception {
 		return (String) select("EzTaskDAO.getTaskCount", map);
 	}
@@ -75,6 +80,10 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		insert("EzTaskDAO.insertTaskAttach", map);
 	}
 	
+	public void taskSaveGeneral(Map<String, Object> map) {
+		insert("EzTaskDAO.taskSaveGeneral", map);
+	}
+	
 	public void updateHasComment(Map<String, Object> map) {
 		update("EzTaskDAO.updateHasComment", map);
 	}
@@ -95,6 +104,10 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		update("EzTaskDAO.taskUpdateConfig", map);
 	}
 	
+	public void updateTaskGeneral(Map<String, Object> map) {
+		update("EzTaskDAO.updateTaskGeneral", map);
+	}
+
 	public void deleteComment(Map<String, Object> map) {
 		delete("EzTaskDAO.deleteComment", map);
 	}

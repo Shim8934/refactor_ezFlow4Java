@@ -36,6 +36,7 @@ import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
+import egovframework.ezEKP.ezTask.vo.TaskGeneralVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -88,11 +89,16 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
+//		TaskGeneralVO taskGeneralVO = ezTaskService.getTaskGeneral(userInfo.getId(), userInfo.getTenantId());
 
 		if (configVO == null) {
 			ezTaskService.taskSaveConfig(userInfo.getId(), "#FF1B1B", "#8DFF1B", "", "", userInfo.getTenantId());
 			configVO = ezTaskService.getOriginColor(userID, tenantID);
 		}
+
+//		if (taskGeneralVO == null) {
+//			ezTaskService.taskSaveGeneral(userInfo.getId(), 10, "taskprog", userInfo.getTenantId());
+//		}
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("delayColor", configVO.getDelayColor());
@@ -948,5 +954,42 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskCheckName2 ended.");
 
 		return "/ezTask/taskCheckName2";
+	}
+
+	/**
+	 * 업무관리 기본설정
+	 */
+	@RequestMapping(value = "/ezTask/taskGeneral.do")
+	public String taskGeneral(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("taskGeneral started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		TaskGeneralVO taskGeneralVO = ezTaskService.getTaskGeneral(userInfo.getId(), userInfo.getTenantId());
+
+		model.addAttribute("taskGeneralVO", taskGeneralVO);
+
+		logger.debug("taskGeneral ended.");
+
+		return "/ezTask/taskGeneral";
+	}
+	
+	/**
+	 * 업무관리 기본설정 저장
+	 */
+	@RequestMapping(value = "/ezTask/taskSaveGeneral.do")
+	public String taskSaveGeneral(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskSaveGeneral started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		int listCount = Integer.parseInt(request.getParameter("listCount"));
+		String selectTaskStatus = request.getParameter("selectTaskStatus");
+
+		ezTaskService.updateTaskGeneral(userInfo.getId(), listCount, selectTaskStatus, userInfo.getTenantId());
+
+		logger.debug("taskSaveGeneral ended.");
+
+		return "json";
 	}
 }

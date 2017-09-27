@@ -5,6 +5,7 @@ import java.util.List;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
+import egovframework.ezEKP.ezTask.vo.TaskGeneralVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 
@@ -16,7 +17,9 @@ public interface EzTaskService {
 	List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception;
 	
 	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, int tenantID) throws Exception;
-	
+
+	TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception;
+
 	TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception;
 	
 	TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception;
@@ -40,4 +43,8 @@ public interface EzTaskService {
 	void taskUpdateConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception;
 	
 	void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception;
+
+	void taskSaveGeneral(String userID, int listCount, String selectTaskStatus, int tenantID) throws Exception;
+
+	void updateTaskGeneral(String userID, int listCount, String selectTaskStatus, int tenantID) throws Exception;
 }
