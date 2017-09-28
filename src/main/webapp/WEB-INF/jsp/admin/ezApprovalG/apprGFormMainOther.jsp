@@ -65,7 +65,7 @@
 		            return true;
 		    };
 		
-		    window.onload = function () {
+		    $(document).ready(function() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -137,7 +137,7 @@
 		                Editor_Complete();
 		            }
 		        }
-		    }
+		    });
 		
 		    function Editor_Complete() {
 	            if (formURL != "") {
