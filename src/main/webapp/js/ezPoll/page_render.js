@@ -1,0 +1,116 @@
+	function makePageSelPage(currentPage, totalPages, totalQuestions, blockSize){
+        var strtext;
+        var PagingHTML = "";
+        document.getElementById("tblPageRayer").innerHTML = "";
+        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalQuestions + " </span>" + strLang42 + "]";
+        strtext = "<div class='pagenavi'>";
+        PagingHTML += strtext;
+        var pageNum = currentPage;
+        if(totalPages > 1 && pageNum != 1){
+            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+            PagingHTML += strtext;
+        }else{
+            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+            PagingHTML += strtext;
+        }
+        if(totalPages > blockSize){
+            if(pageNum > blockSize){
+                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang39 + "</span>";
+                PagingHTML += strtext;
+            }else{
+                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang39 + "</span>";
+                PagingHTML += strtext;
+            }
+        }else{
+            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang39 + "</span>";
+            PagingHTML += strtext;
+        }
+        var MaxNum;
+        var i;
+        var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+        if(totalPages >= (startNum + parseInt(blockSize))){
+            MaxNum = (startNum + parseInt(blockSize)) - 1;
+        }else{
+            MaxNum = totalPages;
+        }
+        for(i = startNum; i <= MaxNum; i++){
+            if(i == pageNum){
+                strtext = "<span class='on'>" + i + "</span>";
+                PagingHTML += strtext;
+            }else{
+				strtext = "<span onClick='goToPageByNum(" + i + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + i + "</span>";
+                PagingHTML += strtext;
+            }
+        }
+        if(totalPages > blockSize){
+        	if(totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)){
+        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang40 + "</span>";
+        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+                PagingHTML += strtext;
+        	}else{
+                strtext = "<span class='ptxt' onclick='return selafterBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang40 + "</span>";
+                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                PagingHTML += strtext;
+        	}
+        }else{
+            strtext = "<span class='ptxt' onClick='return selafterBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang40 + "</span>";
+            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+            PagingHTML += strtext;
+        }
+        if(totalPages > 1 && totalPages != 1 && (totalPages != pageNum)){
+            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+            PagingHTML += strtext;
+        }else{
+            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+            PagingHTML += strtext;
+        }
+        PagingHTML += "</div>";
+        td_Create1(PagingHTML);
+    }
+    
+    function td_Create1(strtext){
+        document.getElementById("tblPageRayer").innerHTML = strtext;
+    }
+    
+    function selafterBlock_one(currentPage, totalPages, totalQuestions, blockSize){
+        var pageNum = parseInt(currentPage);
+        if(parseInt(pageNum + 1) <= totalPages)
+            goToPageByNum(parseInt(pageNum + 1), totalPages, totalQuestions, blockSize);
+        else
+            return;
+    }
+    
+    function selbeforeBlock_one(currentPage, totalPages, totalQuestions, blockSize){
+        var pageNum = parseInt(currentPage);
+        if(parseInt(pageNum - 1) > 0)
+            goToPageByNum(parseInt(pageNum - 1), totalPages, totalQuestions, blockSize);
+        else
+            return;
+    }
+	
+    function goToPageByNum(Value, totalPages, totalQuestions, blockSize){
+    	//currentPage = Value;
+        makePageSelPage(Value, totalPages, totalQuestions, blockSize);
+        search_Set(Value, totalPages);
+    }
+    
+    function selbeforeBlock(currentPage, totalPages, totalQuestions, blockSize){
+        var pageNum = parseInt(currentPage);
+        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+        goToPageByNum(pageNum, totalPages, totalQuestions, blockSize);
+    }
+    
+    function selafterBlock(currentPage, totalPages, totalQuestions, blockSize){
+        var pageNum = parseInt(currentPage);
+        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+        goToPageByNum(pageNum, totalPages, totalQuestions, blockSize);
+    }
+    
+    function search_Set(pPage, totalPages){
+    	var g_BrdID = "6";
+		if(pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt(totalPages)){
+			var szUrl = "";
+			szUrl = "/ezPoll/pollList.do?brdID=" + g_BrdID + "&currPage=" + pPage;			
+			window.location.href = szUrl;
+		}
+	}

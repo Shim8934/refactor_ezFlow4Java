@@ -54,11 +54,15 @@
 		            WebPartToggle(level1El.item(level1El.length - 1));
 		            Open_Func(1);
 		        }
+		        else if (Func == "3") {
+		        	WebPartToggle(level1El.item(level1El.length - 1));
+		        	Poll_Open(1);
+				}
 		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
 		        }
 		
-		        if (Func != "1") {
+		        if (Func != "1" && Func != "3") {
 		            if (subFunc == "1") {
 		                MyBoard();
 		            }
@@ -451,6 +455,22 @@
 		            SetTreeviewUnSelect("");
 		        }
 		    }
+			function Poll_Open(idx) {
+		        if (CrossYN()) {
+		            if (idx == 1) {
+		                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
+		            }
+		            else {
+		                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		            }
+		        } else {
+		            if (idx == 1)
+		            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
+		            else
+		            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		            SetTreeviewUnSelect("");
+		        }
+		    }
 		    function WebPartToggle(obj) {
 		        for (var i = 0; i < level1El.length; i++) {
 		            if (i != obj.listNum) {
@@ -566,7 +586,13 @@
 	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	            </c:if>
 	        </ul>
-	        <h3>
+	        <h2><span onclick="Poll_Open(1)"><spring:message code="ezBoard.t371" /></span></h2>
+	        <ul>
+	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
+	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li>
+	            
+	        </ul>
+	    <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
 	    <c:if test="${applyFlag == 'OK'}">
