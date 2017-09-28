@@ -108,18 +108,25 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public String getApprovNotiConfig(String userID, int tenantID) throws Exception {
-		logger.debug("getApprovNotiConfig started");
-
+	public String getApprovNotiConfig(String userID, String currentID, int tenantID) throws Exception {
+		logger.debug("getApprovNotiConfig started");		
+		/**
+		 * 보낸 편지함에 결재관련 메일이 등록되는 것을 막기 위해선
+		 * 메일을 받는 사람의 SAVEMAILFLAG가 아닌 메일을 보내는 사람(현재 유저)의 SAVEMAILFLAG 값이 필요.
+		 * userID : 메일 수신자
+		 * userInfo.getID() : 메일 발신자
+		 * */
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userID);
 		map.put("tenantID", tenantID);
+		map.put("currentID", currentID);
 		
 		String temp = ezPersonalDAO.getApprovNotiConfig_S1(map);
 		
 		List<PersonalApprovMailVO> approvMailVOList = new ArrayList<PersonalApprovMailVO>();
 		
 		if (temp != null && temp.equals("1")) {
+			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
 			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
 		} else {
 			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);

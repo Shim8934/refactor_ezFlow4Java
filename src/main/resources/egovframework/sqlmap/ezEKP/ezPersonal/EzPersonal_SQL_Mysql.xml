@@ -110,7 +110,10 @@
                 BANSONG ,
                 CALLBACK ,
                 HESONG ,
-                SAVEMAILFLAG 
+                (SELECT SAVEMAILFLAG 
+                 FROM TBL_PS_APPROVNOTIMAILCONF
+                 WHERE UserID = #currentID# 
+                 AND TENANT_ID = '0') AS SAVEMAILFLAG 
            	FROM
 				TBL_PS_APPROVNOTIMAILCONF 
           	WHERE
