@@ -28,8 +28,8 @@
 			var totalPages 		  = ${totalPages}; 		//totalPage
 		    var totalQuestions 	  = ${totalQuestions};  //totalCount
 		    var blockSize 		  = 10;
-		    var status_processing = "<spring:message code = 'ezQuestion.t571' />";
-		    var status_finish 	  = "<spring:message code = 'ezQuestion.t572' />";		   
+		    var status_processing = "<spring:message code = 'ezPoll.t101' />";
+		    var status_finish 	  = "<spring:message code = 'ezPoll.t102' />";		   
 			var brdID			  = ${brdID};	
 			var searchParam	  	  = "<c:out value='${strSearch}'/>";
 			var userID 			  = "<c:out value='${userID}'/>";
@@ -222,17 +222,17 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code="ezQuestion.t301" /><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code="ezPoll.t103" /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu1">
 			<ul>
 				<li>
 					<input type="text" name="searchInput" id="searchInput" placeholder="제목, 글내용, 작성자로 검색" >
 					<a class="imgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezQuestion.t34" /></span></a>
 				</li>
-				<li id="btnDel"><a class="imgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezQuestion.t182" /></span></a></li>
-				<li id="btnHid"><a class="imgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezQuestion.t183" /></span></a></li>
-				<li><a class="imgbtn" onClick="menu_Show()"   style="margin-top: 3px;"><span ><spring:message code="ezQuestion.t184" /></span></a></li>				
-				<li><input id="seeAll" type="checkbox" style="float:left;"><span>숨긴 투표 보기</span></li>
+				<li id="btnDel"><a class="imgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202" /></span></a></li>
+				<li id="btnHid"><a class="imgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203" /></span></a></li>
+				<li><a class="imgbtn" onClick="menu_Show()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204" /></span></a></li>				
+				<li><input id="seeAll" type="checkbox" style="float:left;"><span><spring:message code="ezPoll.t205" /></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">
@@ -242,13 +242,13 @@
 		<form method="post">
 			<table id="QstList" class="mainlist1" style="width:100%"> 
 			    <tr> 
-					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th> 
-					<th><spring:message code="ezQuestion.t307" /></th> 
-					<th width="60px"><spring:message code="ezQuestion.t302" /></th> 
-					<th width="90px"><spring:message code="ezQuestion.t265" /></th> 
-					<th width="60px"><spring:message code="ezQuestion.t310" /></th>
-					<th width="80px"><spring:message code="ezQuestion.t309" /></th> 
-					<th width="60px"><spring:message code="ezQuestion.t308" /></th>			
+					<th width="30px" align="center"> <spring:message code="ezPoll.t105" /></th> 
+					<th><spring:message code="ezPoll.t106" /></th> 
+					<th width="60px"><spring:message code="ezPoll.t104" /></th> 
+					<th width="90px"><spring:message code="ezPoll.t107" /></th> 
+					<th width="60px"><spring:message code="ezPoll.t108" /></th>
+					<th width="80px"><spring:message code="ezPoll.t201" /></th> 
+					<th width="60px"><spring:message code="ezPoll.t109" /></th>			
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.qstId}" class="white">

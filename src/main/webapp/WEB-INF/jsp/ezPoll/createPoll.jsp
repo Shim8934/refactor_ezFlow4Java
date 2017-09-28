@@ -589,7 +589,7 @@
 <xmp id="sigBody" style="display: none;">${content}</xmp>
 <body class="mainbody">
 	<form id="frmCreate" method="post" action="/ezPoll/pollComplete.do" name="frmCreate"> 	
-		<h1><spring:message code="ezQuestion.t438" /></h1>
+		<h1><spring:message code="ezPoll.t206" /></h1>
 
 		<table class="content" style="width: 100%;"> 
 			<tr>    <!------------Question title----------------> 
