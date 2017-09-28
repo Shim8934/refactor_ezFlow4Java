@@ -12384,8 +12384,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (subSQL.indexOf("FALSE") > -1) {
 			return "FALSE";
-		} else {
-			strSQL.append(subSQL);
 		}
 		
 		String signType = "TEXT";
@@ -12467,8 +12465,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (subSQL.indexOf("FALSE") > -1) {
 			return "FALSE";
-		} else {
-			strSQL.append(subSQL);
 		}
 		
 		return strSQL.toString();
