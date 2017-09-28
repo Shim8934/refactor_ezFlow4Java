@@ -72,16 +72,7 @@
 				document.getElementById("sendBttn").addEventListener("click", function(event){
 				    event.preventDefault()
 				});
-				document.getElementById("sendBttn").disabled = true;	
-				
-				/* var specifiedElement = document.getElementById('a');
-				document.addEventListener('click', function(event) {
-					  var isClickInside = specifiedElement.contains(event.target);
-
-					  if (!isClickInside) {
-					    //the click was outside the specifiedElement, do something
-					  }
-				}); */
+				document.getElementById("sendBttn").disabled = true;
 			}
 			
 			function preProcess() {	

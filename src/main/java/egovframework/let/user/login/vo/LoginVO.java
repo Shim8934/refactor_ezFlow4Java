@@ -451,11 +451,26 @@ public class LoginVO implements Serializable {
 	public void setLoginCnt(int loginCnt) {
 		this.loginCnt = loginCnt;
 	}
+	
 	public String getGyumJik() {
 		return gyumJik;
 	}
+	
 	public void setGyumJik(String gyumJik) {
 		this.gyumJik = gyumJik;
 	}
 	
+	public boolean equals(Object object) {
+		if(object instanceof LoginVO) {
+			LoginVO obj = (LoginVO) object;
+			return id.equals(obj.id) && tenantId == obj.tenantId;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return id.hashCode() + tenantId;
+	}
 }
