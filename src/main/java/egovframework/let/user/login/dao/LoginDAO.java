@@ -316,5 +316,17 @@ public class LoginDAO extends EgovAbstractDAO {
         return (TenantServerNameVO)select("loginDAO.selectTenantServerName", map);
     }
  
+	public LoginVO selectReceiver(Map<String, Object> map) throws Exception {
+        return (LoginVO) select("loginDAO.selectReceiver", map);
+    }
 	
+    @SuppressWarnings("unchecked")
+	public List<LoginVO> selectAllReceivers(Map<String, Object> map) throws Exception {
+        return (List<LoginVO>) list("loginDAO.selectAllReceivers", map);
+    }
+    
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> selectAllMemberOfCompany(Map<String, Object> map) throws Exception {
+        return (List<LoginVO>) list("loginDAO.selectAllMemberOfCompany", map);
+    }
 }

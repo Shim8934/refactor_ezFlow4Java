@@ -2,7 +2,9 @@ package egovframework.let.user.login.service.impl;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -19,10 +21,8 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -235,5 +235,31 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
             return getTenantIdForLocal(serverName);
         }
     }
+    
+	@Override
+	public LoginVO selectReceiver(String userID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("id", userID);
+		map.put("tenantId", tenantID);
+		return loginDAO.selectReceiver(map);
+	}
+	
+	@Override
+	public List<LoginVO> selectAllReceivers(String userID, int tenantID)
+			throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("id", userID);
+		map.put("tenantId", tenantID);
+		return loginDAO.selectAllReceivers(map);
+	}
+	
+	@Override
+	public List<LoginVO> selectAllMemberOfCompany(String companyID, int tenantID)
+			throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("company_id", companyID);
+		map.put("tenantId", tenantID);
+		return loginDAO.selectAllMemberOfCompany(map);		
+	}
 
 }

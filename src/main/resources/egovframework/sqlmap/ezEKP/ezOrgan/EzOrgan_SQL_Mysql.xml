@@ -1498,4 +1498,26 @@
 		AND
 			USERID = #userID#
 	</select>
+	
+	<select id="EzOrganDAO.getAllSubDeptId" resultClass="String">
+		SELECT
+			CN
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			EXTENSIONATTRIBUTE1 = #deptId#
+	</select>
+	
+	<select id="EzOrganDAO.getDeptPath" resultClass="String">
+		SELECT
+			DEPT_CD_PATH
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			CN = #deptId#
+	</select>
 </sqlMap>

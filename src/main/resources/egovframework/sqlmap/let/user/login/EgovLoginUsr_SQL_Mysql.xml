@@ -136,5 +136,107 @@
                 SERVER_NAME = #serverName#
         ]]>
     </select>
- 
+    
+    <select id="loginDAO.selectReceiver" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                loginCnt,
+                extensionattribute4 as gyumJik
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                cn = #id# 
+            AND 
+            	tenant_id = #tenantId#
+        ]]>
+    </select> 
+    
+    <select id="loginDAO.selectAllReceivers" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                loginCnt,
+                extensionattribute4 as gyumJik
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                (DEPARTMENT = #id# OR EXTENSIONATTRIBUTE4 LIKE CONCAT('%',#id#, '%'))  AND  tenant_id = #tenantId#
+        ]]>
+    </select>
+    
+    <select id="loginDAO.selectAllMemberOfCompany" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                loginCnt,
+                extensionattribute4 as gyumJik
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                PHYSICALDELIVERYOFFICENAME = #company_id# 
+            AND
+				tenant_id = #tenantId#
+        ]]>
+    </select>
 </sqlMap>

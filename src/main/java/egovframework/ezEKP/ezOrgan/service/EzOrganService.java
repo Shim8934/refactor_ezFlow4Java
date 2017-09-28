@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezOrgan.service;
 
+import java.util.List;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 
@@ -54,6 +56,10 @@ public interface EzOrganService {
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
 
 	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
+	
+	public List<String> getAllSubDeptId(String deptID, int tenantID) throws Exception;
+	
+	public String getDeptPath(String deptID, int tenantID) throws Exception;
 
  
 }

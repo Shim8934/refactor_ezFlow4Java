@@ -1374,6 +1374,23 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		return proxyInfo;
 	}
+	
+	@Override
+	public List<String> getAllSubDeptId(String deptID, int tenantID)
+			throws Exception {	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptId", deptID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getAllSubDeptId(map);
+	}
+	
+	@Override
+	public String getDeptPath(String deptID, int tenantID) throws Exception {		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptId", deptID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getDeptPath(map);
+	}
 
 	
 }
