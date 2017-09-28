@@ -61,8 +61,7 @@
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
 				doc.write(iframeStyle + sigBody.innerHTML);
-				doc.close(); 				
- 				autoResize("message_test");	
+				doc.close();							
  				//Result view segment
  				preProcess();
  				updateGraph();
@@ -406,16 +405,17 @@
 	
 		    }
 		    
-		    function autoResize(id) {
-		        var newheight = 10;
-		        document.getElementById("message_test").style.height = "10px";
-
-		        if(document.getElementById(id)){
-		            newheight = document.getElementById(id).contentWindow.document.body.scrollHeight;
-		        }	        
-		        
-		        document.getElementById(id).style.height = (newheight) + "px";
-		        document.getElementById("messagetd").style.height = (newheight + 10) + "px";		       
+		    function resizeFrame() {
+				var iFrame = document.getElementById("message_test");
+				iFrame.style.height = "10px";
+				newheight = iFrame.contentWindow.document.body.scrollHeight;
+				console.log("New height: " + newheight);
+				if (newheight > 350) {
+					iFrame.style.height = "350px";
+				}
+				else {
+					iFrame.style.height = (newheight + 10) + "px";
+				}				
 		    }
 		    
 		    function change(obj) {
@@ -538,8 +538,7 @@
 		    
 		    function finishVote() {	    	
 		    	var tenantId = "<c:out value='${question.tenantId}'/>";
-		    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));
-		    	//alert("Testtttt");
+		    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
 		    }
 		    
 		    function test_func() {
@@ -547,8 +546,7 @@
 		    	document.getElementById("sendBttn").disabled = false;		    	
 		    }
 		    
-		    function showEditPanel(obj) {
-				//obj.stopPropagation();
+		    function showEditPanel(obj) {				
 		    	var id = obj.getAttribute("_comtIndex");		    	
 		    	document.getElementById(id).style.display = "block";		    	
 		    	document.addEventListener("click", function handleClick(e){
@@ -556,8 +554,7 @@
 			    	document.getElementById(id).style.display = "none"; 	
 			    	document.removeEventListener("click", handleClick);
 		    	});	   	
-		    }
-		    
+		    }		    
 		    
 		    function sendComment() {
 		    	alert("This is a test function!");
@@ -692,7 +689,7 @@
 
 			</div>			
 			<div class="pad1" style="vertical-align: top; width: 100%;border-right-width: 0px;display:inline-block;" id="messagetd">
-	             <iframe id="message_test" style="border: #b6b6b6 0px solid; overflow: auto;width: 100%; padding-top: 6px; background-color: white;"></iframe>   	                                 
+	             <iframe onload="resizeFrame()" id="message_test" style="border: #b6b6b6 0px solid; overflow: auto;width: 100%; padding-top: 6px; background-color: white;"></iframe>   	                                 
 	        </div>
 	        <c:if test="${numOfFile != 0}">
 	        	<div id="attached file" style="overflow: hidden;display:inline-block; width: 100%;">
