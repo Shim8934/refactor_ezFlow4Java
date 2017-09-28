@@ -125,7 +125,6 @@
 						}
 					}					
 				}				
-
 			}
 			
 			function updateGraph() {				
@@ -344,8 +343,7 @@
 				        		updateGraph();
 				        	}
 			        	}			        	
-			        });
-			        
+			        });		        
 			    });
 			 }
 
@@ -402,7 +400,6 @@
 		        	suffix = 0;
 		            return;
 		        }
-	
 		    }
 		    
 		    function resizeFrame() {

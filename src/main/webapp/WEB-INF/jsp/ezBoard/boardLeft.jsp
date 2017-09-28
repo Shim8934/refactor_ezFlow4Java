@@ -51,7 +51,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        if (Func == "1") {
-		            WebPartToggle(level1El.item(level1El.length - 1));
+		            WebPartToggle(level1El.item(level1El.length - 2));
 		            Open_Func(1);
 		        }
 		        else if (Func == "3") {
