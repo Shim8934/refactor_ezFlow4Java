@@ -203,8 +203,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				folder = new JSONObject();
 				
-				if ( f.getName().equals("INBOX") ) {
-					folder.put("name", "받은 편지함");
+				if ( f.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
+					folder.put("name", egovMessageSource.getMessage("ezEmail.t99000025", locale));
 				} else {
 					folder.put("name", f.getName());
 				}
@@ -588,7 +588,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			String folderName = folder.getName();
 			if ( folderName.equals("INBOX") ) {
-				folderName = "받은 편지함";
+				folderName = egovMessageSource.getMessage("ezEmail.t99000025 ", locale);
 			}
 			folder.close(false);
 			
@@ -5048,6 +5048,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", "fail");
 			
 		}
+        
         LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");
         
         return result;
