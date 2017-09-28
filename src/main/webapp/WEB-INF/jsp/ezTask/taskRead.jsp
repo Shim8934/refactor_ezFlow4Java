@@ -661,7 +661,10 @@
 			}
 
 			window.onunload = function () {
-			    try {window.opener.RefreshView();} catch (e) {}
+			    try {
+			    	window.opener.location.reload();
+			    	window.close();
+			    } catch (e) {}
 			}
 
 			function messageload() {

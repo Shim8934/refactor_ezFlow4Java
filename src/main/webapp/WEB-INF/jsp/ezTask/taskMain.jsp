@@ -749,7 +749,7 @@
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body").css("background", "");
 		    	}
-		    	
+
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -772,7 +772,7 @@
 						alert("<spring:message code='ezTask.t992' />");
 					}
 				});
-		    	
+
 				strListInfo = "";
 				strListIdInfo = "";
 		    }
