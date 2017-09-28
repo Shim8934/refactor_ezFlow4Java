@@ -78,7 +78,7 @@ INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`,
 INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES (0, 'draftJunGyulFlag', '1', '기안시 사인칸 전결자 표시여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES (0,'MineViewYN','NO','결재진행문서 결재 순서 왔을 때만 표출 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES (0,'forceCallBack_YN','NO','강제회수 버튼 활성화 유무');
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES (0,'chamjoAfterYN','NO','최종결재자 이후 참조 추가여부');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES (0,'chamjoAfterYN','YES','최종결재자 이후 참조 추가여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES (0,'Use_FromAddress','NO','보내는 사람  주소 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'LoginMailLogKeepPeriod','3','로그인 기록과 메일 수발신 로그를 보존하는 기간, 월 단위로 지정');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseBizmekaSpambox','NO','비즈메카 스팸편지함과의 연동 여부');
