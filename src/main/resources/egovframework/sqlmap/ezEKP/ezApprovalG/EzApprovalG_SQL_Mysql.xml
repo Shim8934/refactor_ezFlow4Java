@@ -5653,7 +5653,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO">
 		SELECT 
-			A.aprsn,
+			DISTINCT A.aprsn,
 			A.signtype,
 			A.signname,
 			A.content,
@@ -5667,7 +5667,7 @@
         AND
         	A.docid = B.docid
         AND
-        	A.aprsn = B.aprmembersn - 1
+        	B.aprtype not in ('011', '012', '008', '009')
 		WHERE
 			A.docid = #v_DOCID#
 		AND
