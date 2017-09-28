@@ -406,7 +406,7 @@
 				var iFrame = document.getElementById("message_test");
 				iFrame.style.height = "10px";
 				newheight = iFrame.contentWindow.document.body.scrollHeight;
-				console.log("New height: " + newheight);
+				
 				if (newheight > 350) {
 					iFrame.style.height = "350px";
 				}
@@ -553,8 +553,49 @@
 		    	});	   	
 		    }		    
 		    
-		    function sendComment() {
-		    	alert("This is a test function!");
+		    function editComment(obj) {
+		    	console.log("Run in edit Comment function!");
+		    	var id = obj.getAttribute("_comtIndex");
+		    	document.getElementById(id).style.display = "none";
+		    	var div2CmtId = "div2Cmt" + id.slice(-1);
+		    	var div2Cmt = document.getElementById(div2CmtId);
+		    	var tagA1 = document.createElement("a"); 
+		    	tagA1.innerHTML = "Cancel";
+		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(-1));
+		    	tagA1.setAttribute("_cmtIndex", id.slice(-1));
+		    	tagA1.setAttribute("style", "cursor: pointer; ");
+		    	tagA1.onclick = function (event) { event.stopPropagation(); cancelEditComment(this); };
+		    	
+		    	var tagA2 = document.createElement("a");
+		    	
+		    	tagA2.innerHTML = "Save";
+		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(-1));
+		    	tagA2.setAttribute("style", "cursor: pointer; ");
+		    	tagA2.setAttribute("_cmtIndex", id.slice(-1));
+		    	div2Cmt.appendChild(tagA1);
+		    	div2Cmt.appendChild(tagA2);
+		    	var cmtAreaId = "cmtArea" + id.slice(-1);
+		    	var cmtArea = document.getElementById(cmtAreaId);
+		    	cmtArea.readOnly = false;
+		    	cmtArea.focus();
+		    }
+		    
+		    function cancelEditComment(obj){
+		    	var commentIndex = obj.getAttribute("_cmtIndex");
+		    	document.getElementById("clA1cmt" + commentIndex).style.display = "none";
+		    	document.getElementById("clA2cmt" + commentIndex).style.display = "none";
+		    	//Create a post to retrieve the original content
+		    	
+		    	document.getElementById("cmtArea" + commentIndex).readOnly = true;
+		    }
+		    
+		    function deleteComment(obj) {
+		    	console.log("Run in delete Comment function!");
+		    	var id = obj.getAttribute("_comtIndex");
+		    	document.getElementById(id).style.display = "none";
+		    }
+		    
+		    function sendComment() {		    	
 		    	document.getElementById("sendBttn").disabled = true;	
 		    	var currentText = document.getElementById("comment_input").value;
 		    	document.getElementById("comment_input").value = "";
@@ -586,14 +627,17 @@
                 var objTd2 = document.createElement("td");
                 var div1ForTd2 = document.createElement("div");
                 var div2ForTd2 = document.createElement("div");
-                var txtAreaForTd2 = document.createElement("textarea");
+                var txtAreaForTd2 = document.createElement("textarea");                
                 div2ForTd2.appendChild(txtAreaForTd2);
+                div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);
                 div1ForTd2.innerHTML = curentUser;
                 div1ForTd2.setAttribute("style", "display: inline-block; padding-left: 8px; padding-top: 10px; color: blue");       
                 txtAreaForTd2.value = currentText;
                 txtAreaForTd2.setAttribute("style", "display: inline-block; overflow: auto; height: 32px; width: 98%; outline: none; border: none; resize:none; padding-left: 8px;");       
                 txtAreaForTd2.setAttribute("cols", "20");
                 txtAreaForTd2.setAttribute("rows", "1");
+                txtAreaForTd2.readOnly = true;
+                txtAreaForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 objTd2.appendChild(div1ForTd2);
                 objTd2.appendChild(div2ForTd2);
                 objTr.appendChild(objTd2);
@@ -616,11 +660,14 @@
                 div1ForTd3.setAttribute("tabindex", "0");        
                 var innerDiv1ForTd3 = document.createElement("div");
                 innerDiv1ForTd3.innerHTML = "Edit Comment";
-                innerDiv1ForTd3.setAttribute("id", "innerEditComment" + commentIndex);
-                innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px;");                
+                innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
+                innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
+                innerDiv1ForTd3.onclick = function (event) { event.stopPropagation(); editComment(this); };
                 var innerDiv2ForTd3 = document.createElement("div");
                 innerDiv2ForTd3.innerHTML = "Delete Comment";
-                innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px;");
+                innerDiv2ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);  
+                innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
+                innerDiv2ForTd3.onclick = function (event) { event.stopPropagation(); deleteComment(this); };
                 div1ForTd3.appendChild(innerDiv1ForTd3);
                 div1ForTd3.appendChild(innerDiv2ForTd3);
                 objTd3.appendChild(div1ForTd3);
@@ -794,10 +841,7 @@
 				<div style="float:left; display:block; width:80%;">
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: auto; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;" oninput="test_func();"></textarea>
 				</div>	
-				<button id="sendBttn" style="float:left; display:block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>			
-				<!-- <div style="float:left; display:block; border: 1px solid #b6b6b6; width: 60px; height:20px; text-align: center; margin-left: 15px; position: relative; cursor: pointer;" id="sendBttn" onclick="sendComment();">
-					<span style="vertical-align: middle; padding-top: 3.5px;">Send</span>
-				</div>	 -->			
+				<button id="sendBttn" style="float:left; display:block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
 			</div>
 			
 		</form>
