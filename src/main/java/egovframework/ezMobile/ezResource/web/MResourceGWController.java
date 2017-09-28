@@ -377,8 +377,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			LOGGER.debug("tenantId: " + tenantId);
-			
 			String ownerId = resourceId; 
 			String pNum = "";
 			String endDate = jsonObject.get("endDate").toString();
@@ -419,8 +417,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("resourceId: " + resourceId);
-		LOGGER.debug("jsonObject: " + jsonObject);
+
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/resources/{resourceId}/schedules] ended.");	
 		return result;
 	}
@@ -435,8 +432,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			JSONObject result = new JSONObject();
 		
 		String test = (String) jsonObject.get("userId");
-		LOGGER.debug("test: " + test);
-		LOGGER.debug("jsonObject in update res sch: " + jsonObject);
 		
 		try {
 			
@@ -470,8 +465,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("resourceId: " + resourceId);
-		LOGGER.debug("jsonObject: " + jsonObject);
+
 		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] ended.");	
 		return result;
 	}
@@ -512,8 +506,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("resourceId: " + resourceId);
-		LOGGER.debug("schuduleId: " + scheduleId);
+		
 		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] ended.");	
 		return result;
 	}
@@ -546,8 +539,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("resourceId: " + resourceId);
-		LOGGER.debug("userId: " + userId);
+		
 		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/favorite/{userId}] ended.");	
 		return result;
 	}
@@ -585,8 +577,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("resourceId: " + resourceId);
-		LOGGER.debug("jsonObject: " + jsonObject);
+
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/resources/{resourceId}/favorite] ended.");
 		return result;
 	}
@@ -604,10 +595,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			LOGGER.debug("userId: " + userId);		
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String cID = request.getParameter("COMPANYID");
-			LOGGER.debug("cID: " + cID);
 			//의미확인후 삭제
 			cID = "VIEW";	
 			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
@@ -627,5 +616,145 @@ public class MResourceGWController extends EgovFileMngUtil {
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/holiday] ended.");
 		return result;
 	}
+	
+	/**
+	 * 모바일 G/W 자원관리 [get] 자원예약 승인대상 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/approve-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject approveList( HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/approve-list/users/{userId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String cID = request.getParameter("COMPANYID");
+			//의미확인후 삭제
+			cID = "VIEW";	
+			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", getHoliday);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
 
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/approve-list/users/{userId}] ended.");
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 자원관리 [get] 자원예약 승인중복조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-repetition", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject approveRepetition( HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");	
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String cID = request.getParameter("COMPANYID");
+			//의미확인후 삭제
+			cID = "VIEW";	
+			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", getHoliday);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] ended.");
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 자원관리 [put] 자원예약 승인/미승인 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-flag", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject updateApproveFlag( HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-flag] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");		
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String cID = request.getParameter("COMPANYID");
+			//의미확인후 삭제
+			cID = "VIEW";	
+			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", getHoliday);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+
+		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-flag] ended.");
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 자원관리 [post] 자원예약 승인/미승인 처리결과 메일 전송
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/send-mail/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject sendMailApprove( HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/send-mail/users/{userId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");	
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String cID = request.getParameter("COMPANYID");
+			//의미확인후 삭제
+			cID = "VIEW";	
+			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", getHoliday);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+
+		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/send-mail/users/{userId}] ended.");
+		return result;
+	}
+	
 }

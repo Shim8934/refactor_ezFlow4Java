@@ -48,7 +48,6 @@ public class MResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MResourceScheduleVO> getResScheduleList(Map<String, Object> map){
 		List<MResourceScheduleVO> list = (List<MResourceScheduleVO>) list("MResourceDAO.getResScheduleList", map);
-		LOGGER.debug("size of list: " + list.size());
 		return  list;
 	}
 	
@@ -71,8 +70,6 @@ public class MResourceDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(Map<String, Object> map){
-		LOGGER.debug("in getResBrdList");
-		LOGGER.debug("map in getResBrdList: " + map);
 		return  (List<MResourceGetAdmSubClsTreeVO>) list("MResourceDAO.getResBrdList", map);
 	}
 	

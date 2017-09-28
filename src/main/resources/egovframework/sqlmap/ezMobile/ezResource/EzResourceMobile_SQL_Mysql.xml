@@ -825,7 +825,7 @@
 		]]>
 	</delete>
 	
-		<select id="MResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
+	<select id="MResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
 		<![CDATA[
 			SELECT 
 				A.NUM ,
@@ -978,7 +978,7 @@
 		]]>
 	</select>
 	
-		<select id="MResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
+	<select id="MResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
 			SELECT
 				NUM ,
@@ -1033,7 +1033,7 @@
 		]]>
 	</select>
 	
-		<select id="MResourceDAO.getScheduleListRepetitim" parameterClass="Map" resultMap="resGetScheduleListMainVO">
+	<select id="MResourceDAO.getScheduleListRepetitim" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
 			SELECT
 				NUM ,
@@ -1086,7 +1086,7 @@
 		]]>
 	</select>
   
-      <select id="MResourceDAO.getDeletedRepScheduleDate" parameterClass="Map" resultClass="String">
+    <select id="MResourceDAO.getDeletedRepScheduleDate" parameterClass="Map" resultClass="String">
         <![CDATA[
         	SELECT
 	        	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE
@@ -1109,7 +1109,7 @@
         ]]>
     </select>
     
-    	<select id="MResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
+    <select id="MResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
 		<![CDATA[
 			SELECT
 				OWNERID, 
@@ -1248,5 +1248,157 @@
 	
 	</select>
   
+  	<select id="MResourceDAO.getScheduleListAppr" parameterClass="Map" resultMap="resGetScheduleListVO">
+		<![CDATA[
+			SELECT 
+				A.NUM ,
+                A.PNUM ,
+                A.OWNERID ,
+                A.title title  ,
+                A.LOCATION ,
+                A.TIMEDISPLAY ,
+                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+                DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                A.ownerID VALUE  ,
+                A.ALERTTIME ,
+                A.REFLAG ,
+                A.GRESFLAG ,
+                A.WRITERID ,
+                A.IMPORTANCE ,
+                A.ENTRYLIST ,
+                A.ALLDAY ,
+                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                A.ATTACHFLAG ,
+                A.CHARACTERID ,
+                A.APPROVEFLAG ,
+                C.APPROVEFLAG RESAPPROVEFLAG,
+                B.DISPLAYNAME OWNERNM  ,
+                B.DISPLAYNAME2 OWNERNM2  ,
+                B.DESCRIPTION DEPTNM  ,
+                B.DESCRIPTION2 DEPTNM2  ,
+                B.TITLE JOBTITLE  ,
+                B.TITLE2 JOBTITLE2,
+                C.BRD_NM BRDNM,
+                (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN  
+           	FROM 
+           		TBL_RS_SCHEDULE A
+			JOIN
+				TBL_USERMASTER B 
+			ON
+				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
+		    JOIN
+				TBL_RS_BRD C
+			ON
+				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
+          	WHERE
+				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+			AND
+				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= A.ENDDATE
+			AND 
+				A.COMPANYID = #v_PCOMPANYID#
+				]]>
+			<isNotEmpty property="v_POWNERID">				
+			AND 
+				A.OWNERID = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
+			AND
+				REFLAG = '0'
+						]]>
+			<isEmpty property="v_POWNERID">
+			AND 
+			    B.DEPARTMENT = #v_WRITERDEPT#
+			</isEmpty>	
+			<![CDATA[   	
+			AND
+				A.TENANT_ID = #tenantID#	
+			ORDER BY
+				STARTDATE ASC,
+				ENDDATE DESC 
+		]]>
+	</select>
+	
+	<select id="MResourceDAO.getScheduleListRepetitiAppr" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
+		<![CDATA[
+			SELECT 
+				A.num ,
+            	A.PNUM ,
+            	A.ownerID ,
+            	A.title title  ,
+            	A.LOCATION ,
+            	A.TIMEDISPLAY ,
+            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+            	DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                A.ownerID VALUE  ,
+            	A.ALERTTIME ,
+            	A.REFLAG ,
+            	A.GRESFLAG ,
+            	A.WRITERID ,
+            	A.IMPORTANCE ,
+            	A.ENTRYLIST ,
+            	A.ALLDAY ,
+            	DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+            	A.ATTACHFLAG ,
+            	A.companyID ,
+            	A.CHARACTERID ,
+            	A.APPROVEFLAG ,
+            	D.APPROVEFLAG RESAPPROVEFLAG,
+            	B.DISPLAYNAME OWNERNM  ,
+            	B.DISPLAYNAME2 OWNERNM2  ,
+            	B.DESCRIPTION DEPTNM  ,
+            	B.DESCRIPTION2 DEPTNM2  , 
+            	B.TITLE JOBTITLE  ,
+            	B.TITLE2 JOBTITLE2 ,
+            	D.BRD_NM BRDNM,
+                (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN 
+			FROM
+				TBL_RS_SCHEDULE A
+			JOIN
+				TBL_USERMASTER B   
+			ON
+				A.writerID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID	
+			JOIN
+				TBL_RS_SCHEDULERepetition C 
+			ON 
+				A.ownerID = C.ownerID
+			AND
+				A.num = C.num
+			AND
+				A.TENANT_ID = C.TENANT_ID
+		    JOIN
+				TBL_RS_BRD D
+			ON
+				A.OWNERID = D.BRD_ID AND A.TENANT_ID = D.TENANT_ID		
+			WHERE
+				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+			AND
+				A.COMPANYID = #v_PCOMPANYID#
+			        	]]>
+			<isNotEmpty property="v_POWNERID">				
+			AND
+				A.OWNERID = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
+			AND
+				REFLAG = '1'
+			AND
+				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+						]]>
+			<isEmpty property="v_POWNERID">
+			AND 
+			    B.DEPARTMENT = #v_WRITERDEPT#
+			</isEmpty>	
+			<![CDATA[    
+			AND 
+				A.TENANT_ID = #tenantID#	
+        	ORDER BY
+        		STARTDATE ASC,
+                ENDDATE DESC
+		]]>
+	</select>
 </sqlMap>
 
