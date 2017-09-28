@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -364,9 +363,9 @@
 	                xfe.setHeight(document.documentElement.clientHeight + "px");
 	            } catch (e) { }
 	        }
-		</script> 
+		</script>
 	</head>
-	<body style="margin: 0px; padding: 0px;" id="xfe">
+	<body style="margin: 0px; padding: 0px; overflow: hidden;" id="xfe">
 	    <script type="text/javascript">
 	    	var userLang = "${userInfo.lang}";
 	    	var lang = "";
@@ -393,13 +392,6 @@
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do";
 	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do";
-	    	
-	    	if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
-	   			uploadFilePath = "/ezEditor/tfxUploadMail.do";
-	   			uploadPasteContentsPath = "/ezEditor/tfxSimpleUploadMail.do";
-	   		} else if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofoffice.do") > -1) {
-	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
-	   		}
 	    	
 	        xfe = new XFE({
 	        	lang : lang,

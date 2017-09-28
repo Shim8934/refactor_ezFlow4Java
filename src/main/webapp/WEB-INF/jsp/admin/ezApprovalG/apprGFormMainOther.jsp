@@ -64,8 +64,10 @@
 		        else
 		            return true;
 		    };
-		
+		    
+		    var onloadflag = false;
 		    $(document).ready(function() {
+// 			window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -137,7 +139,10 @@
 		                Editor_Complete();
 		            }
 		        }
+		        
+		        onloadflag = true;
 		    });
+// 			}
 		
 		    function Editor_Complete() {
 	            if (formURL != "") {
@@ -874,12 +879,8 @@
 					<tr>
                         <td style="height:770px; vertical-align:top">
                         	<c:choose>
-                        		<c:when test="${useEditor == 'HWP'}">
-	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
-                        		</c:when>
-                        		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
-                        		</c:otherwise>
+                        		<c:when test="${useEditor == 'HWP'}"><iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe></c:when>
+                        		<c:otherwise><iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe></c:otherwise>
                         	</c:choose>
                         </td>
                         <td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
