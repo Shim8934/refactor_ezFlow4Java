@@ -277,6 +277,8 @@
 						
 						getCommentList();
 						$("#TextComment").val("");
+						RefreshView();
+						
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
