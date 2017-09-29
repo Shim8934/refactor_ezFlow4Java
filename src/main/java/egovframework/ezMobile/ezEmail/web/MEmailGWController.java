@@ -588,7 +588,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			String folderName = folder.getName();
 			if ( folderName.equals("INBOX") ) {
-				folderName = egovMessageSource.getMessage("ezEmail.t99000025 ", locale);
+				folderName = egovMessageSource.getMessage("ezEmail.t99000025", locale);
 			}
 			folder.close(false);
 			
