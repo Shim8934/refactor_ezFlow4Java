@@ -595,10 +595,6 @@
 		    	var div2Cmt = document.getElementById("div2Cmt" + commentIndex);
 		    	div2Cmt.removeChild(div2Cmt.lastElementChild);
 		    	div2Cmt.removeChild(div2Cmt.lastElementChild);
-		    	//document.getElementById("clA1cmt" + commentIndex).style.display = "none";
-		    	//document.getElementById("clA2cmt" + commentIndex).style.display = "none";
-		    	//Create a post request to retrieve the original content
-		    	
 		    	document.getElementById("cmtArea" + commentIndex).readOnly = true;
 		    }
 		    
@@ -623,12 +619,12 @@
 		    }
 		    
 		    function sendComment() {		    	
-		    	document.getElementById("sendBttn").disabled = true;	
-		    	var currentText = document.getElementById("comment_input").value;
-		    	document.getElementById("comment_input").value = "";
-		    	
+		    	document.getElementById("sendBttn").disabled = true;		    	
  		    	//Create table comment element if not exist
 		    	startComment();
+ 		    	
+		    	var currentText = document.getElementById("comment_input").value;		    	
+ 		    	
 		    	var oTable = document.getElementById("commentListView");
 		    	//create the Tr field
 		    	objTr = document.createElement("tr");
@@ -653,18 +649,56 @@
                 
                 var objTd2 = document.createElement("td");
                 var div1ForTd2 = document.createElement("div");
-                var div2ForTd2 = document.createElement("div");
-                var txtAreaForTd2 = document.createElement("textarea");                
-                div2ForTd2.appendChild(txtAreaForTd2);
-                div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);
+                var div2ForTd2 = document.createElement("div");  
+                div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");  
+                
+                div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUser;
-                div1ForTd2.setAttribute("style", "display: inline-block; padding-left: 8px; padding-top: 10px; color: blue");       
-                txtAreaForTd2.value = currentText;
-                txtAreaForTd2.setAttribute("style", "display: inline-block; overflow: auto; height: 32px; width: 98%; outline: none; border: none; resize:none; padding-left: 8px;");       
-                txtAreaForTd2.setAttribute("cols", "20");
-                txtAreaForTd2.setAttribute("rows", "1");
-                txtAreaForTd2.readOnly = true;
-                txtAreaForTd2.setAttribute("id", "cmtArea" + commentIndex);
+                div1ForTd2.setAttribute("style", "display: block; padding-left: 8px; padding-top: 10px; color: blue");       
+                
+                //Add text comment if exist
+                if (currentText.length > 0) {
+                	currentText = currentText.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                	var pForTd2 = document.createElement("p");  
+                	pForTd2.innerHTML = currentText;
+                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+                	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
+                	div2ForTd2.appendChild(pForTd2);
+                }
+                
+                //Add file if exist
+                var uploadFileElement = document.getElementById("uploadedFile");
+		        if (uploadFileElement.hasChildNodes()) {		        	
+		        	var img2ForUpFileElmt = uploadFileElement.lastElementChild;
+		        	var fileinfo = img2ForUpFileElmt.getAttribute("_fileInfo");		    	
+			    	var orgFileName = fileinfo.split("/")[1];
+			    	var ext = orgFileName.split('.').pop().toLowerCase();
+			    	var innerDiv1 = document.createElement("div");	
+			    	innerDiv1.setAttribute("style", "padding-top: 5px;");
+			    	var imgForinnerDiv1 = document.createElement("img");   
+			    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);              
+			    	imgForinnerDiv1.setAttribute("vertical-align", "middle");
+			    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;"); 
+			    	
+			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {			   
+				    	imgForinnerDiv1.setAttribute("height", "60");
+				    	imgForinnerDiv1.setAttribute("width", "60");
+				    	imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];
+			    		innerDiv1.appendChild(imgForinnerDiv1);
+			    		div2ForTd2.appendChild(innerDiv1);
+			    	}
+			    	else {
+				    	imgForinnerDiv1.setAttribute("height", "30");
+				    	imgForinnerDiv1.setAttribute("width", "30");
+				    	imgForinnerDiv1.src = "/images/cmtFile.png";
+			    		innerDiv1.appendChild(imgForinnerDiv1);
+			    		div2ForTd2.appendChild(innerDiv1);
+			    		var innerDiv2 = document.createElement("div");
+			    		innerDiv2.innerHTML = fileinfo.split("/")[1];
+			    		div2ForTd2.appendChild(innerDiv2);
+			    	}			    	
+		        }
+                
                 objTd2.appendChild(div1ForTd2);
                 objTd2.appendChild(div2ForTd2);
                 objTr.appendChild(objTd2);
@@ -704,6 +738,15 @@
                 
                 oTable.appendChild(objTr);
                 commentIndex = commentIndex + 1;
+                
+                //Clean the place
+                document.getElementById("comment_input").value = "";
+		        var uploadFileElement = document.getElementById("uploadedFile");
+		        while (uploadFileElement.hasChildNodes()) {
+		        	uploadFileElement.removeChild(uploadFileElement.lastElementChild);
+				}
+		        uploadFileElement.style.display = "none";        
+		        window.scrollTo(0,document.body.scrollHeight);
 		    }
 		    
 		    function startComment() {
@@ -719,8 +762,7 @@
 		    function uploadFileCmt() {		    	
 	    	    var fd = new FormData();		    	
 		    	var _file = document.getElementById("file").files[0];
-		    	var ext = _file.name.split('.').pop().toLowerCase();
-		    	console.log("File name:" + _file.name + ", extension: " + ext);
+		    	var ext = _file.name.split('.').pop().toLowerCase();		    	
 		    	
 	            if (_file.size / 1024 / 1024 > 5) {
 	                alert("<spring:message code = 'ezPoll.t208' />");
@@ -750,12 +792,10 @@
 		            alert("Upload Failed!");
 		            return;
 		        }     
-		        var xml = loadXMLString(strXML); 		        
-		        console.log(xml);
+		        var xml = loadXMLString(strXML); 	        	        
 		    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		    	
 		    	var orgFileName = fileinfo.split("/")[1];		 	    	
-		    	var _ext = orgFileName.split('.').pop().toLowerCase();
-		    	console.log("After upload file, the extension is: " + _ext);
+		    	var _ext = orgFileName.split('.').pop().toLowerCase();		    	
 		    	document.getElementById("uploadedFile").style.display = "inline-block";
 		    	
 		    	//Add cancel image for uploadFile element
@@ -783,7 +823,8 @@
 		    	else {
 		    		imagTag2.src = "/images/cmtFile.png";
 		    	}
-		    	document.getElementById("uploadedFile").appendChild(imagTag2);		    	
+		    	document.getElementById("uploadedFile").appendChild(imagTag2);		
+		    	document.getElementById("sendBttn").disabled = false;
 		    }
 		    
 		    function addFileComent() {
@@ -797,7 +838,7 @@
 		    	var ext = orgFileName.split('.').pop().toLowerCase();
 		        var fd = new FormData();		        
 		        fd.append("fileToDelete", fileinfo);
-		        if ( ext == "jpg" || ext == "png" || ext == "bmp") {
+		        if (ext == "jpg" || ext == "png" || ext == "bmp") {
 			        xhr1.open("POST", "/ezPoll/deleteCmtFile.do");
 			        xhr1.send(fd);
 		        }
@@ -812,6 +853,13 @@
 		        	uploadFileElement.removeChild(uploadFileElement.lastElementChild);
 				}
 		        uploadFileElement.style.display = "none";
+		    }
+		    
+		    function auto_grow(element) {		    	
+		    	document.getElementById("sendBttn").disabled = false;
+		        element.style.height = "5px";
+		        element.style.height = (element.scrollHeight)+"px";
+		        window.scrollTo(0,document.body.scrollHeight);
 		    }
 
 		</script>
@@ -966,7 +1014,7 @@
 				<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px;" onclick="addFileComent()">
 				<img id="_addEmoticon" src="/images/add_emo.png" style="float:left; display:block; height:25px; width:25px; padding-left: 10px;">
 				<div style="float:left; display:block; width:80%;">
-					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: auto; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;" oninput="test_func();"></textarea>
+					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;"  onkeyup="auto_grow(this)"></textarea>
 				</div>
 				<div style="float:left; display:block; width: 60px;">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B"></div>	
