@@ -355,6 +355,7 @@
 						/* alert("<spring:message code='ezTask.t148' />"); */
 						
 						getCommentList();
+						RefreshView();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
