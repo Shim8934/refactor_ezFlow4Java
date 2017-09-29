@@ -65,7 +65,7 @@
 		            return true;
 		    };
 		    
-		    var onloadflag = false;
+// 		    var onloadflag = false;
 		    $(document).ready(function() {
 // 			window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -140,7 +140,7 @@
 		            }
 		        }
 		        
-		        onloadflag = true;
+// 		        onloadflag = true;
 		    });
 // 			}
 		
