@@ -98,7 +98,54 @@ function setDocNumFormat() {
                 if (parseInt(mdate) < 10) mdate = "0" + mdate;
                 numHeader = numHeader + mdate + Tail;
                 break;
-
+                
+            /* 단암 양식*/
+            case "D1":
+            	numHeader += "계약" + Tail;
+        		break;
+            case "D2":
+            	numHeader += "교육기안" + Tail;
+        		break;
+            case "D3":
+            	numHeader += "교육" + Tail;
+        		break;
+            case "D4":
+            	numHeader += "구매" + Tail;
+        		break;
+            case "D5":
+            	numHeader += "제" + Tail;
+        		break;
+            case "D6":
+            	numHeader += "기구" + Tail;
+        		break;
+            case "D7":
+            	numHeader += "기안" + Tail;
+        		break;
+            case "D8":
+            	numHeader += "제 문서 신청" + Tail;
+        		break;
+            case "D9":
+            	numHeader += "보고" + Tail;
+        		break;
+            case "DA":
+            	numHeader += "제조-보고" + Tail;
+        		break;
+            case "DB":
+            	numHeader += "연장근무보고서" + Tail;
+        		break;
+            case "DC":
+            	numHeader += "출장" + Tail;
+        		break;
+            case "DD":
+            	numHeader += "해외출장" + Tail;
+        		break;
+            case "DE":
+            	numHeader += "품질검사" + Tail;
+        		break;
+            case "DF":
+            	numHeader += "휴가" + Tail;
+            	break;
+            	
             default:
                 numHeader = numHeader + fieldValue;
                 break;

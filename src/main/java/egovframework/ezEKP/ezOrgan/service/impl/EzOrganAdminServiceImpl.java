@@ -1,9 +1,6 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,8 +10,6 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -65,6 +61,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
     @Autowired
     private EzCommonService ezCommonService;
+    
+    @Autowired
+    private EzEmailUtil ezEmailUtil;
     
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
@@ -894,7 +893,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_TITLE1", sTitle1);
             		map.put("v_TITLE2", sTitle2);
                     
+            		String bizmekaResult = "ERROR";
+            		
             		try {
+    					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+    					
+    					// 비즈메카와 연동된 경우에는 비즈메카 API를 이용해 비즈메카 사용자 계정을 삭제한다.
+    					if (useBizmekaSpambox.equals("YES")) {
+    						String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+    						String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+    						String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+    						
+    						bizmekaResult = ezEmailUtil.bizmekaAddSubtitle(bizmekaAdminId, bizmekaAdminPw,
+    											bizmekaCompanyId, userID, pDeptID, sTitle1, sTitle2);	
+    						
+    						logger.debug("bizmekaResult=" + bizmekaResult);
+    						
+    						if (!bizmekaResult.equals("OK")) {
+    							throw new Exception("bizmekaAddSubtitle failed");
+    						}						
+    					}
+    					
             			if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             				ezOrganAdminDao.setAddJob(map);
             			} else {
@@ -945,7 +964,26 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     map.put("v_CN", userID);
                     map.put("v_DEPTID", pDeptID);
                     
+                    String bizmekaResult = "ERROR";
+                    
                     try {
+    					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+    					
+    					// 비즈메카와 연동된 경우에는 비즈메카 API를 이용해 비즈메카 사용자 계정을 삭제한다.
+    					if (useBizmekaSpambox.equals("YES")) {
+    						String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+    						String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+    						String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+    						
+    						bizmekaResult = ezEmailUtil.bizmekaDeleteSubtitle(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, userID, pDeptID);		
+    						
+    						logger.debug("bizmekaResult=" + bizmekaResult);
+    						
+    						if (!bizmekaResult.equals("OK")) {
+    							throw new Exception("bizmekaDeleteSubtitle failed");
+    						}						
+    					}
+                    	
                         ezOrganAdminDao.deleteAddJob(map);   
                     } catch (Exception e) { // Exception이 발생하면 Group Email 주소에 해당 User를 다시 등록한다.
                         ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
@@ -997,5 +1035,5 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
 	}
-	
+
 }

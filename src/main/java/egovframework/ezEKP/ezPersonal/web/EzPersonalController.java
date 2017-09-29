@@ -397,7 +397,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String callBack = "0";
 		String saveMailFlag = "0";
 		
-		String result = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getTenantId());
+		String result = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		
@@ -1292,8 +1292,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String userID = doc.getElementsByTagName("USERID").item(0).getTextContent().trim();
-		
-		String result = ezPersonalService.getApprovNotiConfig(userID, userInfo.getTenantId());
+
+		String result = ezPersonalService.getApprovNotiConfig(userID, userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("getApprovNoticeMail ended");
 		return result;

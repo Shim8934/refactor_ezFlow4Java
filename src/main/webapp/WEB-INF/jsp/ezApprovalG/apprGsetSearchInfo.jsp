@@ -71,7 +71,8 @@
 		        if (Type == "APR") {
 		            document.getElementById("displayTR1").style.display = "none";
 		            document.getElementById("displayTR2").style.display = "none";
-		            window.resizeBy(0, -60);
+		            //window.resizeBy(0, -60);
+		            window.resizeTo(510, 355);
 		        }
 		
 		        reset_onclick();
