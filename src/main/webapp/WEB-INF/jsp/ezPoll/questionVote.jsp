@@ -16,6 +16,8 @@
 		<!-- <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script> -->
 		
 		<script type="text/javascript">	
+			var filesize = 0;
+			var xhr1 = new XMLHttpRequest();
 			var hasVoted = "<c:out value='${hasVoted}'/>";
 			var votePrivilege = "<c:out value='${hasVotePrivilege}'/>";
 			var numberOfMultiSelect = "<c:out value='${question.multiSelect}'/>";
@@ -556,22 +558,23 @@
 		    function editComment(obj) {
 		    	console.log("Run in edit Comment function!");
 		    	var id = obj.getAttribute("_comtIndex");
-		    	document.getElementById(id).style.display = "none";
+		    	//document.getElementById(id).style.display = "none";
 		    	var div2CmtId = "div2Cmt" + id.slice(-1);
 		    	var div2Cmt = document.getElementById(div2CmtId);
 		    	var tagA1 = document.createElement("a"); 
 		    	tagA1.innerHTML = "Cancel";
 		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(-1));
 		    	tagA1.setAttribute("_cmtIndex", id.slice(-1));
-		    	tagA1.setAttribute("style", "cursor: pointer; ");
+		    	tagA1.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
 		    	tagA1.onclick = function (event) { event.stopPropagation(); cancelEditComment(this); };
 		    	
 		    	var tagA2 = document.createElement("a");
 		    	
 		    	tagA2.innerHTML = "Save";
 		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(-1));
-		    	tagA2.setAttribute("style", "cursor: pointer; ");
+		    	tagA2.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
 		    	tagA2.setAttribute("_cmtIndex", id.slice(-1));
+		    	tagA2.onclick = function (event) { event.stopPropagation(); saveEditComment(this); };
 		    	div2Cmt.appendChild(tagA1);
 		    	div2Cmt.appendChild(tagA2);
 		    	var cmtAreaId = "cmtArea" + id.slice(-1);
@@ -584,15 +587,29 @@
 		    	var commentIndex = obj.getAttribute("_cmtIndex");
 		    	document.getElementById("clA1cmt" + commentIndex).style.display = "none";
 		    	document.getElementById("clA2cmt" + commentIndex).style.display = "none";
-		    	//Create a post to retrieve the original content
+		    	//Create a post request to retrieve the original content
 		    	
 		    	document.getElementById("cmtArea" + commentIndex).readOnly = true;
+		    }
+		    
+		    function saveEditComment(obj){
+		    	console.log("Run in save edit comment!");
+		    	//Create a post request to update comment
 		    }
 		    
 		    function deleteComment(obj) {
 		    	console.log("Run in delete Comment function!");
 		    	var id = obj.getAttribute("_comtIndex");
-		    	document.getElementById(id).style.display = "none";
+		    	//document.getElementById(id).style.display = "none";
+		    	if (confirm("<spring:message code = 'ezPoll.t207' />")) { 
+		    		console.log("Delete comment!");
+				    // Delete comment by sending a post request!
+				    
+				    
+				} else {
+				    // Cancel
+				    console.log("Cancel!");
+				}
 		    }
 		    
 		    function sendComment() {		    	
@@ -662,12 +679,14 @@
                 innerDiv1ForTd3.innerHTML = "Edit Comment";
                 innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
                 innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
-                innerDiv1ForTd3.onclick = function (event) { event.stopPropagation(); editComment(this); };
+                //innerDiv1ForTd3.onclick = function (event) { event.stopPropagation(); editComment(this); };
+                innerDiv1ForTd3.onclick = function (event) { editComment(this); };
                 var innerDiv2ForTd3 = document.createElement("div");
                 innerDiv2ForTd3.innerHTML = "Delete Comment";
                 innerDiv2ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);  
                 innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
-                innerDiv2ForTd3.onclick = function (event) { event.stopPropagation(); deleteComment(this); };
+                //innerDiv2ForTd3.onclick = function (event) { event.stopPropagation(); deleteComment(this); };
+                innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
                 div1ForTd3.appendChild(innerDiv1ForTd3);
                 div1ForTd3.appendChild(innerDiv2ForTd3);
                 objTd3.appendChild(div1ForTd3);
@@ -685,6 +704,34 @@
 		    	    oTable.id = "commentListView";		    	    
 		    	}		    	
 		        document.getElementById("commentArea").appendChild(oTable); 
+		    }
+		    
+		    function uploadFileCmt() {		    	
+	    	    var fd = new FormData();		    	
+		    	var _file = document.getElementById("file").files[0];
+		    	console.log("File name:" + _file.name);
+		    	
+	            if (_file.size / 1024 / 1024 > 5) {
+	                alert("<spring:message code = 'ezPoll.t208' />");
+	                return;
+	            }	            
+	            fd.append("fileToUpload", _file);			
+		        xhr1.addEventListener("load", uploadComplete, false);
+	    	    xhr1.open("POST", "/ezPoll/uploadFile.do");
+	    	    xhr1.send(fd); 
+		    }		    
+
+		    
+		    function uploadComplete(evt) {
+		        showAttachedCmtile(xhr1.responseText);		       
+		    }
+		    
+		    function showAttachedCmtile(txt) {
+		    	console.log(txt);
+		    }
+		    
+		    function addFileComent() {
+		    	document.getElementById("file").click();
 		    }
 
 		</script>
@@ -836,13 +883,15 @@
 			<div id="commentArea" style="">
 			</div>
 			<div id="sendComment" style="padding-top: 20px;">
-				<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px;">
+				<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px;" onclick="addFileComent()">
 				<img id="_addEmoticon" src="/images/add_emo.png" style="float:left; display:block; height:25px; width:25px; padding-left: 10px;">
 				<div style="float:left; display:block; width:80%;">
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: auto; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;" oninput="test_func();"></textarea>
 				</div>	
 				<button id="sendBttn" style="float:left; display:block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
 			</div>
+			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 
+			<!-- <input type="hidden" onclick="fileupload()"/> -->
 			
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 

@@ -34,7 +34,7 @@ function onDrop(evt) {
     
     for (var i = 0; i < filelist.length; i++) {
         if (filelist[i].size / 1024 / 1024 > 5) {
-            alert(strLang25);
+            alert("<spring:message code = 'ezPoll.t208' />");
             return;
         }
         else {
