@@ -193,8 +193,7 @@
 	        	
 	        	//Select Target
 	        	var _selectedTarget = "<c:out value='${question.target}'/>";
-	        	//var _pathTarget = "<c:out value='${targetPath}'/>";
-	        	//console.log("Target checking: " + sigBody3.innerHTML);
+
 	        	if (_selectedTarget == 0) {
 	        		$('#receiverBttn').hide();
 	        		$("#set_Target").val("0").change();	        		
@@ -204,15 +203,6 @@
 	        		$("#set_Target").val("1").change();	
 	        		document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
 	        	}
-	        	
-				$('#set_Target').on('change', function(e) {					
-				    if($(this).val() == '1'){
-				    	$('#receiverBttn').show();
-				    }
-				    else{
-				    	$('#receiverBttn').hide();
-				    }
-				}); 
 			}
 			else {
 				
@@ -222,35 +212,34 @@
 				$('#receiverBttn').hide();
 
 				setDateTimeValue();
-
-				$('#multipleCheck').click(function(){
-					if(this.checked){
-						$('#numberOfMultiSelect').show();
-					}
-					else{
-						$('#numberOfMultiSelect').hide();
-					}
-				});	
-				
-				$('#endDate').click(function(){
-					if(this.checked){
-						showDateTimePicker();
-					}
-					else{
-						$('#_dateTimePicker').hide();					
-					}
-				});	
-				
-				//showDateTimePicker();
-				$('#set_Target').on('change', function(e) {					
-				    if($(this).val() == '1'){
-				    	$('#receiverBttn').show();
-				    }
-				    else{
-				    	$('#receiverBttn').hide();
-				    }
-				}); 
 			}
+			
+			$('#multipleCheck').click(function(){
+				if(this.checked){
+					$('#numberOfMultiSelect').show();
+				}
+				else{
+					$('#numberOfMultiSelect').hide();
+				}
+			});	
+			
+			$('#endDate').click(function(){
+				if(this.checked){
+					showDateTimePicker();
+				}
+				else{
+					$('#_dateTimePicker').hide();					
+				}
+			});
+			
+			$('#set_Target').on('change', function(e) {					
+			    if($(this).val() == '1'){
+			    	$('#receiverBttn').show();
+			    }
+			    else{
+			    	$('#receiverBttn').hide();
+			    }
+			}); 
 		}
 		
 		function checkOptionsList(){
@@ -405,9 +394,9 @@
 		
 		function fun_Cancel() {
     		var compTemp = "";
-    		compTemp = confirm("<spring:message code='ezQuestion.t434' />");
+    		compTemp = confirm("<spring:message code='ezPoll.t209' />");
     		if (compTemp == true) {
-        		surveyState = "CANCEL";
+        		//surveyState = "CANCEL";
         		menuQst_List();
     		}
 		}

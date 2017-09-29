@@ -40,6 +40,8 @@
 			var numberOptions = "<c:out value='${numberOfOptions}'/>";
 			var votesArr = [];	
 			var userNameArr = [[]];
+			var stompClient = null;
+			
 			var colors = ["#49a0d8", "#d353a0", "#ffc527", "#df4c27","#34cb34","7127df"];
             var iframeStyle = "<style>";
             iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -52,7 +54,13 @@
             iframeStyle += "TABLE TD { text-indent: 0px }";
             iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
-            	
+            
+    		window.onunload = function(){
+    		    if (stompClient !== null) {
+    		        stompClient.disconnect();
+    		    }
+        	}; 
+            
 			window.onload = function () {
 				commentCheck();				
  				getConnect(); 				
@@ -242,7 +250,7 @@
 			    var socket = new SockJS('/ezFlow/hello');
 			    stompClient = Stomp.over(socket);			
 			    stompClient.connect({}, function (frame) {		        			    
-			        stompClient.subscribe('/reply/getSeenUpdate', function (updatedInfo) {
+			    	stompClient.subscribe('/reply/getSeenUpdate', function (updatedInfo) {
 			        //stompClient.subscribe('/app/getSeenUpdate', function (updatedInfo) {
 		        	var ret = JSON.parse(updatedInfo.body).updatedNumber;
 		        	
@@ -568,8 +576,7 @@
 		    	tagA1.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
 		    	tagA1.onclick = function (event) { event.stopPropagation(); cancelEditComment(this); };
 		    	
-		    	var tagA2 = document.createElement("a");
-		    	
+		    	var tagA2 = document.createElement("a");		    	
 		    	tagA2.innerHTML = "Save";
 		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(-1));
 		    	tagA2.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
@@ -585,8 +592,11 @@
 		    
 		    function cancelEditComment(obj){
 		    	var commentIndex = obj.getAttribute("_cmtIndex");
-		    	document.getElementById("clA1cmt" + commentIndex).style.display = "none";
-		    	document.getElementById("clA2cmt" + commentIndex).style.display = "none";
+		    	var div2Cmt = document.getElementById("div2Cmt" + commentIndex);
+		    	div2Cmt.removeChild(div2Cmt.lastElementChild);
+		    	div2Cmt.removeChild(div2Cmt.lastElementChild);
+		    	//document.getElementById("clA1cmt" + commentIndex).style.display = "none";
+		    	//document.getElementById("clA2cmt" + commentIndex).style.display = "none";
 		    	//Create a post request to retrieve the original content
 		    	
 		    	document.getElementById("cmtArea" + commentIndex).readOnly = true;
@@ -709,29 +719,99 @@
 		    function uploadFileCmt() {		    	
 	    	    var fd = new FormData();		    	
 		    	var _file = document.getElementById("file").files[0];
-		    	console.log("File name:" + _file.name);
+		    	var ext = _file.name.split('.').pop().toLowerCase();
+		    	console.log("File name:" + _file.name + ", extension: " + ext);
 		    	
 	            if (_file.size / 1024 / 1024 > 5) {
 	                alert("<spring:message code = 'ezPoll.t208' />");
 	                return;
-	            }	            
+	            }	 
+	            
 	            fd.append("fileToUpload", _file);			
 		        xhr1.addEventListener("load", uploadComplete, false);
-	    	    xhr1.open("POST", "/ezPoll/uploadFile.do");
-	    	    xhr1.send(fd); 
-		    }		    
-
-		    
+		        
+		        if ( ext == "jpg" || ext == "png" || ext == "bmp") {
+		    	    xhr1.open("POST", "/ezPoll/uploadCmtFile.do");
+		    	    xhr1.send(fd); 
+		        }
+		        else {
+		    	    xhr1.open("POST", "/ezPoll/uploadFile.do");
+		    	    xhr1.send(fd); 
+		        }    	    
+		    }		   
+    
 		    function uploadComplete(evt) {
-		        showAttachedCmtile(xhr1.responseText);		       
+		    	xhr1.removeEventListener("load", uploadComplete);
+		        showAttachedCmtFile(xhr1.responseText);		       
 		    }
 		    
-		    function showAttachedCmtile(txt) {
-		    	console.log(txt);
+		    function showAttachedCmtFile(strXML) {
+		    	if (strXML == "ERROR") {    	
+		            alert("Upload Failed!");
+		            return;
+		        }     
+		        var xml = loadXMLString(strXML); 		        
+		        console.log(xml);
+		    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		    	
+		    	var orgFileName = fileinfo.split("/")[1];		 	    	
+		    	var _ext = orgFileName.split('.').pop().toLowerCase();
+		    	console.log("After upload file, the extension is: " + _ext);
+		    	document.getElementById("uploadedFile").style.display = "inline-block";
+		    	
+		    	//Add cancel image for uploadFile element
+		    	var imagTag1 = document.createElement("img");   
+		    	imagTag1.setAttribute("_fileInfo", fileinfo);               
+		    	imagTag1.setAttribute("height", "20");
+		    	imagTag1.setAttribute("width", "20");
+		    	imagTag1.setAttribute("vertical-align", "middle");
+		    	imagTag1.setAttribute("style", "float:right; display: block; cursor: pointer;");  
+		    	imagTag1.src = "/images/close.png";		  
+		    	imagTag1.onclick = function (event) { cancelShowingCmtFile(this); };
+		    	document.getElementById("uploadedFile").appendChild(imagTag1);
+		    	
+		    	//Add image of file for uploadFile element
+		    	var imagTag2 = document.createElement("img");   
+		    	imagTag2.setAttribute("_fileInfo", fileinfo);               
+		    	imagTag2.setAttribute("height", "60");
+		    	imagTag2.setAttribute("width", "60");
+		    	imagTag2.setAttribute("vertical-align", "middle");
+		    	imagTag2.setAttribute("style", "display: block; padding-left: 20px; padding-right: 20px;");    		    	
+            
+		    	if (_ext == "jpg" || _ext == "png" || _ext == "bmp") {		    	    	             
+		    		imagTag2.src = "/files/commentImages/" + fileinfo.split("/")[0];
+		    	}
+		    	else {
+		    		imagTag2.src = "/images/cmtFile.png";
+		    	}
+		    	document.getElementById("uploadedFile").appendChild(imagTag2);		    	
 		    }
 		    
 		    function addFileComent() {
 		    	document.getElementById("file").click();
+		    }
+		    
+		    function cancelShowingCmtFile(obj) {
+		    	//Delete file in server
+		    	var fileinfo = obj.getAttribute("_fileInfo");		    	
+		    	var orgFileName = fileinfo.split("/")[1];
+		    	var ext = orgFileName.split('.').pop().toLowerCase();
+		        var fd = new FormData();		        
+		        fd.append("fileToDelete", fileinfo);
+		        if ( ext == "jpg" || ext == "png" || ext == "bmp") {
+			        xhr1.open("POST", "/ezPoll/deleteCmtFile.do");
+			        xhr1.send(fd);
+		        }
+		        else {
+		    	    xhr1.open("POST", "/ezPoll/deleteFile.do");
+		    	    xhr1.send(fd); 
+		        }  		        
+		        
+		        //Hide uploadFile element
+		        var uploadFileElement = document.getElementById("uploadedFile");
+		        while (uploadFileElement.hasChildNodes()) {
+		        	uploadFileElement.removeChild(uploadFileElement.lastElementChild);
+				}
+		        uploadFileElement.style.display = "none";
 		    }
 
 		</script>
@@ -887,8 +967,12 @@
 				<img id="_addEmoticon" src="/images/add_emo.png" style="float:left; display:block; height:25px; width:25px; padding-left: 10px;">
 				<div style="float:left; display:block; width:80%;">
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: auto; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;" oninput="test_func();"></textarea>
-				</div>	
-				<button id="sendBttn" style="float:left; display:block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
+				</div>
+				<div style="float:left; display:block; width: 60px;">
+					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B"></div>	
+					<button id="sendBttn" style="display:inline-block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
+				</div>
+				
 			</div>
 			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 
 			<!-- <input type="hidden" onclick="fileupload()"/> -->

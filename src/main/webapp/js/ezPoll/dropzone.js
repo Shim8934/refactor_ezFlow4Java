@@ -74,6 +74,7 @@ function uploadProgress(evt) {
 }
 
 function uploadComplete(evt) {
+	xhr.removeEventListener("load", uploadComplete);
     document.getElementById('prog_bar').style.width = "0%";
     document.getElementById('prog_num').innerHTML = "0";
     document.getElementById('progdiv').style.display = "none";   

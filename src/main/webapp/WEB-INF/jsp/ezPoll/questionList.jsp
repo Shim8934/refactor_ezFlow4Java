@@ -38,9 +38,15 @@
 			var hideBttn 		  = "<c:out value='${hideBttn}'/>";
 			var checkedArr		  = [];					
 			var chkDelete		  = 0;
-			var admin = "<c:out value='${adminPrivilege}'/>";
-		   //var chkHide			  = 0;
+			var admin = "<c:out value='${adminPrivilege}'/>";	
+			var stompClient = null;
 		    
+		    window.onunload = function(){
+    		    if (stompClient !== null) {
+    		        stompClient.disconnect();
+    		    }
+        	}; 
+		   
 			window.onload = function(){				
 				preProcessing();				
 				makePageSelPage(currentPage, totalPages, totalQuestions, blockSize);

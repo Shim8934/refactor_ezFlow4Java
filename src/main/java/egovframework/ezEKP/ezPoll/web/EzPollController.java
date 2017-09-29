@@ -733,6 +733,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		return strXML;
 	}
+	
 	@RequestMapping(value="/ezPoll/deleteQuestion.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String deleteQuestion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, ModelMap model) throws Exception {
@@ -750,6 +751,62 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Delete Question finishes!");		
 		return strXML;
 		//return "forward:/ezPoll/pollList.do";
+	}
+	
+	@RequestMapping(value = "/ezPoll/uploadCmtFile.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String uploadCmtFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
+		logger.debug("------------------- uploadCommentFile start ----------------");
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String pFileName = "";
+        Long fileSize = 0L;        
+        //String resultUpload = "";
+        String sGUID = "";
+        String pUploadSN = "";      
+               
+        //resultUpload = "false";
+        sGUID = UUID.randomUUID().toString();
+        pUploadSN = "{" + sGUID + "}";
+       
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	      
+            String _pFileName = multiFile.get(0).getOriginalFilename();
+            if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+            }
+           pFileName = _pFileName;           
+        }       
+        
+        pFileName = pFileName.replace("+", "%2b");
+        pFileName = pFileName.replace(";", "%3b");       
+        
+        String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1);
+        if (extension.toLowerCase().equals("jpg") || extension.toLowerCase().equals("png") || extension.toLowerCase().equals("bmp")) {
+    		String pDirPath = commonUtil.separator + "files" + commonUtil.separator + "commentImages" + commonUtil.separator;
+    		pDirPath = realPath + pDirPath;
+            File file = new File(pDirPath);
+            
+            if (!file.exists()) {
+            	file.mkdir();        
+            }
+            
+            String newFileName = pUploadSN + "." + extension;  
+            fileSize = multiFile.get(0).getSize();
+            StringBuffer strXML = new StringBuffer();
+            strXML.append("<ROOT><NODES>");
+            writeUploadedFile(multiFile.get(0), newFileName, pDirPath);
+			strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName + "/" + fileSize + "]]></DATA>");
+			strXML.append("<DATA2><![CDATA[]]></DATA2>");
+			strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
+			strXML.append("</NODES></ROOT>");
+			return strXML.toString();
+        }        	
+        else {
+        	return "ERROR";
+        }     
 	}
 	
 	@RequestMapping(value = "/ezPoll/uploadFile.do", produces = "text/plain; charset=utf-8")
@@ -791,7 +848,7 @@ public class EzPollController extends EgovFileMngUtil {
         for (int i = 0; i < cnt; i++) {
             pFileName[i] = pFileName[i].replace("+", "%2b");
             pFileName[i] = pFileName[i].replace(";", "%3b");
-        }
+        }           
         
         String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
 
@@ -882,6 +939,36 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Adjust Joined Users is ended!");	
 		return strXML;
 	}
+	
+	@RequestMapping(value="/ezPoll/deleteCmtFile.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String deleteCmtFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String fileName = "";
+		String strXML = "";
+		if (req.getParameter("fileToDelete") != null) {
+			fileName = req.getParameter("fileToDelete").split("/")[0];
+		}
+		
+		String realPath = req.getServletContext().getRealPath("");
+		String pDirPath = commonUtil.separator + "files" + commonUtil.separator + "commentImages" + commonUtil.separator;
+		String absoluteFilePath = realPath + pDirPath +  fileName;
+		
+		try {
+			File file = new File(absoluteFilePath);
+			if(!file.exists()){
+				logger.debug("Wrong folder path!");
+				return "<DATA>DELETE_FAIL</DATA>";
+			}
+			file.delete();	
+			strXML = "<DATA>DELETE_OK</DATA>";
+		}
+		catch (Exception e) {
+			strXML = "<DATA>DELETE_FAIL</DATA>";
+	         e.printStackTrace();
+	      }
+		return strXML;
+	}
 
 	@RequestMapping(value="/ezPoll/deleteFile.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -892,9 +979,8 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		if (req.getParameter("fileToDelete") != null) {
 			fileName = req.getParameter("fileToDelete").split("/")[0];
-		}
+		}		
 		
-		logger.debug("FileName cua thi chu:" + fileName);
 		String realPath = req.getServletContext().getRealPath("");
 		String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
 		pDirPath = realPath + pDirPath;
