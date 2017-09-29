@@ -15015,7 +15015,6 @@
             	TENANT_ID = #v_TENANTID#
             AND
                 COMPANYID = #companyID#
-            AND
         ]]>
 		<isEqual property="approvalFlag" compareValue="G" prepend="AND">
                aprtype IN ( '018','019','007','031','002')
