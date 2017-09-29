@@ -137,6 +137,7 @@
 						try { window.opener.RefreshView() } catch (e) { }
 						close_onclick();
 						parent.initProgressBar(taskstatus, $("#completeRate").val());
+						parent.RefreshView();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						

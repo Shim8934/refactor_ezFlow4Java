@@ -660,17 +660,21 @@
 			    }
 			}
 
-			window.onunload = function () {
-			    try {
-			    	window.opener.location.reload();
+			window.onunload = function (e) {
+		    	try {
+// 		    		window.opener.RefreshView();
 			    	window.close();
-			    } catch (e) {}
+		    	} catch (e) {}
 			}
 
 			function messageload() {
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
 			}
 			
+			function RefreshView() {
+				window.opener.RefreshView();
+			}
+
 			function getTaskWorkAttachList() {
 				$.ajax({
 					type : "POST",
@@ -716,7 +720,7 @@
 		</script>
 		
 		<div class="wrap_progress">
-			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="<c:out value = '${taskInfoVO.title }' />">${taskInfoVO.title }</h4>
+			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="'${taskInfoVO.title }' />">${taskInfoVO.title }</h4>
 			<div class="circle progress_graph" style="width:30%; margin: 10px 20px;">
 				<strong></strong>
 			</div>

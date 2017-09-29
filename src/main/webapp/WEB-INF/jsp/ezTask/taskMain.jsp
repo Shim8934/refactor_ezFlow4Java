@@ -749,7 +749,7 @@
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body").css("background", "");
 		    	}
-
+		    	
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
