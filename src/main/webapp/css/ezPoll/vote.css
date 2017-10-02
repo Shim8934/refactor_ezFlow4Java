@@ -1,2 +1,22 @@
 .icon_graydown {margin:0px 0px 0px 3px; cursor:pointer; width:11px; height:11px; display:inline-block; background:url(/images/icon_graydown.gif) no-repeat center bottom; vertical-align:middle;}
 .icon_grayup {margin:0px 0px 0px 3px; cursor:pointer; width:11px; height:11px; display:inline-block; background:url(/images/icon_grayup.gif) no-repeat center bottom; vertical-align:middle;}
+/* background-image: url(/images/emoticon/girl/45.png); */
+.emoticon {    
+    background-size: 85px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
+    transition: background-size 0.2s;
+    -webkit-transition: background-size 0.2s;
+    transition-timing-function: cubic-bezier(.07,1.41,.82,1.41);
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.emoticon:hover {
+    background-size: 100px;
+}
+

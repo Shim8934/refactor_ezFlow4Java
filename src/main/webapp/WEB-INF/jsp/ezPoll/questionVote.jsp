@@ -39,10 +39,11 @@
 			var window_open2;
 			var numberOptions = "<c:out value='${numberOfOptions}'/>";
 			var votesArr = [];	
+			var stickerIndex = null;
 			var userNameArr = [[]];
 			var stompClient = null;
 			
-			var colors = ["#49a0d8", "#d353a0", "#ffc527", "#df4c27","#34cb34","7127df"];
+			var colors = ["#49a0d8", "#d353a0", "#ffc527", "#df4c27","#34cb34","7127df"]; //add more colors
             var iframeStyle = "<style>";
             iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -61,7 +62,7 @@
     		    }
         	}; 
             
-			window.onload = function () {
+			window.onload = function () {				
 				commentCheck();				
  				getConnect(); 				
 				document.getElementById("seenPeople").innerHTML = s_Users + seenText;
@@ -631,6 +632,7 @@
 		    	objTr.setAttribute("style", "border-bottom: 1px solid #b6b6b6");
 		    	
 		    	var objTd = document.createElement("td");
+		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");  
                 objTd.style.paddingLeft  = "10px";
                 objTd.style.paddingRight = "0px";
                 objTd.style.paddingBottom = "0px";
@@ -640,9 +642,7 @@
                 
                 var image_tag = document.createElement("img");                
                 image_tag.src = "/images/account.jpg";
-                image_tag.setAttribute("height", "50");
-                image_tag.setAttribute("width", "50");
-                image_tag.setAttribute("vertical-align", "middle");
+                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; "); 
                 //image_tag.onclick = function () { filedelete(this); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);                          
@@ -670,8 +670,17 @@
                 var uploadFileElement = document.getElementById("uploadedFile");
 		        if (uploadFileElement.hasChildNodes()) {		        	
 		        	var img2ForUpFileElmt = uploadFileElement.lastElementChild;
-		        	var fileinfo = img2ForUpFileElmt.getAttribute("_fileInfo");		    	
-			    	var orgFileName = fileinfo.split("/")[1];
+		        	var fileinfo = img2ForUpFileElmt.getAttribute("_fileInfo");	
+		        	var fileType = img2ForUpFileElmt.getAttribute("_type");	
+			    	var orgFileName = "";	
+			    	
+			    	if (fileType == "file") {
+			    		orgFileName = fileinfo.split("/")[1]; 
+			    	}
+			    	else {
+			    		orgFileName = fileinfo.split("/")[4];
+			    	}
+			    	
 			    	var ext = orgFileName.split('.').pop().toLowerCase();
 			    	var innerDiv1 = document.createElement("div");	
 			    	innerDiv1.setAttribute("style", "padding-top: 5px;");
@@ -680,21 +689,47 @@
 			    	imgForinnerDiv1.setAttribute("vertical-align", "middle");
 			    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;"); 
 			    	
-			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {			   
-				    	imgForinnerDiv1.setAttribute("height", "60");
-				    	imgForinnerDiv1.setAttribute("width", "60");
-				    	imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];
+			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {		   	
+				    	if (fileType == "file") {
+					    	imgForinnerDiv1.setAttribute("height", "60");
+					    	imgForinnerDiv1.setAttribute("width", "60");
+				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];		
+				    	}
+				    	else {
+				    		imgForinnerDiv1.setAttribute("height", "80");
+					    	imgForinnerDiv1.setAttribute("width", "80");
+				    		imgForinnerDiv1.src = fileinfo;
+				    	}
+				    			    	
 			    		innerDiv1.appendChild(imgForinnerDiv1);
 			    		div2ForTd2.appendChild(innerDiv1);
 			    	}
 			    	else {
 				    	imgForinnerDiv1.setAttribute("height", "30");
 				    	imgForinnerDiv1.setAttribute("width", "30");
-				    	imgForinnerDiv1.src = "/images/cmtFile.png";
+				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;"); 
+				    	
+				    	if (ext == "doc" || ext == "docx"){
+				    		imgForinnerDiv1.src = "/images/msWord.png";
+				    	}
+				    	else if (ext == "ppt" || ext == "pptx"){
+				    		imgForinnerDiv1.src = "/images/msPowerpoint.png";
+				    	}
+				    	else if (ext == "xls" || ext == "xlsx"){
+				    		imgForinnerDiv1.src = "/images/msExcel.png";
+				    	}
+				    	else if (ext == ".hwp"){
+				    		imgForinnerDiv1.src = "/images/hancomHWP.png";
+				    	}
+				    	else {
+				    		imgForinnerDiv1.src = "/images/cmtFile.png";
+				    	}				    	
+				    	
 			    		innerDiv1.appendChild(imgForinnerDiv1);
 			    		div2ForTd2.appendChild(innerDiv1);
 			    		var innerDiv2 = document.createElement("div");
 			    		innerDiv2.innerHTML = fileinfo.split("/")[1];
+			    		innerDiv2.setAttribute("style", "cursor: pointer;"); 
 			    		div2ForTd2.appendChild(innerDiv2);
 			    	}			    	
 		        }
@@ -741,11 +776,7 @@
                 
                 //Clean the place
                 document.getElementById("comment_input").value = "";
-		        var uploadFileElement = document.getElementById("uploadedFile");
-		        while (uploadFileElement.hasChildNodes()) {
-		        	uploadFileElement.removeChild(uploadFileElement.lastElementChild);
-				}
-		        uploadFileElement.style.display = "none";        
+		        document.getElementById("uploadedFile").style.display = "none"; 	            
 		        window.scrollTo(0,document.body.scrollHeight);
 		    }
 		    
@@ -797,61 +828,59 @@
 		    	var orgFileName = fileinfo.split("/")[1];		 	    	
 		    	var _ext = orgFileName.split('.').pop().toLowerCase();		    	
 		    	document.getElementById("uploadedFile").style.display = "inline-block";
-		    	
-		    	//Add cancel image for uploadFile element
-		    	var imagTag1 = document.createElement("img");   
-		    	imagTag1.setAttribute("_fileInfo", fileinfo);               
-		    	imagTag1.setAttribute("height", "20");
-		    	imagTag1.setAttribute("width", "20");
-		    	imagTag1.setAttribute("vertical-align", "middle");
-		    	imagTag1.setAttribute("style", "float:right; display: block; cursor: pointer;");  
-		    	imagTag1.src = "/images/close.png";		  
-		    	imagTag1.onclick = function (event) { cancelShowingCmtFile(this); };
-		    	document.getElementById("uploadedFile").appendChild(imagTag1);
-		    	
-		    	//Add image of file for uploadFile element
-		    	var imagTag2 = document.createElement("img");   
-		    	imagTag2.setAttribute("_fileInfo", fileinfo);               
-		    	imagTag2.setAttribute("height", "60");
-		    	imagTag2.setAttribute("width", "60");
-		    	imagTag2.setAttribute("vertical-align", "middle");
-		    	imagTag2.setAttribute("style", "display: block; padding-left: 20px; padding-right: 20px;");    		    	
-            
+		    	var imagePreview = document.getElementById("previewImage");
+		    	var cancelPreview = document.getElementById("cancelImg");
+		    	cancelPreview.setAttribute("_fileInfo", fileinfo);
+		    	cancelPreview.setAttribute("_type", "file");
+		    	imagePreview.setAttribute("_fileInfo", fileinfo);
+		    	imagePreview.setAttribute("_type", "sticker");
 		    	if (_ext == "jpg" || _ext == "png" || _ext == "bmp") {		    	    	             
-		    		imagTag2.src = "/files/commentImages/" + fileinfo.split("/")[0];
+		    		imagePreview.src = "/files/commentImages/" + fileinfo.split("/")[0];
+		    	}
+		    	else if (_ext == "doc" || _ext == "docx"){
+		    		imagePreview.src = "/images/msWord.png";
+		    	}
+		    	else if (_ext == "ppt" || _ext == "pptx"){
+		    		imagePreview.src = "/images/msPowerpoint.png";
+		    	}
+		    	else if (_ext == "xls" || _ext == "xlsx"){
+		    		imagePreview.src = "/images/msExcel.png";
+		    	}
+		    	else if (_ext == ".hwp"){
+		    		imagePreview.src = "/images/hancomHWP.png";
 		    	}
 		    	else {
-		    		imagTag2.src = "/images/cmtFile.png";
-		    	}
-		    	document.getElementById("uploadedFile").appendChild(imagTag2);		
+		    		imagePreview.src = "/images/cmtFile.png";
+		    	}	   	  		
 		    	document.getElementById("sendBttn").disabled = false;
 		    }
 		    
-		    function addFileComent() {
+		    function addFileComment() {
+				//Close sticker picker if display
+				document.getElementById("emoticonPanel").style.display = "none";
 		    	document.getElementById("file").click();
 		    }
 		    
 		    function cancelShowingCmtFile(obj) {
-		    	//Delete file in server
-		    	var fileinfo = obj.getAttribute("_fileInfo");		    	
-		    	var orgFileName = fileinfo.split("/")[1];
-		    	var ext = orgFileName.split('.').pop().toLowerCase();
-		        var fd = new FormData();		        
-		        fd.append("fileToDelete", fileinfo);
-		        if (ext == "jpg" || ext == "png" || ext == "bmp") {
-			        xhr1.open("POST", "/ezPoll/deleteCmtFile.do");
-			        xhr1.send(fd);
-		        }
-		        else {
-		    	    xhr1.open("POST", "/ezPoll/deleteFile.do");
-		    	    xhr1.send(fd); 
-		        }  		        
-		        
+				var type = obj.getAttribute("_type");
+				
+				if (type == "file") {
+					//Delete file in server
+			    	var fileinfo = obj.getAttribute("_fileInfo");		    	
+			    	var orgFileName = fileinfo.split("/")[1];
+			    	var ext = orgFileName.split('.').pop().toLowerCase();
+			        var fd = new FormData();		        
+			        fd.append("fileToDelete", fileinfo);
+			        if (ext == "jpg" || ext == "png" || ext == "bmp") {
+				        xhr1.open("POST", "/ezPoll/deleteCmtFile.do");
+				        xhr1.send(fd);
+			        }
+			        else {
+			    	    xhr1.open("POST", "/ezPoll/deleteFile.do");
+			    	    xhr1.send(fd); 
+			        }  		        
+				}		    			        
 		        //Hide uploadFile element
-		        var uploadFileElement = document.getElementById("uploadedFile");
-		        while (uploadFileElement.hasChildNodes()) {
-		        	uploadFileElement.removeChild(uploadFileElement.lastElementChild);
-				}
 		        uploadFileElement.style.display = "none";
 		    }
 		    
@@ -861,7 +890,62 @@
 		        element.style.height = (element.scrollHeight)+"px";
 		        window.scrollTo(0,document.body.scrollHeight);
 		    }
-
+			
+		    function checkScrollBars() {		
+				if (document.getElementById("_listG" + stickerIndex + "Table").scrollHeight > 320){
+		    		document.getElementById("emoticonPanel").style.width = "420px";
+		    	}
+		    }
+		    
+		    function addSticker(){
+		    	stickerIndex = 1;
+		    	document.getElementById("_group1").style.backgroundColor  = "#d9d9d9";
+		    	for (var i = 2; i < 4; i++) {
+		    		document.getElementById("_group" + i).style.backgroundColor  = "#fff";
+		    	}
+		    	document.getElementById("emoticonPanel").style.display = "block";
+		    	checkScrollBars();
+		    }
+		    
+		    function changeStickerGroup(obj) {		    	
+		    	document.getElementById("_group" + stickerIndex).style.backgroundColor  = "#fff";
+		    	obj.style.backgroundColor  = "#d9d9d9";
+		    	document.getElementById("_listG" + stickerIndex).style.display = "none";
+		    	var imageTag = obj.firstElementChild;
+		    	if (imageTag.src.indexOf("hackerGirl.png") !== -1) {		    		
+		    		stickerIndex = 1;		    		
+		    	}
+		    	else if (imageTag.src.indexOf("crayonShin.png") !== -1) {
+		    		stickerIndex = 2;
+		    	}
+		    	else if (imageTag.src.indexOf("catEmoticon.png") !== -1) {
+		    		stickerIndex = 3;
+		    	}
+		    	else {
+		    		stickerIndex = 4;
+		    	}
+		    	document.getElementById("_listG" + stickerIndex).style.display = "block";
+		    }
+		    
+		    function displaySticker(obj) {
+		    	var style = obj.currentStyle || window.getComputedStyle(obj, false);
+		    	var bgImage = style.backgroundImage.slice(4, -1);
+		    	var actualUrl = bgImage.slice(bgImage.indexOf("/images/"), -1);		   	    	
+		    	console.log("current position: " + actualUrl);
+		    	
+		    	//Close sticker picker
+		    	document.getElementById("emoticonPanel").style.display = "none";
+		    	//Add sticker in upload File
+		    	document.getElementById("uploadedFile").style.display = "inline-block";
+		    	var imagePreview = document.getElementById("previewImage");
+		    	var cancelPreview = document.getElementById("cancelImg");
+		    	cancelPreview.setAttribute("_type", "sticker");
+		    	imagePreview.setAttribute("_fileInfo", actualUrl);
+		    	imagePreview.setAttribute("_type", "sticker");
+		    	imagePreview.src = actualUrl;
+		    	document.getElementById("sendBttn").disabled = false;
+		    }
+		    
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -1011,19 +1095,269 @@
 			<div id="commentArea" style="">
 			</div>
 			<div id="sendComment" style="padding-top: 20px;">
-				<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px;" onclick="addFileComent()">
-				<img id="_addEmoticon" src="/images/add_emo.png" style="float:left; display:block; height:25px; width:25px; padding-left: 10px;">
+				<div style="float:left; display:block;">
+					<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px; cursor: pointer;" onclick="addFileComment()">
+				</div>
+				<div style="float:left; display:block;">					
+					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-right: -400px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
+						<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
+							<div id="previousEmoticon" style="float:left; display:block;">
+								<img src="/images/previous1.png" height=40 width=40 style="padding-top: 3px; ">
+							</div>
+							<div id="_ePresentors" style="float:left; display:block; ">
+								<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+								<div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+								<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+								<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+							</div>
+							<div id="nextEmoticon" style="float: right; display:block;">
+								<img src="/images/next1.png" height=40 width=40 style="padding-top: 3px; ">
+							</div>
+						</div>						
+						<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+							<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
+								<table id="_listG1Table">
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/45.png);" onclick="displaySticker(this);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/65.png);" onclick="displaySticker(this);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/75.png);" onclick="displaySticker(this);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/85.png);" onclick="displaySticker(this);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/95.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/105.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/118.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/119.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/125.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/135.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/145.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/155.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/165.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/172.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/182.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/192.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/202.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/215.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/216.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/222.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/232.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/242.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/252.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/262.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/272.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/282.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/292.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/302.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/314.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/315.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/322.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/332.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/341.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/351.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/361.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/371.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/381.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/391.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/401.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/431.png);"></div></td>
+									</tr>
+								</table>
+							</div>
+							<div id="_listG2" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
+								<table id="_listG2Table">
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/2.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/3.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/4.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/5.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/6.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/7.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/8.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/9.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/10.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/11.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/12.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/13.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/14.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/15.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/16.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/17.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/18.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/19.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/20.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/21.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/22.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/23.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/24.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/25.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/26.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/27.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/28.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/29.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/30.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/31.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/32.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/33.png);"></div></td>
+									</tr>
+								</table>
+							</div>
+							<div id="_listG3" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
+								<table id="_listG3Table">
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/1.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/2.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/3.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/4.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/5.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/6.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/7.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/8.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/9.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/10.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/11.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/12.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/13.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/14.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/15.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/16.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/17.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/18.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/19.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/20.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/21.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/22.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/23.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/24.png);"></div></td>
+									</tr>
+								</table>
+							</div>
+							<div id="_listG4" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
+								<table id="_listG4Table">
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/1.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/2.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/3.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/4.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/5.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/6.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/7.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/8.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/9.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/10.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/11.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/12.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/13.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/14.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/15.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/16.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/17.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/18.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/19.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/20.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/21.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/22.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/23.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/24.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/25.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/26.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/27.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/28.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/29.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/30.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/31.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/32.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/33.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/34.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/35.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/36.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/37.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/38.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/39.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/40.png);"></div></td>
+									</tr>
+									<tr style="width:100%; height:45px;">
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/41.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/42.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/43.png);"></div></td>
+										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/44.png);"></div></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>					
+					<img id="_addEmoticon" src="/images/add_emo.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
+				</div >				
 				<div style="float:left; display:block; width:80%;">
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;"  onkeyup="auto_grow(this)"></textarea>
 				</div>
 				<div style="float:left; display:block; width: 60px;">
-					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B"></div>	
+					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B">
+						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
+						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
+					</div>	
 					<button id="sendBttn" style="display:inline-block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
 				</div>
 				
 			</div>
-			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 
-			<!-- <input type="hidden" onclick="fileupload()"/> -->
+			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 		
 			
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
