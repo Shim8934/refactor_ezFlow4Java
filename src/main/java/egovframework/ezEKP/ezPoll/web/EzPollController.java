@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
@@ -39,6 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -46,6 +49,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
@@ -402,6 +406,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int numOfFile = 0;
 		ObjectMapper om = new ObjectMapper();
 		int adminPrivilege = -1;
+		int numberOfCmt = -1;
 		
 		if (loginVO.getRollInfo().indexOf("c=1") == -1 && loginVO.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
@@ -508,18 +513,6 @@ public class EzPollController extends EgovFileMngUtil {
 			model.addAttribute("hasVoted", 0);
 		}
 
-/*		//Get all seen users
-		List<String> listOfSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		
-		//int totalSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		totalSeenUsers = listOfSeenUsers.size();
-		
-		//Check if the number of seen users changes
-		if (currentTotalSeenUsers != totalSeenUsers) {
-			//Inform update to users
-			getUpdateSeenRequests(totalSeenUsers);
-		}*/
-
 		String[] files = null;
 		
 		if(pollQuestionVO.getFilePath() != null){
@@ -557,6 +550,12 @@ public class EzPollController extends EgovFileMngUtil {
 	        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
 		});
 		
+		//Get list of comments for question
+		List<PollCommentVO> listComments = ezPollService.getListCmtOfQst(qstId, tenantId);
+		numberOfCmt = listComments.size();
+		
+		model.addAttribute("listComments", listComments);
+		model.addAttribute("numberOfCmt", numberOfCmt);
 		model.addAttribute("listSelectedOptions", om.writeValueAsString(listSelectedOptionsOfUser));
 		model.addAttribute("totalVotes", totalVotes);
 		model.addAttribute("listOptions", listOptions);
@@ -690,15 +689,96 @@ public class EzPollController extends EgovFileMngUtil {
 
 		logger.debug("Confirm Delete Question end!");
 		return "/ezPoll/confirmDeleteQst";
+	}	
+	
+	@RequestMapping(value="/ezPoll/addComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String addComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String strXML = "";
+		String cmtTime = "";
+		String attachFilePath = "";
+		String fileName = "";
+		String filePath = "";
+		String txtContent = "";
+		String fileType = "";		
+		int qstId = -1;
+		int cmtId = -1;
+		
+		
+		qstId = Integer.parseInt(request.getParameter("qstId"));
+		cmtId = Integer.parseInt(request.getParameter("cmtId"));
+		attachFilePath = request.getParameter("cmtAttach");
+		cmtTime = request.getParameter("cmtTime");
+		fileType = request.getParameter("fileType");
+		int pos = attachFilePath.indexOf("/images/");
+		
+		if (request.getParameter("fileName") != null) {
+			fileName = request.getParameter("fileName");
+		}
+		
+		if (request.getParameter("filePath") != null) {
+			filePath = request.getParameter("filePath");
+		}		
+		
+		if (request.getParameter("cmtTxt") != null) {
+			txtContent = request.getParameter("cmtTxt");
+		}	
+		
+		if (qstId == -1 || cmtId == -1 || attachFilePath.equals("") || cmtTime.equals("") || fileType.equals("")) {
+			strXML = "<DATA>FAIL</DATA>";
+			return strXML;
+		}
+		
+		PollCommentVO pollCmtVO = new PollCommentVO();
+		pollCmtVO.setCmtId(cmtId); // Need to test here
+		pollCmtVO.setQstId(qstId);		
+		pollCmtVO.setTenantId(loginVO.getTenantId());
+		pollCmtVO.setUserId(loginVO.getId());		
+		pollCmtVO.setCmtTime(cmtTime);		
+		pollCmtVO.setTextContent(txtContent);
+		logger.debug("File Type = " + fileType);
+		if (fileType.equals("sticker")) {		
+			pollCmtVO.setImageAttach(attachFilePath.substring(pos));
+			pollCmtVO.setFileAttach("");
+			pollCmtVO.setFileName("");
+			pollCmtVO.setFilePath("");			
+		}
+		else {
+			pollCmtVO.setImageAttach("");			
+			if (fileName.equals("")){
+				pollCmtVO.setFileAttach(attachFilePath.substring(attachFilePath.indexOf("/files/")));
+				pollCmtVO.setFileName("");
+				pollCmtVO.setFilePath("");
+			}
+			else {
+				pollCmtVO.setFileAttach(attachFilePath.substring(pos));
+				pollCmtVO.setFileName(fileName);
+				pollCmtVO.setFilePath(filePath);
+			}		
+		}
+		
+		//Save comment to database 
+		try {
+			//Insert into comment table
+			ezPollService.insertCmt(pollCmtVO);
+			//Update comment user in question related table
+			strXML = "<DATA>OK</DATA>";
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			strXML = "<DATA>FAIL</DATA>";
+		}
+		return strXML;
 	}
 	
 	@RequestMapping(value="/ezPoll/undoModifyVote.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, ModelMap model) throws Exception {
+	public String undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String strXML = "";
 		int qstId = -1;
-		if(request.getParameter("questionId") != null){
+		if (request.getParameter("questionId") != null) {
 			qstId = Integer.parseInt(request.getParameter("questionId"));
 		}
 		

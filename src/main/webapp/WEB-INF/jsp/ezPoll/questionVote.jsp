@@ -33,7 +33,7 @@
 			var seenText = "분이 투표 내용을 확인했습니다";
 			var _status = "<c:out value='${question.status}'/>";
 			var sessionId = "<c:out value='${question.creator}'/>";			
-			var commentIndex = 0;
+			var commentIndex = ${numberOfCmt};
 			var votedUsers = ${votedUsers};
 			var window_open1;		
 			var window_open2;
@@ -754,6 +754,7 @@
 		    }
 		    
 		    function sendComment() {		    	
+		    	var fd = new FormData();
 		    	document.getElementById("sendBttn").disabled = true;		    		    		    		    	
 		    	var currentText = document.getElementById("comment_input").value;		    			    	
 		    	var oTable = document.getElementById("commentListView");
@@ -763,14 +764,7 @@
 		    	
 		    	//Td1
 		    	var objTd = document.createElement("td");
-		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");  
-                objTd.style.paddingLeft  = "10px";
-                objTd.style.paddingRight = "0px";
-                objTd.style.paddingBottom = "0px";
-                objTd.style.paddingTop = "0px";
-                objTd.style.width = "24px";
-                objTd.style.height = "24px";
-                
+		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
                 image_tag.src = "/images/account.jpg";
                 image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; "); 
@@ -780,8 +774,6 @@
                 
                 //Td2
                 var objTd2 = document.createElement("td");
-/*                 var parentDivForTd2 = document.createElement("div");   
-                parentDivForTd2.setAttribute("id", "parent1Div" + commentIndex);  */
                 var div1ForTd2 = document.createElement("div");
                 var div2ForTd2 = document.createElement("div");  
                 var editDiv2ForTd2 = document.createElement("div");  
@@ -801,7 +793,8 @@
                 	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 	div2ForTd2.appendChild(pForTd2);
-                	document.getElementById("hidCmtTxt").value = currentText;
+                	//document.getElementById("hidCmtTxt").value = currentText;
+                	fd.append("cmtTxt", currentText);
                 }
                 
                 //Add file if exist
@@ -828,18 +821,20 @@
 			    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;"); 
 			    	
 			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {		   	
-				    	if (fileType == "file") {
-				    		document.getElementById("hidCmtType").value = "image";
+			    		imgForinnerDiv1.setAttribute("_type", "images");
+			    		if (fileType == "file") {
+				    		//document.getElementById("hidCmtType").value = "image";	
+				    		fd.append("fileType", "file");
 					    	imgForinnerDiv1.setAttribute("height", "60");
-					    	imgForinnerDiv1.setAttribute("width", "60");
-					    	imgForinnerDiv1.setAttribute("_type", "image");
+					    	imgForinnerDiv1.setAttribute("width", "60");	
+					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];				    		
 				    	}
 				    	else {
-				    		document.getElementById("hidCmtType").value = "sticker";
+				    		//document.getElementById("hidCmtType").value = "sticker";
+				    		fd.append("fileType", "sticker");
 				    		imgForinnerDiv1.setAttribute("height", "80");
-					    	imgForinnerDiv1.setAttribute("width", "80");
-					    	imgForinnerDiv1.setAttribute("_type", "sticker");
+					    	imgForinnerDiv1.setAttribute("width", "80");					    	
 				    		imgForinnerDiv1.src = fileinfo;
 				    	}
 		    			    	
@@ -847,9 +842,10 @@
 			    		div2ForTd2.appendChild(innerDiv1);
 			    	}
 			    	else {
-			    		document.getElementById("hidCmtType").value = "file";
-			    		imgForinnerDiv1.setAttribute("height", "30");
-				    	imgForinnerDiv1.setAttribute("width", "30");
+			    		//document.getElementById("hidCmtType").value = "file";
+			    		fd.append("fileType", "file");
+			    		imgForinnerDiv1.setAttribute("height", "60");
+				    	imgForinnerDiv1.setAttribute("width", "60");
 				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 				    	imgForinnerDiv1.setAttribute("_type", "file");
 				    	
@@ -873,8 +869,10 @@
 			    		div2ForTd2.appendChild(innerDiv1);
 			    		var innerDiv2 = document.createElement("div");
 			    		innerDiv2.innerHTML = fileinfo.split("/")[1];
-			    		innerDiv2.setAttribute("style", "cursor: pointer;"); 		    		
+			    		innerDiv2.setAttribute("style", "cursor: pointer;"); 			    		
 			    		innerDiv1.appendChild(innerDiv2);
+			    		fd.append("fileName", innerDiv2.innerHTML);
+			    		fd.append("filePath", fileinfo.split("/")[0]);
 			    	}			    	
 		        }               
 		        
@@ -931,10 +929,16 @@
 		        window.scrollTo(0,document.body.scrollHeight);
 		        
 		        //Send comment information to server
-		        document.getElementById("hidQst").value = qstId;
+/* 		        document.getElementById("hidQst").value = qstId;
 		        document.getElementById("hidCmtTime").value = fistChildForTd3.innerHTML;  
 		        document.getElementById("hidCmtAttach").value = imgForinnerDiv1.src;
-		        document.frmCreate.submit();
+		        document.frmCreate.submit(); */	
+		        fd.append("qstId", qstId);
+		        fd.append("cmtId", commentIndex);
+		        fd.append("cmtTime", fistChildForTd3.innerHTML);
+		        fd.append("cmtAttach", imgForinnerDiv1.src);
+	    	    xhr1.open("POST", "/ezPoll/addComment.do");
+	    	    xhr1.send(fd); 		        
 		    }
 		    
 		    function uploadFileCmt() {		    	
@@ -1209,7 +1213,7 @@
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
 	<body class="mainbody"  id="mainbodytag">
-		<!-- <form method="post"> -->
+		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden;">
 				  <div style="float: left; display: block;width:300px;">
@@ -1347,10 +1351,47 @@
 					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;">투표 종료</div>
 				</div> 
 			</c:if>
-		<!-- </form> -->
-		<!-- <form id="frmCreate" method="post" action="/ezPoll/commentAdd.do" name="frmCreate">	 -->	
 			<div id="commentArea" style="">
 				<table style="width: 100%;" id="commentListView">
+					<c:forEach var="_comt" items="${listComments}">
+						<tr>
+							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
+								<img src="/images/account.jpg" style="padding-top: 10px; height: 50px; width:50px; ">
+							</td>
+							<td>
+								<div style="display: block; padding-left: 8px; padding-top: 10px; color: blue">${_comt.userId}</div>
+								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;" >
+									<c:if test="${_comt.textContent != ''}">
+										<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
+									</c:if>
+									<c:if test="${_comt.imageAttach != ''}">
+										<div style="padding-top: 5px;">
+											<img _type="images" height=80 width=80 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px;" src="<c:out value ="${_comt.imageAttach}" />">
+										</div>										
+									</c:if>
+									<c:if test="${_comt.fileAttach != ''}">
+										<c:if test="${_comt.fileName != ''}">
+											<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.filePath}" />">
+											<div style="cursor: pointer; padding-left: 15px;"><c:out value ="${_comt.fileName}" /></div>
+										</c:if>
+										<c:if test="${_comt.fileName == ''}">
+											<img _type="images" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />">
+										</c:if>
+									</c:if>
+								</div>
+								<div id="editCmtDiv<c:out value ="${_comt.cmtId}" />" style="display: none;"></div>
+							</td>
+							<td style="width: 145px; position: relative;">
+								<div style="position: absolute; top:10px;"><c:out value ="${_comt.cmtTime}" /></div>
+								<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+								<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;" tabindex=0>							
+									<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);">Edit Comment</div>
+									<div style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);">Delete Comment</div>
+								</div>
+								
+							</td>
+						</tr>
+					</c:forEach>					
 				</table>
 			</div>
 			<div id="sendComment" style="padding-top: 20px;">
@@ -1623,14 +1664,13 @@
 				
 			</div>
 			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 
-		<form id="frmCreate" method="post" action="/ezPoll/commentAdd.do" name="frmCreate">	
-			<div style="display:none">	
+<!-- 			<div style="display:none">	
 				<input type="text" name="hidCmtTime" id="hidCmtTime" style="display:none"> 
                 <input type="text" name="hidCmtTxt" id="hidCmtTxt" style="display:none" value="">
                 <input type="text" name="hidCmtType" id="hidCmtType" style="display:none">	
                 <input type="text" name="hidCmtAttach" id="hidCmtAttach" style="display:none" value="">
                  <input type="text" name="hidQst" id="hidQst" style="display:none">
-			</div>
+			</div> -->
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
 	</body>

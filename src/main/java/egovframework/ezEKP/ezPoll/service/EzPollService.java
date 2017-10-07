@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPoll.service;
 import java.util.List;
 
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
@@ -52,8 +53,6 @@ public interface EzPollService {
 	public void deleteAnswers(int qstId, int tenantId) throws Exception;
 
 	public void deleteUserAndQuestion(int qstId, int tenantId) throws Exception;
-
-	//public int getNumberOfSeenUsers(int qstId, int tenantId) throws Exception;
 	
 	public List<String> getNumberOfSeenUsers(int qstId, int tenantId) throws Exception;
 
@@ -83,4 +82,8 @@ public interface EzPollService {
 
 	public String getModifyingUser(int tenantId, int qstId) throws Exception;
 
+	public List<PollCommentVO> getListCmtOfQst(int qstId, int tenantId) throws Exception;
+
+	public void insertCmt(PollCommentVO pollCmtVO) throws Exception;
+	
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -35,6 +36,11 @@ public class EzPollDAO extends EgovAbstractDAO{
 		return (List<PollAnswerVO>) list("EzPollDAO.getListOptionsOfQst", map);
 	}	
 	
+	@SuppressWarnings("unchecked")
+	public List<PollCommentVO> getListCmtOfQst(Map<String, Object> map) {
+		return (List<PollCommentVO>) list("EzPollDAO.getListCmtOfQst", map);
+	}	
+	
 	public void addAnswerAndUser(Map<String, Object> map) {
 		insert("EzPollDAO.addAnswerAndUser", map);
 	}	
@@ -47,7 +53,10 @@ public class EzPollDAO extends EgovAbstractDAO{
 	}	
 	public void insertOption(Map<String, Object> map) {
 		insert("EzPollDAO.insertOption", map);
-	}		
+	}	
+	public void insertCmt(Map<String, Object> map) {
+		insert("EzPollDAO.insertCmt", map);
+	}	
 	public void insertHiddenQuestion(Map<String, Object> map) {
 		insert("EzPollDAO.insertHiddenQuestion", map);
 	}	

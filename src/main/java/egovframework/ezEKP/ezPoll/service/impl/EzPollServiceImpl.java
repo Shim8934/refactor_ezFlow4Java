@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPoll.dao.EzPollDAO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
@@ -359,6 +360,30 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("qst_id", qstId);	
 		map.put("tenant_id", tenantId);	
 		return ezPollDAO.getModifyingUser(map);
+	}
+
+	@Override
+	public List<PollCommentVO> getListCmtOfQst(int qstId, int tenantId)	throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("qst_id", qstId);
+		map.put("tenant_id", tenantId);	
+		return ezPollDAO.getListCmtOfQst(map);	
+	}
+
+	@Override
+	public void insertCmt(PollCommentVO pollCmtVO) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("id", pollCmtVO.getCmtId());
+		map.put("qst_id", pollCmtVO.getQstId());			
+		map.put("tenant_id", pollCmtVO.getTenantId());
+		map.put("user_id", pollCmtVO.getUserId());		
+		map.put("text_content", pollCmtVO.getTextContent());
+		map.put("image_type", pollCmtVO.getImageAttach());			
+		map.put("file_type", pollCmtVO.getFileAttach());
+		map.put("file_name", pollCmtVO.getFileName());
+		map.put("file_path", pollCmtVO.getFilePath());
+		map.put("cmt_time", pollCmtVO.getCmtTime());
+		ezPollDAO.insertCmt(map);		
 	}
 
 }

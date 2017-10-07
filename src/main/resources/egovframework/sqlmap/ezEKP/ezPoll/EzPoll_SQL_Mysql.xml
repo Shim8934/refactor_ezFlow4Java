@@ -5,6 +5,7 @@
 
     <typeAlias  alias="PollAnswerVO"            	   type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
     <typeAlias  alias="PollQuestionVO"                 type="egovframework.ezEKP.ezPoll.vo.PollQuestionVO"/>
+    <typeAlias  alias="PollCommentVO"           	   type="egovframework.ezEKP.ezPoll.vo.PollCommentVO"/>
     <typeAlias  alias="PollUserAnswerVO"               type="egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO"/>
     <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
 
@@ -32,6 +33,19 @@
         <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
         <result property="content"         		column="content"               		columnIndex="4"/>
         <result property="votesNumber"         	column="VOTES_NUM"               	columnIndex="5"/>
+    </resultMap>    
+    
+    <resultMap id="pollComment" class="PollCommentVO">
+        <result property="cmtId"                column="id"                         columnIndex="1"/>
+        <result property="qstId"             	column="qst_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="userId"         		column="user_id"               		columnIndex="4"/>
+        <result property="textContent"         	column="text_content"               columnIndex="5"/>        
+        <result property="imageAttach"         	column="image_type"               	columnIndex="6"/>
+        <result property="fileAttach"         	column="file_type"               	columnIndex="7"/>
+        <result property="fileName"         	column="file_name"               	columnIndex="8"/>        
+        <result property="filePath"         	column="file_path"               	columnIndex="9"/>
+        <result property="cmtTime"         		column="cmt_time"               	columnIndex="10"/>
     </resultMap>    
 	
 	<resultMap id="pollUserAnswer" class="PollUserAnswerVO">
@@ -221,6 +235,18 @@
             ]]> 
         </isNotEqual>       
     </insert>
+    
+    <insert id="EzPollDAO.insertCmt" parameterClass="Map"> 
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_COMMENT(
+	               ID, 	   QST_ID,     TENANT_ID,    USER_ID, 	 TEXT_CONTENT, 	  IMAGE_TYPE, 	  FILE_TYPE,      FILE_NAME,  	   FILE_PATH,     CMT_TIME 
+	            )
+	            VALUES( 
+	               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#
+	            )  
+        	]]>
+         
+    </insert>
 
     <select id="EzPollDAO.getQuestionSeq" resultClass="String">             
 		<![CDATA[
@@ -406,6 +432,19 @@
 				TENANT_ID = #tenant_id#	
 		]]>				
     </select>    
+    
+    <select id="EzPollDAO.getListCmtOfQst" resultMap="pollComment">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>   
     
     <select id="EzPollDAO.getPollUserAndAnswer" resultMap="pollUserAnswer">   
 		<![CDATA[
