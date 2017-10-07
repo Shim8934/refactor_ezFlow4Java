@@ -44,6 +44,8 @@
 			var stompClient = null;
 			var numberOfGroupSticker = 4;	
 			var currentGroupSticker = -1;
+			var flagEvent = -1;
+			var currentEditingCmt = -1;
 			var colors = ["#49a0d8", "#d353a0", "#ffc527", "#df4c27","#34cb34","7127df"]; //add more colors
             var iframeStyle = "<style>";
             iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -550,63 +552,194 @@
 		    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
 		    }
 		    
-		    function test_func() {
-		    	//document.getElementById("sendBttn").disabled = true;		    
+		    function test_func() {		    			    
 		    	document.getElementById("sendBttn").disabled = false;		    	
 		    }
 		    
-		    function showEditPanel(obj) {				
-		    	var id = obj.getAttribute("_comtIndex");		    	
-		    	document.getElementById(id).style.display = "block";		    	
-		    	document.addEventListener("click", function handleClick(e){
-		    		console.log("Clicked outside!");		    									
+		    function showEditPanel(obj) {					    	
+		    	if (flagEvent != -1) {					
+		    		document.getElementById("editComt" + flagEvent).style.display = "none";
+		    	}	
+		    	
+		    	var id = obj.getAttribute("_comtIndex");
+		    	
+		    	if (flagEvent == id.slice(8)){
+		    		flagEvent = -1;
+					return;
+		    	}
+		    	flagEvent = id.slice(8);	    	
+		    	document.getElementById(id).style.display = "block";	
+		    	
+		    	document.addEventListener("click", function handleClick(e){		    									
 			    	document.getElementById(id).style.display = "none"; 	
 			    	document.removeEventListener("click", handleClick);
+			    	flagEvent = -1;
 		    	});	   	
 		    }		    
 		    
+		    function deleteFileInCmt () {		    	
+		    	document.getElementById("descriptCmt" + currentEditingCmt).style.display = "none";
+		    	if (document.getElementById("descriptCmt" + currentEditingCmt).childElementCount == 3) {
+		    		document.getElementById("descriptCmt" + currentEditingCmt).lastElementChild.innerHTML = "";
+		    	}
+		    	document.getElementById("toolCmt" + currentEditingCmt).style.display = "block";	
+		    }
+		    
 		    function editComment(obj) {
-		    	console.log("Run in edit Comment function!");
+		    	if (currentEditingCmt != -1) {
+		    		var cancelObj = document.getElementById("clA1cmt" + currentEditingCmt);
+		    		cancelEditComment(cancelObj);
+		    	}
+		    	
+		    	document.getElementById("sendComment").style.display = "none";	
 		    	var id = obj.getAttribute("_comtIndex");
-		    	//document.getElementById(id).style.display = "none";
-		    	var div2CmtId = "div2Cmt" + id.slice(-1);
-		    	var div2Cmt = document.getElementById(div2CmtId);
+		    	currentEditingCmt = id.slice(8);
+		    	document.getElementById("_eCmt" + id.slice(8)).style.display = "none";	    		    	
+		    	var div2Cmt = document.getElementById("div2Cmt" + id.slice(8));
+		    	div2Cmt.style.display = "none";	
+		    	var nChilds = div2Cmt.childElementCount;		    	
+		    	var editDiv2Cmt = document.getElementById("editCmtDiv" + id.slice(8));	    	
+		    	var innerDiv1 = document.createElement("div");
+		    	innerDiv1.setAttribute("style", "display: inline-block;");		    	
+		    	var innerDiv2 = document.createElement("div");	
+		    	innerDiv2.setAttribute("id", "descriptCmt" + id.slice(8));
+		    	innerDiv2.setAttribute("style", "display: none;  padding-left: 10px; position: relative;");	
+		    	var innerDiv3 = document.createElement("div");	
+		    	innerDiv3.setAttribute("style", "padding-top: 10px;");			    	
+		    	editDiv2Cmt.appendChild(innerDiv1);
+		    	editDiv2Cmt.appendChild(innerDiv2);
+		    	
+		    	//Inner div 2
+		    	var imgForInnerDiv2 = document.createElement("img"); 
+		    	imgForInnerDiv2.setAttribute("id", "editPreviewImg" + id.slice(8));
+		    	imgForInnerDiv2.setAttribute("style", "display: block; height: 60px; width: 60px; ");	    	
+		    	innerDiv2.appendChild(imgForInnerDiv2);
+		    	
+		    	
+		    	//Copy text comment
+		    	var innInnerDiv1 = document.createElement("div");
+		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #b6b6b6;padding-left: 0px;margin-left: 7px; width: 500px;");
+		    	var editTxtArea = document.createElement("textarea");
+		    	editTxtArea.setAttribute("id", "editCmtArea" + id.slice(8));
+		    	editTxtArea.setAttribute("cols", "20");
+		    	editTxtArea.setAttribute("rows", "1");
+		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding-left: 5px; width: 90%;");
+		    	editTxtArea.onkeyup =  function () { editAutoGrow(this); }	
+		    	
+		    	innInnerDiv1.appendChild(editTxtArea);		
+		    	innerDiv1.appendChild(innInnerDiv1);	
+		    	
+	    		var innInnerDiv2 = document.createElement("div");
+	    		innInnerDiv2.setAttribute("style", "display: none; float:left;");
+	    		innInnerDiv2.setAttribute("id", "toolCmt" + id.slice(8));
+	    		var divFile = document.getElementById("_addFile");
+	    		var divSticker = document.getElementById("_stickerArea");
+	    		var cloneOfDivFile = divFile.cloneNode(true);
+	    		var cloneOfDivSticker = divSticker.cloneNode(true);
+	    		innInnerDiv2.appendChild(cloneOfDivFile);
+	    		innInnerDiv2.appendChild(cloneOfDivSticker);
+	    		innerDiv1.appendChild(innInnerDiv2);
+		    	
+		    	//Copy file or sticker
+		    	if (nChilds == 1) {		    		
+		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
+		    			console.log("There is only text comment!");
+			    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML;
+			    		innInnerDiv2.style.display = "block";
+			    	}
+		    		else {
+		    			console.log("There is only file/sticker comment!");
+		    			innInnerDiv2.style.display = "none";		    			
+		    			imgForInnerDiv2.src = div2Cmt.firstElementChild.firstElementChild.src;
+		    			innerDiv2.style.display = "block";		    					    			
+		    			
+		    			//Add delete image
+		    			var cancelImgForInnerDiv2 = document.createElement("img"); 
+		    			cancelImgForInnerDiv2.src = "/images/close.png";
+		    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute;");
+		    			cancelImgForInnerDiv2.onclick = function () { deleteFileInCmt(); };
+		    			innerDiv2.appendChild(cancelImgForInnerDiv2);
+		    			
+		    			var fileType = div2Cmt.firstElementChild.firstElementChild.getAttribute("_type");	
+		    			
+		    			if (fileType == "file") {
+							var nameDiv = document.createElement("div");
+							nameDiv.innerHTML = div2Cmt.firstElementChild.lastElementChild.innerHTML;														
+							innerDiv2.appendChild(nameDiv);
+		    			}
+		    		}
+
+		    	}
+		    	else {
+		    		console.log("There are both text and files/stickers comments!");
+		    		innInnerDiv2.style.display = "none";
+		    		//Copy file/sticker to an div then add delete image in the file/sticker
+		    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML;
+		    		imgForInnerDiv2.src = div2Cmt.lastElementChild.firstElementChild.src;
+		    		innerDiv2.style.display = "block";
+		    			
+	    			//Add delete image
+	    			var cancelImgForInnerDiv2 = document.createElement("img"); 
+	    			cancelImgForInnerDiv2.src = "/images/close.png";
+	    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+	    			cancelImgForInnerDiv2.onclick = function () { deleteFileInCmt(); };
+	    			innerDiv2.appendChild(cancelImgForInnerDiv2);
+	    			
+	    			var fileType = div2Cmt.lastElementChild.firstElementChild.getAttribute("_type");
+	    			
+	    			if (fileType == "file") {
+						var nameDiv = document.createElement("div");
+						nameDiv.innerHTML = div2Cmt.lastElementChild.lastElementChild.innerHTML;												
+						innerDiv2.appendChild(nameDiv);
+	    			}
+
+		    	}		    		    	    	
+		    	
+		    	//Inner div 3
 		    	var tagA1 = document.createElement("a"); 
 		    	tagA1.innerHTML = "Cancel";
-		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(-1));
-		    	tagA1.setAttribute("_cmtIndex", id.slice(-1));
+		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(8));
+		    	tagA1.setAttribute("_cmtIndex", id.slice(8));
 		    	tagA1.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
 		    	tagA1.onclick = function (event) { event.stopPropagation(); cancelEditComment(this); };
 		    	
 		    	var tagA2 = document.createElement("a");		    	
 		    	tagA2.innerHTML = "Save";
-		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(-1));
+		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(8));
 		    	tagA2.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
-		    	tagA2.setAttribute("_cmtIndex", id.slice(-1));
+		    	tagA2.setAttribute("_cmtIndex", id.slice(8));
 		    	tagA2.onclick = function (event) { event.stopPropagation(); saveEditComment(this); };
-		    	div2Cmt.appendChild(tagA1);
-		    	div2Cmt.appendChild(tagA2);
-		    	var cmtAreaId = "cmtArea" + id.slice(-1);
-		    	var cmtArea = document.getElementById(cmtAreaId);
-		    	cmtArea.readOnly = false;
-		    	cmtArea.focus();
+		    	innerDiv3.appendChild(tagA1);
+		    	innerDiv3.appendChild(tagA2);
+		    	
+		    	editDiv2Cmt.appendChild(innerDiv3);
+		    	editDiv2Cmt.style.display = "inline-block";	
+		    	editTxtArea.focus(); 
 		    }
 		    
 		    function cancelEditComment(obj){
 		    	var commentIndex = obj.getAttribute("_cmtIndex");
 		    	var div2Cmt = document.getElementById("div2Cmt" + commentIndex);
-		    	div2Cmt.removeChild(div2Cmt.lastElementChild);
-		    	div2Cmt.removeChild(div2Cmt.lastElementChild);
-		    	document.getElementById("cmtArea" + commentIndex).readOnly = true;
+		    	div2Cmt.style.display = "inline-block";
+		    	var editDiv2Cmt = document.getElementById("editCmtDiv" + commentIndex);
+		    	while (editDiv2Cmt.hasChildNodes()) {
+		    		editDiv2Cmt.removeChild(editDiv2Cmt.lastChild);
+		    	}
+		    	editDiv2Cmt.style.display = "none";	
+		    	document.getElementById("sendComment").style.display = "block";	
+		    	document.getElementById("_eCmt" + commentIndex).style.display = "block";
+		    	currentEditingCmt = -1;
 		    }
 		    
 		    function saveEditComment(obj){
 		    	console.log("Run in save edit comment!");
+		    	currentEditingCmt = -1;
 		    	//Create a post request to update comment
 		    }
 		    
 		    function deleteComment(obj) {
 		    	console.log("Run in delete Comment function!");
+		    	//currentEditingCmt = -1;
 		    	var id = obj.getAttribute("_comtIndex");
 		    	//document.getElementById(id).style.display = "none";
 		    	if (confirm("<spring:message code = 'ezPoll.t207' />")) { 
@@ -621,17 +754,14 @@
 		    }
 		    
 		    function sendComment() {		    	
-		    	document.getElementById("sendBttn").disabled = true;		    	
- 		    	//Create table comment element if not exist
-		    	startComment();
- 		    	
-		    	var currentText = document.getElementById("comment_input").value;		    	
- 		    	
+		    	document.getElementById("sendBttn").disabled = true;		    		    		    		    	
+		    	var currentText = document.getElementById("comment_input").value;		    			    	
 		    	var oTable = document.getElementById("commentListView");
 		    	//create the Tr field
 		    	objTr = document.createElement("tr");
 		    	objTr.setAttribute("style", "border-bottom: 1px solid #b6b6b6");
 		    	
+		    	//Td1
 		    	var objTd = document.createElement("td");
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");  
                 objTd.style.paddingLeft  = "10px";
@@ -648,11 +778,17 @@
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);                          
                 
+                //Td2
                 var objTd2 = document.createElement("td");
+/*                 var parentDivForTd2 = document.createElement("div");   
+                parentDivForTd2.setAttribute("id", "parent1Div" + commentIndex);  */
                 var div1ForTd2 = document.createElement("div");
                 var div2ForTd2 = document.createElement("div");  
-                div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");  
+                var editDiv2ForTd2 = document.createElement("div");  
+                editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
+                editDiv2ForTd2.style.display = "none"; 
                 
+                div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUser;
                 div1ForTd2.setAttribute("style", "display: block; padding-left: 8px; padding-top: 10px; color: blue");       
@@ -665,22 +801,23 @@
                 	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 	div2ForTd2.appendChild(pForTd2);
+                	document.getElementById("hidCmtTxt").value = currentText;
                 }
                 
                 //Add file if exist
-                var uploadFileElement = document.getElementById("uploadedFile");
-		        if (uploadFileElement.hasChildNodes()) {		        	
+                var uploadFileElement = document.getElementById("uploadedFile");            
+		        if (uploadFileElement.style.display !== "none") {		        	
 		        	var img2ForUpFileElmt = uploadFileElement.lastElementChild;
 		        	var fileinfo = img2ForUpFileElmt.getAttribute("_fileInfo");	
 		        	var fileType = img2ForUpFileElmt.getAttribute("_type");	
 			    	var orgFileName = "";	
 			    	
 			    	if (fileType == "file") {
-			    		orgFileName = fileinfo.split("/")[1]; 
+			    		orgFileName = fileinfo.split("/")[1];  		
 			    	}
 			    	else {
 			    		orgFileName = fileinfo.split("/")[4];
-			    	}
+			    	}			    	
 			    	
 			    	var ext = orgFileName.split('.').pop().toLowerCase();
 			    	var innerDiv1 = document.createElement("div");	
@@ -692,23 +829,29 @@
 			    	
 			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {		   	
 				    	if (fileType == "file") {
+				    		document.getElementById("hidCmtType").value = "image";
 					    	imgForinnerDiv1.setAttribute("height", "60");
 					    	imgForinnerDiv1.setAttribute("width", "60");
-				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];		
+					    	imgForinnerDiv1.setAttribute("_type", "image");
+				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];				    		
 				    	}
 				    	else {
+				    		document.getElementById("hidCmtType").value = "sticker";
 				    		imgForinnerDiv1.setAttribute("height", "80");
 					    	imgForinnerDiv1.setAttribute("width", "80");
+					    	imgForinnerDiv1.setAttribute("_type", "sticker");
 				    		imgForinnerDiv1.src = fileinfo;
 				    	}
-				    			    	
+		    			    	
 			    		innerDiv1.appendChild(imgForinnerDiv1);
 			    		div2ForTd2.appendChild(innerDiv1);
 			    	}
 			    	else {
-				    	imgForinnerDiv1.setAttribute("height", "30");
+			    		document.getElementById("hidCmtType").value = "file";
+			    		imgForinnerDiv1.setAttribute("height", "30");
 				    	imgForinnerDiv1.setAttribute("width", "30");
-				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;"); 
+				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+				    	imgForinnerDiv1.setAttribute("_type", "file");
 				    	
 				    	if (ext == "doc" || ext == "docx"){
 				    		imgForinnerDiv1.src = "/images/msWord.png";
@@ -730,16 +873,24 @@
 			    		div2ForTd2.appendChild(innerDiv1);
 			    		var innerDiv2 = document.createElement("div");
 			    		innerDiv2.innerHTML = fileinfo.split("/")[1];
-			    		innerDiv2.setAttribute("style", "cursor: pointer;"); 
-			    		div2ForTd2.appendChild(innerDiv2);
+			    		innerDiv2.setAttribute("style", "cursor: pointer;"); 		    		
+			    		innerDiv1.appendChild(innerDiv2);
 			    	}			    	
-		        }
-                
+		        }               
+		        
                 objTd2.appendChild(div1ForTd2);
                 objTd2.appendChild(div2ForTd2);
+                objTd2.appendChild(editDiv2ForTd2);
                 objTr.appendChild(objTd2);
                 
+                //Td3
                 var objTd3 = document.createElement("td");
+                objTd3.setAttribute("style", "width: 145px; position: relative;");                
+                var fistChildForTd3 = document.createElement("div");
+                fistChildForTd3.setAttribute("style", "position: absolute; top:10px;");     
+                fistChildForTd3.innerHTML = new Date().toLocaleString();
+                objTd3.appendChild(fistChildForTd3);                
+                
                 var imagForTd3 = document.createElement("img");                
                 imagForTd3.src = "/images/option3.png";
                 imagForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);
@@ -752,20 +903,19 @@
                 objTd3.appendChild(imagForTd3);
                 
                 var div1ForTd3 = document.createElement("div");
-                div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; margin-top: -14px; margin-right: 3px; width: 120px;");
+                div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;");
                 div1ForTd3.setAttribute("id", "editComt" + commentIndex);
                 div1ForTd3.setAttribute("tabindex", "0");        
                 var innerDiv1ForTd3 = document.createElement("div");
+                innerDiv1ForTd3.setAttribute("id", "_eCmt" + commentIndex);
                 innerDiv1ForTd3.innerHTML = "Edit Comment";
                 innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
                 innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
-                //innerDiv1ForTd3.onclick = function (event) { event.stopPropagation(); editComment(this); };
                 innerDiv1ForTd3.onclick = function (event) { editComment(this); };
-                var innerDiv2ForTd3 = document.createElement("div");
+                var innerDiv2ForTd3 = document.createElement("div");                
                 innerDiv2ForTd3.innerHTML = "Delete Comment";
                 innerDiv2ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);  
-                innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
-                //innerDiv2ForTd3.onclick = function (event) { event.stopPropagation(); deleteComment(this); };
+                innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");         
                 innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
                 div1ForTd3.appendChild(innerDiv1ForTd3);
                 div1ForTd3.appendChild(innerDiv2ForTd3);
@@ -776,19 +926,15 @@
                 commentIndex = commentIndex + 1;
                 
                 //Clean the place
-                document.getElementById("comment_input").value = "";
+                document.getElementById("comment_input").value = "";          
 		        document.getElementById("uploadedFile").style.display = "none"; 	            
 		        window.scrollTo(0,document.body.scrollHeight);
-		    }
-		    
-		    function startComment() {
-		    	var oTable = document.getElementById("commentListView");
-		    	if (oTable == null) {
-		    		oTable = document.createElement("TABLE");
-		    	    oTable.style.width = "100%";
-		    	    oTable.id = "commentListView";		    	    
-		    	}		    	
-		        document.getElementById("commentArea").appendChild(oTable); 
+		        
+		        //Send comment information to server
+		        document.getElementById("hidQst").value = qstId;
+		        document.getElementById("hidCmtTime").value = fistChildForTd3.innerHTML;  
+		        document.getElementById("hidCmtAttach").value = imgForinnerDiv1.src;
+		        document.frmCreate.submit();
 		    }
 		    
 		    function uploadFileCmt() {		    	
@@ -827,14 +973,41 @@
 		        var xml = loadXMLString(strXML); 	        	        
 		    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		    	
 		    	var orgFileName = fileinfo.split("/")[1];		 	    	
-		    	var _ext = orgFileName.split('.').pop().toLowerCase();		    	
-		    	document.getElementById("uploadedFile").style.display = "inline-block";
-		    	var imagePreview = document.getElementById("previewImage");
-		    	var cancelPreview = document.getElementById("cancelImg");
-		    	cancelPreview.setAttribute("_fileInfo", fileinfo);
-		    	cancelPreview.setAttribute("_type", "file");
-		    	imagePreview.setAttribute("_fileInfo", fileinfo);
-		    	imagePreview.setAttribute("_type", "sticker");
+		    	var _ext = orgFileName.split('.').pop().toLowerCase();		 
+		    	var imagePreview = null;
+		    	if (document.getElementById("sendComment").style.display !== "none") {			    	
+			    	document.getElementById("uploadedFile").style.display = "inline-block";
+			    	imagePreview = document.getElementById("previewImage");
+			    	var cancelPreview = document.getElementById("cancelImg");
+			    	cancelPreview.setAttribute("_fileInfo", fileinfo);
+			    	cancelPreview.setAttribute("_type", "file");
+			    	imagePreview.setAttribute("_fileInfo", fileinfo);			    	   	  		
+			    	document.getElementById("sendBttn").disabled = false;
+		    	}
+		    	else {
+		    		//Editing situation
+		    		imagePreview = document.getElementById("editPreviewImg" + currentEditingCmt);	    		    				    		
+		    		var childElmNumber = imagePreview.parentElement.childElementCount;
+		    		if (childElmNumber == 1) {
+		    			// Add cancel image
+		    			var cancelImg = document.createElement("img"); 
+		    			cancelImg.src = "/images/close.png";
+		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+		    			cancelImg.onclick = function () { deleteFileInCmt(); };
+		    			imagePreview.parentElement.appendChild(cancelImg);
+		    			
+						var nameDiv = document.createElement("div");
+						nameDiv.innerHTML = orgFileName;														
+						imagePreview.parentElement.appendChild(nameDiv);			    		
+		    		}
+		    		else {
+		    			imagePreview.parentElement.lastElementChild.innerHTML = orgFileName;
+		    		}	   
+		    		imagePreview.parentElement.style.display = "block";	
+		    	}
+		    	
+		    	imagePreview.setAttribute("_type", "file");	
+		    	
 		    	if (_ext == "jpg" || _ext == "png" || _ext == "bmp") {		    	    	             
 		    		imagePreview.src = "/files/commentImages/" + fileinfo.split("/")[0];
 		    	}
@@ -852,8 +1025,8 @@
 		    	}
 		    	else {
 		    		imagePreview.src = "/images/cmtFile.png";
-		    	}	   	  		
-		    	document.getElementById("sendBttn").disabled = false;
+		    	}
+
 		    }
 		    
 		    function addFileComment() {
@@ -882,14 +1055,28 @@
 			        }  		        
 				}		    			        
 		        //Hide uploadFile element
+		        var uploadFileElement = document.getElementById("uploadedFile");		        	       
 		        uploadFileElement.style.display = "none";
+		        if (document.getElementById("comment_input").value == "") {
+		        	document.getElementById("sendBttn").disabled = true;
+		        }
 		    }
 		    
-		    function auto_grow(element) {		    	
-		    	document.getElementById("sendBttn").disabled = false;
+		    function auto_grow(element) {
+				if (element.value == "" && document.getElementById("uploadedFile").style.display == "none") {
+					document.getElementById("sendBttn").disabled = true;
+				}
+				else {
+			    	document.getElementById("sendBttn").disabled = false;
+			        element.style.height = "5px";
+			        element.style.height = (element.scrollHeight)+"px";
+			        window.scrollTo(0,document.body.scrollHeight);
+				}
+		    }
+		    
+		    function editAutoGrow(element) {
 		        element.style.height = "5px";
-		        element.style.height = (element.scrollHeight)+"px";
-		        window.scrollTo(0,document.body.scrollHeight);
+		        element.style.height = (element.scrollHeight)+"px";		        
 		    }
 			
 		    function checkScrollBars() {		
@@ -933,23 +1120,42 @@
 		    	checkScrollBars();
 		    }
 		    
-		    function displaySticker(obj) {		    	
+		    function displaySticker(obj) {				    	
 		    	var style = obj.currentStyle || window.getComputedStyle(obj, false);
 		    	var bgImage = style.backgroundImage.slice(4, -1);
-		    	var actualUrl = bgImage.slice(bgImage.indexOf("/images/"), -1);		   	    	
-		    	console.log("current position: " + actualUrl);
+		    	var actualUrl = bgImage.slice(bgImage.indexOf("/images/"), -1);		   	    		    	
 		    	
 		    	//Close sticker picker
 		    	document.getElementById("emoticonPanel").style.display = "none";
-		    	//Add sticker in upload File
-		    	document.getElementById("uploadedFile").style.display = "inline-block";
-		    	var imagePreview = document.getElementById("previewImage");
-		    	var cancelPreview = document.getElementById("cancelImg");
-		    	cancelPreview.setAttribute("_type", "sticker");
-		    	imagePreview.setAttribute("_fileInfo", actualUrl);
-		    	imagePreview.setAttribute("_type", "sticker");
-		    	imagePreview.src = actualUrl;
-		    	document.getElementById("sendBttn").disabled = false;
+		    	
+		    	if (document.getElementById("sendComment").style.display !== "none") {
+			    	//Add sticker in upload File
+			    	document.getElementById("uploadedFile").style.display = "inline-block";
+			    	var imagePreview = document.getElementById("previewImage");
+			    	var cancelPreview = document.getElementById("cancelImg");
+			    	cancelPreview.setAttribute("_type", "sticker");
+			    	imagePreview.setAttribute("_fileInfo", actualUrl);
+			    	imagePreview.setAttribute("_type", "sticker");
+			    	imagePreview.src = actualUrl;
+			    	document.getElementById("sendBttn").disabled = false;
+		    	}
+		    	else {
+		    		//Editing situation
+		    		var editPreviewTag = document.getElementById("editPreviewImg" + currentEditingCmt);
+		    		editPreviewTag.setAttribute("_type", "sticker");
+		    		editPreviewTag.src = actualUrl;
+		    		var childElmNumber = editPreviewTag.parentElement.childElementCount;
+		    		if (childElmNumber == 1) {
+		    			// Add cancel image
+		    			var cancelImg = document.createElement("img"); 
+		    			cancelImg.src = "/images/close.png";
+		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+		    			cancelImg.onclick = function () { deleteFileInCmt(); };
+		    			editPreviewTag.parentElement.appendChild(cancelImg);
+		    		}
+		    		editPreviewTag.parentElement.style.display = "block";
+		    	}
+
 		    }
 		    
 		    function processGroupStickers() {				
@@ -1003,7 +1209,7 @@
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
 	<body class="mainbody"  id="mainbodytag">
-		<form method="post">
+		<!-- <form method="post"> -->
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden;">
 				  <div style="float: left; display: block;width:300px;">
@@ -1140,14 +1346,18 @@
 					<img src="/images/verified.png" style="height:15px; width:15px; float:left; display:block; padding-top: 14px;padding-left: 5px; cursor: pointer;">				
 					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;">투표 종료</div>
 				</div> 
-			</c:if>		
+			</c:if>
+		<!-- </form> -->
+		<!-- <form id="frmCreate" method="post" action="/ezPoll/commentAdd.do" name="frmCreate">	 -->	
 			<div id="commentArea" style="">
+				<table style="width: 100%;" id="commentListView">
+				</table>
 			</div>
 			<div id="sendComment" style="padding-top: 20px;">
 				<div style="float:left; display:block;">
 					<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px; cursor: pointer;" onclick="addFileComment()">
 				</div>
-				<div style="float:left; display:block;">					
+				<div id ="_stickerArea" style="float:left; display:block;">					
 					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-right: -400px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
 						<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
 							<div style="float:left; display:block;">
@@ -1404,16 +1614,23 @@
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;"  onkeyup="auto_grow(this)"></textarea>
 				</div>
 				<div style="float:left; display:block; width: 60px;">
-					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B">
-						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
+					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
+						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer;  z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
 					</div>	
 					<button id="sendBttn" style="display:inline-block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
 				</div>
 				
 			</div>
-			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 		
-			
+			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 
+		<form id="frmCreate" method="post" action="/ezPoll/commentAdd.do" name="frmCreate">	
+			<div style="display:none">	
+				<input type="text" name="hidCmtTime" id="hidCmtTime" style="display:none"> 
+                <input type="text" name="hidCmtTxt" id="hidCmtTxt" style="display:none" value="">
+                <input type="text" name="hidCmtType" id="hidCmtType" style="display:none">	
+                <input type="text" name="hidCmtAttach" id="hidCmtAttach" style="display:none" value="">
+                 <input type="text" name="hidQst" id="hidQst" style="display:none">
+			</div>
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
 	</body>
