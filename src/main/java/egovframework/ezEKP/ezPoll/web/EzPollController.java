@@ -281,6 +281,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("totalQuestions", totalQuestions);
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("userID", loginVO.getId());
+		model.addAttribute("tenantID", loginVO.getTenantId());
 		model.addAttribute("strSearch", searchStr);		
 		model.addAttribute("seeCheck", seeAll);
 		model.addAttribute("deleteBttn", checkingArray[0]);
@@ -444,7 +445,7 @@ public class EzPollController extends EgovFileMngUtil {
 				pollQstStatusVO.setQustId(qstId);	
 				ezPollService.insertSeenQuestion(pollQstStatusVO);
 				totalSeenUsers = totalSeenUsers + 1;
-				getUpdateSeenRequests(totalSeenUsers);
+				getUpdateSeenRequests(totalSeenUsers, qstId, loginVO.getTenantId());
 			}
 		}		
 		
@@ -574,11 +575,11 @@ public class EzPollController extends EgovFileMngUtil {
 		return "/ezPoll/questionVote";
 	}		
 	
-	public void getUpdateSeenRequests(int totalSeenUpdated) throws Exception{	
+	public void getUpdateSeenRequests(int totalSeenUpdated, int qstId, int tenantId) throws Exception{	
 		String result = "{\"updatedNumber\":\"" + Integer.toString(totalSeenUpdated) + "\"}";
 		JSONParser parser = new JSONParser(); 
 		JSONObject json = (JSONObject) parser.parse(result);
-		this.template.convertAndSend("/reply/getSeenUpdate", json); 
+		this.template.convertAndSend("/reply/getSeenUpdateForQst" + qstId + "+" + tenantId, json); 
 		//this.template.convertAndSend("/reply/getSeenUpdate", new Message(Integer.toString(totalSeenUpdated))); 	
 	}
 	
@@ -774,6 +775,14 @@ public class EzPollController extends EgovFileMngUtil {
 		try {
 			//Insert into comment table
 			ezPollService.insertCmt(pollCmtVO);
+			
+			//Inform all waiting users
+			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
+					+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\"}";
+			JSONParser parser = new JSONParser(); 
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/addCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
+			
 			//Update comment user in question related table
 			strXML = "<DATA>OK</DATA>";
 		}
@@ -1192,7 +1201,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String result = "{\"result\":\"CHANGED\", \"userId\":\"" + userId + "\"}";
 		JSONParser parser = new JSONParser(); 
 		JSONObject json = (JSONObject) parser.parse(result);
-		this.template.convertAndSend("/reply/editQst" + qstId, json);
+		this.template.convertAndSend("/reply/editQst" + qstId + "+" + tenantId, json);
 	}
 		
 	@MessageMapping("/finish")
@@ -1217,7 +1226,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String result = "{\"result\":\"OK\"}";		
 		JSONParser parser = new JSONParser(); 
 		JSONObject json = (JSONObject) parser.parse(result);
-		this.template.convertAndSend("/reply/finishVoteForQst" + qstId, json);
+		this.template.convertAndSend("/reply/finishVoteForQst" + qstId + "+" + tenantId, json);
 	}
 	
 	@RequestMapping(value = "/ezPoll/showSeenUserInfo.do")
@@ -1257,7 +1266,7 @@ public class EzPollController extends EgovFileMngUtil {
 		try {
 			ezPollService.addAnswerAndUser(pollUserAnswer);
 			ezPollService.updateNumberOfVotesForAnswer(pollUserAnswer, 1);
-			getUpdateVotes(pollUserAnswer.getAnsId(), pollUserAnswer.getQstId(), pollUserAnswer.getUserId(), pollUserAnswer.getUserName(), 1);
+			getUpdateVotes(pollUserAnswer.getAnsId(), pollUserAnswer.getQstId(), pollUserAnswer.getUserId(), pollUserAnswer.getUserName(), 1, pollUserAnswer.getTenantId());
 			strXML = "<RESULT>ADD_OK</RESULT>";
 		}
 		catch (Exception e){
@@ -1272,7 +1281,7 @@ public class EzPollController extends EgovFileMngUtil {
 		try {
 			ezPollService.removeAnswerAndUser(pollUserAnswer);	
 			ezPollService.updateNumberOfVotesForAnswer(pollUserAnswer, -1);
-			getUpdateVotes(pollUserAnswer.getAnsId(), pollUserAnswer.getQstId(), pollUserAnswer.getUserId(), pollUserAnswer.getUserName(), 0);
+			getUpdateVotes(pollUserAnswer.getAnsId(), pollUserAnswer.getQstId(), pollUserAnswer.getUserId(), pollUserAnswer.getUserName(), 0, pollUserAnswer.getTenantId());
 			strXML = "<RESULT>REMOVE_OK</RESULT>";
 		}
 		catch (Exception e){
@@ -1282,11 +1291,11 @@ public class EzPollController extends EgovFileMngUtil {
 		return strXML;
 	}
 	
-	public void getUpdateVotes(int optId, int qstId, String userId, String userName, int mode) throws Exception{	
+	public void getUpdateVotes(int optId, int qstId, String userId, String userName, int mode, int tenantId) throws Exception{	
 		String result = "{\"optionId\":\"" + Integer.toString(optId) + "\", \"mode\":\"" + Integer.toString(mode) + "\", \"userId\":\"" + userId + "\",\"userName\":\"" + userName + "\"}";
 		JSONParser parser = new JSONParser(); 
 		JSONObject json = (JSONObject) parser.parse(result);
-		this.template.convertAndSend("/reply/getResultUpdateForQst" + qstId, json); 
+		this.template.convertAndSend("/reply/getResultUpdateForQst" + qstId + "+" + tenantId, json); 
 	}
 	
 	public int getQuestionSeq(int tenantID) throws Exception {
@@ -1523,8 +1532,8 @@ public class EzPollController extends EgovFileMngUtil {
 				JSONParser parser = new JSONParser(); 
 				JSONObject json = (JSONObject) parser.parse(result);
 				JSONObject json2 = (JSONObject) parser.parse(result2);
-				this.template.convertAndSend("/reply/deleteQst" + qstId, json);
-				this.template.convertAndSend("/reply/qstDelete", json2);
+				this.template.convertAndSend("/reply/deleteQst" + qstId + "+" + loginVO.getTenantId(), json);
+				this.template.convertAndSend("/reply/qstDeleteForTenant" + loginVO.getTenantId(), json2);
 			}
 			strXML = "<DATA>DELETE_OK</DATA>";
 		}

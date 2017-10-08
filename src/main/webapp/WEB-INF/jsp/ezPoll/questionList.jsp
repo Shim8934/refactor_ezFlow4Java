@@ -38,6 +38,7 @@
 			var hideBttn 		  = "<c:out value='${hideBttn}'/>";
 			var checkedArr		  = [];					
 			var chkDelete		  = 0;
+			var tenantId		  =  "<c:out value='${tenantID}'/>";
 			var admin = "<c:out value='${adminPrivilege}'/>";	
 			var stompClient = null;
 		    
@@ -57,7 +58,7 @@
 			    var socket = new SockJS('/ezFlow/hello');
 			    stompClient = Stomp.over(socket);
 			    stompClient.connect({}, function (frame) {
-			        stompClient.subscribe('/reply/qstDelete', function (updatedInfo) {			       
+			        stompClient.subscribe('/reply/qstDeleteForTenant' + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 						if (ret == "DELETED"){
 							//reload page

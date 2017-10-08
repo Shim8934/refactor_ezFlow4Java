@@ -25,7 +25,8 @@
 			var secretVote = "<c:out value='${question.secretVote}'/>";
 			var totalVotes = parseInt("<c:out value='${totalVotes}'/>");
 			var s_Users = "<c:out value='${seenUsers}'/>";
-			var qstId = "<c:out value='${question.qstId}'/>";	
+			var qstId = "<c:out value='${question.qstId}'/>";
+			var tenantId = "<c:out value='${question.tenantId}'/>";
 			var curentUser = "<c:out value='${curentUser}'/>";
 			var curentUserName = "<c:out value='${curentUserName}'/>";
 			var numberOfSelected = 0;
@@ -113,8 +114,7 @@
 						document.getElementById("_editVote").style.display = "none";
 					}
 				}	
-				else {
-					//console.log("Poll is running! SeeResultBeforVote: " + seeResultBeforVote);
+				else {				
 					if (seeResultBeforVote != 1) {
 						for (var i = 0; i < numberOptions; i++) {
 							var _optId = votesArr[i][0];
@@ -254,7 +254,7 @@
 			    var socket = new SockJS('/ezFlow/hello');
 			    stompClient = Stomp.over(socket);			
 			    stompClient.connect({}, function (frame) {		        			    
-			    	stompClient.subscribe('/reply/getSeenUpdate', function (updatedInfo) {
+			    	stompClient.subscribe('/reply/getSeenUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
 			        //stompClient.subscribe('/app/getSeenUpdate', function (updatedInfo) {
 		        	var ret = JSON.parse(updatedInfo.body).updatedNumber;
 		        	
@@ -269,7 +269,7 @@
 					    }
 			        });
 			        
-			        stompClient.subscribe('/reply/finishVoteForQst' + qstId, function (updatedInfo) {			       
+			        stompClient.subscribe('/reply/finishVoteForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	console.log("Vote is changing!");
 				            if (ret == "OK") {
@@ -278,7 +278,7 @@
 						    }
 				    });
 			        
-			        stompClient.subscribe('/reply/editQst' + qstId, function (updatedInfo) {			       
+			        stompClient.subscribe('/reply/editQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	var user = JSON.parse(updatedInfo.body).userId;			        	
 				            if (ret == "CHANGED" && user != curentUser) {
@@ -288,7 +288,7 @@
 						    }
 				    });
 			        
-			        stompClient.subscribe('/reply/deleteQst' + qstId, function (updatedInfo) {			       
+			        stompClient.subscribe('/reply/deleteQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 			        	var user = JSON.parse(updatedInfo.body).userId;	
 				            if (ret == "DELETED" && user != curentUser) {
@@ -298,7 +298,17 @@
 						    }
 				    });
 			        
-			        stompClient.subscribe('/reply/getResultUpdateForQst' + qstId, function (updatedInfo) {
+			        stompClient.subscribe('/reply/addCmtForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
+			        	var ret = JSON.parse(updatedInfo.body).result;	
+			        	var user = JSON.parse(updatedInfo.body).userId;	
+				            if (ret == "DELETED" && user != curentUser) {
+								//console.log("Vote is deleted!");
+								alert(user + " deleted the vote! The vote is not longer exist!");
+				            	document.location.href = "/ezPoll/pollList.do?brdID=6";
+						    }
+				    });
+			        
+			        stompClient.subscribe('/reply/getResultUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
 			        	var optId = JSON.parse(updatedInfo.body).optionId;			        	
 			        	var mode = JSON.parse(updatedInfo.body).mode;
 			        	var user = JSON.parse(updatedInfo.body).userId;
