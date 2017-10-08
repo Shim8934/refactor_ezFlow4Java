@@ -755,6 +755,7 @@
 		    
 		    function sendComment() {		    	
 		    	var fd = new FormData();
+		    	commentIndex = commentIndex + 1;
 		    	document.getElementById("sendBttn").disabled = true;		    		    		    		    	
 		    	var currentText = document.getElementById("comment_input").value;		    			    	
 		    	var oTable = document.getElementById("commentListView");
@@ -873,7 +874,8 @@
 			    		innerDiv1.appendChild(innerDiv2);
 			    		fd.append("fileName", innerDiv2.innerHTML);
 			    		fd.append("filePath", fileinfo.split("/")[0]);
-			    	}			    	
+			    	}	
+			    	fd.append("cmtAttach", imgForinnerDiv1.src);
 		        }               
 		        
                 objTd2.appendChild(div1ForTd2);
@@ -920,8 +922,7 @@
                 objTd3.appendChild(div1ForTd3);
                 objTr.appendChild(objTd3);
                 
-                oTable.appendChild(objTr);
-                commentIndex = commentIndex + 1;
+                oTable.appendChild(objTr);                
                 
                 //Clean the place
                 document.getElementById("comment_input").value = "";          
@@ -935,8 +936,7 @@
 		        document.frmCreate.submit(); */	
 		        fd.append("qstId", qstId);
 		        fd.append("cmtId", commentIndex);
-		        fd.append("cmtTime", fistChildForTd3.innerHTML);
-		        fd.append("cmtAttach", imgForinnerDiv1.src);
+		        fd.append("cmtTime", fistChildForTd3.innerHTML);		        
 	    	    xhr1.open("POST", "/ezPoll/addComment.do");
 	    	    xhr1.send(fd); 		        
 		    }
@@ -1002,10 +1002,25 @@
 		    			
 						var nameDiv = document.createElement("div");
 						nameDiv.innerHTML = orgFileName;														
-						imagePreview.parentElement.appendChild(nameDiv);			    		
+						imagePreview.parentElement.appendChild(nameDiv);	
+						
+						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
+							var nameDiv = document.createElement("div");
+							nameDiv.innerHTML = orgFileName;	
+							imagePreview.parentElement.appendChild(nameDiv);							
+						}
+		    		}
+		    		else if (childElmNumber == 2) {
+						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
+							var nameDiv = document.createElement("div");
+							nameDiv.innerHTML = orgFileName;	
+							imagePreview.parentElement.appendChild(nameDiv);							
+						}
 		    		}
 		    		else {
-		    			imagePreview.parentElement.lastElementChild.innerHTML = orgFileName;
+						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
+							imagePreview.parentElement.lastElementChild.innerHTML = orgFileName;							
+						}		    			
 		    		}	   
 		    		imagePreview.parentElement.style.display = "block";	
 		    	}
@@ -1324,7 +1339,7 @@
 		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
 		               			<div style="float:left; display:none;width:80px; margin-left: 1px;" align="center" id="_tax${loop.index}">
 		               				<div style="float:left; display:block; padding-left: 5px; padding-top: 1.5px">모두보기</div>
-		               				<img src="/images/arrow_right.png" height="10px" width="10px" style="float:left; display:block; padding-top: 2.5px; padding-left: 10px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
+		               				<img src="/images/arrow_right.png" height="10px" width="10px" style="cursor: pointer; float:left; display:block; padding-top: 2.5px; padding-left: 10px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 		               			</div>
 		               		</div>          		
 		               </td>
@@ -1340,7 +1355,7 @@
 						<div style="overflow: hidden;display:inline-block;">
 							<div style="float:left; display:block; padding-top: 8px; padding-left: 35px;">미참여 인원:</div>
 							<div style="float:left; display:block; padding-top: 8px; padding-left: 20px;"><c:out value='${numberOfUnvotedUsers}'/></div>
-							<img src="/images/arrow_right.png" height="20px" width="20px" style="float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">
+							<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">
 						</div>
 					</td>					
 				</tr>
@@ -1383,12 +1398,13 @@
 							</td>
 							<td style="width: 145px; position: relative;">
 								<div style="position: absolute; top:10px;"><c:out value ="${_comt.cmtTime}" /></div>
-								<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
-								<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;" tabindex=0>							
-									<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);">Edit Comment</div>
-									<div style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);">Delete Comment</div>
-								</div>
-								
+								<c:if test="${_comt.userId == curentUser}">								
+									<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;" tabindex=0>							
+										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);">Edit Comment</div>
+										<div style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);">Delete Comment</div>
+									</div>
+								</c:if>
 							</td>
 						</tr>
 					</c:forEach>					

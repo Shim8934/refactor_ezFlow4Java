@@ -703,15 +703,20 @@ public class EzPollController extends EgovFileMngUtil {
 		String txtContent = "";
 		String fileType = "";		
 		int qstId = -1;
-		int cmtId = -1;
-		
+		int cmtId = -1;		
 		
 		qstId = Integer.parseInt(request.getParameter("qstId"));
 		cmtId = Integer.parseInt(request.getParameter("cmtId"));
-		attachFilePath = request.getParameter("cmtAttach");
-		cmtTime = request.getParameter("cmtTime");
-		fileType = request.getParameter("fileType");
-		int pos = attachFilePath.indexOf("/images/");
+		
+		cmtTime = request.getParameter("cmtTime");				
+		
+		if (request.getParameter("cmtAttach") != null) {
+			attachFilePath = request.getParameter("cmtAttach");
+		}
+		
+		if (request.getParameter("fileType") != null) {
+			fileType = request.getParameter("fileType");
+		}
 		
 		if (request.getParameter("fileName") != null) {
 			fileName = request.getParameter("fileName");
@@ -725,7 +730,7 @@ public class EzPollController extends EgovFileMngUtil {
 			txtContent = request.getParameter("cmtTxt");
 		}	
 		
-		if (qstId == -1 || cmtId == -1 || attachFilePath.equals("") || cmtTime.equals("") || fileType.equals("")) {
+		if (qstId == -1 || cmtId == -1 || cmtTime.equals("") ) {
 			strXML = "<DATA>FAIL</DATA>";
 			return strXML;
 		}
@@ -738,13 +743,14 @@ public class EzPollController extends EgovFileMngUtil {
 		pollCmtVO.setCmtTime(cmtTime);		
 		pollCmtVO.setTextContent(txtContent);
 		logger.debug("File Type = " + fileType);
+		
 		if (fileType.equals("sticker")) {		
-			pollCmtVO.setImageAttach(attachFilePath.substring(pos));
+			pollCmtVO.setImageAttach(attachFilePath.substring(attachFilePath.indexOf("/images/")));
 			pollCmtVO.setFileAttach("");
 			pollCmtVO.setFileName("");
 			pollCmtVO.setFilePath("");			
 		}
-		else {
+		else if (fileType.equals("file")) {
 			pollCmtVO.setImageAttach("");			
 			if (fileName.equals("")){
 				pollCmtVO.setFileAttach(attachFilePath.substring(attachFilePath.indexOf("/files/")));
@@ -752,10 +758,16 @@ public class EzPollController extends EgovFileMngUtil {
 				pollCmtVO.setFilePath("");
 			}
 			else {
-				pollCmtVO.setFileAttach(attachFilePath.substring(pos));
+				pollCmtVO.setFileAttach(attachFilePath.substring(attachFilePath.indexOf("/images/")));
 				pollCmtVO.setFileName(fileName);
 				pollCmtVO.setFilePath(filePath);
 			}		
+		}
+		else {
+			pollCmtVO.setImageAttach("");
+			pollCmtVO.setFileAttach("");
+			pollCmtVO.setFileName("");
+			pollCmtVO.setFilePath("");
 		}
 		
 		//Save comment to database 
