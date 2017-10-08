@@ -778,7 +778,8 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
-					+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\"}";
+					+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\","
+					+ " \"cmtTime\":\"" + cmtTime + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/addCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -787,6 +788,7 @@ public class EzPollController extends EgovFileMngUtil {
 			strXML = "<DATA>OK</DATA>";
 		}
 		catch (Exception e) {
+			logger.debug("BAONK _CHECK IN EXCEPTION!");
 			e.printStackTrace();
 			strXML = "<DATA>FAIL</DATA>";
 		}

@@ -256,7 +256,7 @@
 			    stompClient.connect({}, function (frame) {		        			    
 			    	stompClient.subscribe('/reply/getSeenUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
 			        //stompClient.subscribe('/app/getSeenUpdate', function (updatedInfo) {
-		        	var ret = JSON.parse(updatedInfo.body).updatedNumber;
+		        		var ret = JSON.parse(updatedInfo.body).updatedNumber;
 		        	
 			            if (ret != -1 && ret != s_Users) {
 					    	s_Users = ret;
@@ -272,40 +272,48 @@
 			        stompClient.subscribe('/reply/finishVoteForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	console.log("Vote is changing!");
-				            if (ret == "OK") {
-								console.log("Running here!");
-				            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
-						    }
+			            if (ret == "OK") {
+							console.log("Running here!");
+			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+					    }
 				    });
 			        
 			        stompClient.subscribe('/reply/editQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	var user = JSON.parse(updatedInfo.body).userId;			        	
-				            if (ret == "CHANGED" && user != curentUser) {
-								//console.log("Vote is deleted!");
-								alert(user + " is modifying the vote! Please wait!");
-				            	document.location.href = "/ezPoll/pollList.do?brdID=6";
-						    }
+			            if (ret == "CHANGED" && user != curentUser) {
+							//console.log("Vote is deleted!");
+							alert(user + " is modifying the vote! Please wait!");
+			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
+					    }
 				    });
 			        
 			        stompClient.subscribe('/reply/deleteQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 			        	var user = JSON.parse(updatedInfo.body).userId;	
-				            if (ret == "DELETED" && user != curentUser) {
-								//console.log("Vote is deleted!");
-								alert(user + " deleted the vote! The vote is not longer exist!");
-				            	document.location.href = "/ezPoll/pollList.do?brdID=6";
-						    }
+			            if (ret == "DELETED" && user != curentUser) {													
+			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
+					    }
 				    });
 			        
 			        stompClient.subscribe('/reply/addCmtForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
-			        	var ret = JSON.parse(updatedInfo.body).result;	
-			        	var user = JSON.parse(updatedInfo.body).userId;	
-				            if (ret == "DELETED" && user != curentUser) {
-								//console.log("Vote is deleted!");
-								alert(user + " deleted the vote! The vote is not longer exist!");
-				            	document.location.href = "/ezPoll/pollList.do?brdID=6";
-						    }
+			        	var _cmdId = JSON.parse(updatedInfo.body).cmId;	
+			        	var _userId = JSON.parse(updatedInfo.body).userId;	
+			        	var _attachFilePath = JSON.parse(updatedInfo.body).attachFilePath;
+			        	var _fileType = JSON.parse(updatedInfo.body).fileType;
+			        	var _fileName = JSON.parse(updatedInfo.body).fileName;
+			        	var _filePath = JSON.parse(updatedInfo.body).filePath;
+			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
+			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
+			        	//var _userId = JSON.parse(updatedInfo.body).userId;
+			            if (_userId != curentUser) {
+			          		console.log("_cmdId: " + _cmdId + ", CommentIndex: " + commentIndex);
+			            	if (_cmdId <= commentIndex) {
+			          			alert("Something is wrong!");
+			          			return;
+			          		}
+			            	updateNewCmt(_userId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime);
+					    }
 				    });
 			        
 			        stompClient.subscribe('/reply/getResultUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
@@ -673,8 +681,11 @@
 		    			var fileType = div2Cmt.firstElementChild.firstElementChild.getAttribute("_type");	
 		    			
 		    			if (fileType == "file") {
-							var nameDiv = document.createElement("div");
-							nameDiv.innerHTML = div2Cmt.firstElementChild.lastElementChild.innerHTML;														
+		    				imgForInnerDiv2.setAttribute("_fileInfo", div2Cmt.firstElementChild.firstElementChild.getAttribute("_fileInfo"));
+		    				var nameDiv = document.createElement("div");
+							nameDiv.innerHTML = div2Cmt.firstElementChild.lastElementChild.innerHTML;	
+							nameDiv.setAttribute("style", "padding-left: 6px;");
+							nameDiv.setAttribute("_fileInfo", div2Cmt.firstElementChild.firstElementChild.getAttribute("_fileInfo"));
 							innerDiv2.appendChild(nameDiv);
 		    			}
 		    		}
@@ -698,12 +709,14 @@
 	    			var fileType = div2Cmt.lastElementChild.firstElementChild.getAttribute("_type");
 	    			
 	    			if (fileType == "file") {
-						var nameDiv = document.createElement("div");
-						nameDiv.innerHTML = div2Cmt.lastElementChild.lastElementChild.innerHTML;												
+	    				imgForInnerDiv2.setAttribute("_fileInfo", div2Cmt.lastElementChild.firstElementChild.getAttribute("_fileInfo"));
+	    				var nameDiv = document.createElement("div");
+						nameDiv.innerHTML = div2Cmt.lastElementChild.lastElementChild.innerHTML;	
+						nameDiv.setAttribute("style", "padding-left: 6px;");
 						innerDiv2.appendChild(nameDiv);
 	    			}
 
-		    	}		    		    	    	
+		    	}	
 		    	
 		    	//Inner div 3
 		    	var tagA1 = document.createElement("a"); 
@@ -826,8 +839,7 @@
 			    	var ext = orgFileName.split('.').pop().toLowerCase();
 			    	var innerDiv1 = document.createElement("div");	
 			    	innerDiv1.setAttribute("style", "padding-top: 5px;");
-			    	var imgForinnerDiv1 = document.createElement("img");   
-			    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);              
+			    	var imgForinnerDiv1 = document.createElement("img");  	    	           
 			    	imgForinnerDiv1.setAttribute("vertical-align", "middle");
 			    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;"); 
 			    	
@@ -839,7 +851,8 @@
 					    	imgForinnerDiv1.setAttribute("height", "60");
 					    	imgForinnerDiv1.setAttribute("width", "60");	
 					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
-				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];				    		
+				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];	
+				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);   
 				    	}
 				    	else {
 				    		//document.getElementById("hidCmtType").value = "sticker";
@@ -847,6 +860,7 @@
 				    		imgForinnerDiv1.setAttribute("height", "80");
 					    	imgForinnerDiv1.setAttribute("width", "80");					    	
 				    		imgForinnerDiv1.src = fileinfo;
+				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);   
 				    	}
 		    			    	
 			    		innerDiv1.appendChild(imgForinnerDiv1);
@@ -859,6 +873,7 @@
 				    	imgForinnerDiv1.setAttribute("width", "60");
 				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 				    	imgForinnerDiv1.setAttribute("_type", "file");
+				    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]);   
 				    	
 				    	if (ext == "doc" || ext == "docx"){
 				    		imgForinnerDiv1.src = "/images/msWord.png";
@@ -880,7 +895,8 @@
 			    		div2ForTd2.appendChild(innerDiv1);
 			    		var innerDiv2 = document.createElement("div");
 			    		innerDiv2.innerHTML = fileinfo.split("/")[1];
-			    		innerDiv2.setAttribute("style", "cursor: pointer;"); 			    		
+			    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
+			    		innerDiv2.setAttribute("_fileInfo", fileinfo.split("/")[0]);   
 			    		innerDiv1.appendChild(innerDiv2);
 			    		fd.append("fileName", innerDiv2.innerHTML);
 			    		fd.append("filePath", fileinfo.split("/")[0]);
@@ -937,13 +953,9 @@
                 //Clean the place
                 document.getElementById("comment_input").value = "";          
 		        document.getElementById("uploadedFile").style.display = "none"; 	            
-		        window.scrollTo(0,document.body.scrollHeight);
+		        window.scrollTo(0, document.body.scrollHeight);
 		        
 		        //Send comment information to server
-/* 		        document.getElementById("hidQst").value = qstId;
-		        document.getElementById("hidCmtTime").value = fistChildForTd3.innerHTML;  
-		        document.getElementById("hidCmtAttach").value = imgForinnerDiv1.src;
-		        document.frmCreate.submit(); */	
 		        fd.append("qstId", qstId);
 		        fd.append("cmtId", commentIndex);
 		        fd.append("cmtTime", fistChildForTd3.innerHTML);		        
@@ -1009,27 +1021,32 @@
 		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
 		    			cancelImg.onclick = function () { deleteFileInCmt(); };
 		    			imagePreview.parentElement.appendChild(cancelImg);
-		    			
-						var nameDiv = document.createElement("div");
-						nameDiv.innerHTML = orgFileName;														
-						imagePreview.parentElement.appendChild(nameDiv);	
 						
 						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
+							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							var nameDiv = document.createElement("div");
-							nameDiv.innerHTML = orgFileName;	
+							nameDiv.innerHTML = orgFileName;
+							nameDiv.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							nameDiv.setAttribute("style", "padding-left: 6px;");
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
 		    		}
 		    		else if (childElmNumber == 2) {
 						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
+							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							var nameDiv = document.createElement("div");
 							nameDiv.innerHTML = orgFileName;	
+							nameDiv.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							nameDiv.setAttribute("style", "padding-left: 6px;");
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
 		    		}
 		    		else {
 						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
-							imagePreview.parentElement.lastElementChild.innerHTML = orgFileName;							
+							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							imagePreview.parentElement.lastElementChild.innerHTML = orgFileName;
+							imagePreview.parentElement.lastElementChild.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							imagePreview.parentElement.lastElementChild.setAttribute("style", "padding-left: 6px;");
 						}		    			
 		    		}	   
 		    		imagePreview.parentElement.style.display = "block";	
@@ -1234,6 +1251,103 @@
 		    	}
 		    }
 		    
+		    function updateNewCmt(userId, attach, type, name, path, txtContent, cmtTime) {
+		    	commentIndex = commentIndex + 1;
+		    	var oTable = document.getElementById("commentListView");
+		    	//create the Tr field
+		    	objTr = document.createElement("tr");
+		    	objTr.setAttribute("style", "border-bottom: 1px solid #b6b6b6");
+		    	
+		    	//Td1
+		    	var objTd = document.createElement("td");
+		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
+                var image_tag = document.createElement("img");                
+                image_tag.src = "/images/account.jpg";
+                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; "); 
+                //image_tag.onclick = function () { filedelete(this); };
+                objTd.appendChild(image_tag);
+                objTr.appendChild(objTd);
+                
+              	//Td2
+                var objTd2 = document.createElement("td");
+                var div1ForTd2 = document.createElement("div");
+                var div2ForTd2 = document.createElement("div");  
+                var editDiv2ForTd2 = document.createElement("div");  
+                editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
+                editDiv2ForTd2.style.display = "none"; 
+                
+                div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");               
+                div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
+                div1ForTd2.innerHTML = userId;
+                div1ForTd2.setAttribute("style", "display: block; padding-left: 8px; padding-top: 10px; color: blue");       
+                
+                //Add text comment if exist
+                if (txtContent.length > 0) {
+                	txtContent = txtContent.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                	var pForTd2 = document.createElement("p");  
+                	pForTd2.innerHTML = txtContent;
+                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+                	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
+                	div2ForTd2.appendChild(pForTd2);
+                }
+                
+              	//Add file if exist
+                if (attach != ""){
+                	var innerDiv1 = document.createElement("div");
+                	innerDiv1.setAttribute("style", "padding-top: 5px;");
+			    	var imgForinnerDiv1 = document.createElement("img");  	    	           
+			    	imgForinnerDiv1.setAttribute("vertical-align", "middle");
+			    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;"); 
+			    	
+                	if (type == "sticker") {
+                		imgForinnerDiv1.setAttribute("_type", "images");    
+			    		imgForinnerDiv1.setAttribute("height", "80");
+				    	imgForinnerDiv1.setAttribute("width", "80");					    	
+			    		imgForinnerDiv1.src = attach;
+			    		imgForinnerDiv1.setAttribute("_fileInfo", attach);  
+			    		innerDiv1.appendChild(imgForinnerDiv1);
+			    		div2ForTd2.appendChild(innerDiv1);
+                	}
+                	else {
+				    	imgForinnerDiv1.setAttribute("height", "60");
+				    	imgForinnerDiv1.setAttribute("width", "60");	
+				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+			    		imgForinnerDiv1.src = attach;	
+			    		innerDiv1.appendChild(imgForinnerDiv1);
+			    		div2ForTd2.appendChild(innerDiv1);
+			    		
+			    		if (name == "") {
+			    			imgForinnerDiv1.setAttribute("_fileInfo", attach);
+			    			imgForinnerDiv1.setAttribute("_type", "images"); 
+			    		}
+			    		else {					    	
+					    	imgForinnerDiv1.setAttribute("_type", "file");
+			    			imgForinnerDiv1.setAttribute("_fileInfo", path); 
+				    		var innerDiv2 = document.createElement("div");
+				    		innerDiv2.innerHTML = name;
+				    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
+				    		innerDiv2.setAttribute("_fileInfo", path);   
+				    		innerDiv1.appendChild(innerDiv2);
+			    		}			    		
+                	}
+                }
+              	
+                objTd2.appendChild(div1ForTd2);
+                objTd2.appendChild(div2ForTd2);
+                objTd2.appendChild(editDiv2ForTd2);
+                objTr.appendChild(objTd2);             	            	
+              	
+                //Td3
+                var objTd3 = document.createElement("td");
+                objTd3.setAttribute("style", "width: 145px; position: relative;");                
+                var fistChildForTd3 = document.createElement("div");
+                fistChildForTd3.setAttribute("style", "position: absolute; top:10px;");     
+                fistChildForTd3.innerHTML = cmtTime;
+                objTd3.appendChild(fistChildForTd3);                                         
+                objTr.appendChild(objTd3);             
+                oTable.appendChild(objTr);  
+		    }
+		    
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -1396,11 +1510,15 @@
 									</c:if>
 									<c:if test="${_comt.fileAttach != ''}">
 										<c:if test="${_comt.fileName != ''}">
-											<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.filePath}" />">
-											<div style="cursor: pointer; padding-left: 15px;"><c:out value ="${_comt.fileName}" /></div>
+											<div style="padding-top: 5px;">
+												<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.filePath}"/>" >									
+												<div style="cursor: pointer; padding-left: 15px;" _fileInfo="<c:out value ="${_comt.filePath}" />" ><c:out value ="${_comt.fileName}" /></div>						
+											</div>					
 										</c:if>
 										<c:if test="${_comt.fileName == ''}">
-											<img _type="images" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />">
+											<div style="padding-top: 5px;">
+												<img _type="images" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />">
+											</div>
 										</c:if>
 									</c:if>
 								</div>
