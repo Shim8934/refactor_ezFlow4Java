@@ -787,8 +787,7 @@ public class EzPollController extends EgovFileMngUtil {
 			//Update comment user in question related table
 			strXML = "<DATA>OK</DATA>";
 		}
-		catch (Exception e) {
-			logger.debug("BAONK _CHECK IN EXCEPTION!");
+		catch (Exception e) {			
 			e.printStackTrace();
 			strXML = "<DATA>FAIL</DATA>";
 		}
@@ -1527,6 +1526,8 @@ public class EzPollController extends EgovFileMngUtil {
 				ezPollService.deleteAnswers(qstId, loginVO.getTenantId());
 				//Delete in table User and Answer
 				ezPollService.deleteUserAndQuestion(qstId, loginVO.getTenantId());
+				//Delete in table Comment
+				ezPollService.deleteCommentOfQst(qstId, loginVO.getTenantId());
 				
 				//Inform waiting users
 				String result = "{\"result\":\"DELETED\", \"userId\":\"" + loginVO.getId() + "\"}";

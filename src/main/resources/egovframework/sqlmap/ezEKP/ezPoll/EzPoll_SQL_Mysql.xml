@@ -788,6 +788,17 @@
 		]]>
    </delete>
    
+   <delete id="EzPollDAO.deleteCommentOfQst" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_COMMENT
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
    <delete id="EzPollDAO.deleteUserAndQuestion" parameterClass="Map">
    		<![CDATA[
 			DELETE FROM

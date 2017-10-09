@@ -85,5 +85,7 @@ public interface EzPollService {
 	public List<PollCommentVO> getListCmtOfQst(int qstId, int tenantId) throws Exception;
 
 	public void insertCmt(PollCommentVO pollCmtVO) throws Exception;
+
+	public void deleteCommentOfQst(int qstId, int tenantId) throws Exception;
 	
 }

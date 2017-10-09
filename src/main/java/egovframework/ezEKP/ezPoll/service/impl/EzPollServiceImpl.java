@@ -386,4 +386,12 @@ public class EzPollServiceImpl implements EzPollService{
 		ezPollDAO.insertCmt(map);		
 	}
 
+	@Override
+	public void deleteCommentOfQst(int qstId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("qst_id", qstId);
+		map.put("tenant_id", tenantId);	
+		ezPollDAO.deleteCommentOfQst(map);		
+	}
+
 }
