@@ -570,6 +570,11 @@
 		    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
 		    }
 		    
+		    function menuQst_DetailUserInfo(pUserID){
+		    	 var feature = GetOpenPosition(420, 438);
+		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    }	
+		    
 		    function test_func() {		    			    
 		    	document.getElementById("sendBttn").disabled = false;		    	
 		    }
@@ -634,8 +639,7 @@
 		    	var imgForInnerDiv2 = document.createElement("img"); 
 		    	imgForInnerDiv2.setAttribute("id", "editPreviewImg" + id.slice(8));
 		    	imgForInnerDiv2.setAttribute("style", "display: block; height: 60px; width: 60px; ");	    	
-		    	innerDiv2.appendChild(imgForInnerDiv2);
-		    	
+		    	innerDiv2.appendChild(imgForInnerDiv2);		    	
 		    	
 		    	//Copy text comment
 		    	var innInnerDiv1 = document.createElement("div");
@@ -768,6 +772,7 @@
 		    
 		    function saveEditComment(obj){
 		    	console.log("Run in save edit comment!");
+		    	var fd = new FormData();
 		    	currentEditingCmt = -1;
 		    	var commentIndex = obj.getAttribute("_cmtIndex");
 		    	var div2Cmt = document.getElementById("div2Cmt" + commentIndex);
@@ -777,6 +782,7 @@
 		    		}
 		    	}
 		    	else {
+		    		fd.append("cmtTxt", document.getElementById("editCmtArea5" + commentIndex).value);
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea5" + commentIndex).value;
 		    		}
@@ -929,9 +935,10 @@
 		    	}
 		    	editDiv2Cmt.style.display = "none";	
 		    	
-		    	//Enable div2Cmt and edit option
+		    	//Enable div2Cmt, sendComment and edit option
 		    	div2Cmt.style.display = "inline-block";
 		    	document.getElementById("_eCmt" + commentIndex).style.display = "block";
+		    	document.getElementById("sendComment").style.display = "block";
 		    	
 		    	//Create a post request to update comment
 		    	
@@ -968,8 +975,8 @@
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
                 image_tag.src = "/images/account.jpg";
-                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; "); 
-                //image_tag.onclick = function () { filedelete(this); };
+                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; cursor: pointer; "); 
+                image_tag.onclick = function () { menuQst_DetailUserInfo(curentUser); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);                          
                 
@@ -993,8 +1000,7 @@
                 	pForTd2.innerHTML = currentText;
                 	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
-                	div2ForTd2.appendChild(pForTd2);
-                	//document.getElementById("hidCmtTxt").value = currentText;
+                	div2ForTd2.appendChild(pForTd2);                	
                 	fd.append("cmtTxt", currentText);
                 }
                 
@@ -1469,8 +1475,8 @@
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
                 image_tag.src = "/images/account.jpg";
-                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; "); 
-                //image_tag.onclick = function () { filedelete(this); };
+                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; cursor: pointer; "); 
+                image_tag.onclick = function () { menuQst_DetailUserInfo(userId); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);
                 
@@ -1562,7 +1568,7 @@
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden;">
 				  <div style="float: left; display: block;width:300px;">
-				  		<img src="/images/account.jpg" style="display:inline-block;float:left; height:50px;width:50px;">
+				  		<img src="/images/account.jpg" style="display:inline-block;float:left; height:50px;width:50px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
 						<div id="textTest" style="display:inline-block;">
 							<span style="display:block;padding-top: 8px;padding-left: 5px;"><c:out value='${question.creatorName}'/></span>
 							<span style="display:block;padding-top: 8px;padding-left: 5px;"><c:out value='${question.startDate}'/></span>
@@ -1701,7 +1707,7 @@
 					<c:forEach var="_comt" items="${listComments}">
 						<tr>
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<img src="/images/account.jpg" style="padding-top: 10px; height: 50px; width:50px; ">
+								<img src="/images/account.jpg" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>
 							<td>
 								<div style="display: block; padding-left: 8px; padding-top: 10px; color: blue">${_comt.userId}</div>
