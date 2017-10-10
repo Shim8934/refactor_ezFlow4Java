@@ -435,26 +435,34 @@
 		
 		    function AprLineAddDept(TNAME, TID, TYPE) {
 		        var Resultxml = createXmlDom();
-		        Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1><DATA2></DATA2></CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        
+		        if (approvalFlag == 'S') {
+		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1><DATA2></DATA2></CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        } else {
+		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        }
+		        
 		        var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
 		        setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
 		        setNodeText(GetChildNodes(objNodes[0])[1], TID);
-		
-		        if (TYPE == "D") {
-		            setNodeText(GetChildNodes(objNodes[0])[2], "");
-		            setNodeText(GetChildNodes(objNodes[1])[0], "");
-		        } else {
-		            var pUserList = new ListView();
-		            pUserList.LoadFromID("lvUserList");
-		
-		            var selnode = pUserList.GetSelectedRows();
-		            setNodeText(GetChildNodes(objNodes[0])[2], GetAttribute(selnode[0], "DATA2"));
-		            setNodeText(GetChildNodes(objNodes[1])[0], GetAttribute(selnode[0], "DATA4"));
+		        
+		        if (approvalFlag == 'S') {
+		        	if (TYPE == "D") {
+			            setNodeText(GetChildNodes(objNodes[0])[2], "");
+			            setNodeText(GetChildNodes(objNodes[1])[0], "");
+			        } else {
+			            var pUserList = new ListView();
+			            pUserList.LoadFromID("lvUserList");
+			
+			            var selnode = pUserList.GetSelectedRows();
+			            setNodeText(GetChildNodes(objNodes[0])[2], GetAttribute(selnode[0], "DATA2"));
+			            setNodeText(GetChildNodes(objNodes[1])[0], GetAttribute(selnode[0], "DATA4"));
+			        }
 		        }
-		
+
 		        var lvtFormView = new ListView();
 		        lvtFormView.LoadFromID("lvtForm");
-		
+
 		        var InitTr = lvtFormView.GetDataRows();
 		        var length = InitTr.length;
 		        var noitem = false;
@@ -465,20 +473,21 @@
 		                noitem = true;
 		            }
 		        }
-		
+
 		        var MaxID = 0;
-		        
+
 		        if (noitem) {
 		            MaxID = 0;
 		        } else {
 		            for (var j = 0; j < length; j++) {
 		                var curnum = Number(lvtFormView.GetSelectedRowID(j).substring(lvtFormView.GetSelectedRowID(j).lastIndexOf('_') + 1), lvtFormView.GetSelectedRowID(j).length);
-		                if (MaxID < curnum)
+		                if (MaxID < curnum) {
 		                    MaxID = curnum;
+		                }
 		            }
 		        }
 		        MaxID += 1;
-		
+
 		        var objTr = lvtFormView.AddRow(length);
 		        SetAttribute(objTr, "id", "lvtForm" + "_TR_" + MaxID);
 		        lvtFormView.AddDataRow(objTr, GetElementsByTagName(Resultxml.documentElement, "ROW")[0]);
@@ -690,7 +699,7 @@
 			            if (userRows.length <= 0) {
 			                OpenAlertUI(linealt1);
 			            }
-		    		}        			
+		    		}
 		    	});
 		    }
 		    function list_onSel_Click() {
