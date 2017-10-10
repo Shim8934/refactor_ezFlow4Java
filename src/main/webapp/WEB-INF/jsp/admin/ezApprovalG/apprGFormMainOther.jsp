@@ -80,7 +80,7 @@
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
 		
-		        getDeptFullTree("${topID}");
+		        getDeptFullTree("${companyID}");
 		        getFormRecv();
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
@@ -269,7 +269,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${topID}");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		
 		            var xmlHTTP = createXMLHttpRequest();
@@ -936,6 +936,7 @@
             </table>
         </div>
         
+        <!-- 고정 수신처 -->
         <div id="ApvForm_content5" style="width:100%;height:90%;display:none; padding-top:10px;">         
             <h2 id="group" class="receiver_tltype01" style="margin-bottom:5px;">
             	<span style="min-width: 45px;" id="groupstr"><spring:message code='ezApproval.t646'/></span>

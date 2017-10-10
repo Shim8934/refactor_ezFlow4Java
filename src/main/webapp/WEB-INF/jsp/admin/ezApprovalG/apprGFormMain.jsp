@@ -63,7 +63,7 @@
 		            get_FormInfo();
 		        }
 	
-		        getDeptFullTree("<c:out value = '${topID}' />");
+		        getDeptFullTree("<c:out value = '${companyID}' />");
 		        getFormRecv();
 		        
 		        add_doc_maker(companyID);
@@ -160,7 +160,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${topID}' />");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${companyID}' />");
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
 	
 		            var xmlHTTP = createXMLHttpRequest();
@@ -224,7 +224,10 @@
 		        	type : "POST",
 		        	url : "/admin/ezApprovalG/getFormRecvAdmin.do",
 		        	async : false,
-		        	data : {formID : formID},
+		        	data : {
+		    			formID 	  : formID,
+		    			companyID : companyID
+		    		},
 		        	success : function(result) {
 						xmlpara = loadXMLString(result);
 	        		}
@@ -316,7 +319,7 @@
 		        var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
 		        setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
 		        setNodeText(GetChildNodes(objNodes[0])[1], TID);
-	
+		        
 		        var lvtFormView = new ListView();
 		        lvtFormView.LoadFromID("lvtForm");
 	
@@ -332,6 +335,7 @@
 		        }
 	
 		        var MaxID = 0;
+		        
 		        if (noitem) {
 		            MaxID = 0;
 		        } else {
@@ -727,13 +731,12 @@
         </div>
         
         <!-- 고정수신처 -->
-        <div id="ApvForm_content5" style="width:100%;height:100%;display:none; padding-top:10px;">         
-            
+        <div id="ApvForm_content5" style="width:100%;height:100%;display:none; padding-top:10px;">
             <h2 id="group" class="receiver_tltype01" style="margin-bottom:5px;">
             	<span style="min-width: 45px;" id="groupstr"><spring:message code = 'ezApprovalG.t1577' /></span>
             </h2>
 
-            <table style="width:100%; height:565px; border : none;">         
+            <table style="width:100%; height:565px; border : none;">
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border:none">
                         <h2>

@@ -163,39 +163,40 @@ var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {
     var xmlRtn = createXmlDom();
     
+    //양식 정보 XML
     var arrFormInfo = MakeFormInfoXML();
     if (arrFormInfo[0] == "TRUE") {
         formInfo = arrFormInfo[1];
-    }
-    else {
+    } else {
         OpenAlertUI(arrFormInfo[2]);
         document.getElementById("1tab1").click();
         return;
     }
     
+    //작성양식 XML
     var arrFormMHT = MakeFormMHTXML();
     if (arrFormMHT[0] == "TRUE") {
         formMHT = arrFormMHT[1];
-    }
-    else {
+    } else {
         OpenAlertUI(arrFormMHT[2]);
         document.getElementById("1tab2").click();
         return;
     }
     
+    //연동정보 XML
     var arrFormConn = "";
     arrFormConn = MakeFormConnXML();
     if (arrFormConn[0] == "TRUE") {
         if (arrFormConn[1] != "") { 
             formConn = arrFormConn[1];
         }
-    }
-    else {
+    } else {
         OpenAlertUI(arrFormConn[2]);
         document.getElementById("1tab3").click();
         return;
     }
 
+    //WorkFlow XML
     var arrFormWorkFlow = "";
     arrFormWorkFlow = MakeFormWorkFlow();
     if (arrFormWorkFlow[0] == "TRUE") {
@@ -207,6 +208,8 @@ function SaveFormInfo() {
         document.getElementById("1tab4").click();
         return;
     }
+    
+    //자동분류 XML
     var arrFormAutoRule = MakeFormAutoRuleXML();
     if (arrFormAutoRule[0] == "TRUE") {
         formAutoRule = arrFormAutoRule[1];
@@ -215,11 +218,12 @@ function SaveFormInfo() {
         formAutoRule = "";
         formAutoRuleLine = "";
     }
+    
+    //고정수신처정보 XML
     var arrFormRecevGroup = MakeFormRecevGroupXML();
     if (arrFormRecevGroup[0] == "TRUE") {
         formRecevGroup = arrFormRecevGroup[1];
-    }
-    else {
+    } else {
         OpenAlertUI(arrFormRecevGroup[2]);
         document.getElementById("1tab5").click();
         return;
@@ -236,7 +240,7 @@ function SaveFormInfo() {
     $.ajax({
 		type : "POST",
 		dataType : "text",
-		async : true,
+		async : false,
 		url : url,
 		data : {
 			companyID  : companyID,
