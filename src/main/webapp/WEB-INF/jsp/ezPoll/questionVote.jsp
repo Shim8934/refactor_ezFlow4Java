@@ -47,7 +47,9 @@
 			var currentGroupSticker = -1;
 			var flagEvent = -1;
 			var currentEditingCmt = -1;
-			var colors = ["#49a0d8", "#d353a0", "#ffc527", "#df4c27","#34cb34","7127df"]; //add more colors
+			var colors = ["#49A0D8", "#D353A0", "#FFC527", "#DF4C27", "#34CB34", "#7127DF", "#90C3D4", "#C390D4", "#A1D490", "#D4A190",
+			              "#581845", "#581825", "#582B18", "#584B18", "#455818", "#255818", "#C15AA3", "#C15A6F", "#C1785A", "#C1AC5A",
+			              "#A3C15A", "#70C15A", "#4EC479", "#4EC4B4", "#4E99C4", "#4E5EC4", "#794EC4", "#B44EC4", "#AFC44E", "#74C44E"]; //add more colors
             var iframeStyle = "<style>";
             iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -179,12 +181,12 @@
 	       					ctx.shadowBlur = 2;
 	       					ctx.shadowColor = "#999";
 	       					var gradient = ctx.createLinearGradient(0, 0, test, 0);
-	       					gradient.addColorStop(1, colors[i]);
+	       					gradient.addColorStop(1, colors[i % 30]);
 	       					gradient.addColorStop(0, "#ffffff");
 	       					ctx.fillStyle = gradient;
 	       					ctx.fillRect(0, 0 , test, 20); 
 	       					
-	       					//Show vote infor
+	       					//Show vote information
          					if (secretVote == 0) {
 	       						var listUserAnswer = ${listOfUserAnswer};       						       						       						
 	       						var tempLoop = 0;	       						
@@ -195,8 +197,7 @@
 	       						else {
 	       							tempLoop = maxLoop;
 	       						}
-	       						
-	       						//console.log("Temp Loop is: " + tempLoop);	       						
+	       							       						      						
 	       						var tempClassId = "_thu" + i;	 
 	       						var viewAll = "_tax" + i;
 	       						var listDivs = document.getElementsByClassName(tempClassId);
