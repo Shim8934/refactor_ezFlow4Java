@@ -317,9 +317,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			if (menu.equals("etc")) {
 				//게시판 풋터리스트
 				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId);
-				
+				String langStr = request.getParameter("langStr");
 				//자원관리 풋터리스트				
-				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId);
+				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId, langStr);
 				
 				dataObject.put("boardFooterList", boardFooterList);
 				dataObject.put("resourceFooterList", resourceFooterList);

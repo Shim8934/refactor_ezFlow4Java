@@ -94,7 +94,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId,
-			String brdCompany, String userId, String userCompany, String userDept, int tenantId) {	
+			String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr) {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDID", brdId);
 		map.put("v_PBRDCOMPANY", brdCompany);
@@ -102,18 +102,36 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PUSERCOMPANY", userCompany);
 		map.put("v_PUSERDEPT", userDept);
 		map.put("tenantID", tenantId);
-
-		return mResourceDAO.getResBrdList(map);
+		
+		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResBrdList(map);
+		
+		for (MResourceGetAdmSubClsTreeVO resultVO : result) {
+			if(!langStr.equals('1')){
+				resultVO.setBrdNm(resultVO.getBrdNm2());
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
 	public List<MResourceScheduleVO> getResFavoriteList(String userId,
-			String companyId,int tenantId) {
+			String companyId,int tenantId, String langStr) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userId);
 		map.put("tenantID", tenantId);
 		map.put("v_PCOMPANYID", companyId);
-		return mResourceDAO.getResFavoriteList(map);
+		
+		List<MResourceScheduleVO> result = mResourceDAO.getResFavoriteList(map);
+		
+		for (MResourceScheduleVO resultVO : result) {
+			if(!langStr.equals('1')){
+				LOGGER.debug("resultVO in resFavoriteList " + resultVO);
+				resultVO.setBrdNm(resultVO.getBrdNm2());
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -1317,15 +1335,23 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId) {	
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr) {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDCOMPANY", brdCompany);
 		map.put("v_PUSERID", userId);
 		map.put("v_PUSERCOMPANY", userCompany);
 		map.put("v_PUSERDEPT", userDept);
 		map.put("tenantID", tenantId);
-
-		return mResourceDAO.getResApprBrdList(map);
+		
+		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResApprBrdList(map);
+		
+		for (MResourceGetAdmSubClsTreeVO resultVO : result) {
+			if(!langStr.equals('1')){
+				resultVO.setBrdNm(resultVO.getBrdNm2());
+			}
+		}
+		
+		return result;
 	}
 	
 }

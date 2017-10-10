@@ -33,11 +33,11 @@ public interface MResourceService {
 	
 	public MResourceScheduleVO getResScheduleDetail(String resourceId, String scheduleId, String companyId, int tenantId);
 	
-	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany,  String userId, String userCompany, String userDept , int tenantId);
+	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany,  String userId, String userCompany, String userDept , int tenantId, String langStr);
 	
-	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId);
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr);
 	
-	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId);
+	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId, String langStr);
 	
 	public void addResSch(String ownerId, String companyId, int tenantId, String pNum, String writerId, String deptNm, String ownerNm, String title, 
 			String location, String timeDisplay, String startDate, String endDate, String allDay, String alterTime, String content, String importance, 

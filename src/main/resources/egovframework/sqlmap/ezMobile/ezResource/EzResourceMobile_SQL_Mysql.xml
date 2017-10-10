@@ -194,6 +194,7 @@
 		<result property="brdNm"				column="BRDNM"				columnIndex="29"/>
 		<result property="content"				column="CONTENT"				columnIndex="30"		nullValue=""/>
 		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="31"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="32"/>
 	</resultMap>
     
     <select id="MResourceDAO.getAdmSubClsTree" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
@@ -784,7 +785,8 @@
 				A.USERID,
 				A.RESCOMPANY,
 				A.TENANT_ID,
-				B.BRD_NM BRDNM
+				B.BRD_NM BRDNM,
+				B.BRD_NM2 BRDNM2
 			FROM
 				TBL_RS_FAVORITE A
 			JOIN 

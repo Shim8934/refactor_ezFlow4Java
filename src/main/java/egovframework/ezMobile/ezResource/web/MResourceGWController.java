@@ -143,10 +143,12 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	String offset = info.getOffSet();
 	    	String favoriteYn = "N";
 	    	
+			String langStr = request.getParameter("langStr");
+	    	
 	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "");
 			
 	    	if(ownerId != null && !ownerId.equals("")) {
-	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(request.getParameter("userId"), companyId, tenantId);
+	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(request.getParameter("userId"), companyId, tenantId, langStr);
 		    	if(list.size() > 0) {
 		    		for (MResourceScheduleVO mResourceScheduleVO : list) {
 						if(mResourceScheduleVO.getResId() != null) {
@@ -201,8 +203,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String brdCompany = info.getCompanyId();
 			String userCompany = info.getCompanyId();
 			String userDept = info.getDeptId();
+			String langStr = request.getParameter("langStr");
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId);
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId, langStr);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data",list);
@@ -234,8 +237,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
-
-			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId,tenantId);
+			String langStr = request.getParameter("langStr");
+				
+			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId, tenantId, langStr);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -857,8 +861,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String brdCompany = info.getCompanyId();
 			String userCompany = info.getCompanyId();
 			String userDept = info.getDeptId();
+			String langStr = request.getParameter("langStr");
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(brdCompany, userId, userCompany, userDept , tenantId);
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(brdCompany, userId, userCompany, userDept , tenantId, langStr);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data",list);
