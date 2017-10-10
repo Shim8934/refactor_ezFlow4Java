@@ -859,6 +859,7 @@
 						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 					    		imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
+					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 					    		innerDiv1.appendChild(imgForinnerDiv1);
 					    		div2Cmt.appendChild(innerDiv1);
 			    			}
@@ -869,11 +870,15 @@
 						    	imgForinnerDiv1.setAttribute("_type", "file");
 						    	imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 						    	imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
+						    	imgForinnerDiv1.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+						    	imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 						    	innerDiv1.appendChild(imgForinnerDiv1);						    	
 					    		var innerDiv2 = document.createElement("div");
 					    		innerDiv2.innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
-					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
+					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		innerDiv1.appendChild(innerDiv2);
 					    		div2Cmt.appendChild(innerDiv1);
 					    		fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
@@ -901,25 +906,32 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer;");
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
-			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 			    			}
 			    			else {
 			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "file");
-			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.children[1].innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;
 			    					div2Cmt.firstElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
-			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
+			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
+			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+			    					div2Cmt.firstElementChild.children[1].onclick = function () { downloadFileInCmt(this); };
 			    				}
 			    				else {
 			    					var innerDiv2 = document.createElement("div");
 						    		innerDiv2.innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;					    		
 						    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
-						    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
+						    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+						    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+						    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 						    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 			    				}
 			    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
@@ -949,6 +961,7 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer;");
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
+		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    			}
 		    			else {		    				
 		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
@@ -956,17 +969,23 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "file");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {		    					
 		    					div2Cmt.lastElementChild.children[1].innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;
 		    					div2Cmt.lastElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
 		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
+		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+		    					div2Cmt.lastElementChild.children[1].onclick = function () { downloadFileInCmt(this); };
 		    				}
 		    				else {
 		    					var innerDiv2 = document.createElement("div");
 					    		innerDiv2.innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
-					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
+					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 		    				}
 		    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
@@ -1093,6 +1112,7 @@
 					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];	
 				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);   
+				    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 				    	}
 				    	else {				    		
 				    		imgForinnerDiv1.setAttribute("_type", "sticker");
@@ -1112,7 +1132,8 @@
 				    	imgForinnerDiv1.setAttribute("width", "60");
 				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px;");
 				    	imgForinnerDiv1.setAttribute("_type", "file");
-				    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]);   
+				    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]); 
+				    	imgForinnerDiv1.setAttribute("_fileName", fileinfo.split("/")[1]);
 				    	
 				    	if (ext == "doc" || ext == "docx"){
 				    		imgForinnerDiv1.src = "/images/msWord.png";
@@ -1130,12 +1151,15 @@
 				    		imgForinnerDiv1.src = "/images/cmtFile.png";
 				    	}				    	
 				    	
+				    	imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 			    		innerDiv1.appendChild(imgForinnerDiv1);
 			    		div2ForTd2.appendChild(innerDiv1);
 			    		var innerDiv2 = document.createElement("div");
 			    		innerDiv2.innerHTML = fileinfo.split("/")[1];
 			    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
-			    		innerDiv2.setAttribute("_fileInfo", fileinfo.split("/")[0]);   
+			    		innerDiv2.setAttribute("_fileInfo", fileinfo.split("/")[0]); 
+			    		innerDiv2.setAttribute("_fileName", fileinfo.split("/")[1]);
+			    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 			    		innerDiv1.appendChild(innerDiv2);
 			    		fd.append("fileName", innerDiv2.innerHTML);
 			    		fd.append("filePath", fileinfo.split("/")[0]);
@@ -1586,14 +1610,19 @@
 			    		if (name == "") {
 			    			imgForinnerDiv1.setAttribute("_fileInfo", attach);
 			    			imgForinnerDiv1.setAttribute("_type", "images"); 
+			    			imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 			    		}
 			    		else {					    	
 					    	imgForinnerDiv1.setAttribute("_type", "file");
 			    			imgForinnerDiv1.setAttribute("_fileInfo", path); 
+			    			imgForinnerDiv1.setAttribute("_fileName", name);
+			    			imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 				    		var innerDiv2 = document.createElement("div");
 				    		innerDiv2.innerHTML = name;
 				    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
 				    		innerDiv2.setAttribute("_fileInfo", path);   
+				    		innerDiv2.setAttribute("_fileName", name);
+				    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 				    		innerDiv1.appendChild(innerDiv2);
 			    		}			    		
                 	}
@@ -1661,6 +1690,7 @@
 						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 					    		imgForinnerDiv1.src = attachFilePath;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", attachFilePath); 
+					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 					    		innerDiv1.appendChild(imgForinnerDiv1);
 					    		div2Cmt.appendChild(innerDiv1);
 			    			}
@@ -1670,12 +1700,16 @@
 						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px;");
 						    	imgForinnerDiv1.setAttribute("_type", "file");
 						    	imgForinnerDiv1.src = attachFilePath;
-						    	imgForinnerDiv1.setAttribute("_fileInfo", filePath); 
+						    	imgForinnerDiv1.setAttribute("_fileInfo", filePath);
+						    	imgForinnerDiv1.setAttribute("_fileName", fileName);
+						    	imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 						    	innerDiv1.appendChild(imgForinnerDiv1);						    	
 					    		var innerDiv2 = document.createElement("div");
 					    		innerDiv2.innerHTML = fileName;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
-					    		innerDiv2.setAttribute("_fileInfo", filePath);   
+					    		innerDiv2.setAttribute("_fileInfo", filePath);
+					    		innerDiv2.setAttribute("_fileName", fileName);
+					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		innerDiv1.appendChild(innerDiv2);
 					    		div2Cmt.appendChild(innerDiv1);
 			    			}					    	
@@ -1700,6 +1734,7 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer;");
 			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
+			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 			    			}
 			    			else {
 			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
@@ -1707,17 +1742,23 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "file");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", filePath); 
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileName", fileName);
+			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.children[1].innerHTML = fileName;
 			    					div2Cmt.firstElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
 			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileInfo", filePath);   
+			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileName", fileName);
+			    					div2Cmt.firstElementChild.children[1].onclick = function () { downloadFileInCmt(this); };
 			    				}
 			    				else {
 			    					var innerDiv2 = document.createElement("div");
 						    		innerDiv2.innerHTML = fileName;					    		
 						    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
 						    		innerDiv2.setAttribute("_fileInfo", filePath);   
+						    		innerDiv2.setAttribute("_fileName", fileName);
+						    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 						    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 			    				}
 			    			}		    				
@@ -1743,6 +1784,7 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer;");
 		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
+		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    			}
 		    			else {
 		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
@@ -1750,17 +1792,23 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "file");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", filePath); 
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileName", fileName);
+		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {		    					
 		    					div2Cmt.lastElementChild.children[1].innerHTML = fileName;
 		    					div2Cmt.lastElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
 		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileInfo", filePath);   
+		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileName", fileName);
+		    					div2Cmt.lastElementChild.children[1].onclick = function () { downloadFileInCmt(this); };
 		    				}
 		    				else {
 		    					var innerDiv2 = document.createElement("div");
 					    		innerDiv2.innerHTML = fileName;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
 					    		innerDiv2.setAttribute("_fileInfo", filePath);   
+					    		innerDiv2.setAttribute("_fileName", fileName);
+					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 		    				}
 		    			}		    			
@@ -1775,6 +1823,28 @@
 	    		var oTable = document.getElementById("commentListView");
 	    		var i = div2Cmt.parentNode.parentNode.rowIndex;
 	    		oTable.deleteRow(i);
+		    }
+		    
+		    function downloadFileInCmt(obj) {
+		    	var filePath = obj.getAttribute("_fileInfo");		    	
+		    	var fileName = obj.getAttribute("_fileName");
+		    	
+		    	if (fileName == null || fileName == "") {
+		    		var ext = filePath.split('.').pop().toLowerCase();
+		    		fileName = "_" + randString(40) + "." + ext;
+		    	}	
+		    	
+		    	var param = "/ezPoll/downloadAttach.do?folderPath=" + filePath +  "&filename=" + fileName;
+		    	DownloadAttach(param);
+		    }
+		    
+		    function randString(x) {
+		        var s = "";
+		        while (s.length < x & x > 0) {
+		            var r = Math.random();
+		            s += (r < 0.1 ? Math.floor(r * 100):String.fromCharCode(Math.floor(r * 26) + (r > 0.5 ? 97:65)));
+		        }
+		        return s;
 		    }
 		</script>
 	</head>
@@ -1939,13 +2009,13 @@
 									<c:if test="${_comt.fileAttach != ''}">
 										<c:if test="${_comt.fileName != ''}">
 											<div style="padding-top: 5px;">
-												<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.filePath}"/>" >									
-												<div style="cursor: pointer; padding-left: 15px;" _fileInfo="<c:out value ="${_comt.filePath}" />" ><c:out value ="${_comt.fileName}" /></div>						
+												<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.filePath}"/>" onclick="downloadFileInCmt(this);">									
+												<div style="cursor: pointer; padding-left: 15px;" _fileInfo="<c:out value ="${_comt.filePath}" />" _fileName="<c:out value ="${_comt.fileName}" />" onclick="downloadFileInCmt(this);"><c:out value ="${_comt.fileName}" /></div>						
 											</div>					
 										</c:if>
 										<c:if test="${_comt.fileName == ''}">
 											<div style="padding-top: 5px;">
-												<img _type="images" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />">
+												<img _type="images" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />" onclick="downloadFileInCmt(this);">
 											</div>
 										</c:if>
 									</c:if>

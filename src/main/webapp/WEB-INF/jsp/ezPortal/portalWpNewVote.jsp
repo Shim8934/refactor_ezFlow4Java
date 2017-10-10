@@ -83,7 +83,7 @@
 	               					<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong>명/</div>
 	               				</div>
 	               				<div id="graph<c:out value ="${_option.ansId}" />" style="display: inline-block;width: 234px; padding-left: 18px;">
-	               					<canvas id="myCanvas<c:out value ="${_option.ansId}" />"  height="19" style="border:1px solid #000000;"></canvas>			               					               					
+	               					<canvas id="myCanvas<c:out value ="${_option.ansId}" />"  height="16" style="border:1px solid #000000;"></canvas>			               					               					
 	               				</div>
 	               				<script type="text/javascript">		               					
 		               					var voteNum = ${_option.votesNumber};

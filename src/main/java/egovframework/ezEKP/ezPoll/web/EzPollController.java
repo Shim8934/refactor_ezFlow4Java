@@ -633,8 +633,12 @@ public class EzPollController extends EgovFileMngUtil {
         String fullPath = pDirPath + "uploadFile" + commonUtil.separator + folderPath;    
         file = new File(fullPath);
 		if (file == null || !file.exists()) {
-			logger.error("Folder not found. folderPath=" + folderPath);
-			return;
+			fullPath = realPath + folderPath;
+			file = new File(fullPath);
+			if (file == null || !file.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+				return;
+			}				
 		}
 		FileInputStream inputStream = null;
 		OutputStream outStream = null;
