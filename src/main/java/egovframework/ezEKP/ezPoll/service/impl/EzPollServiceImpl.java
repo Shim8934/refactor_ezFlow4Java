@@ -408,4 +408,13 @@ public class EzPollServiceImpl implements EzPollService{
 		ezPollDAO.updateCmt(map);	
 	}
 
+	@Override
+	public void deleteSpecificCmt(int cmtId, int qstId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("id", cmtId);
+		map.put("qst_id", qstId);			
+		map.put("tenant_id", tenantId);			
+		ezPollDAO.deleteSpecificCmt(map);		
+	}
+
 }

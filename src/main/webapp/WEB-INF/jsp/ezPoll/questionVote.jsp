@@ -333,6 +333,19 @@
 					    }
 				    });
 			        
+			        stompClient.subscribe('/reply/deleteCmtInQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
+			        	var _cmdId = JSON.parse(updatedInfo.body).cmId;	
+			        	var _userId = JSON.parse(updatedInfo.body).userId;
+
+			            if (_userId != curentUser) {			          		
+			            	if (_cmdId > commentIndex) {
+			          			alert("Something is wrong!");
+			          			return;
+			          		}
+			            	deleteCurrentCmt(_cmdId);
+					    }
+				    });
+			        
 			        stompClient.subscribe('/reply/getResultUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
 			        	var optId = JSON.parse(updatedInfo.body).optionId;			        	
 			        	var mode = JSON.parse(updatedInfo.body).mode;
@@ -611,7 +624,9 @@
 		    	document.getElementById(id).style.display = "block";	
 		    	
 		    	document.addEventListener("click", function handleClick(e){		    									
-			    	document.getElementById(id).style.display = "none"; 	
+			    	if (document.getElementById(id) != null) {
+			    		document.getElementById(id).style.display = "none"; 
+			    	}		    			
 			    	document.removeEventListener("click", handleClick);
 			    	flagEvent = -1;
 		    	});	   	
@@ -978,16 +993,20 @@
 		    function deleteComment(obj) {
 		    	console.log("Run in delete Comment function!");
 		    	//currentEditingCmt = -1;
-		    	var id = obj.getAttribute("_comtIndex");
-		    	//document.getElementById(id).style.display = "none";
+		    	var id = obj.getAttribute("_comtIndex");		    	
 		    	if (confirm("<spring:message code = 'ezPoll.t207' />")) { 
 		    		console.log("Delete comment!");
+		    		//Delete row in comment table
+		    		var oTable = document.getElementById("commentListView");
+		    		var i = obj.parentNode.parentNode.parentNode.rowIndex;
+		    		oTable.deleteRow(i);
+		    		
 				    // Delete comment by sending a post request!
-				    
-				    
-				} else {
-				    // Cancel
-				    console.log("Cancel!");
+ 		    		var fd = new FormData();
+			        fd.append("qstId", qstId);
+			        fd.append("cmtId", id);		        		        
+		    	    xhr1.open("POST", "/ezPoll/deleteComment.do");
+		    	    xhr1.send(fd);				    
 				}
 		    }
 		    
@@ -1152,7 +1171,7 @@
                 innerDiv1ForTd3.onclick = function (event) { editComment(this); };
                 var innerDiv2ForTd3 = document.createElement("div");                
                 innerDiv2ForTd3.innerHTML = "Delete Comment";
-                innerDiv2ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);  
+                innerDiv2ForTd3.setAttribute("_comtIndex", commentIndex);  
                 innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");         
                 innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
                 div1ForTd3.appendChild(innerDiv1ForTd3);
@@ -1740,6 +1759,15 @@
 		    		}
 		    	}
 		    }
+		    
+		    function deleteCurrentCmt(cmdId) {
+		    	var div2Cmt = document.getElementById("div2Cmt" + cmdId);
+		    	
+	    		//Delete row in comment table
+	    		var oTable = document.getElementById("commentListView");
+	    		var i = div2Cmt.parentNode.parentNode.rowIndex;
+	    		oTable.deleteRow(i);
+		    }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -1922,7 +1950,7 @@
 									<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
 									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;" tabindex=0>							
 										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);">Edit Comment</div>
-										<div style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);">Delete Comment</div>
+										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);">Delete Comment</div>
 									</div>
 								</c:if>
 							</td>

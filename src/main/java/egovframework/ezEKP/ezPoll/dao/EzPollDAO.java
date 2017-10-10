@@ -167,6 +167,10 @@ public class EzPollDAO extends EgovAbstractDAO{
 		delete("EzPollDAO.deleteCommentOfQst", map);
 	}	
 	
+	public void deleteSpecificCmt(Map<String, Object> map) {
+		delete("EzPollDAO.deleteSpecificCmt", map);
+	}
+	
 	public void deleteUserAndQuestion(Map<String, Object> map) {
 		delete("EzPollDAO.deleteUserAndQuestion", map);
 	}	

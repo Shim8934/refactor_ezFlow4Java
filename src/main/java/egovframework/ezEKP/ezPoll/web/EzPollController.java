@@ -873,9 +873,9 @@ public class EzPollController extends EgovFileMngUtil {
 			pollCmtVO.setFilePath("");
 		}
 		
-		//Update comment to database 
+		//Update comment in database 
 		try {
-			//Insert into comment table
+			//Update in comment table
 			ezPollService.updateCmt(pollCmtVO);
 			
 			//Inform all waiting users
@@ -895,6 +895,43 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		return strXML;
 	}
+	
+	@RequestMapping(value="/ezPoll/deleteComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String deleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String strXML = "";	
+		int cmtId = -1;		
+		int qstId = -1;		
+		qstId = Integer.parseInt(request.getParameter("qstId"));
+		cmtId = Integer.parseInt(request.getParameter("cmtId"));
+		
+		if (qstId == -1 || cmtId == -1) {
+			strXML = "<DATA>FAIL</DATA>";
+			return strXML;
+		}
+		
+		//Delete comment in database 
+		try {
+			//Insert into comment table
+			ezPollService.deleteSpecificCmt(cmtId, qstId, loginVO.getTenantId());
+			
+			//Inform all waiting users
+			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\"}";
+			JSONParser parser = new JSONParser(); 
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/deleteCmtInQst" + qstId + "+" + loginVO.getTenantId(), json);
+			
+			//Update comment user in question related table
+			strXML = "<DATA>OK</DATA>";
+		}
+		catch (Exception e) {			
+			e.printStackTrace();
+			strXML = "<DATA>FAIL</DATA>";
+		}
+		
+		return strXML;
+	}	
 	
 	@RequestMapping(value="/ezPoll/undoModifyVote.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
