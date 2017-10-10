@@ -53,6 +53,13 @@
 		    };
 			
 		    $(document).ready(function(){
+				if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua)) && pEditor == "FORM") {
+					$('#btnInsForm1').hide();
+					$('#btnInsForm2').hide();
+					$('#btnUpForm').hide();
+					$('#btnFormListView').hide();
+				}
+		    	
 				companyID = document.getElementById("ListCompany").value;
 				Tree_setconfig();
 				InitFormCont();
@@ -436,7 +443,11 @@
 		    }
 	
 		    function lvtForm_Row_Dbclick() {
-		        UpdateForm();
+		        if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua)) && pEditor == "FORM") {
+		        	return;
+		        } else {
+		        	UpdateForm();
+		        }
 		    }
 	
 		    function MoveUp_onclick() {
