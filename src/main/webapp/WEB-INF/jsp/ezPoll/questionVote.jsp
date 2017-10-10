@@ -1147,8 +1147,11 @@
 				    	else if (ext == "xls" || ext == "xlsx"){
 				    		imgForinnerDiv1.src = "/images/msExcel.png";
 				    	}
-				    	else if (ext == ".hwp"){
+				    	else if (ext == "hwp"){
 				    		imgForinnerDiv1.src = "/images/hancomHWP.png";
+				    	}
+				    	else if (ext == "pdf") {
+				    		imgForinnerDiv1.src = "/images/pdfIcon.png";
 				    	}
 				    	else {
 				    		imgForinnerDiv1.src = "/images/cmtFile.png";
@@ -1352,13 +1355,15 @@
 		    	else if (_ext == "xls" || _ext == "xlsx"){
 		    		imagePreview.src = "/images/msExcel.png";
 		    	}
-		    	else if (_ext == ".hwp"){
+		    	else if (_ext == "hwp"){
 		    		imagePreview.src = "/images/hancomHWP.png";
+		    	}
+		    	else if (ext == "pdf") {
+		    		imagePreview.src = "/images/pdfIcon.png";
 		    	}
 		    	else {
 		    		imagePreview.src = "/images/cmtFile.png";
 		    	}
-
 		    }
 		    
 		    function addFileComment() {
