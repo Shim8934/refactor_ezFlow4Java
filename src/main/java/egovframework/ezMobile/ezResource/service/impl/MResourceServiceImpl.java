@@ -1141,6 +1141,192 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		return mResourceDAO.getResBrdDetail(map);
 	}
+
+
+
+	@Override
+	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate) throws Exception {
+		
+		LOGGER.debug("getScheduleList Start");
+		
+		Map<String, Object> result = new HashMap<>();
+		String startDateLimit = eDate + " 23:59:59";
+		String endDateLimit = sDate + " 00:00:01";
+
+		startDateLimit = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
+		endDateLimit = commonUtil.getDateStringInUTC(endDateLimit, offset, true);
+		LOGGER.debug("");
+		
+		LOGGER.debug("startDateLimit" + startDateLimit);
+		LOGGER.debug("endDateLimit" + endDateLimit);
+		
+		
+		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
+		List<ResGetScheduleVO> getScheduleList = getScheduleApprNormalList(ownerID, companyID, sDate, eDate, userId, deptId, writerName, approveType, tenantID, check);
+		
+		
+		for (ResGetScheduleVO resVO : getScheduleList) {
+			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
+			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
+			resVO.setDate(resVO.getStartDate().substring(0,10));
+		}
+		
+		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
+			
+		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
+		List<ResGetScheduleVO> getScheduleListRept = getScheduleApprRepetList(ownerID, companyID, sDate, eDate, userId, deptId, writerName, approveType, tenantID, check);
+		
+		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
+		
+		getRepeatResult.addAll(getScheduleListRept);
+		
+		// return할 ResGetScheduleVO getScheduleList 에 추가(반복예약)
+		if (getRepeatResult.size() > 0 ) {
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			for (int i=0; i<getRepeatResult.size(); i++) {
+				String reCompanyID = getRepeatResult.get(i).getCompanyId();
+				String reNum = Integer.toString(getRepeatResult.get(i).getNum());
+				String reOwnerID = getRepeatResult.get(i).getOwnerId();
+				
+				// tbl_schedulerepetition에서 정보 가져옴
+				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, Integer.parseInt(reNum), tenantID);
+				
+				if (vo != null) {
+					
+					vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+					vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+					
+					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+					ResScheduleRepetitionVO rvo = resStruct(vo);
+					LOGGER.debug("ResScheduleRepetitionVO: " + rvo);
+					
+					// 반복예약의 반복되는 날짜리스트 뽑아옴
+					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
+					
+					// 반복예약 중에 삭제된 예약 가져옴
+					List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
+					LOGGER.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					
+					for (int j=0; j<deletedDateStrList.size(); j++) {
+						deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
+					}
+					
+					for (Date[] dateArr : returnRepDateTimes) {
+						// 삭제된 예약이면 넘어감
+						if (deletedDateStrList.contains(format.format(dateArr[0]))) {
+							continue;
+						}
+						
+						ResGetScheduleVO temp = new ResGetScheduleVO();
+						
+						temp.setNum(getRepeatResult.get(i).getNum());
+						temp.setpNum(getRepeatResult.get(i).getNum());
+						temp.setOwnerId(getRepeatResult.get(i).getOwnerId());
+						temp.setTitle(getRepeatResult.get(i).getTitle());
+						temp.setLocation(getRepeatResult.get(i).getLocation());
+						temp.setTimeDisplay(getRepeatResult.get(i).getTimeDisplay());
+						temp.setStartDate(format.format(dateArr[0]));
+						temp.setEndDate(format.format(dateArr[1]));
+						temp.setAlertTime(getRepeatResult.get(i).getAlertTime());
+						temp.setReFlag(getRepeatResult.get(i).getReFlag());
+						temp.setGresFlag(getRepeatResult.get(i).getGresFlag());
+						temp.setWriterId(getRepeatResult.get(i).getWriterId());
+						temp.setImportance(getRepeatResult.get(i).getImportance());
+						temp.setEntryList(getRepeatResult.get(i).getEntryList());
+						temp.setAllDay(getRepeatResult.get(i).getAllDay());
+						temp.setWriteDay(getRepeatResult.get(i).getWriteDay());
+						temp.setAttachFlag(getRepeatResult.get(i).getAttachFlag());
+						temp.setCharacterId(getRepeatResult.get(i).getCharacterId());
+						temp.setApproveFlag(getRepeatResult.get(i).getApproveFlag());
+						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
+						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
+						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						temp.setDate(format.format(dateArr[0]).substring(0,10));
+						temp.setValue(getRepeatResult.get(i).getOwnerId());
+						
+						getScheduleList.add(temp);
+					}
+					
+				}
+				
+			}
+		}
+		
+		String repeatYn = "N";
+
+		if(check.equals("Y")) {
+			LOGGER.debug("checkSDate" + checkSDate);
+			LOGGER.debug("checkEDate" + checkEDate);
+			
+			for (ResGetScheduleVO vo : getScheduleList) {
+			
+				LOGGER.debug("vo in loop for cheking repeat " + vo.toString());
+				LOGGER.debug("vo.getStartDate() " + Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				LOGGER.debug("vo.getEndDate() " + Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14))); 
+				LOGGER.debug("checkSDate() " + Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				LOGGER.debug("checkEDate() " + Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				
+				if((Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) <= Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) < Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)))
+				||(Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) < Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)))
+				||(Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) <= Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) )){
+					LOGGER.debug("repeat repeat repaet !!!!");	
+					repeatYn = "Y";
+				}
+			}
+		}
+				
+		LOGGER.debug("resultList: " + getScheduleList);		
+		
+		result.put("scheduleList", getScheduleList);
+		result.put("repeatYn", repeatYn);
+		LOGGER.debug("getScheduleList End");
+		return result;
+	}
+	
+	public List<ResGetScheduleVO> getScheduleApprNormalList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check) throws Exception {
+
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", sDate);
+		map.put("v_PENDDATE", eDate);
+		map.put("v_PUSERID", userId);
+		map.put("v_PDEPTID", deptId);
+		map.put("v_WRITERNAME", writerName);
+		map.put("v_APPROVETYPE", approveType);
+		map.put("tenantID", tenantID);
+		map.put("check", check);
+		return mResourceDAO.getScheduleApprList(map);
+	}
+	
+	public List<ResGetScheduleVO> getScheduleApprRepetList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check) throws Exception {
+		
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", sDate);
+		map.put("v_PENDDATE", eDate);
+		map.put("v_PUSERID", userId);
+		map.put("v_PDEPTID", deptId);
+		map.put("v_WRITERNAME", writerName);
+		map.put("v_APPROVETYPE", approveType);
+		map.put("tenantID", tenantID);
+		map.put("check", check);
+		return mResourceDAO.getScheduleApprListRepetiti(map);
+	}
+	
+	@Override
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId) {	
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDCOMPANY", brdCompany);
+		map.put("v_PUSERID", userId);
+		map.put("v_PUSERCOMPANY", userCompany);
+		map.put("v_PUSERDEPT", userDept);
+		map.put("tenantID", tenantId);
+
+		return mResourceDAO.getResApprBrdList(map);
+	}
 	
 }
 

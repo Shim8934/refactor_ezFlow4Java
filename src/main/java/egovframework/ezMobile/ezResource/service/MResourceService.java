@@ -10,6 +10,8 @@ import java.util.Map;
 
 
 
+
+
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
@@ -21,6 +23,8 @@ public interface MResourceService {
 	
 	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt, String check, String checkNum, String checkSDate, String checkEDate) throws Exception;
 	
+	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate) throws Exception;
+	
 	public Map<String, Object> getScheduleMainList(MCommonVO info, String listCnt) throws Exception;
 		
 	public List<MResourceScheduleVO> getResScheduleMainList(String utcStartDate, String utcEndDate, String companyId, int page, String firstWriteDay, String lastWriteDay,int tenantId);
@@ -30,6 +34,8 @@ public interface MResourceService {
 	public MResourceScheduleVO getResScheduleDetail(String resourceId, String scheduleId, String companyId, int tenantId);
 	
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany,  String userId, String userCompany, String userDept , int tenantId);
+	
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId);
 	
 	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId);
 	

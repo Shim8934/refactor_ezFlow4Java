@@ -33,6 +33,8 @@ public class MCommonVO {
 	private String title2;			/** 직급2 */
 	
 	private String userFileUrl;		/** 사용자 사진 */
+	
+	private String email; /* 사용자 e-mail*/
 
 	public int getTenantId() {
 		return tenantId;
@@ -40,6 +42,14 @@ public class MCommonVO {
 
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getLang() {
