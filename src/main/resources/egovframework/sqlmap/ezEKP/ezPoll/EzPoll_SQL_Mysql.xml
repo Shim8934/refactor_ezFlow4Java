@@ -865,6 +865,24 @@
 	            		TENANT_ID	= #tenant_id#
 		]]>
    </update>  
-    	
+    
+   <update id="EzPollDAO.updateCmt" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_COMMENT
+	            SET 
+	            	 TEXT_CONTENT 	= #text_content#,
+	            	 IMAGE_TYPE		= #image_type#,
+	            	 FILE_TYPE		= #file_type#,
+	            	 FILE_NAME		= #file_name#,	
+	            	 FILE_PATH		= #file_path#
+	            WHERE
+	            		ID			= #id#
+	            	AND
+	            		QST_ID		= qst_id
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>   
 
 </sqlMap>

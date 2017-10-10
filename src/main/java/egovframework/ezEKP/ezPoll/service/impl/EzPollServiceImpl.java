@@ -394,4 +394,18 @@ public class EzPollServiceImpl implements EzPollService{
 		ezPollDAO.deleteCommentOfQst(map);		
 	}
 
+	@Override
+	public void updateCmt(PollCommentVO pollCmtVO) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("id", pollCmtVO.getCmtId());
+		map.put("qst_id", pollCmtVO.getQstId());			
+		map.put("tenant_id", pollCmtVO.getTenantId());				
+		map.put("text_content", pollCmtVO.getTextContent());
+		map.put("image_type", pollCmtVO.getImageAttach());			
+		map.put("file_type", pollCmtVO.getFileAttach());
+		map.put("file_name", pollCmtVO.getFileName());
+		map.put("file_path", pollCmtVO.getFilePath());		
+		ezPollDAO.updateCmt(map);	
+	}
+
 }

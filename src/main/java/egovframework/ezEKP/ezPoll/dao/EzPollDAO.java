@@ -84,7 +84,11 @@ public class EzPollDAO extends EgovAbstractDAO{
 	
 	public void updateEndDateForQst(Map<String, Object> map) {
 		update("EzPollDAO.updateEndDateForQst", map);
-	}		
+	}	
+	
+	public void updateCmt(Map<String, Object> map) {
+		update("EzPollDAO.updateCmt", map);
+	}	
 	
 	@SuppressWarnings("unchecked")
 	public List<String> getListOfUserIdForQst(Map<String, Object> map) {		

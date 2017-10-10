@@ -745,8 +745,9 @@ public class EzPollController extends EgovFileMngUtil {
 		pollCmtVO.setTextContent(txtContent);
 		logger.debug("File Type = " + fileType);
 		
-		if (fileType.equals("sticker")) {		
-			pollCmtVO.setImageAttach(attachFilePath.substring(attachFilePath.indexOf("/images/")));
+		if (fileType.equals("sticker")) {	
+			attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
+			pollCmtVO.setImageAttach(attachFilePath);
 			pollCmtVO.setFileAttach("");
 			pollCmtVO.setFileName("");
 			pollCmtVO.setFilePath("");			
@@ -754,12 +755,14 @@ public class EzPollController extends EgovFileMngUtil {
 		else if (fileType.equals("file")) {
 			pollCmtVO.setImageAttach("");			
 			if (fileName.equals("")){
-				pollCmtVO.setFileAttach(attachFilePath.substring(attachFilePath.indexOf("/files/")));
+				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/files/"));
+				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName("");
 				pollCmtVO.setFilePath("");
 			}
 			else {
-				pollCmtVO.setFileAttach(attachFilePath.substring(attachFilePath.indexOf("/images/")));
+				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
+				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName(fileName);
 				pollCmtVO.setFilePath(filePath);
 			}		
@@ -791,6 +794,105 @@ public class EzPollController extends EgovFileMngUtil {
 			e.printStackTrace();
 			strXML = "<DATA>FAIL</DATA>";
 		}
+		return strXML;
+	}
+	
+	@RequestMapping(value="/ezPoll/editComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String editComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String strXML = "";		
+		String attachFilePath = "";
+		String fileName = "";
+		String filePath = "";
+		String txtContent = "";
+		String fileType = "";		
+		int cmtId = -1;		
+		int qstId = -1;
+		
+		qstId = Integer.parseInt(request.getParameter("qstId"));
+		cmtId = Integer.parseInt(request.getParameter("cmtId"));		
+		
+		if (request.getParameter("cmtAttach") != null) {
+			attachFilePath = request.getParameter("cmtAttach");
+		}
+		
+		if (request.getParameter("fileType") != null) {
+			fileType = request.getParameter("fileType");
+		}
+		
+		if (request.getParameter("fileName") != null) {
+			fileName = request.getParameter("fileName");
+		}
+		
+		if (request.getParameter("filePath") != null) {
+			filePath = request.getParameter("filePath");
+		}		
+		
+		if (request.getParameter("cmtTxt") != null) {
+			txtContent = request.getParameter("cmtTxt");
+		}	
+		
+		if (qstId == -1 || cmtId == -1) {
+			strXML = "<DATA>FAIL</DATA>";
+			return strXML;
+		}
+		
+		PollCommentVO pollCmtVO = new PollCommentVO();
+		pollCmtVO.setCmtId(cmtId); 
+		pollCmtVO.setQstId(qstId);		
+		pollCmtVO.setTenantId(loginVO.getTenantId());			
+		pollCmtVO.setTextContent(txtContent);			
+		
+		if (fileType.equals("sticker")) {		
+			attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
+			pollCmtVO.setImageAttach(attachFilePath);
+			pollCmtVO.setFileAttach("");
+			pollCmtVO.setFileName("");
+			pollCmtVO.setFilePath("");			
+		}
+		else if (fileType.equals("file")) {
+			pollCmtVO.setImageAttach("");			
+			if (fileName.equals("")){				
+				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/files/"));
+				pollCmtVO.setFileAttach(attachFilePath);
+				pollCmtVO.setFileName("");
+				pollCmtVO.setFilePath("");
+			}
+			else {
+				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
+				pollCmtVO.setFileAttach(attachFilePath);
+				pollCmtVO.setFileName(fileName);
+				pollCmtVO.setFilePath(filePath);
+			}		
+		}
+		else {
+			pollCmtVO.setImageAttach("");
+			pollCmtVO.setFileAttach("");
+			pollCmtVO.setFileName("");
+			pollCmtVO.setFilePath("");
+		}
+		
+		//Update comment to database 
+		try {
+			//Insert into comment table
+			ezPollService.updateCmt(pollCmtVO);
+			
+			//Inform all waiting users
+			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
+					+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\"}";
+			JSONParser parser = new JSONParser(); 
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/editCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
+			
+			//Update comment user in question related table
+			strXML = "<DATA>OK</DATA>";
+		}
+		catch (Exception e) {			
+			e.printStackTrace();
+			strXML = "<DATA>FAIL</DATA>";
+		}
+		
 		return strXML;
 	}
 	

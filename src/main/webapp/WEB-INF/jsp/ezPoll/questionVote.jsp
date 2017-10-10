@@ -305,14 +305,31 @@
 			        	var _filePath = JSON.parse(updatedInfo.body).filePath;
 			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
 			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
-			        	//var _userId = JSON.parse(updatedInfo.body).userId;
-			            if (_userId != curentUser) {
-			          		console.log("_cmdId: " + _cmdId + ", CommentIndex: " + commentIndex);
+			        	
+			            if (_userId != curentUser) {			          		
 			            	if (_cmdId <= commentIndex) {
 			          			alert("Something is wrong!");
 			          			return;
 			          		}
 			            	updateNewCmt(_userId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime);
+					    }
+				    });
+			        
+			        stompClient.subscribe('/reply/editCmtForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
+			        	var _cmdId = JSON.parse(updatedInfo.body).cmId;	
+			        	var _userId = JSON.parse(updatedInfo.body).userId;	
+			        	var _attachFilePath = JSON.parse(updatedInfo.body).attachFilePath;
+			        	var _fileType = JSON.parse(updatedInfo.body).fileType;
+			        	var _fileName = JSON.parse(updatedInfo.body).fileName;
+			        	var _filePath = JSON.parse(updatedInfo.body).filePath;
+			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
+
+			            if (_userId != curentUser) {			          		
+			            	if (_cmdId > commentIndex) {
+			          			alert("Something is wrong!");
+			          			return;
+			          		}
+			            	updateCurrentCmt(_cmdId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent);
 					    }
 				    });
 			        
@@ -782,9 +799,9 @@
 		    		}
 		    	}
 		    	else {
-		    		fd.append("cmtTxt", document.getElementById("editCmtArea5" + commentIndex).value);
+		    		fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value);
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
-		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea5" + commentIndex).value;
+		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value;
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
@@ -800,7 +817,8 @@
 		    	}
 		    	else {
 		    		var fileType = document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_type");
-		    		if (div2Cmt.childElementCount == 1) {		    			
+		    		fd.append("fileType", fileType);
+		    		if (div2Cmt.childElementCount == 1) {	    				    			
 		    			if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {		                	
 		    				var innerDiv1 = document.createElement("div");
 		                	innerDiv1.setAttribute("style", "padding-top: 5px;");
@@ -825,10 +843,10 @@
 					    		innerDiv1.appendChild(imgForinnerDiv1);
 					    		div2Cmt.appendChild(innerDiv1);
 			    			}
-			    			else {
-					    		imgForinnerDiv1.setAttribute("height", "60");
+			    			else {					    		
+			    				imgForinnerDiv1.setAttribute("height", "60");
 						    	imgForinnerDiv1.setAttribute("width", "60");
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px;");
 						    	imgForinnerDiv1.setAttribute("_type", "file");
 						    	imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 						    	imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
@@ -839,9 +857,13 @@
 					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
 					    		innerDiv1.appendChild(innerDiv2);
 					    		div2Cmt.appendChild(innerDiv1);
+					    		fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 			    			}
+					    	fd.append("cmtAttach", imgForinnerDiv1.src);
 		    			}
 		    			else {		    				
+		    				div2Cmt.firstElementChild.children[0].setAttribute("vertical-align", "middle");
+		    				div2Cmt.firstElementChild.children[0].setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
 		    				if (fileType == "sticker") {
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
@@ -865,7 +887,7 @@
 			    			else {
 			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");
-			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "file");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
@@ -881,10 +903,14 @@
 						    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
 						    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 			    				}
+			    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 			    			}
+		    				fd.append("cmtAttach", div2Cmt.firstElementChild.children[0].src);
 		    			}
 		    		}
-		    		else {		    			
+		    		else {    					    			
+		    			div2Cmt.lastElementChild.children[0].setAttribute("vertical-align", "middle");
+		    			div2Cmt.lastElementChild.children[0].setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
 		    			if (fileType == "sticker") {
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
@@ -905,10 +931,10 @@
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 		    			}
-		    			else {
+		    			else {		    				
 		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");
-		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "file");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
@@ -924,7 +950,9 @@
 					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);   
 					    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 		    				}
+		    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 		    			}
+		    			fd.append("cmtAttach", div2Cmt.lastElementChild.children[0].src);
 		    		}
 		    	}
 		    	
@@ -941,7 +969,10 @@
 		    	document.getElementById("sendComment").style.display = "block";
 		    	
 		    	//Create a post request to update comment
-		    	
+		        fd.append("qstId", qstId);
+		        fd.append("cmtId", commentIndex);		        		        
+	    	    xhr1.open("POST", "/ezPoll/editComment.do");
+	    	    xhr1.send(fd); 		  
 		    }
 		    
 		    function deleteComment(obj) {
@@ -1027,8 +1058,7 @@
 			    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;"); 
 			    	
 			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {	   			    		
-			    		if (fileType == "file") {
-				    		//document.getElementById("hidCmtType").value = "image";
+			    		if (fileType == "file") {				    		
 				    		imgForinnerDiv1.setAttribute("_type", "images");
 				    		fd.append("fileType", "file");
 					    	imgForinnerDiv1.setAttribute("height", "60");
@@ -1037,8 +1067,7 @@
 				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];	
 				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);   
 				    	}
-				    	else {
-				    		//document.getElementById("hidCmtType").value = "sticker";
+				    	else {				    		
 				    		imgForinnerDiv1.setAttribute("_type", "sticker");
 				    		fd.append("fileType", "sticker");
 				    		imgForinnerDiv1.setAttribute("height", "80");
@@ -1050,12 +1079,11 @@
 			    		innerDiv1.appendChild(imgForinnerDiv1);
 			    		div2ForTd2.appendChild(innerDiv1);
 			    	}
-			    	else {
-			    		//document.getElementById("hidCmtType").value = "file";
+			    	else {			    		
 			    		fd.append("fileType", "file");
 			    		imgForinnerDiv1.setAttribute("height", "60");
 				    	imgForinnerDiv1.setAttribute("width", "60");
-				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px;");
 				    	imgForinnerDiv1.setAttribute("_type", "file");
 				    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]);   
 				    	
@@ -1523,7 +1551,7 @@
                 	else {
 				    	imgForinnerDiv1.setAttribute("height", "60");
 				    	imgForinnerDiv1.setAttribute("width", "60");	
-				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px;");
 			    		imgForinnerDiv1.src = attach;	
 			    		innerDiv1.appendChild(imgForinnerDiv1);
 			    		div2ForTd2.appendChild(innerDiv1);
@@ -1560,6 +1588,158 @@
                 oTable.appendChild(objTr);  
 		    }
 		    
+		    function updateCurrentCmt(cmdId, attachFilePath, fileType, fileName, filePath, txtContent) {		    	
+		    	var div2Cmt = document.getElementById("div2Cmt" + cmdId);
+		    	if (txtContent == "") {
+		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
+		    			div2Cmt.removeChild(div2Cmt.children[0]);
+		    		}
+		    	}
+		    	else {		    		
+		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
+		    			div2Cmt.firstElementChild.innerHTML = txtContent;
+		    		}
+		    		else {
+		    			var pForTd2 = document.createElement("p");  
+		    			pForTd2.innerHTML = txtContent;
+		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
+		    		}
+		    	}
+		    	
+		    	if (attachFilePath == "") {
+		    		if (div2Cmt.lastElementChild.tagName.toLowerCase() == "div") {
+		    			div2Cmt.removeChild(div2Cmt.children[1]);
+		    		}
+		    	}
+		    	else {	    			    		
+		    		if (div2Cmt.childElementCount == 1) {		    			
+		    			if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {		                	
+		    				var innerDiv1 = document.createElement("div");
+		                	innerDiv1.setAttribute("style", "padding-top: 5px;");
+					    	var imgForinnerDiv1 = document.createElement("img");  	    	           
+					    	imgForinnerDiv1.setAttribute("vertical-align", "middle");
+					    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
+					    	if (fileType == "sticker") {
+					    		imgForinnerDiv1.setAttribute("_type", "sticker");					    		
+					    		imgForinnerDiv1.setAttribute("height", "80");
+						    	imgForinnerDiv1.setAttribute("width", "80");					    	
+					    		imgForinnerDiv1.src = attachFilePath;	
+					    		innerDiv1.appendChild(imgForinnerDiv1);
+					    		div2Cmt.appendChild(innerDiv1);
+					    	}
+			    			else if (fileType == "images") {
+					    		imgForinnerDiv1.setAttribute("_type", "images");					    		
+						    	imgForinnerDiv1.setAttribute("height", "60");
+						    	imgForinnerDiv1.setAttribute("width", "60");	
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+					    		imgForinnerDiv1.src = attachFilePath;	
+					    		imgForinnerDiv1.setAttribute("_fileInfo", attachFilePath); 
+					    		innerDiv1.appendChild(imgForinnerDiv1);
+					    		div2Cmt.appendChild(innerDiv1);
+			    			}
+			    			else {
+					    		imgForinnerDiv1.setAttribute("height", "60");
+						    	imgForinnerDiv1.setAttribute("width", "60");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px;");
+						    	imgForinnerDiv1.setAttribute("_type", "file");
+						    	imgForinnerDiv1.src = attachFilePath;
+						    	imgForinnerDiv1.setAttribute("_fileInfo", filePath); 
+						    	innerDiv1.appendChild(imgForinnerDiv1);						    	
+					    		var innerDiv2 = document.createElement("div");
+					    		innerDiv2.innerHTML = fileName;					    		
+					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
+					    		innerDiv2.setAttribute("_fileInfo", filePath);   
+					    		innerDiv1.appendChild(innerDiv2);
+					    		div2Cmt.appendChild(innerDiv1);
+			    			}					    	
+		    			}
+		    			else {		    				
+		    				if (fileType == "sticker") {
+			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
+			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
+			    				}
+		    					div2Cmt.firstElementChild.children[0].setAttribute("_type", "sticker");					    		
+		    					div2Cmt.firstElementChild.children[0].setAttribute("height", "80");
+		    					div2Cmt.firstElementChild.children[0].setAttribute("width", "80");					    	
+		    					div2Cmt.firstElementChild.children[0].src = attachFilePath;	
+			    			}
+			    			else if (fileType == "images") {
+			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
+			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
+			    				}
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");					    		
+			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer;");
+			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;	
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
+			    			}
+			    			else {
+			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "file");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", filePath); 
+			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;
+			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
+			    					div2Cmt.firstElementChild.children[1].innerHTML = fileName;
+			    					div2Cmt.firstElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
+			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileInfo", filePath);   
+			    				}
+			    				else {
+			    					var innerDiv2 = document.createElement("div");
+						    		innerDiv2.innerHTML = fileName;					    		
+						    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
+						    		innerDiv2.setAttribute("_fileInfo", filePath);   
+						    		div2Cmt.lastElementChild.appendChild(innerDiv2);
+			    				}
+			    			}		    				
+		    			}
+		    		}
+		    		else {		    			
+		    			if (fileType == "sticker") {
+		    				if (div2Cmt.lastElementChild.childElementCount == 2) {
+		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
+		    				}
+	    					div2Cmt.lastElementChild.children[0].setAttribute("_type", "sticker");					    		
+	    					div2Cmt.lastElementChild.children[0].setAttribute("height", "80");
+	    					div2Cmt.lastElementChild.children[0].setAttribute("width", "80");					    	
+	    					div2Cmt.lastElementChild.children[0].src = attachFilePath;	
+		    			}
+		    			else if (fileType == "images") {
+		    				if (div2Cmt.lastElementChild.childElementCount == 2) {
+		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
+		    				}
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");					    		
+		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");	
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer;");
+		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;	
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
+		    			}
+		    			else {
+		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "file");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", filePath); 
+		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;
+		    				if (div2Cmt.lastElementChild.childElementCount == 2) {		    					
+		    					div2Cmt.lastElementChild.children[1].innerHTML = fileName;
+		    					div2Cmt.lastElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
+		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileInfo", filePath);   
+		    				}
+		    				else {
+		    					var innerDiv2 = document.createElement("div");
+					    		innerDiv2.innerHTML = fileName;					    		
+					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
+					    		innerDiv2.setAttribute("_fileInfo", filePath);   
+					    		div2Cmt.lastElementChild.appendChild(innerDiv2);
+		    				}
+		    			}		    			
+		    		}
+		    	}
+		    }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -1724,7 +1904,7 @@
 										<c:if test="${_comt.fileName != ''}">
 											<div style="padding-top: 5px;">
 												<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileInfo="<c:out value ="${_comt.filePath}"/>" >									
-												<div style="cursor: pointer; padding-left: 6px;" _fileInfo="<c:out value ="${_comt.filePath}" />" ><c:out value ="${_comt.fileName}" /></div>						
+												<div style="cursor: pointer; padding-left: 15px;" _fileInfo="<c:out value ="${_comt.filePath}" />" ><c:out value ="${_comt.fileName}" /></div>						
 											</div>					
 										</c:if>
 										<c:if test="${_comt.fileName == ''}">
