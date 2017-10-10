@@ -596,7 +596,7 @@ public class MBoardGWController {
 				
 				list.get(i).setFileSize(fileSize);
 				//filePath 및 fileName 인코딩
-				list.get(i).setFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
+				list.get(i).setEncodeFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
 				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
 				
 			}
