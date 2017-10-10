@@ -128,6 +128,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
     }
+    
     return RtnVal;
 }
 

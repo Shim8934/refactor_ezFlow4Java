@@ -376,12 +376,21 @@
 		
 		    function insertAllCont_onclick() {
 		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><br><spring:message code='ezApprovalG.t1362'/>";
-		        var Ans = OpenInformationUI(pAlertContent);
+		        var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
 		
-		        if (!Ans)
+		        if (!Ans) {
 		            return;
-		
-		        chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("VALUE"));
+		        }
+		    }
+		    
+		    function insertAllCont_complete(ret) {
+		    	if (!ret) {
+		    		DivPopUpHidden();
+		    		return;
+		    	}
+		    	
+		    	chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("VALUE"));
+		    	DivPopUpHidden();
 		    }
 		
 		    function chkAllDept(aDeptID, aDeptName) {
@@ -408,8 +417,7 @@
 		
 		            if (objNodes.length > 0) {
 		                for (var i = 0; i < objNodes.length; i++) {
-		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue,
-					            objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
+		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
 		                }
 		            }
 		            return;
@@ -968,8 +976,8 @@
                         <img style="cursor:pointer" src="/images/arr_ll.gif" width="24" height="24" onclick="return deleteAllCont_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_u.gif" width="24" height="24" onclick="return moveUp_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_d.gif" width="24" height="24" onclick="return moveDown_onclick()"><br>
-                        <div style="height:250px;">&nbsp;</div>
-                        <img style="cursor:pointer;" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()"><br>
+                        <div style="height:250px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>">&nbsp;</div>
+                        <img style="cursor:pointer;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()"><br>
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
                         <h2><spring:message code='ezApproval.t61'/></h2>
