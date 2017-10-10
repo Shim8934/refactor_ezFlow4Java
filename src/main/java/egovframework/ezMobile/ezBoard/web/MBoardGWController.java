@@ -113,21 +113,22 @@ public class MBoardGWController {
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), pSearchText);
 			LOGGER.debug("listCount ="+listCount);
 			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
-			result.put("data2", boardInfo);
-			result.put("listCount", listCount);
+			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
-			result.put("data2", "");
-			result.put("listSize", "");
 		}
 		
 		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] ended.");
+		
 		return result;
 	}
 	
@@ -175,21 +176,26 @@ public class MBoardGWController {
 			String favoriteYN = mBoardService.checkFavorite(userID, boardId, info.getTenantId());
 			LOGGER.debug("listCount : "+listCount);
 			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+			data.put("favoriteYN", favoriteYN);
+			data.put("parentWriteDate", parentWriteDate);
+			data.put("upperitemidtree", upperitemidtree);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
-			result.put("data2", boardInfo);
-			result.put("listCount", listCount);
-			result.put("favoriteYN", favoriteYN);
-			result.put("parentWriteDate", parentWriteDate);
-			result.put("upperitemidtree", upperitemidtree);
+			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] ended.");
+		
 		return result;
 	}
 	
@@ -213,14 +219,13 @@ public class MBoardGWController {
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", resultList);
-			
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] ended.");
+		
 		return result;
 	}
 	
@@ -233,6 +238,7 @@ public class MBoardGWController {
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] started.");
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		try {
 			String userID = request.getParameter("userID");
@@ -243,7 +249,6 @@ public class MBoardGWController {
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
-			//boardInfo
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
@@ -264,21 +269,21 @@ public class MBoardGWController {
 			//새게시물 눌렀을때, read테이블에 들어가게함.
 			mBoardService.setAsRead(info, boardId, contentId);
 			
+			data.put("boardItem", boardItem);
+			data.put("content", mhtContent);
+			data.put("boardInfo", boardInfo);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", boardItem);
-			result.put("content", mhtContent);
-			result.put("boardInfo", boardInfo);
+			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
-			result.put("content", "");
-			result.put("boardInfo", "");
 		}		
 		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] ended.");
+		
 		return result;
 	}
 	
@@ -291,6 +296,7 @@ public class MBoardGWController {
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] started.");
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		try {
 			String userID = request.getParameter("userID");
@@ -316,10 +322,7 @@ public class MBoardGWController {
 			boardInfo.setType("photoBoardItem");
 			List<MBoardAttachVO>	photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
-			//String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-			
 			for (MBoardAttachVO photo : photoList) {
-				//임시로 localhost:8080
 				photo.setFilePath(photo.getFilePath());
 			}
 				
@@ -327,21 +330,21 @@ public class MBoardGWController {
 			
 			mBoardService.setAsRead(info, boardId, contentId);
 			
+			data.put("boardItem", boardItem);
+			data.put("boardInfo", boardInfo);
+			data.put("photoList", photoList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", boardItem);
-			result.put("boardInfo", boardInfo);
-			result.put("photoList", photoList);
+			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
-			result.put("boardInfo", "");
-			result.put("photoList", "");
 		}		
 		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] ended.");
+		
 		return result;
 	}
 	
@@ -378,12 +381,10 @@ public class MBoardGWController {
 
 	        result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] ended.");
@@ -424,12 +425,10 @@ public class MBoardGWController {
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] ended.");
@@ -455,12 +454,10 @@ public class MBoardGWController {
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");
@@ -475,6 +472,7 @@ public class MBoardGWController {
 	public Object getLeftMenu(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] started.");
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		try {
 			String userId = request.getParameter("userId");
@@ -491,19 +489,20 @@ public class MBoardGWController {
 			
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
 			
+			data.put("list", list);
+			data.put("listCount", listCount);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
-			result.put("data2", listCount);
-			
+			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
-			result.put("data2", "");
-		}				
+		}
+		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] ended.");
+		
 		return result;
 	}
 	
@@ -527,12 +526,12 @@ public class MBoardGWController {
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
+		
 		return result;
 	}
 	
@@ -556,12 +555,12 @@ public class MBoardGWController {
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
+		
 		return result;
 	}
 	
@@ -601,19 +600,18 @@ public class MBoardGWController {
 				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
 				
 			}
-
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");
+		
 		return result;
 	}
 	
@@ -635,6 +633,7 @@ public class MBoardGWController {
 		jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
 		
 		JSONObject result = new JSONObject();
+		
 		try {
 			JSONArray fileArray = new JSONArray();
 			
@@ -734,7 +733,6 @@ public class MBoardGWController {
 
 	        strXML.append("<ROOT><NODES>");
 	        
-	        String attachment = "";
 	        for (int i = 0; i < cnt; i++) {
 	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
 	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
@@ -742,21 +740,15 @@ public class MBoardGWController {
 	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
 	            strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
 	            strXML.append("</NODE>");
-	            
-	            
-	            //attachment += "tempUploadFile"+commonUtil.separator+pUploadSN[i]+"_"+pFileName[i]+"|";
-	            
 	        }
 	        
 	        strXML.append("</NODES></ROOT>");
 	        
 	        result.put("data", strXML);
-	        //result.put("attachments", attachment);
 			result.put("status", "ok");
 			result.put("code", 0);
-			
 		} catch (Exception e) {
-			e.printStackTrace();
+			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -767,36 +759,6 @@ public class MBoardGWController {
 		
 		return result;
 	}
-	
-/*	*//**
-	 * 모바일 G/W 게시판 [GET] 게시판 리스트 카운트
-	 *//*
-	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getBoardItemListCount() throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] started.");
-				
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] ended.");
-	}
-	
-	*//**
-	 * 모바일 G/W 게시판 [GET] 섬네일게시판 리스트
-	 *//*
-	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getThumbBoardList() throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] started.");
-				
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] ended.");
-	}
-	
-	*//**
-	 * 모바일 G/W 게시판 [GET] 섬네일게시판 리스트 카운트
-	 *//*
-	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getThumbBoardListCount() throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] started.");
-				
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] ended.");
-	}*/
 	
 	/**
      * 첨부파일을 서버에 저장한다.
