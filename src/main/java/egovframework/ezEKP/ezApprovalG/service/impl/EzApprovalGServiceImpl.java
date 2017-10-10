@@ -22536,9 +22536,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 strRtnXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
 	         strRtnXML = strRtnXML + commonUtil.convertDocumentToString(xmlDom).replace("&amp;", "&");
 		}
-		 String strFilePath = mapPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg" + commonUtil.separator + strDocID + ".xml";
+		 String strFilePath = mapPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg" + commonUtil.separator + strDocID + ".xml";
 
-		 File file = new File (mapPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg");
+		 File file = new File (mapPath  + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg");
 		 
 		 if (!file.exists()) {
 			 file.mkdirs();
@@ -23009,7 +23009,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private String getFileName(String realPath, String strFileName, String strFolderName, int tenantID) {
-		String strPath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+		String strPath = config.getProperty("relay_root") + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
 		String strResult = "";
 		boolean exist;
 		String result = "";
