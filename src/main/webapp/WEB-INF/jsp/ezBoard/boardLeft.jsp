@@ -462,13 +462,13 @@
 		                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
 		            }
 		            else {
-		                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6&qstId=" + qstId;
+		                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
 		            }
 		        } else {
 		            if (idx == 1)
 		            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
 		            else
-		            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6&qstId=" + qstId;
+		            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
 		            SetTreeviewUnSelect("");
 		        }	    
 		    }
