@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -172,7 +173,7 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezPoll/pollList.do")
-	public String getQuestion(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+	public String getQuestion(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
 		logger.debug("Start /ezPoll/pollList.do!");
 		
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);		
@@ -188,6 +189,20 @@ public class EzPollController extends EgovFileMngUtil {
 		checkingArray[0] = 0;
 		checkingArray[1] = 0;
 		int adminPrivilege = -1;
+		String qstId = "";
+		
+		if(request.getParameter("qstId") != null){			
+			qstId = request.getParameter("qstId");
+		}
+		
+		logger.debug("CHECK QSTID: " + qstId);
+		
+		if (!qstId.equals("")) {
+			logger.debug("Run here!");
+			redirectAttributes.addAttribute("qstId", qstId);
+			return "redirect:/ezPoll/pollVote.do";
+		}
+		
 		List<Integer> listOfModifyingQst = new ArrayList<Integer>();
 		ObjectMapper om = new ObjectMapper();
 		
@@ -198,7 +213,7 @@ public class EzPollController extends EgovFileMngUtil {
 		else {
 			//Admin privilege user
 			adminPrivilege = 1;
-		}
+		}	
 		
 		if(request.getParameter("see") != null){
 			seeAll = Integer.parseInt(request.getParameter("see"));
@@ -558,7 +573,13 @@ public class EzPollController extends EgovFileMngUtil {
 		Collections.sort(listComments, (PollCommentVO cmt1, PollCommentVO cmt2) ->{
 	        return Integer.valueOf(cmt1.getCmtId()).compareTo(cmt2.getCmtId());
 		});
-		numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
+		
+		if (listComments.isEmpty()) {
+			numberOfCmt = 0;
+		}
+		else {
+			numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
+		}		
 		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);

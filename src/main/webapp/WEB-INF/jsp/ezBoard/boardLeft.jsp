@@ -24,6 +24,7 @@
 	        var RedirectBoardID = "${redirectBoardID}";
 	        var Func = "${func}";
 	        var subFunc = "${subFunc}";
+	        var qstId = "${qstId}";
 	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;
@@ -455,21 +456,21 @@
 		            SetTreeviewUnSelect("");
 		        }
 		    }
-			function Poll_Open(idx) {
-		        if (CrossYN()) {
+			function Poll_Open(idx) {		       
+				if (CrossYN()) {
 		            if (idx == 1) {
-		                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
+		                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
 		            }
 		            else {
-		                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6&qstId=" + qstId;
 		            }
 		        } else {
 		            if (idx == 1)
-		            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
+		            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
 		            else
-		            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6&qstId=" + qstId;
 		            SetTreeviewUnSelect("");
-		        }
+		        }	    
 		    }
 		    function WebPartToggle(obj) {
 		        for (var i = 0; i < level1El.length; i++) {

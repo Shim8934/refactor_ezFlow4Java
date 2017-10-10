@@ -131,6 +131,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardMain(HttpServletRequest req, Model model) {
 		String func = "";
 		String subFunc = "";
+		String qstId = "";
 
 		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
 			func = req.getParameter("func");	
@@ -138,10 +139,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("subFunc") != null && !req.getParameter("subFunc").equals("")) {
 			subFunc = req.getParameter("subFunc");	
 		}
+		if (req.getParameter("qstId") != null && !req.getParameter("qstId").equals("")) {
+			qstId = req.getParameter("qstId");	
+		}
 		
 		model.addAttribute("func", func);
-		model.addAttribute("subFunc", subFunc);
-		
+		model.addAttribute("subFunc", subFunc);	
+		model.addAttribute("qstId", qstId);	
+									
 		return "ezBoard/boardMain";
 	}
 	
@@ -173,6 +178,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception{
 		String redirectBoardID = "";
         String redirectBoardGroupID = "";
+        String qstId = "";
         String func = "";
         String subFunc = "";
         String photoType = "";
@@ -205,6 +211,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (request.getParameter("func") != null) {
 			func = request.getParameter("func");
+		}
+		
+		if (request.getParameter("qstId") != null) {
+			qstId = request.getParameter("qstId");
 		}
 		
 		if (request.getParameter("subFunc") != null) {
@@ -245,6 +255,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("resultXML", resultXML);
         modelMap.addAttribute("func",func);
         modelMap.addAttribute("subFunc",subFunc);
+        modelMap.addAttribute("qstId",qstId);        
         modelMap.addAttribute("photoType",photoType);
         modelMap.addAttribute("redirectBoardID",redirectBoardID);
         modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);

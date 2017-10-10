@@ -5,11 +5,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -41,6 +44,9 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPoll.service.EzPollService;
+import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
@@ -116,6 +122,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name = "EzPollService")
+	private EzPollService ezPollService;
 	/**
 	 * 포탈 메인 화면 호출 함수
 	 */
@@ -1350,7 +1358,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 설문참여 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+/*	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewPoll Start");
 		
@@ -1450,7 +1458,47 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		logger.debug("wpNewPoll End");
 		return "/ezPortal/portalWpNewPoll";
+	}*/
+	
+	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("wpNewVote Start");
+		loginVO = commonUtil.userInfo(loginCookie);
+		int qstId = -1;
+		String qstTitle = "";
+		
+		//Get List of Question for user
+		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
+		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, "");
+		
+		if (!setOfQuestions.isEmpty()) {
+			//Sort listQuestions by question id
+			List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
+			Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) ->{
+		        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
+			});
+			PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
+			qstTitle = question.getTitle();
+			qstId = question.getQstId();
+			//Get list of Options		
+			List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());
+			
+			//Sort list of Options by votes
+			Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) ->{
+		        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
+			});
+			
+			model.addAttribute("listOptions", listOptions);
+			model.addAttribute("numberOfOptions", listOptions.size());
+		}
+		
+		model.addAttribute("qstTitle", qstTitle);		
+		model.addAttribute("qstId", qstId);	
+		
+		logger.debug("wpNewVote End");
+		return "/ezPortal/portalWpNewVote";
 	}
+	
 	
 	/**
 	 * 포탈 - webPart 결재 통계 화면 호출 함수

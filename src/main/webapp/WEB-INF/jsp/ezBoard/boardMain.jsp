@@ -9,7 +9,7 @@
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="about:blank" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
 		    <frameset cols="220,*" frameborder="0" border="0">
-			    <frame src="/ezBoard/boardLeft.do?func=${func}&subFunc=${subFunc}" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
+			    <frame src="/ezBoard/boardLeft.do?func=${func}&subFunc=${subFunc}&qstId=${qstId}" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
 	            <frame src="about:blank" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
 		    </frameset>
     </frameset>
