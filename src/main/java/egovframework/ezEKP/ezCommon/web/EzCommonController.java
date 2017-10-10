@@ -214,7 +214,7 @@ public class EzCommonController extends EgovFileMngUtil{
         String result = "";
         String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
 
-        if (strHTML.indexOf("error") > -1) {
+        if (strHTML.equals("error")) {
         	strHTML = commonUtil.cleanValue(strHTML);
         } else {
         	if (strHTML.indexOf("<BODY>") > -1) {
