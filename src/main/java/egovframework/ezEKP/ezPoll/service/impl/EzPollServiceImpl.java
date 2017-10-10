@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezPoll.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPoll.dao.EzPollDAO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -17,6 +20,7 @@ import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPollService")
@@ -26,6 +30,9 @@ public class EzPollServiceImpl implements EzPollService{
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -415,6 +422,42 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("qst_id", qstId);			
 		map.put("tenant_id", tenantId);			
 		ezPollDAO.deleteSpecificCmt(map);		
+	}
+	
+	public void getAllQuestionForUser(LoginVO loginvo, Set<PollQuestionVO> set, String searchStr) throws Exception {
+		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
+		int tenantID = loginvo.getTenantId();
+		//Check if user has admin privilege
+		if (loginvo.getRollInfo().indexOf("c=1") == -1 && loginvo.getRollInfo().indexOf("k=1") == -1) {
+			//Normal user
+			String companyID = loginvo.getCompanyID();
+			String deptID = loginvo.getDeptID();
+			String userID = loginvo.getId();
+			
+			try {
+				String depPath = ezOrganService.getDeptPath(deptID, tenantID);
+				listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			set.addAll(listOfQuestion);
+			
+			//Get all question that this user is creator
+			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
+			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr);		
+			set.addAll(listOfQuestion2);
+		}
+		else {
+			//Get all question for admin privilege user
+			try {
+				listOfQuestion = getAllQuestions(tenantID, searchStr);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			set.addAll(listOfQuestion);
+		}	
 	}
 
 }

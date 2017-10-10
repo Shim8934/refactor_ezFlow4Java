@@ -227,7 +227,8 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get List of Question for user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
-		getAllQuestionForUser(loginVO, setOfQuestions, searchStr);
+		//getAllQuestionForUser(loginVO, setOfQuestions, searchStr); comment to test
+		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, searchStr);
 		List<Integer> listHiddenQuestionIds = ezPollService.getHiddenQuestionIds(userID, loginVO.getTenantId());
 		
 		//Set Status for each question
@@ -553,7 +554,11 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get list of comments for question
 		List<PollCommentVO> listComments = ezPollService.getListCmtOfQst(qstId, tenantId);
-		numberOfCmt = listComments.size();
+		//Sort list of comments
+		Collections.sort(listComments, (PollCommentVO cmt1, PollCommentVO cmt2) ->{
+	        return Integer.valueOf(cmt1.getCmtId()).compareTo(cmt2.getCmtId());
+		});
+		numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
 		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);
@@ -1511,7 +1516,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}		
 	}
 	
-	private void getAllQuestionForUser(LoginVO loginvo, Set<PollQuestionVO> set, String searchStr) throws Exception {
+/*	private void getAllQuestionForUser(LoginVO loginvo, Set<PollQuestionVO> set, String searchStr) throws Exception {
 		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
 		int tenantID = loginvo.getTenantId();
 		//Check if user has admin privilege
@@ -1545,7 +1550,7 @@ public class EzPollController extends EgovFileMngUtil {
 			}
 			set.addAll(listOfQuestion);
 		}	
-	}
+	}*/
 
 	private void setStatusForQuestions(Set<PollQuestionVO> setOfQuestions, List<Integer> listHiddenQuestionIds, LoginVO loginVO, int[] checkingArray, int seeAll) throws ParseException{
 		String userID = loginVO.getId();

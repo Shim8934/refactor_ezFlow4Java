@@ -343,6 +343,9 @@
 			          			alert("Something is wrong!");
 			          			return;
 			          		}
+			            	if (_cmdId == commentIndex) {
+			            		commentIndex = commentIndex - 1;
+			            	}
 			            	deleteCurrentCmt(_cmdId);
 					    }
 				    });
@@ -996,7 +999,11 @@
 		    	//currentEditingCmt = -1;
 		    	var id = obj.getAttribute("_comtIndex");		    	
 		    	if (confirm("<spring:message code = 'ezPoll.t207' />")) { 
-		    		console.log("Delete comment!");
+		    		console.log("Delete comment!");		    		
+		    		if (id == commentIndex) {
+		    			commentIndex = commentIndex - 1;
+		    		}
+		    		
 		    		//Delete row in comment table
 		    		var oTable = document.getElementById("commentListView");
 		    		var i = obj.parentNode.parentNode.parentNode.rowIndex;

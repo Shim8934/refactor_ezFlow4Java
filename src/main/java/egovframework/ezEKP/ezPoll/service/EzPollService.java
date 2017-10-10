@@ -1,12 +1,14 @@
 package egovframework.ezEKP.ezPoll.service;
 
 import java.util.List;
+import java.util.Set;
 
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 
 
@@ -91,5 +93,7 @@ public interface EzPollService {
 	public void updateCmt(PollCommentVO pollCmtVO) throws Exception;
 
 	public void deleteSpecificCmt(int cmtId, int qstId, int tenantId) throws Exception;
+
+	public void getAllQuestionForUser(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr)  throws Exception;
 	
 }
