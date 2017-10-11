@@ -24,7 +24,7 @@ public interface MBoardService {
 	
 	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
 	
-	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception;
+	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID, String primary) throws Exception;
 	
 	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID, String offset) throws Exception;
 	

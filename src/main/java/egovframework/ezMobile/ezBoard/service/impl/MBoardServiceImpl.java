@@ -812,7 +812,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception {
+	public List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID, String primary) throws Exception {
 		logger.debug("brdBoardTree started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -825,6 +825,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("selectBy", selectBy);
 		map.put("excludeBoardID", excludeBoardID);
 		map.put("tenantID", tenantID);
+		map.put("primary", primary);
 		
 		logger.debug("brdBoardTree ended");
 		return mBoardDAO.brdBoardTree(map);
@@ -885,6 +886,7 @@ public class MBoardServiceImpl implements MBoardService {
 	public List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception {
 		logger.debug("getBoardTree started");
 		
+		String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 		String rollInfo = info.getRollInfo();
 		int tenantID = info.getTenantId();
 		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
@@ -903,10 +905,10 @@ public class MBoardServiceImpl implements MBoardService {
 	    for (int i = 0; i < accessID.split(",").length; i++) {
             
             if (mode == 0) {
-            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);
+            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID, primary);
             	
             } else {
-            	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, tenantID);
+            	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, tenantID, primary);
             	
             	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
             		for (MBoardTreeVO k : tempBrdBoardTreeList) {
