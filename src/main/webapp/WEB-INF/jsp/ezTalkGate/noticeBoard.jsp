@@ -40,7 +40,7 @@ function ItemRead_onclick(itemseq) {
     // window.open("/myoffice/ezMsn/shownotice.aspx?itemid=" + itemseq, "", "height=657,width=720px, status=no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,""); 
 
     var pURL = "/ezTalkGate/showNoticeBoardItem.do?itemId=" + itemseq
-    window.showModalDialog(pURL, null, "dialogHeight:440px; dialogWidth:680px; status:no; scroll:no; help:no; edge:sunken; resizable=yes; center:yes"); 
+    window.showModalDialog(pURL, null, "dialogHeight:604px; dialogWidth:773px; status:no; scroll:no; help:no; edge:sunken; resizable=yes; center:yes"); 
 }
   
 </script>
