@@ -24,22 +24,20 @@
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   	<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	  
 	<script type="text/javascript">		
-		//Variable for file upload()
-	    var filesize = 0;
-	    var file = new Array;
-	    var xhr = new XMLHttpRequest();
-		var lstAttachLink = document.getElementById("lstAttachLink");
-	    var isfileup = false;
-	    //end
-	    var mode = "<c:out value='${mode}'/>";
-		var L_StartDate = "";
-		var L_EndDate = "";
-		var L_StartTime = "";
-		var L_EndTime = "";
+	    var filesize 		  = 0;
+	    var file 			  = new Array;
+	    var xhr 			  = new XMLHttpRequest();
+		var lstAttachLink 	  = document.getElementById("lstAttachLink");
+	    var isfileup 		  = false;
+	    var mode 			  = "<c:out value='${mode}'/>";
+		var L_StartDate 	  = "";
+		var L_EndDate 		  = "";
+		var L_StartTime 	  = "";
+		var L_EndTime 		  = "";
 		var g_windowReference = null;		
 		
-		window.onunload = function(){
-			if (mode == "modify"){
+		window.onunload = function() {
+			if (mode == "modify") {
 				//Update the vote modifying status
 				var qstID = "<c:out value='${question.qstId}'/>";
 				var fd = new FormData();
@@ -49,7 +47,7 @@
 			    window.close();
 			}			
     	}; 
-		window.onload = function () {	
+		window.onload = function() {	
 			preProcessing();		
 			setBorder();
 			
@@ -67,10 +65,11 @@
 		    	}
 				
 		    });
+			
 			fileUploadStart();
 		}
 		
-		function preProcessing(){
+		function preProcessing() {
 			if (mode == "modify") {
 				//Modify the vote
 				var questionTitle = "<c:out value='${question.title}'/>";
@@ -79,6 +78,7 @@
 
 				if (pathFile != null || pathFile != "") {
 					var oTable = document.getElementById("filelist");
+					
 					if (oTable == null) {
 						oTable = document.createElement("TABLE");
 					    oTable.style.width = "100%";
@@ -92,13 +92,14 @@
 				
 				var listOfOptions = ${optList};
 				var addOptions = listOfOptions.length - 3;
+				
 				if (addOptions >= 0) {
 					for (var i = 0; i < addOptions + 1; i++) {
 						addOption();
 					}
 				}
 				
-				for( var j = 0; j < listOfOptions.length; j++) {
+				for (var j = 0; j < listOfOptions.length; j++) {
 					var _id = "option" + (j + 1);
 					document.getElementById(_id).value =  listOfOptions[j].content;
 				}
@@ -113,7 +114,8 @@
 				else {
 					$('#multipleCheck').attr('checked', true);
 					$('#numberOfMultiSelect').show();
-					if(_multi_select == 0){
+					
+					if (_multi_select == 0) {
 						$("#numberOfMultiSelect select").val("1");
 					}
 					else {
@@ -142,6 +144,7 @@
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
 		        	buttonImageOnly: true
 		    	});
+				
 				$("#Edatepicker").datepicker({
 			        changeMonth: true,
 		    	    changeYear: true,
@@ -150,6 +153,7 @@
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
 		        	buttonImageOnly: true
 		    	});
+				
 				$('#endDate ').attr('checked', true);
 				var _startD = "<c:out value='${question.startDate}'/>";
 				var _endD = "<c:out value='${question.endDate}'/>";
@@ -158,9 +162,9 @@
 				var sMonth = _startD.substring(5, 7);
 				var sDay = _startD.substring(8, 10);
 				var sHour = _startD.substring(11, 13);
-				var sMin = _startD.substring(14, 16);
-				
+				var sMin = _startD.substring(14, 16);				
 				var SDate = new Date(sYear, sMonth-1, sDay);
+				
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 		        
@@ -168,9 +172,9 @@
 				var eMonth = _endD.substring(5, 7);
 				var eDay = _endD.substring(8, 10);
 				var eHour = _endD.substring(11, 13);
-				var eMin = _endD.substring(14, 16);
-				
+				var eMin = _endD.substring(14, 16);				
 	        	var EDate = new Date(eYear, eMonth-1, eDay);
+	        	
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Edatepicker").datepicker('setDate', EDate);
 	        	
@@ -204,59 +208,60 @@
 	        		document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
 	        	}
 			}
-			else {
-				
+			else {				
 				$('#anonymousVote').removeAttr('checked');	
 				$('#endDate').removeAttr('checked');			
 				$('#_dateTimePicker').hide();			
 				$('#receiverBttn').hide();
-
 				setDateTimeValue();
 			}
 			
-			$('#multipleCheck').click(function(){
-				if(this.checked){
+			$('#multipleCheck').click(function() {
+				if (this.checked) {
 					$('#numberOfMultiSelect').show();
 				}
-				else{
+				else {
 					$('#numberOfMultiSelect').hide();
 				}
 			});	
 			
-			$('#endDate').click(function(){
-				if(this.checked){
+			$('#endDate').click(function() {
+				if (this.checked) {
 					showDateTimePicker();
 				}
-				else{
+				else {
 					$('#_dateTimePicker').hide();					
 				}
 			});
 			
 			$('#set_Target').on('change', function(e) {					
-			    if($(this).val() == '1'){
+			    if ($(this).val() == '1') {
 			    	$('#receiverBttn').show();
 			    }
-			    else{
+			    else {
 			    	$('#receiverBttn').hide();
 			    }
 			}); 
 		}
 		
-		function checkOptionsList(){
+		function checkOptionsList() {
 			if ($('#qst_title').val() == '') {
-				alert("You must enter the question!");
+				alert('<spring:message code="ezPoll.t147"/>');				
 			}
 			
     		var totalOptions = $('#columnsbnk li').length;
     		var check_flag = 0;
-    		for(var i = 1; i <= totalOptions; i++){
+    		
+    		for (var i = 1; i <= totalOptions; i++) {
     			var optionId = "#option" + i;
-    			if($(optionId).val() == ""){
+    			
+    			if ($(optionId).val() == "") {
     				check_flag = 1;
     				break;
     			}
     		} 
-    		if(check_flag == 0){
+    		
+    		if (check_flag == 0) {
     			addOption();
     		}
 		}
@@ -267,6 +272,7 @@
 				$('#columnsbnk li').eq(i).addClass("myBorder");
 			}
 		}
+		
 		function showDateTimePicker() {
 			$('#_dateTimePicker').show();
 			$('#Edatepicker').show();
@@ -286,6 +292,7 @@
 	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	        	buttonImageOnly: true
 	    	});
+	    	
 			$("#Edatepicker").datepicker({
 		        changeMonth: true,
 	    	    changeYear: true,
@@ -305,17 +312,15 @@
         	
         	var selection = "";
         	var i = 0;
-        	for(var i = 0; i < 24; i++)
-        	{
+        	
+        	for (var i = 0; i < 24; i++) {
         	    var j = zeroFill(i, 2);
         	    selection += "<option value='"+ j +"00'>"+ j + ":00" + "</option>";
         	    selection += "<option value='"+ j +"30'>"+ j + ":30" + "</option>";
         	} 
         	
-        	$("#sTimePicker").html(selection);        	
-        	//$("#sTimePicker option[value='0800']").attr('selected','selected');
+        	$("#sTimePicker").html(selection);       	 	
         	$("#eTimePicker").html(selection); 
-        	//$("#eTimePicker option[value='0800']").attr('selected','selected');
 		}		
 		
 		function zeroFill( number, width ) {
@@ -324,27 +329,30 @@
 		  if ( width > 0 ) {
 		    return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
 		  }
-		  return number + ""; // always return a string
+		  
+		  return number + "";
 		}
 
-		function addOption(){		
+		function addOption() {		
 			var currentOptionNumber = $('#columnsbnk li').length + 1;	
 			
 			if ($('#qst_title').val() == '') {
-				alert("You must enter the question!");
+				alert('<spring:message code="ezPoll.t147"/>');
 			}
 			else {
 				$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
-				$('#columnsbnk').append('<li> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="New option" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
+				$('#columnsbnk').append('<li> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 			}					
 		}
 		
 		function menuQst_List() {
-    		if(CrossYN()) {
+    		if (CrossYN()) {
     			var szUrl = "/ezPoll/pollList.do?brdID=6"
-    		} else {
+    		} 
+    		else {
     			var szUrl = "/ezPoll/pollList.do?brdID=6"
     		}
+    		
     		window.location.href = szUrl;	
 		}
 		
@@ -354,40 +362,47 @@
 	
 	            if (CrossYN()) {
 	            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
-	            } else {
+	            }
+	            else {
 	            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
 	            }
 	  
 	            var _MSIE = 'MSIE';
 	            var useragentstr = navigator.userAgent;
+	            
 	            if (useragentstr.indexOf(_MSIE) != -1) {	            	
 	                var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
 	                var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
-	                console.log("Checking :" + rv);
+	                
 	                if (rv[0] == "OK") {
 	                    document.getElementById("set_Target").selectedIndex = 1;
 	                    document.getElementById("hidTarget").value = "1";
 	                    document.getElementById("select_YN").value = "YES";
 	                    document.getElementById("RangeXMLStr").value = rv[1];
-	                } else if (rv[0] == "NO") {
+	                } 
+	                else if (rv[0] == "NO") {
 	                    document.getElementById("set_Target").selectedIndex = 0;
 	                    document.getElementById("hidTarget").value = "0";
 	                    document.getElementById("selectYN").value = "NO";
 	                    document.getElementById("RangeXMLStr").value = "";
 	                }
-	            } else {	            	
+	            } 
+	            else {	            	
 	                if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 	                    if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
 	                        var feature = GetOpenPosition(560, 730);
 	                        g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
-	                    } else {
+	                    } 
+	                    else {
 	                        var feature = GetOpenPosition(730, 700);
 	                        g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
 	                    }
 	                }
+	                
 	                g_windowReference.focus();
 	            }
-	        } else {
+	        } 
+	        else {
 	            menu_SelectRange_IE();
 	        } 
 	    }
@@ -395,24 +410,27 @@
 		function fun_Cancel() {
     		var compTemp = "";
     		compTemp = confirm("<spring:message code='ezPoll.t209' />");
-    		if (compTemp == true) {
-        		//surveyState = "CANCEL";
+    		
+    		if (compTemp == true) {        		
         		menuQst_List();
     		}
 		}
 		
 	    function menu_SelectRange_IE() {
 	        var item_no = document.all("item_no").value;
-	         var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no; 
+	        var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no; 
+	        
 	        if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 	            if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
 	                var feature = GetOpenPosition(560, 630);
 	                g_windowReference = window.open(szUrl, "SelectRange", "height=630,width=560,resizable=no,center=yes" + feature);
-	            } else {
+	            } 
+	            else {
 	                var feature = GetOpenPosition(560, 700);
 	                g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
 	            }
 	        }
+	        
 	        g_windowReference.focus();
 	    }
 	    
@@ -423,13 +441,11 @@
     	function fun_OK() {
     		$('#numberOfOptions').val($('#columnsbnk li').length); 
     		
-    		if (!$('#endDate').is(':checked')) {
-    			
+    		if (!$('#endDate').is(':checked')) {    			
             	$("#sTimePicker option[value='0000']").attr('selected','selected');            	
             	$("#eTimePicker option[value='2330']").attr('selected','selected');
             	L_StartTime = $( "#sTimePicker option:selected" ).text() + ":00";
-            	L_EndTime   = $( "#eTimePicker option:selected" ).text() + ":59";
-            	
+            	L_EndTime   = $( "#eTimePicker option:selected" ).text() + ":59";       	
     		}
     		else {
     			L_StartTime = $( "#sTimePicker option:selected" ).text() + ":00";
@@ -489,56 +505,63 @@
         	}
     	}    	
     	
-    	function checkOption(){
+    	function checkOption() {
     		var totalOptions = $('#columnsbnk li').length;
     		var count = 0;
-    		for(var i = 1; i <= totalOptions; i++){
+    		for (var i = 1; i <= totalOptions; i++) {
     			var optionId = "#option" + i;
-    			if($(optionId).val() != ""){
-    				//alert(optionId + $(optionId).val());
+    			
+    			if ($(optionId).val() != "") {    				
     				count ++;
     			}
-    		}   
+    		} 
+    		
     		return count;
     	}
     	
     	function form_check() {
-    		//alert("Run in form_check!");
 	        if (trim_Cross(document.getElementById("qst_title").value) == "") {
-	            alert('<spring:message code="ezQuestion.t185" />');	            
+	            alert('<spring:message code="ezQuestion.t185"/>');	            
 	            document.getElementById("qst_title").focus();
 	            return false;
 	        }
+	        
 	        if (document.getElementById("set_Target").selectedIndex == 1) {
 	            if (document.getElementById("select_YN").value != "YES") {
 	            	alert('<spring:message code="ezQuestion.t432" />');
 	                return false;
 	            }
 	        }
-	        if(checkOption() <= 0){
-	        	alert("Please enter at least one option for this question!");
+	        
+	        if (checkOption() <= 0) {	        	
+	        	alert('<spring:message code="ezPoll.t148"/>');
 	        	document.getElementById("option1").focus();
 	        	return false;
-	        }	        
+	        }	   
+	        
 	        L_StartDate = L_StartDate.substring(0, 10);
 	        L_EndDate 	= L_EndDate.substring(0, 10);
+	        
 	        if (L_StartDate > L_EndDate) {
 	        	alert('<spring:message code="ezQuestion.jjs2" />');
 	            return false;
 	        }
-	        else if(L_StartDate == L_EndDate){
-	        	if(L_StartTime >= L_EndTime){
+	        else if (L_StartDate == L_EndDate) {
+	        	if (L_StartTime >= L_EndTime) {
 		        	alert('<spring:message code="ezQuestion.jjs2" />');
 		            return false;
 	        	}
 	        }
+	        
 	        var rtnValue = $.isNumeric(trim_Cross($('#multiSelectNumber').val()));
-	        if(!rtnValue){
-	        	alert("Something wrong with multi-select funtion()");
+	        
+	        if (!rtnValue) {
+	        	alert('<spring:message code="ezPoll.t149"/>');
 	        	return false;
 	        }
-	        if($('#hidSecreteVote').val() == ""){
-	        	alert("Something wrong with secretVote");
+	        
+	        if ($('#hidSecreteVote').val() == "") {
+	        	alert('<spring:message code="ezPoll.t150"/>');
 	        	return false;
 	        }
     	}
@@ -562,6 +585,7 @@
 	            }
 	        }
 	    }
+	    
 	    function Editor_Complete() {
 	    	if (mode == "modify") {
 	    		message.SetEditorContent(sigBody.innerHTML);
@@ -607,8 +631,8 @@
 					</div>
 					<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 100px;border: 1px solid #3C2F2E;overflow: auto;">
 						<div id="addFile" style="color: #818181;padding-left: 10px;padding-top: 10px;">
-						<img src="/images/plus1600.png" style="height:24px;width:24px;vertical-align:middle" onclick="uploadbtn()">
-						Add Files
+							<img src="/images/plus1600.png" style="height:24px;width:24px;vertical-align:middle" onclick="uploadbtn()">
+							<spring:message code="ezPoll.t151"/>
 						</div>
 					</div> 
 					<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px" /> 
@@ -625,17 +649,17 @@
 					<ul id="columnsbnk" >
 						<li>
 							<span>1</span>
-							<input type="text" value=""	placeholder="New option" id="option1" name="option1" oninput="checkOptionsList();">
+							<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();">
 							<img src="/images/sortIcon.png" class="drag_drop">
 						</li>
 						<li>
 							<span>2</span>
-							<input type="text" value="" placeholder="New option" id="option2" name="option2" oninput="checkOptionsList();">
+							<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();">
 							<img src="/images/sortIcon.png" class="drag_drop">
 						</li>
 						<li>
 							<span>3</span>
-							<input type="text" value=""	placeholder="New option" id="option3" name="option3" oninput="checkOptionsList();">
+							<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();">
 							<img src="/images/sortIcon.png" class="drag_drop">
 						</li>
 					</ul>
@@ -643,18 +667,18 @@
 			</tr>
 		</table>
 
-		<button type="button" id="addOpt" onclick="javascript:addOption();">New	option</button>
+		<button type="button" id="addOpt" onclick="javascript:addOption();"><spring:message code="ezPoll.t153"/></button>
 
 		<table class="content" style="width: 100%;"> 
 			<tr>    <!------------Question setting---------------->
 				<td>
 				<div class="qstSetting">
-					<input id="multipleCheck" type="checkbox" checked> <span>Allow
-						multi-select</span>
+					<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
 				</div>
 				<div id="numberOfMultiSelect">
-					Maximum multi-select <select id="myList">
-						<option value="1">Unlimited</option>
+					<spring:message code="ezPoll.t155"/>
+					<select id="myList">
+						<option value="1"><spring:message code="ezPoll.t156"/></option>
 						<option value="2">2</option>
 						<option value="3">3</option>
 						<option value="4">4</option>
@@ -663,35 +687,34 @@
 				</div>
 				<div class="qstSetting">
 					<input id="seeResultFirst" type="checkbox" checked> 
-					<span>See Result Before Voting</span>
+					<span><spring:message code="ezPoll.t157"/></span>
 				</div>
 					<div class="qstSetting">
 					<input id="anonymousVote" type="checkbox">
-					<span>Allow secret voting</span>
+					<span><spring:message code="ezPoll.t158"/></span>
 				</div>
 				
 				<div class="qstSetting">
 					<input id="endDate" type="checkbox">
-					<span>Set End Date</span>
-				</div>		
-	
+					<span><spring:message code="ezPoll.t159"/></span>
+				</div>	
 				
 				<div id="_dateTimePicker">		
-					<span>Start Date</span>			
+					<span><spring:message code="ezPoll.t160"/></span>			
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" >
 					<select id="sTimePicker"></select>
-					<span>End Date</span>
+					<span><spring:message code="ezPoll.t161"/></span>
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" >
 					<select id="eTimePicker"></select>						
 				</div>
 	
 				<div id="target_select">
-					<span>Select target</span>
+					<span><spring:message code="ezPoll.t162"/></span>
 					<select id="set_Target">
 						<option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option>
 						<option value="1"><spring:message code="ezQuestion.t252" /></option>
 					</select>	
-					<a class="imgbtn" id="receiverBttn"><span onclick="menu_SelectRange();">Receivers</span></a>																		
+					<a class="imgbtn" id="receiverBttn"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>																		
 				</div>
 				<div style="display:none">
 					<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
@@ -706,8 +729,7 @@
 					<input type="text" name="hidResultFirst" id="hidResultFirst" value="" style="display:none"> 
 					<input type="text" name="hidModifyInfo" id="hidModifyInfo" value="" style="display:none"> 
 					<textarea name="hidContent" id="hidContent" style="display:none"></textarea>
-					<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">
-					
+					<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">					
 				</div>
 				</td>
 			</tr>						

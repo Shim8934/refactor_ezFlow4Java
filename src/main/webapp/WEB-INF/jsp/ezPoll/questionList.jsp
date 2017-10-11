@@ -24,9 +24,9 @@
 		</style>
 		
 		<script type="text/javascript">		 	
-			var currentPage		  = ${currPage};  		//CurPage
-			var totalPages 		  = ${totalPages}; 		//totalPage
-		    var totalQuestions 	  = ${totalQuestions};  //totalCount
+			var currentPage		  = ${currPage};  		
+			var totalPages 		  = ${totalPages}; 		
+		    var totalQuestions 	  = ${totalQuestions};  
 		    var blockSize 		  = 10;
 		    var status_processing = "<spring:message code = 'ezPoll.t101' />";
 		    var status_finish 	  = "<spring:message code = 'ezPoll.t102' />";		   
@@ -39,22 +39,22 @@
 			var checkedArr		  = [];					
 			var chkDelete		  = 0;
 			var tenantId		  =  "<c:out value='${tenantID}'/>";
-			var admin = "<c:out value='${adminPrivilege}'/>";	
-			var stompClient = null;
+			var admin 			  = "<c:out value='${adminPrivilege}'/>";	
+			var stompClient 	  = null;
 		    
-		    window.onunload = function(){
+		    window.onunload = function() {
     		    if (stompClient !== null) {
     		        stompClient.disconnect();
     		    }
         	}; 
 		   
-			window.onload = function(){				
+			window.onload = function() {				
 				preProcessing();				
 				makePageSelPage(currentPage, totalPages, totalQuestions, blockSize);
 				getConnect();
 			}		
 			
-			function getConnect(){
+			function getConnect() {
 			    var socket = new SockJS('/ezFlow/hello');
 			    stompClient = Stomp.over(socket);
 			    stompClient.connect({}, function (frame) {
@@ -68,93 +68,103 @@
 			    });
 			}
 			
-			function preProcessing(){
+			function preProcessing() {
 				//Uncheck all checkboxes after reload for firefox
 		    	$(':checkbox:checked').removeAttr('checked');    	
 				
-				if(seeCheck == 1){
+				if (seeCheck == 1) {
 					$('#seeAll').prop('checked', true);
 				}
-				if(deleteBttn == 1 || admin == 1) {
+				if (deleteBttn == 1 || admin == 1) {
 					$('#btnDel').show();
 				}
-				else{
+				else {
 					$('#btnDel').hide();
 				}
-				if(hideBttn == 1){
+				if (hideBttn == 1) {
 					$('#btnHid').show();
 				}
-				else{
+				else {
 					$('#btnHid').hide();
 				}
+				
 				document.getElementById("searchInput").value = searchParam;
 			}
 		    
-		    function menuQst_DetailUserInfo(pUserID){
+		    function menuQst_DetailUserInfo(pUserID) {
 		    	 var feature = GetOpenPosition(420, 438);
 		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
 		    
-		    function menu_Search(){
+		    function menu_Search() {
 		    	var checkSeeAll = 0;
 		    	var search_str = "";
 		    	
-		    	if($('#seeAll').is(':checked')){
+		    	if ($('#seeAll').is(':checked')) {
 		    		checkSeeAll = 1;
-		    	}		    	
-		    	if(document.getElementById("searchInput").value != null){
+		    	}	
+		    	
+		    	if (document.getElementById("searchInput").value != null) {
 		    		search_str = document.getElementById("searchInput").value;
 		    	}
+		    	
 		        var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&search=" + search_str + "&see=" + checkSeeAll;
 		        window.location.href = szUrl;
 		    }
 		    
-		    function getChecked(t){			    	
-		    	if($(t).is(':checked')){    				    		
+		    function getChecked(t) {			    	
+		    	if ($(t).is(':checked')) {    				    		
 		    		checkedArr.push($(t).val());
 		    		var creator = "creator" + $(t).val();
 		    		
-					if(document.getElementById(creator).value != userID && admin == 0) {
+					if (document.getElementById(creator).value != userID && admin == 0) {
 						chkDelete = 1;
 					}		    		
 		    	}
-		    	else{
+		    	else {
 		    		var test = checkedArr.indexOf($(t).val());
-		    		if(test != -1){
+		    		
+		    		if (test != -1) {
 		    			checkedArr.splice(test, 1);
 		    		}
 		    	}
 		    }
 		    
-		    function menu_Hide(){
-		    	if(checkedArr.length == 0){
+		    function menu_Hide() {
+		    	if (checkedArr.length == 0) {
 		            alert('<spring:message code="ezQuestion.t294" />');
 		            return;
 		    	}
+		    	
 		    	var checkedList = checkedArr[0];
-	    		for(var i = 1; i < checkedArr.length; i++){
+		    	
+	    		for (var i = 1; i < checkedArr.length; i++) {
 	    			checkedList = checkedList + "," + checkedArr[i];	    			
 	    		}
+	    		
 	    		var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&hide=" + checkedList;   		
 	    		window.location.href = szUrl;
 		    }
 		    
-		    function menu_Show(){
+		    function menu_Show() {
 		    	var checkSeeAll = 0;
-		    	if($('#seeAll').is(':checked')){
+		    	
+		    	if ($('#seeAll').is(':checked')) {
 		    		checkSeeAll = 1;
 		    	}
+		    	
 		    	var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&see=" + checkSeeAll;
 		    	window.location.href = szUrl;
 		    }
 		    
-		    function menu_Delete(){
-		    	if(checkedArr.length == 0){
-		            alert('<spring:message code="ezQuestion.t294" />');
+		    function menu_Delete() {
+		    	if (checkedArr.length == 0) {
+		            alert('<spring:message code="ezQuestion.t294"/>');
 		            return;
 		    	}
-		    	if(chkDelete == 1){
-		            alert('You must be creator of all selected question to be able to delete them!');
+		    	
+		    	if (chkDelete == 1) {
+		            alert('<spring:message code="ezPoll.t141"/>');
 		            return;
 		    	}	
 		    	
@@ -163,26 +173,28 @@
 		    	var id = "tlt" + checkedArr[0];		
 		    	var qstTitleList = document.getElementById(id).innerHTML;
 		    	
-	    		for (var i = 1; i < checkedArr.length; i++) {
-	    			//var test_id = document.getElementById("tlt" + checkedArr[0]).value;
+	    		for (var i = 1; i < checkedArr.length; i++) {	    			
 	    			checkedList = checkedList + "," + checkedArr[i];
 	    			qstTitleList = qstTitleList + "," + document.getElementById("tlt" + checkedArr[i]).innerHTML;
 	    		}
 		    	
 		    	//Checking if some one is modifying this vote
 		    	var listModifyingQst = ${listOfModifyingQst};
-		    	if (listModifyingQst.length > 0){
+		    	
+		    	if (listModifyingQst.length > 0) {
 		    		var flag = 0;
+		    		
 		    		for (var j = 0; j < checkedArr.length; j++) {
-				    	for (var i = 0; i < listModifyingQst.length; i++){
+				    	for (var i = 0; i < listModifyingQst.length; i++) {
 				    		if (listModifyingQst[i] == checkedArr[j]) {
 								flag = 1;
 								break;
 				    		}
 				    	}
 		    		}
+		    		
 			    	if (flag == 1) {
-			    		alert("There is a question is modifying! You cannot delete.");
+			    		alert('<spring:message code="ezPoll.t142"/>');
 			    		document.location.href = "/ezPoll/pollList.do?brdID=6";			    		
 			    	}    
 			    	else {
@@ -194,28 +206,28 @@
 			        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=300px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			        w.focus();
 		    	}
-
-
 		    }
 		    
 		    function popupClosing() {    	
 		    	document.location.href = "/ezPoll/pollList.do?brdID=6";
 		    }
 		    
-		    function title_OnClick(pReceve){
+		    function title_OnClick(pReceve) {
 		    	var listModifyingQst = ${listOfModifyingQst};
-		    	if (listModifyingQst.length > 0){
+		    	
+		    	if (listModifyingQst.length > 0) {
 		    		var flag = 0;
-			    	for (var i = 0; i < listModifyingQst.length; i++){
+		    		
+			    	for (var i = 0; i < listModifyingQst.length; i++) {
 			    		if (listModifyingQst[i] == pReceve) {
 							flag = 1;
 							break;
 			    		}
 			    	}
+			    	
 			    	if (flag == 1) {
-			    		alert("This question is modifying! Please wait.");
-			    		document.location.href = "/ezPoll/pollList.do?brdID=6";
-			    		
+			    		alert('<spring:message code="ezPoll.t143"/>');
+			    		document.location.href = "/ezPoll/pollList.do?brdID=6";		    		
 			    	}
 			    	else {
 			    		document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve;
@@ -229,16 +241,16 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code="ezPoll.t103" /><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code="ezPoll.t103"/><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu1">
 			<ul>
 				<li>
-					<input type="text" name="searchInput" id="searchInput" placeholder="제목, 글내용, 작성자로 검색" >
-					<a class="imgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezQuestion.t34" /></span></a>
+					<input type="text" name="searchInput" id="searchInput" placeholder="<spring:message code="ezPoll.t144"/>" >
+					<a class="imgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezQuestion.t34"/></span></a>
 				</li>
-				<li id="btnDel"><a class="imgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202" /></span></a></li>
-				<li id="btnHid"><a class="imgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203" /></span></a></li>
-				<li><a class="imgbtn" onClick="menu_Show()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204" /></span></a></li>				
+				<li id="btnDel"><a class="imgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202"/></span></a></li>
+				<li id="btnHid"><a class="imgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203"/></span></a></li>
+				<li><a class="imgbtn" onClick="menu_Show()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left;"><span><spring:message code="ezPoll.t205" /></span></li>
 			</ul>
 		</div>
@@ -249,13 +261,13 @@
 		<form method="post">
 			<table id="QstList" class="mainlist1" style="width:100%"> 
 			    <tr> 
-					<th width="30px" align="center"> <spring:message code="ezPoll.t105" /></th> 
-					<th><spring:message code="ezPoll.t106" /></th> 
-					<th width="60px"><spring:message code="ezPoll.t104" /></th> 
-					<th width="90px"><spring:message code="ezPoll.t107" /></th> 
-					<th width="60px"><spring:message code="ezPoll.t108" /></th>
-					<th width="80px"><spring:message code="ezPoll.t201" /></th> 
-					<th width="60px"><spring:message code="ezPoll.t109" /></th>			
+					<th width="30px" align="center"> <spring:message code="ezPoll.t105"/></th> 
+					<th><spring:message code="ezPoll.t106"/></th> 
+					<th width="60px"><spring:message code="ezPoll.t104"/></th> 
+					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
+					<th width="60px"><spring:message code="ezPoll.t108"/></th>
+					<th width="80px"><spring:message code="ezPoll.t201"/></th> 
+					<th width="60px"><spring:message code="ezPoll.t109"/></th>			
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.qstId}" class="white">
@@ -265,10 +277,10 @@
 			          	
 			          	<%-- Question status --%>
 						<c:if test="${list.status == 0}">
-							<td>완료</td>
+							<td><spring:message code="ezPoll.t145"/></td>
 						</c:if>
 						<c:if test="${list.status != 0}">
-							<td>진행</td>
+							<td><spring:message code="ezPoll.t146"/></td>
 						</c:if>
 						
 			          	<%-- Creator --%>
@@ -279,30 +291,29 @@
 			          	
 			          	<%-- Target --%>
 			          	<c:if test="${list.target == 0}">
-			          		<td><spring:message code = 'ezQuestion.t251' /></td>	
+			          		<td><spring:message code = 'ezQuestion.t251'/></td>	
 			          	</c:if>
 			          	<c:if test="${list.target == 1}">
-			          		<td><spring:message code = 'ezQuestion.t252' /></td>	
+			          		<td><spring:message code = 'ezQuestion.t252'/></td>	
 			          	</c:if> 
 			          	
 			          	<%-- End date--%>
-			          	<c:set var="pollEndDate" value="${list.endDate}" />
+			          	<c:set var="pollEndDate" value="${list.endDate}"/>
 			          	<td> ${fn:substring(pollEndDate,0,10) } </td>			          	
 			          	
 			          	<%-- Secret setting --%>
 			          	<c:if test="${list.secretVote == 0}">
-			          		<td><spring:message code = 'ezQuestion.t238' /></td>	
+			          		<td><spring:message code = 'ezQuestion.t238'/></td>	
 			          	</c:if>
 			          	<c:if test="${list.secretVote == 1}">
-			          		<td><spring:message code = 'ezQuestion.t239' /></td>	
+			          		<td><spring:message code = 'ezQuestion.t239'/></td>	
 			          	</c:if>
 			          	
 			          	<c:choose>
 							<c:when test="${list.isHidden == 1}">
 							    	<script>
 										var id = ${list.qstId};
-										var id2 = "test" + ${list.qstId};
-										//$(".test1").css('color','red');
+										var id2 = "test" + ${list.qstId};										
 										document.getElementById(id2).style.color="red";
 										document.getElementById(id).style.color="red";
 									</script>
@@ -311,8 +322,7 @@
 							    <c:if test="${list.status == 0}">
 									<script>
 										var id = ${list.qstId};
-										var id2 = "test" + ${list.qstId};
-										//$(".test1").css('color','blue');
+										var id2 = "test" + ${list.qstId};										
 										document.getElementById(id2).style.color="blue";
 										document.getElementById(id).style.color="blue";
 									</script>

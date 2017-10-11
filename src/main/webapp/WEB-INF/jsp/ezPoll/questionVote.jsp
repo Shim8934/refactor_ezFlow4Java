@@ -15,42 +15,43 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		
 		<script type="text/javascript">	
-			var filesize = 0;
-			var xhr1 = new XMLHttpRequest();
-			var hasVoted = "<c:out value='${hasVoted}'/>";
-			var votePrivilege = "<c:out value='${hasVotePrivilege}'/>";
-			var numberOfMultiSelect = "<c:out value='${question.multiSelect}'/>";
-			var seeResultBeforVote = "<c:out value='${question.resultFirst}'/>";
-			var secretVote = "<c:out value='${question.secretVote}'/>";
-			var totalVotes = parseInt("<c:out value='${totalVotes}'/>");
-			var s_Users = "<c:out value='${seenUsers}'/>";
-			var qstId = "<c:out value='${question.qstId}'/>";
-			var tenantId = "<c:out value='${question.tenantId}'/>";
-			var curentUser = "<c:out value='${curentUser}'/>";
-			var curentUserName = "<c:out value='${curentUserName}'/>";
-			var numberOfUnvotedUsers = ${numberOfUnvotedUsers};
-			var numberOfSelected = 0;
-			var maxLoop = 0;			
-			var seenText = "<spring:message code = 'ezPoll.t112'/>";
-			var _status = "<c:out value='${question.status}'/>";
-			var sessionId = "<c:out value='${question.creator}'/>";			
-			var commentIndex = ${numberOfCmt};
-			var votedUsers = ${votedUsers};
-			var window_open1;		
-			var window_open2;
-			var numberOptions = "<c:out value='${numberOfOptions}'/>";
-			var votesArr = [];	
-			var stickerIndex = null;
-			var userNameArr = [[]];
-			var stompClient = null;
-			var numberOfGroupSticker = 4;	
-			var currentGroupSticker = -1;
-			var flagEvent = -1;
-			var currentEditingCmt = -1;
-			var colors = ["#49A0D8", "#D353A0", "#FFC527", "#DF4C27", "#34CB34", "#7127DF", "#90C3D4", "#C390D4", "#A1D490", "#D4A190",
-			              "#581845", "#581825", "#582B18", "#584B18", "#455818", "#255818", "#C15AA3", "#C15A6F", "#C1785A", "#C1AC5A",
-			              "#A3C15A", "#70C15A", "#4EC479", "#4EC4B4", "#4E99C4", "#4E5EC4", "#794EC4", "#B44EC4", "#AFC44E", "#74C44E"];
-            var iframeStyle = "<style>";
+			var filesize 				= 0;
+			var xhr1 					= new XMLHttpRequest();
+			var hasVoted 				= "<c:out value='${hasVoted}'/>";
+			var votePrivilege 			= "<c:out value='${hasVotePrivilege}'/>";
+			var numberOfMultiSelect 	= "<c:out value='${question.multiSelect}'/>";
+			var seeResultBeforVote  	= "<c:out value='${question.resultFirst}'/>";
+			var secretVote 				= "<c:out value='${question.secretVote}'/>";
+			var totalVotes 				= parseInt("<c:out value='${totalVotes}'/>");
+			var s_Users 				= "<c:out value='${seenUsers}'/>";
+			var qstId 					= "<c:out value='${question.qstId}'/>";
+			var tenantId 				= "<c:out value='${question.tenantId}'/>";
+			var curentUser 				= "<c:out value='${curentUser}'/>";
+			var curentUserName 			= "<c:out value='${curentUserName}'/>";
+			var numberOfUnvotedUsers 	= ${numberOfUnvotedUsers};
+			var numberOfSelected 		= 0;
+			var maxLoop 				= 0;			
+			var seenText 				= "<spring:message code = 'ezPoll.t112'/>";
+			var _status 				= "<c:out value='${question.status}'/>";
+			var sessionId 				= "<c:out value='${question.creator}'/>";			
+			var commentIndex 			= ${numberOfCmt};
+			var votedUsers 				= ${votedUsers};
+			var window_open1			= null;		
+			var window_open2			= null;
+			var numberOptions 			= "<c:out value='${numberOfOptions}'/>";
+			var votesArr 				= [];	
+			var stickerIndex 			= null;
+			var userNameArr 			= [[]];
+			var stompClient 			= null;
+			var numberOfGroupSticker 	= 4;	
+			var currentGroupSticker 	= -1;
+			var flagEvent 				= -1;
+			var currentEditingCmt 		= -1;
+			var colors 					= ["#49A0D8", "#D353A0", "#FFC527", "#DF4C27", "#34CB34", "#7127DF", "#90C3D4", "#C390D4", "#A1D490", "#D4A190",
+			             				   "#581845", "#581825", "#582B18", "#584B18", "#455818", "#255818", "#C15AA3", "#C15A6F", "#C1785A", "#C1AC5A",
+			              				   "#A3C15A", "#70C15A", "#4EC479", "#4EC4B4", "#4E99C4", "#4E5EC4", "#794EC4", "#B44EC4", "#AFC44E", "#74C44E"];
+            var iframeStyle 			= "<style>";
+            
             iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -813,14 +814,14 @@
 		    	
 		    	//Adding save/cancel comment buttons
 		    	var tagA1 = document.createElement("button"); 
-		    	tagA1.innerHTML = "Cancel";
+		    	tagA1.innerHTML = "<spring:message code = 'ezPoll.t139'/>"; 
 		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(8));
 		    	tagA1.setAttribute("_cmtIndex", id.slice(8));
 		    	tagA1.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
 		    	tagA1.onclick = function (event) { event.stopPropagation(); event.preventDefault(); cancelEditComment(this); };
 		    	
 		    	var tagA2 = document.createElement("button");		    	
-		    	tagA2.innerHTML = "Save";
+		    	tagA2.innerHTML = "<spring:message code = 'ezPoll.t140'/>";
 		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(8));
 		    	tagA2.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
 		    	tagA2.setAttribute("_cmtIndex", id.slice(8));
