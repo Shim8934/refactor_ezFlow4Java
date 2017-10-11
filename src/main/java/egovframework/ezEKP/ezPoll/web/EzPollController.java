@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.util.HSSFColor.BROWN;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -613,10 +615,10 @@ public class EzPollController extends EgovFileMngUtil {
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String folderPath = request.getParameter("folderPath");
-		String filename = request.getParameter("filename");
+		String fileName = request.getParameter("filename");
 		File file = null;
 		
-		if (folderPath == null || filename == null) {
+		if (folderPath == null || fileName == null) {
 			logger.debug("downloadAttach illegal arguments.");
 			return;
 		}
@@ -651,17 +653,23 @@ public class EzPollController extends EgovFileMngUtil {
 	            // set to binary type if MIME mapping not found
 	            mimeType = "application/octet-stream";
 	        }
-	        System.out.println("MIME type: " + mimeType);
-	 
-	        // set content attributes for the response
+	        logger.debug("MIME type: " + mimeType);	 
+	        	
+	        fileName = URLEncoder.encode(fileName, "UTF-8");
+	        String browserType = request.getHeader("User-Agent");
+	        
+	        // set content attributes and header for the response
 	        response.setContentType(mimeType);
 	        response.setContentLength((int) file.length());
-	 
-	        // set headers for the response
-	        String headerKey = "Content-Disposition";
-	        String headerValue = String.format("attachment; filename=\"%s\"", filename);
-	        response.setHeader(headerKey, headerValue);
-	 
+	        response.setCharacterEncoding("UTF-8");       	    	        
+	                             
+	        if (browserType.contains("Firefox")) {		        	
+	            response.setHeader("Content-Disposition","attachment; filename*=UTF-8''" + fileName);
+	        }  
+	        else {
+	        	response.setHeader("Content-Disposition","attachment; filename=" + fileName);
+	        }
+
 	        // get output stream of the response
 	        outStream = response.getOutputStream();
 	 
@@ -1016,7 +1024,7 @@ public class EzPollController extends EgovFileMngUtil {
 		if(request.getParameter("listQst") != null){
 			listQstIds = request.getParameter("listQst");
 		}		
-		//logger.debug("BAONK_____CHECKKK: List Question Ids: " + listQstIds);
+		
 		strXML = questionDelete(listQstIds, loginVO);		
 
 		logger.debug("Delete Question finishes!");		
@@ -1128,7 +1136,7 @@ public class EzPollController extends EgovFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        //logger.debug("BAONK_CHECK DIRPATH:" + pDirPath);
+        
         File file = new File(pDirPath + "uploadFile");
 
         if (!file.exists()) {
@@ -1616,21 +1624,24 @@ public class EzPollController extends EgovFileMngUtil {
 				if (listHiddenQuestionIds.contains(pollQstVO.getQstId())){
 					iterator.remove();				
 				}
-				else{
+				else {
 					//endDate = formatter.parse(commonUtil.getDateStringInUTC(pollQstVO.getEndDate(), loginVO.getOffset(), false));
 					endDate = formatter.parse(pollQstVO.getEndDate());
 					compareEnd = endDate.compareTo(sysDate);
-					if(compareEnd > 0){
+					if (compareEnd > 0) {
 						pollQstVO.setStatus(1);
-					}else{
+					} 
+					else {
 						pollQstVO.setStatus(0);
 					}
+					
 					pollQstVO.setIsHidden(0);
+					
 					//Checking Array
-					if(userID.equals(pollQstVO.getCreator())){
+					if (userID.equals(pollQstVO.getCreator())) {
 						checkingArray[0] = 1;
 					}
-					else{
+					else {
 						checkingArray[1] = 1;
 					}
 				}
