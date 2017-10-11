@@ -27,7 +27,7 @@
 	                document.body.style.WebkitUserSelect = 'none';
 	                document.body.style.khtmlUserSelect = 'none';
 	                document.body.style.oUserSelect = 'none';
-	                document.body.style.UserSelect = 'none';
+	                document.body.style.UserSelect = 'none';3333-01-1864112
 	            }   	
 	            document.getElementById(TabId).setAttribute("class", "tabon");
 	            Tab1_SelectID = TabId;

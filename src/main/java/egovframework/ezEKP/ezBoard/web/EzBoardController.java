@@ -4008,6 +4008,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			List<BoardAttributeVO> attributeList = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
 			
@@ -4017,12 +4018,23 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("attributeList", attributeList);
 		}
 		
+        //추가 항목 가져오는 소스 
+        List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
+        
+        if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+        	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
+        	if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+        		extenLang = "2";
+        	}
+        }
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("guBun", guBun);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("extenLang", extenLang);
 		model.addAttribute("strNow", strNow);
+		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
 		
 		return "ezBoard/boardItemPreView";
 	}
