@@ -40,7 +40,7 @@ public interface MBoardService {
 	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
-	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception;
+	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID, String userID) throws Exception;
 	
 	MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception;
 	

@@ -262,7 +262,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception {
+	public MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID, String userID) throws Exception {
 		logger.debug("getBoardProperty started.");
 		logger.debug("boardID = " + boardID + " || primary = " + primary + " || tenantID = " + tenantID);
 		
@@ -272,6 +272,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		
 		MBoardInfoVO vo = mBoardDAO.getBoardProperty(map);
+		MOptionVO mobileInfo = mOptionService.optionInfo(userID, tenantID);
 		
 		if (vo.getGuBun().equals("4") || vo.getGuBun().equals("3")) {
 			vo.setType("photoBoardItem");
@@ -279,6 +280,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		if (vo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 			vo.setType("newBoardItemList");
+			vo.setBoardName(egovMessageSource.getMessage("ezBoard.t480", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
 		} else {
 			vo.setType("boardItemList");
 		}

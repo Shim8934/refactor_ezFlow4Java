@@ -107,7 +107,7 @@ public class MBoardGWController {
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 
 			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId(), info.getOffSet(),pSearchText);
@@ -163,7 +163,7 @@ public class MBoardGWController {
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getUserId(),add,pSearchText, parentWriteDate, upperitemidtree);
@@ -262,7 +262,7 @@ public class MBoardGWController {
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			//상세보기일때 type boardItem으로 지정
 			boardInfo.setType("boardItem");
@@ -322,7 +322,7 @@ public class MBoardGWController {
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			//썸네일게시판일때 게시물
