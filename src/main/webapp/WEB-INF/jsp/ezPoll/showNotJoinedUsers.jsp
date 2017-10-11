@@ -11,20 +11,17 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">			
-		<script type="text/javascript">			
-			
-			window.onload = function () {
+		<script type="text/javascript">				
+			window.onload = function() {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
 				}					
 			}
 			
-		    function menuQst_DetailUserInfo(pUserID){
+		    function menuQst_DetailUserInfo(pUserID) {
 		    	 var feature = GetOpenPosition(420, 438);
 		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
-
-
 		</script>
 	</head>
 	
@@ -32,7 +29,7 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; padding-left: 25%;">
-			        	<h1>참여하지 않은 사람 : <c:out value='${numberOfUnVotedUsers}'/></h1>
+			        	<h1><spring:message code='ezPoll.t134'/> <c:out value='${numberOfUnVotedUsers}'/></h1>
 			    </div>
 			    <div id="close1" style="float: right; display: block;cursor:pointer;">		    	     
 			        <img src="/images/close.png" style="height:20px;width:20px;padding-top: 8px;" onClick="window.close()">

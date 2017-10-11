@@ -11,20 +11,17 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">			
-		<script type="text/javascript">			
-			//var totalVotes = "<c:out value='${totalVotes}'/>";
+		<script type="text/javascript">				
 			window.onload = function () {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
 				}					
 			}
 			
-		    function menuQst_DetailUserInfo(pUserID){
+		    function menuQst_DetailUserInfo(pUserID) {
 		    	 var feature = GetOpenPosition(420, 438);
 		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
-
-
 		</script>
 	</head>
 	
@@ -32,7 +29,7 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: inline-block; padding-left: 25%;">
-			        <h1 style="padding-left: 35px;">총 투표자 <font color="red"> <c:out value='${totalVotes}'/></font></h1>
+			        <h1 style="padding-left: 35px;"><spring:message code='ezPoll.t138'/><font color="red"> <c:out value='${totalVotes}'/></font></h1>
 			    </div>				
 			</div>
 			<div style="display: inline-block; width: 100%;border-bottom: 1px solid #b6b6b6; padding-bottom: 10px; padding-left: 8px;"><b><c:out value='${content}'/></b></div>	

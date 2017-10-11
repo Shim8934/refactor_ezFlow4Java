@@ -11,22 +11,20 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">			
-		<script type="text/javascript">			
-			
+		<script type="text/javascript">				
 			window.onload = function () {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
 				}
-				document.getElementById("seenUser_").style.color="#5ea84b";
-				document.getElementById("unseenUser_").style.color="#cc8b12";				
+				
+				document.getElementById("seenUser_").style.color = "#5ea84b";
+				document.getElementById("unseenUser_").style.color = "#cc8b12";				
 			}
 			
-		    function menuQst_DetailUserInfo(pUserID){
+		    function menuQst_DetailUserInfo(pUserID) {
 		    	 var feature = GetOpenPosition(420, 438);
 		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
-
-
 		</script>
 	</head>
 	
@@ -34,7 +32,7 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; padding-left: 140px;">
-			        	<h1>투표 확인 여부</h1>
+			        	<h1><spring:message code='ezPoll.t135'/></h1>
 			    </div>
 			    <div id="close1" style="float: right; display: block;cursor:pointer;">		    	     
 			        <img src="/images/close.png" style="height:20px;width:20px;padding-top: 8px;" onClick="window.close()">
@@ -43,7 +41,7 @@
 			<div style="height:359px; overflow: auto;">
 				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey">
 					<tr> 
-						<th> <a id="seenUser_">읽음 <c:out value='${numberOfSeenUsers}'/></a></th> 
+						<th> <a id="seenUser_"><spring:message code='ezPoll.t136'/> <c:out value='${numberOfSeenUsers}'/></a></th> 
 					</tr>
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
 						<tr id="${list1.id}" class="white" style="border: 1px solid #b6b6b6;">
@@ -65,7 +63,7 @@
 				</table>
 				<table border=1px style="float: left;clear: none;width : 50%;">
 					<tr> 
-						<th> <a id="unseenUser_">읽지 않음 <c:out value='${numberOfUnseenUsers}'/></a></th> 
+						<th> <a id="unseenUser_"><spring:message code='ezPoll.t137'/> <c:out value='${numberOfUnseenUsers}'/></a></th> 
 					</tr>
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
 						<tr id="${list2.id}" class="white" style="border: 1px solid #b6b6b6;">
