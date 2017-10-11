@@ -481,24 +481,24 @@ public class EzPollController extends EgovFileMngUtil {
 			int diffInDays  = Days.daysBetween(toDay_, endDate_).getDays();		
 			
 			if (diffInDays != 0) {
-				timeRemain = Integer.toString(diffInDays) + "일 남았습니다.";				
+				timeRemain = Integer.toString(diffInDays) + egovMessageSource.getMessage("ezPoll.t118", loginVO.getLocale());				
 			}
 			else {
 				int diffInHours  = endDate_.getHourOfDay() - toDay_.getHourOfDay();
 				//logger.debug("Hours remain: " + diffInHours );
 				if (diffInHours != 0) {
-					timeRemain = Integer.toString(diffInHours) + "시 남았습니다.";
+					timeRemain = Integer.toString(diffInHours) + egovMessageSource.getMessage("ezPoll.t119", loginVO.getLocale());
 				}
 				else {
 					int diffInMinutes = endDate_.getMinuteOfHour() - toDay_.getMinuteOfHour();
 					//logger.debug("Minutes remain: " + diffInMinutes );
 					if (diffInMinutes != 0) {
-						timeRemain = Integer.toString(diffInMinutes) + "분 남았습니다.";
+						timeRemain = Integer.toString(diffInMinutes) + egovMessageSource.getMessage("ezPoll.t120", loginVO.getLocale());
 					}
 					else {
 						int diffInSeconds = endDate_.getSecondOfMinute() - toDay_.getSecondOfMinute();
 						//logger.debug("Seconds remain: " + diffInSeconds);
-						timeRemain = Integer.toString(diffInSeconds) + "초 남았습니다.";
+						timeRemain = Integer.toString(diffInSeconds) + egovMessageSource.getMessage("ezPoll.t121", loginVO.getLocale());
 					}										
 				}	
 			}

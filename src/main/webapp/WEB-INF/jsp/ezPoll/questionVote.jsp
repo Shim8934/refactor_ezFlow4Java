@@ -12,8 +12,7 @@
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<!-- <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script> -->
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		
 		<script type="text/javascript">	
 			var filesize = 0;
@@ -32,7 +31,7 @@
 			var numberOfUnvotedUsers = ${numberOfUnvotedUsers};
 			var numberOfSelected = 0;
 			var maxLoop = 0;			
-			var seenText = "분이 투표 내용을 확인했습니다";
+			var seenText = "<spring:message code = 'ezPoll.t112'/>";
 			var _status = "<c:out value='${question.status}'/>";
 			var sessionId = "<c:out value='${question.creator}'/>";			
 			var commentIndex = ${numberOfCmt};
@@ -73,9 +72,10 @@
 				commentCheck();				
  				getConnect(); 				
 				document.getElementById("seenPeople").innerHTML = s_Users + seenText;				
-				document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
-				document.getElementById("seenPeople").style.color="red";
-				document.getElementById("status").style.color="#2828e2";								
+				document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
+				document.getElementById("seenPeople").style.color = "red";
+				document.getElementById("status").style.color = "#2828e2";	
+				
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
 				doc.write(iframeStyle + sigBody.innerHTML);
@@ -218,7 +218,7 @@
 	       						}
 	       					}
          					else {
-         						document.getElementById(voteInfo).innerHTML = "무기명";
+         						document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
          					}
 						}
 						else {
@@ -233,7 +233,7 @@
 							//If it is secret vote, then show 무기명 even no one votes for this option
 							if (secretVote == 1 && seeResultBeforVote == 1) {
 								document.getElementById(voteInfo).style.display = "block";
-								document.getElementById(voteInfo).innerHTML = "무기명";
+								document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
 							}
 						}
 					}
@@ -288,7 +288,7 @@
 			            	
 			            	if (user != curentUser) {
 				            	votedUsers = votedUsers + 1;
-				            	document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
+				            	document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
 			            	}
 					    }
 			            else {
@@ -297,7 +297,7 @@
 			            	
 			            	if (user != curentUser) {
 			            		votedUsers = votedUsers - 1;
-			            		document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
+			            		document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
 			            	}			            	
 			            }
 				    });			        		        
@@ -307,7 +307,7 @@
 			        	var user = JSON.parse(updatedInfo.body).userId;	
 			        	
 			            if (ret == "CHANGED" && user != curentUser) {						
-							alert(user + " is modifying the vote! Please wait!");
+							alert(user + "<spring:message code = 'ezPoll.t113'/>");
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
 				    });
@@ -333,7 +333,7 @@
 			        	
 			            if (_userId != curentUser) {			          		
 			            	if (_cmdId <= commentIndex) {
-			          			alert("Something is wrong!");
+			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
 			          		}
 			            	
@@ -352,7 +352,7 @@
 
 			            if (_userId != curentUser) {			          		
 			            	if (_cmdId > commentIndex) {
-			          			alert("Something is wrong!");
+			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
 			          		}
 			            	
@@ -366,7 +366,7 @@
 
 			            if (_userId != curentUser) {			          		
 			            	if (_cmdId > commentIndex) {
-			          			alert("Something is wrong!");
+			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
 			          		}
 			            	
@@ -450,7 +450,7 @@
 
 			function voteEdit() {
 				if (totalVotes > 0) {
-					alert("Someone has already voted! You cannot edit this vote"); //chu y sua thanh tieng han
+					alert("<spring:message code = 'ezPoll.t115'/>");
 					return;
 				}
 				
@@ -532,7 +532,7 @@
 	 	    		if (hasVoted == 0) {
 	 	    			votedUsers = votedUsers + 1;
 	 	    			hasVoted = 1;	 	    			
-	 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
+	 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
 	 	    		}
 	 	    		
 	 	    		seeResultBeforVote = 1;
@@ -624,7 +624,7 @@
 		    	if (flag == 0) {		    		
 		    		votedUsers = votedUsers - 1;
  	    			hasVoted = 0; 	    			
- 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
+ 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
 		    	}
 		    }
 		    
@@ -1267,12 +1267,12 @@
                 div1ForTd3.setAttribute("tabindex", "0");        
                 var innerDiv1ForTd3 = document.createElement("div");
                 innerDiv1ForTd3.setAttribute("id", "_eCmt" + commentIndex);
-                innerDiv1ForTd3.innerHTML = "Edit Comment";
+                innerDiv1ForTd3.innerHTML = "<spring:message code = 'ezPoll.t125'/>";
                 innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
                 innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
                 innerDiv1ForTd3.onclick = function (event) { editComment(this); };
                 var innerDiv2ForTd3 = document.createElement("div");                
-                innerDiv2ForTd3.innerHTML = "Delete Comment";
+                innerDiv2ForTd3.innerHTML = "<spring:message code = 'ezPoll.t126'/>";
                 innerDiv2ForTd3.setAttribute("_comtIndex", commentIndex);  
                 innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");         
                 innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
@@ -1305,8 +1305,8 @@
 		    
 		    function uploadFileCmt() {		    	
 	    	    var fd = new FormData();		    	
-		    	var _file = document.getElementById("file").files[0];
-		    	var ext = _file.name.split('.').pop().toLowerCase();		    	
+		    	var _file = document.getElementById("fileInput").files[0];
+		    	var ext = _file.name.split('.').pop().toLowerCase();
 		    	
 	            if (_file.size / 1024 / 1024 > 5) {
 	                alert("<spring:message code = 'ezPoll.t208' />");
@@ -1326,8 +1326,9 @@
 		        }    	    
 		    }		   
     
-		    function uploadComplete(evt) {
+		    function uploadComplete(evt) {		    	
 		    	xhr1.removeEventListener("load", uploadComplete);
+		    	document.getElementById("fileInput").value = "";
 		        showAttachedCmtFile(xhr1.responseText);		       
 		    }
 		    
@@ -1435,9 +1436,9 @@
 		    }
 		    
 		    function addFileComment() {
-				//Close sticker picker
+		    	//Close sticker picker
 				document.getElementById("emoticonPanel").style.display = "none";
-		    	document.getElementById("file").click();
+		    	document.getElementById("fileInput").click();
 		    }
 		    
 		    function cancelShowingCmtFile(obj) {
@@ -1962,7 +1963,7 @@
 						</div>
 				  </div>
 				  <div style="float: left; display: block;padding-top: 30px;padding-left: 420px;">
-				  	<a style="display:inline-block;cursor: pointer;" id="seenPeople" onClick="menuDetailSeenUserInfo('${question.qstId}')">분이 투표 내용을 확인했습니다</a>
+				  	<a style="display:inline-block;cursor: pointer;" id="seenPeople" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/></a>
 				  </div>
 				  <c:if test="${curentUser == question.creator || adminPrivilege == 1}">
 					  <div style="float: right; display: block;" id="_editVote">
@@ -1974,19 +1975,15 @@
 				<div id="title" style="display:inline-block;float:left;padding-left: 10px;"><font size="5"><c:out value='${question.title}'/></font></div>
 				<div id="status" style="display:inline-block;padding-left: 1330px;">
 					<c:choose>
-						<c:when test="${question.status == 1}">
-							투표중
-						</c:when>
-						<c:otherwise>
-							투표완료
-						</c:otherwise>
+						<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
+						<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
 					</c:choose>
 				</div>
 				<div id="votedUsers"style="display:inline-block;float:right;padding-right: 45px;">					
-					<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110' />
+					<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>
 				</div>
 				 <c:if test="${question.status == 1}">
-					<div id="daysRemain"style="display:block;padding-left: 1450px;padding-top: 5px; color: green;">
+					<div id="daysRemain" style="display:block;padding-left: 1450px;padding-top: 5px; color: green;">
 						<c:out value='${timeRemain}'/>
 					</div> 			
 				</c:if>
@@ -2061,7 +2058,7 @@
 		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
 		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
 		               			<div style="float:left; display:none;width:80px; margin-left: 1px;" align="center" id="_tax${loop.index}">
-		               				<div style="float:left; display:block; padding-left: 5px; padding-top: 1.5px">모두보기</div>
+		               				<div style="float:left; display:block; padding-left: 5px; padding-top: 1.5px"><spring:message code = 'ezPoll.t122'/></div>
 		               				<img src="/images/arrow_right.png" height="10px" width="10px" style="cursor: pointer; float:left; display:block; padding-top: 2.5px; padding-left: 10px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 		               			</div>
 		               		</div>          		
@@ -2074,7 +2071,7 @@
 				<tr>
 					<td style="border-right: none;width:100%; " colspan="3" >
 						<div style="overflow: hidden;display:inline-block;">
-							<div style="float:left; display:block; padding-top: 8px; padding-left: 35px;">미참여 인원:</div>
+							<div style="float:left; display:block; padding-top: 8px; padding-left: 35px;"><spring:message code = 'ezPoll.t123'/></div>
 							<div id="_unVotedNumber" style="float:left; display:block; padding-top: 8px; padding-left: 20px;"><c:out value='${numberOfUnvotedUsers}'/></div>
 							<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">
 						</div>
@@ -2084,7 +2081,7 @@
 			<c:if test="${curentUser == question.creator || adminPrivilege == 1}">
 				<div id="_finish" style="border:1px solid #b6b6b6; margin-right: auto; margin-left: auto; width:120px; height:40px; margin-top: 15px; cursor: pointer;" onclick="finishVote();">
 					<img src="/images/verified.png" style="height:15px; width:15px; float:left; display:block; padding-top: 14px;padding-left: 5px; cursor: pointer;">				
-					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;">투표 종료</div>
+					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 				</div> 
 			</c:if>
 			<div id="commentArea" style="">
@@ -2126,8 +2123,8 @@
 								<c:if test="${_comt.userId == curentUser}">								
 									<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
 									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;" tabindex=0>							
-										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);">Edit Comment</div>
-										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);">Delete Comment</div>
+										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
+										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
 									</div>
 								</c:if>
 							</td>
@@ -2137,7 +2134,7 @@
 			</div>
 			<div id="sendComment" style="padding-top: 20px;">
 				<div style="float:left; display:block;">
-					<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px; cursor: pointer;" onclick="addFileComment()">
+					<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px; cursor: pointer;" onclick="addFileComment();">
 				</div>
 				<div id ="_stickerArea" style="float:left; display:block;">					
 					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-right: -400px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
@@ -2154,7 +2151,7 @@
 								<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 								<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 								<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-<!-- 								<div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+						   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 								<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
 							</div>
 							<div style="float: right; display:block;">
@@ -2404,14 +2401,7 @@
 				</div>
 				
 			</div>
-			<input id="file" type="file" onchange="uploadFileCmt()" style="width: 1px; height: 1px" /> 
-<!-- 			<div style="display:none">	
-				<input type="text" name="hidCmtTime" id="hidCmtTime" style="display:none"> 
-                <input type="text" name="hidCmtTxt" id="hidCmtTxt" style="display:none" value="">
-                <input type="text" name="hidCmtType" id="hidCmtType" style="display:none">	
-                <input type="text" name="hidCmtAttach" id="hidCmtAttach" style="display:none" value="">
-                 <input type="text" name="hidQst" id="hidQst" style="display:none">
-			</div> -->
+			<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 1px; height: 1px" /> 
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
 	</body>
