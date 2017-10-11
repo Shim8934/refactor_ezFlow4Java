@@ -1347,7 +1347,15 @@ public class EzPollController extends EgovFileMngUtil {
 				listOfAnsweredUsers.add(pollUserAndAnswer.getUserId());
 			}
 		}		
-
+		
+		Iterator<LoginVO> iterator = listOfUnvotedUsers.iterator();
+		while(iterator.hasNext()){
+			LoginVO user = iterator.next();
+			if (listOfAnsweredUsers.contains(user.getId())) {
+				iterator.remove();	
+			}					
+		}
+		
 		listOfUnvotedUsers.removeAll(listOfAnsweredUsers);
 		numberOfUnVotedUsers = listOfUnvotedUsers.size();
 		
