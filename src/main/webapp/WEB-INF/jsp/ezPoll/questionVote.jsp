@@ -50,7 +50,7 @@
 			var currentEditingCmt = -1;
 			var colors = ["#49A0D8", "#D353A0", "#FFC527", "#DF4C27", "#34CB34", "#7127DF", "#90C3D4", "#C390D4", "#A1D490", "#D4A190",
 			              "#581845", "#581825", "#582B18", "#584B18", "#455818", "#255818", "#C15AA3", "#C15A6F", "#C1785A", "#C1AC5A",
-			              "#A3C15A", "#70C15A", "#4EC479", "#4EC4B4", "#4E99C4", "#4E5EC4", "#794EC4", "#B44EC4", "#AFC44E", "#74C44E"]; //add more colors
+			              "#A3C15A", "#70C15A", "#4EC479", "#4EC4B4", "#4E99C4", "#4E5EC4", "#794EC4", "#B44EC4", "#AFC44E", "#74C44E"];
             var iframeStyle = "<style>";
             iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -63,31 +63,32 @@
             iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
             
-    		window.onunload = function(){
+    		window.onunload = function() {
     		    if (stompClient !== null) {
     		        stompClient.disconnect();
     		    }
         	}; 
             
-			window.onload = function () {				
+			window.onload = function() {				
 				commentCheck();				
  				getConnect(); 				
-				document.getElementById("seenPeople").innerHTML = s_Users + seenText;
-				document.getElementById("votedUsers").innerHTML = votedUsers + "명 참여";				
+				document.getElementById("seenPeople").innerHTML = s_Users + seenText;				
+				document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
 				document.getElementById("seenPeople").style.color="red";
 				document.getElementById("status").style.color="#2828e2";								
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
 				doc.write(iframeStyle + sigBody.innerHTML);
-				doc.close();							
- 				//Result view segment
+				doc.close();	
+				
+ 				//View vote result functions
  				preProcess();
  				updateGraph();
 			}		
 					
-			function commentCheck(){
-				document.getElementById("sendBttn").addEventListener("click", function(event){
-				    event.preventDefault()
+			function commentCheck() {
+				document.getElementById("sendBttn").addEventListener("click", function(event) {
+				    event.preventDefault();
 				});
 				document.getElementById("sendBttn").disabled = true;
 			}
@@ -101,7 +102,7 @@
 				}	
 				
 				//Check if poll is ended
-				if( _status == 0) { 
+				if ( _status == 0) { 
 					for (var i = 0; i < numberOptions; i++) {
 						var _optId = votesArr[i][0];
 						var checkboxId = "_checkbox" + _optId;
@@ -112,6 +113,7 @@
 					
 					var creator = "<c:out value='${question.creator}'/>";
 					var admin = "<c:out value='${adminPrivilege}'/>";
+					
 					if (curentUser == creator || admin == 1) {
 						document.getElementById("_finish").style.display = "none";
 						document.getElementById("_editVote").style.display = "none";
@@ -128,14 +130,14 @@
 							document.getElementById(showVotes).style.display = "none";
 							document.getElementById(voteInfo).style.display = "none";
 						}
-					}
-					
+					}					
 					if (hasVoted == 1) {
 						var test = ${listSelectedOptions};
 						
 						for (var i = 0; i < test.length; i++) {
 							var imageCheckBoxId = "_imageCheckBox" + test[i];
 							var imageCheckBox = document.getElementById(imageCheckBoxId);
+							
 							if (imageCheckBox.src.indexOf("/images/unchecked.png") !== -1) {
 								imageCheckBox.src = "/images/checked.png";
 							}
@@ -157,7 +159,7 @@
  						if (seeResultBeforVote == 1 || _status == 0 || hasVoted == 1) { 								
 							document.getElementById(percentTdId).innerHTML = "[" + (percent * 100).toFixed(1) + "%]";
  						} 							
- 					
+ 						
 						if (votesArr[i][1] != 0) {								
 							var id = "myCanvas" + _optId;							
 							var showVotes = "voterNumber" + _optId;							   					
@@ -203,9 +205,8 @@
 	       						var viewAll = "_tax" + i;
 	       						var listDivs = document.getElementsByClassName(tempClassId);
 
-	       						for (var j = 0; j < tempLoop; j++){
-	       							listDivs[j].style.display = "block";	
-	       							//listDivs[j].innerHTML = Object.values(userNameArr[i][j])[0];
+	       						for (var j = 0; j < tempLoop; j++) {
+	       							listDivs[j].style.display = "block";       							
 	       							listDivs[j].innerHTML = Object.keys(userNameArr[i][j]).map(function(key){return userNameArr[i][j][key];})[0];
 	       						}   
 	       						
@@ -230,7 +231,7 @@
 							}
 							
 							//If it is secret vote, then show 무기명 even no one votes for this option
-							if (secretVote == 1 && seeResultBeforVote == 1){
+							if (secretVote == 1 && seeResultBeforVote == 1) {
 								document.getElementById(voteInfo).style.display = "block";
 								document.getElementById(voteInfo).innerHTML = "무기명";
 							}
@@ -251,13 +252,11 @@
 			}
 			
 			function getConnect() {
-			    //var socket = new WebSocket('ws://localhost:8080/ezFlow/hello');
-			    //var socket = new WebSocket('ws://localhost:8080/ezFlow/hello/websocket');
+			    //var socket = new WebSocket('ws://localhost:8080/ezFlow/hello');			    
 			    var socket = new SockJS('/ezFlow/hello');
 			    stompClient = Stomp.over(socket);			
 			    stompClient.connect({}, function (frame) {		        			    
-			    	stompClient.subscribe('/reply/getSeenUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
-			        //stompClient.subscribe('/app/getSeenUpdate', function (updatedInfo) {
+			    	stompClient.subscribe('/reply/getSeenUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {			
 		        		var ret = JSON.parse(updatedInfo.body).updatedNumber;
 		        	
 			            if (ret != -1 && ret != s_Users) {
@@ -273,30 +272,41 @@
 			        
 			        stompClient.subscribe('/reply/finishVoteForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
-			        	console.log("Vote is changing!");
-			            if (ret == "OK") {
-							console.log("Running here!");
+			        	
+			            if (ret == "OK") {							
 			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
 					    }
 				    });
 			        
 			        stompClient.subscribe('/reply/updateUnVotedUsersForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
-			        	var ret = JSON.parse(updatedInfo.body).result;			        	
+			        	var ret = JSON.parse(updatedInfo.body).result;	
+			        	var user = JSON.parse(updatedInfo.body).userId;	
+			        	
 			            if (ret == "ADD") {							
-			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;
+			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;			            	
 			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	
+			            	if (user != curentUser) {
+				            	votedUsers = votedUsers + 1;
+				            	document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
+			            	}
 					    }
 			            else {
-			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;
+			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;			            	
 			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	
+			            	if (user != curentUser) {
+			            		votedUsers = votedUsers - 1;
+			            		document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
+			            	}			            	
 			            }
 				    });			        		        
 			        
 			        stompClient.subscribe('/reply/editQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
-			        	var user = JSON.parse(updatedInfo.body).userId;			        	
-			            if (ret == "CHANGED" && user != curentUser) {
-							//console.log("Vote is deleted!");
+			        	var user = JSON.parse(updatedInfo.body).userId;	
+			        	
+			            if (ret == "CHANGED" && user != curentUser) {						
 							alert(user + " is modifying the vote! Please wait!");
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
@@ -305,6 +315,7 @@
 			        stompClient.subscribe('/reply/deleteQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 			        	var user = JSON.parse(updatedInfo.body).userId;	
+			        	
 			            if (ret == "DELETED" && user != curentUser) {													
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
@@ -325,6 +336,7 @@
 			          			alert("Something is wrong!");
 			          			return;
 			          		}
+			            	
 			            	updateNewCmt(_userId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime);
 					    }
 				    });
@@ -343,6 +355,7 @@
 			          			alert("Something is wrong!");
 			          			return;
 			          		}
+			            	
 			            	updateCurrentCmt(_cmdId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent);
 					    }
 				    });
@@ -356,9 +369,11 @@
 			          			alert("Something is wrong!");
 			          			return;
 			          		}
+			            	
 			            	if (_cmdId == commentIndex) {
 			            		commentIndex = commentIndex - 1;
 			            	}
+			            	
 			            	deleteCurrentCmt(_cmdId);
 					    }
 				    });
@@ -370,13 +385,14 @@
 			        	var userName = JSON.parse(updatedInfo.body).userName;
 			        	
 			        	if (user != curentUser) {
-			        		var voteId = -1;							
+			        		var voteId = -1;
+			        		
 				        	if (mode == 1) {
-				        		//Adding mode
+				        		//In adding mode
 				        		var showVotes = "voterNumber2" + optId;
-				        		document.getElementById(showVotes).style.display = "none";
-				        		
+				        		document.getElementById(showVotes).style.display = "none";				        		
 				        		totalVotes = totalVotes + 1;
+				        		
 				        		for (var i = 0; i < numberOptions; i++) {
 				        			if (votesArr[i][0] == optId) {
 				        				votesArr[i][1] = votesArr[i][1] + 1;
@@ -388,16 +404,19 @@
 				        		if (secretVote == 0) {
 									//Update the userName array
 									var tempObj = new Object();
-									tempObj[user] = userName;								
-									if (userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName) === -1){	
+									tempObj[user] = userName;	
+									
+									if (userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName) === -1) {	
 										userNameArr[voteId].push(tempObj);
 									}
 				        		}
+				        		
 				        		updateGraph();
 				        	}
 				        	else {
-				        		//Remove mode
-				        		totalVotes = totalVotes - 1;					        		
+				        		//In removing mode
+				        		totalVotes = totalVotes - 1;
+				        		
 				        		for (var i = 0; i < numberOptions; i++) {
 				        			if (votesArr[i][0] == optId) {
 				        				votesArr[i][1] = votesArr[i][1] - 1;
@@ -405,10 +424,12 @@
 				        				break;
 				        			}
 				        		}	
+				        		
 				        		if (secretVote == 0) {
-					        		//Remove userName if exist in userName Array
-					        		var pos = userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName);					        		
-									if ( pos > -1){	
+					        		//Remove userName if exist in userName array
+					        		var pos = userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName);	
+					        		
+									if ( pos > -1) {	
 										userNameArr[voteId].splice(pos, 1);									
 				   						var tempClassId = "_thu" + voteId;
 				   						var listDivs = document.getElementsByClassName(tempClassId);
@@ -419,6 +440,7 @@
 				   						}		   						
 									}		
 				        		}
+				        		
 				        		updateGraph();
 				        	}
 			        	}			        	
@@ -430,25 +452,25 @@
 				if (totalVotes > 0) {
 					alert("Someone has already voted! You cannot edit this vote"); //chu y sua thanh tieng han
 					return;
-				}		
+				}
+				
 				var tenantId = "<c:out value='${question.tenantId}'/>";
 				stompClient.send("/app/editVote", {}, JSON.stringify({'question': qstId, 'tenant': tenantId, 'user': curentUser}));
 				document.location.href = "/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify";				
 		    }		
 		    
-		    function menuDetailSeenUserInfo(pQstID) {
-		    	 //console.log("Run Here! QustID is: " + pQstID);
+		    function menuDetailSeenUserInfo(pQstID) {		    	 
 		    	 var feature = GetOpenPosition(420, 438);
 		    	 window_open1 = window.open("/ezPoll/showSeenUserInfo.do?qstId=" + pQstID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 		    
 		    function AttachDetail_view(obj) {
 		        if (obj.className == "icon_graydown") {
-		            obj.className = "icon_grayup"
+		            obj.className = "icon_grayup";
 		            document.getElementById("fileList").style.display = "";
 		        }
 		        else {
-		            obj.className = "icon_graydown"
+		            obj.className = "icon_graydown";
 		            document.getElementById("fileList").style.display = "none";
 		        }
 		    }
@@ -458,6 +480,7 @@
 		    }
 		    
 		    var suffix = 0;
+		    
 		    function AttachAllDownload() {
 		    	var test = ${numOfFile};
 		    	
@@ -506,10 +529,10 @@
 	 					return;
 	 	    		}
 	 	    		
-	 	    		if(hasVoted == 0){
-	 	    			votedUsers = votedUsers + 1; //Inform for other users
-	 	    			hasVoted = 1;
-	 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "명 참여";
+	 	    		if (hasVoted == 0) {
+	 	    			votedUsers = votedUsers + 1;
+	 	    			hasVoted = 1;	 	    			
+	 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
 	 	    		}
 	 	    		
 	 	    		seeResultBeforVote = 1;
@@ -519,7 +542,7 @@
 		    		var optId = votesArr[voteId][0];		    	
 		    		var showVotes = "voterNumber2" + optId;
 		    		
-		    		//update values of total votes and votes for current option 
+		    		//Update values of total votes and votes for current option 
 		    		votesArr[voteId][1] = votesArr[voteId][1] + 1;
 		    		totalVotes = totalVotes + 1;				
 					document.getElementById(showVotes).style.display = "none";
@@ -528,15 +551,16 @@
 						//Update the userName array
 						var tempObj = new Object();
 						tempObj[curentUser] = curentUserName;
-						if (userNameArr[voteId].map(function (o) {return o[curentUser];}).indexOf(curentUserName) === -1){	
+						
+						if (userNameArr[voteId].map(function (o) {return o[curentUser];}).indexOf(curentUserName) === -1) {	
 							userNameArr[voteId].push(tempObj);
 						}
 					}
 					
-		    		//then update the graph for all options				    		
+		    		//Then update the graph for all options				    		
 		    		updateGraph();
 		    		
-		    		//Update in server
+		    		//Send update request to server
 		    		var xhr = new XMLHttpRequest();
 		    	    var fd = new FormData();
 		    	    fd.append("optionId", optId);
@@ -552,7 +576,7 @@
 	 	    		checkVoted();
 	 	    		seeResultBeforVote = 1;	 	    			 	    		
 	 	    		
-	 	    		//Update infor
+	 	    		//Update local information
 	 	    		numberOfSelected = numberOfSelected - 1;
 	 	    		votesArr[voteId][1] = votesArr[voteId][1] - 1;
 	 	    		totalVotes = totalVotes - 1;
@@ -560,7 +584,7 @@
 					if (secretVote == 0) {
 		 	    		var pos = userNameArr[voteId].map(function (o) {return o[curentUser];}).indexOf(curentUserName);
 		 	    		
-						if ( pos > -1){	
+						if ( pos > -1) {	
 							userNameArr[voteId].splice(pos, 1);						
 	   						var tempClassId = "_thu" + voteId;	   						
 	   						var listDivs = document.getElementsByClassName(tempClassId);
@@ -572,9 +596,10 @@
 						}
 					}
 					
+					//Then update the graph for all options	
 	 	    		updateGraph();   			
  	    			
- 	    			//Delete entry in server
+ 	    			//Send remove entry request to server
 		    		var xhr = new XMLHttpRequest();
 		    	    var fd = new FormData();
 		    	    fd.append("optionId", optId);
@@ -587,7 +612,8 @@
 		    
 		    function checkVoted() {				
 		    	var flag = 0;	
-		    	var imgTags = document.getElementsByClassName("_imageTag");		    	
+		    	var imgTags = document.getElementsByClassName("_imageTag");	
+		    	
 		    	for (var i = 0; i < imgTags.length; i++) {					
 		    		if (imgTags[i].src.indexOf("/images/checked.png") !== -1) {
 		    			flag = 1;
@@ -597,8 +623,8 @@
 		    	
 		    	if (flag == 0) {		    		
 		    		votedUsers = votedUsers - 1;
- 	    			hasVoted = 0;
- 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "명 참여";
+ 	    			hasVoted = 0; 	    			
+ 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110' />";
 		    	}
 		    }
 		    
@@ -617,14 +643,10 @@
 		    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
 		    }
 		    
-		    function menuQst_DetailUserInfo(pUserID){
+		    function menuQst_DetailUserInfo(pUserID) {
 		    	 var feature = GetOpenPosition(420, 438);
 		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
-		    
-		    function test_func() {		    			    
-		    	document.getElementById("sendBttn").disabled = false;		    	
-		    }
 		    
 		    function showEditPanel(obj) {					    	
 		    	if (flagEvent != -1) {					
@@ -633,14 +655,15 @@
 		    	
 		    	var id = obj.getAttribute("_comtIndex");
 		    	
-		    	if (flagEvent == id.slice(8)){
+		    	if (flagEvent == id.slice(8)) {
 		    		flagEvent = -1;
 					return;
 		    	}
+		    	
 		    	flagEvent = id.slice(8);	    	
 		    	document.getElementById(id).style.display = "block";	
 		    	
-		    	document.addEventListener("click", function handleClick(e){		    									
+		    	document.addEventListener("click", function handleClick(e) {		    									
 			    	if (document.getElementById(id) != null) {
 			    		document.getElementById(id).style.display = "none"; 
 			    	}		    			
@@ -649,12 +672,15 @@
 		    	});	   	
 		    }		    
 		    
-		    function deleteFileInCmt () {		    	
+		    function deleteFileInCmt() {		    	
 		    	document.getElementById("descriptCmt" + currentEditingCmt).style.display = "none";
+		    	
 		    	if (document.getElementById("descriptCmt" + currentEditingCmt).childElementCount == 3) {
 		    		document.getElementById("descriptCmt" + currentEditingCmt).lastElementChild.innerHTML = "";
 		    	}
+		    	
 		    	document.getElementById("toolCmt" + currentEditingCmt).style.display = "block";	
+		    	
 		    	if (document.getElementById("editCmtArea" + currentEditingCmt).value == "") {
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = true;
 		    	}
@@ -666,6 +692,7 @@
 		    		cancelEditComment(cancelObj);
 		    	}
 		    	
+		    	//Prepare step
 		    	document.getElementById("sendComment").style.display = "none";	
 		    	var id = obj.getAttribute("_comtIndex");
 		    	currentEditingCmt = id.slice(8);
@@ -684,7 +711,7 @@
 		    	editDiv2Cmt.appendChild(innerDiv1);
 		    	editDiv2Cmt.appendChild(innerDiv2);
 		    	
-		    	//Inner div 2
+		    	//Create image element for stickers/files
 		    	var imgForInnerDiv2 = document.createElement("img"); 
 		    	imgForInnerDiv2.setAttribute("id", "editPreviewImg" + id.slice(8));
 		    	imgForInnerDiv2.setAttribute("style", "display: block; height: 60px; width: 60px; ");	    	
@@ -714,7 +741,7 @@
 	    		innInnerDiv2.appendChild(cloneOfDivSticker);
 	    		innerDiv1.appendChild(innInnerDiv2);
 		    	
-		    	//Copy file or sticker
+		    	//Copy files/stickers
 		    	if (nChilds == 1) {		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {		    			
 			    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML;
@@ -725,7 +752,7 @@
 		    			imgForInnerDiv2.src = div2Cmt.firstElementChild.firstElementChild.src;
 		    			innerDiv2.style.display = "block";		    					    			
 		    			
-		    			//Add delete image
+		    			//Add delete image in top rigt of sticker/files
 		    			var cancelImgForInnerDiv2 = document.createElement("img"); 
 		    			cancelImgForInnerDiv2.src = "/images/close.png";
 		    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
@@ -753,12 +780,13 @@
 		    	}
 		    	else {		    		
 		    		innInnerDiv2.style.display = "none";
-		    		//Copy file/sticker to an div then add delete image in the file/sticker
+		    		
+		    		//Copy files/sticker to a div
 		    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML;
 		    		imgForInnerDiv2.src = div2Cmt.lastElementChild.firstElementChild.src;
 		    		innerDiv2.style.display = "block";
 		    			
-	    			//Add delete image
+	    			//Add delete image in top rigt of sticker/files
 	    			var cancelImgForInnerDiv2 = document.createElement("img"); 
 	    			cancelImgForInnerDiv2.src = "/images/close.png";
 	    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
@@ -783,7 +811,7 @@
 	    			}
 		    	}	
 		    	
-		    	//Inner div 3
+		    	//Adding save/cancel comment buttons
 		    	var tagA1 = document.createElement("button"); 
 		    	tagA1.innerHTML = "Cancel";
 		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(8));
@@ -805,26 +833,28 @@
 		    	editTxtArea.focus(); 
 		    }
 		    
-		    function cancelEditComment(obj){
+		    function cancelEditComment(obj) {
 		    	var commentIndex = obj.getAttribute("_cmtIndex");
 		    	var div2Cmt = document.getElementById("div2Cmt" + commentIndex);
 		    	div2Cmt.style.display = "inline-block";
 		    	var editDiv2Cmt = document.getElementById("editCmtDiv" + commentIndex);
+		    	
 		    	while (editDiv2Cmt.hasChildNodes()) {
 		    		editDiv2Cmt.removeChild(editDiv2Cmt.lastChild);
 		    	}
+		    	
 		    	editDiv2Cmt.style.display = "none";	
 		    	document.getElementById("sendComment").style.display = "block";	
 		    	document.getElementById("_eCmt" + commentIndex).style.display = "block";
 		    	currentEditingCmt = -1;
 		    }
 		    
-		    function saveEditComment(obj){
-		    	console.log("Run in save edit comment!");
+		    function saveEditComment(obj) {		    	
 		    	var fd = new FormData();
 		    	currentEditingCmt = -1;
 		    	var commentIndex = obj.getAttribute("_cmtIndex");
 		    	var div2Cmt = document.getElementById("div2Cmt" + commentIndex);
+		    	
 		    	if (document.getElementById("editCmtArea" + commentIndex).value == "") {
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			div2Cmt.removeChild(div2Cmt.children[0]);
@@ -832,6 +862,7 @@
 		    	}
 		    	else {
 		    		fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value);
+		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value;
 		    		}
@@ -850,6 +881,7 @@
 		    	else {
 		    		var fileType = document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_type");
 		    		fd.append("fileType", fileType);
+		    		
 		    		if (div2Cmt.childElementCount == 1) {	    				    			
 		    			if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {		                	
 		    				var innerDiv1 = document.createElement("div");
@@ -857,6 +889,7 @@
 					    	var imgForinnerDiv1 = document.createElement("img");  	    	           
 					    	imgForinnerDiv1.setAttribute("vertical-align", "middle");
 					    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
+					    	
 					    	if (fileType == "sticker") {
 					    		imgForinnerDiv1.setAttribute("_type", "sticker");					    		
 					    		imgForinnerDiv1.setAttribute("height", "80");
@@ -885,27 +918,32 @@
 						    	imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo")); 
 						    	imgForinnerDiv1.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 						    	imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
-						    	innerDiv1.appendChild(imgForinnerDiv1);						    	
+						    	innerDiv1.appendChild(imgForinnerDiv1);
+						    	
 					    		var innerDiv2 = document.createElement("div");
 					    		innerDiv2.innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
 					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
+					    		
 					    		innerDiv1.appendChild(innerDiv2);
 					    		div2Cmt.appendChild(innerDiv1);
 					    		fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 					    		fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 			    			}
+					    	
 					    	fd.append("cmtAttach", imgForinnerDiv1.src);
 		    			}
 		    			else {		    				
 		    				div2Cmt.firstElementChild.children[0].setAttribute("vertical-align", "middle");
 		    				div2Cmt.firstElementChild.children[0].setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
+		    				
 		    				if (fileType == "sticker") {
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 			    				}
+			    				
 		    					div2Cmt.firstElementChild.children[0].setAttribute("_type", "sticker");					    		
 		    					div2Cmt.firstElementChild.children[0].setAttribute("height", "80");
 		    					div2Cmt.firstElementChild.children[0].setAttribute("width", "80");					    	
@@ -915,6 +953,7 @@
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 			    				}
+			    				
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");					    		
 			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
@@ -932,6 +971,7 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
+			    				
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.children[1].innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;
 			    					div2Cmt.firstElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
@@ -948,19 +988,23 @@
 						    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 						    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 			    				}
+			    				
 			    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 			    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 			    			}
+		    				
 		    				fd.append("cmtAttach", div2Cmt.firstElementChild.children[0].src);
 		    			}
 		    		}
 		    		else {    					    			
 		    			div2Cmt.lastElementChild.children[0].setAttribute("vertical-align", "middle");
 		    			div2Cmt.lastElementChild.children[0].setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
+		    			
 		    			if (fileType == "sticker") {
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 		    				}
+		    				
 	    					div2Cmt.lastElementChild.children[0].setAttribute("_type", "sticker");					    		
 	    					div2Cmt.lastElementChild.children[0].setAttribute("height", "80");
 	    					div2Cmt.lastElementChild.children[0].setAttribute("width", "80");					    	
@@ -970,6 +1014,7 @@
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 		    				}
+		    				
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");					    		
 		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");	
@@ -987,6 +1032,7 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
+		    				
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {		    					
 		    					div2Cmt.lastElementChild.children[1].innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;
 		    					div2Cmt.lastElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
@@ -1003,18 +1049,22 @@
 					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 		    				}
+		    				
 		    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 		    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 		    			}
+		    			
 		    			fd.append("cmtAttach", div2Cmt.lastElementChild.children[0].src);
 		    		}
 		    	}
 		    	
-		    	//Delete all child of editCmtDiv element
+		    	//Delete all child element of editCmtDiv
 		    	var editDiv2Cmt = document.getElementById("editCmtDiv" + commentIndex);
+		    	
 		    	while (editDiv2Cmt.hasChildNodes()) {
 		    		editDiv2Cmt.removeChild(editDiv2Cmt.lastChild);
 		    	}
+		    	
 		    	editDiv2Cmt.style.display = "none";	
 		    	
 		    	//Enable div2Cmt, sendComment and edit option
@@ -1022,7 +1072,7 @@
 		    	document.getElementById("_eCmt" + commentIndex).style.display = "block";
 		    	document.getElementById("sendComment").style.display = "block";
 		    	
-		    	//Create a post request to update comment
+		    	//Send an update comment request to server
 		        fd.append("qstId", qstId);
 		        fd.append("cmtId", commentIndex);		        		        
 	    	    xhr1.open("POST", "/ezPoll/editComment.do");
@@ -1030,21 +1080,19 @@
 		    }
 		    
 		    function deleteComment(obj) {
-		    	console.log("Run in delete Comment function!");
-		    	//currentEditingCmt = -1;
-		    	var id = obj.getAttribute("_comtIndex");		    	
-		    	if (confirm("<spring:message code = 'ezPoll.t207' />")) { 
-		    		console.log("Delete comment!");		    		
+		    	var id = obj.getAttribute("_comtIndex");
+		    	
+		    	if (confirm("<spring:message code = 'ezPoll.t207' />")) { 	    			    		
 		    		if (id == commentIndex) {
 		    			commentIndex = commentIndex - 1;
 		    		}
 		    		
-		    		//Delete row in comment table
+		    		//Delete this row in comment table
 		    		var oTable = document.getElementById("commentListView");
 		    		var i = obj.parentNode.parentNode.parentNode.rowIndex;
 		    		oTable.deleteRow(i);
 		    		
-				    // Delete comment by sending a post request!
+				    //Send delete comment request to server
  		    		var fd = new FormData();
 			        fd.append("qstId", qstId);
 			        fd.append("cmtId", id);		        		        
@@ -1059,11 +1107,12 @@
 		    	document.getElementById("sendBttn").disabled = true;		    		    		    		    	
 		    	var currentText = document.getElementById("comment_input").value;		    			    	
 		    	var oTable = document.getElementById("commentListView");
-		    	//create the Tr field
+		    	
+		    	//create the tr element
 		    	objTr = document.createElement("tr");
 		    	objTr.setAttribute("style", "border-bottom: 1px solid #b6b6b6");
 		    	
-		    	//Td1
+		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
@@ -1073,7 +1122,7 @@
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);                          
                 
-                //Td2
+                //Process td2 (comment and user information) element
                 var objTd2 = document.createElement("td");
                 var div1ForTd2 = document.createElement("div");
                 var div2ForTd2 = document.createElement("div");  
@@ -1086,7 +1135,7 @@
                 div1ForTd2.innerHTML = curentUser;
                 div1ForTd2.setAttribute("style", "display: block; padding-left: 8px; padding-top: 10px; color: blue");       
                 
-                //Add text comment if exist
+                //Add text comment if exists
                 if (currentText.length > 0) {
                 	currentText = currentText.replace(/(?:\r\n|\r|\n)/g, '<br />');
                 	var pForTd2 = document.createElement("p");  
@@ -1097,8 +1146,9 @@
                 	fd.append("cmtTxt", currentText);
                 }
                 
-                //Add file if exist
-                var uploadFileElement = document.getElementById("uploadedFile");            
+                //Add files/sticker if exists
+                var uploadFileElement = document.getElementById("uploadedFile");   
+                
 		        if (uploadFileElement.style.display !== "none") {		        	
 		        	var img2ForUpFileElmt = uploadFileElement.lastElementChild;
 		        	var fileinfo = img2ForUpFileElmt.getAttribute("_fileInfo");	
@@ -1128,7 +1178,7 @@
 					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];	
 				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);   
-				    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
+				    		imgForinnerDiv1.onclick = function() { downloadFileInCmt(this); };
 				    	}
 				    	else {				    		
 				    		imgForinnerDiv1.setAttribute("_type", "sticker");
@@ -1151,16 +1201,16 @@
 				    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]); 
 				    	imgForinnerDiv1.setAttribute("_fileName", fileinfo.split("/")[1]);
 				    	
-				    	if (ext == "doc" || ext == "docx"){
+				    	if (ext == "doc" || ext == "docx") {
 				    		imgForinnerDiv1.src = "/images/msWord.png";
 				    	}
-				    	else if (ext == "ppt" || ext == "pptx"){
+				    	else if (ext == "ppt" || ext == "pptx") {
 				    		imgForinnerDiv1.src = "/images/msPowerpoint.png";
 				    	}
-				    	else if (ext == "xls" || ext == "xlsx"){
+				    	else if (ext == "xls" || ext == "xlsx") {
 				    		imgForinnerDiv1.src = "/images/msExcel.png";
 				    	}
-				    	else if (ext == "hwp"){
+				    	else if (ext == "hwp") {
 				    		imgForinnerDiv1.src = "/images/hancomHWP.png";
 				    	}
 				    	else if (ext == "pdf") {
@@ -1180,6 +1230,7 @@
 			    		innerDiv2.setAttribute("_fileName", fileinfo.split("/")[1]);
 			    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 			    		innerDiv1.appendChild(innerDiv2);
+			    		
 			    		fd.append("fileName", innerDiv2.innerHTML);
 			    		fd.append("filePath", fileinfo.split("/")[0]);
 			    	}	
@@ -1191,7 +1242,7 @@
                 objTd2.appendChild(editDiv2ForTd2);
                 objTr.appendChild(objTd2);
                 
-                //Td3
+                //Process td3 (comment time and edit comment) element
                 var objTd3 = document.createElement("td");
                 objTd3.setAttribute("style", "width: 145px; position: relative;");                
                 var fistChildForTd3 = document.createElement("div");
@@ -1227,9 +1278,9 @@
                 innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
                 div1ForTd3.appendChild(innerDiv1ForTd3);
                 div1ForTd3.appendChild(innerDiv2ForTd3);
-                objTd3.appendChild(div1ForTd3);
-                objTr.appendChild(objTd3);
                 
+                objTd3.appendChild(div1ForTd3);
+                objTr.appendChild(objTd3);                
                 oTable.appendChild(objTr);                
                 
                 //Clean the place
@@ -1237,7 +1288,7 @@
 		        document.getElementById("uploadedFile").style.display = "none"; 	            
 		        window.scrollTo(0, document.body.scrollHeight);
 		        
-		        //Send comment information to server
+		        //Send add comment request to server
 		        fd.append("qstId", qstId);
 		        fd.append("cmtId", commentIndex);
 		        fd.append("cmtTime", fistChildForTd3.innerHTML);		        
@@ -1285,11 +1336,13 @@
 		            alert("Upload Failed!");
 		            return;
 		        }     
+		    	
 		        var xml = loadXMLString(strXML); 	        	        
 		    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		    	
 		    	var orgFileName = fileinfo.split("/")[1];		 	    	
 		    	var _ext = orgFileName.split('.').pop().toLowerCase();		 
 		    	var imagePreview = null;
+		    	
 		    	if (document.getElementById("sendComment").style.display !== "none") {			    	
 			    	document.getElementById("uploadedFile").style.display = "inline-block";
 			    	imagePreview = document.getElementById("previewImage");
@@ -1300,11 +1353,12 @@
 			    	document.getElementById("sendBttn").disabled = false;
 		    	}
 		    	else {
-		    		//Editing situation
+		    		//In editing situation
 		    		imagePreview = document.getElementById("editPreviewImg" + currentEditingCmt);	    		    				    		
 		    		var childElmNumber = imagePreview.parentElement.childElementCount;
+		    		
 		    		if (childElmNumber == 1) {
-		    			// Add cancel image
+		    			// Add cancel image in top right of files/sticker
 		    			var cancelImg = document.createElement("img"); 
 		    			cancelImg.src = "/images/close.png";
 		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
@@ -1349,7 +1403,8 @@
 						else {
 							imagePreview.setAttribute("_type", "images"); 
 						}
-		    		}	   
+		    		}
+		    		
 		    		imagePreview.parentElement.style.display = "block";	
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 		    	}
@@ -1359,16 +1414,16 @@
 		    	if (_ext == "jpg" || _ext == "png" || _ext == "bmp") {		    	    	             
 		    		imagePreview.src = "/files/commentImages/" + fileinfo.split("/")[0];
 		    	}
-		    	else if (_ext == "doc" || _ext == "docx"){
+		    	else if (_ext == "doc" || _ext == "docx") {
 		    		imagePreview.src = "/images/msWord.png";
 		    	}
-		    	else if (_ext == "ppt" || _ext == "pptx"){
+		    	else if (_ext == "ppt" || _ext == "pptx") {
 		    		imagePreview.src = "/images/msPowerpoint.png";
 		    	}
-		    	else if (_ext == "xls" || _ext == "xlsx"){
+		    	else if (_ext == "xls" || _ext == "xlsx") {
 		    		imagePreview.src = "/images/msExcel.png";
 		    	}
-		    	else if (_ext == "hwp"){
+		    	else if (_ext == "hwp") {
 		    		imagePreview.src = "/images/hancomHWP.png";
 		    	}
 		    	else if (_ext == "pdf") {
@@ -1380,7 +1435,7 @@
 		    }
 		    
 		    function addFileComment() {
-				//Close sticker picker if display
+				//Close sticker picker
 				document.getElementById("emoticonPanel").style.display = "none";
 		    	document.getElementById("file").click();
 		    }
@@ -1389,12 +1444,13 @@
 				var type = obj.getAttribute("_type");
 				
 				if (type == "file") {
-					//Delete file in server
+					//Send delete file request to server
 			    	var fileinfo = obj.getAttribute("_fileInfo");		    	
 			    	var orgFileName = fileinfo.split("/")[1];
 			    	var ext = orgFileName.split('.').pop().toLowerCase();
 			        var fd = new FormData();		        
 			        fd.append("fileToDelete", fileinfo);
+			        
 			        if (ext == "jpg" || ext == "png" || ext == "bmp") {
 				        xhr1.open("POST", "/ezPoll/deleteCmtFile.do");
 				        xhr1.send(fd);
@@ -1403,10 +1459,12 @@
 			    	    xhr1.open("POST", "/ezPoll/deleteFile.do");
 			    	    xhr1.send(fd); 
 			        }  		        
-				}		    			        
+				}	
+				
 		        //Hide uploadFile element
 		        var uploadFileElement = document.getElementById("uploadedFile");		        	       
 		        uploadFileElement.style.display = "none";
+		        
 		        if (document.getElementById("comment_input").value == "") {
 		        	document.getElementById("sendBttn").disabled = true;
 		        }
@@ -1437,12 +1495,12 @@
 		    }
 			
 		    function checkScrollBars() {		
-				if (document.getElementById("_listG" + stickerIndex + "Table").scrollHeight > 320){
+				if (document.getElementById("_listG" + stickerIndex + "Table").scrollHeight > 320) {
 		    		document.getElementById("emoticonPanel").style.width = "420px";
 		    	}
 		    }
 		    
-		    function addSticker(){
+		    function addSticker() {
 		    	processGroupStickers();
 		    	stickerIndex = 1;		    	
 		    	document.getElementById("_group1").style.backgroundColor  = "#d9d9d9";
@@ -1452,6 +1510,7 @@
 		    		document.getElementById("_group" + i).style.backgroundColor  = "#fff";
 		    		document.getElementById("_listG" + i).style.display = "none";
 		    	}
+		    	
 		    	document.getElementById("emoticonPanel").style.display = "block";
 		    	checkScrollBars();
 		    }
@@ -1461,6 +1520,7 @@
 		    	obj.style.backgroundColor  = "#d9d9d9";
 		    	document.getElementById("_listG" + stickerIndex).style.display = "none";
 		    	var imageTag = obj.firstElementChild;
+		    	
 		    	if (imageTag.src.indexOf("hackerGirl.png") !== -1) {		    		
 		    		stickerIndex = 1;		    		
 		    	}
@@ -1486,7 +1546,7 @@
 		    	document.getElementById("emoticonPanel").style.display = "none";
 		    	
 		    	if (document.getElementById("sendComment").style.display !== "none") {
-			    	//Add sticker in upload File
+			    	//Add sticker in uploadFile element
 			    	document.getElementById("uploadedFile").style.display = "inline-block";
 			    	var imagePreview = document.getElementById("previewImage");
 			    	var cancelPreview = document.getElementById("cancelImg");
@@ -1497,19 +1557,21 @@
 			    	document.getElementById("sendBttn").disabled = false;
 		    	}
 		    	else {
-		    		//Editing situation
+		    		//In editing situation
 		    		var editPreviewTag = document.getElementById("editPreviewImg" + currentEditingCmt);
 		    		editPreviewTag.setAttribute("_type", "sticker");
 		    		editPreviewTag.src = actualUrl;
 		    		var childElmNumber = editPreviewTag.parentElement.childElementCount;
+		    		
 		    		if (childElmNumber == 1) {
-		    			// Add cancel image
+		    			// Add cancel image in top right of files/sticker
 		    			var cancelImg = document.createElement("img"); 
 		    			cancelImg.src = "/images/close.png";
 		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
 		    			cancelImg.onclick = function () { deleteFileInCmt(); };
 		    			editPreviewTag.parentElement.appendChild(cancelImg);
 		    		}
+		    		
 		    		editPreviewTag.parentElement.style.display = "block";
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 		    	}
@@ -1519,15 +1581,17 @@
 		    function processGroupStickers() {				
 		    	if (numberOfGroupSticker > 8) {
 		    		currentGroupSticker = 8;
-		    		for (var i = 9; i <= numberOfGroupSticker; i++){
+		    		
+		    		for (var i = 9; i <= numberOfGroupSticker; i++) {
 		    			document.getElementById("_group" + i).style.display = "none";
 		    		}
+		    		
 		    		document.getElementById("nextEmoticon").src = "/images/next.png";
 		    		document.getElementById("nextEmoticon").style.cursor = "pointer";
 		    		document.getElementById("nextEmoticon").onclick = function () { showNextGroupSticker(); };
 		    	}
 		    	else {
-		    		for (var i = numberOfGroupSticker + 1; i <= 8; i++){
+		    		for (var i = numberOfGroupSticker + 1; i <= 8; i++) {
 		    			document.getElementById("_group" + i).style.display = "none";
 		    		}		    		
 		    	}
@@ -1539,7 +1603,7 @@
 		    	document.getElementById("_group" + currentGroupSticker).style.display = "block";
 		    	document.getElementById("previousEmoticon").src = "/images/previous.png";
 		    	document.getElementById("previousEmoticon").style.cursor = "pointer";
-		    	document.getElementById("previousEmoticon").onclick = function () { showPreviousGroupSticker(); };
+		    	document.getElementById("previousEmoticon").onclick = function() { showPreviousGroupSticker(); };
 		    	
 		    	if (currentGroupSticker >= numberOfGroupSticker) {
 		    		document.getElementById("nextEmoticon").src = "/images/next1.png";
@@ -1566,11 +1630,12 @@
 		    function updateNewCmt(userId, attach, type, name, path, txtContent, cmtTime) {
 		    	commentIndex = commentIndex + 1;
 		    	var oTable = document.getElementById("commentListView");
-		    	//create the Tr field
+		    	
+		    	//Create the tr element
 		    	objTr = document.createElement("tr");
 		    	objTr.setAttribute("style", "border-bottom: 1px solid #b6b6b6");
 		    	
-		    	//Td1
+		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
@@ -1580,7 +1645,7 @@
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);
                 
-              	//Td2
+              	//Process td2 (user information and comment information) element
                 var objTd2 = document.createElement("td");
                 var div1ForTd2 = document.createElement("div");
                 var div2ForTd2 = document.createElement("div");  
@@ -1593,7 +1658,7 @@
                 div1ForTd2.innerHTML = userId;
                 div1ForTd2.setAttribute("style", "display: block; padding-left: 8px; padding-top: 10px; color: blue");       
                 
-                //Add text comment if exist
+                //Add text comment if exists
                 if (txtContent.length > 0) {
                 	txtContent = txtContent.replace(/(?:\r\n|\r|\n)/g, '<br />');
                 	var pForTd2 = document.createElement("p");  
@@ -1603,8 +1668,8 @@
                 	div2ForTd2.appendChild(pForTd2);
                 }
                 
-              	//Add file if exist
-                if (attach != ""){
+              	//Add files/sticker if exists
+                if (attach != "") {
                 	var innerDiv1 = document.createElement("div");
                 	innerDiv1.setAttribute("style", "padding-top: 5px;");
 			    	var imgForinnerDiv1 = document.createElement("img");  	    	           
@@ -1638,6 +1703,7 @@
 			    			imgForinnerDiv1.setAttribute("_fileInfo", path); 
 			    			imgForinnerDiv1.setAttribute("_fileName", name);
 			    			imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
+			    			
 				    		var innerDiv2 = document.createElement("div");
 				    		innerDiv2.innerHTML = name;
 				    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
@@ -1654,12 +1720,13 @@
                 objTd2.appendChild(editDiv2ForTd2);
                 objTr.appendChild(objTd2);             	            	
               	
-                //Td3
+                //Process td3 (comment time and edit comment) element
                 var objTd3 = document.createElement("td");
                 objTd3.setAttribute("style", "width: 145px; position: relative;");                
                 var fistChildForTd3 = document.createElement("div");
                 fistChildForTd3.setAttribute("style", "position: absolute; top:10px;");     
                 fistChildForTd3.innerHTML = cmtTime;
+                
                 objTd3.appendChild(fistChildForTd3);                                         
                 objTr.appendChild(objTd3);             
                 oTable.appendChild(objTr);  
@@ -1667,6 +1734,7 @@
 		    
 		    function updateCurrentCmt(cmdId, attachFilePath, fileType, fileName, filePath, txtContent) {	    			    	
 		    	var div2Cmt = document.getElementById("div2Cmt" + cmdId);
+		    	
 		    	if (txtContent == "") {
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			div2Cmt.removeChild(div2Cmt.children[0]);
@@ -1696,6 +1764,7 @@
 					    	var imgForinnerDiv1 = document.createElement("img");  	    	           
 					    	imgForinnerDiv1.setAttribute("vertical-align", "middle");
 					    	imgForinnerDiv1.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
+					    	
 					    	if (fileType == "sticker") {
 					    		imgForinnerDiv1.setAttribute("_type", "sticker");					    		
 					    		imgForinnerDiv1.setAttribute("height", "80");
@@ -1724,7 +1793,8 @@
 						    	imgForinnerDiv1.setAttribute("_fileInfo", filePath);
 						    	imgForinnerDiv1.setAttribute("_fileName", fileName);
 						    	imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
-						    	innerDiv1.appendChild(imgForinnerDiv1);						    	
+						    	innerDiv1.appendChild(imgForinnerDiv1);		
+						    	
 					    		var innerDiv2 = document.createElement("div");
 					    		innerDiv2.innerHTML = fileName;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
@@ -1740,6 +1810,7 @@
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 			    				}
+			    				
 		    					div2Cmt.firstElementChild.children[0].setAttribute("_type", "sticker");					    		
 		    					div2Cmt.firstElementChild.children[0].setAttribute("height", "80");
 		    					div2Cmt.firstElementChild.children[0].setAttribute("width", "80");					    	
@@ -1749,6 +1820,7 @@
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 			    				}
+			    				
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");					    		
 			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
@@ -1766,6 +1838,7 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileName", fileName);
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;
+			    				
 			    				if (div2Cmt.firstElementChild.childElementCount == 2) {
 			    					div2Cmt.firstElementChild.children[1].innerHTML = fileName;
 			    					div2Cmt.firstElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
@@ -1790,6 +1863,7 @@
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 		    				}
+		    				
 	    					div2Cmt.lastElementChild.children[0].setAttribute("_type", "sticker");					    		
 	    					div2Cmt.lastElementChild.children[0].setAttribute("height", "80");
 	    					div2Cmt.lastElementChild.children[0].setAttribute("width", "80");					    	
@@ -1799,6 +1873,7 @@
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 		    				}
+		    				
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");					    		
 		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");	
@@ -1816,6 +1891,7 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileName", fileName);
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;
+		    				
 		    				if (div2Cmt.lastElementChild.childElementCount == 2) {		    					
 		    					div2Cmt.lastElementChild.children[1].innerHTML = fileName;
 		    					div2Cmt.lastElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
@@ -1840,7 +1916,7 @@
 		    function deleteCurrentCmt(cmdId) {
 		    	var div2Cmt = document.getElementById("div2Cmt" + cmdId);
 		    	
-	    		//Delete row in comment table
+	    		//Delete this row in comment table
 	    		var oTable = document.getElementById("commentListView");
 	    		var i = div2Cmt.parentNode.parentNode.rowIndex;
 	    		oTable.deleteRow(i);
@@ -1863,10 +1939,12 @@
 		    
 		    function randString(x) {
 		        var s = "";
+		        
 		        while (s.length < x & x > 0) {
 		            var r = Math.random();
 		            s += (r < 0.1 ? Math.floor(r * 100):String.fromCharCode(Math.floor(r * 26) + (r > 0.5 ? 97:65)));
 		        }
+		        
 		        return s;
 		    }
 		</script>
@@ -1904,8 +1982,8 @@
 						</c:otherwise>
 					</c:choose>
 				</div>
-				<div id="votedUsers"style="display:inline-block;float:right;padding-right: 45px;">
-					<c:out value='${votedUsers}'/>명 참여
+				<div id="votedUsers"style="display:inline-block;float:right;padding-right: 45px;">					
+					<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110' />
 				</div>
 				 <c:if test="${question.status == 1}">
 					<div id="daysRemain"style="display:block;padding-left: 1450px;padding-top: 5px; color: green;">

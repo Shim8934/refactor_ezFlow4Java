@@ -1209,7 +1209,8 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			if (check == -1) {
 				//Update number of unVoted users
-				String result = "{\"result\":\"ADD\"}";		
+				String result = "{\"result\":\"ADD\", \"userId\":\"" + loginVO.getId() + "\"}";		
+				
 				JSONParser parser = new JSONParser(); 
 				JSONObject json = (JSONObject) parser.parse(result);
 				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -1248,7 +1249,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			if (check == -1) {
 				//Update number of unVoted users
-				String result = "{\"result\":\"REMOVE\"}";		
+				String result = "{\"result\":\"REMOVE\", \"userId\":\"" + loginVO.getId() + "\"}";		
 				JSONParser parser = new JSONParser(); 
 				JSONObject json = (JSONObject) parser.parse(result);
 				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);
