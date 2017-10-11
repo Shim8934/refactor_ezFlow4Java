@@ -15,9 +15,10 @@
 		<style>
 		</style>
 		<script type="text/javascript">
- 		    window.onunload = function(){
- 					window.opener.popupClosing();
+ 		    window.onunload = function() {
+ 				window.opener.popupClosing();
 		    }; 
+		    
 		    function btn_Delete() {
 		    	var checkedList = "<c:out value='${listQstIds}'/>";
 		        var xmlHttp = createXMLHttpRequest();
@@ -25,30 +26,31 @@
 		        xmlHttp.open("POST", szUrl, false);
 		        xmlHttp.send();
 		        var resultXML = xmlHttp.responseXML;
-		        if (resultXML.xml == "")
-		            alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />");
+		        
+		        if (resultXML.xml == "") {
+		            alert("<spring:message code='ezQuestion.t263'/>" + "\n" + "<spring:message code='ezQuestion.t264'/>");
+		        }
 		        else {
-		            State = SelectSingleNodeValue(resultXML, "DATA");
-		            if (State != "DELETE_OK")
-		                alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />");
+		            state = SelectSingleNodeValue(resultXML, "DATA");
+		            
+		            if (state != "DELETE_OK") {
+		                alert("<spring:message code='ezQuestion.t263'/>" + "\n" + "<spring:message code='ezQuestion.t264'/>");
+		            }
 		            else {
-		            	//window.opener.location.reload();
-		            	//window.location.reload();
 		            	window.close();
 		            }
 		        }
 		    }
-
 		</script>
 	</head>
 	<body class="popup">
 		<form id="Form1" method="post"> 
-			<h1 style="padding-left: 40%;">투표삭제확인</h1>
+			<h1 style="padding-left: 40%;"><spring:message code='ezPoll.t127'/></h1>
 			<div style="height:119px; overflow: auto;">
 	  			<table class="content" style="table-layout: fixed;">   				
 	    			<tr > 
-	      				<th style="width:30px;">투표 신분증</th> 
-	      				<th>투표 내용</th>				
+	      				<th style="width:30px;"><spring:message code='ezPoll.t128'/></th> 
+	      				<th><spring:message code='ezPoll.t129'/></th>				
 	    			</tr> 
 	    			<c:forEach var="list" items="${listQuestionIDs}" varStatus="status">
 		    			<tr> 
@@ -60,12 +62,12 @@
 	  		</div>
   			<div class="box" style="padding:10px;margin-top:10px">
   				<c:if test="${numberOfQst == 1}">
-  					 위 투표과 관계된 모든 정보가 삭제됩니다.<br> 
-        			정말로 삭제하시겠습니까 ?
+  					<spring:message code='ezPoll.t130'/><br> 
+        			<spring:message code='ezPoll.t131'/>
   				</c:if>
   				<c:if test="${numberOfQst > 1}">
-	  				위 <c:out value='${numberOfQst}'/> 투표과 관계된 모든 정보가 삭제됩니다.<br> 
-	        		정말로 삭제하시겠습니까 ?
+	  				<spring:message code='ezPoll.t132'/> <c:out value='${numberOfQst}'/> <spring:message code='ezPoll.t133'/><br> 
+	        		<spring:message code='ezPoll.t131'/>
   				</c:if>
         	</div>
 			<div class="btnposition">
