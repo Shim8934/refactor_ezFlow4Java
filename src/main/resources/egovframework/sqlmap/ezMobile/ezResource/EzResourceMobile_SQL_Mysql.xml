@@ -52,6 +52,7 @@
 		<result property="date"				column="DATE"				columnIndex="27"/>
 		<result property="value"				column="VALUE"				columnIndex="28"/>
 		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="29"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
@@ -128,6 +129,7 @@
 		<result property="value"				column="VALUE"				columnIndex="29"/>
 		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="30"/>
 		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="31"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="32"/>
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
@@ -548,10 +550,11 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
 				IF(isnull(F.RESID),'N','Y') FAVORITE,
-				    C.BRD_NM BRDNM,
-					 D.STARTDATETIME REPSTARTDATE,
-					 D.ENDDATETIME REPENDDATE,
-					 CASE A.REFLAG WHEN '0' THEN '비반복' WHEN '1' THEN '반복' ELSE '불확실' END REPTYPE  
+				C.BRD_NM BRDNM,
+				C.BRD_NM2 BRDNM2,
+				D.STARTDATETIME REPSTARTDATE,
+				D.ENDDATETIME REPENDDATE,
+				CASE A.REFLAG WHEN '0' THEN '비반복' WHEN '1' THEN '반복' ELSE '불확실' END REPTYPE  
 			FROM TBL_RS_SCHEDULE A 
 			
 			LEFT JOIN TBL_USERMASTER B ON A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
@@ -860,6 +863,7 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
                 C.BRD_NM BRDNM,
+                C.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN  
            	FROM 
            		TBL_RS_SCHEDULE A
@@ -932,6 +936,7 @@
             	B.TITLE JOBTITLE  ,
             	B.TITLE2 JOBTITLE2 ,
             	D.BRD_NM BRDNM,
+            	D.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN 
 			FROM
 				TBL_RS_SCHEDULE A
@@ -1285,6 +1290,7 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
                 C.BRD_NM BRDNM,
+                C.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN  
            	FROM 
            		TBL_RS_SCHEDULE A
@@ -1367,6 +1373,7 @@
             	B.TITLE JOBTITLE  ,
             	B.TITLE2 JOBTITLE2 ,
             	D.BRD_NM BRDNM,
+            	D.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN 
 			FROM
 				TBL_RS_SCHEDULE A

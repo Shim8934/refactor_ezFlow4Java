@@ -98,10 +98,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-
+			String langStr = request.getParameter("langStr");
 	    	String listCnt = "10";
 	    				
-			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt);
+			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt, langStr);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -145,7 +145,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 			String langStr = request.getParameter("langStr");
 	    	
-	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "");
+			LOGGER.debug("info.getLang() ?? " + info.getLang());
+			
+	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "", langStr);
 			
 	    	if(ownerId != null && !ownerId.equals("")) {
 	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(request.getParameter("userId"), companyId, tenantId, langStr);
@@ -274,8 +276,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			String offset = info.getOffSet();
 			String companyId = info.getCompanyId();
+			String langStr = request.getParameter("langStr");
  
-			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
+			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId, langStr);
 
 			String content = resVO.getContent();
 			
@@ -355,7 +358,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String resApproveFlag = resVO.getResApproveFlag();
 			
 			if(resApproveFlag.equals("0")) {
-				resultMap = mResourceService.getScheduleList(ownerId, companyId, sDate, eDate, writerDt, tenantId, offset, "", "Y", num, startDate, endDate);
+				resultMap = mResourceService.getScheduleList(ownerId, companyId, sDate, eDate, writerDt, tenantId, offset, "", "Y", num, startDate, endDate, info.getLang());
 			}
 			
 			
@@ -681,7 +684,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	LOGGER.debug("writerName: " + writerName);
 	    	LOGGER.debug("approveType: " + approveType);
 
-	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(ownerId, companyId, startDate, endDate, userId, deptId, writerName, approveType, tenantId, offset, "", "", "", "");
+	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(ownerId, companyId, startDate, endDate, userId, deptId, writerName, approveType, tenantId, offset, "", "", "", "", info.getLang());
 				    	
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -722,7 +725,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String deptId = info.getDeptId();  	
 	    	String offset = info.getOffSet();
 	    				
-	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(resourceId, companyId, startDate, endDate, userId, deptId, "", "1", tenantId, offset, "Y", "", sDate, eDate);
+	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(resourceId, companyId, startDate, endDate, userId, deptId, "", "1", tenantId, offset, "Y", "", sDate, eDate, info.getLang());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

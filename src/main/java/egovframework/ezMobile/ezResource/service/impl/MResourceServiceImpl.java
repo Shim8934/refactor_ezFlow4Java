@@ -83,13 +83,20 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public MResourceScheduleVO getResScheduleDetail(String resourceId, String ScheduleId,
-			String companyId, int tenantId) {
+			String companyId, int tenantId, String langStr) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", resourceId);
 		map.put("v_PNUM", ScheduleId);
 		map.put("v_PCOMPANYID", companyId);
 		map.put("tenantID", tenantId);
-		return mResourceDAO.getResScheduleDetail(map);
+		
+		MResourceScheduleVO resultVO = mResourceDAO.getResScheduleDetail(map);
+		
+		if(Integer.parseInt(langStr) != 1){
+			resultVO.setBrdNm(resultVO.getBrdNm2());
+		}
+		
+		return resultVO;
 	}
 
 	@Override
@@ -141,9 +148,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			String content, String importance, String writeDay,
 			String entryList, String attachFlag, String approveFlag, String reFlag,
 			String scheduleId) {
-		
-		LOGGER.debug("in addResSch!!! ");
-		
+
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerId);
 		map.put("v_PCOMPANYID", companyId);
@@ -169,7 +174,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PREFLAG", reFlag);
 		map.put("v_PGRESFLAG", "");
 		map.put("v_PCHARACTERID", 0);
-		//map.put("v_PNUM", "26");
+
 		LOGGER.debug("map: " + map);
 		mResourceDAO.addResSch(map);
 	}
@@ -253,7 +258,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt, String check, String checkNum, String checkSDate, String checkEDate) throws Exception {
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt, String check, String checkNum, String checkSDate, String checkEDate, String langStr) throws Exception {
 		LOGGER.debug("getScheduleList Start");
 	
 		Map<String, Object> result = new HashMap<>();
@@ -277,6 +282,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
 			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
 			resVO.setDate(resVO.getStartDate().substring(0,10));
+			
+			if(Integer.parseInt(langStr) != 1){
+				resVO.setBrdNm(resVO.getBrdNm2());
+			}
 		}
 		
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
@@ -350,6 +359,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						
+						if(Integer.parseInt(langStr) != 1){
+							temp.setBrdNm(getRepeatResult.get(i).getBrdNm2());
+						}
+						
 						temp.setDate(format.format(dateArr[0]).substring(0,10));
 						temp.setValue(getRepeatResult.get(i).getOwnerId());
 						
@@ -1113,7 +1127,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public Map<String, Object> getScheduleMainList(MCommonVO info,
-			String listCnt) throws Exception {
+			String listCnt, String langStr) throws Exception {
 		
 		String ownerId = "";
 		String utcStartDate = "";
@@ -1133,7 +1147,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		utcStartDate = today.substring(0,10);
     	utcEndDate = today.substring(0,10);
   	
-		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt, "", "", "", "");
+		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt, "", "", "", "", langStr);
 		
 		return result;
 	}
@@ -1164,7 +1178,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 
 	@Override
-	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate) throws Exception {
+	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate, String langStr) throws Exception {
 		
 		LOGGER.debug("getScheduleList Start");
 		
@@ -1188,6 +1202,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
 			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
 			resVO.setDate(resVO.getStartDate().substring(0,10));
+			
+			if(Integer.parseInt(langStr) != 1){
+				resVO.setBrdNm(resVO.getBrdNm2());
+			}
 		}
 		
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
@@ -1261,6 +1279,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						
+						if(Integer.parseInt(langStr) != 1){
+							temp.setBrdNm(getRepeatResult.get(i).getBrdNm2());
+						}
 						temp.setDate(format.format(dateArr[0]).substring(0,10));
 						temp.setValue(getRepeatResult.get(i).getOwnerId());
 						
