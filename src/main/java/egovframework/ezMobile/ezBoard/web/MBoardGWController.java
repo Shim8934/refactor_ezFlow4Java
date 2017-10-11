@@ -9,11 +9,11 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +45,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -97,15 +98,16 @@ public class MBoardGWController {
 			String lastDate = request.getParameter("lastDate");
 			String pSearchText = request.getParameter("pSearchText");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
 			
-			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 
 			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId(), info.getOffSet(),pSearchText);
@@ -152,15 +154,16 @@ public class MBoardGWController {
 			String pSearchText = request.getParameter("pSearchText");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
-			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getUserId(),add,pSearchText, parentWriteDate, upperitemidtree);
@@ -213,8 +216,10 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
-			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId());
+			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId(), primary);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -245,18 +250,19 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
-			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			//상세보기일때 type boardItem으로 지정
 			boardInfo.setType("boardItem");
@@ -303,19 +309,20 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
 			//boardInfo
-			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
-			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			//썸네일게시판일때 게시물

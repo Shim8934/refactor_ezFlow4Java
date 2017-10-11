@@ -35,7 +35,21 @@
 	   <![CDATA[
             SELECT 
                 boardid,
-                CASE #primary# WHEN '1' THEN boardname ELSE boardname2 END boardname,
+                CASE  #primary#
+                    WHEN 
+                        '1'
+                    THEN
+                        boardname
+                    ELSE
+                        CASE
+                            WHEN
+                                (boardname2 = '' OR boardname2 IS NULL)
+                            THEN
+                                boardname
+                            ELSE
+                                boardname2
+                        END
+                END boardname,
                 treevieworder,
 				boardlevel,
 				parentboardid,
@@ -703,7 +717,21 @@
       <![CDATA[
           SELECT 
               A.BOARDID ,
-              A.BOARDNAME ,
+              CASE  #primary#
+                WHEN 
+                    '1'
+                THEN
+                    A.boardname
+                ELSE
+                    CASE
+                        WHEN
+                            (A.boardname2 = '' OR A.boardname2 IS NULL)
+                        THEN
+                            A.boardname
+                        ELSE
+                            A.boardname2
+                    END
+              END boardname,
               A.BOARDNAME2 ,
               TABUSED ,
               B.GUBUN 
@@ -977,128 +1005,146 @@
                 <![CDATA[
                     SELECT 
                         DISTINCT A.boardid BoardID,
-                        A.boardname BoardName,
-                        CASE
-                            WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
-                                THEN A.boardname
-                            ELSE A.boardname2
-                         END
-                            BoardName2,
-                          A.treevieworder TreeViewOrder,
-                          A.boardcolor BoardColor,
-                          A.gubun,
-                          '' BoardGroupACL
-                      FROM 
-                          TBL_Board_BoardInfo A
-                      JOIN 
-                        (  SELECT 
-                              boardid ,
-                              accessid ,
-                              access_,
-                              tenant_id
-                           FROM 
-                              TBL_Board_BoardManage 
-                           WHERE
-                              TENANT_ID = #tenantID#
-                           AND  
-                              parentboardid = #rootBoardID#
-                           AND 
-                              access_ = 1
-                           AND 
-                              write_fg = 'true'
-                           AND 
-                              boardid <> #excludeBoardID#
-                           AND 
-                              ( accessid = #userID# OR accessid = #deptID# OR accessid = #companyID# ) 
+                        CASE #primary#
+                            WHEN
+                               '1'
+                            THEN
+                                A.boardname
+                            ELSE
+                                CASE
+                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+                                    THEN A.boardname
+                                    ELSE A.boardname2
+                                END
+                        END
+                        BoardName,
+                        A.treevieworder TreeViewOrder,
+                        A.boardcolor BoardColor,
+                        A.gubun,
+                        '' BoardGroupACL
+                    FROM 
+                        TBL_Board_BoardInfo A
+                    JOIN 
+                        (SELECT 
+                            boardid ,
+                            accessid ,
+                            access_,
+                            tenant_id
+                         FROM 
+                            TBL_Board_BoardManage 
+                         WHERE
+                            TENANT_ID = #tenantID#
+                         AND  
+                            parentboardid = #rootBoardID#
+                         AND 
+                            access_ = 1
+                         AND 
+                            write_fg = 'true'
+                         AND 
+                            boardid <> #excludeBoardID#
+                         AND 
+                            ( accessid = #userID# OR accessid = #deptID# OR accessid = #companyID# ) 
                          ) B   
-                      ON 
+                    ON 
                         A.TENANT_ID = B.TENANT_ID
-                      AND
+                    AND
                         A.boardid = B.boardid
-                      WHERE
+                    WHERE
                         A.TENANT_ID = #tenantID#
-                      ORDER BY 
+                    ORDER BY 
                         A.treevieworder ASC
                   ]]>
               </isEqual>
               <isNotEqual property="selectBy" compareValue="3">
               <!--        접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
-                  <![CDATA[
-                      SELECT 
+                <![CDATA[
+                    SELECT 
                         DISTINCT A.BoardID BoardID,
-                                      A.BoardName BoardName,
-                                  CASE
-                          WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
-                          THEN A.boardname
-                          ELSE A.boardname2
-                        END BoardName2,
-                                  A.TreeViewOrder TreeViewOrder  ,
-                                  A.BoardColor BoardColor  ,
-                                  A.Gubun ,
-                                  B.BOARDGROUPACL BOARDGROUPACL  
-                              FROM 
-                                TBL_Board_BoardInfo A
-                              JOIN 
-                                ( SELECT 
-                                  C.BoardID ,
-                                      C.AccessID ,
-                                      C.Access_ ,
-                                      C.BoardGroupACL ,
-                                      C.tenant_id
-                                    FROM 
-                                      TBL_Board_BoardManage C
-                                    LEFT JOIN 
-                                      TBL_Board_BoardInfo D   
-                                    ON
-                                      C.TENANT_ID = D.TENANT_ID 
-                                    AND
-                                      C.BoardID = D.BoardID
-                                    WHERE
-                                      C.TENANT_ID = #tenantID#
-                                    AND
-                                      C.Access_ = 1
-                                    AND 
-                                      C.BoardID <> #excludeBoardID#
-                                    AND 
-                                      ( C.AccessID = #userID# )
-                                    AND 
-                                      D.ParentBoardID = #rootBoardID# ) B   
-                              ON 
-                                A.TENANT_ID = B.TENANT_ID
-                              AND
-                                A.BoardID = B.BOARDID
-                              WHERE
-                                A.TENANT_ID = #tenantID#
-                              ORDER BY 
-                                A.TreeViewOrder ASC
+                        CASE #primary#
+                            WHEN
+                                '1'
+                            THEN
+                                A.boardname
+                            ELSE
+                                CASE
+                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+                                    THEN A.boardname
+                                    ELSE A.boardname2
+                                END
+                        END BoardName,
+                        A.TreeViewOrder TreeViewOrder  ,
+                        A.BoardColor BoardColor  ,
+                        A.Gubun ,
+                        B.BOARDGROUPACL BOARDGROUPACL  
+                    FROM 
+                        TBL_Board_BoardInfo A
+                    JOIN 
+                        (SELECT 
+                            C.BoardID ,
+                            C.AccessID ,
+                            C.Access_ ,
+                            C.BoardGroupACL ,
+                            C.tenant_id
+                         FROM 
+                            TBL_Board_BoardManage C
+                         LEFT JOIN 
+                            TBL_Board_BoardInfo D   
+                         ON
+                            C.TENANT_ID = D.TENANT_ID 
+                         AND
+                            C.BoardID = D.BoardID
+                         WHERE
+                            C.TENANT_ID = #tenantID#
+                         AND
+                            C.Access_ = 1
+                         AND 
+                            C.BoardID <> #excludeBoardID#
+                         AND 
+                            ( C.AccessID = #userID# )
+                         AND 
+                            D.ParentBoardID = #rootBoardID# ) B   
+                         ON 
+                            A.TENANT_ID = B.TENANT_ID
+                         AND
+                            A.BoardID = B.BOARDID
+                         WHERE
+                            A.TENANT_ID = #tenantID#
+                         ORDER BY 
+                            A.TreeViewOrder ASC
                       ]]>
                 </isNotEqual>
             </isEqual>
             <isNotEqual property="mode" compareValue="1">
             <!--      ADMIN권한 -->
-              <![CDATA[
-                  SELECT 
-                    DISTINCT A.BoardID ,
-                              A.BoardName ,
-                              CASE
-                      WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
-                      THEN A.Boardname
-                      ELSE A.Boardname2
-                    END BoardName2,
-                              A.TreeViewOrder ,
-                              A.BoardColor BoardColor,
-                              A.Gubun ,
-                              '' BoardGroupACL
-                        FROM 
-                          TBL_Board_BoardInfo A
-                        WHERE
-                          A.TENANT_ID = #tenantID#
-                        AND
-                          A.PARENTBOARDID = #rootBoardID#
-                          AND 
-                            A.BoardID <> #excludeBoardID#
-                        ORDER BY 
-                          A.TreeViewOrder ASC
+                <![CDATA[
+                    SELECT 
+                        DISTINCT A.BoardID ,
+                        CASE #primary#
+                            WHEN
+                                '1'
+                            THEN
+                                A.boardname
+                            ELSE
+                                CASE
+                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+                                    THEN A.boardname
+                                    ELSE A.boardname2
+                                END
+                        END BoardName,
+                        A.TreeViewOrder ,
+                        A.BoardColor BoardColor,
+                        A.Gubun ,
+                        '' BoardGroupACL
+                    FROM 
+                        TBL_Board_BoardInfo A
+                    WHERE
+                        A.TENANT_ID = #tenantID#
+                    AND
+                        A.PARENTBOARDID = #rootBoardID#
+                    AND 
+                        A.BoardID <> #excludeBoardID#
+                    ORDER BY 
+                        A.TreeViewOrder ASC
                 ]]>
           </isNotEqual>
       </select>

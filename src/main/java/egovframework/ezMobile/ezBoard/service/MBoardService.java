@@ -22,9 +22,9 @@ public interface MBoardService {
 
 	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 	
-	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
+	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID, String primary) throws Exception;
 	
-	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception;
+	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID, String primary) throws Exception;
 	
 	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID, String offset) throws Exception;
 	
@@ -40,7 +40,7 @@ public interface MBoardService {
 	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
-	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception;
+	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID, String userID) throws Exception;
 	
 	MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception;
 	
