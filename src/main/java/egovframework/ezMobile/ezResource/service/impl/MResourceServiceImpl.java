@@ -105,9 +105,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResBrdList(map);
 		
-		for (MResourceGetAdmSubClsTreeVO resultVO : result) {
-			if(!langStr.equals('1')){
-				resultVO.setBrdNm(resultVO.getBrdNm2());
+		if(Integer.parseInt(langStr) != 1){
+			for (MResourceGetAdmSubClsTreeVO resultVO : result) {
+					resultVO.setBrdNm(resultVO.getBrdNm2());
 			}
 		}
 		
@@ -123,11 +123,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCOMPANYID", companyId);
 		
 		List<MResourceScheduleVO> result = mResourceDAO.getResFavoriteList(map);
-		
-		for (MResourceScheduleVO resultVO : result) {
-			if(!langStr.equals('1')){
-				LOGGER.debug("resultVO in resFavoriteList " + resultVO);
-				resultVO.setBrdNm(resultVO.getBrdNm2());
+
+		if(Integer.parseInt(langStr) != 1){
+			for (MResourceScheduleVO resultVO : result) {
+					resultVO.setBrdNm(resultVO.getBrdNm2());
 			}
 		}
 		
@@ -177,7 +176,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public void modifyResSch(String title, String startDate, String endDate, 
-			String alterTime, String content,String importance, String reFlag,
+			String alterTime, String content,String importance, String reFlag, String approveFlag,
 			String companyId, String num, String ownerId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerId);
@@ -190,6 +189,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCONTENT", content);
 		map.put("v_PIMPORTANCE", importance);
 		map.put("v_PREFLAG", reFlag);
+		map.put("v_PAPPROVEFLAG", approveFlag);
 		map.put("v_PNUM", num);
 		
 		LOGGER.debug("map in modifyResSch: " + map);
@@ -1150,12 +1150,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return mResourceDAO.getTholiday(map);
 	}
 	
-	//휴일가져오기
+	//자원상세정보 가져오기
 	@Override
-	public MResourceScheduleVO getResBrdDetail(String ownerId, int tenantId) throws Exception {
+	public MResourceScheduleVO getResBrdDetail(String ownerId, String companyId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDID", ownerId);
 		map.put("tenantID", tenantId);
+		map.put("v_PCOMPANYID", companyId);
 		
 		return mResourceDAO.getResBrdDetail(map);
 	}
@@ -1344,10 +1345,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("tenantID", tenantId);
 		
 		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResApprBrdList(map);
-		
-		for (MResourceGetAdmSubClsTreeVO resultVO : result) {
-			if(!langStr.equals('1')){
-				resultVO.setBrdNm(resultVO.getBrdNm2());
+
+		if(Integer.parseInt(langStr) != 1){
+			for (MResourceGetAdmSubClsTreeVO resultVO : result) {
+					resultVO.setBrdNm(resultVO.getBrdNm2());
 			}
 		}
 		

@@ -347,7 +347,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String sDate = startDate.substring(0, 10);
 			String eDate = endDate.substring(0, 10);
 
-			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, tenantId);
+			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);
 			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -422,8 +422,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			allDay =  "0"; 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
-			String approveFlag =  "";
-
+	    	
+	    	String approveFlag =  "1";
+			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
+			String resApproveFlag = resVO.getResApproveFlag();			
+			if(resApproveFlag.equals("1")) {
+				approveFlag =  "0";
+			}
+			
 	    	mResourceService.addResSch(ownerId, companyId, tenantId, pNum, writerId, deptNm, ownerNm, title, location, timeDisplay, utcStartDate, utcEndDate, allDay, alterTime, content, importance, writeDay, entryList, attachFlag, approveFlag, reFlag, scheduleId);
 
 			result.put("status", "ok");
@@ -470,7 +476,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
 	    	
-	    	mResourceService.modifyResSch(title,utcStartDate, utcEndDate, alertTime, content, importance, reFlag, companyId, num, ownerId, tenantId);
+	    	String approveFlag =  "1";
+			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
+			String resApproveFlag = resVO.getResApproveFlag();			
+			if(resApproveFlag.equals("1")) {
+				approveFlag =  "0";
+			}
+			
+	    	mResourceService.modifyResSch(title,utcStartDate, utcEndDate, alertTime, content, importance, reFlag, approveFlag, companyId, num, ownerId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

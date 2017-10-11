@@ -670,7 +670,8 @@
 				 CONTENT = #v_PCONTENT#,
 		</isNotEmpty>
 		<![CDATA[
-                ALERTTIME = #v_PALERTTIME#,             
+                ALERTTIME = #v_PALERTTIME#,
+                APPROVEFLAG = #v_PAPPROVEFLAG#,              
                 IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
            		COMPANYID = #v_PCOMPANYID#
@@ -1244,6 +1245,8 @@
 			    TBL_RS_BRD	
 			WHERE
 				BRD_ID = #v_PBRDID#
+			AND
+				BRD_COMPANY = #v_PCOMPANYID#
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
