@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
-<html style="height: 99%;">
+<html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
@@ -37,7 +37,7 @@
 	        });	        
 
 	        function window_resize() {
-	            document.getElementById("BoardEnv_ifrm").style.height = (document.documentElement.clientHeight - 60) + "PX";
+	            document.getElementById("BoardEnv_ifrm").style.height = (document.documentElement.clientHeight - 120) + "PX";
 	        }
 	        function ChangeTab(obj) {
 	            var pSelectTab = obj.getAttribute("divname");
@@ -114,7 +114,7 @@
 	        }
 	    </script>
 	</head>
-	<body class="mainbody" style="height: 100%; overflow:hidden;">
+	<body class="mainbody">
 		<h1><p style="padding-left:5px">${boardName}</p></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
