@@ -1358,7 +1358,7 @@
 		    	else if (_ext == "hwp"){
 		    		imagePreview.src = "/images/hancomHWP.png";
 		    	}
-		    	else if (ext == "pdf") {
+		    	else if (_ext == "pdf") {
 		    		imagePreview.src = "/images/pdfIcon.png";
 		    	}
 		    	else {
@@ -1974,12 +1974,10 @@
 		               				<img src="/images/arrow_right.png" height="10px" width="10px" style="cursor: pointer; float:left; display:block; padding-top: 2.5px; padding-left: 10px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 		               			</div>
 		               		</div>          		
-		               </td>
-		               
+		               </td>		               
 			          <td style="width:80px;border-left: none;">	   	               		
 			               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" style="padding-bottom: 3px;padding-left: 20px;"></div>           		
-			          </td>
-		               
+			          </td>		               
 		            </tr>
 				</c:forEach>
 				<tr>
@@ -2001,7 +1999,7 @@
 			<div id="commentArea" style="">
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${listComments}">
-						<tr>
+						<tr style="border-bottom: 1px solid #b6b6b6; ">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
 								<img src="/images/account.jpg" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>

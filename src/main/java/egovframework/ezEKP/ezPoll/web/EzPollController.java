@@ -656,6 +656,7 @@ public class EzPollController extends EgovFileMngUtil {
 	        logger.debug("MIME type: " + mimeType);	 
 	        	
 	        fileName = URLEncoder.encode(fileName, "UTF-8");
+	        fileName = fileName.replace("+", " ");	        
 	        String browserType = request.getHeader("User-Agent");
 	        
 	        // set content attributes and header for the response
@@ -663,11 +664,12 @@ public class EzPollController extends EgovFileMngUtil {
 	        response.setContentLength((int) file.length());
 	        response.setCharacterEncoding("UTF-8");       	    	        
 	                             
-	        if (browserType.contains("Firefox")) {		        	
-	            response.setHeader("Content-Disposition","attachment; filename*=UTF-8''" + fileName);
+	        if (browserType.contains("Firefox")) {	
+	        	fileName = fileName.replace(" ", "%20");	
+	            response.setHeader("Content-Disposition","attachment; filename*=UTF-8''" + fileName );
 	        }  
 	        else {
-	        	response.setHeader("Content-Disposition","attachment; filename=" + fileName);
+	        	response.setHeader("Content-Disposition","attachment; filename=" + "'" + fileName + "'");
 	        }
 
 	        // get output stream of the response
