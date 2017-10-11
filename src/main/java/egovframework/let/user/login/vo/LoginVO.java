@@ -133,6 +133,8 @@ public class LoginVO implements Serializable {
     private String serverName;
     /** 겸직 정보*/
     private String gyumJik;
+    /** 리얼패스*/
+    private String realPath;
 	
 	public String getId() {
 		return id;
@@ -456,6 +458,12 @@ public class LoginVO implements Serializable {
 	}
 	public void setGyumJik(String gyumJik) {
 		this.gyumJik = gyumJik;
+	}
+	public String getRealPath() {
+		return realPath;
+	}
+	public void setRealPath(String realPath) {
+		this.realPath = realPath;
 	}
 	
 }

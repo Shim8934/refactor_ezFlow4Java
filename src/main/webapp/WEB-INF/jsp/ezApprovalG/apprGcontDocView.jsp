@@ -137,8 +137,9 @@
 		    }
 		    function FieldsAvailable() {
 		        CheckSignImg();
-		        if (SignCheckFlag == "N")
-		            SignCheck();
+		        //없이 테스트
+// 		        if (SignCheckFlag == "N")
+// 		            SignCheck();
 		
 		        var fields = message.GetFieldsList();
 		        if (pListSusin == 1 || pListSusin == "") {

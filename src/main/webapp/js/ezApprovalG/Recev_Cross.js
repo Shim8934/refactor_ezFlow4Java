@@ -1572,7 +1572,13 @@ function SaveDraftDocInfo()
 
             createNodeInsert(xmlpara, objNode, "PARAMETER");
             createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-            createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
+            //합의문 formid로 수정해야
+            if (pDraftFlag == "HAPYUI") {
+            	createNodeAndInsertText(xmlpara, objNode, "FORMID", "2003000007");
+            } else {
+            	createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
+            }
+            	
             if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
                 createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
             else
