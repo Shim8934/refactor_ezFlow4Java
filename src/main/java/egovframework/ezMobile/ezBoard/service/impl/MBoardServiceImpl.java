@@ -39,7 +39,9 @@ import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
+import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -64,6 +66,9 @@ public class MBoardServiceImpl implements MBoardService {
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -886,7 +891,8 @@ public class MBoardServiceImpl implements MBoardService {
 	public List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception {
 		logger.debug("getBoardTree started");
 		
-		String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+		MOptionVO mobileInfo = mOptionService.optionInfo(info.getUserId(), info.getTenantId());
+		String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 		String rollInfo = info.getRollInfo();
 		int tenantID = info.getTenantId();
 		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
