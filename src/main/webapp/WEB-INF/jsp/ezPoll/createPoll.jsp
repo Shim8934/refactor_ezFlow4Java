@@ -470,7 +470,7 @@
     		} 
     		
 	        if ($('#multipleCheck').is(':checked')) {
-	    		if ($("#myList option:selected").text() == "Unlimited") {
+	    		if ($("#myList option:selected").text() == "<spring:message code="ezPoll.t156"/>") {
 	    			$('#multiSelectNumber').val('0');
 	    		}
 	    		else {
@@ -552,7 +552,7 @@
 		            return false;
 	        	}
 	        }
-	        
+ 	        
 	        var rtnValue = $.isNumeric(trim_Cross($('#multiSelectNumber').val()));
 	        
 	        if (!rtnValue) {
