@@ -324,8 +324,6 @@ public class MPortalGWController extends EgovFileMngUtil {
 			if (menu.equals("etc")) {
 				//게시판 풋터리스트
 				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId, primary);
-				//새게시물 리소스화
-				boardFooterList.get(0).setBoardName(egovMessageSource.getMessage("ezBoard.t480", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
 				
 				String langStr = request.getParameter("langStr");
 				//자원관리 풋터리스트				
