@@ -440,12 +440,13 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception {
+	public List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID, String primary) throws Exception {
 		logger.debug("getFavoriteList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
+		map.put("primary", primary);
 
 		logger.debug("getFavoriteList ended");
 		return mBoardDAO.getFavoriteList(map);

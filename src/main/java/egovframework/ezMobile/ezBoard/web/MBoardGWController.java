@@ -216,8 +216,10 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
-			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId());
+			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId(), primary);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

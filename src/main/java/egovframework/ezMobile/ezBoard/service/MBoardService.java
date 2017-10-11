@@ -22,7 +22,7 @@ public interface MBoardService {
 
 	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 	
-	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
+	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID, String primary) throws Exception;
 	
 	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID, String primary) throws Exception;
 	
