@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
@@ -81,6 +82,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Resource(name = "jspw")
     private String jspw;
@@ -303,7 +307,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 		
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
 		LOGGER.debug("portalFooterList Start");
 		
 		JSONObject result = new JSONObject();
@@ -320,6 +324,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			if (menu.equals("etc")) {
 				//게시판 풋터리스트
 				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId, primary);
+				//새게시물 리소스화
+				boardFooterList.get(0).setBoardName(egovMessageSource.getMessage("ezBoard.t480", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+				
 				String langStr = request.getParameter("langStr");
 				//자원관리 풋터리스트				
 				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId, langStr);
