@@ -742,7 +742,7 @@
                         <h2>
                             <spring:message code = 'ezApprovalG.t232' />
                         </h2>
-                        <div id="divUserContTree" style="height: 530px; width: 100%; overflow-x: auto; overflow-y: auto; border: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="divUserContTree" style="height: 775px; width: 100%; overflow-x: auto; overflow-y: auto; border: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                     </td>
                     <td style="text-align:center; width:50px; border-left:none; border:none">
                         <img style="cursor:pointer" src="/images/arr_r.gif" width="24" height="24" onclick="return insertCont_onclick()"><br>
@@ -756,7 +756,7 @@
                         <h2>
                             <spring:message code = 'ezApprovalG.t999932' />
                         </h2>
-                        <div class="listview" style="border-top:none; height:530px;">
+                        <div class="listview" style="border-top:none; height:775px;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%; overflow-x:auto;overflow-y:auto; padding:0px;"></div>
                         </div>
                     </td>

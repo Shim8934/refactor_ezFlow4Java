@@ -963,9 +963,9 @@
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
                         <h2><spring:message code='ezApprovalG.t232'/></h2>
-                        <div id="TreeView" style="height: 355px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
-                        <br />
-                        <div class="div_scroll" style="border:none;">
+                        <div id="TreeView" style="<c:if test="${approvalFlag != 'S'}">height: 775px;</c:if><c:if test="${approvalFlag == 'S'}">height: 355px;</c:if> width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <c:if test="${approvalFlag == 'S'}"><br /></c:if>
+                        <div class="div_scroll" style="border:none; <c:if test="${approvalFlag != 'S'}">display:none;</c:if>">
                             <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
                     </td>
@@ -976,7 +976,7 @@
                         <img style="cursor:pointer" src="/images/arr_ll.gif" width="24" height="24" onclick="return deleteAllCont_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_u.gif" width="24" height="24" onclick="return moveUp_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_d.gif" width="24" height="24" onclick="return moveDown_onclick()"><br>
-                        <div style="height:250px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>">&nbsp;</div>
+                        <div style="height:250px;<c:if test="${approvalFlag != 'S'}">display:none;</c:if>">&nbsp;</div>
                         <img style="cursor:pointer;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()"><br>
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
