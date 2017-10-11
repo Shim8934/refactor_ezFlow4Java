@@ -1196,6 +1196,25 @@ public class EzPollController extends EgovFileMngUtil {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			String dateNow = formatter.format(date);
 			
+			//Get all of users who voted
+			List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());
+			
+			int check = -1;
+			for (PollUserAnswerVO pollUserAndAnswer : listOfPollUserAndAnswer) {
+				if (pollUserAndAnswer.getUserId().equals(loginVO.getId())) {
+					check = 0;
+					break;
+				}
+			}
+			
+			if (check == -1) {
+				//Update number of unVoted users
+				String result = "{\"result\":\"ADD\"}";		
+				JSONParser parser = new JSONParser(); 
+				JSONObject json = (JSONObject) parser.parse(result);
+				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);
+			}
+			
 			//Add entry
 			PollUserAnswerVO pollUserAnswer = new PollUserAnswerVO();
 			pollUserAnswer.setAnsId(optId);
@@ -1204,9 +1223,9 @@ public class EzPollController extends EgovFileMngUtil {
 			pollUserAnswer.setTenantId(loginVO.getTenantId());
 			pollUserAnswer.setUserName(loginVO.getDisplayName());
 			pollUserAnswer.setVoteDate(dateNow);
-			strXML = addUserAndAnswer(pollUserAnswer);
+			strXML = addUserAndAnswer(pollUserAnswer);		
 		}
-		else {
+		else {						
 			//Delete entry
 			PollUserAnswerVO pollUserAnswer = new PollUserAnswerVO();
 			pollUserAnswer.setAnsId(optId);
@@ -1215,6 +1234,26 @@ public class EzPollController extends EgovFileMngUtil {
 			pollUserAnswer.setTenantId(loginVO.getTenantId());
 			pollUserAnswer.setUserName(loginVO.getDisplayName());
 			strXML = removeUserAndAnswer(pollUserAnswer);
+			
+			//Get all of users who voted
+			List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());
+			
+			int check = -1;
+			for (PollUserAnswerVO pollUserAndAnswer : listOfPollUserAndAnswer) {
+				if (pollUserAndAnswer.getUserId().equals(loginVO.getId())) {
+					check = 0;
+					break;
+				}
+			}
+			
+			if (check == -1) {
+				//Update number of unVoted users
+				String result = "{\"result\":\"REMOVE\"}";		
+				JSONParser parser = new JSONParser(); 
+				JSONObject json = (JSONObject) parser.parse(result);
+				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);
+			}
+			
 		}
 		
 		logger.debug("Adjust Joined Users is ended!");	

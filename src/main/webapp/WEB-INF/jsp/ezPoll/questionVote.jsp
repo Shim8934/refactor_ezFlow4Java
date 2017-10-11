@@ -29,6 +29,7 @@
 			var tenantId = "<c:out value='${question.tenantId}'/>";
 			var curentUser = "<c:out value='${curentUser}'/>";
 			var curentUserName = "<c:out value='${curentUserName}'/>";
+			var numberOfUnvotedUsers = ${numberOfUnvotedUsers};
 			var numberOfSelected = 0;
 			var maxLoop = 0;			
 			var seenText = "분이 투표 내용을 확인했습니다";
@@ -278,6 +279,18 @@
 			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
 					    }
 				    });
+			        
+			        stompClient.subscribe('/reply/updateUnVotedUsersForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
+			        	var ret = JSON.parse(updatedInfo.body).result;			        	
+			            if (ret == "ADD") {							
+			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;
+			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+					    }
+			            else {
+			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;
+			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            }
+				    });			        		        
 			        
 			        stompClient.subscribe('/reply/editQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
@@ -1984,7 +1997,7 @@
 					<td style="border-right: none;width:100%; " colspan="3" >
 						<div style="overflow: hidden;display:inline-block;">
 							<div style="float:left; display:block; padding-top: 8px; padding-left: 35px;">미참여 인원:</div>
-							<div style="float:left; display:block; padding-top: 8px; padding-left: 20px;"><c:out value='${numberOfUnvotedUsers}'/></div>
+							<div id="_unVotedNumber" style="float:left; display:block; padding-top: 8px; padding-left: 20px;"><c:out value='${numberOfUnvotedUsers}'/></div>
 							<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">
 						</div>
 					</td>					
