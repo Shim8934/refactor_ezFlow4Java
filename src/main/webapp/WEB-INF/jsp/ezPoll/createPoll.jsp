@@ -244,11 +244,7 @@
 			}); 
 		}
 		
-		function checkOptionsList() {
-			if ($('#qst_title').val() == '') {
-				alert('<spring:message code="ezPoll.t147"/>');				
-			}
-			
+		function checkOptionsList() {			
     		var totalOptions = $('#columnsbnk li').length;
     		var check_flag = 0;
     		

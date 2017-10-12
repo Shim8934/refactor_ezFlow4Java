@@ -33,10 +33,7 @@
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; padding-left: 140px;">
 			        	<h1><spring:message code='ezPoll.t135'/></h1>
-			    </div>
-			    <div id="close1" style="float: right; display: block;cursor:pointer;">		    	     
-			        <img src="/images/close.png" style="height:20px;width:20px;padding-top: 8px;" onClick="window.close()">
-			    </div>					
+			    </div>				
 			</div>
 			<div style="height:359px; overflow: auto;">
 				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey">
@@ -46,7 +43,7 @@
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
 						<tr id="${list1.id}" class="white" style="border: 1px solid #b6b6b6;">
 							<td >
-								<img src="/images/account.jpg" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px;">
+								<img src="/images/account.jpg" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
 								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
 									<c:choose>
 										<c:when test="${list1.primary == '1'}">
@@ -68,7 +65,7 @@
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
 						<tr id="${list2.id}" class="white" style="border: 1px solid #b6b6b6;">
 						   <td >
-							<img src="/images/account.jpg" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px;">
+							<img src="/images/account.jpg" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
 								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
 									<c:choose>
 										<c:when test="${list2.primary == '1'}">
