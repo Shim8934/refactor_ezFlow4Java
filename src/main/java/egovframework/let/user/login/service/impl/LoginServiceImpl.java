@@ -245,8 +245,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 	
 	@Override
-	public List<LoginVO> selectAllReceivers(String userID, int tenantID)
-			throws Exception {		
+	public List<LoginVO> selectAllReceivers(String userID, int tenantID) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("id", userID);
 		map.put("tenantId", tenantID);
@@ -254,8 +253,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 	
 	@Override
-	public List<LoginVO> selectAllMemberOfCompany(String companyID, int tenantID)
-			throws Exception {
+	public List<LoginVO> selectAllMemberOfCompany(String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("company_id", companyID);
 		map.put("tenantId", tenantID);

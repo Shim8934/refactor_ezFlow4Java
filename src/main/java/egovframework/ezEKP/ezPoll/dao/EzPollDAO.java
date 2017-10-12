@@ -12,7 +12,7 @@ import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPollDAO")
-public class EzPollDAO extends EgovAbstractDAO{
+public class EzPollDAO extends EgovAbstractDAO {
 	public String getQuestionSeq(Map<String, Object> map) {
 		return (String)select("EzPollDAO.getQuestionSeq", map);
 	}
@@ -20,12 +20,7 @@ public class EzPollDAO extends EgovAbstractDAO{
 	public String getModifyingUser(Map<String, Object> map) {
 		return (String)select("EzPollDAO.getModifyingUser", map);
 	}
-	
-	/*
-	public int getNumberOfSeenUsers(Map<String, Object> map) {
-		return (int)select("EzPollDAO.getNumberOfSeenUsers", map);
-	}
-	*/
+
 	@SuppressWarnings("unchecked")
 	public List<String> getNumberOfSeenUsers(Map<String, Object> map) {
 		return (List<String>) list("EzPollDAO.getNumberOfSeenUsers", map);
@@ -48,24 +43,31 @@ public class EzPollDAO extends EgovAbstractDAO{
 	public void insertQuestion(Map<String, Object> map) {
 		insert("EzPollDAO.insertQuestion", map);
 	}
+	
 	public void insertQustReceivers(Map<String, Object> map) {
 		insert("EzPollDAO.insertQustReceivers", map);
 	}	
+	
 	public void insertOption(Map<String, Object> map) {
 		insert("EzPollDAO.insertOption", map);
 	}	
+	
 	public void insertCmt(Map<String, Object> map) {
 		insert("EzPollDAO.insertCmt", map);
 	}	
+	
 	public void insertHiddenQuestion(Map<String, Object> map) {
 		insert("EzPollDAO.insertHiddenQuestion", map);
 	}	
+	
 	public void insertModifyingQuestion(Map<String, Object> map) {
 		insert("EzPollDAO.insertModifyingQuestion", map);
 	}	
+	
 	public void insertSeenQuestion(Map<String, Object> map) {
 		insert("EzPollDAO.insertSeenQuestion", map);
 	}	
+	
 	public void insertCommentQuestion(Map<String, Object> map) {
 		insert("EzPollDAO.insertCommentQuestion", map);
 	}
@@ -140,8 +142,7 @@ public class EzPollDAO extends EgovAbstractDAO{
 	
 	public PollAnswerVO getAnswerByIdAndQstId(Map<String, Object> map) {		
 		return (PollAnswerVO) select("EzPollDAO.getAnswerByIdAndQstId", map);
-	}	
-	
+	}		
 	
 	public void deleteQuestions(Map<String, Object> map) {
 		delete("EzPollDAO.deleteQuestions", map);
@@ -177,6 +178,5 @@ public class EzPollDAO extends EgovAbstractDAO{
 	
 	public void removeAnswerAndUser(Map<String, Object> map) {
 		delete("EzPollDAO.removeAnswerAndUser", map);
-	}
-	
+	}	
 }

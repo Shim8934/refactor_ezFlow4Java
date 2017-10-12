@@ -1461,30 +1461,32 @@ public class EzPortalController extends EgovFileMngUtil {
 	}*/
 	
 	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
-	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest req, Locale locale) throws Exception {
-		logger.debug("wpNewVote Start");
+	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewVote is running!");
 		loginVO = commonUtil.userInfo(loginCookie);
 		int qstId = -1;
 		String qstTitle = "";
 		
-		//Get List of Question for user
+		//Get list of questions for user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
 		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, "");
 		
 		if (!setOfQuestions.isEmpty()) {
 			//Sort listQuestions by question id
 			List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
-			Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) ->{
+			Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
 		        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
-			});
+			});		
+			
 			PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
 			qstTitle = question.getTitle();
 			qstId = question.getQstId();
+			
 			//Get list of Options		
 			List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());
 			
-			//Sort list of Options by votes
-			Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) ->{
+			//Sort list of options by number of votes
+			Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
 		        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
 			});
 			
@@ -1495,7 +1497,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("qstTitle", qstTitle);		
 		model.addAttribute("qstId", qstId);	
 		
-		logger.debug("wpNewVote End");
+		logger.debug("wpNewVote finishes");
 		return "/ezPortal/portalWpNewVote";
 	}
 	

@@ -1,0 +1,901 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezPoll">
+
+    <typeAlias  alias="PollAnswerVO"            	   type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
+    <typeAlias  alias="PollQuestionVO"                 type="egovframework.ezEKP.ezPoll.vo.PollQuestionVO"/>
+    <typeAlias  alias="PollCommentVO"           	   type="egovframework.ezEKP.ezPoll.vo.PollCommentVO"/>
+    <typeAlias  alias="PollUserAnswerVO"               type="egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO"/>
+    <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
+
+    <!-- question resultMap -->
+    <resultMap id="pollQuestion" class="PollQuestionVO">
+        <result property="qstId"                column="id"                        columnIndex="1"  />               
+        <result property="tenantId"         	column="tenant_id"                 columnIndex="2"  />
+        <result property="content"         		column="content"               	   columnIndex="3"  />
+        <result property="multiSelect"          column="multi_select"              columnIndex="4"  />
+        <result property="startDate"            column="start_date"                columnIndex="5"	/>
+        <result property="endDate"            	column="end_date"              	   columnIndex="6"  />
+        <result property="target"               column="target"                    columnIndex="7"  />
+        <result property="title"               	column="title"                     columnIndex="8"	/>
+        <result property="secretVote"           column="secret_vote"               columnIndex="9"  />
+        <result property="creator"           	column="creator"                   columnIndex="10"	/>
+        <result property="creatorName"          column="creator_name"              columnIndex="11" />
+        <result property="filePath"          	column="file_path"                 columnIndex="12" />
+        <result property="resultFirst"          column="result_first"              columnIndex="13" />
+        <result property="isMofifying"          column="is_modifying"              columnIndex="14" />
+    </resultMap>    
+    
+    <resultMap id="pollAnswer" class="PollAnswerVO">
+        <result property="ansId"                column="id"                         columnIndex="1"/>
+        <result property="qstId"             	column="qst_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="content"         		column="content"               		columnIndex="4"/>
+        <result property="votesNumber"         	column="VOTES_NUM"               	columnIndex="5"/>
+    </resultMap>    
+    
+    <resultMap id="pollComment" class="PollCommentVO">
+        <result property="cmtId"                column="id"                         columnIndex="1"/>
+        <result property="qstId"             	column="qst_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="userId"         		column="user_id"               		columnIndex="4"/>
+        <result property="textContent"         	column="text_content"               columnIndex="5"/>        
+        <result property="imageAttach"         	column="image_type"               	columnIndex="6"/>
+        <result property="fileAttach"         	column="file_type"               	columnIndex="7"/>
+        <result property="fileName"         	column="file_name"               	columnIndex="8"/>        
+        <result property="filePath"         	column="file_path"               	columnIndex="9"/>
+        <result property="cmtTime"         		column="cmt_time"               	columnIndex="10"/>
+    </resultMap>    
+	
+	<resultMap id="pollUserAnswer" class="PollUserAnswerVO">
+        <result property="ansId"                column="ans_id"                     columnIndex="1"/>
+        <result property="qstId"             	column="qst_id"                   	columnIndex="2"/>
+        <result property="userId"             	column="user_id"                   	columnIndex="3"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="4"/>
+        <result property="userName"         	column="USER_NAME"                	columnIndex="5"/>
+        <result property="voteDate"         	column="vote_date"               	columnIndex="6"/>
+    </resultMap>   
+    
+    <resultMap id="pollQuestionStatus" class="PollQuestionStatusVO">
+    	<result property="qstId"             	column="qst_id"                   	columnIndex="1"/>
+    	<result property="userId"             	column="user_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="seen"                	column="seen"                       columnIndex="4"/>   
+        <result property="comment"         		column="comment"                	columnIndex="5"/>
+        <result property="hide"         		column="hide"               	    columnIndex="6"/>
+    </resultMap>  
+     
+    <insert id="EzPollDAO.insertQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								ID ,                               		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_VOTE_QUESTION 
+                         			WHERE
+                         				ID = #id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION(
+	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       START_DATE,         
+	                END_DATE,           TARGET,            TITLE,          		SECRET_VOTE,        CREATOR,			
+	                CREATOR_NAME,		FILE_PATH,		   RESULT_FIRST
+	            )
+	            VALUES(
+	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #start_date#,      
+	                #end_date#,         #target#,           #title#,     		#secret_vote#,      #creator#,		
+	               	#creator_name#,		#file_path#,		#result_first#
+            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 CONTENT 		= #content#,
+	            	 MULTI_SELECT 	= #multi_select#,
+	            	 START_DATE		= #start_date#,
+	            	 END_DATE		= #end_date#, 
+	            	 TARGET			= #target#, 
+	            	 TITLE			= #title#,  
+	            	 SECRET_VOTE	= #secret_vote#,
+	            	 CREATOR		= #creator#,
+	            	 CREATOR_NAME	= #creator_name#,
+	            	 FILE_PATH		= #file_path#,
+	            	 RESULT_FIRST	= #result_first#
+	            WHERE
+	            		ID				= #id#
+	            	AND
+	            		TENANT_ID		= #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>
+    
+    <insert id="EzPollDAO.addAnswerAndUser" parameterClass="Map">  
+	    <![CDATA[
+	            INSERT INTO TBL_VOTE_USER_AND_ANSWER(
+	                ANS_ID,        		QST_ID,		    USER_ID,          TENANT_ID, 		USER_NAME,	      VOTE_DATE
+	            )
+	            VALUES(
+	                #opt_id#,          	#qst_id#, 		#user_id#,        #tenant_id#,		#user_name#,	  #vote_date#
+	            )  
+	   ]]> 
+    </insert>  
+    
+   	<insert id="EzPollDAO.insertQustReceivers" parameterClass="Map">  
+        <selectKey keyProperty="v_temp1" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID , 
+     								USER_ID ,                              		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_VOTE_USER_AND_QUESTION
+                         			WHERE
+                         					QST_ID		= #qst_id#
+                         				AND
+                         					USER_ID 	= #user_id#
+                                   		AND
+                                   			TENANT_ID 	= #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp1" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_USER_AND_QUESTION(
+	                QST_ID,        			USER_ID,		    TENANT_ID,          USER_TYPE
+	            )
+	            VALUES(
+	                #qst_id#,          	 	#user_id#, 			#tenant_id#,       #type#  
+	            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp1" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_USER_AND_QUESTION
+	            SET 
+	            	 USER_TYPE	 		= #type#
+
+	            WHERE
+	            		QST_ID			= #qst_id#
+	            	AND
+	            		USER_ID 		= #user_id#
+	            	AND
+	            		TENANT_ID		= #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>   
+    
+    <insert id="EzPollDAO.insertOption" parameterClass="Map">  
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								ID , 
+     								QST_ID ,     								                              		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_VOTE_ANSWER
+                         			WHERE
+                         					ID			= #id#
+                         				AND
+                         					QST_ID		= #qst_id#
+                                   		AND
+                                   			TENANT_ID 	= #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_ANSWER(
+	               ID, 				QST_ID,        		TENANT_ID,          CONTENT, 		    VOTES_NUM
+	            )
+	            VALUES(
+	               #id#,          	 #qst_id#, 			#tenant_id#,       #content#,			#vote_number# 
+	            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_ANSWER
+	            SET 
+	            	 CONTENT	 		= #content#,
+	            	 VOTES_NUM			= #vote_number# 
+
+	            WHERE
+	            		QST_ID			= #qst_id#
+	            	AND
+	            		ID 				= #id#
+	            	AND
+	            		TENANT_ID		= #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>
+    
+    <insert id="EzPollDAO.insertCmt" parameterClass="Map"> 
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_COMMENT(
+	               ID, 	   QST_ID,     TENANT_ID,    USER_ID, 	 TEXT_CONTENT, 	  IMAGE_TYPE, 	  FILE_TYPE,      FILE_NAME,  	   FILE_PATH,     CMT_TIME 
+	            )
+	            VALUES( 
+	               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#
+	            )  
+        	]]>
+         
+    </insert>
+
+    <select id="EzPollDAO.getQuestionSeq" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				IFNULL(MAX(ID),-1) as maxno
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+		]]>		
+    </select>   
+    
+    <select id="EzPollDAO.getModifyingUser" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				TBL_VOTE_QUESTION_RELATED
+			WHERE
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+			AND 
+				MODIFYING = 1
+		]]>		
+    </select>  
+    
+   	<select id="EzPollDAO.getListOfUserIdForQst" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				QST_ID    = #qst_id#
+			AND 
+				USER_TYPE = #type#
+		]]>			
+    </select> 
+    
+    <select id="EzPollDAO.checkTargetOfQst" resultClass="Integer">             
+		<![CDATA[
+			SELECT 
+				TARGET
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				ID    = #qst_id#
+		]]>			
+    </select>
+          
+    <select id="EzPollDAO.getNumberOfSeenUsers" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				TBL_VOTE_QUESTION_RELATED
+			WHERE  
+				TENANT_ID = #tenant_id#	
+			AND
+				QST_ID    = #qst_id#
+			AND 
+				SEEN	  = 1
+		]]>			
+    </select> 
+     
+    <select id="EzPollDAO.getQuestionsTest" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				ID
+			IN
+				(
+					SELECT 
+						QST_ID
+					FROM
+						TBL_VOTE_USER_AND_QUESTION
+					WHERE
+						(
+								USER_TYPE = "user"
+							AND
+								USER_ID   = #user_id#
+						)	
+					OR
+						(
+								USER_TYPE = "company"
+							AND
+								USER_ID   = #company_id#
+						) 
+					OR
+						(
+								USER_TYPE = "dept"
+							AND
+								USER_ID 
+								IN
+									(
+										SELECT 
+											CN
+										FROM
+											TBL_DEPTMASTER
+										WHERE
+											(												
+												FIND_IN_SET	(CN, #v_deptPath#)		
+												OR 
+													CN = "Top"											
+											)
+										AND
+											TENANT_ID = #tenant_id#
+									)
+						)				
+					AND
+						TENANT_ID = #tenant_id#
+				)
+			AND
+				TENANT_ID = #tenant_id#
+			AND 
+				(
+						TITLE LIKE CONCAT('%', #search_str#, '%')
+					OR
+						CREATOR_NAME LIKE CONCAT('%', #search_str#, '%')
+					OR
+						CONTENT LIKE CONCAT('%', #search_str#, '%')
+				)
+		]]>				
+    </select> 
+    
+    <select id="EzPollDAO.getAllQuestions" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE 
+				TENANT_ID = #tenant_id#
+			AND 
+				(
+						TITLE LIKE CONCAT('%', #search_str#, '%')
+					OR
+						CREATOR_NAME LIKE CONCAT('%', #search_str#, '%')
+					OR
+						CONTENT LIKE CONCAT('%', #search_str#, '%')
+				)
+		]]>				
+    </select>     
+    
+    <select id="EzPollDAO.getOwnQuestions" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				CREATOR = #user_id#
+			AND
+				TENANT_ID = #tenant_id#
+			AND
+				(
+						TITLE LIKE CONCAT('%', #search_str#, '%')
+					OR
+						CREATOR_NAME LIKE CONCAT('%', #search_str#, '%')
+					OR
+						CONTENT LIKE CONCAT('%', #search_str#, '%')
+				)		
+		]]>				
+    </select>  
+    
+    <select id="EzPollDAO.getListOptionsOfQst" resultMap="pollAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>    
+    
+    <select id="EzPollDAO.getListCmtOfQst" resultMap="pollComment">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>   
+    
+    <select id="EzPollDAO.getPollUserAndAnswer" resultMap="pollUserAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_ANSWER
+			WHERE  
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>  
+    
+    <select id="EzPollDAO.getListVotedUsersForAnswer" resultMap="pollUserAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_ANSWER
+			WHERE  
+				ANS_ID = #opt_id#
+			AND
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>         
+      
+    <select id="EzPollDAO.getHiddenQuestionIds" resultClass="Integer">             
+		<![CDATA[
+			SELECT 
+				QST_ID
+			FROM  
+				TBL_VOTE_QUESTION_RELATED
+			WHERE  
+				TENANT_ID = #tenant_id#	
+			AND
+				USER_ID   = #user_id#
+			AND 
+				HIDE 	  = 1
+		]]>			
+    </select>   
+    
+    <insert id="EzPollDAO.insertHiddenQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   1,			   0
+            )  
+        	]]>
+        </isEqual>
+        
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 HIDE = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>        
+    </insert>    
+    
+    <insert id="EzPollDAO.insertModifyingQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   0,			   1
+            )  
+        	]]>
+        </isEqual>
+        
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 MODIFYING = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>        
+    </insert>     
+      
+    <update id="EzPollDAO.updateModifyingQuestionRelatedStatus" parameterClass="Map">
+   		<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 MODIFYING = 0
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+    </update>     
+   
+    <insert id="EzPollDAO.insertSeenQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,        1,        	  0,    		 0,			   0
+            )  
+        	]]>
+        </isEqual>
+        
+         <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 SEEN = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>    
+    
+    <insert id="EzPollDAO.insertCommentQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,      MODIFYING
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		   1,      		0,		    0		 
+            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	COMMENT = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>   
+    </insert>    
+   
+    <select id="EzPollDAO.getQuestionByIdAndTenantId" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#		
+		]]>				
+    </select>  
+   
+    <select id="EzPollDAO.getAnswerByIdAndQstId" resultMap="pollAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				ID = #opt_id#
+			AND
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#		
+		]]>				
+    </select>  
+   
+   <delete id="EzPollDAO.deleteQuestions" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_QUESTION
+          	WHERE
+          		ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteUserAndAnswer" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_USER_AND_ANSWER
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteModifyingQuestionRelatedStatus" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_QUESTION_RELATED
+	        WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+   </delete>   
+
+   <delete id="EzPollDAO.deleteQuestionRelated" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_QUESTION_RELATED
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteAnswers" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_ANSWER
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteCommentOfQst" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_COMMENT
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteSpecificCmt" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_COMMENT
+          	WHERE
+          		ID		  = #id#
+          	AND
+          		QST_ID 	  = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteUserAndQuestion" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_USER_AND_QUESTION
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+
+   <delete id="EzPollDAO.removeAnswerAndUser" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_USER_AND_ANSWER
+          	WHERE
+          		ANS_ID = #opt_id#
+			AND
+				QST_ID = #qst_id#	
+			AND
+				USER_ID = #user_id#	
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <update id="EzPollDAO.updateNumberOfVotesForAnswer" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_ANSWER
+	            SET 
+	            	 VOTES_NUM 		= VOTES_NUM + #value#
+	            WHERE
+	            		ID			= #opt_id#
+	            	AND
+	            		QST_ID		= #qst_id#
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>  
+   
+   <update id="EzPollDAO.updateEndDateForQst" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 END_DATE 		= #end_date#
+	            WHERE
+	            		ID			= #qst_id#
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>   
+   
+   <update id="EzPollDAO.updateModifyingQuestion" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 IS_MODIFYING 	= #value#
+	            WHERE
+	            		ID			= #qst_id#
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>  
+    
+   <update id="EzPollDAO.updateCmt" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_COMMENT
+	            SET 
+	            	 TEXT_CONTENT 	= #text_content#,
+	            	 IMAGE_TYPE		= #image_type#,
+	            	 FILE_TYPE		= #file_type#,
+	            	 FILE_NAME		= #file_name#,	
+	            	 FILE_PATH		= #file_path#
+	            WHERE
+	            		ID			= #id#
+	            	AND
+	            		QST_ID		= qst_id
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>   
+
+</sqlMap>

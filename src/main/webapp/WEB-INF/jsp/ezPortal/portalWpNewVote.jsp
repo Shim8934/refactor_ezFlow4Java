@@ -16,26 +16,29 @@
 		    var totalVotes = 0;
 		    var numberOptions = "<c:out value='${numberOfOptions}'/>";
 		    
-		    window.onload = function () {		    	
+		    window.onload = function() {		    	
 		    	updateGraph();
 		    }
+		    
 		    function viewQstList() {
 		    	window.open("/ezBoard/boardMain.do?func=3","main");		    	
 		    }
+		    
 		    function vote_poll() {
 		         window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
 		    }
 		    
-		    function updateGraph() {
-		    	console.log("NumberOptions: " + numberOptions + ", totalVotes : " + totalVotes);
+		    function updateGraph() {		    	
 		    	if (numberOptions == null) {
 		    		return;
 		    	}
+		    	
 				for (var i = 0; i < numberOptions; i++) {
 					if (totalVotes > 0) {
 						var percent = votesArr[i][1]/totalVotes;
 						var inforDiv = document.getElementById("info" + votesArr[i][0]);
 						inforDiv.innerHTML = inforDiv.innerHTML + "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
+						
 						if (votesArr[i][1] != 0) {								
 							var id = "myCanvas" + votesArr[i][0];	
 							var test = Math.round(220 * percent);
@@ -80,7 +83,7 @@
 	               				<div style="display: inline-block; padding-left: 18px; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
 	               					<div style="float:left; display: block;">${loop.index + 1}. </div>
 	               					<div style="float:left; display: block;">${_option.content}</div>
-	               					<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong>명/</div>
+	               					<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
 	               				</div>
 	               				<div id="graph<c:out value ="${_option.ansId}" />" style="display: inline-block;width: 234px; padding-left: 18px;">
 	               					<canvas id="myCanvas<c:out value ="${_option.ansId}" />"  height="16" style="border:1px solid #000000;"></canvas>			               					               					

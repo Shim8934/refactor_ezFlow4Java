@@ -45,8 +45,7 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public void insertQuestion(PollQuestionVO pollQuestionVO) throws Exception {
-		// TODO Auto-generated method stub
+	public void insertQuestion(PollQuestionVO pollQuestionVO) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("id", pollQuestionVO.getQstId());		
 		map.put("tenant_id", pollQuestionVO.getTenantId());
@@ -65,8 +64,7 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public void insertQustReceivers(PollQuestionVO pollQuestionVO)
-			throws Exception {
+	public void insertQustReceivers(PollQuestionVO pollQuestionVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("qst_id", pollQuestionVO.getQstId());		
 		map.put("user_id", pollQuestionVO.getUserId());
@@ -103,19 +101,8 @@ public class EzPollServiceImpl implements EzPollService{
 		return ezPollDAO.checkTargetOfQst(map);
 	}
 
-/*	@Override
-	public List<PollQuestionVO> getQuestionsForACompany(String userID, String companyID,
-			int tenantID) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();	
-		map.put("user_id", userID);
-		map.put("company_id", companyID);
-		map.put("tenant_id", tenantID);
-		return ezPollDAO.getQuestions(map);		
-	}*/
-
 	@Override
-	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID)
-			throws Exception {
+	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("dept_id", dept_id);
 		map.put("tenant_id", tenantID);
@@ -147,8 +134,7 @@ public class EzPollServiceImpl implements EzPollService{
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("qst_id", pollQstStatusVO.getQustId());
 		map.put("user_id", pollQstStatusVO.getUserId());
-		map.put("tenant_id", pollQstStatusVO.getTenantId());	
-		//map.put("hide", pollQstStatusVO.getHide());
+		map.put("tenant_id", pollQstStatusVO.getTenantId());		
 		ezPollDAO.insertHiddenQuestion(map);		
 	}
 
@@ -157,8 +143,7 @@ public class EzPollServiceImpl implements EzPollService{
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("qst_id", pollQstStatusVO.getQustId());
 		map.put("user_id", pollQstStatusVO.getUserId());
-		map.put("tenant_id", pollQstStatusVO.getTenantId());	
-		//map.put("hide", pollQstStatusVO.getHide());
+		map.put("tenant_id", pollQstStatusVO.getTenantId());		
 		ezPollDAO.insertSeenQuestion(map);		
 	}
 	
@@ -167,8 +152,7 @@ public class EzPollServiceImpl implements EzPollService{
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("qst_id", pollQstStatusVO.getQustId());
 		map.put("user_id", pollQstStatusVO.getUserId());
-		map.put("tenant_id", pollQstStatusVO.getTenantId());	
-		//map.put("hide", pollQstStatusVO.getHide());
+		map.put("tenant_id", pollQstStatusVO.getTenantId());		
 		ezPollDAO.insertCommentQuestion(map);		
 	}
 
@@ -262,8 +246,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", pollUserAnswer.getTenantId());	
 		map.put("user_name", pollUserAnswer.getUserName());	
 		map.put("vote_date", pollUserAnswer.getVoteDate());	
-		ezPollDAO.addAnswerAndUser(map);	
-		
+		ezPollDAO.addAnswerAndUser(map);			
 	}
 
 	@Override
@@ -273,8 +256,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("qst_id", pollUserAnswer.getQstId());
 		map.put("user_id", pollUserAnswer.getUserId());
 		map.put("tenant_id", pollUserAnswer.getTenantId());	
-		ezPollDAO.removeAnswerAndUser(map);	
-		
+		ezPollDAO.removeAnswerAndUser(map);			
 	}
 
 	@Override
@@ -284,8 +266,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("qst_id", pollUserAnswer.getQstId());		
 		map.put("tenant_id", pollUserAnswer.getTenantId());	
 		map.put("value", value);
-		ezPollDAO.updateNumberOfVotesForAnswer(map);	
-		
+		ezPollDAO.updateNumberOfVotesForAnswer(map);		
 	}
 
 	@Override
@@ -348,8 +329,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("qst_id", pollQstStatusVO.getQustId());
 		map.put("user_id", pollQstStatusVO.getUserId());
 		map.put("tenant_id", pollQstStatusVO.getTenantId());	
-		ezPollDAO.updateModifyingQuestionRelatedStatus(map);	
-		
+		ezPollDAO.updateModifyingQuestionRelatedStatus(map);		
 	}
 
 	@Override
@@ -427,6 +407,7 @@ public class EzPollServiceImpl implements EzPollService{
 	public void getAllQuestionForUser(LoginVO loginvo, Set<PollQuestionVO> set, String searchStr) throws Exception {
 		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
 		int tenantID = loginvo.getTenantId();
+		
 		//Check if user has admin privilege
 		if (loginvo.getRollInfo().indexOf("c=1") == -1 && loginvo.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
@@ -443,19 +424,20 @@ public class EzPollServiceImpl implements EzPollService{
 			}
 			set.addAll(listOfQuestion);
 			
-			//Get all question that this user is creator
+			//Get all question which this user is creator
 			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
 			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr);		
 			set.addAll(listOfQuestion2);
 		}
 		else {
-			//Get all question for admin privilege user
+			//Get all questions for admin privilege user
 			try {
 				listOfQuestion = getAllQuestions(tenantID, searchStr);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 			set.addAll(listOfQuestion);
 		}	
 	}

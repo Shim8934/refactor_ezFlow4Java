@@ -26,8 +26,6 @@ public interface EzPollService {
 	
 	public int checkTargetOfQst(int qstId, int tenantID) throws Exception;
 
-	//public List<PollQuestionVO> getQuestionsForACompany(String userID, String companyID, int tenantID) throws Exception;
-
 	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID) throws Exception;
 
 	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr) throws Exception;
@@ -94,6 +92,5 @@ public interface EzPollService {
 
 	public void deleteSpecificCmt(int cmtId, int qstId, int tenantId) throws Exception;
 
-	public void getAllQuestionForUser(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr)  throws Exception;
-	
+	public void getAllQuestionForUser(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr)  throws Exception;	
 }

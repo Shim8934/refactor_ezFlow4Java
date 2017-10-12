@@ -461,7 +461,7 @@ public class LoginVO implements Serializable {
 	}
 	
 	public boolean equals(Object object) {
-		if(object instanceof LoginVO) {
+		if (object instanceof LoginVO) {
 			LoginVO obj = (LoginVO) object;
 			return id.equals(obj.id) && tenantId == obj.tenantId;
 		}
