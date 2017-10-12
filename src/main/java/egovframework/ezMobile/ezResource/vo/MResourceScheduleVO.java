@@ -65,6 +65,8 @@ public class MResourceScheduleVO {
 	private String userId;
 	/** 자원명 */
 	private String brdNm;
+	/** 자원명 */
+	private String brdNm2;
 	/** 캘린더 날짜*/
 	private String date;
 	/** 캘린더 값*/
@@ -74,6 +76,14 @@ public class MResourceScheduleVO {
 	/** 중복여부 값*/
 	private String repeatYn;
 
+	
+	public String getBrdNm2() {
+		return brdNm2;
+	}
+	public void setBrdNm2(String brdNm2) {
+		this.brdNm2 = brdNm2;
+	}
+	
 	public String getRepeatYn() {
 		return repeatYn;
 	}

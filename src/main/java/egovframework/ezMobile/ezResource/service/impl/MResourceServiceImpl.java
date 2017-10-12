@@ -83,18 +83,25 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public MResourceScheduleVO getResScheduleDetail(String resourceId, String ScheduleId,
-			String companyId, int tenantId) {
+			String companyId, int tenantId, String langStr) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", resourceId);
 		map.put("v_PNUM", ScheduleId);
 		map.put("v_PCOMPANYID", companyId);
 		map.put("tenantID", tenantId);
-		return mResourceDAO.getResScheduleDetail(map);
+		
+		MResourceScheduleVO resultVO = mResourceDAO.getResScheduleDetail(map);
+		
+		if(Integer.parseInt(langStr) != 1){
+			resultVO.setBrdNm(resultVO.getBrdNm2());
+		}
+		
+		return resultVO;
 	}
 
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId,
-			String brdCompany, String userId, String userCompany, String userDept, int tenantId) {	
+			String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr) {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDID", brdId);
 		map.put("v_PBRDCOMPANY", brdCompany);
@@ -102,18 +109,35 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PUSERCOMPANY", userCompany);
 		map.put("v_PUSERDEPT", userDept);
 		map.put("tenantID", tenantId);
-
-		return mResourceDAO.getResBrdList(map);
+		
+		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResBrdList(map);
+		
+		if(Integer.parseInt(langStr) != 1){
+			for (MResourceGetAdmSubClsTreeVO resultVO : result) {
+					resultVO.setBrdNm(resultVO.getBrdNm2());
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
 	public List<MResourceScheduleVO> getResFavoriteList(String userId,
-			String companyId,int tenantId) {
+			String companyId,int tenantId, String langStr) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userId);
 		map.put("tenantID", tenantId);
 		map.put("v_PCOMPANYID", companyId);
-		return mResourceDAO.getResFavoriteList(map);
+		
+		List<MResourceScheduleVO> result = mResourceDAO.getResFavoriteList(map);
+
+		if(Integer.parseInt(langStr) != 1){
+			for (MResourceScheduleVO resultVO : result) {
+					resultVO.setBrdNm(resultVO.getBrdNm2());
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -124,9 +148,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			String content, String importance, String writeDay,
 			String entryList, String attachFlag, String approveFlag, String reFlag,
 			String scheduleId) {
-		
-		LOGGER.debug("in addResSch!!! ");
-		
+
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerId);
 		map.put("v_PCOMPANYID", companyId);
@@ -152,14 +174,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PREFLAG", reFlag);
 		map.put("v_PGRESFLAG", "");
 		map.put("v_PCHARACTERID", 0);
-		//map.put("v_PNUM", "26");
+
 		LOGGER.debug("map: " + map);
 		mResourceDAO.addResSch(map);
 	}
 
 	@Override
 	public void modifyResSch(String title, String startDate, String endDate, 
-			String alterTime, String content,String importance, String reFlag,
+			String alterTime, String content,String importance, String reFlag, String approveFlag,
 			String companyId, String num, String ownerId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerId);
@@ -172,6 +194,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCONTENT", content);
 		map.put("v_PIMPORTANCE", importance);
 		map.put("v_PREFLAG", reFlag);
+		map.put("v_PAPPROVEFLAG", approveFlag);
 		map.put("v_PNUM", num);
 		
 		LOGGER.debug("map in modifyResSch: " + map);
@@ -235,7 +258,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt, String check, String checkNum, String checkSDate, String checkEDate) throws Exception {
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt, String check, String checkNum, String checkSDate, String checkEDate, String langStr) throws Exception {
 		LOGGER.debug("getScheduleList Start");
 	
 		Map<String, Object> result = new HashMap<>();
@@ -259,6 +282,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
 			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
 			resVO.setDate(resVO.getStartDate().substring(0,10));
+			
+			if(Integer.parseInt(langStr) != 1){
+				resVO.setBrdNm(resVO.getBrdNm2());
+			}
 		}
 		
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
@@ -332,6 +359,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						
+						if(Integer.parseInt(langStr) != 1){
+							temp.setBrdNm(getRepeatResult.get(i).getBrdNm2());
+						}
+						
 						temp.setDate(format.format(dateArr[0]).substring(0,10));
 						temp.setValue(getRepeatResult.get(i).getOwnerId());
 						
@@ -1095,7 +1127,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public Map<String, Object> getScheduleMainList(MCommonVO info,
-			String listCnt) throws Exception {
+			String listCnt, String langStr) throws Exception {
 		
 		String ownerId = "";
 		String utcStartDate = "";
@@ -1115,7 +1147,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		utcStartDate = today.substring(0,10);
     	utcEndDate = today.substring(0,10);
   	
-		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt, "", "", "", "");
+		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt, "", "", "", "", langStr);
 		
 		return result;
 	}
@@ -1132,14 +1164,217 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return mResourceDAO.getTholiday(map);
 	}
 	
-	//휴일가져오기
+	//자원상세정보 가져오기
 	@Override
-	public MResourceScheduleVO getResBrdDetail(String ownerId, int tenantId) throws Exception {
+	public MResourceScheduleVO getResBrdDetail(String ownerId, String companyId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDID", ownerId);
 		map.put("tenantID", tenantId);
+		map.put("v_PCOMPANYID", companyId);
 		
 		return mResourceDAO.getResBrdDetail(map);
+	}
+
+
+
+	@Override
+	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate, String langStr) throws Exception {
+		
+		LOGGER.debug("getScheduleList Start");
+		
+		Map<String, Object> result = new HashMap<>();
+		String startDateLimit = eDate + " 23:59:59";
+		String endDateLimit = sDate + " 00:00:01";
+
+		startDateLimit = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
+		endDateLimit = commonUtil.getDateStringInUTC(endDateLimit, offset, true);
+		LOGGER.debug("");
+		
+		LOGGER.debug("startDateLimit" + startDateLimit);
+		LOGGER.debug("endDateLimit" + endDateLimit);
+		
+		
+		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
+		List<ResGetScheduleVO> getScheduleList = getScheduleApprNormalList(ownerID, companyID, sDate, eDate, userId, deptId, writerName, approveType, tenantID, check);
+		
+		
+		for (ResGetScheduleVO resVO : getScheduleList) {
+			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
+			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
+			resVO.setDate(resVO.getStartDate().substring(0,10));
+			
+			if(Integer.parseInt(langStr) != 1){
+				resVO.setBrdNm(resVO.getBrdNm2());
+			}
+		}
+		
+		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
+			
+		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
+		List<ResGetScheduleVO> getScheduleListRept = getScheduleApprRepetList(ownerID, companyID, sDate, eDate, userId, deptId, writerName, approveType, tenantID, check);
+		
+		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
+		
+		getRepeatResult.addAll(getScheduleListRept);
+		
+		// return할 ResGetScheduleVO getScheduleList 에 추가(반복예약)
+		if (getRepeatResult.size() > 0 ) {
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			for (int i=0; i<getRepeatResult.size(); i++) {
+				String reCompanyID = getRepeatResult.get(i).getCompanyId();
+				String reNum = Integer.toString(getRepeatResult.get(i).getNum());
+				String reOwnerID = getRepeatResult.get(i).getOwnerId();
+				
+				// tbl_schedulerepetition에서 정보 가져옴
+				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, Integer.parseInt(reNum), tenantID);
+				
+				if (vo != null) {
+					
+					vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+					vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+					
+					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+					ResScheduleRepetitionVO rvo = resStruct(vo);
+					LOGGER.debug("ResScheduleRepetitionVO: " + rvo);
+					
+					// 반복예약의 반복되는 날짜리스트 뽑아옴
+					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
+					
+					// 반복예약 중에 삭제된 예약 가져옴
+					List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
+					LOGGER.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					
+					for (int j=0; j<deletedDateStrList.size(); j++) {
+						deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
+					}
+					
+					for (Date[] dateArr : returnRepDateTimes) {
+						// 삭제된 예약이면 넘어감
+						if (deletedDateStrList.contains(format.format(dateArr[0]))) {
+							continue;
+						}
+						
+						ResGetScheduleVO temp = new ResGetScheduleVO();
+						
+						temp.setNum(getRepeatResult.get(i).getNum());
+						temp.setpNum(getRepeatResult.get(i).getNum());
+						temp.setOwnerId(getRepeatResult.get(i).getOwnerId());
+						temp.setTitle(getRepeatResult.get(i).getTitle());
+						temp.setLocation(getRepeatResult.get(i).getLocation());
+						temp.setTimeDisplay(getRepeatResult.get(i).getTimeDisplay());
+						temp.setStartDate(format.format(dateArr[0]));
+						temp.setEndDate(format.format(dateArr[1]));
+						temp.setAlertTime(getRepeatResult.get(i).getAlertTime());
+						temp.setReFlag(getRepeatResult.get(i).getReFlag());
+						temp.setGresFlag(getRepeatResult.get(i).getGresFlag());
+						temp.setWriterId(getRepeatResult.get(i).getWriterId());
+						temp.setImportance(getRepeatResult.get(i).getImportance());
+						temp.setEntryList(getRepeatResult.get(i).getEntryList());
+						temp.setAllDay(getRepeatResult.get(i).getAllDay());
+						temp.setWriteDay(getRepeatResult.get(i).getWriteDay());
+						temp.setAttachFlag(getRepeatResult.get(i).getAttachFlag());
+						temp.setCharacterId(getRepeatResult.get(i).getCharacterId());
+						temp.setApproveFlag(getRepeatResult.get(i).getApproveFlag());
+						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
+						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
+						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						
+						if(Integer.parseInt(langStr) != 1){
+							temp.setBrdNm(getRepeatResult.get(i).getBrdNm2());
+						}
+						temp.setDate(format.format(dateArr[0]).substring(0,10));
+						temp.setValue(getRepeatResult.get(i).getOwnerId());
+						
+						getScheduleList.add(temp);
+					}
+					
+				}
+				
+			}
+		}
+		
+		String repeatYn = "N";
+
+		if(check.equals("Y")) {
+			LOGGER.debug("checkSDate" + checkSDate);
+			LOGGER.debug("checkEDate" + checkEDate);
+			
+			for (ResGetScheduleVO vo : getScheduleList) {
+			
+				LOGGER.debug("vo in loop for cheking repeat " + vo.toString());
+				LOGGER.debug("vo.getStartDate() " + Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				LOGGER.debug("vo.getEndDate() " + Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14))); 
+				LOGGER.debug("checkSDate() " + Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				LOGGER.debug("checkEDate() " + Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				
+				if((Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) <= Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) < Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)))
+				||(Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) < Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)))
+				||(Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) <= Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) )){
+					LOGGER.debug("repeat repeat repaet !!!!");	
+					repeatYn = "Y";
+				}
+			}
+		}
+				
+		LOGGER.debug("resultList: " + getScheduleList);		
+		
+		result.put("scheduleList", getScheduleList);
+		result.put("repeatYn", repeatYn);
+		LOGGER.debug("getScheduleList End");
+		return result;
+	}
+	
+	public List<ResGetScheduleVO> getScheduleApprNormalList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check) throws Exception {
+
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", sDate);
+		map.put("v_PENDDATE", eDate);
+		map.put("v_PUSERID", userId);
+		map.put("v_PDEPTID", deptId);
+		map.put("v_WRITERNAME", writerName);
+		map.put("v_APPROVETYPE", approveType);
+		map.put("tenantID", tenantID);
+		map.put("check", check);
+		return mResourceDAO.getScheduleApprList(map);
+	}
+	
+	public List<ResGetScheduleVO> getScheduleApprRepetList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check) throws Exception {
+		
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", sDate);
+		map.put("v_PENDDATE", eDate);
+		map.put("v_PUSERID", userId);
+		map.put("v_PDEPTID", deptId);
+		map.put("v_WRITERNAME", writerName);
+		map.put("v_APPROVETYPE", approveType);
+		map.put("tenantID", tenantID);
+		map.put("check", check);
+		return mResourceDAO.getScheduleApprListRepetiti(map);
+	}
+	
+	@Override
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr) {	
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDCOMPANY", brdCompany);
+		map.put("v_PUSERID", userId);
+		map.put("v_PUSERCOMPANY", userCompany);
+		map.put("v_PUSERDEPT", userDept);
+		map.put("tenantID", tenantId);
+		
+		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResApprBrdList(map);
+
+		if(Integer.parseInt(langStr) != 1){
+			for (MResourceGetAdmSubClsTreeVO resultVO : result) {
+					resultVO.setBrdNm(resultVO.getBrdNm2());
+			}
+		}
+		
+		return result;
 	}
 	
 }

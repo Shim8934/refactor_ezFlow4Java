@@ -151,6 +151,21 @@ public class MResourceDAO extends EgovAbstractDAO {
 	public MResourceScheduleVO getResBrdDetail(Map<String, Object> map){
 			return  (MResourceScheduleVO) select("MResourceDAO.getResBrdDetail", map);
 	}
-		
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleVO> getScheduleApprList(Map<String, Object> map){
+		return  (List<ResGetScheduleVO>) list("MResourceDAO.getScheduleListAppr", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleVO> getScheduleApprListRepetiti(Map<String, Object> map){
+		return  (List<ResGetScheduleVO>) list("MResourceDAO.getScheduleListRepetitiAppr", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(Map<String, Object> map){
+		return  (List<MResourceGetAdmSubClsTreeVO>) list("MResourceDAO.getResApprBrdList", map);
+	}
+	
 }
 

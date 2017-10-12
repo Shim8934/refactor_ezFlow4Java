@@ -59,8 +59,10 @@ public class ResGetScheduleVO {
 	private String jobTitle;
 	/** 영문직급*/
 	private String jobTitle2;
-	/** 영문직급*/
+	/** 자원명*/
 	private String brdNm;
+	/** 자원명*/
+	private String brdNm2;
 	/** 캘린더 날짜*/
 	private String date;
 	/** 캘린더 값*/
@@ -72,6 +74,13 @@ public class ResGetScheduleVO {
 	/** 즐겨찾기여부*/
 	private String favoriteYn;
 
+	public String getBrdNm2() {
+		return brdNm2;
+	}
+	public void setBrdNm2(String brdNm2) {
+		this.brdNm2 = brdNm2;
+	}
+	
 	public String getFavoriteYn() {
 		return favoriteYn;
 	}

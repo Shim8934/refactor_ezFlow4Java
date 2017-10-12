@@ -250,7 +250,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
 	        		
 	        		String filePath = commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId()) + avo.getFilePath();
-	        		avo.setFilePath(filePath);
+	        		avo.setFilePath(URLEncoder.encode(filePath, "UTF-8"));
 	        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
 	        		avo.setFileTranSize(fileSize);
 	        	}
@@ -293,7 +293,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
         		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
         		
         		String filePath = commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId());
-        		avo.setFilePath(filePath);
+        		avo.setFilePath(URLEncoder.encode(filePath, "UTF-8"));
         		
         		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
         		avo.setFileTranSize(fileSize);

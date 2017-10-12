@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
@@ -82,6 +83,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
 	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
 	@Resource(name = "jspw")
     private String jspw;
 		
@@ -102,7 +106,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 			String serverName = request.getHeader("x-user-host");			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			
+			String langStr = request.getParameter("langStr");
 			String listCnt = request.getParameter("listCnt");			
 			
 			if (type != null && !type.equals("T")) {
@@ -143,7 +147,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
 				
 				//오늘의자원 리스트
-				Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt);
+				Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt, langStr);
 				Object resourceList = resourceMap.get("scheduleList");
 				
 				//오늘의자원 리스트 카운트
@@ -210,7 +214,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//자원관리 조인
-				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "");
+				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "", langStr);
 				List<ResGetScheduleVO> resList = (List<ResGetScheduleVO>) resMap.get("scheduleList");
 				SimpleDateFormat shotDF = new SimpleDateFormat("yyyy-MM-dd");
 				SimpleDateFormat longDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -310,7 +314,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 		
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
 		LOGGER.debug("portalFooterList Start");
 		
 		JSONObject result = new JSONObject();
@@ -321,13 +325,16 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, tenantId);
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			if (menu.equals("etc")) {
 				//게시판 풋터리스트
-				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId);
+				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId, primary);
 				
+				String langStr = request.getParameter("langStr");
 				//자원관리 풋터리스트				
-				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId);
+				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId, langStr);
 				
 				dataObject.put("boardFooterList", boardFooterList);
 				dataObject.put("resourceFooterList", resourceFooterList);
@@ -392,7 +399,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 			String serverName = request.getHeader("x-user-host");			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			
+			String langStr = request.getParameter("langStr");
 			String listCnt = request.getParameter("listCnt");			
 			
 			//받은결재함 리스트
@@ -418,7 +425,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
 			
 			//오늘의자원 리스트
-			Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt);
+			Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt, langStr);
 			
 			//오늘의자원 리스트 카운트
 			Object resourceCnt = resourceMap.get("count");			

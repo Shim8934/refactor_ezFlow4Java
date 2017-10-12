@@ -24,6 +24,7 @@
       <result property="title2"       		column="title2"		        				columnIndex="14"/>      
       <result property="rollInfo"          	column="rollinfo"                       	columnIndex="15"/>
       <result property="userFileUrl"       	column="userFileUrl"   						columnIndex="16"/>
+      <result property="email"       		column="email"   							columnIndex="17"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">
@@ -54,7 +55,8 @@
 			    b.title,
 			    b.title2,
                 b.extensionattribute1 as rollinfo,
-                b.extensionattribute2 as userFileUrl
+                b.extensionattribute2 as userFileUrl,
+                b.mail as email
 			FROM
 				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE

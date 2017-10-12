@@ -52,6 +52,7 @@
 		<result property="date"				column="DATE"				columnIndex="27"/>
 		<result property="value"				column="VALUE"				columnIndex="28"/>
 		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="29"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
@@ -128,6 +129,7 @@
 		<result property="value"				column="VALUE"				columnIndex="29"/>
 		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="30"/>
 		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="31"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="32"/>
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
@@ -194,6 +196,7 @@
 		<result property="brdNm"				column="BRDNM"				columnIndex="29"/>
 		<result property="content"				column="CONTENT"				columnIndex="30"		nullValue=""/>
 		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="31"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="32"/>
 	</resultMap>
     
     <select id="MResourceDAO.getAdmSubClsTree" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
@@ -547,10 +550,11 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
 				IF(isnull(F.RESID),'N','Y') FAVORITE,
-				    C.BRD_NM BRDNM,
-					 D.STARTDATETIME REPSTARTDATE,
-					 D.ENDDATETIME REPENDDATE,
-					 CASE A.REFLAG WHEN '0' THEN '비반복' WHEN '1' THEN '반복' ELSE '불확실' END REPTYPE  
+				C.BRD_NM BRDNM,
+				C.BRD_NM2 BRDNM2,
+				D.STARTDATETIME REPSTARTDATE,
+				D.ENDDATETIME REPENDDATE,
+				CASE A.REFLAG WHEN '0' THEN '비반복' WHEN '1' THEN '반복' ELSE '불확실' END REPTYPE  
 			FROM TBL_RS_SCHEDULE A 
 			
 			LEFT JOIN TBL_USERMASTER B ON A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
@@ -669,7 +673,8 @@
 				 CONTENT = #v_PCONTENT#,
 		</isNotEmpty>
 		<![CDATA[
-                ALERTTIME = #v_PALERTTIME#,             
+                ALERTTIME = #v_PALERTTIME#,
+                APPROVEFLAG = #v_PAPPROVEFLAG#,              
                 IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
            		COMPANYID = #v_PCOMPANYID#
@@ -784,7 +789,8 @@
 				A.USERID,
 				A.RESCOMPANY,
 				A.TENANT_ID,
-				B.BRD_NM BRDNM
+				B.BRD_NM BRDNM,
+				B.BRD_NM2 BRDNM2
 			FROM
 				TBL_RS_FAVORITE A
 			JOIN 
@@ -857,6 +863,7 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
                 C.BRD_NM BRDNM,
+                C.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN  
            	FROM 
            		TBL_RS_SCHEDULE A
@@ -929,6 +936,7 @@
             	B.TITLE JOBTITLE  ,
             	B.TITLE2 JOBTITLE2 ,
             	D.BRD_NM BRDNM,
+            	D.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN 
 			FROM
 				TBL_RS_SCHEDULE A
@@ -1243,6 +1251,8 @@
 			WHERE
 				BRD_ID = #v_PBRDID#
 			AND
+				BRD_COMPANY = #v_PCOMPANYID#
+			AND
 				TENANT_ID = #tenantID#	
 		]]>
 	
@@ -1280,6 +1290,7 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
                 C.BRD_NM BRDNM,
+                C.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN  
            	FROM 
            		TBL_RS_SCHEDULE A
@@ -1297,20 +1308,30 @@
 				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= A.ENDDATE
 			AND 
 				A.COMPANYID = #v_PCOMPANYID#
+			AND 
+				C.APPROVEFLAG = '1'	
+			AND 
+				C.BRD_GB = '2'	
+			AND
+            	C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
 				]]>
 			<isNotEmpty property="v_POWNERID">				
 			AND 
 				A.OWNERID = #v_POWNERID#
+			</isNotEmpty>
+			<isNotEmpty property="v_APPROVETYPE">				
+			AND 
+				A.APPROVEFLAG = #v_APPROVETYPE#
 			</isNotEmpty>	
 			<![CDATA[	
 			AND
 				REFLAG = '0'
 						]]>
-			<isEmpty property="v_POWNERID">
+			<isNotEmpty property="v_WRITERNAME">
 			AND 
-			    B.DEPARTMENT = #v_WRITERDEPT#
-			</isEmpty>	
-			<![CDATA[   	
+                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )	    
+			</isNotEmpty>
+			<![CDATA[
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -1352,6 +1373,7 @@
             	B.TITLE JOBTITLE  ,
             	B.TITLE2 JOBTITLE2 ,
             	D.BRD_NM BRDNM,
+            	D.BRD_NM2 BRDNM2,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN 
 			FROM
 				TBL_RS_SCHEDULE A
@@ -1377,22 +1399,32 @@
 				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
+			AND 
+				D.APPROVEFLAG = '1'
+			AND 
+				D.BRD_GB = '2'	
+			AND
+            	D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
 			        	]]>
 			<isNotEmpty property="v_POWNERID">				
 			AND
 				A.OWNERID = #v_POWNERID#
-			</isNotEmpty>	
+			</isNotEmpty>
+			<isNotEmpty property="v_APPROVETYPE">				
+			AND 
+				A.APPROVEFLAG = #v_APPROVETYPE#
+			</isNotEmpty>		
 			<![CDATA[	
 			AND
 				REFLAG = '1'
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 						]]>
-			<isEmpty property="v_POWNERID">
+			<isNotEmpty property="v_WRITERNAME">
 			AND 
-			    B.DEPARTMENT = #v_WRITERDEPT#
-			</isEmpty>	
-			<![CDATA[    
+                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )	    
+			</isNotEmpty>
+			<![CDATA[
 			AND 
 				A.TENANT_ID = #tenantID#	
         	ORDER BY
@@ -1400,5 +1432,52 @@
                 ENDDATE DESC
 		]]>
 	</select>
+	
+		<select id="MResourceDAO.getResApprBrdList" parameterClass="Map" resultMap="mResourceBrdVO">
+		<![CDATA[
+			SELECT
+					   A.BRD_ID,
+                       A.BRD_NM,
+                       A.BRD_NM2,
+                       A.BRD_LEVEL,
+                       A.BRD_STEP,
+                       A.BRD_POSTTERM,
+                       A.BRD_UPPER,
+                       A.BRD_GB,
+                       A.BRD_URL,
+                       A.BRD_EXPLAIN
+			FROM
+				TBL_RS_BRD A  	
+			WHERE
+				A.BRD_COMPANY = #v_PUSERCOMPANY#
+			AND 
+				A.BRD_GB = '2'
+			AND 
+				A.APPROVEFLAG = '1'	
+      		AND
+            	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
+			AND
+                A.TENANT_ID = #tenantID#
+      	   ORDER BY
+           BRD_GB, BRD_STEP		
+		]]>
+	</select>
+	
+	<update id="EzResourceDAO.updateScheduleAppr" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_RS_SCHEDULE
+      		SET
+      			APPROVEFLAG = #v_PAPPROVE#
+    		WHERE  
+    			COMPANYID = #v_PCOMPANYID#
+     		AND 
+     			OWNERID = #v_POWNERID#
+     		AND 
+     			NUM = #v_PNUM#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
 </sqlMap>
 

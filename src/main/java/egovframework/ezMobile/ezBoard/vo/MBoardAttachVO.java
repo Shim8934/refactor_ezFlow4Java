@@ -25,6 +25,8 @@ public class MBoardAttachVO {
 	private String imageName;
 	/** 인코딩 파일명*/
 	private String encodeFileName;
+	/** 인코딩 파일경로*/
+	private String encodeFilePath;
 	
 	public String getItemID() {
 		return itemID;
@@ -98,5 +100,10 @@ public class MBoardAttachVO {
 	public void setEncodeFileName(String encodeFileName) {
 		this.encodeFileName = encodeFileName;
 	}
-	
+	public String getEncodeFilePath() {
+		return encodeFilePath;
+	}
+	public void setEncodeFilePath(String encodeFilePath) {
+		this.encodeFilePath = encodeFilePath;
+	}
 }

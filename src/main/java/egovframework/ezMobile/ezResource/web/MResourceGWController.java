@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
@@ -17,6 +18,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,15 +27,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResAdminVO;
+import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
-import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -68,6 +75,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
 	
+	@Resource(name="EzResourceService")
+	private EzResourceService ezResourceService;
+	
+	@Resource(name="EzEmailService")
+	private EzEmailService ezEmailService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원예약리스트조회
 	 */
@@ -82,10 +98,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-
+			String langStr = request.getParameter("langStr");
 	    	String listCnt = "10";
 	    				
-			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt);
+			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt, langStr);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -127,10 +143,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	String offset = info.getOffSet();
 	    	String favoriteYn = "N";
 	    	
-	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "");
+			String langStr = request.getParameter("langStr");
+	    	
+			LOGGER.debug("info.getLang() ?? " + info.getLang());
+			
+	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "", langStr);
 			
 	    	if(ownerId != null && !ownerId.equals("")) {
-	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(request.getParameter("userId"), companyId, tenantId);
+	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(request.getParameter("userId"), companyId, tenantId, langStr);
 		    	if(list.size() > 0) {
 		    		for (MResourceScheduleVO mResourceScheduleVO : list) {
 						if(mResourceScheduleVO.getResId() != null) {
@@ -185,8 +205,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String brdCompany = info.getCompanyId();
 			String userCompany = info.getCompanyId();
 			String userDept = info.getDeptId();
+			String langStr = request.getParameter("langStr");
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId);
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId, langStr);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data",list);
@@ -218,8 +239,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
-
-			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId,tenantId);
+			String langStr = request.getParameter("langStr");
+				
+			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId, tenantId, langStr);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -246,7 +268,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 		JSONObject result = new JSONObject();
 		
 		try {
-			
+					
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			String repDate = request.getParameter("repDate");
@@ -254,8 +276,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			String offset = info.getOffSet();
 			String companyId = info.getCompanyId();
+			String langStr = request.getParameter("langStr");
  
-			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
+			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId, langStr);
 
 			String content = resVO.getContent();
 			
@@ -327,7 +350,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String sDate = startDate.substring(0, 10);
 			String eDate = endDate.substring(0, 10);
 
-			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, tenantId);
+			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);
 			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -335,7 +358,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String resApproveFlag = resVO.getResApproveFlag();
 			
 			if(resApproveFlag.equals("0")) {
-				resultMap = mResourceService.getScheduleList(ownerId, companyId, sDate, eDate, writerDt, tenantId, offset, "", "Y", num, startDate, endDate);
+				resultMap = mResourceService.getScheduleList(ownerId, companyId, sDate, eDate, writerDt, tenantId, offset, "", "Y", num, startDate, endDate, info.getLang());
 			}
 			
 			
@@ -402,8 +425,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			allDay =  "0"; 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
-			String approveFlag =  "";
-
+	    	
+	    	String approveFlag =  "1";
+			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
+			String resApproveFlag = resVO.getResApproveFlag();			
+			if(resApproveFlag.equals("1")) {
+				approveFlag =  "0";
+			}
+			
 	    	mResourceService.addResSch(ownerId, companyId, tenantId, pNum, writerId, deptNm, ownerNm, title, location, timeDisplay, utcStartDate, utcEndDate, allDay, alterTime, content, importance, writeDay, entryList, attachFlag, approveFlag, reFlag, scheduleId);
 
 			result.put("status", "ok");
@@ -431,8 +460,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}] started.");
 			JSONObject result = new JSONObject();
 		
-		String test = (String) jsonObject.get("userId");
-		
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
@@ -452,7 +479,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
 	    	
-	    	mResourceService.modifyResSch(title,utcStartDate, utcEndDate, alertTime, content, importance, reFlag, companyId, num, ownerId, tenantId);
+	    	String approveFlag =  "1";
+			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
+			String resApproveFlag = resVO.getResApproveFlag();			
+			if(resApproveFlag.equals("1")) {
+				approveFlag =  "0";
+			}
+			
+	    	mResourceService.modifyResSch(title,utcStartDate, utcEndDate, alertTime, content, importance, reFlag, approveFlag, companyId, num, ownerId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -597,7 +631,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String cID = request.getParameter("COMPANYID");
-			//의미확인후 삭제
+			//의미확인후 삭제 또는 변경
 			cID = "VIEW";	
 			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
 			
@@ -622,23 +656,39 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/approve-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject approveList( HttpServletRequest request) throws Exception {		
+	public JSONObject approveList( @PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/approve-list/users/{userId}] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String cID = request.getParameter("COMPANYID");
-			//의미확인후 삭제
-			cID = "VIEW";	
-			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
-			
+			int tenantId = info.getTenantId();			
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();    	
+	    	String ownerId = request.getParameter("ownerId");   	
+	    	String offset = info.getOffSet();	    	
+	    	String writerName = request.getParameter("writerName");
+	    	String approveType = request.getParameter("approveType");
+	    	
+	    	LOGGER.debug("serverName: " + serverName);
+	    	LOGGER.debug("tenantId: " + tenantId);
+	    	LOGGER.debug("startDate: " + startDate);
+	    	LOGGER.debug("endDate: " + endDate);
+	    	LOGGER.debug("companyId: " + companyId);
+	    	LOGGER.debug("ownerId: " + ownerId);
+	    	LOGGER.debug("offset: " + offset);
+	    	LOGGER.debug("writerName: " + writerName);
+	    	LOGGER.debug("approveType: " + approveType);
+
+	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(ownerId, companyId, startDate, endDate, userId, deptId, writerName, approveType, tenantId, offset, "", "", "", "", info.getLang());
+				    	
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", getHoliday);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
@@ -656,24 +706,30 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 자원예약 승인중복조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-repetition", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject approveRepetition( HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] started.");
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/approve-repetition", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject approveRepetition(@PathVariable String resourceId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/approve-repetition] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			
+			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");	
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String cID = request.getParameter("COMPANYID");
-			//의미확인후 삭제
-			cID = "VIEW";	
-			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			int tenantId = info.getTenantId();			
+			String sDate = request.getParameter("startDate");
+			String eDate = request.getParameter("endDate");
+			String startDate = sDate.substring(0, 10);
+			String endDate = eDate.substring(0, 10);
+			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();  	
+	    	String offset = info.getOffSet();
+	    				
+	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(resourceId, companyId, startDate, endDate, userId, deptId, "", "1", tenantId, offset, "Y", "", sDate, eDate, info.getLang());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", getHoliday);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
@@ -683,7 +739,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		}
 
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] ended.");
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/approve-repetition] ended.");
 		return result;
 	}
 	
@@ -691,24 +747,23 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [put] 자원예약 승인/미승인 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-flag", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject updateApproveFlag( HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-flag] started.");
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/approve-flag", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateApproveFlag(@PathVariable String resourceId, @PathVariable String scheduleId,  HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/approve-flag] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");		
+			String userId = request.getParameter("userId");
+			String approve = request.getParameter("approveType");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String cID = request.getParameter("COMPANYID");
-			//의미확인후 삭제
-			cID = "VIEW";	
-			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			
+			ezResourceService.updateSchedule(Integer.parseInt(scheduleId), resourceId, info.getCompanyId(), approve, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", getHoliday);
+			result.put("data", "");
 			
 		} catch (Exception e) {
 			
@@ -718,7 +773,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		}
 
-		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}/approve-flag] ended.");
+		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/approve-flag] ended.");
 		return result;
 	}
 	
@@ -726,24 +781,71 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [post] 자원예약 승인/미승인 처리결과 메일 전송
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/send-mail/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject sendMailApprove( HttpServletRequest request) throws Exception {		
+	@RequestMapping(value="/mobile/ezresource/send-mail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject sendMailApprove(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/send-mail/users/{userId}] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			
-			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");	
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String cID = request.getParameter("COMPANYID");
-			//의미확인후 삭제
-			cID = "VIEW";	
-			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			String ownerID = (String) jsonObject.get("ownerId");
+			String title = (String) jsonObject.get("title");
+			String startDateTime = (String) jsonObject.get("startDate");
+			String endDateTime = (String) jsonObject.get("endDate");
+			String loginCookie = (String) jsonObject.get("loginCookie");
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
+			LOGGER.debug("ownerID" + ownerID);
+			LOGGER.debug("title" + title);
+			LOGGER.debug("startDateTime" + startDateTime);
+			LOGGER.debug("endDateTime" + endDateTime);
+			LOGGER.debug("loginCookie" + loginCookie);
+			
+			startDateTime = commonUtil.getDateStringInUTC(startDateTime, userInfo.getOffset(), false);
+			endDateTime = commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), false);
+			
+			LOGGER.debug("ownerID=" + ownerID + ",title=" + title + ",startDateTime=" + startDateTime + ",endDateTime=" + endDateTime);
+			
+			ResAdminVO resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId());
+	        
+	        StringBuilder bodyContent = new StringBuilder();
+
+	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+	        
+	        if (userInfo.getPrimary().equals("1")) {
+	        	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
+	        } else {
+	        	bodyContent.append(userInfo.getDisplayName2() +"[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
+	        }
+	        
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.getBrdNm()); 
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
+	        bodyContent.append("</DIV>");
+	        
+	        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + resInfo.getBrdNm() + "] " + title;
+	        
+	        
+	    	InternetAddress from = new InternetAddress();
+	    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	    	from.setAddress(userInfo.getEmail());
+	    	
+	    	String emailAddress = resInfo.getMailAddress();
+	    	String accessName = resInfo.getOwnerNm();
+	    	
+	    	if (accessName.indexOf("(") > -1) {
+	    		accessName = accessName.split("(")[0];
+	    	}
+	    	
+	    	InternetAddress to = new InternetAddress();
+	    	to.setPersonal(accessName, "UTF-8");
+	    	to.setAddress(emailAddress);
+	        	
+	        
+	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+	       
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", getHoliday);
+			result.put("data", "");
 			
 		} catch (Exception e) {
 			
@@ -756,5 +858,42 @@ public class MResourceGWController extends EgovFileMngUtil {
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/send-mail/users/{userId}] ended.");
 		return result;
 	}
+	
+	/**
+	 * 모바일 G/W 자원관리 [get] 승인대상 자원리스트 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/apprfolder-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject resourceApprFolderList(HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			String brdCompany = info.getCompanyId();
+			String userCompany = info.getCompanyId();
+			String userDept = info.getDeptId();
+			String langStr = request.getParameter("langStr");
+
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(brdCompany, userId, userCompany, userDept , tenantId, langStr);
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data",list);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list] ended.");
+		return result;
+	}
+	
 	
 }
