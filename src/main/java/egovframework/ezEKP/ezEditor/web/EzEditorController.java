@@ -1,14 +1,19 @@
 package egovframework.ezEKP.ezEditor.web;
 
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -179,8 +184,41 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
 		
-		if (imageFile.exists()) {			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
+		if (imageFile.exists()) {
+			//Checking CMYK 
+			boolean check = isCMYK(realPath + filePath + commonUtil.separator + fileName);			
+			BufferedImage bi = null;
+			
+			if (check == true) {
+				//Find a suitable ImageReader
+			    Iterator readers = ImageIO.getImageReadersByFormatName("JPEG");
+			    ImageReader reader = null;
+			    
+			    while(readers.hasNext()) {
+			        reader = (ImageReader)readers.next();
+			        if (reader.canReadRaster()) {
+			            break;
+			        }
+			    }
+
+			    //Stream the image file (the original CMYK image)
+			    ImageInputStream input = ImageIO.createImageInputStream(new File(realPath + filePath + commonUtil.separator + fileName)); 
+			    reader.setInput(input); 
+
+			    //Read the image raster
+			    Raster raster = reader.readRaster(0, null); 
+
+			    //Create a new RGB image
+			    bi = new BufferedImage(raster.getWidth(), raster.getHeight(), 
+			    BufferedImage.TYPE_4BYTE_ABGR); 
+
+			    //Fill the new image with the old raster
+			    bi.getRaster().setRect(raster);
+			}
+			else {
+				bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));	
+			}			
+				    
 			width = bi.getWidth();
 			height = bi.getHeight();
 		}
@@ -190,6 +228,26 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("ckUpload ended");
 		return "ezEditor/ckUpload";
 	}
+	
+    private boolean isCMYK(String filename)
+    {
+        boolean result = false;
+        BufferedImage img = null;
+        
+        try {
+            img = ImageIO.read(new File(filename));
+        }
+        catch (Exception e) {
+        	result = true;
+        }
+        if (img != null)
+        {
+            int colorSpaceType = img.getColorModel().getColorSpace().getType();
+            result = colorSpaceType == ColorSpace.TYPE_CMYK;
+        }
+
+        return result;
+    }
 
 	/**
 	 * ck에디터 심플업로드 실행 Method
