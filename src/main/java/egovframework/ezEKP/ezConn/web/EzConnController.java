@@ -109,4 +109,74 @@ public class EzConnController {
 		return isUserExists;
 	}	
     
+	@RequestMapping("/ezConn/approvalMain.do")
+	public String approvalMain(
+					@RequestParam String id,
+					HttpServletRequest request,
+					HttpServletResponse response
+					) throws Exception {
+		logger.debug("approvalMain started.");
+		String resultPage = "redirect:/user/login/login.do";
+		
+		try {
+			logger.debug("id=" + id);
+
+			if (id != null && !id.equals("")) {
+				int atSignPos = id.indexOf("@");
+				
+				if (atSignPos != -1) {
+					id = id.substring(0, atSignPos);
+				}
+				
+				if (!id.equals("")) {
+			        int tenantId = 0;
+			        logger.debug("tenantId=" + tenantId);
+					
+					boolean isUserExists = checkIfUserExistsById(id, tenantId);
+					logger.debug("isUserExists=" + isUserExists);
+					
+					if (isUserExists) {
+						loginController.createLoginCookie(id, "", "", tenantId, request, response);
+						
+						// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
+						// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
+						response.setHeader("P3P", "CP=\"Potato\"");
+						
+						resultPage = "redirect:/ezApprovalG/apprGMain.do";
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("approvalMain ended.");
+		
+		return resultPage;
+	}
+	
+	private boolean checkIfUserExistsById(String id, int tenantId) throws Exception {
+		logger.debug("checkIfUserExistsById started. id=" + id + ",tenantId=" + tenantId);
+		
+		boolean isUserExists = false;
+				
+		LoginVO loginVO = new LoginVO();	
+		
+		loginVO.setId(id);
+		loginVO.setDn("NOPASSWORD");
+		loginVO.setTenantId(tenantId);
+		
+		LoginVO resultVO = loginService.selectUser(loginVO);
+		
+		logger.debug("resultVO=" + resultVO);
+		
+		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+			isUserExists = true;
+		} 
+		
+		logger.debug("checkIfUserExistsById ended.");
+		
+		return isUserExists;
+	}	
+	
 }
