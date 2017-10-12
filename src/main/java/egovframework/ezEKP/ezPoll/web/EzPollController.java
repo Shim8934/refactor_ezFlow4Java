@@ -610,7 +610,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String fileName = request.getParameter("filename");
 		File file = null;
 		
-		if (folderPath == null || fileName == null) {
+		if (folderPath == null || fileName == null || folderPath.equals("") || fileName.equals("")) {
 			logger.debug("downloadAttach illegal arguments!");
 			return;
 		}
@@ -627,12 +627,12 @@ public class EzPollController extends EgovFileMngUtil {
         String fullPath = pDirPath + "uploadFile" + commonUtil.separator + folderPath;    
         file = new File(fullPath);
         
-		if (file == null || !file.exists()) {
+		if (file == null || !file.exists()) {			
 			fullPath = realPath + folderPath;
-			file = new File(fullPath);
+			file = new File(fullPath);			
 			
 			if (file == null || !file.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
+				logger.debug("Folder not found. folderPath=" + folderPath);
 				return;
 			}				
 		}

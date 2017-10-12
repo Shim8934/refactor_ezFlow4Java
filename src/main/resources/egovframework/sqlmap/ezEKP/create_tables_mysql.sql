@@ -7390,6 +7390,124 @@ CREATE TABLE `tbl_userstartpage_item` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_vote_answer`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_answer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_answer` (
+  `ID` mediumint(9) NOT NULL,
+  `QST_ID` mediumint(9) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `CONTENT` varchar(250) NOT NULL,
+  `VOTES_NUM` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`,`QST_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_vote_comment`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_comment` (
+  `ID` int(11) NOT NULL,
+  `QST_ID` int(11) NOT NULL,
+  `TENANT_ID` int(11) NOT NULL,
+  `USER_ID` varchar(50) NOT NULL,
+  `TEXT_CONTENT` varchar(500) NOT NULL DEFAULT '',
+  `IMAGE_TYPE` varchar(50) NOT NULL DEFAULT '',
+  `FILE_TYPE` varchar(250) NOT NULL DEFAULT '',
+  `FILE_NAME` varchar(50) NOT NULL DEFAULT '',
+  `FILE_PATH` varchar(50) NOT NULL DEFAULT '',
+  `CMT_TIME` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`,`QST_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_vote_question`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_question`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_question` (
+  `ID` mediumint(9) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `CONTENT` longtext,
+  `MULTI_SELECT` tinyint(4) NOT NULL DEFAULT '0',
+  `START_DATE` varchar(38) NOT NULL,
+  `END_DATE` varchar(38) NOT NULL,
+  `TARGET` tinyint(4) NOT NULL DEFAULT '0',
+  `TITLE` varchar(250) NOT NULL,
+  `SECRET_VOTE` tinyint(4) NOT NULL DEFAULT '0',
+  `CREATOR` varchar(80) NOT NULL DEFAULT '0',
+  `CREATOR_NAME` varchar(80) NOT NULL DEFAULT '0',
+  `FILE_PATH` longtext,
+  `RESULT_FIRST` tinyint(4) NOT NULL DEFAULT '1',
+  `IS_MODIFYING` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_vote_question_related`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_question_related`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_question_related` (
+  `QST_ID` int(11) NOT NULL,
+  `USER_ID` varchar(50) NOT NULL,
+  `TENANT_ID` int(11) NOT NULL,
+  `SEEN` tinyint(4) NOT NULL DEFAULT '0',
+  `COMMENT` tinyint(4) NOT NULL DEFAULT '0',
+  `HIDE` tinyint(4) NOT NULL DEFAULT '0',
+  `MODIFYING` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`QST_ID`,`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_vote_user_and_answer`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_user_and_answer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_user_and_answer` (
+  `ANS_ID` mediumint(9) NOT NULL,
+  `QST_ID` mediumint(9) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `USER_NAME` varchar(50) NOT NULL,
+  `VOTE_DATE` varchar(70) NOT NULL,
+  PRIMARY KEY (`ANS_ID`,`QST_ID`,`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_vote_user_and_question`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_user_and_question`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_user_and_question` (
+  `QST_ID` int(11) NOT NULL,
+  `USER_ID` varchar(50) NOT NULL,
+  `TENANT_ID` int(11) NOT NULL,
+  `USER_TYPE` varchar(50) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`QST_ID`,`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 
