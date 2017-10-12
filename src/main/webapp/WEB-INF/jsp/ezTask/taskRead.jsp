@@ -102,8 +102,13 @@
 						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
+						if (completerate == 0) {
+							$(this).find('strong').css("color", delayColor);
+						} else {
+							$(this).find('strong').css("color", "");
+						}
 					});
-				} else if (taskstatus == '3') {
+				} else if (taskstatus == '3') {	
 					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
 						fill: {color: completeColor},
@@ -118,6 +123,7 @@
 						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
+						$(this).find('strong').css("color", "");
 					});
 				}
 			}
@@ -406,12 +412,11 @@
 			
 			/* 진행상태 수정 */
 			function update_status() {
-				if (personid != userid) {
+				if (personid == userid || creatorid == userid) {
+					DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid);
+				} else {
 					alert("<spring:message code='ezTask.t149' />");
-					return;
 				}
-				
-				DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid);
 			}
 			
 			function Tab1_NewTabIni(pTabNodeID) {

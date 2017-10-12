@@ -465,7 +465,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map); 
 
-		logger.debug("getTaskList ended. listsize = " + list.size());
+		logger.debug("listsize = " + list.size());
+		logger.debug("getTaskList ended.");
 
 		return list;
 	}

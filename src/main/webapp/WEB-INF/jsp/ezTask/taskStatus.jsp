@@ -33,9 +33,9 @@
 	        
 	        $(document).ready(function() {
 	        	initProgressBar(completerate)
-	        	
+        	
 	        	if (taskstatus == '1') {
-	        		$("#taskStatus").attr("disabled", true);
+// 	        		$("#taskStatus").attr("disabled", true);
 	        	} else if (taskstatus == '2') {
 	        		$("#taskStatus").attr("checked", false);
 	        	} else if (taskstatus == '3') {
@@ -62,7 +62,7 @@
 	        		if ($("#taskStatus").is(":checked")) {
 	        			if ($("#completeRate").val() == "0") {
 							$("#taskStatus").attr("checked", false);
-							$("#taskStatus").attr("disabled", true);
+// 							$("#taskStatus").attr("disabled", true);
 	        				taskstatus = 1;
 						} else if ($("#completeRate").val() == "100") {
 							$("#taskStatus").attr("checked", false);
@@ -72,10 +72,11 @@
 							taskstatus = 4;
 							$("#taskStatus").removeAttr("disabled");
 						}
-	        		} else {
+	        		} else {			
 	        			//지연안된거
 	        			if ($("#completeRate").val() == "0") {
-	        				$("#taskStatus").attr("disabled", true);
+	        				$("#taskStatus").removeAttr("disabled");
+// 	        				$("#taskStatus").attr("disabled", true);
 	        				taskstatus = 1;
 						} else if ($("#completeRate").val() == "100") {
 							$("#taskStatus").attr("disabled", true);
@@ -100,6 +101,11 @@
 						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
+						if (completerate == 0) {
+							$(this).find('strong').css("color", delayColor);
+						} else {
+							$(this).find('strong').css("color", "");
+						}
 					});
 				} else if (taskstatus == '3') {
 					$('.taskProgressBar').circleProgress({
@@ -108,6 +114,7 @@
 						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
+// 						$(this).find('strong').css("color", "");
 					});
 				} else {
 					$('.taskProgressBar').circleProgress({
@@ -116,6 +123,7 @@
 						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
+						$(this).find('strong').css("color", "");
 					});
 				}
 			}

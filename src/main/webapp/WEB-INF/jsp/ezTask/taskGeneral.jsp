@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>업무관리기본설정</title>
+		<title><spring:message code='ezTask.jsh12' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -35,11 +35,11 @@
 	<body style="margin-left:10px;overflow:hidden;">
 		<form method="post" runat="server">
 			<br />
-			<h2 class="h2_dot">리스트 개수와 업무관리에서 보이는 기본 탭을 선택할 수 있습니다.</h2> 
+			<h2 class="h2_dot"><spring:message code='ezTask.jsh13' /></h2> 
 			<p>
 			<table class="content" style="width:240px;margin-left:15px;">
 				<tr>
-                	<th>리스트개수</th>
+                	<th><spring:message code='ezTask.jsh14' /></th>
                 		<td>
                     		<select id="listcount" name="pListCount" style="WIDTH: 100px">
                 				<option value='10' ${taskGeneralVO.listCount == '10' ? 'selected' : ''}>10</option>
@@ -48,11 +48,11 @@
                       			<option value='40' ${taskGeneralVO.listCount == '40' ? 'selected' : ''}>40</option>
                       			<option value='50' ${taskGeneralVO.listCount == '50' ? 'selected' : ''}>50</option>
                    			</select>
-                    	개
+                    	<spring:message code='ezTask.t110' />
                     	</td>
             	</tr>
             	<tr>
-                	<th>업무구분</th>
+                	<th><spring:message code='ezTask.jsh14' /></th>
                 		<td>
                 			<select id="selectTaskStatus" name="pSelectTask" style="WIDTH: 100px">
                 				<option value="taskprog" ${taskGeneralVO.selectTaskStatus == 'taskprog' ? 'selected' : ''}><spring:message code='ezTask.t2007' /></option>

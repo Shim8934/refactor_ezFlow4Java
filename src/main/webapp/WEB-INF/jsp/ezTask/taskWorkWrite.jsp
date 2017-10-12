@@ -5,7 +5,7 @@
 <!DOCTYPE html">
 <html>
 	<head>
-		<title>Insert title here</title>
+		<title><spring:message code='ezTask.lhj06'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>

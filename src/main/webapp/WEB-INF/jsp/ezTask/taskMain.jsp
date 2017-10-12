@@ -30,7 +30,8 @@
 			var pagecount = 0;
 			var allCnt = 0;
 			var currentpage = 0;
-			var pagesize = 10;
+			var pagesize = "${taskGeneralVO.listCount}";
+			var changeTab = "${taskGeneralVO.selectTaskStatus}";
 			var isrefresh = false;
 			var selectelem = null;
 			var initdate = "";
@@ -53,7 +54,13 @@
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 
 		        document.getElementById("list").style.height = height + "px";
-		        ChangeTab(document.getElementById("1tab1"));
+		        if (changeTab == "taskprog") {
+			        ChangeTab(document.getElementById("1tab1"));
+			        $("#1tab1").click();
+		        } else {
+		        	ChangeTab(document.getElementById("1tab2"));
+		        	$("#1tab2").click();
+		        }
 		        selectelem = "";
 		    }
 		    
@@ -439,8 +446,11 @@
 					        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
 						}
 			        }
-				}
 
+					if (taskstatus == '4' && completerate == '0') {
+						$(".bar[taskid=taskProgressBar" + i + "]").find(".percentCount").css("color", delayColor);
+					}
+				}
 			    if (onTaskCount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
 			    }
@@ -457,6 +467,7 @@
 				}
 
 				if (taskstatus == '4') {
+					$(".bar[taskid='" + barID + "']").find("div[class=percentCount]").css("color", delayColor);
 					$(".bar[taskid='" + barID + "']").LineProgressbar({
 						percentage: completerate,
 						fillBackgroundColor: delayColor,
