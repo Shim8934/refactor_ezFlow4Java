@@ -3,11 +3,13 @@ function onDragEnter(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 }
+
 function onDragOver(evt) {
     evt.dataTransfer.dropEffect = "copy";
     evt.stopPropagation();
     evt.preventDefault();
 }
+
 function onDrop(evt) {	
     file = new Array;
     
@@ -15,6 +17,7 @@ function onDrop(evt) {
         evt.stopPropagation();
         evt.preventDefault();
     }   
+    
     if (isfileup) {    	
         alert(strLang258);
         return;
@@ -47,7 +50,7 @@ function onDrop(evt) {
     fileupload();
 }
 
-function fileUploadStart(){
+function fileUploadStart() {
     var ua = navigator.userAgent;
     
     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
@@ -55,6 +58,7 @@ function fileUploadStart(){
     }
     
 	var oTable = document.getElementById("filelist");
+	
 	if (oTable == null) {
 		oTable = document.createElement("TABLE");
 	    oTable.style.width = "100%";
@@ -83,24 +87,23 @@ function uploadComplete(evt) {
 }
 
 function uploadFailed(evt) {
-    alert("There was an error attempting to upload the file.");
+    alert('<spring:message code="ezPoll.t164"/>');
 }
 
 function uploadCanceled(evt) {
-    alert("The upload has been canceled by the user or the browser dropped the connection.");
+    alert('<spring:message code="ezPoll.t165"/>');
 }
 
 function filedelete(r) {
     var filecnt = document.getElementById("filelist").childNodes.length;
     var pBoardID = window.parent.pBoardID;
     var strRet = "";
-    var fileinfo = r.getAttribute("_path");
-    //console.log("Checking fileinfo: " + fileinfo);
+    var fileinfo = r.getAttribute("_path");    
     var isFileDelete = false;    
     var i = r.parentNode.parentNode.rowIndex;
     document.getElementById("filelist").deleteRow(i);
     
-    //delete file on server
+    //Send delete file request to server
     var fd = new FormData();
     fd.append("fileToDelete", fileinfo);
     xhr.open("POST", "/ezPoll/deleteFile.do");
@@ -132,6 +135,7 @@ function setAttachFileInfo1(strXML) {
         alert(strLang28);
         return;
     }     
+    
     var xml = loadXMLString(strXML);  
     
     try {    	
@@ -184,6 +188,7 @@ function setAttachFileInfo1(strXML) {
                 else {
                     fileSize = fileSize + "B";
                 }
+                
                 var strFileSize = fileinfo.split("/")[1] + "(" + fileSize + ")";
                 objTd2.innerHTML = strFileSize;
                 objTr.appendChild(objTd2);
@@ -192,8 +197,12 @@ function setAttachFileInfo1(strXML) {
             else
                 extCheck = true;          
         }
-        if (extCheck)
+        
+        if (extCheck) {
             alert(strLang267);
+        }
     }
-    catch (e) { alert("returnvalue :: " + e.description); }
+    catch (e) { 
+    	alert("returnvalue :: " + e.description); 
+    }
 }
