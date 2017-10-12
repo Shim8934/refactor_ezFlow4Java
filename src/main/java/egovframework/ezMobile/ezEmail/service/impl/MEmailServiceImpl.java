@@ -185,7 +185,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				subject = (subject != null) ? subject : "";
 				
 				if(subject.equals("")) {
-					subject = "제목 없음";
+					subject = egovMessageSource.getMessage("ezEmail.kms03", locale);					
 				}
 				
 				messageJson.put("subject",subject);

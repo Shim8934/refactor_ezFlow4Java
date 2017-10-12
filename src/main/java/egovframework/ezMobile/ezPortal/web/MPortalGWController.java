@@ -32,6 +32,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
@@ -122,6 +123,13 @@ public class MPortalGWController extends EgovFileMngUtil {
 				//안읽은메일 리스트
 				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 				Locale locale = new Locale(ld);
+				
+				MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
+				if ( opt.getLang().equals("1") ) {
+					locale = new Locale("ko");	
+				} else if ( opt.getLang().equals("3") ) {
+					locale = new Locale("ja");
+				}
 				
 				JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
 				
