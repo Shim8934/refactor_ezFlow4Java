@@ -37,7 +37,7 @@
 				<img src="/images/group.png" height="16" width="16" style="float: left; display: block; padding-top: 5px; padding-left: 8px;">
 				<div style="float: left; display: block;padding-top: 5px; padding-left: 5px;"><c:out value='${totalVotesForOption}'/></div>
 			</div>	
-			<div style="height:359px; overflow: auto;">
+			<div style="height:300px; overflow: auto;">
 				<table border=1 style="width : 100%; border-color: grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">

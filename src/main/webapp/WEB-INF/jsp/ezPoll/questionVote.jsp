@@ -1968,7 +1968,7 @@
 				  </div>
 				  <c:if test="${curentUser == question.creator || adminPrivilege == 1}">
 					  <div style="float: right; display: block;" id="_editVote">
-					  		<img src="/images/edit1600.png" style="display:inline-block;float:left; height:25px;width:25px;padding-top: 12px;" onclick="voteEdit()">
+					  		<img src="/images/edit1600.png" style="display:inline-block;float:left; height:25px;width:25px;padding-top: 12px; cursor: pointer;" onclick="voteEdit()">
 					  </div>
 				  </c:if>
 			</div>
