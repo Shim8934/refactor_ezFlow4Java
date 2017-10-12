@@ -177,6 +177,16 @@ function SaveFormInfo() {
         document.getElementById("1tab4").click();
         return;
     }
+    
+  //자동분류 XML
+    var arrFormAutoRule = MakeFormAutoRuleXML();
+    if (arrFormAutoRule[0] == "TRUE") {
+        formAutoRule = arrFormAutoRule[1];
+        formAutoRuleLine = arrFormAutoRule[2];
+    } else {
+        formAutoRule = "";
+        formAutoRuleLine = "";
+    }
 
     //// 고정수신처정보 XML로 가져오기
     var arrFormRecevGroup = MakeFormRecevGroupXML();
@@ -201,6 +211,8 @@ function SaveFormInfo() {
 			formInfo   : formInfo,
 			formMHT    : formMht,
 			formConn   : formConn,
+			formAutoRule     : formAutoRule,
+			formAutoRuleLine : formAutoRuleLine,
 			formWorkFlow : formWorkFlow,
 			formRecevGroup   : formRecevGroup
     	},
@@ -216,10 +228,20 @@ function MakeFormInfoXML() {
     var pErrorMsg = "";
     var retValue = new Array();
 
-    if (tbFormName.value.replace(/ /gi, "") == "") {
+    if (document.getElementById("tbFormName").value.replace(/ /gi, "") == "") {
         pDataCheck = false;
         pErrorMsg = strLang1010;
-    }   
+    }
+    
+    if (document.getElementById("setAutoItemCode").checked && (document.getElementById("tbItemCode").value == "" || document.getElementById("tbItemName").value == "")) {
+        pDataCheck = false;
+        if (pErrorMsg == "") {
+            pErrorMsg = strLang1011;
+        }
+        else {
+            pErrorMsg = pErrorMsg + "<br>" + strLang1011;
+        }
+    }
 
     if (pDataCheck) {
         retValue[0] = "TRUE";
@@ -243,10 +265,25 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "FormDescript", tbDescript.value); // 양식설명
     createNodeAndInsertText(xmlpara, objNode, "FormKind", selFormKind.value); // 양식종류
     
-    if (document.getElementById('setConnFlag').checked)
+    if (document.getElementById("setAutoItemCode").checked) {
+        createNodeAndInsertText(xmlpara, objNode, "USEFLAG", "Y"); 
+    } else {
+        createNodeAndInsertText(xmlpara, objNode, "USEFLAG", "N"); 
+    }
+    
+    if (document.getElementById('setConnFlag').checked) {
         createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "Y"); // 연동양식 체크 
-    else
+    } else {
         createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
+    }
+    
+    createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
+    createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);
+    createNodeAndInsertText(xmlpara, objNode, "SECURITYLEVEL", document.getElementById("securitylevel").value);
+    createNodeAndInsertText(xmlpara, objNode, "ISPUBLIC", document.getElementById("isPublic").value);
+    createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", document.getElementById("tbItemCode").value);
+    createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", document.getElementById("tbItemName").value);
+    createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", document.getElementById("tbItemName2").value);
     
     return getXmlString(xmlpara.childNodes[0]);
 }
@@ -470,6 +507,7 @@ function MakeFormRecevGroupXML_Detail() {
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, objNode2, "DATA", "");
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTID", GetAttribute(selRow[i], "data1"));
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTSN", (i + 1));
+            createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "USERID", GetAttribute(selRow[i], "data2"));
         }
     }
     
