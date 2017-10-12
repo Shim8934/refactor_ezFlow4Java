@@ -5,7 +5,7 @@
 <!DOCTYPE html">
 <html>
 	<head>
-		<title>Insert title here</title>
+		<title><spring:message code='ezTask.lhj06' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
@@ -141,7 +141,7 @@
 		<div id="printScreen" style="display: none">
 			<table class="content">
 				<tr>
-					<td class="popup_title_txt"><img src="/images/popup_title_icon.gif" class="popup_title_img"><spring:message code='ezTask.lhj06' /></td>
+					<td colspan="2" class="popup_title_txt"><img src="/images/popup_title_icon.gif" class="popup_title_img"><spring:message code='ezTask.lhj06' /></td>
 				</tr>
 				<tr style="width:100%;">
 					<td colspan="2"><div id="printDocument" style="padding-right: 5px; padding-left: 5px; padding-bottom: 5px; width: 100%; padding-top: 5px"></div></td>
