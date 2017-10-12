@@ -524,11 +524,14 @@
 	        
 	        if (document.getElementById("set_Target").selectedIndex == 1) {
 	            if (document.getElementById("select_YN").value != "YES") {
-	            	alert('<spring:message code="ezQuestion.t432" />');
-	                return false;
+	            	if (mode != "modify") {
+		            	alert('<spring:message code="ezQuestion.t432" />');
+		                return false;
+	            	}	            	
+	            	document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
 	            }
 	        }
-	        
+	       /*  && mode != "modify" */
 	        if (checkOption() <= 0) {	        	
 	        	alert('<spring:message code="ezPoll.t148"/>');
 	        	document.getElementById("option1").focus();

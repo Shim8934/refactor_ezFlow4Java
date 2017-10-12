@@ -38,6 +38,7 @@
 			var votedUsers 				= ${votedUsers};
 			var window_open1			= null;		
 			var window_open2			= null;
+			var window_open3			= null;
 			var numberOptions 			= "<c:out value='${numberOfOptions}'/>";
 			var votesArr 				= [];	
 			var stickerIndex 			= null;
@@ -301,6 +302,10 @@
 			            		document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
 			            	}			            	
 			            }
+			            
+			    		if (window_open2 != null && !window_open2.closed) {	
+			    			window_open2.location.reload();
+				    	}
 				    });			        		        
 			        
 			        stompClient.subscribe('/reply/editQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
@@ -444,7 +449,11 @@
 				        		
 				        		updateGraph();
 				        	}
-			        	}			        	
+			        	}
+			        	
+			    		if (window_open3 != null && !window_open3.closed) {	
+			    			window_open3.location.reload();
+				    	}
 			        });		        
 			    });
 			 }
@@ -636,7 +645,12 @@
 		    
 		    function displayVotedUser(pQstID, pOptId) {		    		    
 		    	var feature = GetOpenPosition(420, 438);
-		    	window_open2 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=438px,width=350px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    	
+ 		    	if (window_open3 != null && !window_open3.closed) {		    		
+ 		    		window_open3.close();
+		    	}
+		    	
+		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=438px,width=350px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 		    
 		    function finishVote() {	    	

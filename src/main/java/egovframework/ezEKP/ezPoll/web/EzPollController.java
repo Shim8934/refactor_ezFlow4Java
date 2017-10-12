@@ -1597,7 +1597,12 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		else {	
 			Document doc = commonUtil.convertStringToDocument(StrXmlRange);
-			int pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();	
+			int pDeptCnt = 0;
+			int pUserCnt = 0;
+			
+			if (doc.getElementsByTagName("DEPT").item(0) != null) {
+				pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
+			}				
 			
 			for (int j = 0; j < pDeptCnt; j++) {
 				String deptID = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(j).getAttributes().getNamedItem("id").getTextContent();
@@ -1605,8 +1610,10 @@ public class EzPollController extends EgovFileMngUtil {
 				pollQuestionVO.setReceiverType("dept");
 				ezPollService.insertQustReceivers(pollQuestionVO);
 			}	
-		
-			int pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
+			
+			if (doc.getElementsByTagName("MEMBER").item(0) != null) {				
+				pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
+			}				
 			
 			for (int i = 0; i < pUserCnt; i++) {
 				String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
