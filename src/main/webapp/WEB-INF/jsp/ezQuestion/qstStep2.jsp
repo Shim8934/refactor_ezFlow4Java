@@ -718,7 +718,7 @@
                         		} else if (k != 0 && j == 0) {
                             		oTh = document.createElement("th");
                             		oTh.setAttribute("style", "background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;");
-                            		oTh.innerHTML = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("TITLE")[k - 1])
+                            		oTh.innerHTML = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTITLE")[k - 1])
                             		oTr.appendChild(oTh);
                         		} else {
                             		oTd = document.createElement("td");
