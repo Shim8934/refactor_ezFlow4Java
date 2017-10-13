@@ -1195,7 +1195,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
-		List<ResGetScheduleVO> getScheduleList = getScheduleApprNormalList(ownerID, companyID, sDate, eDate, userId, deptId, writerName, approveType, tenantID, check);
+		List<ResGetScheduleVO> getScheduleList = getScheduleApprNormalList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check);
 		
 		
 		for (ResGetScheduleVO resVO : getScheduleList) {
@@ -1211,7 +1211,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
 			
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
-		List<ResGetScheduleVO> getScheduleListRept = getScheduleApprRepetList(ownerID, companyID, sDate, eDate, userId, deptId, writerName, approveType, tenantID, check);
+		List<ResGetScheduleVO> getScheduleListRept = getScheduleApprRepetList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check);
 		
 		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
 		
@@ -1320,6 +1320,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		LOGGER.debug("resultList: " + getScheduleList);		
 		
 		result.put("scheduleList", getScheduleList);
+		result.put("count", getScheduleList.size());
 		result.put("repeatYn", repeatYn);
 		LOGGER.debug("getScheduleList End");
 		return result;

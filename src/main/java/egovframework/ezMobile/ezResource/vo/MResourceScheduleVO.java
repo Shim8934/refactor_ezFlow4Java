@@ -4,9 +4,9 @@ public class MResourceScheduleVO {
 	/** 자원예약게시판ID*/
 	private String ownerId;
 	/** 순번*/
-	private int num;
+	private String num;
 	/** parent일정번호*/
-	private int pNum;
+	private String pNum;
 	/** 회사Id*/
 	private String companyId;
 	/** 등록자사번*/
@@ -75,8 +75,16 @@ public class MResourceScheduleVO {
 	private String resApproveFlag;
 	/** 중복여부 값*/
 	private String repeatYn;
-
+	/** 승인권한 여부 값*/
+	private String apprAuthYn;
 	
+	
+	public String getApprAuthYn() {
+		return apprAuthYn;
+	}
+	public void setApprAuthYn(String apprAuthYn) {
+		this.apprAuthYn = apprAuthYn;
+	}
 	public String getBrdNm2() {
 		return brdNm2;
 	}
@@ -139,16 +147,16 @@ public class MResourceScheduleVO {
 	/** 구분아이디*/
 	private String tenantId;
 	
-	public int getNum() {
+	public String getNum() {
 		return num;
 	}
-	public void setNum(int num) {
+	public void setNum(String num) {
 		this.num = num;
 	}
-	public int getpNum() {
+	public String getpNum() {
 		return pNum;
 	}
-	public void setpNum(int pNum) {
+	public void setpNum(String pNum) {
 		this.pNum = pNum;
 	}
 	public String getOwnerId() {

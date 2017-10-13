@@ -654,7 +654,7 @@
      			( #v_POWNERID#, #v_PNUM#, #v_PPNUM#, #v_PCOMPANYID#, #v_PWRITERID#, #v_PDEPTNM#, #v_POWNERNM#, #v_PTITLE#
      			, #v_PLOCATION#, #v_PTIMEDISPLAY#, STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T'), STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T')
      			, #v_PALLDAY#, #v_PALERTTIME#, #v_PCONTENT#, #v_PIMPORTANCE#, IFNULL(#v_PREFLAG#,'0'), IFNULL(#v_PGRESFLAG#,' '), STR_TO_DATE(#v_PWRITEDAY#, '%Y-%m-%d %T')
-     			, #v_PENTRYLIST#, IFNULL(#v_PCHARACTERID#,0), #v_PATTACHFLAG#, #v_PAPROVEFLAG#, #v_PSCHEDULEID#, #tenantID# )
+     			, #v_PENTRYLIST#, IFNULL(#v_PCHARACTERID#,0), #v_PATTACHFLAG#, IFNULL(#v_PAPROVEFLAG#,'0'), #v_PSCHEDULEID#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -674,7 +674,7 @@
 		</isNotEmpty>
 		<![CDATA[
                 ALERTTIME = #v_PALERTTIME#,
-                APPROVEFLAG = #v_PAPPROVEFLAG#,              
+                APPROVEFLAG = IFNULL(#v_PAPPROVEFLAG#,'0'),              
                 IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
            		COMPANYID = #v_PCOMPANYID#
@@ -1323,15 +1323,13 @@
 			AND 
 				A.APPROVEFLAG = #v_APPROVETYPE#
 			</isNotEmpty>	
-			<![CDATA[	
-			AND
-				REFLAG = '0'
-						]]>
 			<isNotEmpty property="v_WRITERNAME">
 			AND 
                 ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )	    
 			</isNotEmpty>
 			<![CDATA[
+			AND
+				REFLAG = '0'
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
