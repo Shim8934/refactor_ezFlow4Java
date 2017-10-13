@@ -557,7 +557,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
 				subject = (subject != null) ? subject : "";
-						
+				
+				if(subject == null || subject.trim().equals("")){
+					subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+				}
+								
 				messageJson.put("subject",subject);
 				
 				// received date
