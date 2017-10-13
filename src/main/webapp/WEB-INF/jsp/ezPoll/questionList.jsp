@@ -13,8 +13,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
+		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>		
 		<script type="text/javascript" src="/js/ezPoll/page_render.js"></script>	
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style>
@@ -23,13 +22,17 @@
 			}
 		</style>
 		
-		<script type="text/javascript">		 	
+		<script type="text/javascript">	
+			var strLang39		  = "<spring:message code = 'ezPoll.t167'/>";
+			var strLang40 		  = "<spring:message code = 'ezPoll.t168'/>";
+			var strLang41 		  = "<spring:message code = 'ezPoll.t169'/>";
+			var strLang42 		  = "<spring:message code = 'ezPoll.t170'/>";
 			var currentPage		  = ${currPage};  		
 			var totalPages 		  = ${totalPages}; 		
 		    var totalQuestions 	  = ${totalQuestions};  
 		    var blockSize 		  = 10;
-		    var status_processing = "<spring:message code = 'ezPoll.t101' />";
-		    var status_finish 	  = "<spring:message code = 'ezPoll.t102' />";		   
+		    var status_processing = "<spring:message code = 'ezPoll.t101'/>";
+		    var status_finish 	  = "<spring:message code = 'ezPoll.t102'/>";		   
 			var brdID			  = ${brdID};	
 			var searchParam	  	  = "<c:out value='${strSearch}'/>";
 			var userID 			  = "<c:out value='${userID}'/>";
