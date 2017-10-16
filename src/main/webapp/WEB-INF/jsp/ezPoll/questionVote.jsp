@@ -1192,7 +1192,7 @@
 					    	imgForinnerDiv1.setAttribute("width", "60");	
 					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];	
-				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo);   
+				    		imgForinnerDiv1.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);   
 				    		imgForinnerDiv1.onclick = function() { downloadFileInCmt(this); };
 				    	}
 				    	else {				    		
@@ -1354,7 +1354,7 @@
 		        }     
 		    	
 		        var xml = loadXMLString(strXML); 	        	        
-		    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		    	
+		    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		
 		    	var orgFileName = fileinfo.split("/")[1];		 	    	
 		    	var _ext = orgFileName.split('.').pop().toLowerCase();		 
 		    	var imagePreview = null;
@@ -1391,6 +1391,7 @@
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
 						else {
+							imagePreview.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);
 							imagePreview.setAttribute("_type", "images"); 
 						}
 		    		}
@@ -1406,6 +1407,7 @@
 						}
 						else {
 							imagePreview.setAttribute("_type", "images"); 
+							imagePreview.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
 		    		else {
@@ -1417,7 +1419,8 @@
 							imagePreview.parentElement.lastElementChild.setAttribute("style", "padding-left: 6px;");
 						}	
 						else {
-							imagePreview.setAttribute("_type", "images"); 
+							imagePreview.setAttribute("_type", "images");
+							imagePreview.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
 		    		
