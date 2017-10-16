@@ -759,7 +759,7 @@
 		        if (typeof (subCondition) == "undefined")
 		            subCondition = "";
 		
-		        var tempPageSize = "65530";
+		        var tempPageSize = PageSize;
 		        var tempPageNum = "1";
 		        if (AllFG != 1) {
 		            tempPageSize = PageSize;
@@ -780,7 +780,7 @@
 			        if (DocListType == "DocList") {
 			            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-			                "&OO=" + encodeURI(OrderOption);
+			                "&OO=" + encodeURI(OrderOption) + "&allFG=" + AllFG ;
 		        	} else {
 		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
@@ -792,7 +792,7 @@
 		                "&P19=" + encodeURI(condition[19]) + "&P20=" + encodeURI(condition[20]) + "&P21=" + encodeURI(condition[21]) +
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition);
+		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition)+ "&allFG=" + AllFG ;
 		             }
 		        	window.frames["saveExcel"].location.href = url;
                 }

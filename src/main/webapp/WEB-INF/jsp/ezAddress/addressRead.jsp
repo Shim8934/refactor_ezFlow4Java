@@ -140,64 +140,64 @@
 		    <table class="popuplist" style="width:100%">
 		          <tr>
 		            <th><spring:message code='ezAddress.t124' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName">${addressInfo.sName}</span></td>
+		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
 		            <th><spring:message code='ezAddress.t286' /></th>
-		            <td title="<spring:message code='ezAddress.t287' />" style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator">${addressInfo.creatorName}</span></span></td>
+		            <td title="<spring:message code='ezAddress.t287' />" style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t51' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCompany">${addressInfo.sCompany}</span></td>
+		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCompany"><c:out value='${addressInfo.sCompany}' /></span></td>
 		            <th><spring:message code='ezAddress.t288' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCreateDate">${addressInfo.createDate}</span></td>
+		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t54' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextDept">${addressInfo.sDept}</span></td>
+		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextDept"><c:out value='${addressInfo.sDept}' /></span></td>
 		            <th><spring:message code='ezAddress.t289' /></th>
-		            <td title="<spring:message code='ezAddress.t287' />" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"> <span onClick="show_personinfo(1)" style="cursor:pointer"><span id="TextModifier">${addressInfo.modifierName}</span></span></td>
+		            <td title="<spring:message code='ezAddress.t287' />" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"> <span onClick="show_personinfo(1)" style="cursor:pointer"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t52' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextTitle">${addressInfo.sTitle}</span></td>
+		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextTitle"><c:out value='${addressInfo.sTitle}' /></span></td>
 		            <th><spring:message code='ezAddress.t290' /></th>
-		            <td style="white-space:nowrap;"><span id="TextModifyDate">${addressInfo.modifyDate}</span></td>
+		            <td style="white-space:nowrap;"><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t291' /></th>
-		            <td colspan="3" title="<spring:message code='ezAddress.t285' />" style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:blue;text-decoration:underline;"><span onClick="send_email()"><span id="TextEmail" style="cursor:pointer;">${addressInfo.sEmail}</span></span></td>
+		            <td colspan="3" title="<spring:message code='ezAddress.t285' />" style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:blue;text-decoration:underline;"><span onClick="send_email()"><span id="TextEmail" style="cursor:pointer;"><c:out value='${addressInfo.sEmail}' /></span></span></td>
 		          </tr>
 		          <tr style="height:10px;">
 		              <td colspan="4" style="height:10px;border-left:1px solid #ffffff;border-right:1px solid #ffffff;">&nbsp;</td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t192' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCompanyPhone">${addressInfo.sCompanyPhone}</span></td>
+		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCompanyPhone"><c:out value='${addressInfo.sCompanyPhone}' /></span></td>
 		            <th><spring:message code='ezAddress.t189' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextMobile">${addressInfo.sMobile}</span></td>
+		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextMobile"><c:out value='${addressInfo.sMobile}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t292' /></th>
-		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextFax" style="width:185px">${addressInfo.sFax}</span></td>
+		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextFax" style="width:185px"><c:out value='${addressInfo.sFax}' /></span></td>
 		            <th><spring:message code='ezAddress.t293' /></th>
-		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="<spring:message code='ezAddress.t294' />" ><span onClick="open_homepage()" style="cursor:pointer"><span id="TextHomePage" style="width:100%">${addressInfo.sHomePage}</span></span></td>
+		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="<spring:message code='ezAddress.t294' />" ><span onClick="open_homepage()" style="cursor:pointer"><span id="TextHomePage" style="width:100%"><c:out value='${addressInfo.sHomePage}' /></span></span></td>
 		          </tr>
 		          <tr>
 		            <th rowSpan="2"><spring:message code='ezAddress.t295' /></th>
-		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextComZip" style="width:70px" ReadOnly="true">${addressInfo.sCompanyZip}</span></td>
+		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextComZip" style="width:70px" ReadOnly="true"><c:out value='${addressInfo.sCompanyZip}' /></span></td>
 		          </tr>
 		          <tr>
-		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextComAddr" style="width:100%">${addressInfo.sCompanyAddr}</span></td>
+		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextComAddr" style="width:100%"><c:out value='${addressInfo.sCompanyAddr}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th rowSpan="2"><spring:message code='ezAddress.t296' /></th>
-		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextHomeZip" style="width:70px" ReadOnly="true">${addressInfo.sHomeZip}</span></td>
+		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextHomeZip" style="width:70px" ReadOnly="true"><c:out value='${addressInfo.sHomeZip}' /></span></td>
 		          </tr>
 		          <tr>
-		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextHomeAddr" style="width:100%">${addressInfo.sHomeAddr}</span></td>
+		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextHomeAddr" style="width:100%"><c:out value='${addressInfo.sHomeAddr}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t91' /></th>
-		            <td colSpan="3" style="height:50px;overflow:auto;"><div style="height:85px;overflow:auto"><span id="TextMemo" style="width:100%;height:60px" TextMode="MultiLine">${addressInfo.sMemo}</span></div></td>
+		            <td colSpan="3" style="height:50px;overflow:auto;"><div style="height:85px;overflow:auto"><span id="TextMemo" style="width:100%;height:60px" TextMode="MultiLine"><c:out value='${addressInfo.sMemo}' /></span></div></td>
 		          </tr>
 		        </table>
 		  </div>

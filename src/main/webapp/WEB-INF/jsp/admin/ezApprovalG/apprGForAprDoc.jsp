@@ -28,6 +28,7 @@
 	        var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
 	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        var SearchCond = new Array();
+	        var type = "<c:out value ='${type}' />";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -41,7 +42,11 @@
 	            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 	            var reheight = document.documentElement.clientHeight - parseInt(height);
 	            document.getElementById('div_AprLine').style.height = reheight + "px";
-	            document.getElementById("SCompID").value = pCompanyID;
+	            
+	            if (type == 'admin') {
+	            	document.getElementById("SCompID").value = pCompanyID;
+	            }
+	            
 	            GetDocList();
 	        });
 	
@@ -695,7 +700,7 @@
 			        ezStatisticsSearch_Cross_dialogArguments[0] = para;
 			        ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 			
-			        var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(500, 350));
+			        var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
 			        try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 			        }
 			    } else {
@@ -794,12 +799,14 @@
 
     	<div id="mainmenu">
         	<ul>
+        		<c:if test="${type == 'admin' }">
             	<b><spring:message code = 'ezApprovalG.t1276' /></b>
 	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 		        </select><br /><br />
+		        </c:if>
             	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
         	</ul>
     	</div>
@@ -817,7 +824,7 @@
             		<span onclick="pDocInfoValue='2'; MM_swapImagesub('2', event);Recipent_onclick()">
             			<c:choose>
             				<c:when test="${approvalFlag == 'S' }">
-            					<spring:message code = 'ezApprovalG.t999932' />            					
+            					<spring:message code = 'ezApprovalG.t999932' />
             				</c:when>
             				<c:otherwise>
             					<spring:message code = 'ezApprovalG.t950' />

@@ -51,10 +51,6 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        window.onload = function () {
-	            var ua = navigator.userAgent;
-	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                KeEventControl(document.getElementById("Cabinetkeyword"));
-	            }
 	            try {
 	                RetValue = parent.selectcabinet_cross_dialogArguments[0];
 	                ReturnFunction = parent.selectcabinet_cross_dialogArguments[1];

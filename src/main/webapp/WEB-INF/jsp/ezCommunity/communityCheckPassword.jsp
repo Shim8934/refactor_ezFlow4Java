@@ -72,17 +72,7 @@
 		        } catch (e) { }
 	
 		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
-				window.returnValue = "cancel";
-	
-			    try {
-			        var ua = navigator.userAgent;
-			        
-			        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			            KeEventControl(document.getElementById("inpPassword"));
-			        }
-			    }
-			    catch (e) { }
-			    
+				window.returnValue = "cancel";				    
 			}
 	
 			function KeEventControl(obj) {

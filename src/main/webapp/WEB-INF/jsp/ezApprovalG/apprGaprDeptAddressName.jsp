@@ -45,14 +45,6 @@
 		    var ReturnFunction;
 		    window.onload = function () {
 		        document.getElementById('TxtAprDeptTempletName').focus();
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("TxtAprDeptTempletName"));
-		            }
-		        }
-		        catch (e)
-		        { }
 		
 		        try {
 		            RetValue = parent.aprdeptaddressname_cross_dialogArguments[0];

@@ -1628,11 +1628,11 @@ function SendDraftMappingSign(ret) {
 
         field = message.GetListItem(fields, psigncell);
         
-        if (singImageType == "NAME") {
-        	if (message.GetListItem(fields, "1sign1")) {
+       if (singImageType == "IMAGE") {
+       	if (message.GetListItem(fields, "1sign1")) {
         		message.GetListItem(fields, "1sign1").height = "65";
-        	}
-        }
+      	}
+     }
         
         var signWidth = parseInt(field.offsetWidth) - 4;
         var signHeight = parseInt(field.offsetHeight) - 4;
@@ -2009,6 +2009,10 @@ function SetBtnStateTrue() {
 
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
             setMenuBar("btnSelForm", false);
+        }
+        
+        if (pDraftFlag == "DRAFT" || DocSN != "") {
+            setMenuBar("btnSaveServer", true);
         }
     } catch (e) {
         alert("SetBtnStateTrue()" + e.description);
@@ -2462,7 +2466,7 @@ function openAaprDocAttachUI() {
             if(approvalFlag == "G") {
             	DivPopUpShow(820, 500, url);
             } else {
-            	DivPopUpShow(1050, 660, url);
+            	DivPopUpShow(1050, 550, url);
             }
         } else {
         	var feature;
@@ -2749,9 +2753,34 @@ function GetAprDocFormID() {
     	});
 
         pFormID = SelectSingleNodeValueNew(loadXMLString(result), "DATA/FORMID");
+        
+        if (approvalFlag == "S") {
+        	if (pFormID == "") {
+            	isTmpDocID = MakeTmp2Ing(DocSN)
+                pDocID = isTmpDocID;
+                GetAprDocFormID();
+            }
+        }
+        
     } catch (e) {
         alert("GetAprDocFormID()" + e.description);
     }
+}
+
+function MakeTmp2Ing(tmpDocID) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/makeTmp2Ing.do",
+		data : {
+			tmpDocID : tmpDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+    return  getNodeText(loadXMLString(result).documentElement);
 }
 
 function trim(parm_str) {
@@ -2974,11 +3003,17 @@ function OpenInformationUI_Complete() {
 function getDocInfo() {
 	var result = "";
 	
+	if (isUsed == "reuse") {
+		url = "/ezApprovalG/getDocInfo.do?isUsed=" + isUsed + "&beforeDocID=" + beforeDocID;
+	} else {
+		url = "/ezApprovalG/getDocInfo.do";
+	}
+	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getDocInfo.do",
+		url : url,
 		data : {
 			docID : pDocID
 		},
@@ -3132,6 +3167,53 @@ function setDocNumFormat(pPrefix) {
                 numHeader += mdate + Tail;
                 
                 break;
+                
+            /* 단암 양식*/
+            case "D1":
+            	numHeader += "계약" + Tail;
+        		break;
+            case "D2":
+            	numHeader += "교육기안" + Tail;
+        		break;
+            case "D3":
+            	numHeader += "교육" + Tail;
+        		break;
+            case "D4":
+            	numHeader += "구매" + Tail;
+        		break;
+            case "D5":
+            	numHeader += "제" + Tail;
+        		break;
+            case "D6":
+            	numHeader += "기구" + Tail;
+        		break;
+            case "D7":
+            	numHeader += "기안" + Tail;
+        		break;
+            case "D8":
+            	numHeader += "제 문서 신청" + Tail;
+        		break;
+            case "D9":
+            	numHeader += "보고" + Tail;
+        		break;
+            case "DA":
+            	numHeader += "제조-보고" + Tail;
+        		break;
+            case "DB":
+            	numHeader += "연장근무보고서" + Tail;
+        		break;
+            case "DC":
+            	numHeader += "출장" + Tail;
+        		break;
+            case "DD":
+            	numHeader += "해외출장" + Tail;
+        		break;
+            case "DE":
+            	numHeader += "품질검사" + Tail;
+        		break;
+            case "DF":
+            	numHeader += "휴가" + Tail;
+            	break;
 
             default:
                 numHeader += fieldValue;
@@ -3170,8 +3252,8 @@ function setDrafterAddress() {
     message.DocumentBodySetAttribute("lastKyulName", lastKyulName);
     message.DocumentBodySetAttribute("lastKyuljikwee", lastKyuljiwee);
 }
-function setFirstDrafter() {
-    var ret = getAutoAprLine();
+function setFirstDrafter(type, beforDocID) {
+    var ret = getAutoAprLine(type, beforDocID);
 
     if (ret[0] != "NONE") {
         IsSkipDrafter = "FALSE";
@@ -3745,6 +3827,11 @@ function SaveTMPDocInfo(AutoSave) {
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+        
+        if (isUsed == "reuse") {
+            createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
+            createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
+        }
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);

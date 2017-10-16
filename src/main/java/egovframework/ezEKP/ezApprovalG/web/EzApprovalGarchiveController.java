@@ -1200,7 +1200,7 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String result = "FALSE";
-		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
 		Document resultXML = commonUtil.convertStringToDocument(strXml);
 		
 		if(resultXML.getElementsByTagName("HREF").getLength()>0){
@@ -1329,7 +1329,7 @@ public class EzApprovalGarchiveController {
 		String docID = xmlDom.getElementsByTagName("DocID").item(0).getTextContent();
 		String mode =  xmlDom.getElementsByTagName("mode").item(0).getTextContent();
 		String fields =  xmlDom.getElementsByTagName("fields").item(0).getTextContent();
-		String result = ezApprovalGService.getDocInfo(docID, mode, fields, userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.getDocInfo(docID, mode, fields, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
 		
 		logger.debug("<<<docID : " + docID);
 		logger.debug("<<<mode : " + mode);
@@ -1766,11 +1766,8 @@ public class EzApprovalGarchiveController {
 		
 		String pSubQuery = "";
 		String p_UserLang = userInfo.getLang();
-		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10)
-        {
-
-            try
-            {
+		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10) {
+            try {
             	String TempQuery = "";
             	String ReturnQuery = "(1 = 1) ";
             	
@@ -1800,10 +1797,10 @@ public class EzApprovalGarchiveController {
                     }
                 }
                 if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-                    ReturnQuery += " AND STARTDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
                 }
                 if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-                    ReturnQuery += " AND STARTDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
                 }
                 if (TempQuery.indexOf("ENDDATEAF;") != -1) {
                     ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";

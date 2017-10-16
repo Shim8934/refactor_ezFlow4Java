@@ -114,23 +114,23 @@
 		    <table  class="content">
 		      <tr>
 		        <th><spring:message code='ezAddress.t304' /></th>
-		        <td><span id="TextName">${addressInfo.sName}</span></td>
+		        <td><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t286' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(0)"><span id="TextCreator">${addressInfo.creatorName}</span></td>
+		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(0)"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t288' /></th>
-		        <td><span id="TextCreateDate">${addressInfo.createDate}</span></td>
+		        <td><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t289' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(1)"><span id="TextModifier">${addressInfo.modifierName}</span></td>
+		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(1)"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t290' /></th>
-		        <td><span id="TextModifyDate">${addressInfo.modifyDate}</span></td>
+		        <td><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
 		      </tr>
 		    </table>
 		    <div class="nobox" style="margin-top:10px">

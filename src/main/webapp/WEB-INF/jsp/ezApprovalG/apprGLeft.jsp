@@ -251,7 +251,8 @@
 		                    convMain('1', '');
 		                    break;
 		                case "MYCONT":
-		                    cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>",'');
+		                    //cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>",'');
+		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'');
 		                    break;
 		                case "MYDRAFTCONT":
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:EXACT");
@@ -293,6 +294,9 @@
 		                    break;
 		                case "m10":
 		                    break;
+		                case "approvalForDoc":
+		                	window.open("/admin/ezApprovalG/forAprDoc.do?type=user", "right");
+		                	break;
 		                case "ApprovalConfig":
 		                    PresentOpen = "CONFIG";
 		                    window.open("/ezPersonal/ezApprovalConfig.do", "right");
@@ -307,12 +311,13 @@
 		    }
 		
 		    var localValue = "";
-		    function setPresentValue(tempValue) {
+ 		    function setPresentValue(tempValue) {
 		    	if(approvalFlag == 'G') {
-			        if (tempValue == "")
+			        if (tempValue == "") {
 			            tempValue = localValue;
-			        else
+			        } else {
 			            localValue = tempValue;
+			        }
 			        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
 			        try {
 			            if (CrossYN())
@@ -322,12 +327,25 @@
 			        }
 			        catch (e) { }
 		    	} else {
-		    	    if (tempValue == "")
+/* 		    	    if (tempValue == "")
 		    	        tempValue = localValue;
 		    	    else
-		    	        localValue = tempValue;
+		    	        localValue = tempValue;   */
+				        if (tempValue == "") {
+				            tempValue = localValue;
+				        } else {
+				            localValue = tempValue;
+				        }
+				        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
+				        try {
+				            if (CrossYN())
+				                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+				            else
+				                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+				        }
+				        catch (e) { }		    	        
 		    	}
-		    }
+		    } 
 		
 		    function convMain(listtype, SubQuery) {
 		        try {
@@ -773,6 +791,14 @@
 		                    PresentOpen = "DOC_ADMIN";
 		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
 		                    break;
+		                case "approvalForDoc_sub01":
+		                	PresentOpen = "DOC_ADMIN";
+		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do?type=user";
+		                	break;
+		                case "approvalForDoc_sub02":
+		                	PresentOpen = "DOC_ADMIN";
+		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
+		                	break;
 		            }
 		        } catch (e) { }
 		    }
@@ -877,11 +903,9 @@
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL2" onClick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL3" onClick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>
-
-				<c:if test="${approvalFlag == 'S'}"> 
+				<c:if test="${approvalFlag == 'S'}">
 				<li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.hyj04'/><span id="count99"></span></span></li>
-				</c:if>	
-
+				</c:if>
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
 
 	            <c:if test="${userInfoEnforce == '2'}">
@@ -893,7 +917,7 @@
 				<c:if test="${hideCabinet == '0'}">
 				<li class = "approvalG"><span style="width:100%;display:inline-block;" id="APPROVAL5" onClick="setPresentValue('<spring:message code='ezApprovalG.t257'/>');convMain('6','')"><img src="/images/ImgIcon/icon_senddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t257'/><span id=count6></span></span></li>
 				</c:if>
-				<c:if test="${approvalFlag == 'G'}"> 
+				<c:if test="${approvalFlag == 'G'}">
 				<c:if test="${infoXML != ''}">
 					<li><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL9" onClick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')" ><img src="/images/ImgIcon/icon_listsenddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1751'/></span></li>
 				</c:if>
@@ -904,8 +928,8 @@
 				</c:if>
 	            <li><span id="APPROVAL21" onClick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')" ><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t3000'/></span><span id=count21></span></li>
 			</ul>
-			<c:if test="${approvalFlag == 'G'}"> 
-				<c:if test="${hideCabinet == '0'}">	
+			<c:if test="${approvalFlag == 'G'}">
+				<c:if test="${hideCabinet == '0'}">
 			        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10010'/><span id="count99"></span></span></h2>
 			         <ul id="iconul">
 					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/></span></li>
@@ -915,7 +939,7 @@
 			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
 				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
-		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
+		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
 		        <ul>
 				</ul>
 			</c:if>
@@ -943,9 +967,9 @@
 				</c:choose>
 				<c:if test="${fn:indexOf(optGamsabu, userInfo.deptID) > -1}">
 					<li><span style="width:100%;display:inline-block;" onClick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')" ><spring:message code='ezApprovalG.t1517'/></span></li>
-				</c:if>						
+				</c:if>
 			</ul>
-			<c:if test="${approvalFlag == 'S'}"> 
+			<c:if test="${approvalFlag == 'S'}">
 			<h2><span id="ITEMCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 			<ul>
           	<c:forEach var="itemList" items="${itemList}" varStatus="status">
@@ -955,12 +979,12 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 20px; vertical-align: top; background-color: #ffffff;"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff;"></div>
             <h3><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>
-			<c:if test="${approvalFlag eq 'G'}"> 
-			<c:if test="${hideCabinet == '0'}">		
+			<c:if test="${approvalFlag eq 'G'}">
+			<c:if test="${hideCabinet == '0'}">
 			<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>
@@ -978,10 +1002,19 @@
 			</ul>
 			</c:if>
 			</c:if>
+			<c:if test="${approvalForDoc == 'Y'}">
+			<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'f=1')}">
+				<h2><span  style="width:100%;display:inline-block;" id="approvalForDoc" onClick="Open_Func(this)"><spring:message code='ezApprovalG.lhj13'/></span></h2>
+				<ul>
+					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub01" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj14'/></span></li>
+					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub02" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj15'/></span></li>
+				</ul>
+			</c:if>
+			</c:if>
 	        <h3><span  style="width:100%;display:inline-block;" id="ApprovalConfig" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t1800'/></span></h3>
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script> 
+		</script>
 	</body>
 </html>

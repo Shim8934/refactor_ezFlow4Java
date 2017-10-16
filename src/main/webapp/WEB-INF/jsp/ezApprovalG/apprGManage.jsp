@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Untitled Document</title>
+		<title><spring:message code='ezApprovalG.hyj02'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
@@ -1326,6 +1326,7 @@
 		    }
 		
 		    var SearchCond = new Array();
+
 		    var SQLPARADATA;
 		    function SearchCondi_onclick_Complete(returnvalue) {
 		        condition = returnvalue;
@@ -1412,18 +1413,21 @@
 			            TYPE += "APRENDDATE;";
 			            DATA += "<APRENDDATE>" + SearchCond[6] + "-" + SearchCond[7] + "-" + SearchCond[8] + "</APRENDDATE>";
 			        }
-			        
-			        if (SearchCond[21] != "")		// FormID
+
+			        if (SearchCond[21] != "" && SearchCond[21] !== undefined )		// FormID
 			        {
 			            TYPE += "FORMID;";
 			            DATA += "<FORMID>" + SearchCond[21] + "</FORMID>";
 			        }
 			
-			        if (SearchCond[23] != "")		// draftDeptName
+			        if (SearchCond[23] != "" && SearchCond[23] !== undefined )		// draftDeptName
 			        {
 			            TYPE += "WRITERDEPTNAME;";
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
+			        
+			        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+			        
 				} else {
 					 if (condition[0] != "") {
 					        TYPE += "DOCNO;"

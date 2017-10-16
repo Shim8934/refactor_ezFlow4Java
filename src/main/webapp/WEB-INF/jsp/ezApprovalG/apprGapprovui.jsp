@@ -218,17 +218,16 @@
 		    }
 		    function LoadNextDocument(tempString)
 		    {
-		        if (allFlag == "1")
+		        if (allFlag == "1") {
 		            getNextDocInfo();
-		        else if (allFlag == "2")
+		        } else if (allFlag == "2") {
 		            getNextDocList();
+		        }
 		
-		        if (NextDocID == "")
-		        {
-		            if (tempString == "")
+		        if (NextDocID == "") {
+		            if (tempString == "") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t3'/>";
-		            else
-		            {
+		            } else {
 		                tempString = tempString.replace("\n" + "<spring:message code='ezApprovalG.t2'/>", "");
 		                tempString = tempString.replace("\n\n" + "<spring:message code='ezApprovalG.t4'/>", "");
 		                tempString = tempString.replace("\n", "");
@@ -238,7 +237,8 @@
 		            window.parent.close();
 		            btnClose_onclick();
 		        } else {
-		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
+		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht")
+		            {
 		                openOtherApprovUI();
 		                return;
 		            }
@@ -467,7 +467,7 @@
 		    }
 		    function process_AfterOpen()
 		    {
-		        getCurApproverAprLine();
+		        getCurApproverAprLine("${isUsed}");
 		        pGubun = "8";
 		        
 		        if (approvalFlag == "S") {
@@ -876,11 +876,14 @@
 		        }
 		        openOpinionUI("BanSong", btnReject_option_Complete);
 		    }
+		    /**
+		    * '반송'
+		    */
 		    function btnReject_option_Complete(ret) {
 		        DivPopUpHidden();
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
-		            UpdateLineHistory();
+		            UpdateLineHistory(); // '변경내역' 업데이트
 		            var rtnVal = ExcuteInfo("BANSONG_BEFORE", "");
 		            if (!rtnVal) {
 		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
@@ -888,7 +891,7 @@
 		                return;
 		            }
 		            
-		            signInfo = putBansongSign();
+		            signInfo = putBansongSign(); // '서명' 관련 정보 출력
 
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
@@ -985,7 +988,7 @@
 		        var rtnVal = upDateAprLine();
 		        if(rtnVal == "TRUE")
 		        {
-		            getCurApproverAprLine();
+		            getCurApproverAprLine("${isUsed}");
 		            btnApprove_onclick();
 		        }
 		        else
@@ -1005,7 +1008,7 @@
 			            ReAprLineSingMapping(ret);
 		        	}
 		            SaveFile();
-		            getCurApproverAprLine();
+		            getCurApproverAprLine("${isUsed}");
 		        }
 		    }
 		    function btnModAprDept_onclick() {
@@ -1291,7 +1294,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1320,7 +1323,7 @@
 			                        SReAprLineSingMapping(ret);
 			                        IsSkipDrafter = "FALSE";
 			                        SaveFile();
-			                        getCurApproverAprLine();
+			                        getCurApproverAprLine("${isUsed}");
 			                    }
 			                    savexmlhttp = null;
 			                    savexmlhttp = createXMLHttpRequest();
@@ -1345,7 +1348,7 @@
 			                        btnSendDraftEnable = "true";
 			                        ReAprLineSingMapping(ret);
 			                        SaveFile();
-			                        getCurApproverAprLine();
+			                        getCurApproverAprLine("${isUsed}");
 			                    }
 			                    savexmlhttp = null;
 			                    savexmlhttp = createXMLHttpRequest();

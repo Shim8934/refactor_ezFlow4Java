@@ -22,15 +22,6 @@
 		        ConArea.innerHTML += "<span style='margin-left:25px;'>" + inboxRuleCon.innerHTML + "</span>";
 		        ActArea.innerHTML += "<span style='margin-left:20px;'>" + inboxRuleAct.innerHTML + "</span>";
 		        ExptArea.innerHTML += "<span style='margin-left:20px;'>" + inboxRuleExpt.innerHTML + "</span>";
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("RuleDisplayName"));
-		                KeEventControl(document.getElementById("inboxRuleCon1"));
-		            }
-		        }
-		        catch (e)
-		        { }
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();

@@ -222,6 +222,10 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 		update("EzPersonalDAO.setApprovalPwd_U", map);
 	}
 	
+	public void setApprovalPwd_L(Map<String, Object> map) throws Exception{
+		update("EzPersonalDAO.setApprovalPwd_L", map);
+	}
+	
 	public void setApprovNotiMail_U(Map<String, Object> map) throws Exception{
 		update("EzPersonalDAO.setApprovNotiMail_U", map);
 	}

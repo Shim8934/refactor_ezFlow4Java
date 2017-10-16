@@ -185,6 +185,7 @@ function event_searchRecurMail() {
                 tr.height = 20;
                 td = tr.insertCell();
                 td.innerHTML = strLang155;
+                td.style.textAlign  = "center";
             }
             else
                 resultCount.innerHTML = " : " + strLang156 + "<b>" + recordCount + "</b> " + strLang157;

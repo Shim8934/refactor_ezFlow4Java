@@ -83,7 +83,18 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 			String temp = ezPersonalDAO.setApprovalPwd_S(map);
 			
 			if (temp != null && temp.equals("1")) {
-				ezPersonalDAO.setApprovalPwd_U(map);
+				/**
+				 * 1. 로그인 암호를 사용할 경우 -> pwdType, FLAG 업데이트
+				 * 2. 결재 암호를 사용할 경우 xml에서 분기
+				 * 2-1. v_PFLAG == Y -> FLAG, PWD, PWDTYPE 업데이트
+				 * 2-2. v_PFLAG == N -> FLAG만 업데이트
+				 * */
+				if (pwdType.equalsIgnoreCase("L")) {
+					ezPersonalDAO.setApprovalPwd_L(map);
+				} else {
+					ezPersonalDAO.setApprovalPwd_U(map);
+				}
+				
 			} else {
 				ezPersonalDAO.setApprovalPwd_I(map);
 			}
@@ -97,18 +108,25 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public String getApprovNotiConfig(String userID, int tenantID) throws Exception {
-		logger.debug("getApprovNotiConfig started");
-
+	public String getApprovNotiConfig(String userID, String currentID, int tenantID) throws Exception {
+		logger.debug("getApprovNotiConfig started");		
+		/**
+		 * 보낸 편지함에 결재관련 메일이 등록되는 것을 막기 위해선
+		 * 메일을 받는 사람의 SAVEMAILFLAG가 아닌 메일을 보내는 사람(현재 유저)의 SAVEMAILFLAG 값이 필요.
+		 * userID : 메일 수신자
+		 * userInfo.getID() : 메일 발신자
+		 * */
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userID);
 		map.put("tenantID", tenantID);
+		map.put("currentID", currentID);
 		
 		String temp = ezPersonalDAO.getApprovNotiConfig_S1(map);
 		
 		List<PersonalApprovMailVO> approvMailVOList = new ArrayList<PersonalApprovMailVO>();
 		
 		if (temp != null && temp.equals("1")) {
+			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
 			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
 		} else {
 			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);

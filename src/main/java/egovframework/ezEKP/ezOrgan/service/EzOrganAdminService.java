@@ -73,4 +73,5 @@ public interface EzOrganAdminService {
 	public int userCountCheck(String cn, int tenantID) throws Exception;
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
+	
 }

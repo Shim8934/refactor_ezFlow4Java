@@ -30,7 +30,7 @@ function putBansongSign() {
     var RtnVal = getGyulJeDate();
     var CurrentDate = RtnVal.split(".");
     var s = CurrentDate[1] + "." + CurrentDate[2];
-    
+    // aprType 9(개인병렬협조), 11(부서순차협조), 12(부서병렬협조)
     if (pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
@@ -1317,7 +1317,7 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
         alert("openwindow :: " + e.description);
     }
 }
-function getCurApproverAprLine() {
+function getCurApproverAprLine(type) {
 	var result = "";
     
     $.ajax({
@@ -1329,7 +1329,8 @@ function getCurApproverAprLine() {
 				docID    : pDocID, 
 				userID 	 : "",
 				formID   : "",
-				deptID   : arr_userinfo[4]
+				deptID   : arr_userinfo[4],
+				isUsed   : type
 				},
 		success: function(xml){
 			result = xml;
@@ -1403,10 +1404,11 @@ function SaveApproveInfo(pApproveFlag) {
     var field = message.GetListItem(fields, "doctitle");
     pDocTitle = field.textContent;
     createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
-
+    // 경우에 따른 DOCNO 설정.
     if (pApproveFlag == "2") {
     	var field = message.GetListItem(fields, "deptshortedname");
     	if (field) {
+    		var forTest = getfieldValue(field).slice(-1);
     		if (getfieldValue(field).slice(-1) == "-") {
     			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
     		} else {
@@ -1415,6 +1417,7 @@ function SaveApproveInfo(pApproveFlag) {
     	} else {
     		var field = message.GetListItem(fields, "docnumber");
     		if (field) {
+    			var forTest = getfieldValue(field).slice(-1);
     			if (getfieldValue(field).slice(-1) == "-") {
         			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
         		} else {
@@ -1423,6 +1426,7 @@ function SaveApproveInfo(pApproveFlag) {
     		} else {
     			var field = message.GetListItem(fields, "bedocnumber");
     			if (field) {
+    				var forTest = getfieldValue(field).slice(-1);
     				if (getfieldValue(field).slice(-1) == "-") {
     	    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
     	    		} else {
@@ -2803,8 +2807,12 @@ function openAaprDocAttachUI() {
 
         aprcabinetattach_cross_dialogArguments[0] = parameter;
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
-
-        DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
+        
+        if(approvalFlag == "G") {
+        	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
+        } else {
+        	DivPopUpShow(1050, 550, "/ezApprovalG/aprDocAttach.do");
+        }
     } catch (e) {
         alert(e.description);
     }
@@ -3574,7 +3582,54 @@ function setDocNumFormat(pPrefix) {
                 numHeader += mdate + Tail;
                 
                 break;
-
+                
+            /* 단암 양식*/
+            case "D1":
+            	numHeader += "계약" + Tail;
+        		break;
+            case "D2":
+            	numHeader += "교육기안" + Tail;
+        		break;
+            case "D3":
+            	numHeader += "교육" + Tail;
+        		break;
+            case "D4":
+            	numHeader += "구매" + Tail;
+        		break;
+            case "D5":
+            	numHeader += "제" + Tail;
+        		break;
+            case "D6":
+            	numHeader += "기구" + Tail;
+        		break;
+            case "D7":
+            	numHeader += "기안" + Tail;
+        		break;
+            case "D8":
+            	numHeader += "제 문서 신청" + Tail;
+        		break;
+            case "D9":
+            	numHeader += "보고" + Tail;
+        		break;
+            case "DA":
+            	numHeader += "제조-보고" + Tail;
+        		break;
+            case "DB":
+            	numHeader += "연장근무보고서" + Tail;
+        		break;
+            case "DC":
+            	numHeader += "출장" + Tail;
+        		break;
+            case "DD":
+            	numHeader += "해외출장" + Tail;
+        		break;
+            case "DE":
+            	numHeader += "품질검사" + Tail;
+        		break;
+            case "DF":
+            	numHeader += "휴가" + Tail;
+            	break;
+        		
             default:
                 numHeader += fieldValue;
                 break;

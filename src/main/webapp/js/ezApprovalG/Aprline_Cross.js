@@ -10,7 +10,8 @@
     		data : {
     				docID    : pDocID, 
     				userID 	 : pUserID,
-    				formID   : pFormID
+    				formID   : pFormID,
+    				isUsed   : ""
     				},
     		success: function(xml){
     			result = loadXMLString(xml);

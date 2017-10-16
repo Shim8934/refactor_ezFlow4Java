@@ -2193,6 +2193,11 @@ function SetBtnStateTrue() {
     try {
         setMenuBar("btnOpinion", true);
         setMenuBar("btnPrint", true);
+        if (approvalFlag == "S") {
+            if (pDraftFlag == "DRAFT" || DocSN != "") {
+        	   setMenuBar("btnSaveServer", true);
+            }
+        }
         btnClose.Enable = "true";
     } catch (e) {
         alert("SetBtnStateTrue : " + e.description);
