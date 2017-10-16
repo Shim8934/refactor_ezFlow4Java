@@ -319,7 +319,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
-		map.put("pSearchText", pSearchText);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		
@@ -380,7 +380,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
-		map.put("pSearchText", pSearchText);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		
@@ -401,7 +401,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("userID", userID);
 		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("pSearchText", pSearchText);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("tenantID", tenantID);
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
@@ -868,7 +868,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
-		map.put("pSearchText", pSearchText);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		
 		logger.debug("getNewBoardList ended");
 		return mBoardDAO.getNewItemList(map);
@@ -1030,7 +1030,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		map.put("startDate", startDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("pSearchText", pSearchText);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		
 		logger.debug("getNewBoardListCount ended");
 		return mBoardDAO.getNewBoardListCount(map);
