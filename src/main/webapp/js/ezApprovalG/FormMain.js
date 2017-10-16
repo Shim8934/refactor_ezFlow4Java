@@ -126,6 +126,18 @@ function OpenAlertUI(pAlertContent) {
 var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {
     var xmlRtn = createXmlDom();
+    
+    // workflow 저장버튼 G에서만 활성화, S는 자동
+    if (approvalFlag == 'S') {
+    	if (!pzFormProc.editor.DOM.all.WORKFLOW) {
+            var XMLInfo = "<xml id=WORKFLOW style='display:none;'></xml>";
+            pzFormProc.editor.DOM.body.innerHTML = XMLInfo + pzFormProc.editor.DOM.body.innerHTML;
+            pzFormProc.refresh();
+        }
+
+        pzFormProc.editor.DOM.all.WORKFLOW.innerHTML = "\n   <WORKFLOW>\n    <VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n  <STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>\n";
+        pzFormProc.refresh();
+    }
 
     // 양식 정보 XML로 가져오기
     var arrFormInfo = MakeFormInfoXML();    
@@ -150,7 +162,7 @@ function SaveFormInfo() {
         return;
     }
     
-    //// 연동정보 XML로 가져오기
+    // 연동정보 XML로 가져오기
     var arrFormConn = "";
     arrFormConn = MakeFormConnXML();
     if (arrFormConn[0] == "TRUE") {

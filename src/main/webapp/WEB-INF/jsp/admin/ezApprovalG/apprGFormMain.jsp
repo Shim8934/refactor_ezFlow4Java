@@ -941,7 +941,7 @@
 					<th> 
 						<a class="imgbtn" id="Submit1"><span onclick="btn_OpinionAdd1_onclick()"><spring:message code = 'ezApprovalG.t268' /> 1</span></a><br>      
 						<a class="imgbtn" id="Submit2"><span onclick="btn_OpinionAdd2_onclick()"><spring:message code = 'ezApprovalG.t268' /> 2</span></a><br>   
-						<a class="imgbtn" id="Submit3"><span onclick="btn_WorkFlowSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>
+						<a class="imgbtn" id="Submit3" style="<c:if test="${approvalFlag == 'S'}">display: none;</c:if>"><span onclick="btn_WorkFlowSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>
 					</th>
 				</tr>
 			</table>
