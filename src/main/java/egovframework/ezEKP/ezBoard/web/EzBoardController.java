@@ -290,7 +290,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		sb.append("</DATA>");
 		
-		result = "<ROOT>" + sb.toString() + commonUtil.cleanValue(parentName) + "</ROOT>";
+		result = "<ROOT>" + sb.toString() + parentName + "</ROOT>";
 		
 		return result;
 	}
@@ -370,7 +370,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(), BoardIdListCount, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getLocale());
         
-        return "<DATA><TOPBOARDLIST>" + rtv + "</TOPBOARDLIST></DATA>";
+        return "<DATA><TOPBOARDLIST>" + commonUtil.cleanValue(rtv) + "</TOPBOARDLIST></DATA>";
     }
 	
 	/**
