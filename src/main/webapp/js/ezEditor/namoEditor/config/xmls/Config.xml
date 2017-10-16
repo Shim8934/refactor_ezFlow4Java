@@ -11,8 +11,8 @@
 		<WebServerInfo>ETC</WebServerInfo>
 		<WebLanguage>JSP</WebLanguage>
 		<ImageSavePath></ImageSavePath>
-		<Width>730</Width>
-		<Height>450</Height>
+		<Width>100%</Width>
+		<Height>100%</Height>
 		<UploadFileNameType>real</UploadFileNameType>
 		<UploadFileViewer>false</UploadFileViewer>
 		<UploadFileSizeLimit>movie:50000000</UploadFileSizeLimit>
@@ -23,7 +23,7 @@
 		<TagBlockList>0|script,iframe</TagBlockList>
 		<Template></Template>
 		<ServerUrl></ServerUrl>
-		<ResizeBar>true</ResizeBar>
+		<ResizeBar>false</ResizeBar>
 	</General>
 	<Editor>
 		<SetFocus>true</SetFocus>
@@ -43,9 +43,9 @@
 		<TableBGColor>#FFFFFF</TableBGColor>
 		<DefaultFont></DefaultFont>
 		<DefaultFontSize></DefaultFontSize>
-		<Placeholder>여기에 내용을 입력하세요.</Placeholder>
+		<Placeholder></Placeholder>
 		<Csslist></Csslist>
-		<ProfanityStr>염병,병신,멍청이,바보,얼간이</ProfanityStr>
+		<ProfanityStr></ProfanityStr>
 	</Editor>
 	<Document>
 		<CharSet>auto</CharSet>
@@ -62,9 +62,9 @@
 		<Css></Css>
 		<UserToolbar>true</UserToolbar>
 		<CreateToolbar></CreateToolbar>
-		<CreateTab>0|1|2</CreateTab>
+		<CreateTab>0|1</CreateTab>
 		<IsQuestAutoSave></IsQuestAutoSave>
-		<Menu>true</Menu>
+		<Menu>false</Menu>
 		<QuickMenu>false</QuickMenu>
 		<DisplayLoadingBar>true</DisplayLoadingBar>
 	</UI>
