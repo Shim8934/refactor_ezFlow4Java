@@ -918,7 +918,7 @@
                         &lt;/xml&gt; </td>
                     <th>
                         <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_OpinionAdd_onclick()"><spring:message code = 'ezApprovalG.t268' /></span></a><br>      
-                        <a class="imgbtn" id="btn_OpinionSave"><span onclick="btn_OpinionSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>              
+                        <a class="imgbtn" id="btn_OpinionSave" style="<c:if test="{approvalFlag == 'S'}">display: none;</c:if>"><span onclick="btn_OpinionSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>              
                     </th>
                 </tr>
             </table>              

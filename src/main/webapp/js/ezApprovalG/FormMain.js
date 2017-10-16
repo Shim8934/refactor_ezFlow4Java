@@ -127,8 +127,18 @@ var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {
     var xmlRtn = createXmlDom();
     
-    // workflow 저장버튼 G에서만 활성화, S는 자동
     if (approvalFlag == 'S') {
+    	//연동정보 저장버튼 G에서만활성화, S는 자동
+	    if (!pzFormProc.editor.DOM.all.conn) {
+	        var XMLInfo = "<xml id=conn></xml>";
+	        pzFormProc.editor.DOM.body.innerHTML = XMLInfo + pzFormProc.editor.DOM.body.innerHTML;
+	        pzFormProc.refresh();
+	    }
+	    
+	    pzFormProc.editor.DOM.all.conn.innerHTML = "<CONNINFO>\n" + txt_OpinionContent.innerText + "\n</CONNINFO>";
+	    pzFormProc.refresh();
+	    
+	    //workflow 저장버튼 G에서만 활성화, S는 자동
     	if (!pzFormProc.editor.DOM.all.WORKFLOW) {
             var XMLInfo = "<xml id=WORKFLOW style='display:none;'></xml>";
             pzFormProc.editor.DOM.body.innerHTML = XMLInfo + pzFormProc.editor.DOM.body.innerHTML;
