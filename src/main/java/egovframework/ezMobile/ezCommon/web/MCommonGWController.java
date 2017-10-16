@@ -51,7 +51,7 @@ public class MCommonGWController {
 		
 		String filePath = request.getParameter("filePath");
 		LOGGER.debug("filePath = " + filePath);
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		
 		filePath = realPath + filePath;
 

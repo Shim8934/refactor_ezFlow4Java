@@ -20,6 +20,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezOrgan.service.MOrganService;
 import egovframework.ezMobile.ezOrgan.vo.MOrganListVO;
 import egovframework.ezMobile.ezOrgan.vo.MPersonListVO;
@@ -144,8 +145,9 @@ public class MOrganGWController {
 			LOGGER.debug("organType : " + organType);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptInfo(organType, userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptInfo(organType, userInfo.getCompanyId(), userInfo.getDeptId(), optionInfo.getLang(), userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -175,8 +177,9 @@ public class MOrganGWController {
 			LOGGER.debug("deptID : " + deptID);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getLowDeptInfo(deptID, userInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getLowDeptInfo(deptID, optionInfo.getLang(), userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -208,8 +211,9 @@ public class MOrganGWController {
 			LOGGER.debug("deptID : " + deptID);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getHighDeptInfo(deptID, deptType, organType, userInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getHighDeptInfo(deptID, deptType, organType, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -242,8 +246,9 @@ public class MOrganGWController {
 			LOGGER.debug("searchFlag : " + searchFlag);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, selectType, userInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", "0");
