@@ -277,6 +277,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
         String mode = request.getParameter("mode");
         String userID = userInfo.getId();
+        String result = "";
 
         List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getTenantId());
         String parentName = parentBoardName(resultList, userInfo);
@@ -289,7 +290,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		sb.append("</DATA>");
 		
-		return "<ROOT>" + sb.toString() + parentName + "</ROOT>";
+		result = "<ROOT>" + sb.toString() + commonUtil.cleanValue(parentName) + "</ROOT>";
+		
+		return result;
 	}
 	
 	/**
