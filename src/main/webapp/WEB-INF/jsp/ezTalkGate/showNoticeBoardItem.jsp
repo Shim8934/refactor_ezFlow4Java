@@ -15,9 +15,9 @@ P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm }
 <link rel="stylesheet" href="/css/ezTalkGate/site.css" type="text/css">
 </head>
 <body class="popup">
-<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%" >
-  <tr valign="top">
-    <td height="43px">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%" style="position: fixed;" >
+  <tr height="43px">
+    <td height="43px" valign="top">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" height="43px">
         <tr>
           <td width="14" height="43" background="/images/ezTalkGate/left_top.gif"></td>
@@ -27,48 +27,49 @@ P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm }
                 <td valign="top" background="/images/ezTalkGate/title_notice.gif" style="background-repeat:no-repeat; padding-left:48px; padding-top:13px; font-weight:bold; color:#20407D" ><spring:message code="ezBoard.t483" /> </td>
                 <td width="40" align=center onClick="javascript:window.close()" style="cursor:hand; color:#20407D" onmouseover="this.style.color='#CB5000'" onmouseout="this.style.color='#20407D'" ><spring:message code="ezBoard.t12" /></td>
               </tr>
-          </table></td>
+          	</table>
+          </td>
           <td width="14"><img src="/images/ezTalkGate/right_top.gif" width="14" height="43px"></td>
         </tr>
-    </table></td>
+      </table>
+    </td>
   </tr>
-  <tr>
-    <td>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%" >
+  <tr height="*">
+    <td valign="top">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%" style="position: relative;">
         <tr>
-          <td width="14"><img src="/images/ezTalkGate/left_bg.gif" width="14" height="110%"></td>
-          <td style="border:1px solid #596FA1; padding:3px" >
-          <table width="570" border="0" cellspacing="0" cellpadding="3">
-		    <tr>
-              <td height="30" colspan="4" bgcolor="#E8EDF9" style="border:1px solid #A7BAE4" >&nbsp;<b><spring:message code="ezEmail.t556" /> : <c:out value='${boardItem.title}' /></b></td>
-            </tr>
-            <tr>
-              <td colspan="4" height="1" bgcolor="#ffffff"></td>
-            </tr>
-            <tr valign="bottom" bgcolor="#F5F5F5">
-              <td width="150">&nbsp;<spring:message code="ezBoard.t223" /> | <c:out value='${boardItem.writerName}' /><font color="#333399"></font></td>
-              <td align="center" width="150"><spring:message code="ezBoard.t5007" /> | <c:out value='${boardItem.writeDate}' /><font color="#333399"></font> </td>
-              <td width="150" align="center" style="display:none"><spring:message code="ezCommunity.t173" /> | <font color="#333399"></font></td>
-              <td align="center">&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="4" height="1" bgcolor="#D0D0D0"></td>
-            </tr>
-            <tr SCROLLING=auto>
-              <td colspan="4" bgcolor="#ffffff" width="100%" height="170px">             
-                <iframe id=iframeWin SCROLLING=auto src="showNoticeBoardItemContent.do?itemId=${boardItem.itemID}&href=${boardItem.contentLocation}" width="100%" height="161px" FRAMEBORDER=0></iframe>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="4" height="1" bgcolor="#ffffff"></td>
-            </tr>
-          </table>
+          <td width="14"><img src="/images/ezTalkGate/left_bg.gif" width="14" height="102%"></td>
+          <td valign="top" style="border:1px solid #596FA1; padding:3px" style="position: relative;" >
+	          <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="3">
+			    <tr height="40">
+	              <td colspan="4" bgcolor="#E8EDF9" style="border:1px solid #A7BAE4" >&nbsp;<b><spring:message code="ezEmail.t556" /> : <c:out value='${boardItem.title}' /></b></td>
+	            </tr>
+	            <tr height="1">
+	              <td colspan="4" bgcolor="#ffffff"></td>
+	            </tr>
+	            <tr valign="middle" bgcolor="#F5F5F5" height="25">
+	              <td width="150">&nbsp;<spring:message code="ezBoard.t223" /> | <c:out value='${boardItem.writerName}' /><font color="#333399"></font></td>
+	              <td align="center" width="150"><spring:message code="ezBoard.t5007" /> | <c:out value='${boardItem.writeDate}' /><font color="#333399"></font> </td>
+	              <td width="150" align="center" style="display:none"><spring:message code="ezCommunity.t173" /> | <font color="#333399"></font></td>
+	              <td align="center">&nbsp;</td>
+	            </tr>
+	            <tr height="1">
+	              <td colspan="4" bgcolor="#D0D0D0"></td>
+	            </tr>
+	            <tr height="*">
+	              <td colspan="4" bgcolor="#ffffff" width="100%" valign="top">             
+	                <iframe id=iframeWin SCROLLING=auto src="showNoticeBoardItemContent.do?itemId=${boardItem.itemID}&href=${boardItem.contentLocation}" 
+	                	width="100%" height="100%" FRAMEBORDER=0></iframe>
+	              </td>
+	            </tr>
+	          </table>
           </td>
-          <td width="14"><img src="/images/ezTalkGate/right_bg2.jpg" width="14" height="110%"></td>
+          <td width="14"><img src="/images/ezTalkGate/right_bg2.jpg" width="14" height="102%"></td>
         </tr>
-    </table></td>
+      </table>
+    </td>
   </tr>
-  <tr> 
+  <tr height="8px" style="position: relative;"> 
     <td height="8px"> 
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
