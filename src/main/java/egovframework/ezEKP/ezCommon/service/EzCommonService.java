@@ -16,11 +16,11 @@ public interface EzCommonService {
 
 	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
-	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale) throws Exception;
+	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale, String scheme) throws Exception;
 	
 	public String loadMHTFile(String path) throws Exception;
 	
-	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale, String domain) throws Exception;
+	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale, String domain, String scheme) throws Exception;
 	
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	

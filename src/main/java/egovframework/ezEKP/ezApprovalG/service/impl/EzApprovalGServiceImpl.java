@@ -5290,6 +5290,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDeptID = "";
 		String cabinetSN = "";
 		String docNO = "";
+        String scheme = "http://";
+		
+    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+    		scheme = "https://";
+    	}
 		
 		boolean docNumFlag = false;
 		boolean mhtSaveFlag = false;
@@ -5349,7 +5354,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
 		String domain = request.getServerName() + ":" + request.getServerPort();
 		// HTML -> MHT
-		content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), realPath, userInfo.getLocale(), domain);
+		content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), realPath, userInfo.getLocale(), domain, scheme);
 		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
 		//DOCSTATE : 011(수신)
