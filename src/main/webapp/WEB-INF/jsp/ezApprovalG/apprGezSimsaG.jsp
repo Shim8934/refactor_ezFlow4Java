@@ -339,6 +339,16 @@
 		        }
 		    }
 		
+		    var selectenc_dialogArguments = new Array();
+		    function OpenCheckUI() {
+		    	var parameter = "";
+
+		    	selectenc_dialogArguments[0] = parameter;
+		    	selectenc_dialogArguments[1] = OpenCheckUI_Complete;
+
+		    	DivPopUpShow(330, 205, "/ezApprovalG/selectEnc.do");
+		    }
+		    
 		    function OpenCheckUI_Complete(returnvalue) {
 		        DivPopUpHidden();
 		        is_Enc = returnvalue;
@@ -1216,7 +1226,13 @@
 	            // COL TAG의 닫는 태그가 없는 경우가 있어 강제 변환처리.
 	            rtnVal = rtnVal.replace(/<COL>/g, "<col>").replace(/<COL /g, "<col ").replace(/<\/COL>/g, "</col>"); // 대문자 태그를 소문자로 변환
 	            rtnVal = rtnVal.replace(/<col>/g, "<col></col>").replace(/<\/col><\/col>/g, "</col>").replace(/\/><\/col>/g, "></col>");
-
+	            
+	            var rtnVal2 = rtnVal.match(/<img.*?>(.*?)/gm);
+	            if (rtnVal2 != null) {
+		            for( var j=0; j < rtnVal2.length;j++) {
+		            	rtnVal = rtnVal.replace(rtnVal2[j],rtnVal2[j].replace(">","/>"));
+		            }
+	            }
 	            return rtnVal;
 	        }
 		

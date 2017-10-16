@@ -2375,7 +2375,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		logger.debug("cert ended");
-		return "ezApprovalG/apprGcert";
+		return "/ezApprovalG/apprGcert";
 	}
 	
 	
@@ -2395,7 +2395,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezApprovalG/loadDocXML.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String loadDocXML(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		logger.debug("getRelayDocInfo started");
+		logger.debug("loadDocXML started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String result = "";
 		String xmlPath = request.getParameter("XMLPATH");
@@ -2415,14 +2415,14 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		} catch (Exception e){
 		}
 		
-		logger.debug("getRelayDocInfo ended");
+		logger.debug("loadDocXML ended");
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/setHref.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setHref(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		logger.debug("getRelayDocInfo started");
+		logger.debug("setHref started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -2430,14 +2430,14 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String mode = request.getParameter("mode");
 		
 		String result = ezApprovalGService.setHref(docID, fileType, mode, userInfo);
-		logger.debug("getRelayDocInfo ended");
+		logger.debug("setHref ended");
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/setRecvDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setRecvDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		logger.debug("getRelayDocInfo started");
+		logger.debug("setRecvDocInfo started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -2456,14 +2456,14 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			docNumCode = "";
 		}
 		String result = ezApprovalGService.setRecvDocInfo(docID, publicFlag, docNo, docNumCode, orgDocNumCode, mode, fileType, userInfo);
-		logger.debug("getRelayDocInfo ended");
+		logger.debug("setRecvDocInfo ended");
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/setRecvComplete.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setRecvComplete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		logger.debug("getRelayDocInfo started");
+		logger.debug("setRecvComplete started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String docID = request.getParameter("tempDocID");
@@ -2483,14 +2483,14 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String tempCompanyID = request.getParameter("tempCompanyID");
         
 		String result = ezApprovalGService.updateRecvDocInfo(docID, docNo, docNumCode, orgDocNumCode, cabinetID, taskCode, userID, userName, userName2, deptID, userTitle, userTitle2, deptName, deptName2, tempCompanyID, userInfo, commonUtil.getRealPath(request));
-		logger.debug("getRelayDocInfo ended");
+		logger.debug("setRecvComplete ended");
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/sendAckforReSend.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String sendAckforReSend(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		logger.debug("getRelayDocInfo started");
+		logger.debug("sendAckforReSend started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -2504,7 +2504,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		}
 
 		String result = ezApprovalGService.sendAck(commonUtil.getRealPath(request), docID, type, userName, userDeptName, errMsg, userInfo.getCompanyID(), userInfo.getTenantId());
-		logger.debug("getRelayDocInfo ended");
+		logger.debug("sendAckforReSend ended");
 		return result;
 	}
 }

@@ -1330,6 +1330,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 constraints.setReturningAttributes(attrIDs); 
             }
             m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
+            
             dirCtx.close(); 
         } catch (Exception e) { 
             e.printStackTrace(); 

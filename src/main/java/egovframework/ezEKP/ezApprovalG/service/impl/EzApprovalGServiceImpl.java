@@ -21899,12 +21899,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //				}
 				
 				if (doc.getElementsByTag("table").get(k).hasAttr("align")) {
-					System.out.println(doc.getElementsByTag("table").get(k).attr("align").toString());
 					switch (doc.getElementsByTag("table").get(k).attr("align").toString()) {
 					case "left":
                     case "center":
                     case "right":
-                    	System.out.println("2222");
                     case "adjust":
                         break;
 					default:
@@ -21917,7 +21915,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
 				String tbStyle = doc.getElementsByTag("td").get(k).attr("style").toString();
 				if (doc.getElementsByTag("td").get(k).hasAttr("align")) {
-					System.out.println(doc.getElementsByTag("td").get(k).attr("align").toString());
 					switch (doc.getElementsByTag("td").get(k).attr("align").toString().toLowerCase()) {
 					case "left":
                     case "center":
@@ -21994,7 +21991,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 			}
 
-			
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
 			strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
@@ -22318,7 +22314,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		 // 리턴시 div태그를 p태그로 변경하여 리턴한다.
-        strRtnHTML = strRtnHTML.replace("<div", "<p").replace("<DIV", "<p").replace("</div", "</p").replace("</DIV", "</p");
+//        strRtnHTML = strRtnHTML.replace("<div", "<p").replace("<DIV", "<p").replace("</div", "</p").replace("</DIV", "</p");
         
 		return strRtnHTML;
 	}
@@ -22947,7 +22943,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = commonUtil.getUploadPath("upload_relay.ROOT", tenantID) +commonUtil.separator + "sample.xml";
+             strSamplePath = config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT")  + "sample.xml";
              strSendOrgCode = strCompanyID;
              strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
@@ -23012,7 +23008,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strPath = config.getProperty("relay_root") + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
 		String strResult = "";
 		boolean exist;
-		String result = "";
 		
 		for (int i = 1; i <= 99; i++) {
 			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
@@ -23127,7 +23122,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception {
-		
+		logger.debug("getRelayInfo started");
 		StringBuilder result = new StringBuilder();
 		Map <String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
@@ -23219,12 +23214,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		logger.debug("getRelayInfo ended");
+		
 		return result.toString();
 	}
 
 	@Override
 	public String setHref(String docID, String fileType, String mode, LoginVO userInfo) throws Exception {
-		
+		logger.debug("setHref started");
 		try {
 			String strHref = "";
 			if (mode.toUpperCase().equals("E")) {
@@ -23245,6 +23242,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.upadateRelayDocInfo(map);
 			
+			logger.debug("setHref ended");
 			return "<setHref>" + strHref + "</setHref>"; 
 		} catch (Exception e) {
 			 return "<setHref></setHref>";
@@ -23253,6 +23251,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String setRecvDocInfo(String docID, String publicFlag, String docNo, String docNumCode, String orgDocNumCode, String mode, String fileType, LoginVO userInfo) throws Exception {
+		logger.debug("setRecvDocInfo started");
 		try {
 			String href = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true).substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." +fileType;
 			
@@ -23276,6 +23275,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (!publicFlag.equals("") || !docNumCode.equals("") || !orgDocNumCode.equals("")) {
 				ezApprovalGDAO.updateRelayExpDocInfo(map);
 			}
+			
+			logger.debug("setRecvDocInfo ended");
 			return  "<RESULT>TRUE</RESULT>";
 		} catch(Exception e) {
 			return "<RESULT>FALSE</RESULT>";
@@ -23284,6 +23285,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String updateRecvDocInfo(String docID, String docNo, String docNumCode, String orgDocNumCode, String cabinetID, String taskCode, String userID, String userName, String userName2, String deptID, String userTitle, String userTitle2, String deptName, String deptName2, String tempCompanyID, LoginVO userInfo, String realPath) throws Exception {
+		logger.debug("updateRecvDocInfo started");
 			Map <String, Object> map = new HashMap<String, Object>();
 			map.put("v_DOCID", docID);
 			map.put("v_DOCNO", docNo);
@@ -23306,56 +23308,59 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateRelayCabinetDocInfo(map);
 			ezApprovalGDAO.updateRelaycabinetExpDocInfo(map);
 		
-			   String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-               if (dirPath.substring(dirPath.length() - 1).equals("\\")) {
-            	   dirPath += commonUtil.separator;
-               }
+		   String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+           if (dirPath.substring(dirPath.length() - 1).equals("\\")) {
+        	   dirPath += commonUtil.separator;
+           }
 
-               if (userID.equals("")) {
-            	   userID = userInfo.getId();
-               }
-               if (userName.equals("")) {
-            	   userName = userInfo.getDisplayName();
-               }
-               if (userTitle.equals("")) {
-            	   userTitle = userInfo.getTitle();
-               }
-               if (deptID.equals("")) {
-                   deptID = userInfo.getDeptID();
-               }
-               if (deptName.equals("")) {
-                   deptName = userInfo.getDeptName();
-               }
-               if (userName2.equals("")) {
-                   userName2 = userInfo.getDisplayName2();
-               }
-               if (userTitle2.equals("")) {
-                   userTitle2 = userInfo.getTitle2();
-               }
-               if (deptName2.equals("")) {
-                   deptName2 = userInfo.getDeptName2();
-               }
-               if (tempCompanyID.equals("")) {
-            	   tempCompanyID = userInfo.getCompanyID();
-               }
-               
-   				map.put("companyID", tempCompanyID);
-   				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-            //외부수신 가져오면 원래 결재선을 지우네
-               ezApprovalGDAO.deleteRelayAprLineInfo(map);
-               ezApprovalGDAO.deleteRelayExpAprLineInfo(map);
-             
-           //지우고 다시 넣네?
-               ezApprovalGDAO.insertRelayAprLineInfo(map);
-               ezApprovalGDAO.insertRelayExpAprLineInfo(map);
-               
-               doApprove(docID, userID, staASSungIn, userName, userName2, dirPath, deptID, "", tempCompanyID, userInfo.getLang(), userInfo);
-               chkDocDelete(docID, docID, true, userID, deptID, dirPath, tempCompanyID, userInfo.getTenantId());
+           if (userID.equals("")) {
+        	   userID = userInfo.getId();
+           }
+           if (userName.equals("")) {
+        	   userName = userInfo.getDisplayName();
+           }
+           if (userTitle.equals("")) {
+        	   userTitle = userInfo.getTitle();
+           }
+           if (deptID.equals("")) {
+               deptID = userInfo.getDeptID();
+           }
+           if (deptName.equals("")) {
+               deptName = userInfo.getDeptName();
+           }
+           if (userName2.equals("")) {
+               userName2 = userInfo.getDisplayName2();
+           }
+           if (userTitle2.equals("")) {
+               userTitle2 = userInfo.getTitle2();
+           }
+           if (deptName2.equals("")) {
+               deptName2 = userInfo.getDeptName2();
+           }
+           if (tempCompanyID.equals("")) {
+        	   tempCompanyID = userInfo.getCompanyID();
+           }
+           
+			map.put("companyID", tempCompanyID);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+        //외부수신 가져오면 원래 결재선을 지우네
+           ezApprovalGDAO.deleteRelayAprLineInfo(map);
+           ezApprovalGDAO.deleteRelayExpAprLineInfo(map);
+         
+       //지우고 다시 넣네?
+           ezApprovalGDAO.insertRelayAprLineInfo(map);
+           ezApprovalGDAO.insertRelayExpAprLineInfo(map);
+           
+           doApprove(docID, userID, staASSungIn, userName, userName2, dirPath, deptID, "", tempCompanyID, userInfo.getLang(), userInfo);
+           chkDocDelete(docID, docID, true, userID, deptID, dirPath, tempCompanyID, userInfo.getTenantId());
+           
+           logger.debug("updateRecvDocInfo ended");
 		return "TRUE";
 	}
 
 	@Override
 	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception {
+		logger.debug("sendAck Started");
 		String result = "";
 		Map <String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
@@ -23387,6 +23392,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				result = "<RESULT>FALSE</RESULT>";
 			}
 		}
+		logger.debug("sendAck ended");
 		return result;
 	}
 

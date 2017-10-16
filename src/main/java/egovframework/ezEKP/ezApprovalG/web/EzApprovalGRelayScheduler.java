@@ -113,12 +113,14 @@ public class EzApprovalGRelayScheduler {
          List<String[]> receiveerrList = new ArrayList<String[]>();
          List<String[]> xmlparsingerrList = new ArrayList<String[]>();
          List<String[]> senderrList = new ArrayList<String[]>();
+         
          //receiveerr 폴더에 쌓인 XML 파일들을 접수 처리 한다.
          if (config.getProperty("USE_RECEIVEERR_FILE_MOVE_RECEIVETEMP").equals("YES")) {
         	 File dirFile = new File(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveerr");
     		 File [] fileList = dirFile.listFiles();
     		 for (File tempFile : fileList) {
     		   if (tempFile.isFile()) {
+    			   
     		     //receiveerr 폴더의 파일들을 수신처리 하기위해, ReceiveTemp로 이동 한다.
     		     String errorfilename = tempFile.getName();
     		     String errorfilepath = tempFile.getParent() + commonUtil.separator + errorfilename;;
@@ -200,7 +202,7 @@ public class EzApprovalGRelayScheduler {
                       }
                       
                       File fileMove = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemperr" + commonUtil.separator + strFileName);
-                      receiveTemp.renameTo(fileMove);
+                      receiveDir.renameTo(fileMove);
                       
                       logger.debug("비정상적인 XML파일, 수신처리 할 수 없습니다.", "");
                       logger.debug("파일을 receivetemperr 폴더로 이동 하였습니다.", "");
@@ -512,19 +514,23 @@ public class EzApprovalGRelayScheduler {
              }
              }
     		 if (config.getProperty("USE_EMAIL_NOTIFICATION").equals("YES")) {
-    			 AdminMail.add(receiveerrList);
+    			 if (receiveerrList.size() > 0) {
+    				 AdminMail.add(receiveerrList);
+    			 }
     		 }
              senderr = null;
 
-    		 if (config.getProperty("USE_EMAIL_NOTIFICATION").equals("YES")) {
-                 String title = "중계문서 장애 처리 알림 메일";
-                 if (AdminMail != null) {
-	                 String mailBody = MakeMailContent(AdminMail);
-	                 if (mailBody != "<div></div>" && AdminMail.size() > 0) {
-	//                     base.SendMessage(title, mailBody);
-	                 }
-                 }
-             }
+             //메일 대상자 알면 주석 풀기
+//    		 if (config.getProperty("USE_EMAIL_NOTIFICATION").equals("YES")) {
+//                 String title = "중계문서 장애 처리 알림 메일";
+//                 if (AdminMail.size() > 0) {
+//	                 String mailBody = MakeMailContent(AdminMail);
+//	                 if (mailBody != "<div></div>" && AdminMail.size() > 0) {
+//	//                     base.SendMessage(title, mailBody);
+//	                 }
+//                 }
+//             }
+    		 logger.debug("receiverSchedulerMain ended");
 	}
 
 	public String MakeMailContent(List<List<String[]>> list) {
@@ -668,78 +674,12 @@ public class EzApprovalGRelayScheduler {
 				dir.mkdirs();
 			}
 			
-//			File file = new File(pFilePath + commonUtil.separator + fileName);
-			
-//			FileOutputStream fop = new FileOutputStream(file);
-//			// get the content in bytes
-//			fop.write(content.getBytes("UTF-8"));
-//			fop.flush();
-//			fop.close();
-
-//	    	BASE64Decoder base64Decoder = new BASE64Decoder();
-//
-//	    	InputStream in = new FileInputStream(new File(pFilePath + commonUtil.separator + content));
-//
-//	        OutputStream out = new FileOutputStream(new File(pFilePath + commonUtil.separator + fileName));
-//
-//	        base64Decoder.decodeBuffer(in, out);
-//
-//	        in.close();
-//	        out.close();
-//		    BufferedReader in = new BufferedReader(new FileReader(realPath + commonUtil.separator + content));
-//
-//            String str = "";
-//            String line = null;
-//            while ((line = in.readLine()) != null) {
-//                str += line;
-//   // str += line + ",";
-//            }
-//
-//            //System.out.println(str);
-//            in.close();
-//
-//            char intxt[] = new char[str.length()];
-//
-//            str.getChars(0, str.length(), intxt, 0); // 입력하고자 하는 문자열을 문자배열
-//
-//            FileWriter fw = new FileWriter(pFilePath + commonUtil.separator + fileName);
-//            BufferedWriter bw = new BufferedWriter(fw); // 버퍼를 사용한 객체 bw 생성
-//
-//            bw.write(intxt); // 문자 배열의 내용을 파일에 출력
-//            bw.close();
-	         
-		        //1.파이 사이즈 알아내기
-//		        File f = new File(realPath + content);
-//		        int fileSize = (int)f.length();
-//		        System.out.println("파일의 사이즈:" + fileSize);
-//		         
-//		        //2.파일 사이즈에 해당하는 배열 만들기
-//		        byte[] b = new byte[fileSize];
-//		         
-//		        //3.스트림을 이용해서 배열에 데이터 채우기
-//		        FileInputStream fis = new FileInputStream(realPath + content);
-//		        int pos = 0;
-//		        int size = 10;
-//		        int temp;
-//		        while((size=fis.read(b, pos, size)) > 0){
-//		            pos += size;
-//		            temp = b.length - pos;
-//		            if(temp < 10){
-//		                size = temp;
-//		            }
-//		        }
-//		        fis.close();
-//		        System.out.println("읽은 바이트 수:" + pos);
-		         
-		        //4.배열을 통째로 파일에 기록하기
-		        FileOutputStream fos = new FileOutputStream(pFilePath + commonUtil.separator + fileName);
-		        fos.write(content);
-		        fos.close();
-
+	        FileOutputStream fos = new FileOutputStream(pFilePath + commonUtil.separator + fileName);
+	        fos.write(content);
+	        fos.close();
 
 	        result = true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			result = false;
 		}
 		return result;

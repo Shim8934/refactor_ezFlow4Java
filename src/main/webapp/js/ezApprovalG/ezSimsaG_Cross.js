@@ -1,14 +1,4 @@
-﻿var selectenc_dialogArguments = new Array();
-function OpenCheckUI() {
-	var parameter = "";
-
-	selectenc_dialogArguments[0] = parameter;
-	selectenc_dialogArguments[1] = OpenCheckUI_Complete;
-
-	DivPopUpShow(330, 205, "/ezApprovalG/selectEnc.do");
-}
-
-function GetAprDeptXML() {
+﻿function GetAprDeptXML() {
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -92,10 +82,17 @@ function chkToInfo() {
 
 var cert_dialogArguments = new Array();
 function getPasswdEnd() { 
-    cert_dialogArguments[0] = true;
-    cert_dialogArguments[1] = getPasswdEnd_Complete;
-
-    DivPopUpShow(420, 350, "/ezApprovalG/cert.do");
+    var url	= "/ezApprovalG/cert.do";
+	var feature = "status:no;dialogWidth:420px;dialogHeight:350px;help:no;scroll:no"
+	var param = true;
+	var ret = window.showModalDialog(url,param,feature);
+		
+	if(ret[0])
+	{
+		encodePass = ret[1];
+		encodePath = ret[2];	
+	}		
+	return ret[0];
 }
 
 function getPasswdEnd_Complete(ret) {
