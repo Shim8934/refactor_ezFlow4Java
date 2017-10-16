@@ -140,7 +140,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type) throws Exception {
+	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type, String scheme) throws Exception {
 		LOGGER.debug("getMHTBody started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -171,7 +171,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			m_strMHT= "";
 		}
         
-        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
+        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
         LOGGER.debug("strHTML : " + strHTML);
         
 //        Document doc = Jsoup.parse(strHTML);

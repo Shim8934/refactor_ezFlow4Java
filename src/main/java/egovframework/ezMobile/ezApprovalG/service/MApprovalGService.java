@@ -19,7 +19,7 @@ public interface MApprovalGService {
 
 	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
-	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type) throws Exception;
+	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type, String scheme) throws Exception;
 
 	public String getOpinionCount(String pDocID, String type, MCommonVO userInfo) throws Exception;
 

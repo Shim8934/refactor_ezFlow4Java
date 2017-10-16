@@ -270,7 +270,13 @@ public class MBoardGWController {
 			//mht 파일 가져오기
 			String realPath = commonUtil.getRealPath(request);
 			String domain = request.getServerName() + ":" + request.getServerPort();
-			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale);
+	        String scheme = "http://";
+			
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
+	    	
+			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale, scheme);
 			
 			//새게시물 눌렀을때, read테이블에 들어가게함.
 			mBoardService.setAsRead(info, boardId, contentId);

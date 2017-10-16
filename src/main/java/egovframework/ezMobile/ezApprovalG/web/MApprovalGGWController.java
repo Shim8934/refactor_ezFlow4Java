@@ -216,8 +216,13 @@ public class MApprovalGGWController {
 			
 			String realPath = commonUtil.getRealPath(request);
 			String domain = request.getServerName() + ":" + request.getServerPort();
+	        String scheme = "http://";
+			
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
 			//본문
-			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type);
+			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type, scheme);
 			//결재문서정보
 			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, userInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
 			//회수 가능여부

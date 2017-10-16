@@ -50,7 +50,7 @@ public interface MBoardService {
 	
 	String getDeptPathCode(String departmentID,int tenantID) throws Exception;
 	
-	String getMhtContent(String realPath, String domain, MCommonVO userInfo, String url,Locale locale) throws Exception;
+	String getMhtContent(String realPath, String domain, MCommonVO userInfo, String url,Locale locale, String scheme) throws Exception;
 	
 	String checkFavorite(String userID, String boardID, int tenantID) throws Exception;
 	

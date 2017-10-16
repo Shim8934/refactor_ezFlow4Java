@@ -216,8 +216,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			LOGGER.debug("itemID: " + itemID);
 			String type = "SCHEDULECONTENT";
 			String realPath = commonUtil.getRealPath(request);
+	        String scheme = "http://";
+			
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
 	
-			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale);
+			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale, scheme);
 			LOGGER.debug("mhtToHtml: " + mhtToHtml);			
 	        Document doc = Jsoup.parse(mhtToHtml);	        
 	        String bodyHTML = doc.getElementsByTag("BODY").html();

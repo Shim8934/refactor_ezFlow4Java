@@ -1083,7 +1083,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public String getMhtContent(String realPath, String domain, MCommonVO userInfo, String url,Locale locale) throws Exception {
+	public String getMhtContent(String realPath, String domain, MCommonVO userInfo, String url, Locale locale, String scheme) throws Exception {
 		String filePath = "";
 		String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator;
 		
@@ -1103,7 +1103,7 @@ public class MBoardServiceImpl implements MBoardService {
 			m_strMHT= "";
 		}
 	    
-        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
+        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
         logger.debug("strHTML : " + strHTML);
         
         Document doc = Jsoup.parse(strHTML);
