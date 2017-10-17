@@ -869,7 +869,11 @@
 				datetype = #v_DATETYPE#,
 				startdate = #v_STARTDATE#,				
 				enddate = #v_ENDDATE#,
+			]]>	
+			<isNotEmpty property="v_REPETITION">
 				repetition = ifnull(#v_REPETITION#, ''),
+			</isNotEmpty>	
+			<![CDATA[	
 				title = #v_TITLE#,
 				scheduletype = #v_SCHEDULETYPE#,
 				location = ifnull(#v_LOCATION#, '')
