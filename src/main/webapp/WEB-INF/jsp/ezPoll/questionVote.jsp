@@ -1790,7 +1790,9 @@
 					    	if (fileType == "sticker") {
 					    		imgForinnerDiv1.setAttribute("_type", "sticker");					    		
 					    		imgForinnerDiv1.setAttribute("height", "80");
-						    	imgForinnerDiv1.setAttribute("width", "80");					    	
+						    	imgForinnerDiv1.setAttribute("width", "80");
+						    	imgForinnerDiv1.onclick = "";
+						    	imgForinnerDiv1.style.cursor = "default";
 					    		imgForinnerDiv1.src = attachFilePath;	
 					    		innerDiv1.appendChild(imgForinnerDiv1);
 					    		div2Cmt.appendChild(innerDiv1);
@@ -1835,7 +1837,9 @@
 			    				
 		    					div2Cmt.firstElementChild.children[0].setAttribute("_type", "sticker");					    		
 		    					div2Cmt.firstElementChild.children[0].setAttribute("height", "80");
-		    					div2Cmt.firstElementChild.children[0].setAttribute("width", "80");					    	
+		    					div2Cmt.firstElementChild.children[0].setAttribute("width", "80");	
+		    					div2Cmt.firstElementChild.children[0].style.cursor = "default";
+		    					div2Cmt.firstElementChild.children[0].onclick = "";
 		    					div2Cmt.firstElementChild.children[0].src = attachFilePath;	
 			    			}
 			    			else if (fileType == "images") {
@@ -1888,7 +1892,9 @@
 		    				
 	    					div2Cmt.lastElementChild.children[0].setAttribute("_type", "sticker");					    		
 	    					div2Cmt.lastElementChild.children[0].setAttribute("height", "80");
-	    					div2Cmt.lastElementChild.children[0].setAttribute("width", "80");					    	
+	    					div2Cmt.lastElementChild.children[0].setAttribute("width", "80");
+	    					div2Cmt.lastElementChild.children[0].style.cursor = "default";
+	    					div2Cmt.lastElementChild.children[0].onclick = "";
 	    					div2Cmt.lastElementChild.children[0].src = attachFilePath;	
 		    			}
 		    			else if (fileType == "images") {
