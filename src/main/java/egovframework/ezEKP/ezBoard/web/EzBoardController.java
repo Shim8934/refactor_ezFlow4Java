@@ -277,6 +277,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
         String mode = request.getParameter("mode");
         String userID = userInfo.getId();
+        String result = "";
 
         List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getTenantId());
         String parentName = parentBoardName(resultList, userInfo);
@@ -289,7 +290,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		sb.append("</DATA>");
 		
-		return "<ROOT>" + sb.toString() + parentName + "</ROOT>";
+		result = "<ROOT>" + sb.toString() + parentName + "</ROOT>";
+		
+		return result;
 	}
 	
 	/**
@@ -367,7 +370,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(), BoardIdListCount, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getLocale());
         
-        return "<DATA><TOPBOARDLIST>" + rtv + "</TOPBOARDLIST></DATA>";
+        return "<DATA><TOPBOARDLIST>" + commonUtil.cleanValue(rtv) + "</TOPBOARDLIST></DATA>";
     }
 	
 	/**
@@ -4008,6 +4011,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			List<BoardAttributeVO> attributeList = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
 			
@@ -4017,12 +4021,23 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("attributeList", attributeList);
 		}
 		
+        //추가 항목 가져오는 소스 
+        List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
+        
+        if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+        	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
+        	if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+        		extenLang = "2";
+        	}
+        }
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("guBun", guBun);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("extenLang", extenLang);
 		model.addAttribute("strNow", strNow);
+		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
 		
 		return "ezBoard/boardItemPreView";
 	}

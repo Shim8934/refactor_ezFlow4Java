@@ -232,6 +232,14 @@
 		    }
 
 		    function Save_onclick() {
+		    	var copyList = "";
+		    	
+		    	$("#AccessListView tr[selected='true']", opener.document).each(function(idx) {
+		    		copyList += $("#AccessListView tr[selected='true']:eq(" + idx + ")", opener.document).attr("DATA1") + ",";
+				});
+		    	
+		    	copyList = copyList.substring(0, copyList.length - 1);
+		    	
 		        var listview = new ListView();
 		        listview.LoadFromID("CopyBoardListViewTable");
 		        var rowData = listview.GetDataRows();
@@ -250,6 +258,8 @@
 		            objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "UNDERGROUP", rowData[i].getAttribute("DATA3"));
 		        }
 
+		        objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "COPYLIST", copyList);
+		        
 		        xmlhttp.open("POST","/admin/ezBoard/copyBoardAcl.do",false)
 		        xmlhttp.send(xmlpara)
 
