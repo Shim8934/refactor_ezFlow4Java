@@ -22314,7 +22314,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		 // 리턴시 div태그를 p태그로 변경하여 리턴한다.
-//        strRtnHTML = strRtnHTML.replace("<div", "<p").replace("<DIV", "<p").replace("</div", "</p").replace("</DIV", "</p");
+        strRtnHTML = strRtnHTML.replace("<div", "<p").replace("<DIV", "<p").replace("</div", "</p").replace("</DIV", "</p");
         
 		return strRtnHTML;
 	}
@@ -22943,11 +22943,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT")  + "sample.xml";
+             strSamplePath = config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT")  + commonUtil.separator + "sample.xml";
              strSendOrgCode = strCompanyID;
              strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
-             Document objXML = commonUtil.xmlLod(realPath + commonUtil.separator + strSamplePath);
+             Document objXML = commonUtil.xmlLod(strSamplePath);
 
              strFileName = strSendID + strReceiveID + strTimeStamp;
              strFileName = getFileName(realPath, strFileName, "send", tenantID);
