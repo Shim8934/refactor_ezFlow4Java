@@ -331,7 +331,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String lang = info.getLang();			
+			//String lang = info.getLang();	
+			String lang = request.getParameter("langStr");
+			
 			String primary = commonUtil.getPrimaryData(lang, info.getTenantId());
 			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 			StringBuilder sb = new StringBuilder();
