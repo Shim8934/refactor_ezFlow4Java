@@ -212,7 +212,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("companyID", userInfo.getCompanyId());
 		
 		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGDAO.getOpinionInfo(map);
-
+		
 		LOGGER.debug("getOpinionInfo ended");
 		
 		return approvalGOpinionInfoVOs;
