@@ -706,7 +706,7 @@ public class MApprovalGGWController {
 			loginVO.setDeptID(userInfo.getDeptId());
 			
 			if (type.equals("APR")) {
-				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO);
+				rtnVal = ezApprovalGService.mobileSrvConn(approvalGDocInfoVO.getAprMemberID(), "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO);
 				
 				if (rtnVal != null && !rtnVal.equals("ERROR")) {
 					result.put("status", "ok");
@@ -718,7 +718,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("BAN")) {
-				rtnVal = ezApprovalGService.doBansong(docId, userId, "004", realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, userInfo.getDeptId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO);
+				rtnVal = ezApprovalGService.doBansong(docId, approvalGDocInfoVO.getAprMemberID(), "004", realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, userInfo.getDeptId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO);
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
@@ -730,7 +730,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("BO")) {
-				rtnVal = ezApprovalGService.doBoryu(docId, userId, "005", userInfo.getCompanyId(), optionInfo.getLang(), userInfo.getTenantId());
+				rtnVal = ezApprovalGService.doBoryu(docId, approvalGDocInfoVO.getAprMemberID(), "005", userInfo.getCompanyId(), optionInfo.getLang(), userInfo.getTenantId());
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
@@ -742,7 +742,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("HWE")) {
-				rtnVal = ezApprovalGService.doCallBack(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
+				rtnVal = ezApprovalGService.doCallBack(docId, approvalGDocInfoVO.getAprMemberID(), userInfo.getCompanyId(), userInfo.getTenantId());
 				
 				if (rtnVal != null && !rtnVal.equals("<RESULT>FALSE</RESULT>")) {
 					result.put("status", "ok");
