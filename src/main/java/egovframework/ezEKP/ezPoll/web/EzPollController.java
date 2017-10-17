@@ -684,7 +684,7 @@ public class EzPollController extends EgovFileMngUtil {
 	        outStream.close();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			
 		}
 		finally {
 			if (inputStream != null) {
