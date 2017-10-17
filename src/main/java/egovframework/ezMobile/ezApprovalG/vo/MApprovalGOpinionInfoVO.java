@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezApprovalG.vo;
 
+
 public class MApprovalGOpinionInfoVO {
 	/** 의견내용*/
 	private String content;
@@ -39,23 +40,6 @@ public class MApprovalGOpinionInfoVO {
 		this.userDeptName = userDeptName;
 	}
 	public String getOpinionGB() {
-		switch (opinionGB) {
-		case "001": 
-			opinionGB = "일반의견"; 
-			break;
-		case "002":
-			opinionGB = "반송의견";
-			break;
-		case "003":
-			opinionGB = "보류의견";
-			break;
-		case "004":
-			opinionGB = "회송의견";
-			break;
-		default:
-			opinionGB = "기타의견";
-			break;
-		}
 		return opinionGB;
 	}
 	public void setOpinionGB(String opinionGB) {

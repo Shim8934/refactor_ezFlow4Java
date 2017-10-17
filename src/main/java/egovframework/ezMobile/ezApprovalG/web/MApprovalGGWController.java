@@ -674,13 +674,14 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [PUT] 결재(APR), 반송(BAN), 보류(BO), 회수(HWE), 확인(CHECK)
 	 */
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/approve/{type}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject mApprovalDoApprove(@PathVariable String docId, @PathVariable String type, HttpServletRequest request, Locale locale) {
+	public JSONObject mApprovalDoApprove(@PathVariable String docId, @PathVariable String type, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] started.");
 
 		JSONObject result = new JSONObject();
 		
 		try {
 			String userId = request.getParameter("userId");
+			String locale = request.getParameter("locale");
 			String serverName = request.getHeader("x-user-host");
 			String realPath = commonUtil.getRealPath(request);
 			
@@ -701,7 +702,7 @@ public class MApprovalGGWController {
 			loginVO.setCompanyID(userInfo.getCompanyId());
 			loginVO.setTenantId(userInfo.getTenantId());
 			loginVO.setOffset(userInfo.getOffSet());
-			loginVO.setLocale(locale);
+			loginVO.setLocale(new Locale(locale));
 			loginVO.setLang(optionInfo.getLang());
 			loginVO.setDeptID(userInfo.getDeptId());
 			
