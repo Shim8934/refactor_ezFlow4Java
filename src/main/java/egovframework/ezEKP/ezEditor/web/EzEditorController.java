@@ -73,11 +73,14 @@ public class EzEditorController extends EgovFileMngUtil{
 		String id = request.getParameter("id");
 		String isUsed = request.getParameter("isUsed");
 		
+		String serverUrl = "http://" + userInfo.getServerName();
+		logger.debug("serverUrl=" + serverUrl);
+		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String returnPath = "";
 		
 		switch (useEditor) {
-			/* 2017-05-23 이효민 : DEXT, NAMO 추후 개발
+			/* 2017-05-23 이효민 : DEXT 추후 개발
 			case "DEXT":
 				model.addAttribute("id", id);
 				returnPath = "ezEditor/dextEditor";
@@ -97,6 +100,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
 		model.addAttribute("isUsed", isUsed);
+		model.addAttribute("serverUrl", serverUrl);
 
 		return returnPath;
 	}
