@@ -674,7 +674,8 @@
 		</isNotEmpty>
 		<![CDATA[
                 ALERTTIME = #v_PALERTTIME#,
-                APPROVEFLAG = IFNULL(#v_PAPPROVEFLAG#,'0'),              
+                APPROVEFLAG = IFNULL(#v_PAPPROVEFLAG#,'0'),
+                ALLDAY = IFNULL(#v_PALLDAY#,'0'),             
                 IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
            		COMPANYID = #v_PCOMPANYID#

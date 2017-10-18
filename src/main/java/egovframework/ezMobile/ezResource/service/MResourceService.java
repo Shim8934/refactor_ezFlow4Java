@@ -44,7 +44,7 @@ public interface MResourceService {
 			String writeDay, String entryList, String attachFlag, String approveFlag, String reFlag,String scheduleId);
 	
 	public void modifyResSch(String title, String startDate, String endDate, 
-			String alterTime, String content,String importance, String reFlag, String approveFlag,
+			String alterTime, String content,String importance, String reFlag, String allDay,String approveFlag,
 			String companyId, String num, String ownerId, int tenantId);
 	
 	public void delResSch(String companyId, String ownerId, String num, String startDate, String endDate, String offset,String reFlag, int tenantId) throws Exception;

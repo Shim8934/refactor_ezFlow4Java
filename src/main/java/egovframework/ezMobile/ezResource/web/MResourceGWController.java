@@ -435,7 +435,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String reFlag =  jsonObject.get("reFlag").toString();
 
 			writeDay = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			allDay =  "0"; 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
 	    	
@@ -490,7 +489,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String reFlag = jsonObject.get("reFlag").toString(); 
 			String alertTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false
-	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true); 
+	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+	    	String allDay = jsonObject.get("allDay").toString(); 
 	    	
 	    	String approveFlag =  "1";
 			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
@@ -499,7 +499,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 				approveFlag =  "0";
 			}
 			
-	    	mResourceService.modifyResSch(title,utcStartDate, utcEndDate, alertTime, content, importance, reFlag, approveFlag, companyId, num, ownerId, tenantId);
+	    	mResourceService.modifyResSch(title,utcStartDate, utcEndDate, alertTime, content, importance, reFlag, allDay, approveFlag, companyId, num, ownerId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

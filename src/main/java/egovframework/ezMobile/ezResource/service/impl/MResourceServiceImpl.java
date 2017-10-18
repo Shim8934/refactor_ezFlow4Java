@@ -181,7 +181,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public void modifyResSch(String title, String startDate, String endDate, 
-			String alterTime, String content,String importance, String reFlag, String approveFlag,
+			String alterTime, String content,String importance, String reFlag, String allDay, String approveFlag,
 			String companyId, String num, String ownerId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerId);
@@ -194,6 +194,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCONTENT", content);
 		map.put("v_PIMPORTANCE", importance);
 		map.put("v_PREFLAG", reFlag);
+		map.put("v_PALLDAY", allDay);
 		map.put("v_PAPPROVEFLAG", approveFlag);
 		map.put("v_PNUM", num);
 		
