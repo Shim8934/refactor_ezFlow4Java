@@ -374,22 +374,22 @@
 //             FieldsList = CrossEditor.GetBodyElementsByTagName("*");
 //             return FieldsList;
 //         }
-
-//         window.onresize = function () {
-//             if (type != "APPROVAL" || type != "APPROVALG" || type != "ADMIN") {
-//                 CrossEditor.SetUISize("100%", document.documentElement.clientHeight - 10);
-//             }
-//         }
+        
 		</script>
 	</head>
 	<body style="margin: 0px; padding: 0px;">
 	    <script type="text/javascript">
 	        var CrossEditor = new NamoSE("Namo");
 			
+	        if (type == "APPROVAL" || type == "APPROVALG") {
+				CrossEditor.params.Height = height + "px";
+			} else {
+				CrossEditor.params.Height = document.documentElement.clientHeight + "px";
+			}
+	        
 	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do";
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
-	        
 	        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
 	        
 	        if (userLang == "1") {
