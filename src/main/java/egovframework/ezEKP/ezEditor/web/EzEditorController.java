@@ -73,6 +73,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		String id = request.getParameter("id");
 		String isUsed = request.getParameter("isUsed");
 		
+		//TODO: http/https 설정값
 		String serverUrl = "http://" + userInfo.getServerName();
 		logger.debug("serverUrl=" + serverUrl);
 		
