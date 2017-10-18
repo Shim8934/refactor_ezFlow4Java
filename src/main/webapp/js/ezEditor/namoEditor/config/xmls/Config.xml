@@ -12,7 +12,7 @@
 		<WebLanguage>JSP</WebLanguage>
 		<ImageSavePath></ImageSavePath>
 		<Width>100%</Width>
-		<Height>100%</Height>
+		<Height></Height>
 		<UploadFileNameType>real</UploadFileNameType>
 		<UploadFileViewer>false</UploadFileViewer>
 		<UploadFileSizeLimit>movie:50000000</UploadFileSizeLimit>
