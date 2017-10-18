@@ -1496,6 +1496,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("qstTitle", qstTitle);		
 		model.addAttribute("qstId", qstId);	
+		model.addAttribute("tenantId", loginVO.getTenantId());	
 		
 		logger.debug("wpNewVote finishes");
 		return "/ezPortal/portalWpNewVote";

@@ -200,8 +200,7 @@ public class EzPollController extends EgovFileMngUtil {
 			qstId = request.getParameter("qstId");
 		}
 		
-		if (!qstId.equals("")) {
-			logger.debug("Run here!");
+		if (!qstId.equals("")) {			
 			redirectAttributes.addAttribute("qstId", qstId);
 			return "redirect:/ezPoll/pollVote.do";
 		}
@@ -408,8 +407,8 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezPoll/pollVote.do")
-	public String qstVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, ModelMap model) throws Exception {
-		logger.debug("Question vote is running!");			
+	public String qstVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, RedirectAttributes redirectAttributes, ModelMap model) throws Exception {
+		logger.debug("question vote is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
@@ -433,41 +432,16 @@ public class EzPollController extends EgovFileMngUtil {
 		else {
 			//Admin privilege user
 			adminPrivilege = 1;
-		}
-		
-		//Get all related users for this question
-		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
-		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
-		List<LoginVO> listofTotalUsers = new ArrayList<LoginVO>(setOfUserIds);
-		totalUsers = listofTotalUsers.size();	
-		
-		//Check if user has the vote privilege
-		if (listofTotalUsers.contains(loginVO)) {
-			model.addAttribute("hasVotePrivilege", 1);
-		}
-		else {
-			model.addAttribute("hasVotePrivilege", 0);
-		}
-		
-		//Get all seen users
-		List<String> listOfCurrentSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		totalSeenUsers = listOfCurrentSeenUsers.size();
-		
-		if (listofTotalUsers.contains(loginVO)) {
-			if (!listOfCurrentSeenUsers.contains(loginVO.getId())) {
-				//Update seen users number 
-				PollQuestionStatusVO pollQstStatusVO = new PollQuestionStatusVO();
-				pollQstStatusVO.setUserId(loginVO.getId());
-				pollQstStatusVO.setTenantId(loginVO.getTenantId());
-				pollQstStatusVO.setQustId(qstId);	
-				ezPollService.insertSeenQuestion(pollQstStatusVO);
-				totalSeenUsers = totalSeenUsers + 1;
-				getUpdateSeenRequests(totalSeenUsers, qstId, loginVO.getTenantId());
-			}
 		}		
 		
 		//Get question
-		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);		
+		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
+		
+		if (pollQuestionVO == null) {			
+			redirectAttributes.addAttribute("brdID", 6);			
+			return "redirect:/ezPoll/pollList.do";
+		}		
+		
 		Date endDate = formatter.parse(pollQuestionVO.getEndDate());
 		Date nowTime = new Date();
 		compareEnd = endDate.compareTo(nowTime);
@@ -504,6 +478,37 @@ public class EzPollController extends EgovFileMngUtil {
 		else {
 			pollQuestionVO.setStatus(0);
 		}
+		
+		//Get all related users for this question
+		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
+		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+		List<LoginVO> listofTotalUsers = new ArrayList<LoginVO>(setOfUserIds);
+		totalUsers = listofTotalUsers.size();	
+		
+		//Check if user has the vote privilege
+		if (listofTotalUsers.contains(loginVO)) {
+			model.addAttribute("hasVotePrivilege", 1);
+		}
+		else {
+			model.addAttribute("hasVotePrivilege", 0);
+		}
+		
+		//Get all seen users
+		List<String> listOfCurrentSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
+		totalSeenUsers = listOfCurrentSeenUsers.size();
+		
+		if (listofTotalUsers.contains(loginVO)) {
+			if (!listOfCurrentSeenUsers.contains(loginVO.getId())) {
+				//Update seen users number 
+				PollQuestionStatusVO pollQstStatusVO = new PollQuestionStatusVO();
+				pollQstStatusVO.setUserId(loginVO.getId());
+				pollQstStatusVO.setTenantId(loginVO.getTenantId());
+				pollQstStatusVO.setQustId(qstId);	
+				ezPollService.insertSeenQuestion(pollQstStatusVO);
+				totalSeenUsers = totalSeenUsers + 1;
+				getUpdateSeenRequests(totalSeenUsers, qstId, loginVO.getTenantId());
+			}
+		}	
 		
 		//Get user and his/her answers
 		List<Integer> listSelectedOptionsOfUser = new ArrayList<Integer>();

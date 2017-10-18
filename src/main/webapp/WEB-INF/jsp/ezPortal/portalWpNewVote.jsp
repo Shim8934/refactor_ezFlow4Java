@@ -10,16 +10,58 @@
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
+		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 		<script type="text/javascript">
 			var qstTitle = "${qstTitle}";
 		    var qstId = "${qstId}";
 		    var votesArr = [];
 		    var totalVotes = 0;
-		    var numberOptions = "<c:out value='${numberOfOptions}'/>";
+		    var tenantId = "${tenantId}";
+		    var numberOptions = "<c:out value='${numberOfOptions}'/>";		   
 		    
-		    window.onload = function() {		    	
+		    window.onload = function() {
+		    	getConnect();
 		    	updateGraph();
 		    }
+		    
+		    function getConnect(){
+			    var socket = new SockJS('/ezFlow/hello');
+			    stompClient = Stomp.over(socket);			
+			    stompClient.connect({}, function (frame) {
+		        	stompClient.subscribe('/reply/getResultUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
+			        	var optId = JSON.parse(updatedInfo.body).optionId;			        	
+			        	var mode = JSON.parse(updatedInfo.body).mode;
+			        	
+			        	if (mode == 1) {
+			        		//In adding mode
+			        		totalVotes = totalVotes + 1;
+			        		
+			        		for (var i = 0; i < numberOptions; i++) {
+			        			if (votesArr[i][0] == optId) {
+			        				votesArr[i][1] = votesArr[i][1] + 1;			        			
+			        				break;
+			        			}
+			        		}	
+			        		
+			        		updateGraph();
+			        	}
+			        	else {
+			        		//In removing mode
+			        		totalVotes = totalVotes - 1;
+			        		
+			        		for (var i = 0; i < numberOptions; i++) {
+			        			if (votesArr[i][0] == optId) {
+			        				votesArr[i][1] = votesArr[i][1] - 1;			        				
+			        				break;
+			        			}
+			        		}	
+			        		
+			        		updateGraph();
+			        	}
+		        	});
+			    });
+		    }		    
 		    
 		    function viewQstList() {
 		    	window.open("/ezBoard/boardMain.do?func=3","main");		    	
@@ -32,7 +74,7 @@
 		    function updateGraph() {		    	
 		    	if (numberOptions == null) {
 		    		return;
-		    	}
+		    	} 		    	
 		    	
 				for (var i = 0; i < numberOptions; i++) {
 					var graph = document.getElementById("graph" + votesArr[i][0]);				
@@ -40,7 +82,8 @@
 					
 					if (totalVotes > 0) {
 						var percent = votesArr[i][1]/totalVotes;												
-						inforDiv.innerHTML = inforDiv.innerHTML + "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
+						inforDiv.innerHTML = "&nbsp(<strong>" + votesArr[i][1] + "</strong><spring:message code = 'ezPoll.t166'/>/"
+											+ "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
 						
 						if (votesArr[i][1] != 0) {																					
 							graph.style.display = "inline-block";		
