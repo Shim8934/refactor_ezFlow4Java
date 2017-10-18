@@ -144,7 +144,7 @@
         function SetEditorContent(Data) {
             try {
                 CrossEditor.SetBodyValue(Data);
-                Set_CellLocked();
+//                 Set_CellLocked();
 
             } catch (e) { }
         }
@@ -349,30 +349,22 @@
             return FieldsList;
         }
 
-        window.onresize = function () {
-            if (type != "APPROVAL" || type != "APPROVALG" || type != "ADMIN") {
-                CrossEditor.SetUISize("100%", document.documentElement.clientHeight - 10);
-            }
-        }
+//         window.onresize = function () {
+//             if (type != "APPROVAL" || type != "APPROVALG" || type != "ADMIN") {
+//                 CrossEditor.SetUISize("100%", document.documentElement.clientHeight - 10);
+//             }
+//         }
     </script>
 </head>
 <body style="margin: 0px; padding: 0px;">
     <script type="text/javascript">
         var CrossEditor = new NamoSE("Namo");
 //         CrossEditor.params.ImageSavePath = "/Upload_Common/MHTIMAGE/";
-
-//         if (type == "APPROVAL" || type == "APPROVALG") {
-//             CrossEditor.params.Height = height + "px";
-//         } else if (type == "ADMIN") {
-//             CrossEditor.params.Height = parent.document.documentElement.clientHeight - 200;
-//             CrossEditor.params.Width = parent.document.documentElement.clientWidth - 270;
-//         } else {
-// //             CrossEditor.params.Height = (document.documentElement.clientHeight - 10) + "px";
-//         }
 		
+        CrossEditor.params.UploadFileExecutePath = "http://127.0.0.1:8091/ezEditor/namoUpload.do";
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
-
+        
         if (userLang == "1") {
         	CrossEditor.params.UserLang = "kor";
         } else if (userLang == "2") {

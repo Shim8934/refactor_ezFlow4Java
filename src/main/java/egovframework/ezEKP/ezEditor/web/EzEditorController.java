@@ -4,13 +4,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
-import java.util.UUID;
 import java.util.Base64.Decoder;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -521,4 +523,92 @@ public class EzEditorController extends EgovFileMngUtil{
 		return "ezEditor/tfxSimpleUpload";
 	}
 	
+	/**
+	 * namo에디터 업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezEditor/namoUpload.do")
+	@ResponseBody
+	public String namoUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		logger.debug("namoUpload started");
+		
+		JSONObject resultObj = new JSONObject();
+		JSONArray resultArray = new JSONArray();
+		String result = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			JSONObject jsonObj = new JSONObject();
+			
+			MultipartFile multiFile = request.getFile("imageFile");
+			String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+			String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+			String realPath = commonUtil.getRealPath(request);
+			String today = EgovDateUtil.getToday("");
+			String fileName = UUID.randomUUID() + "." + fileType;
+			
+			filePath = filePath + commonUtil.separator + today;
+			File file = new File(realPath + filePath);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			int width = 0;
+			int height = 0;
+			
+			writeUploadedFile(multiFile, fileName, realPath + filePath);
+			
+			String urlFilePath = filePath + commonUtil.separator + fileName;
+			File imageFile = new File(realPath + urlFilePath);			
+			
+			if (imageFile.exists()) {			
+				BufferedImage bi = ImageIO.read(new File(realPath + urlFilePath));			    
+				width = bi.getWidth();
+				height = bi.getHeight();
+			}
+			
+			String imageOrgPath = request.getParameter("imageOrgPath");
+			
+			if (imageOrgPath != null && !imageOrgPath.equalsIgnoreCase("")) {
+				imageOrgPath += "|" + urlFilePath;
+			}
+			
+			jsonObj.put("imageURL", urlFilePath);
+			jsonObj.put("imageTitle", request.getParameter("imageTitle") == null ? "" : request.getParameter("imageTitle"));
+			jsonObj.put("imageAlt", request.getParameter("imageAlt") == null ? "" : request.getParameter("imageAlt"));
+			jsonObj.put("imageWidth", request.getParameter("imageWidth") == null ? "" : request.getParameter("imageWidth"));
+			jsonObj.put("imageWidthUnit", request.getParameter("imageWidthUnit") == null ? "" : request.getParameter("imageWidthUnit"));
+			jsonObj.put("imageHeight", request.getParameter("imageHeight") == null ? "" : request.getParameter("imageHeight"));
+			jsonObj.put("imageHeightUnit", request.getParameter("imageHeightUnit") == null ? "" : request.getParameter("imageHeightUnit"));
+			jsonObj.put("imageMarginLeft", request.getParameter("imageMarginLeft") == null ? "" : request.getParameter("imageMarginLeft"));
+			jsonObj.put("imageMarginLeftUnit", request.getParameter("imageMarginLeftUnit") == null ? "" : request.getParameter("imageMarginLeftUnit"));
+			jsonObj.put("imageMarginRight", request.getParameter("imageMarginRight") == null ? "" : request.getParameter("imageMarginRight"));
+			jsonObj.put("imageMarginRightUnit", request.getParameter("imageMarginRightUnit") == null ? "" : request.getParameter("imageMarginRightUnit"));
+			jsonObj.put("imageMarginTop", request.getParameter("imageMarginTop") == null ? "" : request.getParameter("imageMarginTop"));
+			jsonObj.put("imageMarginTopUnit", request.getParameter("imageMarginTopUnit") == null ? "" : request.getParameter("imageMarginTopUnit"));
+			jsonObj.put("imageMarginBottom", request.getParameter("imageMarginBottom") == null ? "" : request.getParameter("imageMarginBottom"));
+			jsonObj.put("imageMarginBottomUnit", request.getParameter("imageMarginBottomUnit") == null ? "" : request.getParameter("imageMarginBottomUnit"));
+			jsonObj.put("imageAlign", request.getParameter("imageAlign") == null ? "" : request.getParameter("imageAlign"));
+			jsonObj.put("imageId", request.getParameter("imageId") == null ? "" : request.getParameter("imageId"));
+			jsonObj.put("imageClass", request.getParameter("imageClass") == null ? "" : request.getParameter("imageClass"));
+			jsonObj.put("imageBorder", request.getParameter("imageBorder") == null ? "" : request.getParameter("imageBorder"));
+			jsonObj.put("imageKind", request.getParameter("imageKind") == null ? "" : request.getParameter("imageKind"));
+			jsonObj.put("imageOrgPath", imageOrgPath);
+			jsonObj.put("imageOrgWidth", width);
+			jsonObj.put("imageOrgHeight", height);
+			jsonObj.put("editorFrame", request.getParameter("editorFrame") == null ? "" : request.getParameter("editorFrame"));
+			
+			resultArray.add(jsonObj);
+			result = "success";
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resultObj.put("result", result);
+		resultObj.put("addmsg", resultArray);
+		
+		logger.debug("namoUpload ended");
+		return resultObj.toString();
+	}
 }
