@@ -1096,7 +1096,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("user_id", userID);
 		map.put("property_name", propertyName);
 		
-		return ezCommonDAO.getUserConfigInfo(map);
+		String propertyValue = ezCommonDAO.getUserConfigInfo(map);
+        
+        if (propertyValue == null) {
+            propertyValue = "";
+        }
+        
+        return propertyValue;
+
 	}
 
 	@Override
