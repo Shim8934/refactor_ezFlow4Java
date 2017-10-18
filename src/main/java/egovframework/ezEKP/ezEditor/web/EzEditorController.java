@@ -86,6 +86,7 @@ public class EzEditorController extends EgovFileMngUtil{
 				returnPath = "ezEditor/dextEditor";
 	            break; */
 			case "NAMO":
+				model.addAttribute("serverUrl", serverUrl);
 				returnPath = "ezEditor/namoEditor";
                 break;
 			case "TAGFREE":
@@ -100,7 +101,6 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
 		model.addAttribute("isUsed", isUsed);
-		model.addAttribute("serverUrl", serverUrl);
 
 		return returnPath;
 	}
