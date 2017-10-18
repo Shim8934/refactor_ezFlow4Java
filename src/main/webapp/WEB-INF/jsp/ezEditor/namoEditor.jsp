@@ -387,7 +387,7 @@
 				CrossEditor.params.Height = document.documentElement.clientHeight + "px";
 			}
 	        
-	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do";
+	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
 	        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");

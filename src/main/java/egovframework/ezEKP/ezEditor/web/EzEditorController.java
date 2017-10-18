@@ -541,13 +541,23 @@ public class EzEditorController extends EgovFileMngUtil{
 		String result = "";
 		
 		try {
+			String type = request.getParameter("type");
+			logger.debug("type=" + type);
+			
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			JSONObject jsonObj = new JSONObject();
 			
 			MultipartFile multiFile = request.getFile("imageFile");
 			String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-			String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+			
+			String filePath = "";
+			if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+				filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+			} else {
+				filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+			}
+			
 			String realPath = commonUtil.getRealPath(request);
 			String today = EgovDateUtil.getToday("");
 			String fileName = UUID.randomUUID() + "." + fileType;
