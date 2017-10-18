@@ -20,3 +20,7 @@
     background-size: 100px;
 }
 
+.poll_list1 {margin:0px 10px; margin-left: 16px; padding:0px; font-size:12px;}
+.poll_list1 .graphbar1{margin:5px 0px 10px 0px; padding:0px; border:1px solid #c9c9c9; height:7px; width:220px; background-color:#E8E8E8;}
+.poll_list1 .graphbar1 .gx_bar11 {background:#68bbef; height:7px; margin:0px; padding:0px;}
+

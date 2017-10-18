@@ -8,6 +8,7 @@
 		<title><spring:message code='main.t1006' /></title>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 			var qstTitle = "${qstTitle}";
@@ -34,36 +35,24 @@
 		    	}
 		    	
 				for (var i = 0; i < numberOptions; i++) {
+					var graph = document.getElementById("graph" + votesArr[i][0]);				
+					var inforDiv = document.getElementById("info" + votesArr[i][0]);
+					
 					if (totalVotes > 0) {
-						var percent = votesArr[i][1]/totalVotes;
-						var inforDiv = document.getElementById("info" + votesArr[i][0]);
+						var percent = votesArr[i][1]/totalVotes;												
 						inforDiv.innerHTML = inforDiv.innerHTML + "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
 						
-						if (votesArr[i][1] != 0) {								
-							var id = "myCanvas" + votesArr[i][0];	
-							var test = Math.round(220 * percent);
-							document.getElementById("graph" + votesArr[i][0]).style.display = "inline-block";		
-							var canv = document.getElementById(id);
-							
-							//Fill canvas with color
-	 						canv.width = test;       					
-	       					var ctx = canv.getContext("2d");
-	       					ctx.shadowOffsetX = 2;
-	       					ctx.shadowOffsetY = 2;
-	       					ctx.shadowBlur = 2;
-	       					ctx.shadowColor = "#999";
-	       					var gradient = ctx.createLinearGradient(0, 0, 220, 0);
-	       					gradient.addColorStop(0, "#49A0D8");
-	       					gradient.addColorStop(1, "#ffffff");      					
-	       					ctx.fillStyle = gradient;
-	       					ctx.fillRect(0, 0, 220, 50);
+						if (votesArr[i][1] != 0) {																					
+							graph.style.display = "inline-block";		
+							graph.setAttribute("style", "width:" + percent*100 + "%");
 						}
 						else {
-							document.getElementById("graph" + votesArr[i][0]).style.display = "none";
+							graph.style.display = "none";
 						}
 					}
 					else {
-						document.getElementById("graph" + votesArr[i][0]).style.display = "none";
+						graph.style.display = "none";
+						inforDiv.innerHTML = inforDiv.innerHTML + "<span style=\"color:red; font-weight: bold\">0.0</span>" + "%)";
 					}
 				}
 			}
@@ -79,28 +68,30 @@
   							<p class="qusetion">
    								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="${qstTitle }" style="margin-left:3px">${qstTitle}</span>
     						</p>
-      						<c:forEach var="_option" items="${listOptions}" varStatus="loop">      								    
-	               				<div style="display: inline-block; padding-left: 18px; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
-	               					<div style="float:left; display: block;">${loop.index + 1}. </div>
-	               					<div style="float:left; display: block;">${_option.content}</div>
-	               					<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
-	               				</div>
-	               				<div id="graph<c:out value ="${_option.ansId}" />" style="display: inline-block;width: 234px; padding-left: 18px;">
-	               					<canvas id="myCanvas<c:out value ="${_option.ansId}" />"  height="16" style="border:1px solid #000000;"></canvas>			               					               					
-	               				</div>
-	               				<script type="text/javascript">		               					
-		               					var voteNum = ${_option.votesNumber};
-		               					var optionID = ${_option.ansId};		               					
-		               					votesArr.push([optionID, voteNum]);	  
-		               					totalVotes = totalVotes + voteNum;
-		               			</script>  	              		             		         			              			
+      						<c:forEach var="_option" items="${listOptions}" varStatus="loop">     
+      							<div class="poll_list1"> 								    
+		               				<div style="display: inline-block; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
+		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
+		               					<div style="float:left; display: block;">${_option.content}</div>
+		               					<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
+		               				</div>
+		               				<div class="graphbar1">
+		               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11"></p>           					
+		               				</div>
+		               				<script type="text/javascript">		               					
+			               					var voteNum = ${_option.votesNumber};
+			               					var optionID = ${_option.ansId};		               					
+			               					votesArr.push([optionID, voteNum]);	  
+			               					totalVotes = totalVotes + voteNum;
+			               			</script>  	
+			               		</div>              		             		         			              			
       						</c:forEach>
   						</c:when>
   						<c:otherwise>
 	  						<br />
     						<br />
     						<div class="nodata_portlet">
-	    						<p	><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
+	    						<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
     							<p><spring:message code='main.t260' /></p>
     						</div>
   						</c:otherwise>

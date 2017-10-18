@@ -277,6 +277,7 @@ public class EzPollController extends EgovFileMngUtil {
 				model.addAttribute("list", listRenderQuestions);
 			}			
 		}	
+		
 		//Get list of modifying questions
 		for (PollQuestionVO pollQstVO : listTotalQuestions) {
 			if (pollQstVO.getIsMofifying() == 1) {
