@@ -544,6 +544,11 @@ public class EzEditorController extends EgovFileMngUtil{
 			String type = request.getParameter("type");
 			logger.debug("type=" + type);
 			
+			if (type.equals("MAILOUTOFOFFICE")) { //메일 부재중설정 시 이미지 업로드되지 않도록.
+				logger.debug("type is MAILOUTOFOFFICE. no upload.");
+				throw new Exception("MAILOUTOFOFFICE");
+			}
+			
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			JSONObject jsonObj = new JSONObject();
@@ -617,7 +622,9 @@ public class EzEditorController extends EgovFileMngUtil{
 			result = "success";
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (!e.getMessage().equals("MAILOUTOFOFFICE")) {
+				e.printStackTrace();
+			}
 		}
 		
 		resultObj.put("result", result);

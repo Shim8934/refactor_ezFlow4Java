@@ -387,6 +387,11 @@
 				CrossEditor.params.Height = document.documentElement.clientHeight + "px";
 			}
 	        
+	        if (type == "MAILOUTOFOFFICE") {
+	        	//TODO: 이미지 업로드 못하도록(붙여넣기, 드래그앤드랍 시 에러메시지 안나오도록..)
+	        	CrossEditor.params.DeleteCommand = ["image"];
+	        }
+	        
 	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
