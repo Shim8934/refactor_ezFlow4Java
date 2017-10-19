@@ -176,7 +176,8 @@
 				persondeptname2,
 				personemail,
 				hascomment,
-				memo
+				memo,
+				repetition
 			FROM
 				TBL_TASK A
 			LEFT JOIN
@@ -209,11 +210,17 @@
 				]]>
 			</isEqual>
 
-			<isNotEqual property="type" compareValue="1" prepend="AND">
+			<isEqual property="type" compareValue="2" prepend="AND">
 				<![CDATA[
-						(A.creatorid = #userID# AND A.tasktype != 1)
+						(A.creatorid = #userID# AND (A.tasktype = 2 OR A.tasktype = 3))
 				]]>
-			</isNotEqual>
+			</isEqual>
+
+			<isEqual property="type" compareValue="3" prepend="AND">
+				<![CDATA[
+						(A.creatorid = #userID# AND A.tasktype = 4)
+				]]>
+			</isEqual>
 		</isNotNull>
 		
 		<isNotEqual property="filter" compareValue="" prepend="AND">
@@ -280,6 +287,19 @@
 		]]>
 	</select>
 
+	<select id="EzTaskDAO.getTaskRepeDelList" parameterClass="Map" resultClass="String"> 
+		<![CDATA[
+			select 
+				date_format(date_add(startDate, interval +#offset# minute), '%Y-%m-%d') as startDate
+			from 
+				tbl_taskrepetition_del
+			where
+				taskid = #taskID#
+			and
+				tenantid = #tenantID#
+		]]>
+	</select>
+
 	<select id="EzTaskDAO.getTaskCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		    SELECT
@@ -336,7 +356,46 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				(A.creatorid = #userID# and A.tasktype != 1)
+				(A.creatorid = #userID# and (A.tasktype = 2 OR A.tasktype = 3))
+			AND
+				A.taskstatus != 3
+		]]>
+
+		<isNotEqual property="filter" compareValue="" prepend="AND">
+        	<isEqual property="chkValue" compareValue="title">
+	        	<![CDATA[
+        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="personName">
+	        	<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
+	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
+        	</isEqual>
+        </isNotEqual>
+	</select>
+	
+	<select id="EzTaskDAO.getTaskCount3" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		    SELECT
+		    	COUNT(DISTINCT(A.taskID))
+			FROM
+				TBL_TASK A
+			LEFT JOIN
+				TBL_TASKSHARE B
+			ON
+				A.tenantid = B.tenantid
+			WHERE
+				A.tenantid = #tenantID#
+			AND
+				(A.creatorid = #userID# AND A.tasktype = 4)
 			AND
 				A.taskstatus != 3
 		]]>
@@ -375,7 +434,9 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				((A.creatorid = #userID# and A.tasktype != 1)
+				((A.creatorid = #userID# and (A.tasktype = 2 or A.tasktype = 3))
+			OR
+				(A.creatorid = #userID# AND A.tasktype = 4)
 			OR
 				((A.creatorid = #userID# and A.tasktype = 1)
 			OR
@@ -448,6 +509,7 @@
 				personemail,
 				personattach,
 				memo,
+				repetition,
 				tenantid)
 			VALUES
 		]]>
@@ -481,6 +543,7 @@
 				#personEmail#,
 				'N',
 				#memo#,
+				#repetition#,
 				#tenantID#)
 			]]>
 		</isNull>

@@ -11,6 +11,8 @@
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -18,6 +20,8 @@
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
@@ -44,6 +48,7 @@
 		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
 		    var taskWorkAttachList = "${taskWorkAttachList }";
 		    var useTodoMemo = "${useTodoMemo }";
+		    var startdate = "${taskInfoVO.startDate}";
 		    
 		    $(document).ready(function() {
 				load_bodyhtml();
@@ -75,7 +80,7 @@
 
 				/* 의견카운트 */
 				getCommentList();
-		        
+
 				setTimeout(onloadchangtab, 100);
 				
 				initProgressBar(taskstatus, completerate);
@@ -704,6 +709,27 @@
 					}
 				})
 			}
+			
+			$(function () {
+		        $("#Sdatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+
+		        var SDate;
+
+		        if (startdate != "") {
+		            SDate = new Date(startdate);
+		        } else {
+		            SDate = new Date();
+		        }
+		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Sdatepicker").datepicker('setDate', SDate);
+		    });
 		</script>
 	</head>
 	
@@ -732,9 +758,13 @@
 			<div class="circle progress_graph" style="width:30%; margin: 10px 20px;">
 				<strong></strong>
 			</div>
-			
+
 			<div class="progress_txt">
 				<ul>
+					<c:if test="${repeatCount != 0}">
+						<span class="txt_title">반복업무(${repeatCount}회차)</span>
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" >
+					</c:if>
 					<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
 					<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
 				</ul>

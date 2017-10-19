@@ -71,6 +71,9 @@ public class TaskInfoVO {
 	private List<TaskShareVO> shareList;
 	/** memo */
 	private String memo;
+	/** 반복 */
+	private String repetition;
+	private int repeatCount;
 	/** 테넌트ID*/
 	private int tenantID;
 	public String getTaskID() {
@@ -277,10 +280,22 @@ public class TaskInfoVO {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	public String getRepetition() {
+		return repetition;
+	}
+	public void setRepetition(String repetition) {
+		this.repetition = repetition;
+	}
 	public int getTenantID() {
 		return tenantID;
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
 	}
 }

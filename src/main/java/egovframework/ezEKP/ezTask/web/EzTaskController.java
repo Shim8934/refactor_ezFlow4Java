@@ -130,6 +130,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
 		String taskID = request.getParameter("taskID");
+		int repeatCount = Integer.parseInt(request.getParameter("repeatCount"));
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 
 		//업무정보 조회
@@ -174,7 +175,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
-		
+		model.addAttribute("repeatCount", repeatCount);
+
 		logger.debug("taskRead ended.");
 		
 		return "/ezTask/taskRead";
@@ -241,6 +243,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		taskInfoVO.setHasAttach(param.get("hasAttach").toString());
 		taskInfoVO.setContentPath(param.get("contentPath").toString());
 		taskInfoVO.setMemo(param.get("memo").toString());
+		taskInfoVO.setRepetition((param.get("repetition").toString()));
 		
 		List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("shareList");
 		List<TaskShareVO> shareList = new ArrayList<TaskShareVO>();
@@ -903,13 +906,16 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<PERSONNAME2>" + vo.getPersonName2() + "</PERSONNAME2>");
     		resultXML.append("<TASKTYPE>" + vo.getTaskType() + "</TASKTYPE>");
     		resultXML.append("<MEMO>" + commonUtil.cleanValue(vo.getMemo()) + "</MEMO>");
-    		
+    		resultXML.append("<REPETITION>" + vo.getRepetition() + "</REPETITION>");
+    		resultXML.append("<REPEATCOUNT>" + vo.getRepeatCount() + "</REPEATCOUNT>");
+ 		
     		resultXML.append("</ROW>");
     	}
 
     	resultXML.append("<CNT>" + cnt.split(",")[0] + "</CNT>");
     	resultXML.append("<CNT2>" + cnt.split(",")[1]+ "</CNT2>");
-    	resultXML.append("<ALLCNT>" + cnt.split(",")[2]+ "</ALLCNT>");
+    	resultXML.append("<CNT3>" + cnt.split(",")[2]+ "</CNT3>");
+    	resultXML.append("<ALLCNT>" + cnt.split(",")[3]+ "</ALLCNT>");
 
     	resultXML.append("</DATA>");
 
@@ -993,5 +999,21 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskSaveGeneral ended.");
 
 		return "json";
+	}
+	
+	/**
+	 * 업무관리 기본설정 저장
+	 */
+	@RequestMapping(value = "/ezTask/taskRepetition.do")
+	public String taskRepetition(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskRepetition started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("taskRepetition ended.");
+
+		return "/ezTask/taskRepetition";
 	}
 }

@@ -130,11 +130,17 @@
 
 		    function ReadTask(elem) {
 		        var taskid = GetAttribute(elem.parentElement, "taskid");
+		        var repeatcount = GetAttribute(elem.parentElement, "repeatcount");
+		        var date = GetAttribute(elem.parentElement, "startdate");
 		        var feature = "";
 		        
+		        if (repeatcount == "") {
+		        	repeatcount = 0;
+		        }
+alert(repeatcount + " / " + date);		        
 	        	feature = GetOpenPosition(750, 740);
 	        	
-                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
 		    function WriteTask() {
@@ -330,6 +336,10 @@
 
 			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
 			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
+      
+			        if (SelectSingleNodeValue(node, "REPEATCOUNT") != "0") {
+			        	tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
+			        }
 		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
@@ -409,6 +419,9 @@
 			                break;
 			            case "3":
 			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                break;
+			            case "4":
+			            	div.style.background = "url(/images/icon/section_Individualbg.gif)";
 			                break;
 			        }
 
@@ -627,7 +640,7 @@
 	            listdom = loadXMLString(xml);
 
 // 	            totalcount = GetChildNodes(listdom.documentElement).length - 3;
-	            currentCount = GetChildNodes(listdom.documentElement).length - 3;
+	            currentCount = GetChildNodes(listdom.documentElement).length - 4;
 	            totalpage = Math.ceil(new Number(currentCount / pagesize));
 
 	            if (isrefresh) {
@@ -646,14 +659,21 @@
 
 	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+	            var cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 	            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
 
 	            if ($(".tabon").attr("divname") == "taskprog") {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + currentCount + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
-	            } else {
+		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t214' />" + " (" + cnt3 + ")";
+	            } else if ($(".tabon").attr("divname") == "taskdictate") {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + currentCount + ")";
+		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t214' />" + " (" + cnt3 + ")";
+	            } else {
+	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
+		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
+		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t214' />" + " (" + currentCount + ")";
 	            }
 
 	            show_page();
@@ -716,6 +736,9 @@
 		                break;
 		            case "taskdictate":
 		                type = "2";
+		                break;
+		            case "taskrepetition":
+		                type = "3";
 		                break;
 		        }
 
@@ -840,6 +863,7 @@
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="taskprog"><spring:message code='ezTask.t2007' /></span></p>
 		        <p><span id="1tab2" divname="taskdictate"><spring:message code='ezTask.t2008' /></span></p>
+		        <p><span id="1tab3" divname="taskrepetition"><spring:message code='ezTask.t214' /></span></p>
 		    </div>
 		</div>
 		<br />

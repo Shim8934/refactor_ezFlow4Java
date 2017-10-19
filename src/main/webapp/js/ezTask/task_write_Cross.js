@@ -309,6 +309,84 @@ function status_change(fileinfo) {
     } catch (e) { }
 }*/
 
+var g_sdate = null;
+var g_edate = null;
+var task_repetition_cross_dialogArguments = new Array();
+
+function config_repeat() {
+
+    var prameter = new Array();
+    if (g_sdate == null) {
+        prameter["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+        prameter["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    }
+    else {
+        prameter["SDATE"] = g_sdate;
+        prameter["EDATE"] = g_edate;
+    }
+
+    prameter["REPETITION"] = repetition;
+
+    task_repetition_cross_dialogArguments[0] = prameter;
+    task_repetition_cross_dialogArguments[1] = config_repeat_Complete;
+
+    DivPopUpShow(450, 420, "/ezTask/taskRepetition.do");
+}
+
+function config_repeat_Complete(retVal) {
+
+    if (retVal == "cancel" || typeof (retVal) == "undefined") {
+    }
+    else {
+        if (retVal["REPETITION"] == "") {
+            repetition = "";
+            document.getElementById("periodblock").style.display = "";
+            document.getElementById("repeatblock").style.display = "none";
+            document.getElementById("repeatinfo").innerHTML = "&nbsp;";
+        }
+        else {
+            g_sdate = retVal["SDATE"];
+            g_edate = retVal["EDATE"];
+            repetition = retVal["REPETITION"];
+            show_repetition_info();
+        }
+    }
+    DivPopUpHidden();
+
+}
+
+
+function show_repetition_info() {
+
+    document.getElementById("periodblock").style.display = "none";
+    document.getElementById("repeatblock").style.display = "";
+
+    var info = repetition.split("|");
+    var repeatinfo = "" + strLang29 + "";
+
+    switch (info[2]) {
+        case "0":
+            repeatinfo += "" + strLang30 + "";
+            break;
+        case "1":
+            repeatinfo += "" + strLang31 + "";
+            break;
+        case "2":
+            repeatinfo += "" + strLang32 + "";
+            break;
+        case "3":
+            repeatinfo += "" + strLang33 + "";
+            break;
+        default:
+            break;
+    }
+
+    if (repetitiondel != "")
+        repeatinfo += ", " + strLang34 + "" + repetitiondel + " " + strLang35 + "";
+
+    document.getElementById("repeatinfo").innerHTML = repeatinfo;
+}
+
 function ReplaceText(orgStr, findStr, replaceStr) {
     var re = new RegExp(findStr, "gi");
 
@@ -372,8 +450,29 @@ function save_task() {
         return;
     }
 
-    var startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-    var enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	var startdate = "";
+	var enddate = "";
+
+	if (repetition == "") {
+		startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	} else {
+		var sdate, edate;
+
+        if (g_sdate == null) {
+            startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+            enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+            sdate = new Date(startdate.substring(0, 4), parseInt(startdate.substring(5, 7)) - 1, startdate.substring(8, 10));
+            edate = new Date(enddate.substring(0, 4), parseInt(enddate.substring(5, 7)) - 1, enddate.substring(8, 10));
+        }
+        else {
+            sdate = new Date(g_sdate.substring(0, 4), parseInt(g_sdate.substring(5, 7)) - 1, g_sdate.substring(8, 10));
+            edate = new Date(g_edate.substring(0, 4), parseInt(g_edate.substring(5, 7)) - 1, g_edate.substring(8, 10));
+        }
+
+        startdate = sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate();
+        enddate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate();
+	}
 
     if (startdate > enddate) {
     	doubleSubmitFlag = false;
@@ -381,7 +480,12 @@ function save_task() {
         return;
     }
 
-    tasktype = $(":input:radio[name=tasktypesel]:checked").val();
+    if (repetition == "") {
+    	tasktype = $(":input:radio[name=tasktypesel]:checked").val();    	
+    } else {
+    	tasktype = 4;
+    }
+
     importance = $(":input:radio[name=important]:checked").val();
 
     var sharelist = document.getElementById("sharelist").innerHTML;
@@ -423,7 +527,7 @@ function save_task() {
     	}
     }
 
-    if (tasktype == 1) {
+    if (tasktype == 1 || tasktype == 4) {
         personID =  userid;
         personName = username;
         personName2 = username2;
@@ -477,7 +581,7 @@ function save_task() {
 	} else {
 		memo = "";
 	}
-
+alert(repetition);
 	data = {
 			taskID : taskid,
 			ownerID : userid,
@@ -503,7 +607,8 @@ function save_task() {
 			fileName : fileName,
 			fileSize : fileSize,
 			shareList : shareList,
-			memo : memo
+			memo : memo,
+			repetition : repetition
 		};
 	
     $.ajax({

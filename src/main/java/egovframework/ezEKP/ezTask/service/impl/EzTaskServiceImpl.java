@@ -3,11 +3,16 @@ package egovframework.ezEKP.ezTask.service.impl;
 import java.io.File;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -463,12 +468,299 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 
-		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map); 
+		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map);
+		List<TaskInfoVO> resultList = new ArrayList<TaskInfoVO>();
+		
+		for (int i=0; i < list.size(); i++) {
+			TaskInfoVO vo = list.get(i);
+			
+			if (startDate.equals("")) {
+				startDate = vo.getStartDate();
+			}
+			
+			if (endDate.equals("")) {
+				endDate = vo.getEndDate();
+			}
+
+			if (vo.getTaskType().equals("4")) {
+				map.put("taskID", vo.getTaskID());
+System.out.println("@@@ " + vo.getRepetition());				
+				List<String> rList = ezTaskDAO.getTaskRepeDelList(map);
+				
+				String currentEndDate = vo.getEndDate();
+				String[] info = vo.getRepetition().split("\\|");
+
+				if (!info[0].equals("0")) {
+					currentEndDate = endDate;
+				}
+				if (currentEndDate.compareTo(endDate) > 0) {
+					currentEndDate = endDate;
+				}
+
+				int maxCount = Integer.parseInt(info[0]);
+				int count = 0;
+				boolean isFirst = true;
+
+				if (maxCount == 0) {
+					maxCount = -1;
+				}
+
+				Calendar sDate_cal = Calendar.getInstance();
+				Calendar eDate_cal = Calendar.getInstance();
+				Calendar date_cal = Calendar.getInstance();
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+System.out.println("@@@" + startDate + " / " + endDate + " / " + currentEndDate);				
+				sDate_cal.setTime(sdf.parse(startDate));
+				eDate_cal.setTime(sdf.parse(currentEndDate));
+				date_cal.setTime(sdf.parse(vo.getStartDate()));
+				
+				switch (info[2]) {
+					case "0" :
+						while (true) {
+							if (date_cal.compareTo(eDate_cal) > 0) break;
+							if (maxCount == count) break;
+							
+							boolean generated = false;
+							int dayOFWeek = date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+	
+							if (info[3].equals("0")) {
+								if (dayOFWeek != 0 && dayOFWeek != 6) {
+									generated = true;
+								}
+							} else {
+								generated = true;
+							}
+	
+							if (generated) {
+								count++;
+								
+								String calcuDate = nsdf.format(date_cal.getTime());
+	
+								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
+										resultList.add(rVo);
+									}
+								}
+							}
+							
+							if (info[3].equals("0")) {
+								date_cal.add(Calendar.DATE, 1);
+							} else {
+								date_cal.add(Calendar.DATE, Integer.parseInt(info[3]));
+							}
+						}
+					break;
+					
+					case "1" :
+						int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+						
+						while (true) {
+							if (date_cal.compareTo(eDate_cal) > 0) break;
+							if (maxCount == count) break;
+							
+							boolean generated = false;
+	
+							if (info[4].indexOf((date_cal.get(Calendar.DAY_OF_WEEK) - 1) + "") > -1) {
+								generated = true;
+							}
+							
+							if (generated) {
+								count++;
+								
+								String calcuDate = nsdf.format(date_cal.getTime());
+								
+								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+										resultList.add(rVo);
+									}
+								}
+							}
+							
+							if (weekcount == 0) {
+								date_cal.add(Calendar.DATE, (Integer.parseInt(info[3]) - 1) * 7 + 1);
+								weekcount = 6;
+							} else {
+								date_cal.add(Calendar.DATE, 1);
+								weekcount--;
+							}
+						}						
+					break;	
+					
+					case "2" :
+						while (true) {						
+							int year = date_cal.get(Calendar.YEAR);
+							int month = date_cal.get(Calendar.MONTH) + 1;
+	
+							if ((year >= eDate_cal.get(Calendar.YEAR) && month > eDate_cal.get(Calendar.MONTH) + 1) || year > eDate_cal.get(Calendar.YEAR)) break;
+							if (maxCount == count) break;
+							
+							boolean generated = false;
+							
+							Calendar newCal = Calendar.getInstance();
+							newCal.set(year, month-1, 1);
+	
+							if (info[3].equals("1")) {
+								newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+							} else {
+								int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1);
+								
+								if (diff < 0) {
+									diff += 7;									
+								}								
+								newCal.add(Calendar.DATE, diff);
+								
+								if (Integer.parseInt(info[5]) < 5) {
+									newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+								} else {
+									while (true) {
+										newCal.add(Calendar.DATE, 7);
+										
+										if (newCal.get(Calendar.MONTH) + 1 != month) {
+											newCal.add(Calendar.DATE, -7);
+											break;
+										}
+									}
+								}
+							}
+	
+							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+								generated = true;
+							}
+							
+							isFirst = false;
+	
+							if (generated) {
+								count++;
+	
+								String calcuDate = nsdf.format(newCal.getTime());
+								
+								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+										resultList.add(rVo);
+									}
+								}
+							}
+							
+							date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+							date_cal.add(Calendar.MONTH, Integer.parseInt(info[4]));							
+						}
+					break;
+					
+					case "3" :
+						while (true) {
+							int year = date_cal.get(Calendar.YEAR);
+							int month = Integer.parseInt(info[4]);
+									
+							if (year > eDate_cal.get(Calendar.YEAR)) break;
+							if (maxCount == count) break;
+							
+							boolean generated = false;
+							
+							Calendar newCal = Calendar.getInstance();
+							newCal.set(year, month-1, 1);
+							
+							if (info[3].equals("1")) {
+								newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+								
+								if (info[5].equals("2")) {
+									//음력으로 newCal 다시 만듬									
+									if (!isFirst || newCal.compareTo(date_cal) >= 0) {
+										generated = true;
+									}
+								}
+							} else {
+								int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1); 
+								
+								if (diff < 0) {
+									diff += 7;									
+								}								
+								newCal.add(Calendar.DATE, diff);
+								
+								if (Integer.parseInt(info[5]) < 5) {
+									newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+								} else {
+									while (true) {
+										newCal.add(Calendar.DATE, 7);
+										
+										if (newCal.get(Calendar.MONTH) + 1 != month) {
+											newCal.add(Calendar.DATE, -7);
+											break;
+										}
+									}
+								}
+							}
+							
+							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+								generated = true;
+							}
+							
+							isFirst = false;
+							
+							if (generated) {
+								count++;
+								
+								String calcuDate = nsdf.format(newCal.getTime());
+								
+								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+										resultList.add(rVo);
+									}
+								}
+							}
+							
+							date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+							date_cal.add(Calendar.YEAR, 1);
+						}						
+					break;	
+				}
+			} else {
+				resultList.add(vo);
+			}
+		}
 
 		logger.debug("listsize = " + list.size());
 		logger.debug("getTaskList ended.");
 
-		return list;
+		return resultList;
+	}
+
+	public TaskInfoVO addRepeatRow(TaskInfoVO vo, Date date, int count, String dateType) throws Exception {
+		
+		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+		TaskInfoVO innerVO = new TaskInfoVO();
+	
+		String dateTime1 = nsdf.format(date) + vo.getStartDate().substring(10);
+		String dateTime2 = nsdf.format(date) + vo.getEndDate().substring(10);		
+				
+		if (dateTime1.compareTo(dateTime2) > 0) {
+			Calendar cal = Calendar.getInstance();
+			
+			cal.setTime(date);
+			cal.add(Calendar.DATE, 1);
+			
+			dateTime2 = nsdf.format(cal.getTime()) + vo.getEndDate().substring(10); 
+		}
+		
+		int newDateType = Integer.parseInt(dateType) + 1;
+		
+		BeanUtils.copyProperties(innerVO, vo);
+				
+		innerVO.setStartDate(dateTime1);
+		innerVO.setEndDate(dateTime2);
+//		innerVO.setTaskType(newDateType + "");
+		innerVO.setRepeatCount(count);			
+		
+		return innerVO; 
 	}
 
 	@Override
@@ -489,9 +781,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		String rtnCnt = "";
 		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count
 		String cnt2 = ezTaskDAO.getTaskCount2(map); // 지시,협조 중 진행중 count
+		String cnt3 = ezTaskDAO.getTaskCount3(map); // 지시,협조 중 진행중 count
 		String allCnt = ezTaskDAO.getTaskAllCount(map); // 개인 + 지시,협조 count
 
-		rtnCnt = cnt + "," + cnt2 + "," + allCnt;
+		rtnCnt = cnt + "," + cnt2 + "," + cnt3 + "," + allCnt;
 
 		logger.debug("rtnCnt : " + rtnCnt);
 		logger.debug("getTaskCount ended.");
@@ -572,6 +865,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("personDeptName2", vo.getPersonDeptName2());
 		map.put("personEmail", vo.getPersonEmail());
 		map.put("memo", vo.getMemo());
+		map.put("repetition", vo.getRepetition());
 		map.put("tenantID", tenantID);
 		
 		String taskID = ezTaskDAO.insertTask(map);

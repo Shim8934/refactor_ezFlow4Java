@@ -17,12 +17,12 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzTaskDAO extends EgovAbstractDAO {
 	/* 이효진*/
 	@SuppressWarnings("unchecked")
-	public List<TaskCommentVO> getCommentList(Map<String, Object> map) {
+	public List<TaskCommentVO> getCommentList(Map<String, Object> map) throws Exception {
 		return (List<TaskCommentVO>) list("EzTaskDAO.getCommentList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<TaskShareVO> getShareList(Map<String, Object> map) {
+	public List<TaskShareVO> getShareList(Map<String, Object> map) throws Exception {
 		return (List<TaskShareVO>) list("EzTaskDAO.getShareList", map);
 	}
 	
@@ -36,7 +36,7 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		return (List<TaskInfoVO>) list("EzTaskDAO.getTaskList", map);
 	}
 	
-	public TaskInfoVO getTaskInfo(Map<String, Object> map) {
+	public TaskInfoVO getTaskInfo(Map<String, Object> map) throws Exception {
 		return (TaskInfoVO) select("EzTaskDAO.getTaskInfo", map);
 	}
 	
@@ -44,8 +44,13 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		return (TaskConfigVO) select("EzTaskDAO.getOriginColor", map);
 	}
 
-	public TaskGeneralVO getTaskGeneral(Map<String, Object> map) {
+	public TaskGeneralVO getTaskGeneral(Map<String, Object> map) throws Exception {
 		return (TaskGeneralVO) select("EzTaskDAO.getTaskGeneral", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getTaskRepeDelList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzTaskDAO.getTaskRepeDelList", map) ;
 	}
 
 	public String getTaskCount(Map<String, Object> map) throws Exception {
@@ -56,7 +61,11 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		return (String) select("EzTaskDAO.getTaskCount2", map);
 	}
 
-	public String getTaskAllCount(Map<String, Object> map) {
+	public String getTaskCount3(Map<String, Object> map) throws Exception {
+		return (String) select("EzTaskDAO.getTaskCount3", map);
+	}
+
+	public String getTaskAllCount(Map<String, Object> map) throws Exception {
 		return (String) select("EzTaskDAO.getTaskAllCount", map);
 	}
 
@@ -64,7 +73,7 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		return (String) insert("EzTaskDAO.insertTask", map);
 	}
 	
-	public int insertComment(Map<String, Object> map) {
+	public int insertComment(Map<String, Object> map) throws Exception {
 		return update("EzTaskDAO.insertComment", map);
 	}
 	
