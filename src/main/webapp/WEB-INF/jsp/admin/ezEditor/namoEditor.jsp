@@ -359,14 +359,14 @@
 <body style="margin: 0px; padding: 0px;">
     <script type="text/javascript">
         var CrossEditor = new NamoSE("Namo");
-//         CrossEditor.params.ImageSavePath = "/Upload_Common/MHTIMAGE/";
-
-		CrossEditor.params.UploadFileExecutePath = "http://127.0.0.1:8080/ezEditor/namoUpload.do";
+        
+		CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 		CrossEditor.params.Height = parent.document.documentElement.clientHeight - 200;
 		CrossEditor.params.Width = parent.document.documentElement.clientWidth - 270;
 		
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
+        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
         CrossEditor.params.ParagraphTagStyle = {"font-size":"13px;", "font-family":"<spring:message code='main.t246' />"};
 
         if (userLang == "1") {

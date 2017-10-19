@@ -122,6 +122,10 @@ public class EzEditorController extends EgovFileMngUtil{
 		String height = request.getParameter("height");
 		String id = request.getParameter("id");
 		
+		//TODO: http/https 설정값
+		String serverUrl = "http://" + userInfo.getServerName();
+		logger.debug("serverUrl=" + serverUrl);
+		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String returnPath = "";
 		
@@ -132,6 +136,7 @@ public class EzEditorController extends EgovFileMngUtil{
 				returnPath = "admin/ezEditor/dextEditor";
 	            break; */
 			case "NAMO":
+				model.addAttribute("serverUrl", serverUrl);
 				returnPath = "admin/ezEditor/namoEditor";
                 break;
 			case "TAGFREE":
