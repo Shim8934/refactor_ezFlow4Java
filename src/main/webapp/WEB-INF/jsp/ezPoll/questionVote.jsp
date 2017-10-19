@@ -530,12 +530,12 @@
 		    function change(obj) {
 	 	    	if (obj.src.indexOf("/images/unchecked.png") !== -1) {	 	    		   		
 	 	    		if (votePrivilege == 0) {
-	 	    			alert("You don't have privilege to vote for this poll!");
+	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
 	 	    		}
 	 	    		
 	 	    		if (numberOfMultiSelect != 0 && numberOfSelected >= numberOfMultiSelect) {
-	 					alert("The maximum selected options is: " + numberOfMultiSelect);
+	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect);
 	 					return;
 	 	    		}
 	 	    		
