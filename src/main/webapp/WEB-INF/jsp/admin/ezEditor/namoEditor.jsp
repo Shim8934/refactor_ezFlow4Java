@@ -361,11 +361,13 @@
         var CrossEditor = new NamoSE("Namo");
 //         CrossEditor.params.ImageSavePath = "/Upload_Common/MHTIMAGE/";
 
+		CrossEditor.params.UploadFileExecutePath = "http://127.0.0.1:8080/ezEditor/namoUpload.do";
 		CrossEditor.params.Height = parent.document.documentElement.clientHeight - 200;
 		CrossEditor.params.Width = parent.document.documentElement.clientWidth - 270;
 		
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
+        CrossEditor.params.ParagraphTagStyle = {"font-size":"13px;", "font-family":"<spring:message code='main.t246' />"};
 
         if (userLang == "1") {
         	CrossEditor.params.UserLang = "kor";

@@ -364,6 +364,7 @@
         CrossEditor.params.UploadFileExecutePath = "http://127.0.0.1:8091/ezEditor/namoUpload.do";
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
+        CrossEditor.params.ParagraphTagStyle = {"font-size":"13px;", "font-family":"<spring:message code='main.t246' />"};
         
         if (userLang == "1") {
         	CrossEditor.params.UserLang = "kor";
