@@ -83,7 +83,7 @@
 					if (totalVotes > 0) {
 						var percent = votesArr[i][1]/totalVotes;												
 						inforDiv.innerHTML = "&nbsp(<strong>" + votesArr[i][1] + "</strong><spring:message code = 'ezPoll.t166'/>/"
-											+ "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
+											 + "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
 						
 						if (votesArr[i][1] != 0) {																					
 							graph.style.display = "inline-block";		
@@ -95,7 +95,8 @@
 					}
 					else {
 						graph.style.display = "none";
-						inforDiv.innerHTML = inforDiv.innerHTML + "<span style=\"color:red; font-weight: bold\">0.0</span>" + "%)";
+						inforDiv.innerHTML = "&nbsp(<strong>" + votesArr[i][1] + "</strong><spring:message code = 'ezPoll.t166'/>/"
+											 + "<span style=\"color:red; font-weight: bold\">0.0</span>" + "%)";
 					}
 				}
 			}
@@ -115,7 +116,7 @@
       							<div class="poll_list1"> 								    
 		               				<div style="display: inline-block; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
 		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
-		               					<div style="float:left; display: block;">${_option.content}</div>
+		               					<div style="float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap;">${_option.content}</div>
 		               					<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
 		               				</div>
 		               				<div class="graphbar1">
