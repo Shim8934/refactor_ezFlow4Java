@@ -387,7 +387,7 @@
 			}
 	        
 	        if (type == "MAILOUTOFOFFICE") {
-	        	//TODO: 이미지 업로드 못하도록(붙여넣기, 드래그앤드랍 시 에러메시지 안나오도록..)
+	        	//메일 부제중설정 시 이미지 업로드 아이콘 제거
 	        	CrossEditor.params.DeleteCommand = ["image"];
 	        }
 	        
