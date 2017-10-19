@@ -73,16 +73,21 @@ public class EzEditorController extends EgovFileMngUtil{
 		String id = request.getParameter("id");
 		String isUsed = request.getParameter("isUsed");
 		
+		//TODO: http/https 설정값
+		String serverUrl = "http://" + userInfo.getServerName();
+		logger.debug("serverUrl=" + serverUrl);
+		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String returnPath = "";
 		
 		switch (useEditor) {
-			/* 2017-05-23 이효민 : DEXT, NAMO 추후 개발
+			/* 2017-05-23 이효민 : DEXT 추후 개발
 			case "DEXT":
 				model.addAttribute("id", id);
 				returnPath = "ezEditor/dextEditor";
 	            break; */
 			case "NAMO":
+				model.addAttribute("serverUrl", serverUrl);
 				returnPath = "ezEditor/namoEditor";
                 break;
 			case "TAGFREE":
@@ -536,13 +541,28 @@ public class EzEditorController extends EgovFileMngUtil{
 		String result = "";
 		
 		try {
+			String type = request.getParameter("type");
+			logger.debug("type=" + type);
+			
+			if (type.equals("MAILOUTOFOFFICE")) { //메일 부재중설정 시 이미지 업로드되지 않도록.
+				logger.debug("type is MAILOUTOFOFFICE. no upload.");
+				throw new Exception("MAILOUTOFOFFICE");
+			}
+			
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			JSONObject jsonObj = new JSONObject();
 			
 			MultipartFile multiFile = request.getFile("imageFile");
 			String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-			String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+			
+			String filePath = "";
+			if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+				filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+			} else {
+				filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+			}
+			
 			String realPath = commonUtil.getRealPath(request);
 			String today = EgovDateUtil.getToday("");
 			String fileName = UUID.randomUUID() + "." + fileType;
@@ -602,7 +622,9 @@ public class EzEditorController extends EgovFileMngUtil{
 			result = "success";
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (!e.getMessage().equals("MAILOUTOFOFFICE")) {
+				e.printStackTrace();
+			}
 		}
 		
 		resultObj.put("result", result);

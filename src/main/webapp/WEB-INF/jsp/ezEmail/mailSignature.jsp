@@ -272,10 +272,10 @@
 	                <p id = "MailEnv_sub8"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t828' /></span></p>
 		    </div>
 	    </div>
-		<table id="signtable1" class="content" style="width:780px;height:510px"> 
+		<table id="signtable1" class="content" style="width:780px;height:510px;border:none"> 
 		  <TR> 
-		    <TD style="height:510px;">
-				<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILSIGNATURE" name="tbContentElement" style="padding:0; height:200px; width:100%; overflow:auto;border:none;height:100%"></iframe>
+		    <TD style="height:510px;padding:0;border:none">
+				<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILSIGNATURE" name="tbContentElement" style="padding:0; height:200px; width:100%; overflow:auto;height:100%"></iframe>
 		    </TD> 
 		  </TR> 
 		</table>
