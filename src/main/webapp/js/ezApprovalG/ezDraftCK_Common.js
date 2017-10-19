@@ -344,7 +344,21 @@ function setFirstDrafter() {
 }
 
 function delOpinionInfo() {
-    var xmlpara = createXmlDom();
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
+		data : {
+			docID : pDocID,
+			opinionType : "002",
+		},
+		success: function(result) {
+			pHasOpinionYN = "";
+		}
+	});
+	
+    /*var xmlpara = createXmlDom();
     var xmlhttp = createXMLHttpRequest();
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -352,7 +366,7 @@ function delOpinionInfo() {
     xmlhttp.open("POST", "/myoffice/ezApproval/ezAPROPINION/aspx/BansongOpinionDel.aspx", false);
     xmlhttp.send(xmlpara);
 
-    return xmlhttp.responseText;
+    return xmlhttp.responseText;*/
 }
 
 function getDeptSymbol(DeptID, DeptName) {

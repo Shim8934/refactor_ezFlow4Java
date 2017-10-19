@@ -2514,7 +2514,21 @@ function getSignDate() {
 }
 
 function delOpinionInfo() {
-    var xmlhttp = createXMLHttpRequest();
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
+		data : {
+			docID : pDocID,
+			opinionType : "002",
+		},
+		success: function(result) {
+			pHasOpinionYN = "";
+		}
+	});
+	
+    /*var xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
 
     var objNode;
@@ -2526,7 +2540,7 @@ function delOpinionInfo() {
     xmlhttp.send(xmlpara);
 
     pHasOpinionYN = "";
-    return xmlhttp.responseText;
+    return xmlhttp.responseText;*/
 }
 
 function SignCheck() {

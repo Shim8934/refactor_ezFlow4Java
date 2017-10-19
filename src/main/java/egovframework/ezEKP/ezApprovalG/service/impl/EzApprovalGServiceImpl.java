@@ -21778,4 +21778,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
 		return rtnVal;
 	}
+	
+	@Override
+	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteOpinionTypeInfo docID = " + docID + " || opinionType = " + opinionType + " || companyID = " + companyID + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("opinionType", opinionType);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		ezApprovalGDAO.deleteOpinionTypeInfo(map);
+		ezApprovalGDAO.updateHasOpinionYN(map);
+	}
 }
