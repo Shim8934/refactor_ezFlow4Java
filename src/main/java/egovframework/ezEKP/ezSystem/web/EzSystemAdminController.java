@@ -218,14 +218,18 @@ public class EzSystemAdminController {
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate);
 		
 		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate);
+		
 		int totalPage = itemCnt / maxItemPerPage ;
+		
+		if (itemCnt < 1) {
+			totalPage = 1;
+		} 
 		
 		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
 			totalPage = totalPage + 1 ;
 		}
 		
 		currentPage = Math.min(currentPage, totalPage);	
-		
 		model.addAttribute("loginHistList", loginHistList); 
 		model.addAttribute("lang", sysLang);
 		model.addAttribute("currPage", currentPage);
