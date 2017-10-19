@@ -79,8 +79,21 @@
 		    var refreshTimeoutTimerId = 0;
 		    var webSocket =  null;
 		    var userkey = "";
-		    var host = 'ws://' + window.location.host + '/websocket/${userId}';
 		    var pclose = "close";
+		    var protocol = window.location.protocol;
+		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
+		   
+		    function defineHost(protocol){
+	    		var host = "";
+
+	    		if (protocol == "https:") {
+			    	host = 'wss://';
+			    } else {
+			    	host = 'ws://';
+			    }
+	    		
+		    	return host;
+		    }
 		    
 		    // commented out to allow users to be able to select text in the preview : dhlee
 			// document.onselectstart = function () { return false; };
