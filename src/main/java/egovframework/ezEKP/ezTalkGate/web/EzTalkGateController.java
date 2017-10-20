@@ -196,8 +196,13 @@ public class EzTalkGateController {
 				
         BoardListVO boardItem = ezBoardService.getBrdGetItemInfo("", itemId, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());        
         String realPath = commonUtil.getRealPath(request);
+        String scheme = "http://";
+		
+    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+    		scheme = "https://";
+    	}
         
-        String htmlData = ezCommonService.getMHTtoHTML("BOARDCONTENT", boardItem.getItemID(), userInfo.getTenantId(), realPath, request, userInfo.getLocale());
+        String htmlData = ezCommonService.getMHTtoHTML("BOARDCONTENT", boardItem.getItemID(), userInfo.getTenantId(), realPath, request, userInfo.getLocale(), scheme);
         
         model.addAttribute("htmlData", htmlData);
         
