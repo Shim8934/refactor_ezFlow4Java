@@ -87,6 +87,43 @@
  				preProcess();
  				updateGraph();
 			}		
+			
+			window.onresize = function(event) {
+				resizeCanvas();
+			};
+			
+			function resizeCanvas(){
+				for (var i = 0; i < numberOptions; i++) {
+					var _optId = votesArr[i][0];					
+					var graphId = "graph" + _optId;
+					
+					if (votesArr[i][1] != 0) {	
+						var percent = votesArr[i][1]/totalVotes;
+						var id = "myCanvas" + _optId;																	   					
+	   					var canv = document.getElementById(id);	   					
+	   					var max_width = document.getElementById(graphId).offsetWidth;
+	   					var maxWidth_for_canvas = max_width - 40;	   					   					
+						var best_width = Math.round(maxWidth_for_canvas * percent);	
+						
+						//Resize and fill canvas
+ 						canv.width = best_width;  
+ 						fillCanvas(i, best_width, canv);
+					}
+				}
+			}			
+			
+			function fillCanvas(id, value, canv) {
+				var ctx = canv.getContext("2d");
+				ctx.shadowOffsetX = 2;
+				ctx.shadowOffsetY = 2;
+				ctx.shadowBlur = 2;
+				ctx.shadowColor = "#999";
+				var gradient = ctx.createLinearGradient(0, 0, value, 0);
+				gradient.addColorStop(1, colors[id % 30]);
+				gradient.addColorStop(0, "#ffffff");
+				ctx.fillStyle = gradient;
+				ctx.fillRect(0, 0 , value, 20);
+			}			
 					
 			function commentCheck() {
 				document.getElementById("sendBttn").addEventListener("click", function(event) {
@@ -174,22 +211,13 @@
 			   					document.getElementById(voteInfo).style.display = "block";
 		   					}
 		   					
-		   					var test_width = document.getElementById(graphId).offsetWidth;
-		   					var maxWidth_for_canvas = test_width - 40;	   					   					
-							var test = Math.round(maxWidth_for_canvas * percent);	
+		   					var max_width = document.getElementById(graphId).offsetWidth;
+		   					var maxWidth_for_canvas = max_width - 40;	   					   					
+							var best_width = Math.round(maxWidth_for_canvas * percent);	
 							
 							//Fill canvas with color
-	 						canv.width = test;       					
-	       					var ctx = canv.getContext("2d");
-	       					ctx.shadowOffsetX = 2;
-	       					ctx.shadowOffsetY = 2;
-	       					ctx.shadowBlur = 2;
-	       					ctx.shadowColor = "#999";
-	       					var gradient = ctx.createLinearGradient(0, 0, test, 0);
-	       					gradient.addColorStop(1, colors[i % 30]);
-	       					gradient.addColorStop(0, "#ffffff");
-	       					ctx.fillStyle = gradient;
-	       					ctx.fillRect(0, 0 , test, 20); 
+	 						canv.width = best_width;      
+	 						fillCanvas(i, best_width, canv);
 	       					
 	       					//Show vote information
          					if (secretVote == 0) {
