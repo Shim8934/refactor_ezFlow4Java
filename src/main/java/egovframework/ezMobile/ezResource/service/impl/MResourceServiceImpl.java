@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
@@ -118,6 +120,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			}
 		}
 		
+        //자원명으로 정렬
+        Collections.sort(result, new Comparator<MResourceGetAdmSubClsTreeVO>() {
+			@Override
+			public int compare(MResourceGetAdmSubClsTreeVO o1, MResourceGetAdmSubClsTreeVO o2) {
+				return o1.getBrdNm().compareTo(o2.getBrdNm());
+			}
+		});
+		
 		return result;
 	}
 
@@ -136,6 +146,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 					resultVO.setBrdNm(resultVO.getBrdNm2());
 			}
 		}
+		
+        //자원명으로 정렬
+        Collections.sort(result, new Comparator<MResourceScheduleVO>() {
+			@Override
+			public int compare(MResourceScheduleVO o1, MResourceScheduleVO o2) {
+				return o1.getBrdNm().compareTo(o2.getBrdNm());
+			}
+		});
 		
 		return result;
 	}
@@ -1375,6 +1393,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 					resultVO.setBrdNm(resultVO.getBrdNm2());
 			}
 		}
+		
+        //자원명으로 정렬
+        Collections.sort(result, new Comparator<MResourceGetAdmSubClsTreeVO>() {
+			@Override
+			public int compare(MResourceGetAdmSubClsTreeVO o1, MResourceGetAdmSubClsTreeVO o2) {
+				return o1.getBrdNm().compareTo(o2.getBrdNm());
+			}
+		});
 		
 		return result;
 	}
