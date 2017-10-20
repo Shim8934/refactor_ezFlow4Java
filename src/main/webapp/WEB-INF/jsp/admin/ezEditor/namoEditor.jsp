@@ -144,7 +144,7 @@
         function SetEditorContent(Data) {
             try {
                 CrossEditor.SetBodyValue(Data);
-                Set_CellLocked();
+//                 Set_CellLocked();
 
             } catch (e) { }
         }
@@ -283,7 +283,7 @@
             return Div_Body.innerHTML;
         }
 
-        function Set_CellLocked() {
+        /* function Set_CellLocked() {
             for (var i = 0; i < CrossEditor.GetBodyElementsByTagName("*").length; i++) {
                 if (CrossEditor.GetBodyElementsByTagName("*")[i].tagName == "TD") {
                     if (CrossEditor.GetBodyElementsByTagName("*")[i].getAttribute("free") == null) {
@@ -291,7 +291,7 @@
                     }
                 }
             }
-        }
+        } */
 
         function SetEditorFocus() {
             try {
