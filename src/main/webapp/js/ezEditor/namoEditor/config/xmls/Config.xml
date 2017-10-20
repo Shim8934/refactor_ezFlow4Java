@@ -26,7 +26,7 @@
 		<ResizeBar>false</ResizeBar>
 	</General>
 	<Editor>
-		<SetFocus>true</SetFocus>
+		<SetFocus>false</SetFocus>
 		<LineHeight></LineHeight>
 		<UnloadWarning>false</UnloadWarning>
 		<SetDebug>false</SetDebug>
