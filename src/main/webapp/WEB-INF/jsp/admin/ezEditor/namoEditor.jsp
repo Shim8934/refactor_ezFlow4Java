@@ -348,12 +348,6 @@
             FieldsList = CrossEditor.GetBodyElementsByTagName("*");
             return FieldsList;
         }
-
-        window.onresize = function () {
-            if (type != "APPROVAL" || type != "APPROVALG" || type != "ADMIN") {
-                CrossEditor.SetUISize("100%", document.documentElement.clientHeight - 10);
-            }
-        }
     </script>
 </head>
 <body style="margin: 0px; padding: 0px;">
@@ -361,8 +355,7 @@
         var CrossEditor = new NamoSE("Namo");
         
 		CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
-		CrossEditor.params.Height = parent.document.documentElement.clientHeight - 200;
-		CrossEditor.params.Width = parent.document.documentElement.clientWidth - 270;
+		CrossEditor.params.Height = (height - 10) + "px";
 		
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
