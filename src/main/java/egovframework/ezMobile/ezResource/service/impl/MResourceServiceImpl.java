@@ -1394,14 +1394,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			}
 		}
 		
-        //자원명으로 정렬
-        Collections.sort(result, new Comparator<MResourceGetAdmSubClsTreeVO>() {
-			@Override
-			public int compare(MResourceGetAdmSubClsTreeVO o1, MResourceGetAdmSubClsTreeVO o2) {
-				return o1.getBrdNm().compareTo(o2.getBrdNm());
-			}
-		});
-		
 		return result;
 	}
 	
