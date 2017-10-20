@@ -144,7 +144,7 @@
         function SetEditorContent(Data) {
             try {
                 CrossEditor.SetBodyValue(Data);
-//                 Set_CellLocked();
+                Set_CellLocked();
 
             } catch (e) { }
         }
@@ -276,8 +276,8 @@
             Div_Body.innerHTML = HtmlBody;
             var TDRows = Div_Body.getElementsByTagName("*");
             for (var i = 0; i < TDRows.length; i++) {
-                if (TDRows[i].getAttribute("contenteditable") != null) {
-                    TDRows[i].removeAttribute("contenteditable");
+                if (TDRows[i].getAttribute("namo_lock") != null) {
+                    TDRows[i].removeAttribute("namo_lock");
                 }
             }
             return Div_Body.innerHTML;
