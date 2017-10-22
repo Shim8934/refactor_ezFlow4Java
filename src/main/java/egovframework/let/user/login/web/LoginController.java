@@ -98,6 +98,19 @@ public class LoginController {
     
     @RequestMapping(value="/user/login/login.do")
 	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+        
+        logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+    	
+        String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
+        
+    	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
+    	
+        if (ezOffice365Auth.equals("YES")) {        	
+        	return "redirect:/ezApprovalG/apprGMain.do";         	
+        }
+        
     	if (commonUtil.isLoginCookieExists(request, response)) {
     	    return "redirect:/ezPortal/portalMain.do"; 
     	}
