@@ -134,7 +134,7 @@
 	        }
 		</script> 
 	</head>
-	<body style="margin: 0px; padding: 0px;" id="xfe">
+	<body style="margin: 0px; padding: 0px; overflow: hidden;" id="xfe">
 	    <script type="text/javascript">
 	    	var userLang = "${userInfo.lang}";
 	    	var lang = "";
