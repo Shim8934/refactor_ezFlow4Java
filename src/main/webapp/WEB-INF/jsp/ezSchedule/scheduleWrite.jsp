@@ -576,7 +576,7 @@
 	                </tr>
 	                <tr>
 	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
-		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
+		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
 	                    </td>
 	                </tr>
 	                <tr>

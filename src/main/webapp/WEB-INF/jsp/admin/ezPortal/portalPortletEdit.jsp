@@ -978,14 +978,14 @@
   			</tr>
 		</table>
 		<!-- html 포틀릿 -->
-		<table id="selectType_2" class="content"  style="display:none"> 
+		<table id="selectType_2" class="content"  style="display:none;margin:0;padding:0;width:100%;"> 
 			<tr>
 				<th>HTML<spring:message code='ezPortal.t163'/></th> 
 			</tr>
 			<tr> 
-				<td>
+				<td style="margin:0;padding:0;">
 					<%--<SCRIPT language='JavaScript'>FormProc_ActiveX();</SCRIPT>--%>
-                    <iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:450px; width:495px; overflow:auto;"></iframe>
+                    <iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:450px; width:100%; overflow:auto;"></iframe>
 				</td>
 			</tr> 
 		</table>
