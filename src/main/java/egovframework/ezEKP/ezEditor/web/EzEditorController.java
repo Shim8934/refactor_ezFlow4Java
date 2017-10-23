@@ -113,20 +113,19 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		String height = request.getParameter("height");
-		String id = request.getParameter("id");
+		String formID = request.getParameter("formID");
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String returnPath = "";
 		
 		switch (useEditor) {
-			/* 2017-05-23 이효민 : DEXT, NAMO 추후 개발
 			case "DEXT":
-				model.addAttribute("id", id);
+				model.addAttribute("formID", formID);
 				returnPath = "admin/ezEditor/dextEditor";
 	            break;
 			case "NAMO":
 				returnPath = "admin/ezEditor/namoEditor";
-                break; */
+                break;
 			case "TAGFREE":
 				returnPath = "admin/ezEditor/tfxEditor";
 				break;
