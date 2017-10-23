@@ -19,9 +19,7 @@ public class ADConnection {
 	
     @Autowired
     private Properties config;
-    
-    //@Value("#{config['config.USE_AD']}") private String test;
-	
+    	
 	public ADConnection() throws Exception {
 		
 	}	
@@ -42,7 +40,6 @@ public class ADConnection {
     	logger.debug(passwd);
     	//logger.debug(test);
     	logger.debug("===========================");
-
     	
     	logger.debug("=======config.AD Connection=======");
     	logger.debug(config.getProperty("config.PROVIDER_URL"));
