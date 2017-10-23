@@ -2224,28 +2224,11 @@
 	            </c:otherwise>
         	</c:choose>
 	        </tr>
-	        <c:choose>
-	        	<c:when test="${boardInfo.guBun != '3'}">
-			        <tr>
-			            <td style="vertical-align: top; height: 100%" class="pad2" id="EdtorSize">
-			                <table style="width: 100%; height: 100%;">
-			                    <tr>
-			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0px; width: 100%; height: 100%; overflow: auto; margin-top:-1px"></iframe>
-			                        </td>
-			                    </tr>
-			                </table>
-			            </td>
-			        </tr>
-	        	</c:when>
-	        	<c:otherwise>
-			        <tr>
-			            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-			                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
-			            </td>
-			        </tr>
-	        	</c:otherwise>
-	        </c:choose>
+	        <tr>
+	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
+	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	            </td>
+	        </tr>
 	        <tr id="docTR" style="display: none">
 	            <td>
 	                <div id="docContentBorder" style="border: #B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top: 5px;">
