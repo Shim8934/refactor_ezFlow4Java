@@ -2506,5 +2506,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
+	/**
+	 * ad 연동 테스트(언제든 삭제 해도 됨)
+	 * */
+//	@RequestMapping(value = "/admin/ezOrgan/getOrganFromAD.do")
+//	public String getOrganFromAD() throws Exception {
+//		logger.debug("getOrganFromAD started.");
+//		String result = "";
+//		
+//		ADConnection con = new ADConnection();
+//		
+//		DirContext ctx = con.setConnection();
+//		
+//		ezOrganAdminService.getADdata(ctx);
+//
+//		logger.debug("getOrganFromAD ended.");
+//		
+//		return result;
+//	}
 
 }

@@ -922,6 +922,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		vo.setTenantId(userInfo.getTenantId());
 		
+		logger.debug("<<<1. : " + vo.getCn());
+		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date()); 

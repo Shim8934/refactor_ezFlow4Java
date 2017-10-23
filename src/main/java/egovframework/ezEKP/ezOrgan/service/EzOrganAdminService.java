@@ -2,6 +2,9 @@ package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
 
+import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -74,4 +77,6 @@ public interface EzOrganAdminService {
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
+	public void getADdata(DirContext ctx) throws Exception;
+		
 }

@@ -10,6 +10,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,14 +29,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzOrganAdminDAO")
 public class EzOrganAdminDAO extends EgovAbstractDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminDAO.class);
+    /**
+     * Active Directory
+     * - 유저 환경 변수
+     * */
+	private static final int UF_ACCOUNTENABLE = 0x0001;
+	private static final int UF_ACCOUNTDISABLE = 0x0002;
+	private static final int UF_PASSWD_NOTREQD = 0x0020;
+	private static final int UF_PASSWD_CANT_CHANGE = 0x0040;
+	private static final int UF_NORMAL_ACCOUNT = 0x0200;
+	private static final int UF_DONT_EXPIRE_PASSWD = 0x10000;
+	private static final int UF_PASSWORD_EXPIRED = 0x800000;
+	
+	/**
+	 * Active Directory
+	 * - 부서 환경 변수
+	 * */
+	private static final int BUILTIN_LOCAL_GROUP = 0x00000001;
+	private static final int ACCOUNT_GROUP       = 0x00000002;
+	private static final int RESOURCE_GROUP      = 0x00000004;
+	private static final int UNIVERSAL_GROUP     = 0x00000008;
+	private static final int APP_BASIC_GROUP     = 0x00000010;
+	private static final int APP_QUERY_GROUP     = 0x00000020;
+	private static final int SECURITY_ENABLED    = 0x80000000;
             
     @Autowired
     private Properties config;
@@ -1130,6 +1165,15 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	   
 	        try {
 	            insertDBData_deptForLocal(map);
+	            /**
+	             * Active Directory
+	             * - 부서 추가
+	             * */
+	            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+	            	ADConnection conn = new ADConnection();
+	            	DirContext ctx = conn.setConnection();
+	            	insertDeptInAD(ctx, map);
+	            }
 	        // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
 	        } catch (Exception e) {
                 e.printStackTrace();
@@ -1238,6 +1282,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	   
 	        try {
 	            insertDBData_userForLocal(map);
+	            //AD를 사용하는 경우 AD에도 사용자 추가
+	            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+	            	ADConnection con = new ADConnection();
+	            	DirContext ctx = con.setConnection();
+	            	insertUserInAD(ctx, map);
+	            }
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1489,7 +1539,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    updateDBData_userForJMocha(vo);
 
 	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) { 	    
-            updateDBData_userForLocal(vo);       
+            updateDBData_userForLocal(vo);
+            // AD에도 내용을 수정
+            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+            	ADConnection conn = new ADConnection();
+            	DirContext ctx = conn.setConnection();
+            	updateUserInAD(ctx, vo, "user");
+            }
 	    }
 	}
 	
@@ -1592,6 +1648,17 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
 	    	try {
 	    		restoreRetireEntryForLocal(map);
+	    		
+	    		/**
+	    		 * Active Directory
+	    		 * - 퇴직자 복구
+	    		 * */
+	    		if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+	    			ADConnection conn = new ADConnection();
+	    			DirContext ctx = conn.setConnection();
+	    			//retireUserInAD(ctx, map);	    
+	    			restoreUserInAD(ctx, map);
+	    		}
 	    	} catch (Exception e) {
 	    		// Local에서의 복원 작업이 실패하면 JMocha 테이블에서 다시 퇴직처리를 한다.
 	    		retireDBDataForJMocha(map);
@@ -2247,4 +2314,679 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE", map);
     }
     
+    /**
+     * Active Directory
+     * - AD의 모든 그룹 혹은, 그룹의 모든 사용자 추출
+     * - type : ObjectClass 타입 -> user || group
+     * - colum : attribute
+     * */
+    @SuppressWarnings("rawtypes")
+    public ArrayList<HashMap<String, Object>> getAllADdate(DirContext ctx, String type, String column, String value) throws Exception {
+    	logger.debug("getAllADdate started.");
+    	logger.debug("type : " + type + " column : " + column);
+    	ArrayList<HashMap<String, Object>> arrayList = new ArrayList<HashMap<String,Object>>();
+
+    	/**
+    	 * 기본 Distinguished Name
+    	 * */
+    	String searchBase = "OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" 
+    				+ config.getProperty("config.Common_Name1")+ ", DC="+ config.getProperty("config.Common_Name2");     	
+    	logger.debug("searchBase : " + searchBase);
+    	
+    	String filter = "(&(objectClass="+ type +")("+ column +"="+ value +")(cn=*))";
+    	logger.debug("filter : " + filter);
+    	
+    	SearchControls sc = new SearchControls();    	
+    	sc.setSearchScope(SearchControls.SUBTREE_SCOPE);//조직도 뎁스 관련    	    	
+    	sc.setReturningAttributes(new String[] {"cn", "distinguishedName", column});
+    	
+    	NamingEnumeration results = ctx.search(searchBase, filter, sc);
+    	
+    	
+    	while (results.hasMoreElements()) {
+    		HashMap<String, Object> map = new HashMap<String, Object>();
+    		SearchResult sr = (SearchResult)results.next();
+    		
+    		NamingEnumeration attrs = sr.getAttributes().getAll();
+
+    		while (attrs.hasMoreElements()) {    			
+    			Attribute attribute = (Attribute) attrs.nextElement();
+    			map.put(attribute.getID(), attribute.get());    			
+    		}  
+    		arrayList.add(map);
+    		logger.debug("map : " +  map.toString());
+    		logger.debug("map.cn : " +  map.get("cn").toString());
+    	}    	    	
+    	
+    	//logger.debug("map : " +  map.toString());
+    	
+    	logger.debug("getAllADdate ended.");
+    	return arrayList;
+    }
+    
+    /**
+     * Active Directory
+     * - AD의 원하는 Attribute 값 가져오기
+     * */
+    @SuppressWarnings("rawtypes")
+    public String getADdata(DirContext ctx, String cn, String type, String column) throws Exception { 
+     	logger.debug("getADdata started.");
+    	String result = "";
+    	String typeKR = "";
+    	String col = "";
+    	
+    	if (column.equalsIgnoreCase("dn")) {
+    		column = "distinguishedName";
+    	}
+    	
+    	if (type.equalsIgnoreCase("user")) {
+    		typeKR = "사용자";
+    	} else if (type.equalsIgnoreCase("group") || type.equalsIgnoreCase("dept")) {
+    		typeKR = "부서";
+    		type = "group";
+    	} else if (type.equalsIgnoreCase("isMember")) {
+    		type = "group";
+    		col = "member";
+    	}
+    	/**
+    	 * 기본 Distinguished Name
+    	 * */
+    	String defaultPath = "OU=" + config.getProperty("config.Company_Name") + ",OU=TopGroup,DC=" 
+    				+ config.getProperty("config.Common_Name1")+ ",DC="+ config.getProperty("config.Common_Name2");
+    	//String searchBase = "OU="+ typeKR +", OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" + config.getProperty("config.Common_Name1") + ", DC="+ config.getProperty("config.Common_Name2");
+    	logger.debug("searchBase : " + defaultPath);
+    	/**
+    	 * 검색에 사용될 filter
+    	 * */
+    	//String filter = "(&(objectClass="+ type +")(cn=" + cn + "))";
+    	String filter = "";
+    	
+    	if (col.equalsIgnoreCase("")) {
+    		filter = "(&(objectClass="+ type +")(cn=" + cn.trim() + "))";
+    	} else {
+    		//(member=cn=Jim Smith,ou=West,dc=Domain,dc=com)
+    		filter = "("+ col +"=CN=" + cn + ",OU=부서,"+ defaultPath + ")";
+    	}
+    	
+    	logger.debug("filter : " + filter);
+    	SearchControls sc = new SearchControls();
+    	sc.setSearchScope(SearchControls.SUBTREE_SCOPE);//조직도 뎁스 관련
+    	//sc.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+    	
+    	/**
+    	 * 추출하고자 하는 컬럼 데이터 리스트
+    	 * */
+    	sc.setReturningAttributes(new String[] {"cn", "sAMAccountName", column});
+    	
+    	/**
+    	 * filter를 이용한 쿼리 작성
+    	 * */
+    	NamingEnumeration results = ctx.search(defaultPath, filter, sc);
+
+    	while (results.hasMoreElements()) {
+    		SearchResult sr = (SearchResult)results.next();
+//    		Map map = new HashMap();
+//    		NamingEnumeration attrs = sr.getAttributes().getAll();
+    		
+    		result = sr.getAttributes().get(column).toString();
+//    		while (attrs.hasMoreElements()) {
+//    			Attribute attribute = (Attribute) attrs.nextElement();
+//    			map.put(attribute.getID(), attribute.get());
+//    		}
+//    		logger.debug("map : " +  map.toString());
+    	}
+    	
+    	if (result.equalsIgnoreCase("") || result == null) {
+    		result = "NOTHING";
+    	} else {
+    		result = result.split(":")[1];
+    	}
+    	
+    	logger.debug("result : " + result);
+    	logger.debug("getADdata ended.");
+    	
+    	return result.trim();
+    }
+    
+    /**
+     * Active Directory
+     * - 부서 추가
+     * */    
+    public void insertDeptInAD(DirContext ctx, Map<String, Object> map) throws Exception {
+    	logger.debug("insertDeptInAD started.");
+    	
+    	//        	String organDN = ", OU=user, OU=jongcomp, OU=TopGroup, DC=syl2017, DC=dev";
+    	String baseDN = ", OU=부서, OU=" + config.getProperty("config.Company_Name") +
+    					", OU=TopGroup, DC="+ config.getProperty("config.Common_Name1") + ", DC=" + config.getProperty("config.Common_Name2") ;
+
+    	    	
+    	baseDN = "cn="+ map.get("v_CN").toString() + baseDN;
+    	logger.debug("<<<baseDN : " + baseDN);
+    	    	
+    	Attributes container = new BasicAttributes(true);
+    	Attribute objClasses = new BasicAttribute("objectClass");
+
+    	objClasses.add("group");
+    	container.put(objClasses);
+    	container.put(new BasicAttribute( "cn", map.get("v_CN") ));
+    	container.put(new BasicAttribute( "name", map.get("v_CN") ));
+    	container.put(new BasicAttribute( "sAMAccountName", map.get("v_CN") ));
+    	container.put(new BasicAttribute( "displayName", map.get("v_DISPLAYNAME").toString().trim() ));
+    	container.put(new BasicAttribute( "description", map.get("v_DISPLAYNAME").toString().trim() ));
+    	container.put(new BasicAttribute( "groupType", Integer.toString( UNIVERSAL_GROUP + SECURITY_ENABLED ) ));
+    	    	
+
+    	if (!map.get("v_EXTATTR4").toString().equalsIgnoreCase("")) {
+    		container.put(new BasicAttribute( "extensionAttribute4", map.get("v_EXTATTR4") ));
+    	}   	
+    	
+    	if (!map.get("v_EXTATTR5").toString().equalsIgnoreCase("")) {
+    		container.put(new BasicAttribute( "extensionAttribute5", map.get("v_EXTATTR5") ));
+    	}  
+    	
+    	if (!map.get("v_EXTATTR6").toString().equalsIgnoreCase("")) {
+    		container.put(new BasicAttribute( "extensionAttribute6", map.get("v_EXTATTR6") ));
+    	}    
+    	
+    	if (!map.get("v_EXTATTR8").toString().equalsIgnoreCase("")) {
+    		container.put(new BasicAttribute( "extensionAttribute8", map.get("v_EXTATTR8") ));
+    	} 
+    	
+    	if (!map.get("v_EXTATTR9").toString().equalsIgnoreCase("")) {
+    		container.put(new BasicAttribute( "extensionAttribute9", map.get("v_EXTATTR9") ));
+    	} 
+    	if (!map.get("v_EXTATTR10").toString().equalsIgnoreCase("")) {
+    		container.put(new BasicAttribute( "extensionAttribute10", map.get("v_EXTATTR10") ));
+    	}  
+    	
+    	if (!map.get("v_EXTATTR15").toString().equalsIgnoreCase("")) {
+    		container.put(new BasicAttribute( "extensionAttribute15", map.get("v_EXTATTR15") ));
+    	}            	
+    	
+    	ctx.createSubcontext(baseDN, container);
+    	
+    	/**
+    	 * parentCN의 dn이 나올 경우 -> 하위 부서
+    	 * parentCN의 dn이 nothing인 경우 -> 최상위 부서
+    	 * */
+    	String isTOP = getADdata(ctx, map.get("v_PARENTCN").toString(), "group", "dn");
+    	logger.debug("isTOP : " + isTOP);    	
+    	
+    	// 하위부서 추가
+    	if (!isTOP.equalsIgnoreCase("NOTHING")) {
+        	ModificationItem mod[] = new ModificationItem[1];
+        	mod[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("member", baseDN));
+        	ctx.modifyAttributes(isTOP, mod);        
+    	} 	
+    	
+    	logger.debug("insertDeptInAD ended.");
+    }
+    
+    /**
+     * Active Directory
+     * - 부서 정보 수정
+     * */
+    public void updateDeptInAD(DirContext ctx, OrganDeptVO vo) throws Exception {
+    	logger.debug("updateDeptInAD started.");
+    	
+    	String getDN = getADdata(ctx, vo.getCn(), "group", "dn");
+    	logger.debug("getDN : " + getDN);
+    	
+    	ModificationItem[] mods = new ModificationItem[8];
+    	List<ModificationItem> mItems = new ArrayList<ModificationItem>();
+    	
+    	mods[0] = chkADAttribute(ctx, getDN, "displayName", vo.getDisplayName());
+    	mods[1] = chkADAttribute(ctx, getDN, "extensionAttribute4", vo.getExtensionAttribute4());
+    	mods[2] = chkADAttribute(ctx, getDN, "extensionAttribute5", vo.getExtensionAttribute5());
+    	mods[3] = chkADAttribute(ctx, getDN, "extensionAttribute6", vo.getExtensionAttribute6());
+    	mods[4] = chkADAttribute(ctx, getDN, "extensionAttribute8", vo.getExtensionAttribute8());
+    	mods[5] = chkADAttribute(ctx, getDN, "extensionAttribute9", vo.getExtensionAttribute9());
+    	mods[6] = chkADAttribute(ctx, getDN, "extensionAttribute10", vo.getExtensionAttribute10());
+    	mods[7] = chkADAttribute(ctx, getDN, "extensionAttribute15", vo.getExtensionAttribute15());
+    	
+		// attribute 값이 null 이 아닌 경우 추출.
+    	for (int i = 0; i < 8; i ++) {
+    		if ( mods[i] != null ) {
+    			mItems.add(mods[i]);
+    		}
+    	}
+    	
+    	ModificationItem[] items = new ModificationItem[mItems.size()];
+    	items = mItems.toArray(items);
+    	
+    	ctx.modifyAttributes(getDN, items);
+    	
+    	// 부서 내부의 유저 정보 가져오기
+    	ArrayList<HashMap<String, Object>> list = getAllADdate(ctx, "user", "department", vo.getCn());
+    	
+    	// 부서 유저의 description 변경
+    	OrganUserVO userVO = new OrganUserVO();
+    	for (int i = 0; i < list.size(); i ++ ) {
+  		
+    		userVO.setCn(list.get(i).get("cn").toString());
+    		userVO.setDescription(vo.getDisplayName());
+    		userVO.setDepartment(vo.getCn());
+    		
+    		updateUserInAD(ctx, userVO, "dept");
+    	}    	
+    	logger.debug("updateDeptInAD ended.");
+    }
+    
+    /**
+     * Active Directory
+     * - 부서 정보 삭제
+     * */
+    public void deleteDeptInAD(DirContext ctx, String cn) throws Exception {
+    	logger.debug("deleteDeptInAD started.");
+    	
+    	String getDN = getADdata(ctx, cn, "group", "dn");
+    	
+    	logger.debug("getDN : " + getDN);
+    	
+    	// 부서원이 없을 때 만 부서 삭제
+    	// 그룹이 존재하는 경우에만 삭제
+    	if (!getDN.equalsIgnoreCase("NOTHING")) {
+    		ctx.unbind(getDN);
+    	}    	
+    	logger.debug("deleteDeptInAD ended.");
+    }
+    
+    /**
+     * Active Directory
+     * - 부서의 부서 이동
+     * */
+    @SuppressWarnings("static-access")
+	public void moveDeptInAD(DirContext ctx, Map<String, Object> map, String dept) throws Exception {
+    	logger.debug("moveDeptInAD started.");
+    	
+    	logger.debug("map.getCN : " + map.get("v_CN").toString());  //현재 부서
+    	logger.debug("map.getPARENT : " + map.get("v_PARENTCN").toString()); //이동할 부서
+    	logger.debug("dept : " + dept); //이동할 부서
+    	
+    	// 현재 부서가 속한 부모 부서ID 추출
+    	String parDeptID = getADdata(ctx, map.get("v_CN").toString(), "isMember", "cn");
+    	// 현재 부서가 속한 부모 부서의 dn
+    	String parDept = getADdata(ctx, parDeptID, "group", "dn");    	
+    	// 작업이 진행될 부서의 dn
+    	String curDept = getADdata(ctx, map.get("v_CN").toString(), "group", "dn");
+    	// 이동될 부서의 dn
+    	String movDept = getADdata(ctx, dept, "group", "dn");
+    	
+    	logger.debug("parDept : " + parDept); 
+    	logger.debug("curDept : " + curDept);
+    	logger.debug("movDept : " + movDept);
+    	
+    	/**
+    	 * 1. 부모 부서의 member에서 현재 부서를 삭제하기
+    	 *  - 필요내용 : 부모 부서의 dn, 현재 부서의 dn
+    	 * 2. 현재 부서를 이동 부서의 member에 추가하기
+    	 *  - 필요내용 : 이동 부서의 dn, 현재 부서의 dn
+    	 * */
+    	// 부모 부서의 dn이 없다는 것 -> 최상위 부서에서 이동한다는 뜻.
+    	if (!parDept.equalsIgnoreCase("NOTHING")) {
+        	ModificationItem[] delDept = new ModificationItem[1];
+        	delDept[0] = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute("member", curDept));
+        	ctx.modifyAttributes(parDept, delDept);
+    	}
+    	
+    	ModificationItem[] addDept = new ModificationItem[1];
+    	addDept[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", curDept));
+    	ctx.modifyAttributes(movDept, addDept);
+    	
+    	logger.debug("moveDeptInAD ended.");
+    }
+    
+    /*
+     * Active Directory
+     * - 유저 추가
+     * */   
+    public void insertUserInAD(DirContext ctx, Map<String, Object> map) throws Exception {
+    	logger.debug("insertUserInAD started.");    	
+
+    	String baseDN = ", OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" 	+ config.getProperty("config.Common_Name1") 
+    			+ ", DC=" + config.getProperty("config.Common_Name2");
+    	
+    	Attributes container = new BasicAttributes(true);
+    	Attribute objClasses = new BasicAttribute("objectClass");
+
+		/**
+		 * v_CN에는 유저 아이디 정보
+		 * v_PARENTCN에는 그룹 아이디 정보
+		 * */
+		String userDN = ", OU=사용자" + baseDN;   
+		String domainName = config.getProperty("config.Domain_Name");    		
+		String quotedPassword = "\"" + map.get("v_PASS") + "\"";
+		
+	    byte[] pwdArray = quotedPassword.getBytes("UTF-16LE");
+
+    	objClasses.add("user");    
+    	
+    	container.put(objClasses);
+    	container.put(new BasicAttribute( "userPrincipalName", map.get("v_CN") + domainName ));
+    	container.put(new BasicAttribute( "cn", map.get("v_CN") ));
+    	container.put(new BasicAttribute( "sn", map.get("v_CN") ));
+    	container.put(new BasicAttribute( "displayName", map.get("v_DISPLAYNAME") == null ? map.get("v_DISPLAYNAME2") : map.get("v_DISPLAYNAME") ));
+    	container.put(new BasicAttribute( "mail", map.get("v_CN") + domainName ));
+    	container.put(new BasicAttribute( "unicodePwd", pwdArray )); 
+    	container.put(new BasicAttribute( "sAMAccountName", map.get("v_CN") ));
+    	container.put(new BasicAttribute( "userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+    	
+    	String description = getADdata(ctx, map.get("v_PARENTCN").toString(), "group", "displayName");
+    	
+    	//부서 정보 추가 하기.
+    	container.put(new BasicAttribute( "description", description.trim() )); // 부서명
+    	container.put(new BasicAttribute( "department", map.get("v_PARENTCN") ));  // 부서id
+
+    	
+	    if (!map.get("v_TITLE").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "title", map.get("v_TITLE") ));
+		} 
+		if (!map.get("v_TELEPHONE").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "telephoneNumber", map.get("v_TELEPHONE") ));
+		}
+		if (!map.get("v_HOMEPHONE").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "homePhone", map.get("v_HOMEPHONE") ));
+		} 
+		if (!map.get("v_FAX").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "facsimileTelephoneNumber", map.get("v_FAX") ));
+		}
+		if (!map.get("v_MOBILE").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "mobile", map.get("v_MOBILE") ));
+		}
+		if (!map.get("v_POSTALCODE").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "postalCode", map.get("v_POSTALCODE") ));
+		}
+		if (!map.get("v_ADDRESS").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "postalAddress", map.get("v_ADDRESS") ));
+		}
+		if (!map.get("v_EXTATTR6").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "extensionAttribute6", map.get("v_EXTATTR6") ));
+		}
+		if (!map.get("v_EXTATTR10").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "extensionAttribute10", map.get("v_EXTATTR10") ));
+		}
+		if (!map.get("v_EXTATTR14").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "extensionAttribute14", map.get("v_EXTATTR14") ));
+		}
+		if (!map.get("v_EXTATTR15").toString().equalsIgnoreCase("")) {
+			container.put(new BasicAttribute( "extensionAttribute15", map.get("v_EXTATTR15") ));
+		}   	
+
+    	userDN = new StringBuffer().append("CN=").append(map.get("v_CN")).append(userDN).toString();
+    	ctx.createSubcontext(userDN, container);
+    	
+    	/**
+    	 * 해당 부서에 추가
+    	 * CN=부서명, OU=부서(그룹명), OU=회사명, OU=TopGroup, DC=도메인명(@앞부분), DC=도메인명(@뒷부분)
+    	 * v_PARENTCN 값으로 사용
+    	 * */
+    	String dn = getADdata(ctx, map.get("v_PARENTCN").toString(), "group", "dn");
+    	logger.debug("<<<DN : " + dn );
+    	ModificationItem mod[] = new ModificationItem[1];
+    	mod[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("member", userDN));
+    	ctx.modifyAttributes(dn, mod);        	
+    	
+    	logger.debug("insertUserInAD ended."); 
+    }
+    
+    /**
+     * Active Directory
+     * - 사용자 내용 수정
+     * */
+	public void updateUserInAD(DirContext ctx, OrganUserVO vo, String passBy) throws Exception {
+    	logger.debug("updateUserInAD started.");   
+    	
+    	List<ModificationItem> mItems = new ArrayList<ModificationItem>();
+    	String getDN = getADdata(ctx, vo.getCn(), "user", "dn");
+    	
+    	logger.debug("getDN : " + getDN.trim() );
+    	
+    	// 사원 정보 메뉴에서 수정하는 경우
+    	if (passBy.equalsIgnoreCase("user")) {
+    		
+	    	ModificationItem[] mods = new ModificationItem[12];
+	    	
+	    	mods[0] = chkADAttribute(ctx, getDN,"displayName", vo.getDisplayName());
+	    	mods[1] = chkADAttribute(ctx, getDN, "title", vo.getTitle());
+	    	mods[2] = chkADAttribute(ctx, getDN, "extensionAttribute6", vo.getExtensionAttribute6());
+	    	mods[3] = chkADAttribute(ctx, getDN, "extensionAttribute10", vo.getExtensionAttribute10());
+	    	mods[4] = chkADAttribute(ctx, getDN, "extensionAttribute14", vo.getExtensionAttribute14());
+	    	mods[5] = chkADAttribute(ctx, getDN, "extensionAttribute15", vo.getExtensionAttribute15());
+	    	mods[6] = chkADAttribute(ctx, getDN, "telephoneNumber", vo.getTelephoneNumber());
+	    	mods[7] = chkADAttribute(ctx, getDN, "homePhone", vo.getHomePhone());
+	    	mods[8] = chkADAttribute(ctx, getDN, "facsimileTelephoneNumber", vo.getFacsimileTelephoneNumber());
+	    	mods[9] = chkADAttribute(ctx, getDN, "mobile", vo.getMobile());
+	    	mods[10] = chkADAttribute(ctx, getDN, "postalCode", vo.getPostalCode());
+	    	mods[11] = chkADAttribute(ctx, getDN, "postalAddress", vo.getStreetAddress());
+	    	
+	    	// attribute 값이 null 이 아닌 경우 추출.
+	    	for (int i = 0; i < 12; i ++) {
+	    		if ( mods[i] != null ) {
+	    			mItems.add(mods[i]);
+	    		}
+	    	}
+	    	
+	    	ModificationItem[] items = new ModificationItem[mItems.size()];
+	    	items = mItems.toArray(items);
+	    	
+	    	ctx.modifyAttributes(getDN, items);
+	    
+	    // 부서 정보를 수정하는 경우 -> 해당 사원들의 부서 정보도 변경 되어야한다.
+    	} else if (passBy.equalsIgnoreCase("dept")) {
+    		
+    		ModificationItem[] mods = new ModificationItem[2];
+    		
+    		mods[0] = chkADAttribute(ctx, getDN, "department", vo.getDepartment());
+    		mods[1] = chkADAttribute(ctx, getDN, "description", vo.getDescription());
+    		
+    		ctx.modifyAttributes(getDN, mods);
+    	// 퇴직자 처리하는 경우
+    	} else if (passBy.equalsIgnoreCase("retire")) {
+    		//현재의 dn을 retire쪽으로 변경
+    		String retireDN = "CN="+ vo.getCn() + ",OU=Retire,OU="+config.getProperty("config.Company_Name")+",OU=TopGroup,DC="
+    				+config.getProperty("config.Common_Name1")+",DC="+config.getProperty("config.Common_Name2");
+    		
+    		logger.debug("retireDN : " + retireDN);
+    		ctx.rename(getDN, retireDN);
+    	} else if (passBy.equalsIgnoreCase("restore")) {
+    		/**
+    		 * 1. 부서의 이동 PARENTCN : 이동할 부서, CN : 현재 유저ID
+    		 * 2. 해당 부서에 사용자 등록
+    		 * 3. 기존 부서에서 사용자 삭제
+    		 * */
+    		String curDN = getADdata(ctx, vo.getCn(), "user", "dn");
+    		String movDN = "CN="+ vo.getCn() + ",OU=사용자,OU="+config.getProperty("config.Company_Name")+",OU=TopGroup,DC="
+    				+config.getProperty("config.Common_Name1")+",DC="+config.getProperty("config.Common_Name2");
+    		logger.debug("curDN : " + curDN);
+    		logger.debug("movDN: " + movDN);
+    		// 여기
+    		Map<String, Object> map = new HashMap<String, Object>();
+    		map.put("v_CN", vo.getCn());
+    		
+    		moveUserInAD(ctx, map, vo.getParentCn());
+    		
+    		ctx.rename(curDN, movDN);    		
+    	}
+    	
+    	logger.debug("updateUserInAD started.");       	
+    }
+
+    /**
+     * Active Directory
+     * - 사용자 삭제
+     * */
+    public void deleteUserInAD(DirContext ctx, String cn) throws Exception {
+    	logger.debug("deleteUserInAD started.");   
+    	
+    	String getDN = getADdata(ctx, cn, "user", "dn");
+    	
+    	logger.debug("getDN : " + getDN);
+    	
+    	// 빈 부서를 지울 경우, 유저가 없기 때문에 분기를 태운다.
+    	if (!getDN.equalsIgnoreCase("NOTHING")) {
+    		ctx.unbind(getDN);
+    	}   	
+    	
+    	logger.debug("deleteUserInAD started.");       	
+    }    
+    
+    /**
+     * Active Directory
+     * - 데이터 수정을 위한 Attribute 확인.
+     * dn : distinguished name
+     * attr : 변경될 attribute
+     * value : 새로 변경되는 내용
+     * */
+    @SuppressWarnings("static-access")
+	public ModificationItem chkADAttribute(DirContext ctx, String dn, String attr, String value) throws Exception {
+	
+		ModificationItem mod;
+    	String [] arr = {attr};
+    	Attributes container = new BasicAttributes(true);   
+    	    	 		
+		container = ctx.getAttributes(dn, arr);
+		/**
+		 * container.size() == 0 은 attr로 넘어온 값을 지닌 attribute가 존재하지 않은 경우.
+		 * */
+		logger.debug("container.size() : " + container.size());
+		if (container.size() == 0) {
+			//현재 attribute가 존재하지 않음 && value값이 존재함
+			if (value != null && !value.equalsIgnoreCase("")) {
+				mod = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute(attr, value));
+			//현재 attribute가 존재하지 않음 && value값이 존재하지 않음. 또다시 빈값이 들어온 경우
+			} else {
+				mod = null;
+			}
+		} else {
+			//현재 attribute가 존재하는 경우 && value값이 존재하지 않는 경우.
+	    	if ( value == null || value.equalsIgnoreCase("") ) {
+	    		//mod = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute(attr, "empty"));
+	    		mod = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute(attr));
+	    	//현재 attribute가 존재하는 경우 && value값지 존재하는 경우
+	    	} else {    		
+	    		mod = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute(attr, value));
+	    	}    
+		}		
+    	return mod;
+    }
+
+    /**
+     * Active Directory
+     * - 유저의 부서이동
+     * dept : 변경될 부서ID
+     * */
+    @SuppressWarnings("static-access")
+	public void moveUserInAD(DirContext ctx, Map<String, Object> map, String dept) throws Exception {
+    	logger.debug("moveUserInAD started.");
+    	// 현재 유저 dn
+    	String curUser = getADdata(ctx, map.get("v_CN").toString(), "user", "dn");
+    	// 현재 유저의 department
+    	String userDept = getADdata(ctx, map.get("v_CN").toString(), "user", "department");
+    	// 현재 부서 dn
+    	String curDept = getADdata(ctx, userDept.trim(), "group", "dn");
+    	// 옮길 부서 dn
+    	String movDept = getADdata(ctx, dept, "group", "dn");
+    	// 옮길 부서 displayName
+    	String movDisplay = getADdata(ctx, dept, "group", "displayName");
+    	
+    	logger.debug("curUser : " + curUser);
+    	logger.debug("userDept : " + userDept.trim());
+    	logger.debug("curDept : " + curDept);
+    	logger.debug("movDept : " + movDept);
+    	logger.debug("movDisplay : " + movDisplay);
+    	
+    	/**
+    	 * 유저의 attibute값 변경
+    	 * 1. department -> 옮길 부서id
+    	 * 2. description -> 옮길 부서명
+    	 * */
+    	ModificationItem[] mods = new ModificationItem[2];
+    	
+    	mods[0] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("department", dept.trim() ));
+    	mods[1] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("description", movDisplay.trim() ));
+    	ctx.modifyAttributes(curUser, mods);
+    	
+    	/**
+    	 * 1. 본래 부서에 유저 제거
+    	 * 2. 변경 부서에 유저 추가 
+    	 * */    	
+    	ModificationItem[] delUser = new  ModificationItem[1];    	
+    	delUser[0] = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute("member", curUser));
+    	ctx.modifyAttributes(curDept, delUser);
+    	
+    	String newDN = getADdata(ctx, map.get("v_CN").toString(), "user", "dn");
+    	
+    	logger.debug("newDN : " + newDN);
+    	
+    	ModificationItem[] addUser = new ModificationItem[1];
+    	addUser[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", newDN));
+    	ctx.modifyAttributes(movDept, addUser);
+    	
+    	logger.debug("moveUserInAD ended.");
+    }
+    
+    /**
+     * Active Directory
+     * - 퇴직자 처리
+     * */
+    public void retireUserInAD(DirContext ctx, Map<String, Object> map) throws Exception {
+    	logger.debug("retireUserInAD started.");
+    	//empty VO 생성.
+    	OrganUserVO vo = new OrganUserVO();
+    	   	
+//    	String getDN = getADdata(ctx, map.get("v_CN").toString(), "user", "dn");
+//    	
+//    	logger.debug("<<<getDN : " + getDN);
+
+    	vo.setCn(map.get("v_CN").toString());
+    	
+    	updateUserInAD(ctx, vo, "retire");
+    	
+    	logger.debug("retireUserInAD ended.");
+    }
+    
+    /**
+     * Active Directory
+     * - 퇴직자 복구
+     * */
+    public void restoreUserInAD(DirContext ctx, Map<String, Object> map) throws Exception {
+    	logger.debug("restoreUserInAD started.");
+    	
+    	OrganUserVO vo = new OrganUserVO();
+    	
+    	vo.setParentCn(map.get("v_PARENTCN").toString());
+    	vo.setCn(map.get("v_CN").toString());
+    	
+    	updateUserInAD(ctx, vo, "restore");    	
+    	
+    	logger.debug("restoreUserInAD ended.");
+    }
+    
+    /**
+     * Active Directory
+     * - 유저 패스워드 변경
+     * */
+    @SuppressWarnings( "static-access" )  
+    public void changePasswordInAD(DirContext ctx, LoginVO vo) throws Exception {
+    	logger.debug("changePasswordInAD started.");   
+    	
+    	String getDN = getADdata(ctx, vo.getId(), "user", "dn");
+    	
+    	logger.debug("getDN : " + getDN );
+    	
+    	String quotedPassword = "\"" + vo.getPassword() + "\"";
+    	
+    	byte[] pwdArray = quotedPassword.getBytes("UTF-16LE");
+    	
+    	ModificationItem[] mods = new ModificationItem[2];
+
+    	mods[0] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("unicodePwd", pwdArray));
+    	mods[1] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+
+    	ctx.modifyAttributes(getDN, mods);
+    	// 한 번만 실행하면 직전 패스워드로도 로그인이 되어 두 번 수행함
+    	ctx.modifyAttributes(getDN, mods);    
+    	
+    	logger.debug("changePasswordInAD started."); 
+    }
 }
