@@ -4,13 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URLDecoder;
-import java.util.Base64;
-import java.util.Base64.Decoder;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -21,13 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -37,7 +30,6 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 공통
@@ -171,10 +163,15 @@ public class EzCommonController extends EgovFileMngUtil{
 		String type = "";
 		String realPath = commonUtil.getRealPath(request);
 		String strResult = "";
+		String scheme = "http://";
+		
+    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+    		scheme = "https://";
+    	}
 		
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
-		strResult = ezCommonService.getMHTtoHTML(type, itemID, userInfo.getTenantId(), realPath, request, locale);
+		strResult = ezCommonService.getMHTtoHTML(type, itemID, userInfo.getTenantId(), realPath, request, locale, scheme);
 
 		logger.debug("mhtToHTMLContent ended");
 		return strResult;
@@ -194,6 +191,12 @@ public class EzCommonController extends EgovFileMngUtil{
         String realPath = commonUtil.getRealPath(request);
         String strURL = request.getParameter("strURL");
         String domain = request.getServerName() +":" +request.getServerPort();
+        String scheme = "http://";
+		
+    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+    		scheme = "https://";
+    	}
+    	
         logger.debug("strURL="+strURL + ",uploadModule="+uploadModule);
         
         filePath = realPath + uploadModule;
@@ -212,9 +215,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
         
         String result = "";
-        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
+        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
 
-        if (strHTML.indexOf("error") > -1) {
+        if (strHTML.equals("error")) {
         	strHTML = commonUtil.cleanValue(strHTML);
         } else {
         	if (strHTML.indexOf("<BODY>") > -1) {

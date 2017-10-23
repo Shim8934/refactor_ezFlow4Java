@@ -754,7 +754,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 표출 Method
 	 */
 	@Override
-	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale) throws Exception{
+	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale, String scheme) throws Exception{
         String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantID) + commonUtil.separator;
         String domain = request.getServerName() +":" +request.getServerPort();
@@ -783,7 +783,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			m_strMHT= "";
 		}
         
-        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
         
         if (strHTML.trim().length() > 0) {
         	return strHTML;
@@ -795,9 +795,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 실행 표출 Method
 	 * @param domain 
+	 * @param scheme 
 	 */
 	@Override
-	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, String realPath, Locale locale, String domain) throws Exception{
+	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, String realPath, Locale locale, String domain, String scheme) throws Exception{
 		logger.debug("====== startMHT2HTML started ======");
 		String m_strHTML = "";
 		String strBoundary = "";
@@ -838,7 +839,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						//절대경로에서 realPath "" 으로 대체
 						//Chrome 에서 도메인없으면 배경이미지 안뿌려줘서 추가시켰는데 맞는지 모르겄네
-						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), "http://" + domain + m_ListImageLocalLocation.get(i).replace(realPath, ""));
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), scheme + domain + m_ListImageLocalLocation.get(i).replace(realPath, ""));
 					}
 				} else {
 					return egovMessageSource.getMessage("main.t0601", locale);
@@ -1095,7 +1096,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("user_id", userID);
 		map.put("property_name", propertyName);
 		
-		return ezCommonDAO.getUserConfigInfo(map);
+		String propertyValue = ezCommonDAO.getUserConfigInfo(map);
+        
+        if (propertyValue == null) {
+            propertyValue = "";
+        }
+        
+        return propertyValue;
+
 	}
 
 	@Override

@@ -5653,7 +5653,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO">
 		SELECT 
-			A.aprsn,
+			DISTINCT A.aprsn,
 			A.signtype,
 			A.signname,
 			A.content,
@@ -5667,7 +5667,7 @@
         AND
         	A.docid = B.docid
         AND
-        	A.aprsn = B.aprmembersn - 1
+        	B.aprtype not in ('011', '012', '008', '009')
 		WHERE
 			A.docid = #v_DOCID#
 		AND
@@ -14973,23 +14973,19 @@
                                 	TENANT_ID = #v_TENANTID#
                                 AND
                                 	COMPANYID = #companyID# )
-			AND 
-				docid = #v_PDOCID#
-			AND 
-				(aprtype = '002' 
-					OR 
-				 aprtype = '007' 
-				 	OR 
-				 aprtype = '008' 
-				 	OR 
-				 aprtype = '009' 
-				 	OR 
-				 aprtype = '080' )
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
 				COMPANYID = #companyID#
-        ]]>
+			AND 
+				docid = #v_PDOCID#
+         ]]>
+        <isEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '080')
+        </isEqual>
+        <isNotEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '011', '012', '017', '040')
+        </isNotEqual>
 	</select>
 	
 	<select id="EzApprovalG.getDocInfoHab" parameterClass="Map" resultClass="Integer">
@@ -15019,9 +15015,13 @@
             	TENANT_ID = #v_TENANTID#
             AND
                 COMPANYID = #companyID#
-            AND 
-            	aprtype IN ( '018','019','007','031','002')
         ]]>
+		<isEqual property="approvalFlag" compareValue="G" prepend="AND">
+               aprtype IN ( '018','019','007','031','002')
+        </isEqual>
+        <isNotEqual property="approvalFlag" compareValue="G" prepend="AND">
+               aprtype IN ( '007','017','001','040','002')
+        </isNotEqual> 
 	</select>
 	
 	<select id="EzApprovalG.getDocInfoJeonKyul" parameterClass="Map" resultClass="Integer">

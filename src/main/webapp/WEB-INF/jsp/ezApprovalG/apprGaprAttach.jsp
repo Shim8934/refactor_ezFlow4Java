@@ -158,7 +158,7 @@
 				for (var i = 0; i < SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW").length; i++) {
 				    var fileSize = ReplacText(getNodeText(GetChildNodes(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[2])[0]));
 				    filezisearr[i] = fileSize;
-				    if (fileSize > 1024 * 1024) {
+/* 				    if (fileSize > 1024 * 1024) {
 				        fileSize = fileSize / 1024 / 1024;
 				        strSize = parseInt(fileSize) + "MB";
 				    }
@@ -166,8 +166,10 @@
 				        fileSize = fileSize / 1024;
 				        strSize = parseInt(fileSize) + "KB";
 				    }
-				    else
+				    else {
 				        strSize = parseInt(fileSize) + "B";
+				    } */
+				    strSize = fileSize;
 			
 				    setNodeText(GetChildNodes(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[2])[0], strSize);
 				}

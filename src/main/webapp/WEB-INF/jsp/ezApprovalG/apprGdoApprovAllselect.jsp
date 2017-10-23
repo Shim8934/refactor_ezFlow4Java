@@ -99,11 +99,9 @@
 		            }
 		            pAlertContent += strLang931;
 		            OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-		        }
-		        else {
+		        } else {
 		            hideProgress();
 		            pAlertContent = strLang932;
-		            pAlertContent += arrRtnVal[1];
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
