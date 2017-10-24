@@ -843,9 +843,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 						try {
 							URL url = new URL(scheme + domain + m_ListImageLocalLocation.get(i).replace(realPath, ""));
 							url.openStream();
+							
+							throw new ConnectException();
 						} catch (ConnectException e) {
 							// TODO: handle exception
-							domain = "127.0.0.1";
+							domain = "127.0.0.1:" + domain.split(":")[1];
 						}
 						
 						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), scheme + domain + m_ListImageLocalLocation.get(i).replace(realPath, ""));
