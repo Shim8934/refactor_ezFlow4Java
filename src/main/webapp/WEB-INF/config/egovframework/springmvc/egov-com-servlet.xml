@@ -71,11 +71,16 @@
     
     <mvc:annotation-driven/>
 	
-	<websocket:message-broker application-destination-prefix="/app" >		
+	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">		
 	    <websocket:stomp-endpoint path="/hello" >  	    	 	
 			<websocket:sockjs />
 	    </websocket:stomp-endpoint>
-	    <websocket:simple-broker prefix="/reply"/>
+	    <websocket:stomp-endpoint path="/websocket" allowed-origins="/*">
+			<websocket:handshake-interceptors>
+				<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></bean>
+			</websocket:handshake-interceptors>
+		</websocket:stomp-endpoint>
+	    <websocket:simple-broker prefix="/reply, /topic, /message"/>
 	</websocket:message-broker>
 	
 </beans>
