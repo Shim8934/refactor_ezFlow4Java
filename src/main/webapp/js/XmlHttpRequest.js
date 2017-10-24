@@ -688,13 +688,29 @@ function ConvertMHTtoHTML(pURL) {
 }
 
 function ConvertHTMLtoMHT(pContent) {
+//	var rtnVal = '';
+//    $.ajax({
+//		type : "POST",
+//		dataType : "text",
+//		async : false,
+//		url : "/ezCommon/htmlToMHT.do",
+//		data : { strHTML   : encodeURIComponent(pContent)},
+//		success: function(result){
+//			rtnVal = result;
+//		}        			
+//	});
+//    
+    return ConvertHTMLtoMHT(pContent, "");
+}
+
+function ConvertHTMLtoMHT(pContent, pType) {
 	var rtnVal = '';
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezCommon/htmlToMHT.do",
-		data : { strHTML   : encodeURIComponent(pContent) },
+		data : { strHTML   : encodeURIComponent(pContent), type	: pType },
 		success: function(result){
 			rtnVal = result;
 		}        			
@@ -702,7 +718,6 @@ function ConvertHTMLtoMHT(pContent) {
     
     return rtnVal;
 }
-
 
 //에디터 Read 프레임 관련 사용함수
 function CKediter_Trim(value) {

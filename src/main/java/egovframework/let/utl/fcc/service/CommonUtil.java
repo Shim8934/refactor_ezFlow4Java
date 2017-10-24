@@ -547,6 +547,14 @@ public class CommonUtil {
 		return value;
 	}
 	
+	public String cleanScriptValue(String htmlCode, String type) {
+        if("clean".equals(type)){
+        	htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
+        }
+		
+		return htmlCode;
+	}
+	
 	// 2016.09.06 by kgs: Property value의 값을 변환
 	public String cleanPropertyValue(String pOrgString) {
 		String value = ""; 
