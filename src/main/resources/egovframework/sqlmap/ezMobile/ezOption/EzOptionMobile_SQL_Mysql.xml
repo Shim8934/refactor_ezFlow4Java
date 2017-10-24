@@ -58,7 +58,7 @@
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email
 			FROM
-				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
+				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
 				b.cn = #userId#
 			AND
