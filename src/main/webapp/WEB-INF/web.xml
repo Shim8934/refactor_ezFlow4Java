@@ -50,10 +50,12 @@
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>	
+
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>/ezFlow/*</url-pattern>
