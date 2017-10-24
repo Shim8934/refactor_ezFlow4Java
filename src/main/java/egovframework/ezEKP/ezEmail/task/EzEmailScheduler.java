@@ -241,7 +241,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					String secureMailHeader = secureMailHeaders != null ? secureMailHeaders[0] : null;		
 					
 					// 보안메일 처리
-					if (secureMailHeader.equals("true")) {
+					if (secureMailHeader != null && secureMailHeader.equals("true")) {
 						
 						// get Info from secureMail header
 						secureMailHeader = MimeUtility.decodeText(secureMailHeader);
