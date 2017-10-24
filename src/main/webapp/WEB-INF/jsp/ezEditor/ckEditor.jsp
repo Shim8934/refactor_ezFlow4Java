@@ -236,10 +236,10 @@
 	        }
 			
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
-			
 		    CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
+			CKEDITOR.config.tabSpaces = 4;
 		</script>
 	</body>
 </html>
