@@ -679,10 +679,12 @@ function ListView() {
 
                     var NewCell = document.createElement("TD");
                     NewCell.setAttribute("style", "text-align:left; border-bottom:0px;");
-                   
-                    var NewElement = document.createElement("IMG");
-                    NewElement.src = "/images/i_new.gif";
-                    NewCell.appendChild(NewElement);
+                    
+                    if (getNodeText(oDatas[3]) == "Y") {
+                    	 var NewElement = document.createElement("IMG");
+                         NewElement.src = "/images/i_new.gif";
+                         NewCell.appendChild(NewElement);
+                    }
                     
                     var ImgElement = document.createElement("IMG");
                     //ImgElement.src = "/Upload_BoardSTD/" + getNodeText(oDatas[4]);
