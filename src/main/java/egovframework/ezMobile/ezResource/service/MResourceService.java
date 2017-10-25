@@ -37,6 +37,8 @@ public interface MResourceService {
 	
 	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn);
 	
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn);
+	
 	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId, String langStr);
 	
 	public void addResSch(String ownerId, String companyId, int tenantId, String pNum, String writerId, String deptNm, String ownerNm, String title, 

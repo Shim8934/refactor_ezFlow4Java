@@ -1401,5 +1401,26 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return result;
 	}
 	
+	@Override
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) {	
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDCOMPANY", brdCompany);
+		map.put("v_PUSERID", userId);
+		map.put("v_PUSERCOMPANY", userCompany);
+		map.put("v_PUSERDEPT", userDept);
+		map.put("v_PAUTHYN", authYn);
+		map.put("tenantID", tenantId);
+		
+		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResApprBrdListCheck(map);
+
+		if(Integer.parseInt(langStr) != 1){
+			for (MResourceGetAdmSubClsTreeVO resultVO : result) {
+					resultVO.setBrdNm(resultVO.getBrdNm2());
+			}
+		}
+		
+		return result;
+	}
+	
 }
 

@@ -950,5 +950,62 @@ public class MResourceGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 모바일 G/W 자원관리 [get] 승인대상 자원권한체크
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/auth-check/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject resourceApprFolderListCheck(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list/users/{userId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			String brdCompany = info.getCompanyId();
+			String userCompany = info.getCompanyId();
+			String userDept = info.getDeptId();
+			String langStr = request.getParameter("langStr");
+			String authYn = "N";
+			
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+				authYn = "A";
+			}
+			
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+			
+			String authCheck = "N";
+			
+			if(list.size() > 0) {
+				authCheck = "Y";
+			}
+			
+			LOGGER.debug("authCheck: " + authCheck);
+			
+			Map<String, String> resultMap = new HashMap<String, String>();
+			resultMap.put("authCheck", authCheck);
+			
+			String obj = "";
+			
+			Gson gson = new Gson();
+			
+			obj = gson.toJson(resultMap);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data",obj);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list/users/{userId}] ended.");
+		return result;
+	}
 	
 }
