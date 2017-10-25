@@ -133,7 +133,7 @@ public class EzEditorController extends EgovFileMngUtil{
 			case "DEXT":
 				model.addAttribute("formID", formID);
 				returnPath = "admin/ezEditor/dextEditor";
-	            break; */
+	            break;
 			case "NAMO":
 				model.addAttribute("serverUrl", serverUrl);
 				returnPath = "admin/ezEditor/namoEditor";
