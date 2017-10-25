@@ -232,6 +232,7 @@ public class MLoginGWController {
     				map.put("useSecurity", useSecurity);    		
     				map.put("companyID", resultVO.getCompanyID());
     				map.put("primaryLang", primaryLang);
+    				map.put("rollInfo", resultVO.getRollInfo());
     				
     				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
     					map.put("userName", resultVO.getDisplayName1());
