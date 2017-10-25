@@ -612,7 +612,7 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .box2{border:1px solid #b6b6b6;  background-color:#fff; font-size:12px;}
 .nobox{border:none}
 .viewbox{
-	border:1px solid #b6b6b6;
+	border:0;
 	padding:5px;
 	height:100%;
 	background-color:#fff;
