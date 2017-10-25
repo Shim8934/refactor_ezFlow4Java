@@ -1,10 +1,14 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1427,7 +1431,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			returnVal = "OK_"+ fileName;
 		}
-		        
+		
+		//썸네일 생성
+        if (mode.equals("PICTURE")) {
+        	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
+        	File file2 = new File(serverPath + fileName);
+			File thumbnailFolder = new File(thumbnailPath);
+			if (!thumbnailFolder.exists()) {
+				thumbnailFolder.mkdirs();
+			}
+			
+			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + file2.getName());
+			createThumbnail(file2, thumbnailFile);
+        }
+		
 		logger.debug("signImangeUploadIe9 ended");
 				
 		return returnVal;
@@ -1493,9 +1510,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			BufferedImage bi = ImageIO.read(imageFile);
             BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
             bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
-            ImageIO.write(bufferedImage, "png", new File(serverPath + fileName + "png"));
+            
+            File file2 = new File(serverPath + fileName + "png");
+            ImageIO.write(bufferedImage, "png", file2);
             //임시 저장 파일 삭제
             deleteFile(tempPath + fileName + extension);
+            
+            //썸네일 생성
+            if (mode.equals("PICTURE")) {
+            	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
+    			File thumbnailFolder = new File(thumbnailPath);
+    			if (!thumbnailFolder.exists()) {
+    				thumbnailFolder.mkdirs();
+    			}
+    			
+    			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + file2.getName());
+    			createThumbnail(file2, thumbnailFile);
+            }
             
             logger.debug("signImangeUpload ended");
 
@@ -2505,5 +2536,36 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		return returnValue;
 	}
+	
+	private boolean createThumbnail(File sourceFile, File targetFile) {
+		boolean result = false;
+		
+		try {
+			BufferedImage sourceImage = ImageIO.read(sourceFile);
+			int w = 100;
+		    int h = 100;
+		    
+		    BufferedImage targetImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
+		    Graphics2D g2 = targetImage.createGraphics();
+		    g2.setClip(new Ellipse2D.Float(0, 0, w, h));
+		    g2.drawImage(sourceImage, 0, 0, w, h, null);
+		    g2.dispose();
+			
+			ImageIO.write(targetImage, "png", targetFile);
+			
+			result = true;
+		} catch (Exception e) {
+			logger.debug("fail to create thumbnail : " + sourceFile.getName());
+			
+			try {
+				Files.copy(sourceFile.toPath(), targetFile.toPath());
+				logger.debug("copy original File to thumbnail.");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 }

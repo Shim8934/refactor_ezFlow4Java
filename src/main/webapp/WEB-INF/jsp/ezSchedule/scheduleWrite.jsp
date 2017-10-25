@@ -54,7 +54,6 @@
 	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";	        
 		    
-		    document.onselectstart = function () { return false; };		    
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -577,7 +576,7 @@
 	                </tr>
 	                <tr>
 	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
-		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
+		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
 	                    </td>
 	                </tr>
 	                <tr>

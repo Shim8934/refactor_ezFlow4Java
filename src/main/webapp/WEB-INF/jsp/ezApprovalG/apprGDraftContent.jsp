@@ -9,7 +9,7 @@
 		<style>
 			P { margin-top: 0px;margin-bottom: 0px; } 
 			.viewbox {
-				border:1px solid #b6b6b6;
+				border:0;
 				padding:5px;
 				height:100%;
 				background-color:#fff;
@@ -287,7 +287,7 @@
 	                        }
 	                        var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                        for (var i = 0; i < CheckRows.length; i++) {
-	                            if (CheckRows.item(i).type == "checkbox")
+	                            if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
 	                                CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                        }
 	                        if (document.getElementById("body") != null) {
@@ -352,7 +352,7 @@
 	                    }
 	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox")
+	                        if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
 	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                    }
 	                    if (document.getElementById("body") != null) {

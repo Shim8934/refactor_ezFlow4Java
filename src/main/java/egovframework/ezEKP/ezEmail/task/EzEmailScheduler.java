@@ -473,7 +473,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			int bigSizeMailAttachDelDay = Integer.parseInt(bigSizeMailAttachDelDayStr);
 			
 			if (file.exists()) {
-				File[] files = file.listFiles(new deleteExpireAttachFilter(bigSizeMailAttachDelDay));
+				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
 				for (File expiredFile : files) {
 					logger.debug("expired directory name=" + expiredFile.getName());
@@ -550,11 +550,11 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		return isSchedulerServer;
 	}
 	
-	class deleteExpireAttachFilter implements FilenameFilter {
+	class DeleteExpireAttachFilter implements FilenameFilter {
 		private int bigSizeMailAttachDelDay;
 		private String today;
 		
-		public deleteExpireAttachFilter(int bigSizeMailAttachDelDay) {
+		public DeleteExpireAttachFilter(int bigSizeMailAttachDelDay) {
 			super();
 			
 			this.bigSizeMailAttachDelDay = bigSizeMailAttachDelDay;
