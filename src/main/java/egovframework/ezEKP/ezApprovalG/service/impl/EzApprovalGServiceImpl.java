@@ -11697,15 +11697,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		// 마지막 결재라인인 경우 || 더이상의 추가 작업이 필요없는 AprType인 경우. 문서를 종결
 		if (dlength < 1 || lastState.equals(staATAnHam) || lastState.equals(staATChamJo) || lastState.equals(staATGongram)) {
 			if (addLastKyulJeYN.equals("YES")) {
-				if (apprGAprLineVOList2.size() > 0 ) {
-					
-				} else {
-						subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-				}
+				subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
+				
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} 
 			} else {
 				subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
 				
@@ -21802,6 +21798,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int lastKyulJeCnt = ezApprovalGDAO.lastKyulJeCnt(map);
 		
 		map.put("v_memSN", lastKyulJeCnt);
+		
+		String lastHabYuiSN = ezApprovalGDAO.lastHabYuiSN(map);
+		
+		map.put("v_memSN", lastHabYuiSN);
 		
 		String lastKyulJeHabYuiYN = ezApprovalGDAO.lastKyulJeHabYuiYN(map);
 		int result = 0;

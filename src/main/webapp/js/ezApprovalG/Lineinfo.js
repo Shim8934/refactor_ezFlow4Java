@@ -2994,14 +2994,8 @@ function SCheckLineUser() {
 
     var pChkFlag = chkLastKyuljea(AprLineRow)
     
-    if (addLastKyulJeYN == "YES") {
-    	if (!pChkFlag) {
-	        pAlertContent = pAlertContent + " " + strLangSpjj1 + "<br>"
-	    }
-    } else {
-    	if (!pChkFlag) {
-	        pAlertContent = pAlertContent + " " + strLangS289 + "<br>"
-	    }
+	if (!pChkFlag) {
+        pAlertContent = pAlertContent + " " + strLangS289 + "<br>"
     }
   
 
@@ -3141,7 +3135,7 @@ function chkLastKyuljea(AprLineRow) {
 		
 		if (addLastKyulJeYN == "YES") {
 			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
-			if (aprtype == strAprType12 || aprtype == strAprType11) {
+			if (aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
 				rtnVal = false;
 				break;
 			}
@@ -3185,7 +3179,7 @@ function chkLastKyuljeaCF(AprLineRow) {
 		aprtype = GetAttribute(AprLineRow[i],"DATA11");
 		
 		if (addLastKyulJeYN == "YES") {
-			if (aprtype == strAprType8 || aprtype == strAprType9 || aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType8 || aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType2) {
 				rtnVal = false;
 				break;
