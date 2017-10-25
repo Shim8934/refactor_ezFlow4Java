@@ -22222,4 +22222,52 @@
          AND
          	A.COMPANYID = #companyID#
       </update>
-</sqlMap>
+      
+      <select id="EzApprovalG.lastKyulJeCnt" parameterClass="map" resultClass="int">
+      	SELECT 
+      		COUNT(*)
+      	FROM 
+      		TBL_APRLINEINFO
+		WHERE 
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+      </select>
+      
+      <select id ="EzApprovalG.lastKyulJeHabYuiYN" parameterClass="map" resultClass="String">
+      	SELECT 
+      		APRMEMBERSN
+      	FROM 
+      		TBL_APRLINEINFO
+		WHERE 
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			(APRTYPE = '008' OR APRTYPE = '009')
+		AND
+			APRSTATE = '002'
+		AND
+			APRMEMBERSN = #v_memSN#
+      
+      </select>
+      
+      <select id ="EzApprovalG.lastKyulJeHabYuiSN" parameterClass="map" resultClass="int">
+      	SELECT 
+      		COUNT(*)
+      	FROM 
+      		TBL_APRLINEINFO
+		WHERE 
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			(APRTYPE = '008' OR APRTYPE = '009' OR APRTYPE = '001')
+      </select>
+ </sqlMap>

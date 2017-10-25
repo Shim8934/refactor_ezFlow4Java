@@ -459,4 +459,6 @@ public interface EzApprovalGService {
 
 	public String setCabinetHesong(String docID, String deptID,	String deptName, String deptName2, String userName,	String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
+	public int lastKyulJeHabYuiYN(String docID, String companyID, int tenantId) throws Exception;
+
 }

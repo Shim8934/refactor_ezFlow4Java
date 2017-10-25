@@ -587,10 +587,18 @@ function SGetDraftAprLineInfo(ret) {
         
         LastSignSN = OrderType.length;
 
-        for (i = 1; i < OrderType.length; i++) {
-            if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3)
-                LastSignSN = i;
-        }
+//        if (addLastKyulJeYN == "YES") {
+//            for (i = 1; i < OrderType.length; i++) {
+//                if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType8)
+//                    LastSignSN = i;
+//            }
+//        } else {
+            for (i = 1; i < OrderType.length; i++) {
+                if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3)
+                    LastSignSN = i;
+            }
+//        }
+    
 
         if (OrderType[1] == strAprType4) {
             DraftLastFlag = true;

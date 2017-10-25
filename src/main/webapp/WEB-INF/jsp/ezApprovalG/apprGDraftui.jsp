@@ -148,6 +148,7 @@
 			var singImageType = "${signImageType}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
 			
 		    window.onload = function ()
 		    {
