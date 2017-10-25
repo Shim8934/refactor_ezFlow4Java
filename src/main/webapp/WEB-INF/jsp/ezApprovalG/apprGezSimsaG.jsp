@@ -1353,7 +1353,7 @@
 			</tr>
 		  <tr>
 		    <td style="vertical-align: top; height: 90%;">
-		         <iframe id="Iframe1" name="message" class="viewbox" frameborder="0" style="margin: 0px; padding: 0px; width: 99.8%; height: 99.7%; overflow: hidden;" src="enforceContent.do"></iframe>
+		         <iframe id="Iframe1" name="message" class="viewbox" frameborder="0" style="margin: 0px; padding: 0px; width: 100%; height: 99.7%; overflow: hidden;" src="enforceContent.do"></iframe>
 		    </td>
 		  </tr>
 			<tr> 

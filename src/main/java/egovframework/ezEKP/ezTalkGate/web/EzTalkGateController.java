@@ -97,6 +97,8 @@ public class EzTalkGateController {
 				return "redirect:/ezPortal/portalMain.do";
 			} else if (ezTalkSsoType.equals("noticeBoard")) { 
 				return "redirect:/ezTalkGate/noticeBoard.do";
+			} else if (ezTalkSsoType.equals("noticeBoard2")) { 
+				return "redirect:/ezTalkGate/noticeBoard2.do";
 			} else if (ezTalkSsoType.equals("mailWrite")) { 
 				String emailAddress = request.getParameter("emailAddress") == null ? "" : request.getParameter("emailAddress");
 				String name = request.getParameter("name") == null ? "" : request.getParameter("name");
@@ -156,6 +158,41 @@ public class EzTalkGateController {
 		return "ezTalkGate/noticeBoard";
 	}
 
+	@RequestMapping("/ezTalkGate/noticeBoard2.do")
+	public String noticeBoard2(
+					@CookieValue("loginCookie") String loginCookie,
+					Model model
+					) throws Exception {
+		logger.debug("noticeBoard2 started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		logger.debug("id=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId());
+		
+		String ezTalkGateNoticeBoardId2 = ezCommonService.getTenantConfig("ezTalkGateNoticeBoardId2", userInfo.getTenantId());
+		
+		logger.debug("ezTalkGateNoticeBoardId2=" + ezTalkGateNoticeBoardId2);
+		
+		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId2, userInfo.getId(), 1, 5, 0, "", "", "1", userInfo.getTenantId());		
+		
+		String nowDate = commonUtil.getTodayUTCTime("");
+	    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+	    
+	    for (HashMap<String, Object> item : boardItemList) {
+			if (item.get("WRITEDATE").toString().compareTo(nowDate) > 0) {
+				item.put("ISNEW", "YES");
+			} else {
+				item.put("ISNEW", "NO");
+			}
+	    }
+		
+		model.addAttribute("boardItemList", boardItemList);
+		
+		logger.debug("noticeBoard2 ended.");
+		
+		return "ezTalkGate/noticeBoard";
+	}
+	
 	@RequestMapping("/ezTalkGate/showNoticeBoardItem.do")
 	public String showNoticeBoardItem(
 					@CookieValue("loginCookie") String loginCookie,
