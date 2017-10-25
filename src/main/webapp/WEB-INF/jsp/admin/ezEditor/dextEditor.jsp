@@ -208,6 +208,12 @@
 	
 	        var _editor = DEXT5.getEditor("${formID}");
 	        _editor._FRAMEWIN.setTableCellSelect(selCell[0]);
+	        
+	        //2017-10-25 이효진 색상복구 스크립트 추가
+	        setTimeout(function () {
+	        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
+	        	selCell[0].removeAttribute("beforebgcolor");
+            }, 500);
 	    }
 	
 	    function View_CellProperty(g_toggleFlag) {
