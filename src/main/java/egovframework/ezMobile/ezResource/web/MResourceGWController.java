@@ -703,6 +703,12 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    		langStr = "1";
 	    	}
 	    	
+			String authYn = "N";
+			
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+				authYn = "A";
+			}
+	    	
 	    	LOGGER.debug("serverName: " + serverName);
 	    	LOGGER.debug("tenantId: " + tenantId);
 	    	LOGGER.debug("startDate: " + startDate);
@@ -713,7 +719,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	LOGGER.debug("writerName: " + writerName);
 	    	LOGGER.debug("approveType: " + approveType);
 
-	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(ownerId, companyId, startDate, endDate, userId, deptId, writerName, approveType, tenantId, offset, "", "", "", "", langStr);
+	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(ownerId, companyId, startDate, endDate, userId, deptId, writerName, approveType, tenantId, offset, "", "", "", "", langStr, authYn);
 				    	
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -753,8 +759,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();  	
 	    	String offset = info.getOffSet();
-	    				
-	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(resourceId, companyId, startDate, endDate, userId, deptId, "", "1", tenantId, offset, "Y", "", sDate, eDate, info.getLang());
+	    	
+			String authYn = "N";
+			
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+				authYn = "A";
+			}
+	    	
+	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(resourceId, companyId, startDate, endDate, userId, deptId, "", "1", tenantId, offset, "Y", "", sDate, eDate, info.getLang(), authYn);
 			
 			String obj = "";
 			

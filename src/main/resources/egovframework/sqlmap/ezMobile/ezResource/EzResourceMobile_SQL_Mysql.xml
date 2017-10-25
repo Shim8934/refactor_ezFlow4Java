@@ -1316,10 +1316,12 @@
 			AND 
 				C.APPROVEFLAG = '1'	
 			AND 
-				C.BRD_GB = '2'	
+				C.BRD_GB = '2'
+			]]>	
+			<isNotEqual property="v_PAUTHYN" compareValue="A">		
 			AND
             	C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
-				]]>
+			</isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND 
 				A.OWNERID = #v_POWNERID#
@@ -1405,10 +1407,12 @@
 			AND 
 				D.APPROVEFLAG = '1'
 			AND 
-				D.BRD_GB = '2'	
+				D.BRD_GB = '2'
+						]]>	
+			<isNotEqual property="v_PAUTHYN" compareValue="A">			
 			AND
             	D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
-			        	]]>
+			 </isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND
 				A.OWNERID = #v_POWNERID#

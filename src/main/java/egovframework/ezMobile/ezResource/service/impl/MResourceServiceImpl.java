@@ -1198,7 +1198,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 
 	@Override
-	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate, String langStr) throws Exception {
+	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate, String langStr, String authYn) throws Exception {
 		
 		LOGGER.debug("getScheduleList Start");
 		
@@ -1215,7 +1215,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
-		List<ResGetScheduleVO> getScheduleList = getScheduleApprNormalList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check);
+		List<ResGetScheduleVO> getScheduleList = getScheduleApprNormalList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check, authYn);
 		
 		
 		for (ResGetScheduleVO resVO : getScheduleList) {
@@ -1231,7 +1231,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
 			
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
-		List<ResGetScheduleVO> getScheduleListRept = getScheduleApprRepetList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check);
+		List<ResGetScheduleVO> getScheduleListRept = getScheduleApprRepetList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check, authYn);
 		
 		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
 		
@@ -1346,7 +1346,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return result;
 	}
 	
-	public List<ResGetScheduleVO> getScheduleApprNormalList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check) throws Exception {
+	public List<ResGetScheduleVO> getScheduleApprNormalList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check, String authYn) throws Exception {
 
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerID);
@@ -1357,12 +1357,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PDEPTID", deptId);
 		map.put("v_WRITERNAME", writerName);
 		map.put("v_APPROVETYPE", approveType);
+		map.put("v_PAUTHYN", authYn);
 		map.put("tenantID", tenantID);
 		map.put("check", check);
 		return mResourceDAO.getScheduleApprList(map);
 	}
 	
-	public List<ResGetScheduleVO> getScheduleApprRepetList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check) throws Exception {
+	public List<ResGetScheduleVO> getScheduleApprRepetList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String check, String authYn) throws Exception {
 		
 		Map<String,Object> map = new HashMap<String, Object>();		
 		map.put("v_POWNERID", ownerID);
@@ -1373,6 +1374,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PDEPTID", deptId);
 		map.put("v_WRITERNAME", writerName);
 		map.put("v_APPROVETYPE", approveType);
+		map.put("v_PAUTHYN", authYn);
 		map.put("tenantID", tenantID);
 		map.put("check", check);
 		return mResourceDAO.getScheduleApprListRepetiti(map);
