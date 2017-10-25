@@ -1268,9 +1268,9 @@
 		       <tr>
 		            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 		           <td>
-		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center">
+		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 		                ~
-		               <input type="text" id="Edatepicker" style="width:80px;text-align:center"> 
+		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
 		           </td>
 		  </tr>
 		    </table>
