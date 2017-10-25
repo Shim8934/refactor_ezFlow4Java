@@ -69,6 +69,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Autowired
     private EzEmailUtil ezEmailUtil;
     
+    @Autowired
+    private ADConnection conn;
+    
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
     
@@ -352,7 +355,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         		 * - 부서의 부서이동
         		 * */
         		if(config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-        			ADConnection conn = new ADConnection();
         			DirContext ctx = conn.setConnection();
         			ezOrganAdminDao.moveDeptInAD(ctx, map, parentCn);
         		}
@@ -364,7 +366,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	    	 * - 유저의 부서 이동
     	    	 * */
     	    	if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-    	    		ADConnection conn = new ADConnection();
     	    		DirContext ctx = conn.setConnection();
     	    		ezOrganAdminDao.moveUserInAD(ctx, map, parentCn);    	    		
     	    	}
@@ -386,7 +387,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		loginDAO.updatePassword(loginVO);
 		
 		if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-			ADConnection conn = new ADConnection();
 			DirContext ctx = conn.setConnection();
 			ezOrganAdminDao.changePasswordInAD(ctx, loginVO);
 		}
@@ -461,7 +461,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		     * - 퇴작자 처리
 		     * */
 		    if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-		    	ADConnection conn = new ADConnection();
 		    	DirContext ctx = conn.setConnection();
 		    	ezOrganAdminDao.retireUserInAD(ctx, map);
 		    }
@@ -804,7 +803,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			 * - 부서 정보 수정
 			 * */
 			if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-				ADConnection conn = new ADConnection();
 				DirContext ctx = conn.setConnection();
 				ezOrganAdminDao.updateDeptInAD(ctx, vo);				
 			}
@@ -856,7 +854,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			     * - 부서 정보 삭제
 			     * */
 			    if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-			    	ADConnection conn = new ADConnection();
 			    	DirContext ctx = conn.setConnection();
 			    	ezOrganAdminDao.deleteDeptInAD(ctx, cn);
 			    }			        
@@ -872,7 +869,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			     * - 유저 정보 삭제
 			     * */
 			    if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-			    	ADConnection conn = new ADConnection();
 			    	DirContext ctx = conn.setConnection();
 			    	ezOrganAdminDao.deleteUserInAD(ctx, cn);
 			    }		        
@@ -1105,28 +1101,5 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
 	}
-
-	/**
-	 * AD 연동 테스트
-	 * */
-	public void getADdata(DirContext ctx) throws Exception {
-		logger.debug("getADdata started");
-		String cn = "leepaul";
-		String type ="user";
-    	ezOrganAdminDao.getADdata(ctx, cn, type, "dn");
-    	
-		logger.debug("getADdata ended.");
-	}
 	
-//	public void modifyADdata(OrganUserVO vo) throws Exception {
-//		logger.debug("modifyADdata started");
-//		
-//		ADConnection conn = new ADConnection();
-//		
-//		DirContext ctx = conn.setConnection();
-//		
-//		ezOrganAdminDao.modifyADdata(ctx, vo);
-//		
-//		logger.debug("modifyADdata ended.");
-//	}
 }

@@ -69,6 +69,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     @Autowired
     private EzEmailUtil ezEmailUtil;
     
+    @Autowired
+    private ADConnection conn;
+    
     private List<OrganDeptVO> getCompanyListForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("tenantID");
         String isPrimary = (String)map.get("lang");
@@ -1170,7 +1173,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	             * - 부서 추가
 	             * */
 	            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-	            	ADConnection conn = new ADConnection();
 	            	DirContext ctx = conn.setConnection();
 	            	insertDeptInAD(ctx, map);
 	            }
@@ -1284,8 +1286,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	            insertDBData_userForLocal(map);
 	            //AD를 사용하는 경우 AD에도 사용자 추가
 	            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-	            	ADConnection con = new ADConnection();
-	            	DirContext ctx = con.setConnection();
+	            	DirContext ctx = conn.setConnection();
 	            	insertUserInAD(ctx, map);
 	            }
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
@@ -1542,7 +1543,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             updateDBData_userForLocal(vo);
             // AD에도 내용을 수정
             if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-            	ADConnection conn = new ADConnection();
             	DirContext ctx = conn.setConnection();
             	updateUserInAD(ctx, vo, "user");
             }
@@ -1654,7 +1654,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    		 * - 퇴직자 복구
 	    		 * */
 	    		if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
-	    			ADConnection conn = new ADConnection();
 	    			DirContext ctx = conn.setConnection();
 	    			//retireUserInAD(ctx, map);	    
 	    			restoreUserInAD(ctx, map);
@@ -2316,13 +2315,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     /**
      * Active Directory
-     * - AD의 모든 그룹 혹은, 그룹의 모든 사용자 추출
+     * - AD의 모든 그룹 혹은 그룹의 모든 사용자 추출
      * - type : ObjectClass 타입 -> user || group
      * - colum : attribute
      * */
     @SuppressWarnings("rawtypes")
-    public ArrayList<HashMap<String, Object>> getAllADdate(DirContext ctx, String type, String column, String value) throws Exception {
-    	logger.debug("getAllADdate started.");
+    public ArrayList<HashMap<String, Object>> getAllADdata(DirContext ctx, String type, String column, String value) throws Exception {
+    	logger.debug("getAllADdata started.");
     	logger.debug("type : " + type + " column : " + column);
     	ArrayList<HashMap<String, Object>> arrayList = new ArrayList<HashMap<String,Object>>();
 
@@ -2360,7 +2359,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
     	//logger.debug("map : " +  map.toString());
     	
-    	logger.debug("getAllADdate ended.");
+    	logger.debug("getAllADdata ended.");
     	return arrayList;
     }
     
@@ -2393,18 +2392,15 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 * */
     	String defaultPath = "OU=" + config.getProperty("config.Company_Name") + ",OU=TopGroup,DC=" 
     				+ config.getProperty("config.Common_Name1")+ ",DC="+ config.getProperty("config.Common_Name2");
-    	//String searchBase = "OU="+ typeKR +", OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" + config.getProperty("config.Common_Name1") + ", DC="+ config.getProperty("config.Common_Name2");
     	logger.debug("searchBase : " + defaultPath);
     	/**
     	 * 검색에 사용될 filter
     	 * */
-    	//String filter = "(&(objectClass="+ type +")(cn=" + cn + "))";
     	String filter = "";
     	
     	if (col.equalsIgnoreCase("")) {
     		filter = "(&(objectClass="+ type +")(cn=" + cn.trim() + "))";
     	} else {
-    		//(member=cn=Jim Smith,ou=West,dc=Domain,dc=com)
     		filter = "("+ col +"=CN=" + cn + ",OU=부서,"+ defaultPath + ")";
     	}
     	
@@ -2425,15 +2421,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 
     	while (results.hasMoreElements()) {
     		SearchResult sr = (SearchResult)results.next();
-//    		Map map = new HashMap();
-//    		NamingEnumeration attrs = sr.getAttributes().getAll();
-    		
     		result = sr.getAttributes().get(column).toString();
-//    		while (attrs.hasMoreElements()) {
-//    			Attribute attribute = (Attribute) attrs.nextElement();
-//    			map.put(attribute.getID(), attribute.get());
-//    		}
-//    		logger.debug("map : " +  map.toString());
     	}
     	
     	if (result.equalsIgnoreCase("") || result == null) {
@@ -2545,7 +2533,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	mods[7] = chkADAttribute(ctx, getDN, "extensionAttribute15", vo.getExtensionAttribute15());
     	
 		// attribute 값이 null 이 아닌 경우 추출.
-    	for (int i = 0; i < 8; i ++) {
+    	for (int i = 0; i < mods.length; i ++) {
     		if ( mods[i] != null ) {
     			mItems.add(mods[i]);
     		}
@@ -2557,7 +2545,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	ctx.modifyAttributes(getDN, items);
     	
     	// 부서 내부의 유저 정보 가져오기
-    	ArrayList<HashMap<String, Object>> list = getAllADdate(ctx, "user", "department", vo.getCn());
+    	ArrayList<HashMap<String, Object>> list = getAllADdata(ctx, "user", "department", vo.getCn());
     	
     	// 부서 유저의 description 변경
     	OrganUserVO userVO = new OrganUserVO();
@@ -2607,7 +2595,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	String parDeptID = getADdata(ctx, map.get("v_CN").toString(), "isMember", "cn");
     	// 현재 부서가 속한 부모 부서의 dn
     	String parDept = getADdata(ctx, parDeptID, "group", "dn");    	
-    	// 작업이 진행될 부서의 dn
+    	// 작업이 진행되고 있는 부서의 dn
     	String curDept = getADdata(ctx, map.get("v_CN").toString(), "group", "dn");
     	// 이동될 부서의 dn
     	String movDept = getADdata(ctx, dept, "group", "dn");
@@ -2623,15 +2611,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 *  - 필요내용 : 이동 부서의 dn, 현재 부서의 dn
     	 * */
     	// 부모 부서의 dn이 없다는 것 -> 최상위 부서에서 이동한다는 뜻.
+    	// 부모 부서의 dn이 있다는 것 -> 하위 부서에서 이동한다는 뜻.    	
     	if (!parDept.equalsIgnoreCase("NOTHING")) {
         	ModificationItem[] delDept = new ModificationItem[1];
         	delDept[0] = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute("member", curDept));
         	ctx.modifyAttributes(parDept, delDept);
     	}
     	
-    	ModificationItem[] addDept = new ModificationItem[1];
-    	addDept[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", curDept));
-    	ctx.modifyAttributes(movDept, addDept);
+    	// movDept의 dn이 존재하는 경우, 이동할 부서의 member에 현재 부서 dn 추가
+    	if (!movDept.equalsIgnoreCase("NOTHING")) {
+        	ModificationItem[] addDept = new ModificationItem[1];
+        	addDept[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", curDept));
+        	ctx.modifyAttributes(movDept, addDept);            	
+    	} 
     	
     	logger.debug("moveDeptInAD ended.");
     }
@@ -2662,11 +2654,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	objClasses.add("user");    
     	
     	container.put(objClasses);
-    	container.put(new BasicAttribute( "userPrincipalName", map.get("v_CN") + domainName ));
+    	container.put(new BasicAttribute( "userPrincipalName", map.get("v_CN") + "@" + domainName ));
     	container.put(new BasicAttribute( "cn", map.get("v_CN") ));
     	container.put(new BasicAttribute( "sn", map.get("v_CN") ));
     	container.put(new BasicAttribute( "displayName", map.get("v_DISPLAYNAME") == null ? map.get("v_DISPLAYNAME2") : map.get("v_DISPLAYNAME") ));
-    	container.put(new BasicAttribute( "mail", map.get("v_CN") + domainName ));
+    	container.put(new BasicAttribute( "mail", map.get("v_CN") + "@" +  domainName ));
     	container.put(new BasicAttribute( "unicodePwd", pwdArray )); 
     	container.put(new BasicAttribute( "sAMAccountName", map.get("v_CN") ));
     	container.put(new BasicAttribute( "userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
@@ -2760,7 +2752,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    	mods[11] = chkADAttribute(ctx, getDN, "postalAddress", vo.getStreetAddress());
 	    	
 	    	// attribute 값이 null 이 아닌 경우 추출.
-	    	for (int i = 0; i < 12; i ++) {
+	    	for (int i = 0; i < mods.length; i ++) {
 	    		if ( mods[i] != null ) {
 	    			mItems.add(mods[i]);
 	    		}

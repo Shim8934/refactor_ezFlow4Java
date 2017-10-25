@@ -30,22 +30,19 @@ public class ADConnection {
 		/**
 		 * AD 접속을 위한 서버 정보 입력
 		 * */		
-    	String address = "10.0.100.185";
-    	String security = "administrator@syl2017.dev";
-    	String passwd = "P@ssw0rd";
+//    	String address = "10.0.100.185";
+//    	String security = "administrator@syl2017.dev";
+//    	String passwd = "P@ssw0rd";
+		
+    	String address = config.getProperty("config.PROVIDER_URL");
+    	String security = config.getProperty("config.SECURITY_PRINCIPAL");
+    	String passwd = config.getProperty("config.SECURITY_CREDENTIALS");
     	
     	logger.debug("=======AD Connection=======");
     	logger.debug(address);
     	logger.debug(security);
     	logger.debug(passwd);
-    	//logger.debug(test);
     	logger.debug("===========================");
-    	
-    	logger.debug("=======config.AD Connection=======");
-    	logger.debug(config.getProperty("config.PROVIDER_URL"));
-    	logger.debug(config.getProperty("config.SECURITY_PRINCIPAL"));
-    	logger.debug(config.getProperty("config.SECURITY_CREDENTIALS"));
-    	logger.debug("==================================");    	
 
     	Hashtable<String, String> env = new Hashtable<String, String>();
     	
