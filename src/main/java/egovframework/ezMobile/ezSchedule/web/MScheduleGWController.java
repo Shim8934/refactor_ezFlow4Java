@@ -3,8 +3,11 @@ package egovframework.ezMobile.ezSchedule.web;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -610,6 +614,190 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (주간)
+	 */
+	@RequestMapping(value="/mobile/ezschedule/week-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject mScheduleWeekList(@PathVariable String userId, HttpServletRequest request){
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String targetDate =  request.getParameter("targetDate");
+			String langStr =  request.getParameter("langStr");
+			String startDate = "";
+			String endDate = "";
+			String searchTitle = "";
+			
+			Calendar calForWeek = Calendar.getInstance();
+			int toYear = 0;
+			int toMonth = 0;
+			int toDay = 0;
+			 
+			if(targetDate == null || targetDate.equals("")){   //파라메타값이 없을경우 오늘날짜
+			 
+				toYear = calForWeek.get(calForWeek.YEAR);  
+				toMonth = calForWeek.get(calForWeek.MONTH)+1;
+				toDay = calForWeek.get(calForWeek.DAY_OF_MONTH);
+				int yoil = calForWeek.get(calForWeek.DAY_OF_WEEK); //요일나오게하기(숫자로)
+
+			if(yoil != 1){   //해당요일이 일요일이 아닌경우
+				
+				yoil = yoil-2;
+			
+			}else{           //해당요일이 일요일인경우
+			
+				yoil = 7;
+			
+			}
+			
+			calForWeek.set(toYear, toMonth-1, toDay-yoil);  //해당주월요일로 세팅
+			 
+			}else{
+			 
+			int yy =Integer.parseInt(targetDate.substring(0, 4));
+			int mm =Integer.parseInt(targetDate.substring(5, 7))-1;
+			int dd =Integer.parseInt(targetDate.substring(8, 10));
+			calForWeek.set(yy, mm,dd);
+			
+			}
+			
+			String[] arrYMD = new String[7];
+			  
+			int inYear = calForWeek.get(calForWeek.YEAR);  
+			int inMonth = calForWeek.get(calForWeek.MONTH);
+			int inDay = calForWeek.get(calForWeek.DAY_OF_MONTH);
+			int yoil = calForWeek.get(calForWeek.DAY_OF_WEEK); //요일나오게하기(숫자로)
+			
+			yoil = yoil-1;
+			
+			inDay = inDay-yoil;
+			
+			for(int i = 0; i < 7;i++){
+			
+				calForWeek.set(inYear, inMonth, inDay+i);  //
+				String y = Integer.toString(calForWeek.get(calForWeek.YEAR));  
+				String m = Integer.toString(calForWeek.get(calForWeek.MONTH)+1);
+				String d = Integer.toString(calForWeek.get(calForWeek.DAY_OF_MONTH));
+				
+				if(m.length() == 1) m = "0" + m; 
+				
+				if(d.length() == 1) d = "0" + d; 
+			   
+				arrYMD[i] = y + "-" + m + "-" +d;
+				LOGGER.debug("ymd = "+ y + "-" + m + "-" +d);
+			   
+			}
+			
+			List<Map> resultList = new ArrayList<Map>();
+					
+			for (int i = 0; i < arrYMD.length; i++) {
+				
+				startDate = arrYMD[i];
+				endDate = arrYMD[i];
+				
+				if (startDate != null && !startDate.equals("")) {
+					String[] sDate = startDate.split("-");
+					String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+					String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+					
+					startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+				} else {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					Calendar cal = Calendar.getInstance();
+					
+					startDate = sdf.format(cal.getTime()) + " 00:00:00";
+				}
+				
+				if (endDate != null && !endDate.equals("")) {
+					String[] eDate = endDate.split("-");
+					String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+					String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+					
+					endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+				} else {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					Calendar cal = Calendar.getInstance();
+					
+					endDate = sdf.format(cal.getTime()) + " 23:59:59";
+				}
+				
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfo(serverName, userId);
+				info.setLang(langStr);
+				
+				List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle);
+					
+				Map<String, Object> dayMap = new HashMap<String, Object>();
+				
+				if(i == 0) {
+					dayMap.put("weekDay", "sun");
+					dayMap.put("yoil", "일");
+					dayMap.put("scheduleList", sList);
+					dayMap.put("scheduleCount", sList.size());
+					dayMap.put("weekDate", arrYMD[0]);
+					resultList.add(dayMap);
+				} else if(i == 1) {
+					dayMap.put("weekDay", "mon");
+					dayMap.put("yoil", "월");
+					dayMap.put("scheduleList", sList);
+					dayMap.put("scheduleCount", sList.size());
+					dayMap.put("weekDate", arrYMD[1]);
+					resultList.add(dayMap);
+				} else if(i == 2) {
+					dayMap.put("weekDay", "tues");
+					dayMap.put("yoil", "화");
+					dayMap.put("scheduleList", sList);
+					dayMap.put("scheduleCount", sList.size());
+					dayMap.put("weekDate", arrYMD[2]);
+					resultList.add(dayMap);
+				} else if(i == 3) {
+					dayMap.put("weekDay", "wed");
+					dayMap.put("yoil", "수");
+					dayMap.put("scheduleList", sList);
+					dayMap.put("scheduleCount", sList.size());
+					dayMap.put("weekDate", arrYMD[3]);
+					resultList.add(dayMap);
+				} else if(i == 4) {
+					dayMap.put("weekDay", "thur");
+					dayMap.put("yoil", "목");
+					dayMap.put("scheduleList", sList);
+					dayMap.put("scheduleCount", sList.size());
+					dayMap.put("weekDate", arrYMD[4]);
+					resultList.add(dayMap);
+				} else if(i == 5) {
+					dayMap.put("weekDay", "fri");
+					dayMap.put("yoil", "금");
+					dayMap.put("scheduleList", sList);
+					dayMap.put("scheduleCount", sList.size());
+					dayMap.put("weekDate", arrYMD[5]);
+					resultList.add(dayMap);
+				} else if(i == 6) {
+					dayMap.put("weekDay", "sat");
+					dayMap.put("yoil", "토");
+					dayMap.put("scheduleList", sList);
+					dayMap.put("scheduleCount", sList.size());
+					dayMap.put("weekDate", arrYMD[6]);
+					resultList.add(dayMap);
+				}
+							
+			}
+								
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", resultList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] ended.");
 		
 		return result;
 	}
