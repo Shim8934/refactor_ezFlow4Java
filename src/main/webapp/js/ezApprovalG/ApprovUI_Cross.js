@@ -2587,41 +2587,6 @@ function getLastSignSN(pNodes) {
 
         var pCurrentAprType = getNodeText(dataNodes[11]);
         
-//        if (addLastKyulJeYN == "YES") {
-//        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType8 ) {
-//    	        if (pCurrentAprType == strAprType4) junkyulflag = true;
-//    	
-//    	        switch (pCurrentAprType) {
-//    	            case strAprType1:
-//    	                lastaprlineSN = lastaprlineSN + 1;
-//    	                break;
-//    	
-//    	            case strAprType18:
-//    	                lastaprlineSN = lastaprlineSN + 1;
-//    	                break;
-//    	
-//    	            case strAprType19:
-//    	                lastaprlineSN = lastaprlineSN + 1;
-//    	                break;
-//    	
-//    	            case strAprType4:
-//    	                lastaprlineSN = lastaprlineSN + 1;
-//    	                break;
-//    	
-//    	            case strAprType16:
-//    	                lastaprlineSN = lastaprlineSN + 1;
-//    	                break;
-//    	
-//    	            case strAprType3:
-//    	                lastaprlineSN = lastaprlineSN + 1;
-//    	                break;
-//    	                
-//    	            case strAprType8:
-//    	                lastaprlineSN = lastaprlineSN + 1;
-//    	                break;
-//    	        }
-//    	    }
-//        } else {
         	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 ) {
                 if (pCurrentAprType == strAprType4) junkyulflag = true;
 
@@ -2652,7 +2617,6 @@ function getLastSignSN(pNodes) {
                 }
             }
         }
-//    }
         
     return lastaprlineSN;
 }

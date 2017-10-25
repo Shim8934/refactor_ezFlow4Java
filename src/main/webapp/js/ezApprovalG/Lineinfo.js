@@ -3183,11 +3183,21 @@ function chkLastKyuljeaCF(AprLineRow) {
 	rtnVal = true;
 	for(i=0;i < AprLineRow.length - 1; i++)	{
 		aprtype = GetAttribute(AprLineRow[i],"DATA11");
-		if (aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
-		if (aprtype == strAprType2) {
-			rtnVal = false;
-			break;
+		
+		if (addLastKyulJeYN == "YES") {
+			if (aprtype == strAprType8 || aprtype == strAprType9 || aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType2) {
+				rtnVal = false;
+				break;
+			}
+		} else {
+			if (aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType2) {
+				rtnVal = false;
+				break;
+			}
 		}
+	
 	}
 	return rtnVal;
 }

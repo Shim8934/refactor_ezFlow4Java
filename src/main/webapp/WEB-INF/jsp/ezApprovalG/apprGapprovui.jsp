@@ -654,7 +654,7 @@
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
 			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0) || pAprLineType == strAprType4 || totalMemSN > 0) {
-			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
+			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8 || pAprLineType == strAprType9) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
