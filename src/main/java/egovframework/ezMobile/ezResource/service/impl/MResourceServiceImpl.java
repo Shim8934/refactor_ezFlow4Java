@@ -103,13 +103,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId,
-			String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr) {	
+			String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDID", brdId);
 		map.put("v_PBRDCOMPANY", brdCompany);
 		map.put("v_PUSERID", userId);
 		map.put("v_PUSERCOMPANY", userCompany);
 		map.put("v_PUSERDEPT", userDept);
+		map.put("v_PAUTHYN", authYn);
 		map.put("tenantID", tenantId);
 		
 		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResBrdList(map);
@@ -1378,12 +1379,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr) {	
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDCOMPANY", brdCompany);
 		map.put("v_PUSERID", userId);
 		map.put("v_PUSERCOMPANY", userCompany);
 		map.put("v_PUSERDEPT", userDept);
+		map.put("v_PAUTHYN", authYn);
 		map.put("tenantID", tenantId);
 		
 		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResApprBrdList(map);

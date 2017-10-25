@@ -621,9 +621,13 @@
 			AND
 				A.BRD_COMPANY = #v_PBRDCOMPANY#
 			AND 
-				A.BRD_GB = '2'	
+				A.BRD_GB = '2'
+			]]>	
+			<isNotEqual property="v_PAUTHYN" compareValue="A">			
       		AND
             	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID )
+			</isNotEqual>
+			<![CDATA[
 			AND
                 A.TENANT_ID = #tenantID#
       	   ORDER BY
@@ -1452,9 +1456,13 @@
 			AND 
 				A.BRD_GB = '2'
 			AND 
-				A.APPROVEFLAG = '1'	
+				A.APPROVEFLAG = '1'
+			]]>	
+			<isNotEqual property="v_PAUTHYN" compareValue="A">	
       		AND
             	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
+			</isNotEqual>
+			<![CDATA[
 			AND
                 A.TENANT_ID = #tenantID#
       	   ORDER BY

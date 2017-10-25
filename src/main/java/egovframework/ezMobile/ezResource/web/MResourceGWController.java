@@ -206,8 +206,13 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userCompany = info.getCompanyId();
 			String userDept = info.getDeptId();
 			String langStr = request.getParameter("langStr");
-
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId, langStr);
+			String authYn = "N";
+			
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+				authYn = "A";
+			}
+			
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data",list);
@@ -304,12 +309,18 @@ public class MResourceGWController extends EgovFileMngUtil {
 				resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
 			}
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(companyId, userId, companyId, dept , tenantId, langStr);
+			String authYn = "N";
+			
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+				authYn = "A";
+			}
+			
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(companyId, userId, companyId, dept , tenantId, langStr, authYn);
 			
 			String apprAuthYn = "N";
 			
 			for (MResourceGetAdmSubClsTreeVO rVO : list) {
-				if(rVO.getBrdId().equals(resourceId)){
+				if(rVO.getBrdId().equals(resourceId) || authYn.equals("A")){
 					apprAuthYn = "Y";
 				}
 			}
@@ -905,8 +916,13 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userCompany = info.getCompanyId();
 			String userDept = info.getDeptId();
 			String langStr = request.getParameter("langStr");
-
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(brdCompany, userId, userCompany, userDept , tenantId, langStr);
+			String authYn = "N";
+			
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+				authYn = "A";
+			}
+			
+			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data",list);
