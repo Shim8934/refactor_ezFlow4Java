@@ -335,6 +335,7 @@ function ListView() {
 
             oTable.setAttribute("multiselectable", _isMultiSelectable);
             oTable.setAttribute("useocs", _useOcs);
+            oTable.style.minWidth = GetTableMinWidth() + "px";
 
             if (_rowonclick != null)
                 oTable.setAttribute("rowonclick", _rowonclick);
@@ -445,6 +446,25 @@ function ListView() {
         oList = null;
     }
 
+    //테이블 min-width 결정
+    function GetTableMinWidth() {
+    	var oHeaders = _dataSource.getElementsByTagName("HEADER");
+    	var oHeaderMinWidth = 0;
+    	
+    	for (var i = 0; i < oHeaders.length; i++) {
+    		var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
+    		
+    		if(strColName == 'TITLE') {
+    			continue;
+    		}
+    		
+            var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
+            oHeaderMinWidth += parseInt(strWidth);
+    	}
+    	
+    	return oHeaderMinWidth + 200;
+    }
+    
     //리스트뷰 헤더 생성
     function GetTableHeaderObj() {
         var objTr = document.createElement("TR");
