@@ -120,6 +120,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("userIDS", userIDS);
 		map.put("tenantID", info.getTenantId());
 		map.put("companyID", info.getCompanyId());
+		map.put("primary", info.getPrimary());		
 		
 		List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionDAO.getTimeLineList(map);
 

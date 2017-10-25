@@ -104,10 +104,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 		try {
 			Map<String, Object> dataObject = new HashMap<String, Object>();
 
-			String serverName = request.getHeader("x-user-host");			
+			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String langStr = request.getParameter("langStr");
-			String listCnt = request.getParameter("listCnt");			
+			
+			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			String listCnt = request.getParameter("listCnt");
 			
 			if (type != null && !type.equals("T")) {
 				//받은결재함 리스트
@@ -147,7 +148,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
 				
 				//오늘의자원 리스트
-				Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt, langStr);
+				Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt, primary);
 				Object resourceList = resourceMap.get("scheduleList");
 				
 				//오늘의자원 리스트 카운트
@@ -181,6 +182,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 				String nowDate = commonUtil.getDateStringInUTC(utcNowDate, info.getOffSet(), false);
 				String sessionDate = commonUtil.getDateStringInUTC(utcSessionDate, info.getOffSet(), false);
 				
+				info.setPrimary(primary);
+				
 				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 				Locale locale = new Locale(ld);
 				LoginVO userInfo = new LoginVO();
@@ -189,8 +192,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 				userInfo.setLocale(locale);
 				userInfo.setTenantId(info.getTenantId());
 				userInfo.setOffset(info.getOffSet());
+				userInfo.setPrimary(primary);
 		
-				long startTime = System.currentTimeMillis();
+				long startTime = System.currentTimeMillis();				
 				
 				//한번에 가져오긴 힘들고 귀찮다.
 				List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionService.getTimeLineList(info, utcSessionDate, listCnt);
@@ -214,7 +218,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//자원관리 조인
-				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "", langStr);
+				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "", primary);
 				List<ResGetScheduleVO> resList = (List<ResGetScheduleVO>) resMap.get("scheduleList");
 				SimpleDateFormat shotDF = new SimpleDateFormat("yyyy-MM-dd");
 				SimpleDateFormat longDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -224,7 +228,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					mPortalTimeLineVO.setTitle(resGetScheduleVO.getTitle());
 					mPortalTimeLineVO.setStartDate(resGetScheduleVO.getStartDate());
 					mPortalTimeLineVO.setModule("5");
-					mPortalTimeLineVO.setWriterName(resGetScheduleVO.getOwnerNm());
+					mPortalTimeLineVO.setWriterName((primary.equals("1") ? resGetScheduleVO.getOwnerNm() : resGetScheduleVO.getOwnerNm2()));
 					mPortalTimeLineVO.setResID(resGetScheduleVO.getOwnerId());
 					mPortalTimeLineVO.setResNum(resGetScheduleVO.getNum());
 					
@@ -256,7 +260,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					mPortalTimeLineVO.setTitle(scheduleInfoVO.getTitle());
 					mPortalTimeLineVO.setStartDate(scheduleInfoVO.getStartDate());
 					mPortalTimeLineVO.setModule("3");
-					mPortalTimeLineVO.setWriterName(scheduleInfoVO.getCreatorName());
+					mPortalTimeLineVO.setWriterName((primary.equals("1") ? scheduleInfoVO.getCreatorName() : scheduleInfoVO.getCreatorName2()));
 					mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
 					
 					if (shotDF.parse(scheduleInfoVO.getStartDate()).compareTo(shotDF.parse(nowDate)) == 0) {
@@ -401,10 +405,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String langStr = request.getParameter("langStr");
 			String listCnt = request.getParameter("listCnt");			
-			
-			//받은결재함 리스트
-			String today = commonUtil.getTodayUTCTime("");
-		
+								
 			//받은결재함 리스트 카운트
 			int apprCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
 			

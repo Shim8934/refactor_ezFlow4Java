@@ -91,7 +91,10 @@
 				DOCTITLE as title,
 				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 				1 as module,
-				WRITERNAME,
+		]]>	
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[
 				DOCID as APPRID,
 				'' as BOARDID,
 				'' as BOARDITEMID,
@@ -115,9 +118,12 @@
 			
 			( SELECT 
 				A.TITLE,	
-				DATE_ADD(DATE_FORMAT(A.STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE, 
-				4 as module, 
-				WRITERNAME,
+				DATE_ADD(DATE_FORMAT(A.STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
+				4 as module,
+		]]>		 
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[		
 				'' as APPRID,
 				A.BOARDID,
 				A.ITEMID as BOARDITEMID,

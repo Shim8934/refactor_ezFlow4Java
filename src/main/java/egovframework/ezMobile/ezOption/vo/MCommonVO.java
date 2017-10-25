@@ -35,6 +35,8 @@ public class MCommonVO {
 	private String userFileUrl;		/** 사용자 사진 */
 	
 	private String email; /* 사용자 e-mail*/
+	
+	private String primary;
 
 	public int getTenantId() {
 		return tenantId;
@@ -171,5 +173,14 @@ public class MCommonVO {
 	public void setUserFileUrl(String userFileUrl) {
 		this.userFileUrl = userFileUrl;
 	}
+
+	public String getPrimary() {
+		return primary;
+	}
+
+	public void setPrimary(String primary) {
+		this.primary = primary;
+	}
+	
 	
 }
