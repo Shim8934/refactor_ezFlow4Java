@@ -120,7 +120,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		String height = request.getParameter("height");
-		String id = request.getParameter("id");
+		String formID = request.getParameter("formID");
 		
 		//TODO: http/https 설정값
 		String serverUrl = "http://" + userInfo.getServerName();
@@ -130,9 +130,8 @@ public class EzEditorController extends EgovFileMngUtil{
 		String returnPath = "";
 		
 		switch (useEditor) {
-			/* 2017-05-23 이효민 : DEXT, NAMO 추후 개발
 			case "DEXT":
-				model.addAttribute("id", id);
+				model.addAttribute("formID", formID);
 				returnPath = "admin/ezEditor/dextEditor";
 	            break; */
 			case "NAMO":
