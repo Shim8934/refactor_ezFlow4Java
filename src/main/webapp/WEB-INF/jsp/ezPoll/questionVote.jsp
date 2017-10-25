@@ -283,7 +283,7 @@
 			
 			function getConnect() {
 			    //var socket = new WebSocket('ws://localhost:8080/ezFlow/hello');			    
-			    var socket = new SockJS('/ezFlow/hello');
+			    var socket = new SockJS('/hello');
 			    stompClient = Stomp.over(socket);			
 			    stompClient.connect({}, function (frame) {		        			    
 			    	stompClient.subscribe('/reply/getSeenUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {			

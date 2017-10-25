@@ -58,7 +58,7 @@
 			}		
 			
 			function getConnect() {
-			    var socket = new SockJS('/ezFlow/hello');
+			    var socket = new SockJS('/hello');
 			    stompClient = Stomp.over(socket);
 			    stompClient.connect({}, function (frame) {
 			        stompClient.subscribe('/reply/qstDeleteForTenant' + tenantId, function (updatedInfo) {			       
