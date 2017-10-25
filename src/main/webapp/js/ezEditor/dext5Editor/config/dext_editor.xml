@@ -192,8 +192,8 @@
     <width>100%</width>
     <height>100%</height>
     <skinname></skinname>
-    <font_family>맑은 고딕</font_family>
-    <font_size>10pt</font_size>
+    <font_family></font_family>
+    <font_size></font_size>
     <line_height>120%</line_height>
     <show_font_real desc="0: 기본값 사용, 1: 실제 폰트명, 크기 사용">1</show_font_real>
     <accessibility>0</accessibility>
@@ -237,11 +237,11 @@
   </setting>
   
   <uploader_setting>
-    <develop_langage desc="NET, JAVA(JSP), PHP">NET</develop_langage>
+    <develop_langage desc="NET, JAVA(JSP), PHP"></develop_langage>
     <handler_url></handler_url>
     <handler_url_save_for_notes desc="http://를 포함한 전체 경로"></handler_url_save_for_notes>
-    <server_domain>http://gw1.ezekp2013.dev</server_domain>
-    <to_save_path_url>/Upload_Common</to_save_path_url>
+    <server_domain></server_domain>
+    <to_save_path_url></to_save_path_url>
     <to_save_file_path_url></to_save_file_path_url>
     <save_foldername_rule desc="/, YYYY/, YYYY/MM/, YYYY/MM/DD/">YYYY/MM/DD</save_foldername_rule>
     <save_file_foldername_rule desc="/, YYYY/, YYYY/MM/, YYYY/MM/DD/">YYYY/MM/DD</save_file_foldername_rule>
