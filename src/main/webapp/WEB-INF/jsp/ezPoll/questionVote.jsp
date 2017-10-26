@@ -1225,8 +1225,8 @@
 					    	imgForinnerDiv1.setAttribute("height", "60");
 					    	imgForinnerDiv1.setAttribute("width", "60");	
 					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
-				    		imgForinnerDiv1.src = "/files/commentImages/" + fileinfo.split("/")[0];	
-				    		imgForinnerDiv1.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);   
+				    		imgForinnerDiv1.src = fileinfo.split("/")[0];	
+				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]);   
 				    		imgForinnerDiv1.onclick = function() { downloadFileInCmt(this); };
 				    	}
 				    	else {				    		
@@ -1425,7 +1425,7 @@
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
 						else {
-							imagePreview.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);
+							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							imagePreview.setAttribute("_type", "images"); 
 						}
 		    		}
@@ -1441,7 +1441,7 @@
 						}
 						else {
 							imagePreview.setAttribute("_type", "images"); 
-							imagePreview.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);
+							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 						}
 		    		}
 		    		else {
@@ -1454,7 +1454,7 @@
 						}	
 						else {
 							imagePreview.setAttribute("_type", "images");
-							imagePreview.setAttribute("_fileInfo", "/files/commentImages/" + fileinfo.split("/")[0]);
+							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 						}
 		    		}
 		    		
@@ -1465,7 +1465,7 @@
 		    	imagePreview.setAttribute("_type", "file");	
 		    	
 		    	if (_ext == "jpg" || _ext == "png" || _ext == "bmp") {		    	    	             
-		    		imagePreview.src = "/files/commentImages/" + fileinfo.split("/")[0];
+		    		imagePreview.src = fileinfo.split("/")[0];
 		    	}
 		    	else if (_ext == "doc" || _ext == "docx") {
 		    		imagePreview.src = "/images/msWord.png";
