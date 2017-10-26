@@ -211,6 +211,7 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String type = request.getParameter("type");
+			String aprMemberSN = request.getParameter("aprMemberSN");
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
@@ -230,7 +231,7 @@ public class MApprovalGGWController {
 			//본문
 			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type, scheme);
 			//결재문서정보
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN);
 			//회수 가능여부
 			String callBackYN = ezApprovalGService.getCallBackYN(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 			
@@ -682,6 +683,7 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String locale = request.getParameter("locale");
+			String aprMemberSN = request.getParameter("aprMemberSN");
 			String serverName = request.getHeader("x-user-host");
 			String realPath = commonUtil.getRealPath(request);
 			
@@ -694,7 +696,7 @@ public class MApprovalGGWController {
 			String rtnVal = "";
 			
 			//docId로만 정보 가져오기
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN);
 			
 			LoginVO loginVO = new LoginVO();
 			

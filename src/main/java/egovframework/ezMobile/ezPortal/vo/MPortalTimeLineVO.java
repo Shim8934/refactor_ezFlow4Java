@@ -11,6 +11,8 @@ public class MPortalTimeLineVO {
 	private String writerName;
 	/** 전자결재문서아이디*/
 	private String apprID;
+	/** 전자결재문서순번*/
+	private String aprMemberSN;
 	/** 게시판아이디*/
 	private String boardID;
 	/** 게시물아이디*/
@@ -105,6 +107,12 @@ public class MPortalTimeLineVO {
 	}
 	public void setResNum(int resNum) {
 		this.resNum = resNum;
+	}
+	public String getAprMemberSN() {
+		return aprMemberSN;
+	}
+	public void setAprMemberSN(String aprMemberSN) {
+		this.aprMemberSN = aprMemberSN;
 	}
 }
 

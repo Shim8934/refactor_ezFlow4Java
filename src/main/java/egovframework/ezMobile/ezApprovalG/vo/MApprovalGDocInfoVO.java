@@ -27,6 +27,8 @@ public class MApprovalGDocInfoVO {
 	private String aprMemberName2;
 	/** 결재자 부서아이디*/
 	private String aprMemberDeptID;
+	/** 결재자 순번*/
+	private String aprMemberSN;
 	/** 문서경로*/
 	private String href;
 	/** 양식 아이디*/
@@ -39,6 +41,8 @@ public class MApprovalGDocInfoVO {
 	private String aprState;
 	/** 문서상태*/
 	private String functionType;
+	/** 긴급결재여부 Y or N*/
+	private String urgentApproval;
 	
 	public String getDocID() {
 		return docID;
@@ -153,6 +157,18 @@ public class MApprovalGDocInfoVO {
 	}
 	public void setFunctionType(String functionType) {
 		this.functionType = functionType;
+	}
+	public String getUrgentApproval() {
+		return urgentApproval;
+	}
+	public void setUrgentApproval(String urgentApproval) {
+		this.urgentApproval = urgentApproval;
+	}
+	public String getAprMemberSN() {
+		return aprMemberSN;
+	}
+	public void setAprMemberSN(String aprMemberSN) {
+		this.aprMemberSN = aprMemberSN;
 	}
 	
 }

@@ -23,7 +23,9 @@
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
-					FUNCTIONTYPE
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -59,7 +61,8 @@
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
 					HASATTACHYN,
 					HASOPINIONYN,
-					FUNCTIONTYPE
+					FUNCTIONTYPE,
+					URGENTAPPROVAL
 				FROM 
 					VAPRWILLDOCLIST 
 	   			WHERE
@@ -98,7 +101,8 @@
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
-					FUNCTIONTYPE
+					FUNCTIONTYPE,
+					URGENTAPPROVAL
 				FROM 
 					VAPRWILLDOCLIST 
 	   			WHERE
@@ -136,7 +140,8 @@
 				A.HASATTACHYN,
 				A.HASOPINIONYN,
 				B.APRTYPE,
-				E.CODE2 as FUNCTIONTYPE
+				E.CODE2 as FUNCTIONTYPE,
+				C.URGENTAPPROVAL
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -924,9 +929,12 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
+			]]>
+			<isNotEmpty property="aprMemberSN" prepend="AND">
+				APRMEMBERSN = #aprMemberSN#
+			</isNotEmpty>
 				LIMIT
 					1
-			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
