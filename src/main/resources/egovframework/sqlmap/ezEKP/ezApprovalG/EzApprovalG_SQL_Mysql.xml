@@ -22222,4 +22222,45 @@
          AND
          	A.COMPANYID = #companyID#
       </update>
+      
+	<delete id="EzApprovalG.deleteOpinionTypeInfo" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_APROPINIONINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid= #docID#
+			AND
+				opiniongb = #opinionType#
+		]]>
+	</delete>
+	
+	<update id="EzApprovalG.updateHasOpinionYN" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRDOCINFO
+			SET
+				hasopinionyn = 'N'
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+			AND
+				(SELECT
+					COUNT(docid)
+				FROM
+					TBL_APROPINIONINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					docid = #docID#) = 0
+		]]>
+	</update>
 </sqlMap>

@@ -54,7 +54,6 @@
 	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";	        
 		    
-		    document.onselectstart = function () { return false; };		    
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";

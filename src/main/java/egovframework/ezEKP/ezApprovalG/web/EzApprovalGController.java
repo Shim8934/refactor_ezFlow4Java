@@ -7270,4 +7270,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("selectExpCabDocInfo ended");
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/deleteOpinionTypeInfo.do")
+	public String deleteOpinionTypeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteOpinionTypeInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String opinionType = request.getParameter("opinionType");
+		
+		ezApprovalGService.deleteOpinionTypeInfo(docID, opinionType, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("deleteOpinionTypeInfo ended.");
+		
+		return "json";
+	}
 }
