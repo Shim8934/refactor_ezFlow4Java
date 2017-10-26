@@ -133,6 +133,8 @@ public class LoginVO implements Serializable {
     private String serverName;
     /** 겸직 정보*/
     private String gyumJik;
+    /** 이미지*/
+    private String userImage;
 	
 	public String getId() {
 		return id;
@@ -458,6 +460,13 @@ public class LoginVO implements Serializable {
 	
 	public void setGyumJik(String gyumJik) {
 		this.gyumJik = gyumJik;
+	}	
+	
+	public String getUserImage() {
+		return userImage;
+	}
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
 	}
 	
 	public boolean equals(Object object) {

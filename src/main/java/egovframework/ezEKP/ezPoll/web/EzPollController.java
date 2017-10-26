@@ -1426,6 +1426,17 @@ public class EzPollController extends EgovFileMngUtil {
 		totalVotes = listOfPollUserAndAnswer.size();
 		totalVotesForOption = listOfVotedUsersForAnswer.size();
 		content = pollAnswer.getContent();
+		
+		//Set image for each commented user
+		for (PollUserAnswerVO userAnswer: listOfVotedUsersForAnswer) {
+			String imagePath = ezOrganService.getPropertyValue(userAnswer.getUserId(), "extensionAttribute2", userAnswer.getTenantId());
+			
+			if (imagePath != null && !imagePath.equals("")) {
+				userAnswer.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userAnswer.getTenantId())+ commonUtil.separator + imagePath);
+			} else {
+				userAnswer.setUserImage("/images/default_pic.jpg");
+			}
+		}
 
 		model.addAttribute("totalVotes", totalVotes);
 		model.addAttribute("totalVotesForOption", totalVotesForOption);
@@ -1472,10 +1483,18 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			if (listOfAnsweredUsers.contains(user.getId())) {
 				iterator.remove();	
-			}					
-		}
+			}
+			else {
+				String userImagePath = ezOrganService.getPropertyValue(user.getId(), "extensionAttribute2", user.getTenantId());
+				
+				if (userImagePath != null && !userImagePath.equals("")) {
+					user.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
+				} else {
+					user.setUserImage("/images/default_pic.jpg");
+				}
+			}
+		}		
 		
-		listOfUnvotedUsers.removeAll(listOfAnsweredUsers);
 		numberOfUnVotedUsers = listOfUnvotedUsers.size();
 		
 		model.addAttribute("numberOfUnVotedUsers", numberOfUnVotedUsers);
@@ -1558,12 +1577,30 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		for (String _userID : listOfSeenUsers) {
 			LoginVO user = loginService.selectReceiver(_userID, tenantId);
+			String userImagePath = ezOrganService.getPropertyValue(user.getId(), "extensionAttribute2", user.getTenantId());
+			
+			if (userImagePath != null && !userImagePath.equals("")) {
+				user.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
+			} else {
+				user.setUserImage("/images/default_pic.jpg");
+			}
 			listofSeenUsers.add(user);
-		}
+		}		
 		
 		int numberOfSeenUsers = listofSeenUsers.size();
 		listofUnseenUsers.removeAll(listofSeenUsers);
 		int numberOfUnseenUsers = listofUnseenUsers.size();
+		
+		//Add user image
+		for (LoginVO user : listofUnseenUsers) {
+			String userImagePath = ezOrganService.getPropertyValue(user.getId(), "extensionAttribute2", user.getTenantId());
+			
+			if (userImagePath != null && !userImagePath.equals("")) {
+				user.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
+			} else {
+				user.setUserImage("/images/default_pic.jpg");
+			}
+		}
 		
 		model.addAttribute("listOfSeenUsers", listofSeenUsers);
 		model.addAttribute("listOfUnSeenUsers", listofUnseenUsers);

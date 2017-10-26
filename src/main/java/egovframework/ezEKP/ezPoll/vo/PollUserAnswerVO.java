@@ -8,6 +8,7 @@ public class PollUserAnswerVO {
 	private int tenantId;
 	private String userName;
 	private String voteDate;
+	private String userImage;
 	
 	public int getAnsId() {
 		return ansId;
@@ -55,5 +56,14 @@ public class PollUserAnswerVO {
 	
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getUserImage() {
+		return userImage;
+	}
+
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
 	}	
+	
 }	
