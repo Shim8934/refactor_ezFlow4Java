@@ -642,7 +642,8 @@
                 		async : false,
                 		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
                 		data : {
-                				docID     : pDocID
+                				docID     : pDocID,
+                				flag      : "approvUi"
                 				},
                 		success : function(result){
                 			totalMemSN = result;

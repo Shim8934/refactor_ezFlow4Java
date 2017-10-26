@@ -2111,7 +2111,9 @@ public class EzApprovalGarchiveController {
 	userInfo = commonUtil.aprUserInfo(loginCookie);
 	
 	String docID = request.getParameter("docID");
-	int result = ezApprovalGService.lastKyulJeHabYuiYN(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+	String flag  = request.getParameter("flag");
+	
+	int result = ezApprovalGService.lastKyulJeHabYuiYN(docID, flag, userInfo.getCompanyID(), userInfo.getTenantId());
 
 	logger.debug("lastKyulJeHabYuiYN ended");
 		

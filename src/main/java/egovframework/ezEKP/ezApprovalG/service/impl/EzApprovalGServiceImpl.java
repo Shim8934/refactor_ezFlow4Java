@@ -21789,11 +21789,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public int lastKyulJeHabYuiYN(String docID, String companyID, int tenantId) throws Exception {
+	public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID" , companyID);
+		map.put("v_FLAG", flag);
 		
 		int lastKyulJeCnt = ezApprovalGDAO.lastKyulJeCnt(map);
 		
