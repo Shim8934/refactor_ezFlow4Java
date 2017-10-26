@@ -1593,8 +1593,15 @@
 		    function displaySticker(obj) {				    	
 		    	var style = obj.currentStyle || window.getComputedStyle(obj, false);
 		    	var bgImage = style.backgroundImage.slice(4, -1);
-		    	var actualUrl = bgImage.slice(bgImage.indexOf("/images/"), -1);		   	    		    	
+		    	var actualUrl = "";
 		    	
+		    	if (bgImage.slice(-1) === '"') {		    		
+		    		actualUrl = bgImage.slice(bgImage.indexOf("/images/"), -1);
+		    	}
+		    	else {		    		
+		    		actualUrl = bgImage.slice(bgImage.indexOf("/images/"));
+		    	}		    				   	    		    	
+
 		    	//Close sticker picker
 		    	document.getElementById("emoticonPanel").style.display = "none";
 		    	
