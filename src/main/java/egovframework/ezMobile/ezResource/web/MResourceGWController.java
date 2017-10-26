@@ -956,7 +956,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/auth-check/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceApprFolderListCheck(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/auth-check/users/{userId}] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -970,18 +970,32 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String langStr = request.getParameter("langStr");
 			String authYn = "N";
 			
-			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
-				authYn = "A";
-			}
-			
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+			LOGGER.debug("tenantId: " + tenantId);
+			LOGGER.debug("userDept: " + userDept);
+			LOGGER.debug("userCompany: " + userCompany);
+			LOGGER.debug("brdCompany: " + brdCompany);
+			LOGGER.debug("userId: " + userId);
 			
 			String authCheck = "N";
 			
-			if(list.size() > 0) {
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+				authYn = "A";
 				authCheck = "Y";
 			}
+			LOGGER.debug("authYn: " + authYn);
 			
+			if(!authYn.equals("A")) {
+				
+				LOGGER.debug("in authYn check!!!!!");
+				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);					
+			
+				LOGGER.debug("list: " + list);
+				
+				if(list.size() > 0) {
+					authCheck = "Y";
+				}
+			}
+
 			LOGGER.debug("authCheck: " + authCheck);
 			
 			Map<String, String> resultMap = new HashMap<String, String>();
@@ -1004,7 +1018,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list/users/{userId}] ended.");
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/auth-check/users/{userId}] ended.");
 		return result;
 	}
 	

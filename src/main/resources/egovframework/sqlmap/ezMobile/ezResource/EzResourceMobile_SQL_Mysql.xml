@@ -199,6 +199,10 @@
 		<result property="brdNm2"				column="BRDNM2"				columnIndex="32"/>
 	</resultMap>
     
+    <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceApprBrdVO">
+      <result property="brdId"          column="RESID"         columnIndex="1"/>
+    </resultMap>
+    
     <select id="MResourceDAO.getAdmSubClsTree" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
     <isEmpty property="v_P_ParentID">
       <![CDATA[
@@ -1474,35 +1478,25 @@
 		]]>
 	</select>
 	
-			<select id="MResourceDAO.getResApprBrdListCheck" parameterClass="Map" resultMap="mResourceBrdVO">
+	<select id="MResourceDAO.getResApprBrdListCheck" parameterClass="Map" resultMap="mResourceApprBrdVO">
 		<![CDATA[
 			SELECT
-					   A.BRD_ID,
-                       A.BRD_NM,
-                       A.BRD_NM2,
-                       A.BRD_LEVEL,
-                       A.BRD_STEP,
-                       A.BRD_POSTTERM,
-                       A.BRD_UPPER,
-                       A.BRD_GB,
-                       A.BRD_URL,
-                       A.BRD_EXPLAIN
-			FROM
-				TBL_RS_BRD A  	
-			WHERE
-				A.BRD_COMPANY = #v_PUSERCOMPANY#
+				RESID
+			FROM 
+				TBL_RS_RESACL 
+			WHERE 
+				(
+						MEMBER_ID = #v_PUSERCOMPANY# 
+					OR 
+						MEMBER_ID = #v_PUSERDEPT# 
+					OR 
+						MEMBER_ID = #v_PUSERID# 
+					OR 
+						MEMBER_ID = 'everyone') 
 			AND 
-				A.BRD_GB = '2'
-			]]>	
-			<isNotEqual property="v_PAUTHYN" compareValue="A">	
-      		AND
-            	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID )
-			</isNotEqual>
-			<![CDATA[
-			AND
-                A.TENANT_ID = #tenantID#
-      	   ORDER BY
-           A.BRD_UPPER	
+				TENANT_ID = #tenantID#  
+			AND 
+				ACCESS_LVL = 1 
 		]]>
 	</select>
 	
