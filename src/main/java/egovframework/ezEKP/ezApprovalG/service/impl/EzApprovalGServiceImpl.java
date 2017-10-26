@@ -21798,7 +21798,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int lastKyulJeCnt = ezApprovalGDAO.lastKyulJeCnt(map);
 		
-		map.put("v_memSN", lastKyulJeCnt);
+		map.put("v_memSN", lastKyulJeCnt - 1);
 		
 		String lastHabYuiSN = ezApprovalGDAO.lastHabYuiSN(map);
 		
