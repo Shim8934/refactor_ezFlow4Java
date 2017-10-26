@@ -37,10 +37,6 @@
 	   			AND 
 	   				APRTYPE <> '015'
 	   			AND
-	   				APRTYPE <> '009'
-	   			AND
-	   				APRTYPE <> '008'	   				
-	   			AND
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
@@ -247,10 +243,6 @@
 	   			AND
 	   				APRTYPE <> '015'
 	   			AND
-	   				APRTYPE <> '009'
-	   			AND
-	   				APRTYPE <> '008'
-	   			AND
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
@@ -405,10 +397,6 @@
 		   				STARTDATE < #nowDate#
 		   			AND
 		   				APRTYPE <> '015' 
-		   			AND
-		   				APRTYPE <> '009'
-		   			AND
-		   				APRTYPE <> '008'		   				
 		   			AND
 		   				APRMEMBERSN <> 1) as aprDoCount,
 				(SELECT 
