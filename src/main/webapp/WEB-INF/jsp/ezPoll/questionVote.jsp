@@ -366,6 +366,7 @@
 			        	var _filePath = JSON.parse(updatedInfo.body).filePath;
 			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
 			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
+			        	var _userPhoto = JSON.parse(updatedInfo.body).userPhoto;
 			        	
 			            if (_userId != curentUser) {			          		
 			            	if (_cmdId <= commentIndex) {
@@ -373,7 +374,7 @@
 			          			return;
 			          		}
 			            	
-			            	updateNewCmt(_userId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime);
+			            	updateNewCmt(_userId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto);
 					    }
 				    });
 			        
@@ -1164,7 +1165,7 @@
 		    	var objTd = document.createElement("td");
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
-                image_tag.src = "/images/account.jpg";
+                image_tag.src = "${userPhoto}";
                 image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; cursor: pointer; "); 
                 image_tag.onclick = function () { menuQst_DetailUserInfo(curentUser); };
                 objTd.appendChild(image_tag);
@@ -1679,7 +1680,7 @@
 		    	}
 		    }
 		    
-		    function updateNewCmt(userId, attach, type, name, path, txtContent, cmtTime) {
+		    function updateNewCmt(userId, attach, type, name, path, txtContent, cmtTime, userPhoto) {
 		    	commentIndex = commentIndex + 1;
 		    	var oTable = document.getElementById("commentListView");
 		    	
@@ -1691,7 +1692,7 @@
 		    	var objTd = document.createElement("td");
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
-                image_tag.src = "/images/account.jpg";
+                image_tag.src = userPhoto;
                 image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; cursor: pointer; "); 
                 image_tag.onclick = function () { menuQst_DetailUserInfo(userId); };
                 objTd.appendChild(image_tag);
@@ -2013,7 +2014,7 @@
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden;">
 				  <div style="float: left; display: block;width:300px;">
-				  		<img src="/images/account.jpg" style="display:inline-block;float:left; height:50px;width:50px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
+				  		<img src="${question.creatorImage}" style="display:inline-block;float:left; height:60px;width:60px; padding-bottom: 1px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
 						<div id="textTest" style="display:inline-block;">
 							<span style="display:block;padding-top: 8px;padding-left: 5px;"><c:out value='${question.creatorName}'/></span>
 							<span style="display:block;padding-top: 8px;padding-left: 5px;"><c:out value='${question.startDate}'/></span>
@@ -2146,7 +2147,7 @@
 					<c:forEach var="_comt" items="${listComments}">
 						<tr style="border-bottom: 1px solid #b6b6b6; ">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<img src="/images/account.jpg" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
+								<img src="${_comt.userImage}" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>
 							<td>
 								<div style="display: block; padding-left: 8px; padding-top: 10px; color: blue">${_comt.userId}</div>

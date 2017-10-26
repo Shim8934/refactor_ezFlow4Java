@@ -17,6 +17,7 @@ public class PollQuestionVO implements Serializable {
 	private int secretVote;
 	private String creator;
 	private String creatorName;
+	private String creatorImage;
 	private int status;	
 	private String receiverType;
 	private String filePath;
@@ -118,8 +119,16 @@ public class PollQuestionVO implements Serializable {
 	
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
-	}	
+	}		
 	
+	public String getCreatorImage() {
+		return creatorImage;
+	}
+
+	public void setCreatorImage(String creatorImage) {
+		this.creatorImage = creatorImage;
+	}
+
 	public int getStatus() {
 		return status;
 	}

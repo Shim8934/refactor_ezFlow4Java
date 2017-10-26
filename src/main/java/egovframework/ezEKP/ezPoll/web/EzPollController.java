@@ -17,9 +17,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
@@ -41,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -424,6 +427,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int adminPrivilege = -1;
 		int numberOfCmt = -1;
 		String[] files = null;
+		String userPhoto = "";
 		
 		if (loginVO.getRollInfo().indexOf("c=1") == -1 && loginVO.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
@@ -477,6 +481,15 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		else {
 			pollQuestionVO.setStatus(0);
+		}
+		
+		//Set creator Image
+		String creatorImagePath = ezOrganService.getPropertyValue(pollQuestionVO.getCreator(), "extensionAttribute2", pollQuestionVO.getTenantId());
+		
+		if (creatorImagePath != null && !creatorImagePath.equals("")) {
+			pollQuestionVO.setCreatorImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", pollQuestionVO.getTenantId())+ commonUtil.separator + creatorImagePath);
+		} else {
+			pollQuestionVO.setCreatorImage("/images/default_pic.jpg");
 		}
 		
 		//Get all related users for this question
@@ -580,12 +593,32 @@ public class EzPollController extends EgovFileMngUtil {
 	        return Integer.valueOf(cmt1.getCmtId()).compareTo(cmt2.getCmtId());
 		});
 		
+		//Set image for each commented user
+		for (PollCommentVO commentVO: listComments) {
+			String imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenantId());
+			
+			if (imagePath != null && !imagePath.equals("")) {
+				commentVO.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", commentVO.getTenantId())+ commonUtil.separator + imagePath);
+			} else {
+				commentVO.setUserImage("/images/default_pic.jpg");
+			}
+		}
+		
 		if (listComments.isEmpty()) {
 			numberOfCmt = 0;
 		}
 		else {
 			numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
 		}		
+		
+		//User image
+		String result = ezOrganService.getPropertyValue(loginVO.getId(), "extensionAttribute2", loginVO.getTenantId());
+		
+		if (result != null && !result.equals("")) {
+			userPhoto = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", loginVO.getTenantId())+ commonUtil.separator + result;
+		} else {
+			userPhoto = "/images/default_pic.jpg";
+		}
 		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);
@@ -603,6 +636,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("question", pollQuestionVO);
 		model.addAttribute("curentUser", loginVO.getId());
 		model.addAttribute("curentUserName", loginVO.getDisplayName());
+		model.addAttribute("userPhoto", userPhoto);
 		
 		logger.debug("Question vote finishes!");		
 		return "/ezPoll/questionVote";
@@ -748,7 +782,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String fileName = "";
 		String filePath = "";
 		String txtContent = "";
-		String fileType = "";		
+		String fileType = "";	
 		int qstId = -1;
 		int cmtId = -1;		
 		
@@ -819,6 +853,15 @@ public class EzPollController extends EgovFileMngUtil {
 			pollCmtVO.setFilePath("");
 		}
 		
+		//Add userImage
+		String imagePath = ezOrganService.getPropertyValue(pollCmtVO.getUserId(), "extensionAttribute2", pollCmtVO.getTenantId());
+		
+		if (imagePath != null && !imagePath.equals("")) {
+			pollCmtVO.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", pollCmtVO.getTenantId())+ commonUtil.separator + imagePath);
+		} else {
+			pollCmtVO.setUserImage("/images/default_pic.jpg");
+		}
+		
 		//Process comment
 		try {
 			//Insert into comment table
@@ -827,7 +870,7 @@ public class EzPollController extends EgovFileMngUtil {
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
 							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\","
-							+ " \"cmtTime\":\"" + cmtTime + "\"}";
+							+ " \"cmtTime\":\"" + cmtTime + "\"," + " \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/addCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);

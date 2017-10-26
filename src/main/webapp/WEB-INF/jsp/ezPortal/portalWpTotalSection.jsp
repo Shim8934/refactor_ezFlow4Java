@@ -17,7 +17,7 @@
 				 	<strong style="position:absolute;">${displayName} ${mailAddress } </strong>
 				 </p>
 				<div class="info">
-    				<p class="pic">${userPhoto }</p>
+    				<p class="pic">${userPhoto}</p>
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
 			 			<dd><strong>${department} ${title}</strong></dd>

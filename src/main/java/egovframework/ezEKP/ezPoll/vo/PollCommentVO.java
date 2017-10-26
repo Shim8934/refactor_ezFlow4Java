@@ -11,6 +11,7 @@ public class PollCommentVO {
 	private String fileName;
 	private String filePath;
 	private String cmtTime;
+	private String userImage;
 	
 	public int getCmtId() {
 		return cmtId;
@@ -90,5 +91,14 @@ public class PollCommentVO {
 	
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
-	}			
+	}
+
+	public String getUserImage() {
+		return userImage;
+	}
+
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}	
+	
 }
