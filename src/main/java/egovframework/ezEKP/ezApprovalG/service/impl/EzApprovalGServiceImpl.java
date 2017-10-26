@@ -12476,7 +12476,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String formURL = userInfo.getRealPath() + docHref;
 		String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
 		// HTML -> MHT
-		String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "");
+		String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "", "");
 		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
 		
