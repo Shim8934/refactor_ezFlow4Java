@@ -829,7 +829,9 @@ public class EzPollController extends EgovFileMngUtil {
 		pollCmtVO.setTenantId(loginVO.getTenantId());
 		pollCmtVO.setUserId(loginVO.getId());		
 		pollCmtVO.setCmtTime(cmtTime);		
-		pollCmtVO.setTextContent(txtContent);		
+		pollCmtVO.setTextContent(txtContent);	
+		
+		logger.debug("attachFilePath: " + attachFilePath);
 		
 		if (fileType.equals("sticker")) {	
 			attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
@@ -841,7 +843,7 @@ public class EzPollController extends EgovFileMngUtil {
 		else if (fileType.equals("file")) {
 			pollCmtVO.setImageAttach("");			
 			if (fileName.equals("")){
-				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/files/"));
+				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
 				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName("");
 				pollCmtVO.setFilePath("");
