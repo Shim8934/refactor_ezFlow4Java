@@ -2990,7 +2990,7 @@
                     
 
                     // Test whether the native selection is capable of supporting multiple ranges.
-                    if (!selectionHasMultipleRanges) {
+                    /*if (!selectionHasMultipleRanges) {
                         // Doing the original feature test here in Chrome 36 (and presumably later versions) prints a
                         // console error of "Discontiguous selection is not supported." that cannot be suppressed. There's
                         // nothing we can do about this while retaining the feature test so we have to resort to a browser
@@ -3009,7 +3009,7 @@
                                 // Todo: Is this solution well?
                                 selectionSupportsMultipleRanges = false;
                                 
-                                /* IE9 Bug - r2 is empty
+                                 IE9 Bug - r2 is empty
                                 var r2 = r1.cloneRange();
                                 r1.setStart(textNode, 0);
                                 r2.setEnd(textNode, 3);
@@ -3017,7 +3017,7 @@
                                 sel.addRange(r1);
                                 sel.addRange(r2);
                                 selectionSupportsMultipleRanges = (sel.rangeCount == 2);
-                                selectionSupportsMultipleRanges = (sel.rangeCount == 2);*/
+                                selectionSupportsMultipleRanges = (sel.rangeCount == 2);
 
                             } else {
                             
@@ -3037,7 +3037,7 @@
                                 selectionSupportsMultipleRanges = (sel.rangeCount == 2);    
                             }                                         
                         }
-                    }
+                    }*/
 
                     // Clean up
                     dom.removeNode(testEl);

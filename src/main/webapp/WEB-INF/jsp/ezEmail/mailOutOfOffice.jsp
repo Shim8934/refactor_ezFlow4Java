@@ -319,10 +319,10 @@
 	    </td>
 	  </tr>
 	</table>
-	<div class="nobox" style="width:718px; height:500px;margin-top:5px;">
-	<iframe id="tbContentElement1" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
+	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
+		<iframe id="tbContentElement1" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div>
-	<table style="width:720px;" class="box">
+	<table style="width:720px; margin-top:10px;" class="box">
 	  <tr>
 	    <td style="padding:5px"><input type="checkbox" name="chkOut" onclick="CheckOut()" id="chkOut">
 	      <spring:message code='ezEmail.t218' /><br>
@@ -333,7 +333,7 @@
 	  </tr>
 	</table>
 	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
-	<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
+		<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div> 
 	<div style="width:700px;text-align:center;margin-top:10px">
 	    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezEmail.t48' /></span></a>
