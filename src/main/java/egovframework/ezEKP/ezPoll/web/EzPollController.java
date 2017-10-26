@@ -1128,9 +1128,14 @@ public class EzPollController extends EgovFileMngUtil {
         String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1);
         
         if (extension.toLowerCase().equals("jpg") || extension.toLowerCase().equals("png") || extension.toLowerCase().equals("bmp")) {
-    		String pDirPath = commonUtil.separator + "files" + commonUtil.separator + "commentImages" + commonUtil.separator;
+    		String pDirPath = commonUtil.getUploadPath("upload_common.ROOT", loginSimpleVO.getTenantId());    		
     		pDirPath = realPath + pDirPath;
-            File file = new File(pDirPath);
+    		
+            if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+            	pDirPath = pDirPath + commonUtil.separator;
+            }
+    		
+            File file = new File(pDirPath + "commentImages");
             
             if (!file.exists()) {
             	file.mkdir();        
