@@ -135,6 +135,8 @@ public class LoginVO implements Serializable {
     private String gyumJik;
     /** 사용자 사진파일경로 */
     private String userFileUrl;
+    /** 리얼패스*/
+    private String realPath;
 	
 	public String getId() {
 		return id;
@@ -456,6 +458,12 @@ public class LoginVO implements Serializable {
 	}	
 	public void setUserFileUrl(String userFileUrl) {
 		this.userFileUrl = userFileUrl;
+	}
+	public String getRealPath() {
+		return realPath;
+	}
+	public void setRealPath(String realPath) {
+		this.realPath = realPath;
 	}
 	
 }

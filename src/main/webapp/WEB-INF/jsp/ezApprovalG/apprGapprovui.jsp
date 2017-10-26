@@ -558,7 +558,8 @@
 		                }
 		            }		
 		        }
-		        SignCheck();
+		        //없이 테스트
+// 		        SignCheck();
 		    }
 		    function btnApprove_onclick()
 		    {

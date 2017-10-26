@@ -92,7 +92,8 @@
 		                pOpinionType = "";
 		            }
 		            LoadpzFormDocInfo(); // setAttachInfo(DocID, "APR", lstAttachLink);
-		            SignCheck();
+		            //없이 테스트
+// 		            SignCheck();
 		            cancelYN();			      	
 		        }
 		    }
