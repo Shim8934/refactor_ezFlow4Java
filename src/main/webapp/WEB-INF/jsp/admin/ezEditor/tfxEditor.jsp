@@ -357,12 +357,12 @@
 	            }
 	        }
 			
-			window.onresize = function () {
+			/* window.onresize = function () {
 	            try {
 	                xfe.setWidth("100%");
 	                xfe.setHeight(document.documentElement.clientHeight + "px");
 	            } catch (e) { }
-	        }
+	        } */
 		</script>
 	</head>
 	<body style="margin: 0px; padding: 0px; overflow: hidden;" id="xfe">
@@ -397,7 +397,8 @@
 	        	lang : lang,
 	            basePath : "/js/ezEditor/tfxEditor",
 	            width : "100%",
-	            height : (document.documentElement.clientHeight) + "px",
+// 	            height : (document.documentElement.clientHeight) + "px",
+	            height : parseInt("${height}") - 8 + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
 	            initFontFamily : "<spring:message code='main.t246' />",
 	            initFontSize : "13px",
