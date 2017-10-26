@@ -667,15 +667,8 @@ public class EzPollController extends EgovFileMngUtil {
         String fullPath = pDirPath + "uploadFile" + commonUtil.separator + folderPath;    
         file = new File(fullPath);
         
-		if (file == null || !file.exists()) {	
-			pDirPath = commonUtil.getUploadPath("upload_common.ROOT", loginSimpleVO.getTenantId()); 
-	        pDirPath = realPath + pDirPath;
-	        
-	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-	        	pDirPath = pDirPath + commonUtil.separator;
-	        }
-	        
-			fullPath = pDirPath + "commentImages" + commonUtil.separator + folderPath; 
+		if (file == null || !file.exists()) {      
+			fullPath = realPath + folderPath; 
 			file = new File(fullPath);			
 			
 			if (file == null || !file.exists()) {
@@ -1119,7 +1112,7 @@ public class EzPollController extends EgovFileMngUtil {
         String pUploadSN = "";      
 
         sGUID = UUID.randomUUID().toString();
-        pUploadSN = "{" + sGUID + "}";
+        pUploadSN = sGUID;
        
         if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	      
             String _pFileName = multiFile.get(0).getOriginalFilename();

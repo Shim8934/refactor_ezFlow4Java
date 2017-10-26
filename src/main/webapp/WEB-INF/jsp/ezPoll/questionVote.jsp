@@ -1226,7 +1226,7 @@
 					    	imgForinnerDiv1.setAttribute("width", "60");	
 					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
 				    		imgForinnerDiv1.src = "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];	
-				    		imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]);   
+				    		imgForinnerDiv1.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);   
 				    		imgForinnerDiv1.onclick = function() { downloadFileInCmt(this); };
 				    	}
 				    	else {				    		
@@ -1441,7 +1441,7 @@
 						}
 						else {
 							imagePreview.setAttribute("_type", "images"); 
-							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							imagePreview.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
 		    		else {
@@ -1454,7 +1454,7 @@
 						}	
 						else {
 							imagePreview.setAttribute("_type", "images");
-							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							imagePreview.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
 		    		
@@ -1995,7 +1995,7 @@
 		    	if (fileName == null || fileName == "") {
 		    		var ext = filePath.split('.').pop().toLowerCase();
 		    		fileName = "_" + randString(40) + "." + ext;
-		    		var pos = filePath.indexOf("/files/");
+		    		var pos = filePath.indexOf("/fileroot/");
 		    		filePath = filePath.substring(pos, filePath.length);
 		    	}	
 		    	
