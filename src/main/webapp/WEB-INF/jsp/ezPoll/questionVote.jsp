@@ -135,6 +135,8 @@
 			function preProcess() {	
 				var maxWidth =  document.getElementById("_content1").offsetWidth;
 				maxLoop = Math.floor((maxWidth - 250)/80);
+				var test_value = ${listSelectedOptions};
+				numberOfSelected = test_value.length;
 				
 				if (maxLoop > 5) {
 					maxLoop = 5;
@@ -2047,7 +2049,7 @@
 	             <iframe onload="resizeFrame()" id="message_test" style="border: #b6b6b6 0px solid; overflow: auto;width: 100%; padding-top: 6px; background-color: white;"></iframe>   	                                 
 	        </div>
 	        <c:if test="${numOfFile != 0}">
-	        	<div id="attached file" style="overflow: hidden;display:inline-block; width: 100%;">
+	        	<div id="attachedFile" style="overflow: hidden;display:inline-block; width: 100%;">
 	        		<img src="/images/attach_file.png" style="hegith:20px; width:20px;float: left;display:block;" >
 	        		<div style="float: left;display:block; padding-top: 4px;">
 	        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> 개(<c:out value='${totalFilesSize}'/>)
