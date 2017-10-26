@@ -53,6 +53,7 @@
 		<result property="value"				column="VALUE"				columnIndex="28"/>
 		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="29"/>
 		<result property="brdNm2"				column="BRDNM2"				columnIndex="26"/>
+		<result property="resApproveFlag"			column="RESAPPROVEFLAG"			columnIndex="27"/>
 	</resultMap>
 	
 	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
@@ -662,7 +663,7 @@
      			( #v_POWNERID#, #v_PNUM#, #v_PPNUM#, #v_PCOMPANYID#, #v_PWRITERID#, #v_PDEPTNM#, #v_POWNERNM#, #v_PTITLE#
      			, #v_PLOCATION#, #v_PTIMEDISPLAY#, STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T'), STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T')
      			, #v_PALLDAY#, #v_PALERTTIME#, #v_PCONTENT#, #v_PIMPORTANCE#, IFNULL(#v_PREFLAG#,'0'), IFNULL(#v_PGRESFLAG#,' '), STR_TO_DATE(#v_PWRITEDAY#, '%Y-%m-%d %T')
-     			, #v_PENTRYLIST#, IFNULL(#v_PCHARACTERID#,0), #v_PATTACHFLAG#, IFNULL(#v_PAPROVEFLAG#,'0'), #v_PSCHEDULEID#, #tenantID# )
+     			, #v_PENTRYLIST#, IFNULL(#v_PCHARACTERID#,0), #v_PATTACHFLAG#, IFNULL(#v_PAPPROVEFLAG#,'0'), #v_PSCHEDULEID#, #tenantID# )
 		]]>
 	</insert>
 	

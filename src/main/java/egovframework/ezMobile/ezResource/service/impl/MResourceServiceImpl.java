@@ -376,9 +376,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setAttachFlag(getRepeatResult.get(i).getAttachFlag());
 						temp.setCharacterId(getRepeatResult.get(i).getCharacterId());
 						temp.setApproveFlag(getRepeatResult.get(i).getApproveFlag());
+						temp.setResApproveFlag(getRepeatResult.get(i).getResApproveFlag());
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						temp.setOwnerNm2(getRepeatResult.get(i).getOwnerNm2());
+						temp.setDeptNm2(getRepeatResult.get(i).getDeptNm2());
+						temp.setBrdNm2(getRepeatResult.get(i).getBrdNm2());
 						
 						if(Integer.parseInt(langStr) != 1){
 							temp.setBrdNm(getRepeatResult.get(i).getBrdNm2());
@@ -394,7 +398,34 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 				
 			}
 		}
-				
+		
+
+		//자원별 일정 정렬
+	    //시간순, 제목순
+        Collections.sort(getScheduleList, new Comparator<ResGetScheduleVO>() {
+			@Override
+			public int compare(ResGetScheduleVO o1, ResGetScheduleVO o2) {
+					
+				if(o1.getAllDay().compareTo(o2.getAllDay()) == 0){
+					if(o1.getStartDate().compareTo(o2.getStartDate()) == 0){
+						
+						if(o1.getEndDate().compareTo(o2.getEndDate()) == 0){
+							
+							return o1.getTitle().compareTo(o2.getTitle());
+						}else {
+							return o1.getEndDate().compareTo(o2.getEndDate());
+						}
+						
+					}else {
+						return o1.getStartDate().compareTo(o2.getStartDate());
+					}	
+				}else {
+					return o1.getAllDay().compareTo(o2.getAllDay());
+				}
+							
+			}
+		});
+						
 		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
 		int count = getScheduleList.size();
@@ -1217,7 +1248,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleList = getScheduleApprNormalList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check, authYn);
 		
-		
 		for (ResGetScheduleVO resVO : getScheduleList) {
 			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
 			resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
@@ -1299,6 +1329,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						temp.setOwnerNm2(getRepeatResult.get(i).getOwnerNm2());
+						temp.setDeptNm2(getRepeatResult.get(i).getDeptNm2());
+						temp.setBrdNm2(getRepeatResult.get(i).getBrdNm2());
 						
 						if(Integer.parseInt(langStr) != 1){
 							temp.setBrdNm(getRepeatResult.get(i).getBrdNm2());
@@ -1313,6 +1346,34 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 				
 			}
 		}
+		
+		//승인자원정렬
+        //자원순, 시작일 순으로 정렬
+        Collections.sort(getScheduleList, new Comparator<ResGetScheduleVO>() {
+			@Override
+			public int compare(ResGetScheduleVO o1, ResGetScheduleVO o2) {
+				
+				if(o1.getOwnerId().compareTo(o2.getOwnerId()) == 0){
+		
+					if(o2.getStartDate().compareTo(o1.getStartDate()) == 0){
+						
+						if(o2.getEndDate().compareTo(o1.getEndDate()) == 0){
+							
+							return o1.getTitle().compareTo(o2.getTitle());
+						}else {
+							return o2.getEndDate().compareTo(o1.getEndDate());
+						}
+						
+					}else {
+						return o2.getStartDate().compareTo(o1.getStartDate());
+					}
+							
+				}else {
+					return o1.getOwnerId().compareTo(o2.getOwnerId());
+				}
+				
+			}
+		});
 		
 		String repeatYn = "N";
 

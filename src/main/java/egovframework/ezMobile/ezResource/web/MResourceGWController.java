@@ -165,6 +165,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 	    	resultMap.put("favoriteYn", favoriteYn);
 	    	
+	    	String resApproveFlag = "0";
+	    	
+	    	if(ownerId != null && !ownerId.isEmpty()) {
+		    	MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);
+		    	resApproveFlag = resVO.getResApproveFlag();
+	    	}
+   	
+
+	    	resultMap.put("resApproveFlag", resApproveFlag);
+	    	
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", resultMap);
@@ -320,7 +330,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String apprAuthYn = "N";
 			
 			for (MResourceGetAdmSubClsTreeVO rVO : list) {
-				if(rVO.getBrdId().equals(resourceId) || authYn.equals("A")){
+				if(rVO.getBrdId().equals(resourceId)){
 					apprAuthYn = "Y";
 				}
 			}
@@ -451,7 +461,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 	    	String approveFlag =  "1";
 			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
-			String resApproveFlag = resVO.getResApproveFlag();			
+			String resApproveFlag = resVO.getResApproveFlag();
+			
+			LOGGER.debug("resApproveFlag: " + resApproveFlag);
+			
 			if(resApproveFlag.equals("1")) {
 				approveFlag =  "0";
 			}
@@ -505,7 +518,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 	    	String approveFlag =  "1";
 			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
-			String resApproveFlag = resVO.getResApproveFlag();			
+			String resApproveFlag = resVO.getResApproveFlag();
+			
+			LOGGER.debug("resApproveFlag: " + resApproveFlag);
+			
 			if(resApproveFlag.equals("1")) {
 				approveFlag =  "0";
 			}
@@ -986,10 +1002,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			if(!authYn.equals("A")) {
 				
-				LOGGER.debug("in authYn check!!!!!");
-				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);					
-			
-				LOGGER.debug("list: " + list);
+				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
 				
 				if(list.size() > 0) {
 					authCheck = "Y";
