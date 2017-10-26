@@ -612,7 +612,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}		
 		
 		//User image
-		String result = ezOrganService.getPropertyValue(loginVO.getId(), "extensionAttribute2", loginVO.getTenantId());
+		String result = loginVO.getUserFileUrl();
 		
 		if (result != null && !result.equals("")) {
 			userPhoto = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", loginVO.getTenantId())+ commonUtil.separator + result;
@@ -1485,12 +1485,12 @@ public class EzPollController extends EgovFileMngUtil {
 				iterator.remove();	
 			}
 			else {
-				String userImagePath = ezOrganService.getPropertyValue(user.getId(), "extensionAttribute2", user.getTenantId());
+				String userImagePath = user.getUserFileUrl();
 				
 				if (userImagePath != null && !userImagePath.equals("")) {
-					user.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
+					user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
 				} else {
-					user.setUserImage("/images/default_pic.jpg");
+					user.setUserFileUrl("/images/default_pic.jpg");
 				}
 			}
 		}		
@@ -1577,12 +1577,12 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		for (String _userID : listOfSeenUsers) {
 			LoginVO user = loginService.selectReceiver(_userID, tenantId);
-			String userImagePath = ezOrganService.getPropertyValue(user.getId(), "extensionAttribute2", user.getTenantId());
+			String userImagePath = user.getUserFileUrl();
 			
 			if (userImagePath != null && !userImagePath.equals("")) {
-				user.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
+				user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
 			} else {
-				user.setUserImage("/images/default_pic.jpg");
+				user.setUserFileUrl("/images/default_pic.jpg");
 			}
 			listofSeenUsers.add(user);
 		}		
@@ -1593,12 +1593,12 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Add user image
 		for (LoginVO user : listofUnseenUsers) {
-			String userImagePath = ezOrganService.getPropertyValue(user.getId(), "extensionAttribute2", user.getTenantId());
+			String userImagePath = user.getUserFileUrl();
 			
 			if (userImagePath != null && !userImagePath.equals("")) {
-				user.setUserImage("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
+				user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath);
 			} else {
-				user.setUserImage("/images/default_pic.jpg");
+				user.setUserFileUrl("/images/default_pic.jpg");
 			}
 		}
 		
