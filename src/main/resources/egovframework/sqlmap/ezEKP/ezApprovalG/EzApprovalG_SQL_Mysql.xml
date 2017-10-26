@@ -22268,7 +22268,7 @@
 			(APRTYPE = '008')
 		<isEqual property="v_FLAG" compareValue="approvUi">
 		AND
-			APRSTATE = '002'
+			(APRSTATE = '002' OR APRSTATE = '005')
 		</isEqual>
 		AND
 			APRMEMBERSN = #v_memSN#
