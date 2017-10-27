@@ -635,6 +635,8 @@
 			<![CDATA[
 			AND
                 A.TENANT_ID = #tenantID#
+      	   ORDER BY
+           BRD_STEP	
 		]]>
 	</select>
   
