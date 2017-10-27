@@ -1329,6 +1329,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						temp.setBrdStep(getRepeatResult.get(i).getBrdStep());
+						temp.setBrdUpper(getRepeatResult.get(i).getBrdUpper());
+						temp.setBrdUpperStep(getRepeatResult.get(i).getBrdUpperStep());
 						temp.setOwnerNm2(getRepeatResult.get(i).getOwnerNm2());
 						temp.setDeptNm2(getRepeatResult.get(i).getDeptNm2());
 						temp.setBrdNm2(getRepeatResult.get(i).getBrdNm2());
@@ -1353,25 +1356,37 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			@Override
 			public int compare(ResGetScheduleVO o1, ResGetScheduleVO o2) {
 				
-				if(o1.getOwnerId().compareTo(o2.getOwnerId()) == 0){
-		
-					if(o2.getStartDate().compareTo(o1.getStartDate()) == 0){
-						
-						if(o2.getEndDate().compareTo(o1.getEndDate()) == 0){
-							
-							return o1.getTitle().compareTo(o2.getTitle());
-						}else {
-							return o2.getEndDate().compareTo(o1.getEndDate());
-						}
-						
-					}else {
-						return o2.getStartDate().compareTo(o1.getStartDate());
-					}
-							
-				}else {
-					return o1.getOwnerId().compareTo(o2.getOwnerId());
-				}
+				if(Integer.parseInt(o1.getBrdUpper()) == Integer.parseInt(o2.getBrdUpper())){
+					
+					if(Integer.parseInt(o1.getBrdUpperStep()) == Integer.parseInt(o2.getBrdUpperStep())){
+					
+						if(Integer.parseInt(o1.getBrdStep()) == Integer.parseInt(o2.getBrdStep())){
 				
+							if(o2.getStartDate().compareTo(o1.getStartDate()) == 0){
+								
+								if(o2.getEndDate().compareTo(o1.getEndDate()) == 0){
+									
+									return o1.getTitle().compareTo(o2.getTitle());
+								}else {
+									return o2.getEndDate().compareTo(o1.getEndDate());
+								}
+								
+							}else {
+								return o2.getStartDate().compareTo(o1.getStartDate());
+							}
+									
+						}else {
+							return Integer.parseInt(o1.getBrdStep()) < Integer.parseInt(o2.getBrdStep()) ? -1: Integer.parseInt(o1.getBrdStep()) > Integer.parseInt(o2.getBrdStep()) ? 1:0;
+						}
+					
+					}else {
+						return Integer.parseInt(o1.getBrdUpperStep()) < Integer.parseInt(o2.getBrdUpperStep()) ? -1: Integer.parseInt(o1.getBrdUpperStep()) > Integer.parseInt(o2.getBrdUpperStep()) ? 1:0;
+					}
+					
+				}else {
+					return Integer.parseInt(o1.getBrdUpper()) < Integer.parseInt(o2.getBrdUpper()) ? -1: Integer.parseInt(o1.getBrdUpper()) > Integer.parseInt(o2.getBrdUpper()) ? 1:0;
+				}
+			
 			}
 		});
 		

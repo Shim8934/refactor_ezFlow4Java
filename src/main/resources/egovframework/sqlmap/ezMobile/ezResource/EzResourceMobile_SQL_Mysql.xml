@@ -54,6 +54,45 @@
 		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="29"/>
 		<result property="brdNm2"				column="BRDNM2"				columnIndex="26"/>
 		<result property="resApproveFlag"			column="RESAPPROVEFLAG"			columnIndex="27"/>
+		<result property="brdStep"				column="BRDSTEP"				columnIndex="28"/>
+		<result property="brdUpper"				column="BRDUPPER"				columnIndex="29"/>
+	</resultMap>
+	
+	<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListApprVO">
+		<result property="num"					column="NUM"						columnIndex="1"/>
+		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+		<result property="ownerId"				column="OWNERID"				columnIndex="3"/>
+		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="location"				column="LOCATION"				columnIndex="5"/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="writerId"				column="WRITERId"					columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
+		<result property="characterId"			column="CHARACTERId"			columnIndex="18"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="deptNm2"				column="DEPTNM2"				columnIndex="23"/>
+		<result property="jobTitle"					column="JOBTITLE"					columnIndex="24"/>
+		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="25"/>
+		<result property="brdNm"				column="BRDNM"				columnIndex="26"/>
+		<result property="date"				column="DATE"				columnIndex="27"/>
+		<result property="value"				column="VALUE"				columnIndex="28"/>
+		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="29"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="26"/>
+		<result property="resApproveFlag"			column="RESAPPROVEFLAG"			columnIndex="27"/>
+		<result property="brdStep"				column="BRDSTEP"				columnIndex="28"/>
+		<result property="brdUpper"				column="BRDUPPER"				columnIndex="29"/>
+		<result property="brdUpperStep"				column="BRDUPPERSTEP"				columnIndex="30"/>
 	</resultMap>
 	
 	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
@@ -131,6 +170,46 @@
 		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="30"/>
 		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="31"/>
 		<result property="brdNm2"				column="BRDNM2"				columnIndex="32"/>
+		<result property="brdStep"				column="BRDSTEP"				columnIndex="33"/>
+		<result property="brdUpper"				column="BRDUPPER"				columnIndex="34"/>
+	</resultMap>
+    
+    <resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListRepetitionApprVO">
+		<result property="num"					column="NUM"						columnIndex="1"/>
+		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+		<result property="ownerId"				column="OWNERID"				columnIndex="3"/>
+		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="location"				column="LOCATION"				columnIndex="5"/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="writerId"				column="WRITERID"					columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="companyId"			column="COMPANYID"			columnIndex="17"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
+		<result property="characterId"			column="CHARACTERID"			columnIndex="19"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="22"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
+		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
+		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
+		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
+		<result property="brdNm"				column="BRDNM"				columnIndex="27"/>
+		<result property="date"				column="DATE"				columnIndex="28"/>
+		<result property="value"				column="VALUE"				columnIndex="29"/>
+		<result property="resApproveFlag"				column="RESAPPROVEFLAG"				columnIndex="30"/>
+		<result property="favoriteYn"				column="FAVORITEYN"				columnIndex="31"/>
+		<result property="brdNm2"				column="BRDNM2"				columnIndex="32"/>
+		<result property="brdStep"				column="BRDSTEP"				columnIndex="33"/>
+		<result property="brdUpper"				column="BRDUPPER"				columnIndex="34"/>
+		<result property="brdUpperStep"				column="BRDUPPERSTEP"				columnIndex="35"/>
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
@@ -805,15 +884,20 @@
 				TBL_RS_FAVORITE A
 			JOIN 
 			    TBL_RS_BRD B
-			ON A.RESID = B.BRD_ID AND A.TENANT_ID = B.TENANT_ID AND A.RESCOMPANY = B.BRD_COMPANY   	
+			ON 
+				A.RESID = B.BRD_ID AND A.TENANT_ID = B.TENANT_ID AND A.RESCOMPANY = B.BRD_COMPANY
+			JOIN
+				TBL_RS_BRD C
+			ON
+				C.BRD_ID = B.BRD_UPPER AND C.BRD_COMPANY = B.BRD_COMPANY AND C.TENANT_ID = B.TENANT_ID   	
 			WHERE
 				A.USERID = #v_PUSERID#
 			AND
 				A.TENANT_ID = #tenantID#
 			AND 
 				A.RESCOMPANY = #v_PCOMPANYID#
-			ORDER BY
-            B.BRD_STEP	
+      	   ORDER BY
+           C.BRD_UPPER, C.BRD_STEP, B.BRD_STEP	
 		]]>
 
 		
@@ -875,6 +959,8 @@
                 B.TITLE2 JOBTITLE2,
                 C.BRD_NM BRDNM,
                 C.BRD_NM2 BRDNM2,
+                C.BRD_STEP BRDSTEP,
+                C.BRD_UPPER BRDUPPER,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN  
            	FROM 
            		TBL_RS_SCHEDULE A
@@ -948,6 +1034,8 @@
             	B.TITLE2 JOBTITLE2 ,
             	D.BRD_NM BRDNM,
             	D.BRD_NM2 BRDNM2,
+            	D.BRD_STEP BRDSTEP,
+            	D.BRD_UPPER BRDUPPER,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN 
 			FROM
 				TBL_RS_SCHEDULE A
@@ -1269,7 +1357,7 @@
 	
 	</select>
   
-  	<select id="MResourceDAO.getScheduleListAppr" parameterClass="Map" resultMap="resGetScheduleListVO">
+  	<select id="MResourceDAO.getScheduleListAppr" parameterClass="Map" resultMap="resGetScheduleListApprVO">
 		<![CDATA[
 			SELECT 
 				A.NUM ,
@@ -1302,6 +1390,9 @@
                 B.TITLE2 JOBTITLE2,
                 C.BRD_NM BRDNM,
                 C.BRD_NM2 BRDNM2,
+                C.BRD_STEP BRDSTEP,
+                D.BRD_UPPER BRDUPPER,
+                D.BRD_STEP BRDUPPERSTEP,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN  
            	FROM 
            		TBL_RS_SCHEDULE A
@@ -1312,7 +1403,11 @@
 		    JOIN
 				TBL_RS_BRD C
 			ON
-				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
+				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID
+			JOIN
+				TBL_RS_BRD D
+			ON
+				D.BRD_ID = C.BRD_UPPER AND D.BRD_COMPANY = C.BRD_COMPANY AND D.TENANT_ID = C.TENANT_ID		
           	WHERE
 				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -1351,7 +1446,7 @@
 		]]>
 	</select>
 	
-	<select id="MResourceDAO.getScheduleListRepetitiAppr" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
+	<select id="MResourceDAO.getScheduleListRepetitiAppr" parameterClass="Map" resultMap="resGetScheduleListRepetitionApprVO">
 		<![CDATA[
 			SELECT 
 				A.num ,
@@ -1385,6 +1480,9 @@
             	B.TITLE2 JOBTITLE2 ,
             	D.BRD_NM BRDNM,
             	D.BRD_NM2 BRDNM2,
+            	D.BRD_STEP BRDSTEP,
+            	E.BRD_UPPER BRDUPPER,
+            	E.BRD_STEP BRDUPPERSTEP,
                 (SELECT CASE WHEN COUNT(E.RESID) > 0 THEN 'Y' ELSE 'N' END FROM TBL_RS_FAVORITE E WHERE E.USERID = A.WRITERID AND E.TENANT_ID =  A.TENANT_ID AND E.RESID = A.OWNERID AND E.RESCOMPANY = A.COMPANYID) FAVORITEYN 
 			FROM
 				TBL_RS_SCHEDULE A
@@ -1405,7 +1503,11 @@
 		    JOIN
 				TBL_RS_BRD D
 			ON
-				A.OWNERID = D.BRD_ID AND A.TENANT_ID = D.TENANT_ID		
+				A.OWNERID = D.BRD_ID AND A.TENANT_ID = D.TENANT_ID
+			JOIN
+				TBL_RS_BRD E
+			ON
+				E.BRD_ID = D.BRD_UPPER AND E.BRD_COMPANY = D.BRD_COMPANY AND E.TENANT_ID = D.TENANT_ID			
 			WHERE
 				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -1460,7 +1562,11 @@
                        A.BRD_URL,
                        A.BRD_EXPLAIN
 			FROM
-				TBL_RS_BRD A  	
+				TBL_RS_BRD A
+			JOIN
+				TBL_RS_BRD B
+			ON
+				B.BRD_ID = A.BRD_UPPER AND B.BRD_COMPANY = A.BRD_COMPANY AND B.TENANT_ID = A.TENANT_ID		  	
 			WHERE
 				A.BRD_COMPANY = #v_PUSERCOMPANY#
 			AND 
@@ -1476,7 +1582,7 @@
 			AND
                 A.TENANT_ID = #tenantID#
       	   ORDER BY
-           A.BRD_UPPER, A.BRD_STEP	
+           B.BRD_UPPER, B.BRD_STEP, A.BRD_STEP	
 		]]>
 	</select>
 	

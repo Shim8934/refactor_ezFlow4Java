@@ -73,7 +73,32 @@ public class ResGetScheduleVO {
 	private String repeatYn;
 	/** 즐겨찾기여부*/
 	private String favoriteYn;
-
+	/** 자원정렬기준  자원스텝*/
+	private String brdStep;
+	/** 자원정렬기준  상위자원*/
+	private String brdUpper;
+	/** 자원정렬기준  상위자원스텝*/
+	private String brdUpperStep;
+	
+	
+	public String getBrdUpperStep() {
+		return brdUpperStep;
+	}
+	public void setBrdUpperStep(String brdUpperStep) {
+		this.brdUpperStep = brdUpperStep;
+	}
+	public String getBrdUpper() {
+		return brdUpper;
+	}
+	public void setBrdUpper(String brdUpper) {
+		this.brdUpper = brdUpper;
+	}
+	public String getBrdStep() {
+		return brdStep;
+	}
+	public void setBrdStep(String brdStep) {
+		this.brdStep = brdStep;
+	}
 	public String getBrdNm2() {
 		return brdNm2;
 	}
