@@ -119,7 +119,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		String height = request.getParameter("height");
-		String formID = request.getParameter("formID") == null ? "" : request.getParameter("formID");
+		String formID = request.getParameter("formID").equals("") ? "editor1" : request.getParameter("formID");
 		
 		//TODO: http/https 설정값
 		String serverUrl = "http://" + userInfo.getServerName();
