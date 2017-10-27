@@ -222,8 +222,6 @@
 		<script type="text/javascript">
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
-	            CKEDITOR.resize = false;
-// 	            CKEDITOR.config.height = parseInt(height) - 120 + "px";
 	            
 	        } else if (type == "MAILOUTOFOFFICE") {
 	            CKEDITOR.config.removePlugins = '_Insert_Image';

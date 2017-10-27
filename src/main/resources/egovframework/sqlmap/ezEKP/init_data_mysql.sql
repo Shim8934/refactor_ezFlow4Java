@@ -88,6 +88,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseEmpNumberLogin','NO','사번으로 로그인 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'daliyDocNumYN','NO','날짜가 바뀔 때 마다 채번 리셋 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ezTalkGateNoticeBoardId','0','비즈메카톡에서 호출하는 사내공지게시판 아이디');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ezTalkGateNoticeBoardId2','0','비즈메카톡에서 호출하는 두 번째 사내공지게시판 아이디');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseBizmekaTalk','NO','비즈메카톡과의 연동 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'signImageType','IMAGE','이미지 서명 시 IMAGE : 서명이미지만 표출 NAME : 서명이미지 + 서명인 이름 표출');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'MyBoardTopFlag','YES','게시판 left 마이게시판, 즐겨찾기 위치 상(YES)하(NO) 여부');

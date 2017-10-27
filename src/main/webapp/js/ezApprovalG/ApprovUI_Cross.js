@@ -3534,12 +3534,12 @@ function setDocNumFormat(pPrefix) {
                 break;
 
             case "YY":
-                numHeader += d.getYear() + Tail;
+                numHeader += d.getFullYear() + Tail;
                 break;
                 
             case "yy":
-                var yyear = d.getYear();
-                numHeader += yyear.toString().substr(1) + Tail;
+                var yyear = d.getFullYear();
+                numHeader += yyear.toString().substr(2) + Tail;
                 break;
 
             case "MM":
@@ -3571,8 +3571,8 @@ function setDocNumFormat(pPrefix) {
             	break;
             	
             case "YM":
-            	var yyear = d.getYear();
-                numHeader += yyear.toString().substr(1);
+            	var yyear = d.getFullYear();
+                numHeader += yyear.toString().substr(2);
                 
             	var mmonth = d.getMonth() + 1;
                 if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
