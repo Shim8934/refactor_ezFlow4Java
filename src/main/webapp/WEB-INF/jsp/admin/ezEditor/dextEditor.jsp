@@ -11,15 +11,18 @@
 	<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 	
 	<script type="text/javascript">
+		var formID = "${formID}";
+		
+		if (!formID) {
+			formID = "editor";
+		}
+		
 		function dext_editor_loaded_event(editor) {
 	        // 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	        if (parent.onloadflag || typeof parent.onloadflag === "undefined") {
 	            parent.Editor_Complete();
-	            if ("${type}" == "ADMIN") {
-	                DEXT5.showTopMenu(1, "${formID}");
-	            }
-	        }
-	        else {
+                DEXT5.showTopMenu(1, formID);
+	        } else {
 	            setTimeout(dext_editor_loaded_event, 10);
 	        }
 	    }
@@ -61,17 +64,14 @@
 	
 	    function SetEditorContent(Data) {
 	        try {
-	            DEXT5.setBodyValue(Data, "${formID}");
+	            DEXT5.setBodyValue(Data, formID);
 	            Set_CellLocked();
 	        } catch (e) { }
 	    }
 	
 	    function GetEditorContent() {
 	        try {
-	        	if ("${type}" == "APPROVAL" || "${type}" == "APPROVALG")
-                    return Get_BodyUnlock(DEXT5.getBodyValue("${formID}"));
-                else
-                	return DEXT5.getBodyValue("${formID}");
+				return Get_BodyUnlock(DEXT5.getBodyValue(formID));
 	        } catch (e) {
 	            alert("본문 내용을 가져오는중 에러가 발생하였습니다.");
 	        }
@@ -79,16 +79,10 @@
 	
 	    function GetEditorTextContent() {
 	        try {
-	            return DEXT5.getBodyTextValue("${formID}");
+	            return DEXT5.getBodyTextValue(formID);
 	        } catch (e) {
 	            alert("본문 내용을 가져오는중 에러가 발생하였습니다.");
 	        }
-	    }
-	
-	    window.onresize = function () {
-	        try {
-	            DEXT5.setSize('100%', (document.documentElement.clientHeight - 10) + "px", "${formID}");
-	        } catch (e) { }
 	    }
 	
 	    function SetEditorContentURL(pURL) {
@@ -102,7 +96,7 @@
 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            var htmlData = getNodeText(XmlBodyDATA);
-	            DEXT5.setBodyValue(htmlData, "${formID}");
+	            DEXT5.setBodyValue(htmlData, formID);
 	        } catch (e) { }
 	    }
 	
@@ -130,7 +124,7 @@
 	                    htmlData = htmlData + GetChildNodes(Doc_ContentHtml)[i].outerHTML;
 	            }
 	
-	            DEXT5.setBodyValue(htmlData, "${formID}");
+	            DEXT5.setBodyValue(htmlData, formID);
 	            return ConnData;
 	        } catch (e) { }
 	    }
@@ -144,7 +138,7 @@
 	        xmlhttp.open("POST", "/myoffice/ezEmail/remote/LoadHtml.aspx", false);
 	        xmlhttp.send(xmlpara);
 	        try {
-	            DEXT5.setHtmlValue("<br/>" + xmlhttp.responseText, "${formID}");
+	            DEXT5.setHtmlValue("<br/>" + xmlhttp.responseText, formID);
 	        } catch (e) { }
 	    }
 	
@@ -188,7 +182,7 @@
 	    }
 	
 	    function SetAttribute(type, id, classname) {
-	        var selCell = DEXT5.getSelectedCell("${formID}");
+	        var selCell = DEXT5.getSelectedCell(formID);
 	        if (type == "DEL") {
 	            selCell[0].removeAttribute("id");
 	            if (selCell[0].classList.contains("FIELD"))
@@ -206,18 +200,18 @@
 	                selCell[0].classList.add("FIELD");
 	        }
 	
-	        var _editor = DEXT5.getEditor("${formID}");
+	        var _editor = DEXT5.getEditor(formID);
 	        _editor._FRAMEWIN.setTableCellSelect(selCell[0]);
 	        
 	        //2017-10-25 이효진 색상복구 스크립트 추가
-	        setTimeout(function () {
+	        /* setTimeout(function () {
 	        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
 	        	selCell[0].removeAttribute("beforebgcolor");
-            }, 500);
+            }, 500); */
 	    }
 	
 	    function View_CellProperty(g_toggleFlag) {
-	        var _editor = DEXT5.getEditor("${formID}");
+	        var _editor = DEXT5.getEditor(formID);
 	        var TotalTag = DEXT5.getDext5BodyDom().getElementsByTagName("TD");
 	        try {
 	            for (var i = 0 ; i < TotalTag.length; i++) {
@@ -238,9 +232,9 @@
 	        return g_toggleFlag;
 	    }
 	
-	    function EditorExistsElement(elementID) {
+	    /* function EditorExistsElement(elementID) {
 	        try {
-	            var editorDocument = DEXT5.getDext5DocumentDom("${formID}");
+	            var editorDocument = DEXT5.getDext5DocumentDom(formID);
 	            var ElementObj = editorDocument.getElementById(elementID);
 	            if (ElementObj)
 	                return true;
@@ -249,7 +243,7 @@
 	        } catch (e) {
 	            return false;
 	        }
-	    }
+	    } */
 	
 	    function FormInfoCheck(type) {
 	        try {
@@ -287,7 +281,7 @@
 	
 	    function EditorElement(elementID) {
 	        try {
-	            var editorDocument = DEXT5.getDext5DocumentDom("${formID}");
+	            var editorDocument = DEXT5.getDext5DocumentDom(formID);
 	            var ElementObj = editorDocument.getElementById(elementID);
 	            if (ElementObj)
 	                return ElementObj;
@@ -352,23 +346,13 @@
 	</head>
 	<body id="dextbody" style="margin: 0px; padding: 0px;">
 		<script type="text/javascript">
-			var type = "${type}";
-			var formID = "${formID}";
-			
 	        DEXT5.config.DialogWindow = parent.window;
 	        DEXT5.config.RemoveItem = "about";
-	        if (type == "ADMIN") {
-	            DEXT5.config.StatusBarItem = "design,source";
-	            DEXT5.config.ManagerMode = "1";
-	        }
-	
-	        if (type == "APPROVAL" || type == "APPROVALG") 
-	            DEXT5.config.Height = height + "px";
-	        else if (type == "MAIL") 
-	            DEXT5.config.Height = (document.documentElement.clientHeight - 10) + "px";
-	        else
-	            DEXT5.config.Height = (document.documentElement.clientHeight - 10) + "px";
-	
+            DEXT5.config.StatusBarItem = "design,source";
+            DEXT5.config.ManagerMode = "1";
+	        
+            DEXT5.config.Height = (parseInt("${height}") - 12) + "px";
+	        
 	        DEXT5.config.userFontFamily = "<spring:message code='main.t246' />";
             DEXT5.config.Lang = "<spring message code = 'main.t0619' />";
 	        DEXT5.config.userFontSize = "13px";
