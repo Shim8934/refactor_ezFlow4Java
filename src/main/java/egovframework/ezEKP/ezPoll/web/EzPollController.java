@@ -948,7 +948,7 @@ public class EzPollController extends EgovFileMngUtil {
 		else if (fileType.equals("file")) {
 			pollCmtVO.setImageAttach("");			
 			if (fileName.equals("")){				
-				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/files/"));
+				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
 				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName("");
 				pollCmtVO.setFilePath("");
