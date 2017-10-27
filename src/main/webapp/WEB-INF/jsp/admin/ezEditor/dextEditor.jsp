@@ -340,6 +340,11 @@
                 if (TDRows[i].getAttribute("dext_lock") != null) {
                     TDRows[i].removeAttribute("dext_lock");
                 }
+                /* } else if (TDRows[i].getAttribute("cell_lock") != null) {
+                	TDRows[i].removeAttribute("cell_lock");
+                } else if (TDRows[i].getAttribute("table_lock") != null) {
+                	TDRows[i].removeAttribute("table_lock");
+                } */
             }
             return Div_Body.innerHTML;
         }
