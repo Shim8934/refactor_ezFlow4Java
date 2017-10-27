@@ -635,8 +635,6 @@
 			<![CDATA[
 			AND
                 A.TENANT_ID = #tenantID#
-      	   ORDER BY
-           BRD_NM, BRD_NM2		
 		]]>
 	</select>
   
@@ -812,7 +810,6 @@
 				A.TENANT_ID = #tenantID#
 			AND 
 				A.RESCOMPANY = #v_PCOMPANYID#
-			ORDER BY B.BRD_NM, B.BRD_NM2	
 		]]>
 
 		
