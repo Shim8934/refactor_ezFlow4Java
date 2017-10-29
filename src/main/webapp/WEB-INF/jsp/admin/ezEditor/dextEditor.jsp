@@ -228,7 +228,7 @@
 		        return g_toggleFlag;
 		    }
 		
-		    /* function EditorExistsElement(elementID) {
+		    function EditorExistsElement(elementID) {
 		        try {
 		            var editorDocument = DEXT5.getDext5DocumentDom(formID);
 		            var ElementObj = editorDocument.getElementById(elementID);
@@ -239,7 +239,7 @@
 		        } catch (e) {
 		            return false;
 		        }
-		    } */
+		    }
 		
 		    function FormInfoCheck(type) {
 		        try {
