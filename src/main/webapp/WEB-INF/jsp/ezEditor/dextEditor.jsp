@@ -345,7 +345,7 @@
 	        DEXT5.config.Lang = "<spring:message code='main.t0619' />";
             DEXT5.config.userFontFamily = "<spring:message code='main.t246' />";
 	        DEXT5.config.userFontSize = parseInt("13px");
-	        DEXT5.config.HandlerUrl = "http://127.0.0.1:8091/ezEditor/dextUpload.do";
+	        DEXT5.config.HandlerUrl = "/ezEditor/dextUpload.do?type=" + type;
 	        var editorid = new Dext5editor("editor1");
 	    </script>
 	</body>

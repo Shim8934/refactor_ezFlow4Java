@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -518,6 +519,109 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("resultCode", "3");
 		
 		return "ezEditor/tfxSimpleUpload";
+	}
+	
+	/**
+	 * dext에디터 업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezEditor/dextUpload.do")
+	@ResponseBody
+	public String dextUpload(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("dextUpload started");
+		String result = "";
+		
+		try {
+			String type = request.getParameter("type");
+			logger.debug("type=" + type);
+			
+			if (type.equals("MAILOUTOFOFFICE")) { //메일 부재중설정 시 이미지 업로드되지 않도록.
+				logger.debug("type is MAILOUTOFOFFICE. no upload.");
+				result = "fail_image"; //TODO: 적절한 result가 필요함..
+				
+			} else {
+				LoginVO userInfo = commonUtil.userInfo(loginCookie);
+				long maxSize = 10485760;
+				
+				if (request.getParameterMap().containsKey("imagedata")) { // 붙여넣기 또는 드래그&드롭
+					String imageData = request.getParameter("imagedata");
+					byte[] imageByte = imageData.getBytes(); //TODO: charset 뭐로 정해줘야하지?
+					imageByte = Base64.getDecoder().decode(imageByte);
+					
+					String fileType = request.getParameter("savefileext");
+					long fileSize = imageByte.length;
+					logger.debug("fileType=" + fileType + ",fileSize=" + fileSize);
+					
+					if (fileSize> maxSize) {
+						logger.debug("file size over. fileSize=" + fileSize);
+						result = "invalid_size";
+						
+					} else {
+						String filePath = "";
+						if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+						} else {
+							filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+						}
+						
+						String realPath = commonUtil.getRealPath(request);
+						String today = EgovDateUtil.getToday("");
+						String fileName = UUID.randomUUID() + "." + fileType;
+						
+						filePath = filePath + commonUtil.separator + today;
+						File file = new File(realPath + filePath);
+					    if (!file.exists()) {
+					    	file.mkdirs();
+					    }
+						
+					    FileUtils.writeByteArrayToFile(new File(realPath + filePath + commonUtil.separator + fileName), imageByte);
+						
+						String serverUrl = "http://" + userInfo.getServerName();
+						result = serverUrl + filePath + commonUtil.separator + fileName;
+					}
+					
+				} else {
+					MultipartFile multiFile = ((MultipartHttpServletRequest)request).getFile("Filedata");
+					
+					String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+					long fileSize = multiFile.getSize();
+					logger.debug("fileType=" + fileType + ",fileSize=" + fileSize);
+					
+					if (fileSize> maxSize) {
+						logger.debug("file size over. fileSize=" + fileSize);
+						result = "invalid_size";
+						
+					} else {
+						String filePath = "";
+						if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+						} else {
+							filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+						}
+						
+						String realPath = commonUtil.getRealPath(request);
+						String today = EgovDateUtil.getToday("");
+						String fileName = UUID.randomUUID() + "." + fileType;
+						
+						filePath = filePath + commonUtil.separator + today;
+						File file = new File(realPath + filePath);
+					    if (!file.exists()) {
+					    	file.mkdirs();
+					    }
+						
+						writeUploadedFile(multiFile, fileName, realPath + filePath);
+						
+						String serverUrl = "http://" + userInfo.getServerName();
+						result = serverUrl + filePath + commonUtil.separator + fileName;
+					}
+				}
+			}
+		} catch (Exception e) {
+			result = "";
+			e.printStackTrace();
+		}
+		
+		logger.debug("dextUpload ended.");
+		return result;
 	}
 	
 }
