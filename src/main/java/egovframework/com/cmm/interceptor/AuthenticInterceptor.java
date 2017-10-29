@@ -129,7 +129,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 								|| "https".equals(request.getScheme())
 								&& request.getServerPort() == 443 ? "" : ":"
 								+ request.getServerPort())
-						+ "/ezApprovalG/apprGMain.do";
+						+ request.getRequestURI();
 				String fullUrl = currentUri
 						+ (request.getQueryString() != null ? "?"
 								+ request.getQueryString() : "");
@@ -169,7 +169,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 								
 								loginController.createLoginCookie(userId, "", "", tenantId, request, response);
 								
-								return true;
+								response.sendRedirect(request.getRequestURI());
 							}														
 						}
 					} catch (Throwable e) {

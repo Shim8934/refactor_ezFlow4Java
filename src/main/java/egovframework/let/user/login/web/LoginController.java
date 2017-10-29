@@ -108,7 +108,7 @@ public class LoginController {
     	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
     	
         if (ezOffice365Auth.equals("YES")) {        	
-        	return "redirect:/ezApprovalG/apprGMain.do";         	
+        	return "redirect:/ezPortal/portalMain.do";         	
         }
         
     	if (commonUtil.isLoginCookieExists(request, response)) {
