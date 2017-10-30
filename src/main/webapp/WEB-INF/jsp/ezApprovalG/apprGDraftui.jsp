@@ -801,7 +801,7 @@
 		            return;
 		        }
 		        
-		        if (addLastKyulJeYN == "YES") {
+		        if (addLastKyulJeYN == "1") {
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",
