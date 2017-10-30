@@ -149,6 +149,7 @@
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var totalMemSN = "0";
 			
 		    window.onload = function ()
 		    {
