@@ -106,7 +106,7 @@
 		    		return;
 		    	}
 		    	
-		        if (document.getElementById("keyword").value == "" && document.getElementById("usedate").checked == false) {
+		        if (document.getElementById("keyword").value.trim() == "" && document.getElementById("usedate").checked == false) {
 		            alert("<spring:message code='ezSchedule.t346'/>");
 		            document.getElementById("keyword").focus();
 		            return;
