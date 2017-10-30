@@ -12,6 +12,7 @@
 	
 	<script type="text/javascript">
 		var formID = "${formID}";
+		var type = "${type}";
 		
 		if (!formID) {
 			formID = "editor";
@@ -204,10 +205,10 @@
 	        _editor._FRAMEWIN.setTableCellSelect(selCell[0]);
 	        
 	        //2017-10-25 이효진 색상복구 스크립트 추가
-	        /* setTimeout(function () {
+	        setTimeout(function () {
 	        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
 	        	selCell[0].removeAttribute("beforebgcolor");
-            }, 500); */
+            }, 500);
 	    }
 	
 	    function View_CellProperty(g_toggleFlag) {
@@ -353,9 +354,10 @@
 	        
             DEXT5.config.Height = (parseInt("${height}") - 12) + "px";
 	        
-	        DEXT5.config.userFontFamily = "<spring:message code='main.t246' />";
-            DEXT5.config.Lang = "<spring message code = 'main.t0619' />";
-	        DEXT5.config.userFontSize = "13px";
+            DEXT5.config.Lang = "<spring:message code='main.t0619' />";
+            DEXT5.config.userFontFamily = "<spring:message code='main.t246' />";
+	        DEXT5.config.userFontSize = parseInt("13px");
+	        DEXT5.config.HandlerUrl = "/ezEditor/dextUpload.do?type=" + type;
 	        
 	        var editorid = new Dext5editor(formID);
 	    </script>
