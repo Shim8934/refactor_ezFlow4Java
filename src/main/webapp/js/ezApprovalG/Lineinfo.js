@@ -3139,7 +3139,7 @@ function chkLastKyuljea(AprLineRow) {
 				rtnVal = false;
 				break;
 			}
-		} else if (addLastKyulJeYN == "0"){
+		} else {
 			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType8 || aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
 				rtnVal = false;

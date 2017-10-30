@@ -635,7 +635,7 @@
 		            }
 		        }
 		        
-		        if (addLastKyulJeYN == "1") {
+		        if (addLastKyulJeYN != "0") {
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",
