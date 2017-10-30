@@ -443,7 +443,7 @@
             
   	    	var issearch = false;
   	    	function search_click(type) {
-  		        if (document.getElementById("keyword").value == "") {
+  		        if (document.getElementById("keyword").value.trim() == "") {
   	            	alert("<spring:message code='ezAddress.jsh05'/>");
   	            	document.getElementById("keyword").focus();
   	            	return;
@@ -458,14 +458,14 @@
   					method : 'POST',
   					dataType : "text",
   					data : {
-  						search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value,
+  						search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
   						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
   						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
   						page : CurPage,
   						type : "user"
   					},
-     					success : function(xml) {
-     						event_displayUserList2(loadXMLString(xml));
+   					success : function(xml) {
+   						event_displayUserList2(loadXMLString(xml));
   					},
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert("<spring:message code='ezAddress.t353'/>" + textStatus);
