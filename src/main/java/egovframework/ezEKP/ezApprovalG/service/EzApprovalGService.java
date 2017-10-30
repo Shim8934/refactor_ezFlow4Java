@@ -461,4 +461,5 @@ public interface EzApprovalGService {
 
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
+	public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception;
 }

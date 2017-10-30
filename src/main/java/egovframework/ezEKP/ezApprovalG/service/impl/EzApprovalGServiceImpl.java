@@ -11212,6 +11212,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean rtnVal = false;
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID.trim());
@@ -11695,11 +11696,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		// 마지막 결재라인인 경우 || 더이상의 추가 작업이 필요없는 AprType인 경우. 문서를 종결
 		if (dlength < 1 || lastState.equals(staATAnHam) || lastState.equals(staATChamJo) || lastState.equals(staATGongram)) {
-			subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
-			
-			if (subSQL.toUpperCase().equals("FALSE")) {
-				rtnVal = false;
-			} 
+			if (addLastKyulJeYN.equals("YES")) {
+				subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
+				
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} 
+			} else {
+				subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
+				
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} 
+			}
 		}
 		
 		if (rtnVal) {
@@ -21791,5 +21800,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		ezApprovalGDAO.deleteOpinionTypeInfo(map);
 		ezApprovalGDAO.updateHasOpinionYN(map);
+	}
+	
+	@Override
+	public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantId);
+		map.put("companyID" , companyID);
+		map.put("v_FLAG", flag);
+		
+		int lastKyulJeCnt = ezApprovalGDAO.lastKyulJeCnt(map);
+		
+		map.put("v_memSN", lastKyulJeCnt - 1);
+		
+		String lastHabYuiSN = ezApprovalGDAO.lastHabYuiSN(map);
+		
+		map.put("v_memSN", lastHabYuiSN);
+		
+		String lastKyulJeHabYuiYN = ezApprovalGDAO.lastKyulJeHabYuiYN(map);
+		int result = 0;
+		
+		if (lastKyulJeHabYuiYN != null) {
+			result = ezApprovalGDAO.lastKyulJeHabYuiSN(map);
+		}
+		
+		return result;
+
 	}
 }

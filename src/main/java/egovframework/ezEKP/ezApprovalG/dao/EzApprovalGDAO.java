@@ -956,6 +956,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getReceiptProcessInfoRecS", map3);
 	}
 	
+	public String lastKyulJeHabYuiYN(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.lastKyulJeHabYuiYN", map);
+	}
+	
+	public String lastHabYuiSN(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.lastHabYuiSN", map);
+	}
+	
 	public int selectDoCallBack(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.selectDoCallBack", map);
 	}
@@ -1223,6 +1231,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int gongRamActivateCount2(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.gongRamActivateCount2", map);
+	}
+	
+	public int lastKyulJeCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.lastKyulJeCnt", map);
+	}
+	
+	public int lastKyulJeHabYuiSN(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.lastKyulJeHabYuiSN", map);
 	}
 	
 	public String getUserContMaxID(Map<String, Object> map) throws Exception{

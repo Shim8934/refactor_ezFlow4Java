@@ -2993,9 +2993,11 @@ function SCheckLineUser() {
     }
 
     var pChkFlag = chkLastKyuljea(AprLineRow)
-    if (!pChkFlag) {
+    
+	if (!pChkFlag) {
         pAlertContent = pAlertContent + " " + strLangS289 + "<br>"
     }
+  
 
     var pChkFlag = chkHabyuiGamsa(AprLineRow)
     if (!pChkFlag) {
@@ -3006,7 +3008,6 @@ function SCheckLineUser() {
     if (!pChkFlag) {
         pAlertContent = pAlertContent + " " + strLangS291 + "<br>"
     }
-
 //    var pChkFlag = chkbeforeGamSa(AprLineRow)
 //    if (!pChkFlag)
 //        pAlertContent = pAlertContent + " " + strLangS292 + "<br>"
@@ -3124,24 +3125,31 @@ function chkJunkyul(AprLineRow)
  	return rtnVal; 
 }
 
-function chkLastKyuljea(AprLineRow)  
-{
+function chkLastKyuljea(AprLineRow) {
 	var i, rtnVal;
 	var aprtype;
 	rtnVal = true;
 	
-	for(i=0;i < AprLineRow.length - 1; i++)
-	{
-		aprtype = GetAttribute(AprLineRow[i],"DATA11")
-		if(aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
-		if(aprtype == strAprType8 || aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11)
-		{
-			rtnVal = false;
-			break;
+	for(i=0;i < AprLineRow.length - 1; i++) {
+		aprtype = GetAttribute(AprLineRow[i],"DATA11");
+		
+		if (addLastKyulJeYN == "YES") {
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
+				rtnVal = false;
+				break;
+			}
+		} else {
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType8 || aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
+				rtnVal = false;
+				break;
+			}
 		}
 	}
 	return rtnVal;
 }
+
 function chkHabyuiGamsa(AprLineRow)  
 {
 	var i, rtnVal;
@@ -3163,21 +3171,31 @@ function chkHabyuiGamsa(AprLineRow)
 	return rtnVal; 
 }
 
-function chkLastKyuljeaCF(AprLineRow)  
-{
+function chkLastKyuljeaCF(AprLineRow) {
 	var i, rtnVal;
 	var aprtype;
 	rtnVal = true;
 	for(i=0;i < AprLineRow.length - 1; i++)	{
 		aprtype = GetAttribute(AprLineRow[i],"DATA11");
-		if (aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
-		if (aprtype == strAprType2) {
-			rtnVal = false;
-			break;
+		
+		if (addLastKyulJeYN == "YES") {
+			if (aprtype == strAprType8 || aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType2) {
+				rtnVal = false;
+				break;
+			}
+		} else {
+			if (aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType2) {
+				rtnVal = false;
+				break;
+			}
 		}
+	
 	}
 	return rtnVal;
 }
+
 function chkbeforeGamSa(AprLineRow)
 {
 	var afterApr;

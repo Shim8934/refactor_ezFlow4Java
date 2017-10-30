@@ -2102,4 +2102,21 @@ public class EzApprovalGarchiveController {
 	return result;
 	}
 	
+	/** 전자결재 G 최종결재 개인합의 갯수 구하기*/
+	@RequestMapping(value = "/ezApprovalG/lastKyulJeHabYuiYN.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String lastKyulJeHabYuiYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		
+	logger.debug("lastKyulJeHabYuiYN started");
+	userInfo = commonUtil.aprUserInfo(loginCookie);
+	
+	String docID = request.getParameter("docID");
+	String flag  = request.getParameter("flag");
+	
+	int result = ezApprovalGService.lastKyulJeHabYuiYN(docID, flag, userInfo.getCompanyID(), userInfo.getTenantId());
+
+	logger.debug("lastKyulJeHabYuiYN ended");
+		
+	return Integer.toString(result);
+	}
 }
