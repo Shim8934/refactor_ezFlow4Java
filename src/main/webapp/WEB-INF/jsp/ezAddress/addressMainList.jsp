@@ -656,6 +656,15 @@
 		        }		        
 		        window.location.reload();
 		    }
+	        
+	        function quick_add_close(){
+	        	var child = document.getElementById("addpopup_list").getElementsByTagName('td');
+	        	var i;
+	        	for (i = 0; i < child.length; i++) {
+	        		child[i].childNodes[0].value = "";
+	        	}
+	        }
+	        
 	    </script>
     </head>
 	<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -807,7 +816,7 @@
 					▒ <spring:message code='ezAddress.t2003' />
 				</div>				
 				<!-- 내용 -->
-			    <table class="popuplist" style="width:440px;margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px"><spring:message code='ezAddress.t124' /></th>
 						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
@@ -833,7 +842,7 @@
 				<br />
 				<div style="text-align:center;">
 					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span><spring:message code='ezAddress.t11' /></span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
 			    </div>
 			</div>
 		</div>
