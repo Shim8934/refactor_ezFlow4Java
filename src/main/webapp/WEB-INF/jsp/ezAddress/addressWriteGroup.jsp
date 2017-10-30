@@ -349,7 +349,7 @@
 	        }
 	
 	        function add() {
-	            if (document.getElementById("TextName").value == "") {
+	            if (document.getElementById("TextName").value.trim() == "") {
 	                alert("<spring:message code='ezAddress.t346' />");
 	                    return;
 	                }

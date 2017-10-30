@@ -419,7 +419,7 @@
 	            }
 	        }
 	        function quick_add() {
-	            if (document.getElementById("qname").value == "") {
+	            if (document.getElementById("qname").value.trim() == "") {
 	                alert("<spring:message code='ezAddress.t220' />");
 	                document.getElementById("qname").focus();
 	                return;
