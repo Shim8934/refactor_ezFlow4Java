@@ -13,13 +13,13 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
 		{ name: 'others' ,     groups: [ 'links' ] },
 		{ name: 'paragraph',   groups: [ 'list', 'align' ] },
-		{ name: 'colors' },
 		{ name: 'insert' },
 		'/',
 		{ name: 'tables',      groups: [ 'table','tablerow','tablecolumn', 'tablecell','tablecellmergesplit' ] },		
 		'/',
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		{ name: 'styles' },		
+		{ name: 'colors' },
 		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] }
 	];
 
@@ -29,7 +29,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.allowedContent = true;    
     config.specialChars = ['!', '&quot;', '#', '$', '%', '&amp;', "'", '(', ')', '*', '+', '-', '.', '/', ':', ';', '&lt;', '=', '&gt;', '?', '@', '[', ']', '^', '_', '`', '{', '|', '}', '~', "&euro;", "&lsquo;", "&rsquo;", "&ldquo;", "&rdquo;", "&ndash;", "&mdash;", "&iexcl;", "&cent;", "&pound;", "&curren;", "&yen;", "&brvbar;", "&sect;", "&uml;", "&copy;", "&ordf;", "&laquo;", "&not;", "&reg;", "&macr;", "&deg;", "&sup2;", "&sup3;", "&acute;", "&micro;", "&para;", "&middot;", "&cedil;", "&sup1;", "&ordm;", "&raquo;", "&frac14;", "&frac12;", "&frac34;", "&iquest;", "&Agrave;", "&Aacute;", "&Acirc;", "&Atilde;", "&Auml;", "&Aring;", "&AElig;", "&Ccedil;", "&Egrave;", "&Eacute;", "&Ecirc;", "&Euml;", "&Igrave;", "&Iacute;", "&Icirc;", "&Iuml;", "&ETH;", "&Ntilde;", "&Ograve;", "&Oacute;", "&Ocirc;", "&Otilde;", "&Ouml;", "&times;", "&Oslash;", "&Ugrave;", "&Uacute;", "&Ucirc;", "&Uuml;", "&Yacute;", "&THORN;", "&szlig;", "&agrave;", "&aacute;", "&acirc;", "&atilde;", "&auml;", "&aring;", "&aelig;", "&ccedil;", "&egrave;", "&eacute;", "&ecirc;", "&euml;", "&igrave;", "&iacute;", "&icirc;", "&iuml;", "&eth;", "&ntilde;", "&ograve;", "&oacute;", "&ocirc;", "&otilde;", "&ouml;", "&divide;", "&oslash;", "&ugrave;", "&uacute;", "&ucirc;", "&uuml;", "&yacute;", "&thorn;", "&yuml;", "&OElig;", "&oelig;", "&#372;", "&#374", "&#373", "&#375;", "&sbquo;", "&#8219;", "&bdquo;", "&hellip;", "&trade;", "&#9658;", "&bull;", "&rarr;", "&rArr;", "&hArr;", "&diams;", "&asymp;"]
     config.skin = 'moonocolor';    
-	config.removeButtons = 'Image,Subscript,Superscript,Styles,Unlink,Anchor';
+	config.removeButtons = 'Image,Subscript,Superscript,Styles,Unlink,Anchor,Format';
 	config.format_tags = 'p;h1;h2;h3;pre';
 	config.removeDialogTabs = 'link:advanced;image:Link;image:advanced;image:Upload';
 	config.colorButton_colors =
