@@ -473,7 +473,7 @@ function save_task() {
         startdate = sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate();
         enddate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate();
 	}
-
+alert(startdate + " / " + enddate);
     if (startdate > enddate) {
     	doubleSubmitFlag = false;
     	alert(strLang45);
@@ -581,7 +581,7 @@ function save_task() {
 	} else {
 		memo = "";
 	}
-alert(repetition);
+
 	data = {
 			taskID : taskid,
 			ownerID : userid,

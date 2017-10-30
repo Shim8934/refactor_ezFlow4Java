@@ -442,9 +442,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, int tenantID) throws Exception {
+	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception {
 		logger.debug("getTaskList started.");
-		logger.debug("userID : " + userID + " | startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount);
+		logger.debug("userID : " + userID + " | startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount + " | pSelectTab : " + pSelectTab);
 
 		if (!startDate.equals("")) {
 			startDate += " 00:00:00";
@@ -475,16 +475,18 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			TaskInfoVO vo = list.get(i);
 			
 			if (startDate.equals("")) {
-				startDate = vo.getStartDate();
+//				startDate = vo.getStartDate();
+				startDate = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 00:00:00";
 			}
 			
 			if (endDate.equals("")) {
-				endDate = vo.getEndDate();
+//				endDate = vo.getEndDate();
+				endDate = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59";
 			}
 
-			if (vo.getTaskType().equals("4")) {
+			if (vo.getTaskType().equals("4") && !pSelectTab.equals("taskrepetition")) {
 				map.put("taskID", vo.getTaskID());
-System.out.println("@@@ " + vo.getRepetition());				
+		
 				List<String> rList = ezTaskDAO.getTaskRepeDelList(map);
 				
 				String currentEndDate = vo.getEndDate();
@@ -492,7 +494,8 @@ System.out.println("@@@ " + vo.getRepetition());
 
 				if (!info[0].equals("0")) {
 					currentEndDate = endDate;
-				}
+				} // 반복주기 설정범위가 다음회수 반복 후 종료 일때 '0'
+
 				if (currentEndDate.compareTo(endDate) > 0) {
 					currentEndDate = endDate;
 				}
@@ -511,13 +514,17 @@ System.out.println("@@@ " + vo.getRepetition());
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
-System.out.println("@@@" + startDate + " / " + endDate + " / " + currentEndDate);				
+
+				logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | currentEndDate : " + currentEndDate);
+
 				sDate_cal.setTime(sdf.parse(startDate));
 				eDate_cal.setTime(sdf.parse(currentEndDate));
 				date_cal.setTime(sdf.parse(vo.getStartDate()));
-				
+
+				logger.debug("sDate_cal : " + sDate_cal + " | eDate_cal : " + eDate_cal + " | date_cal : " + date_cal);
+
 				switch (info[2]) {
-					case "0" :
+					case "0" : // 매일
 						while (true) {
 							if (date_cal.compareTo(eDate_cal) > 0) break;
 							if (maxCount == count) break;
@@ -555,7 +562,7 @@ System.out.println("@@@" + startDate + " / " + endDate + " / " + currentEndDate)
 						}
 					break;
 					
-					case "1" :
+					case "1" : //매주
 						int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
 						
 						while (true) {
@@ -592,7 +599,7 @@ System.out.println("@@@" + startDate + " / " + endDate + " / " + currentEndDate)
 						}						
 					break;	
 					
-					case "2" :
+					case "2" : // 매월
 						while (true) {						
 							int year = date_cal.get(Calendar.YEAR);
 							int month = date_cal.get(Calendar.MONTH) + 1;
@@ -654,7 +661,7 @@ System.out.println("@@@" + startDate + " / " + endDate + " / " + currentEndDate)
 						}
 					break;
 					
-					case "3" :
+					case "3" : // 매년
 						while (true) {
 							int year = date_cal.get(Calendar.YEAR);
 							int month = Integer.parseInt(info[4]);
@@ -738,23 +745,25 @@ System.out.println("@@@" + startDate + " / " + endDate + " / " + currentEndDate)
 		
 		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 		TaskInfoVO innerVO = new TaskInfoVO();
-	
+
+		logger.debug("vo.getStartDate : " + vo.getStartDate() + " | vo.getEndDate() : " + vo.getEndDate());
+
 		String dateTime1 = nsdf.format(date) + vo.getStartDate().substring(10);
-		String dateTime2 = nsdf.format(date) + vo.getEndDate().substring(10);		
-				
+		String dateTime2 = nsdf.format(date) + vo.getEndDate().substring(10);
+		
 		if (dateTime1.compareTo(dateTime2) > 0) {
 			Calendar cal = Calendar.getInstance();
 			
 			cal.setTime(date);
-			cal.add(Calendar.DATE, 1);
+			cal.add(Calendar.DATE, 1); // 1일 후
 			
 			dateTime2 = nsdf.format(cal.getTime()) + vo.getEndDate().substring(10); 
 		}
 		
-		int newDateType = Integer.parseInt(dateType) + 1;
+//		int newDateType = Integer.parseInt(dateType) + 1;
 		
 		BeanUtils.copyProperties(innerVO, vo);
-				
+
 		innerVO.setStartDate(dateTime1);
 		innerVO.setEndDate(dateTime2);
 //		innerVO.setTaskType(newDateType + "");
@@ -1061,5 +1070,24 @@ System.out.println("@@@" + startDate + " / " + endDate + " / " + currentEndDate)
 		ezTaskDAO.updateTaskGeneral(map);
 		
 		logger.debug("updatetaskGeneral ended.");
+	}
+
+	@Override
+	public void insertTaskRepeDel(String taskID, String repeatCount, String taskStatus, String completeRate, String startDate, int tenantID) throws Exception {
+		logger.debug("insertTaskRepeDel started.");
+		logger.debug("taskID : " + taskID + " | repeatCount : " + repeatCount + " | taskStatus : " + taskStatus + " | completeRate : " + completeRate + " | startDate : " + startDate);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("taskID", taskID);
+		map.put("repeatCount", repeatCount);
+		map.put("taskStatus", taskStatus);
+		map.put("completeRate", completeRate);
+		map.put("startDate", startDate);
+		map.put("tenantID", tenantID);
+
+		ezTaskDAO.insertTaskRepeDel(map);
+
+		logger.debug("insertTaskRepeDel ended.");
 	}
 }

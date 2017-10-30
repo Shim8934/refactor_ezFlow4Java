@@ -137,7 +137,7 @@
 		        if (repeatcount == "") {
 		        	repeatcount = 0;
 		        }
-alert(repeatcount + " / " + date);		        
+		        
 	        	feature = GetOpenPosition(750, 740);
 	        	
                 window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
@@ -727,8 +727,9 @@ alert(repeatcount + " / " + date);
 		        }
 		    }
 		    
+		    var pSelectTab;
 		    function ChangeTab(obj) {
-		        var pSelectTab = GetAttribute(obj, "divname");
+		        pSelectTab = GetAttribute(obj, "divname");
 
 		        switch (pSelectTab) {
 		            case "taskprog":
@@ -783,7 +784,7 @@ alert(repeatcount + " / " + date);
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body").css("background", "");
 		    	}
-		    	
+
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -797,7 +798,8 @@ alert(repeatcount + " / " + date);
 						chkValue : chkValue,
 						searchClass : "",
 						taskStatusCount : taskStatusCount,
-						useDate : ""
+						useDate : "",
+						pSelectTab : pSelectTab
 					},
 					success : function(xml) {
 						after_DateChange(xml);

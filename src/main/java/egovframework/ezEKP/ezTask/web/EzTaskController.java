@@ -131,6 +131,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");
 		int repeatCount = Integer.parseInt(request.getParameter("repeatCount"));
+		String date = request.getParameter("date");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 
 		//업무정보 조회
@@ -176,6 +177,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		model.addAttribute("repeatCount", repeatCount);
+		model.addAttribute("date", date);
+		model.addAttribute("repetition", taskInfoVO.getRepetition());
 
 		logger.debug("taskRead ended.");
 		
@@ -850,6 +853,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String startDate = request.getParameter("startDate");
     	String endDate = request.getParameter("endDate");
     	String useDate = request.getParameter("useDate");
+    	String pSelectTab = request.getParameter("pSelectTab");
     	
     	// 검색 시 날짜사용 안하면 최근 3개월이내 검색
 		if (useDate.equals("false")) {
@@ -868,7 +872,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);    			
 		}
 
-    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);
     	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
@@ -1015,5 +1019,43 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskRepetition ended.");
 
 		return "/ezTask/taskRepetition";
+	}
+	
+	/**
+	 * 업무관리 반복일정 선택 후 삭제 시 팝업 
+	 */	
+	@RequestMapping(value="/ezTask/taskDeleteConfirm.do")	
+	public String taskDeleteConfirm() throws Exception {
+		logger.debug("taskDeleteConfirm started.");
+		
+		logger.debug("taskDeleteConfirm ended.");
+		
+		return "/ezTask/taskDeleteConfirm";
+	}
+	
+	/**
+	 * 업무관리 반복일정 해당일정만 삭제
+	 */	
+	@RequestMapping(value="/ezTask/taskOnceDelete.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public void taskOnceDelete(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		logger.debug("taskOnceDelete started.");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String taskID = request.getParameter("taskID");
+		String repeatCount = request.getParameter("repeatCount");
+		String taskStatus = request.getParameter("taskStatus");
+		String completeRate = request.getParameter("completeRate");
+		String selectDate = request.getParameter("selectDate");
+		String startDate = request.getParameter("startDate");		
+		String realStartDate = selectDate + "" + startDate.substring(10, 16);		
+
+		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
+
+		//일정데이터 삭제
+		ezTaskService.insertTaskRepeDel(taskID, repeatCount, taskStatus, completeRate, realDate, loginSimpleVO.getTenantId());
+		
+		logger.debug("taskOnceDelete ended.");
 	}
 }

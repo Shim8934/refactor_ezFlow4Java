@@ -40,7 +40,8 @@
 				personemail,
 				personattach,
 				personcontentpath,
-				memo
+				memo,
+				repetition
 			FROM
 				TBL_TASK
 			WHERE
@@ -292,7 +293,7 @@
 			select 
 				date_format(date_add(startDate, interval +#offset# minute), '%Y-%m-%d') as startDate
 			from 
-				tbl_taskrepetition_del
+				tbl_taskinstancestatus
 			where
 				taskid = #taskID#
 			and
@@ -602,6 +603,15 @@
                 (userid, listcount, selecttaskstatus, tenantid) 
             VALUES
                 (#userID#, #listCount#, #selectTaskStatus#, #tenantID#)
+        ]]>
+    </insert>
+
+	<insert id="EzTaskDAO.insertTaskRepeDel" parameterClass="map">
+        <![CDATA[
+            INSERT INTO TBL_TASKINSTANCESTATUS
+                (taskid, repeatcount, taskstatus, completerate, startdate, enddate, tenantid) 
+            VALUES
+                (#taskID#, #repeatCount#, #taskStatus#, #completeRate#, #startDate#, #startDate#, #tenantID#)
         ]]>
     </insert>
 

@@ -92,7 +92,11 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public void taskSaveGeneral(Map<String, Object> map) {
 		insert("EzTaskDAO.taskSaveGeneral", map);
 	}
-	
+
+	public void insertTaskRepeDel(Map<String, Object> map) {
+		insert("EzTaskDAO.insertTaskRepeDel", map);
+	}
+
 	public void updateHasComment(Map<String, Object> map) {
 		update("EzTaskDAO.updateHasComment", map);
 	}

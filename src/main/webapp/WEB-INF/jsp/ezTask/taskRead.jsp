@@ -49,6 +49,9 @@
 		    var taskWorkAttachList = "${taskWorkAttachList }";
 		    var useTodoMemo = "${useTodoMemo }";
 		    var startdate = "${taskInfoVO.startDate}";
+		    var repeatCount = "${repeatCount}";
+		    var createDate = "${taskInfoVO.createDate}";
+		    var repetition = "${repetition}";
 		    
 		    $(document).ready(function() {
 				load_bodyhtml();
@@ -299,31 +302,77 @@
 			
 			var deltaskid = "";
 			function delete_task() {
-				if (!confirm("<spring:message code='ezTask.t106' />")) {
-					return;
+				if (tasktype == "4") {	
+					repetition_Delete();
+				} else {
+					if (!confirm("<spring:message code='ezTask.t106' />")) {
+						return;
+					}
+		
+					deltaskid = taskid + ";";
+					
+					$.ajax({
+						type : "POST",
+						url : "/ezTask/taskDelete.do",
+						dataType : "json",
+						data : {
+							taskIDList : deltaskid
+						},
+						success : function(result) {
+							window.opener.RefreshView()
+						},
+						error : function(jqXHR, textStatus, errorThrown) {
+							alert("<spring:message code='ezTask.t108' />")
+						},
+						complete : function() {
+							window.close();
+						}
+					});
 				}
-	
-				deltaskid = taskid + ";";
-				
-				$.ajax({
+			}
+
+			var task_delete_confirm_cross_dialogArguments = new Array();
+			function repetition_Delete() {
+				task_delete_confirm_cross_dialogArguments[0] = "";
+	        	task_delete_confirm_cross_dialogArguments[1] = deleteTask_Complete;
+	            GetOpenWindow("/ezTask/taskDeleteConfirm.do", "task_delete_confirm_Cross", 400, 170);				
+			}
+
+			function deleteTask_Complete(ret) {				
+				if (ret == "0") {
+					once_Delete_Task();
+				} else {
+					delete_task();
+				}								
+			}
+
+			function once_Delete_Task() {
+	        	if (!confirm("<spring:message code='ezTask.t106' />"))
+	                return;
+		            
+	            $.ajax({
 					type : "POST",
-					url : "/ezTask/taskDelete.do",
-					dataType : "json",
-					data : {
-						taskIDList : deltaskid
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskOnceDelete.do",
+					data : { 
+						taskID : taskid,
+						repeatCount : repeatCount,
+						taskStatus : taskstatus,
+						completeRate : completerate,
+						selectDate : date,
+						startDate : startdate						
 					},
-					success : function(result) {
-						window.opener.RefreshView()
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezTask.t108' />")
-					},
-					complete : function() {
-						window.close();
+					success: function() {
+		                try { window.opener.RefreshView() } catch (e) { }
+		
+		                if (window.opener.reload != undefined)
+		                    window.opener.reload();
+		                window.close();
 					}
 				});
-			}
-			
+	        }
+
 			/* 업무수정 */
 			function edit_task() {
 			    var win;
@@ -676,7 +725,7 @@
 			window.onunload = function (e) {
 		    	try {
 // 		    		window.opener.RefreshView();
-			    	window.close();
+// 			    	window.close();
 		    	} catch (e) {}
 			}
 
@@ -709,7 +758,7 @@
 					}
 				})
 			}
-			
+
 			$(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -717,19 +766,104 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            onSelect:function(dateText, inst) {
+		            	var selectDate = new Date(dateText);
+		            	var SD = selectDate.getDay();
+    	
+						if (SD == 0 || SD == 6) {
+							alert("주말은 선택할 수 없습니다.");
+							$("#Sdatepicker").datepicker("setDate", date);
+						} else {
+			            	dayOnMouseClick(dateText);							
+						}
+		            }
 		        });
 
 		        var SDate;
 
-		        if (startdate != "") {
-		            SDate = new Date(startdate);
+		        if (date != "") {
+		            SDate = new Date(date);
 		        } else {
 		            SDate = new Date();
 		        }
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 		    });
+			
+			$(function () {
+		    	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+					           "<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					                "<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					              "<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+				};
+				
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
+			
+			function dayOnMouseClick(changeDate) {
+				var repetitionCount = repetition.split("|");
+
+// 				var changeDateVal = new Date(changeDate);
+// 				var CDV = changeDateVal.getDay();
+				
+				var dateArray = date.split("-");
+				var dateObj = new Date(dateArray[0], Number(dateArray[1]) - 1, dateArray[2]); // 오늘날짜의 반복업무
+
+				var changeDateArray = changeDate.split("-");
+				var changeDateObj = new Date(changeDateArray[0], Number(changeDateArray[1]) - 1, changeDateArray[2]); // 달력에서 선택한 다른날짜의 반복업무				
+				var count = (dateObj.getTime() - changeDateObj.getTime())/1000/60/60/24; // 처음날짜 - 바꿀날짜
+
+				var createDateArray = createDate.substring(0,10).split("-");
+				var createDateObj = new Date(createDateArray[0], Number(createDateArray[1]) - 1, createDateArray[2]); // 반복업무 작성일
+				var count2 = (dateObj.getTime() - createDateObj.getTime())/1000/60/60/24; // 처음날짜 - 업무생성날짜
+
+				if ((count2 - count) < 0) {
+					alert("반복업무 작성일 이전의 날짜는 선택할 수 없습니다.");
+					$("#Sdatepicker").datepicker("setDate", date);
+					return;
+				} else {
+// 					if ((repetitionCount[0] > 0) && (Math.abs(count3) - repetitionCount[0] > 0)) {						
+// 						alert("반복업무 횟수를 초과하였습니다.");
+// 						$("#Sdatepicker").datepicker("setDate", date);
+// 						return;
+// 					}
+					if (count2 > repeatCount) {
+						repeatCount = repeatCount - count + 2;
+					} else {
+						repeatCount = repeatCount - count;
+					}
+
+					var feature = GetOpenPosition(750, 740);
+					window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+					window.close();					
+				}
+			}
 		</script>
 	</head>
 	
@@ -761,12 +895,16 @@
 
 			<div class="progress_txt">
 				<ul>
-					<c:if test="${repeatCount != 0}">
+					<c:if test="${taskInfoVO.taskType == 4}">
 						<span class="txt_title">반복업무(${repeatCount}회차)</span>
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" >
+						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
+						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
 					</c:if>
-					<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
-					<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
+					<c:if test="${taskInfoVO.taskType != 4}">
+						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
+						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
+					</c:if>
 				</ul>
 				<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
 			</div>
