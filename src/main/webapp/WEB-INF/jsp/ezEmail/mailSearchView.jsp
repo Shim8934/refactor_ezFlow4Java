@@ -677,12 +677,12 @@
 			<table class="mainlist" style="width:100%;table-layout:fixed;">
 				<tr> 
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
-			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
+			        <th style="width: 24px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 			        <th style="width: 26px; padding: 0px; color: black;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="view" orderoption="ASC"><img src="/images/ImgIcon/view-document.gif" border="0"></th>
-			        <th style="width: 26px; padding: 0px; color: black;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="flag" orderoption="ASC"><img src="/images/ImgIcon/icon-flag.gif" border="0"></th>
-			        <th style="width: 26px; padding: 0px; color: black;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="attach" orderoption="ASC"><img src="/images/newAttach.gif" border="0"></th>
-					<th style="width:80px;cursor:pointer" align="left" valign="center" id="tofromname" onclick="event_HeaderClick(this)" porp="from" orderoption="ASC"><spring:message code="ezEmail.t656" /></th> 
-					<th style="width:100%;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="subject" orderoption="ASC"><spring:message code="ezEmail.t556" /></th> 
+			        <th style="width: 26px; padding: 0px; color: black;padding-left:1px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="flag" orderoption="ASC"><img src="/images/ImgIcon/icon-flag.gif" border="0"></th>
+			        <th style="width: 15px; padding: 0px; color: black;padding-left:4px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="attach" orderoption="ASC"><img src="/images/newAttach.gif" border="0"></th>
+					<th style="width:101px;cursor:pointer" align="left" valign="center" id="tofromname" onclick="event_HeaderClick(this)" porp="from" orderoption="ASC"><spring:message code="ezEmail.t656" /></th> 
+					<th style="width:100%;cursor:pointer;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"  align="left" onclick="event_HeaderClick(this)" porp="subject" orderoption="ASC"><spring:message code="ezEmail.t556" /></th> 
 					<th style="width:200px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)" porp="recevdate" orderoption="ASC"><spring:message code="ezEmail.t657" /></th> 
 					<th style="width:120px;" align="left"><spring:message code="ezEmail.t658" /></th> 
 					<th style="width:50px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC"><spring:message code="ezEmail.t617" /></th> 

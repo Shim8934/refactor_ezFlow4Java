@@ -973,7 +973,9 @@ function event_listContextMenu(event) {
         var Div_ = EventDivSize - listsizewidth;
         EventMouseX = EventMouseX - Div_;
     }
-
+    if (g_foldertype == "draft") {
+    	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
+    }
     document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
@@ -1111,6 +1113,11 @@ function event_HeaderCheckBoxClick(obj) {
 var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
+	
+	if (event.target.className == "Mail_Input") {
+		return;
+	}
+	
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (!event) event = window.event;
     }
