@@ -822,7 +822,7 @@
 						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
 					</tr>
 					<tr>
-			  			<th style="width:90px"><spring:message code='ezAddress.t221' /></th>
+			  			<th style="width:90px"><spring:message code='ezAddress.t51' /></th>
 						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
 					</tr>
 					<tr>
