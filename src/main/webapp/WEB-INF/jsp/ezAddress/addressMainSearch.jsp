@@ -315,42 +315,44 @@
 	                alert("<spring:message code='ezAddress.t212' />");
 	            }
 	            else {
-	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
-	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                    if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                        if (AddressObj.getAttribute("_foldertype") != "P") {
-	                            if (AddressObj.getAttribute("_foldertype") == "D" && Badmin != "Y" || AddressObj.getAttribute("_foldertype") == "C" && Cadmin != "Y") {
-	                                if (AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
-	                                    alert("<spring:message code='ezAddress.t211' />");
-	                                    return;
-	                                }
-	                            }
-	                        }
-	                    }
-	                }
-	                var xmlDom = createXmlDom();
-	                var objNode;
-	                var objRow;
-	                var objRowNode;
-	                objNode = createNodeInsert(xmlDom, objNode, "DATA");
-	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
-	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                    objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ROW");
-	                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
-	                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "OLDFOLDERTYPE", AddressObj.getAttribute("_foldertype"));
-	                }
-	                var xmlHTTP = createXMLHttpRequest();
-	                xmlHTTP.open("POST", "/ezAddress/addressDelete.do", false);
-	                xmlHTTP.send(xmlDom);
-	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-	                    alert("<spring:message code='ezAddress.t214' />");
-	                else {
-	                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
-	                    pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
-	                    if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
-	                        pCurrentPage--;
-	                    Get_SearchAddressList();
-	                }
+	            	if (confirm(listContentArry.length + "<spring:message code='ezAddress.t213' />")) {
+		                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
+		                    var AddressObj = document.getElementById(listContentArry[Cnt]);
+		                    if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
+		                        if (AddressObj.getAttribute("_foldertype") != "P") {
+		                            if (AddressObj.getAttribute("_foldertype") == "D" && Badmin != "Y" || AddressObj.getAttribute("_foldertype") == "C" && Cadmin != "Y") {
+		                                if (AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+		                                    alert("<spring:message code='ezAddress.t211' />");
+		                                    return;
+		                                }
+		                            }
+		                        }
+		                    }
+		                }
+		                var xmlDom = createXmlDom();
+		                var objNode;
+		                var objRow;
+		                var objRowNode;
+		                objNode = createNodeInsert(xmlDom, objNode, "DATA");
+		                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
+		                    var AddressObj = document.getElementById(listContentArry[Cnt]);
+		                    objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ROW");
+		                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
+		                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "OLDFOLDERTYPE", AddressObj.getAttribute("_foldertype"));
+		                }
+		                var xmlHTTP = createXMLHttpRequest();
+		                xmlHTTP.open("POST", "/ezAddress/addressDelete.do", false);
+		                xmlHTTP.send(xmlDom);
+		                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+		                    alert("<spring:message code='ezAddress.t214' />");
+		                else {
+		                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
+		                    pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
+		                    if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
+		                        pCurrentPage--;
+		                    Get_SearchAddressList();
+		                }
+	            	}
 	            }
 	        }
 	        function check_click(obj) {
