@@ -34,8 +34,8 @@
 		        }
 		        if (startdate != "") {
 		            document.getElementById("usedate").checked = true;
-		            document.getElementById('keyword').value = keyword;
-		        }
+		            //document.getElementById('keyword').value = keyword;
+		        }	        
 		    }
 			
 		    $(function () {
