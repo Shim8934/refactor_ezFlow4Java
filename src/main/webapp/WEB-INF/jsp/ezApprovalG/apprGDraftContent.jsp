@@ -144,10 +144,10 @@
 	                return true;
 	        }
 	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.childNodes.length; i++) {
-	                obj.childNodes.item(i).setAttribute("check", "1");
+	            for (var i = 0; i < obj.options.length; i++) {
+	                obj.childNodes.item(i).setAttribute("selected", "");
 	            }
-	            obj.childNodes.item(obj.selectedIndex).setAttribute("check", "2");
+	            obj.childNodes.item(obj.selectedIndex).setAttribute("selected", "selected");
 	        }
 	        function CheckBoxOnclick(obj) {
 	            obj.removeAttribute("checked");
