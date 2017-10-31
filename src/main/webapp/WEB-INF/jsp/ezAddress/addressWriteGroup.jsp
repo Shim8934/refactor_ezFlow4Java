@@ -924,12 +924,16 @@
                 return;
 	        } 
 	        
-            var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
-            if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
-                alert("<spring:message code='ezAddress.t1100' />");
-                return;
-            }
-            
+	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
+	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+	        
+	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
+	            alert("<spring:message code='ezAddress.t1100' />");
+	            document.getElementById("emailaddr").value = pTextEmail;
+	            document.getElementById("emailaddr").focus();
+	            return;
+	        }
+	        
             if (!check_length(document.getElementById("emailaddr").value, 100, "<spring:message code='ezAddress.t224' />")) return;
 
             var pparsingXML = "";
@@ -1689,6 +1693,32 @@
 	                displayUserList();
 	            }
 	        }
+		    
+		    function TrimText(orgStr) {
+		        var copyStr = "";
+		        var strIndex;
+		        for (strIndex = 0; strIndex < orgStr.length; strIndex++) {
+		            if (orgStr.charAt(strIndex) == ' ') {
+		                continue;
+		            }
+		            else {
+		                copyStr = orgStr.substr(strIndex);
+		                break;
+		            }
+		        }
+		        for (strIndex = copyStr.length - 1; strIndex >= 0; strIndex--) {
+		            if (copyStr.charAt(strIndex) == ' ') {
+		                continue;
+		            }
+		            else {
+		                copyStr = copyStr.substr(0, strIndex + 1);
+		                break;
+		            }
+		        }
+		
+		        return copyStr;
+		    }
+		    
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
