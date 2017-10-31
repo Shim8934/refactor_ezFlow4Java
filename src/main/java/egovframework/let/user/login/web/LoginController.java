@@ -436,6 +436,28 @@ public class LoginController {
     	    }
     	}
     	
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+    	
+        String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
+        
+    	logger.debug("actionLogout ezOffice365Auth=" + ezOffice365Auth);
+    	
+        if (ezOffice365Auth.equals("YES")) {       
+			String redirectUri = request.getScheme()
+					+ "://"
+					+ request.getServerName()
+					+ ("http".equals(request.getScheme())
+							&& request.getServerPort() == 80
+							|| "https".equals(request.getScheme())
+							&& request.getServerPort() == 443 ? "" : ":"
+							+ request.getServerPort());
+        	
+			logger.debug("actionLogout redirectUri=" + redirectUri);
+			
+        	return "redirect:https://login.microsoftonline.com/common/OAuth2/logout?post_logout_redirect_uri=" + redirectUri;         	
+        }
+    	
     	return "redirect:/user/login/login.do"; 
     }
     
