@@ -432,12 +432,6 @@
 	                return;
 	            }
 	
-	            if (!check_length(document.getElementById("qname").value, 50, "<spring:message code='ezAddress.t124' />")) return;
-	            if (!check_length(document.getElementById("qcompany").value, 50, "<spring:message code='ezAddress.t221' />")) return;
-	            if (!check_length(document.getElementById("qcomphone").value, 20, "<spring:message code='ezAddress.t222' />")) return;
-	            if (!check_length(document.getElementById("qmobile").value, 20, "<spring:message code='ezAddress.t223' />")) return;
-	            if (!check_length(document.getElementById("qemail").value, 250, "<spring:message code='ezAddress.t224' />")) return;
-	
 	            if (document.getElementById("qemail").value != "") {
 	                var AddressCnt = Get_SameAddressCnt();
 	
@@ -503,22 +497,6 @@
 	            	window.location.href = window.location.href;
 	            }	            
 	        }
-	        function check_length(chkstr, maxlength, fieldname) {
-	            var length = 0;
-	            var i;
-	
-	            for (i = 0; i < chkstr.length; i++)
-	                if (chkstr.charCodeAt(i) > 256)
-	                    length = length + 2;
-	                else
-	                    length++;
-	
-	            if (length > maxlength) {
-	                alert(fieldname + "<spring:message code='ezAddress.t227' />" + maxlength + "<spring:message code='ezAddress.t228' />");
-			    	return false
-				}	
-	        	return true;
-	        }	
 	        function address_inout(which) {
 	            var feature = "dialogWidth:390px; dialogHeight:290px; scroll:no; status:no; help:no;edge:sunken";
 	            feature = feature + GetShowModalPosition(390, 290);
@@ -819,23 +797,23 @@
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px"><spring:message code='ezAddress.t124' /></th>
-						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
+						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
 					</tr>
 					<tr>
 			  			<th style="width:90px"><spring:message code='ezAddress.t51' /></th>
-						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
+						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
 					</tr>
 					<tr>
 			  			<th style="width:90px" ><spring:message code='ezAddress.t222' /></th>
-						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
+						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20"></td>
 					</tr>
 					<tr>
 						<th style="width:90px"><spring:message code='ezAddress.t223' /></th>
-						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
+						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20"></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezAddress.t264' /></th>
-						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="250">      </td>
+						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"></td>
 					</tr>
 				</table>
 				<!-- /내용 -->

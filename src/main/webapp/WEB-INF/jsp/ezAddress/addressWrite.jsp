@@ -191,17 +191,12 @@
 		
 		            document.getElementById("TextName").value = "";
 		            document.getElementById("TextName").focus();
-		
 		            return;
 		        }
-		        if (!check_length(pTextName, 50, "<spring:message code='ezAddress.t124' />")) return;
-		        if (!check_length(document.getElementById("TextCompany").value, 50, "<spring:message code='ezAddress.t221' />")) return;
+		        
 		        if (!check_length(document.getElementById("TextCompanyPhone").value, 20, "<spring:message code='ezAddress.t222' />")) return;
-		        if (!check_length(document.getElementById("TextFax").value, 20, "<spring:message code='ezAddress.t333' />")) return;
 		        if (!check_length(document.getElementById("TextMobile").value, 20, "<spring:message code='ezAddress.t223' />")) return;
-		        if (!check_length(document.getElementById("TextDept").value, 50, "<spring:message code='ezAddress.t54' />")) return;
-		        if (!check_length(document.getElementById("TextTitle").value, 50, "<spring:message code='ezAddress.t359' />")) return;
-		        if (!check_length(document.getElementById("TextEmail").value, 100, "<spring:message code='ezAddress.t224' />")) return;
+		        if (!check_length(document.getElementById("TextFax").value, 20, "<spring:message code='ezAddress.t333' />")) return;
 		        if (!check_length(document.getElementById("TextHomePage").value, 200, "<spring:message code='ezAddress.t293' />")) return;
 		        if (!check_length(document.getElementById("TextComAddr").value, 200, "<spring:message code='ezAddress.t295' />")) return;
 		        if (!check_length(document.getElementById("TextHomeAddr").value, 200, "<spring:message code='ezAddress.t296' />")) return;
@@ -457,23 +452,23 @@
 		    <tr>
 		      <!-- <th rowspan="4" align="center" ><span id="LiteralPhoto" width="119"></span></th> -->
 		      <th><spring:message code='ezAddress.t124' /></th>
-		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass" value="${addressInfo.sName}"></td>
+		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sName}"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t51' /></th>
-		      <td><input type="text" id="TextCompany" name="TextCompany" style="width:100%" maxlength="24" class="txtClass" value="${addressInfo.sCompany}"></td>
+		      <td><input type="text" id="TextCompany" name="TextCompany" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sCompany}"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t54' /></th>
-		      <td><input type="text" id="TextDept" name="TextDept" style="width:100%" maxlength="24" class="txtClass" value="${addressInfo.sDept}"></td>
+		      <td><input type="text" id="TextDept" name="TextDept" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sDept}"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t359' /></th>
-		      <td><input type="text" id="TextTitle" name="TextTitle" style="width:100%" maxlength="24" class="txtClass" value="${addressInfo.sTitle}"></td>
+		      <td><input type="text" id="TextTitle" name="TextTitle" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sTitle}"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t291' /></th>
-		      <td><input type="text" id="TextEmail" name="TextEmail" style="width:100%" class="txtClass" value="${addressInfo.sEmail}"></td>
+		      <td><input type="text" id="TextEmail" name="TextEmail" style="width:100%" maxlength="100" class="txtClass" value="${addressInfo.sEmail}"></td>
 		    </tr>
 		  </table>
 		  <table class="popuplist" style="margin-top:10px;width:100%">

@@ -934,8 +934,6 @@
 	            return;
 	        }
 	        
-            if (!check_length(document.getElementById("emailaddr").value, 100, "<spring:message code='ezAddress.t224' />")) return;
-
             var pparsingXML = "";
             var pparsingXML2 = "";
             var strName = "";
@@ -1811,7 +1809,7 @@
 	            <tr>
 	                <th><spring:message code='ezAddress.t360' /></th>
 	                <td>
-	                    <input type="text" id="TextName" name="TextName" style="width:100%" MaxLength="24" class="txtClass"></td>
+	                    <input type="text" id="TextName" name="TextName" style="width:100%" MaxLength="50" class="txtClass"></td>
 	            </tr>
 	        </table>
 	        <table style="margin-top: 10px">
@@ -1852,13 +1850,13 @@
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
 	                                <td>
-	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="24">
+	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="50">
 	                                </td>
 	                            </tr>
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t224' /></th>
 	                                <td>
-	                                    <input type="text" id="emailaddr" style="WIDTH: 98%" onkeypress="return on_keydown(event)">
+	                                    <input type="text" id="emailaddr" style="WIDTH: 98%" maxlength="100" onkeypress="return on_keydown(event)">
 	                                </td>
 	                            </tr>
 	                        </table>
