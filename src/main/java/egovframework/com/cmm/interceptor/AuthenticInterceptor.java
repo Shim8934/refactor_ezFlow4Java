@@ -107,12 +107,10 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
     	
 	        if (ezOffice365Auth.equals("YES")) {
-				String ezOffice365TenantName = "";
 				String ezOffice365ClientId = "";
 				String ezOffice365ClientSecret = "";
 	        	
 	        	try {
-					ezOffice365TenantName = ezCommonService.getTenantConfig("ezOffice365TenantName", tenantId);
 		        	ezOffice365ClientId = ezCommonService.getTenantConfig("ezOffice365ClientId", tenantId);
 		        	ezOffice365ClientSecret = ezCommonService.getTenantConfig("ezOffice365ClientSecret", tenantId);
 	        	} catch (Exception e) {
@@ -150,7 +148,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							AuthenticationSuccessResponse oidcResponse = (AuthenticationSuccessResponse)authResponse;
 							
 							AuthenticationResult result = getAccessToken(
-															ezOffice365TenantName,
+															"common",
 															ezOffice365ClientId,
 															ezOffice365ClientSecret,
 															oidcResponse.getAuthorizationCode(),
@@ -178,7 +176,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 					
 					return false;
 				} else {
-					ModelAndView modelAndView = new ModelAndView("redirect:" + getRedirectUrl(ezOffice365TenantName, ezOffice365ClientId, currentUri));
+					ModelAndView modelAndView = new ModelAndView("redirect:" + getRedirectUrl("common", ezOffice365ClientId, currentUri));
 					throw new ModelAndViewDefiningException(modelAndView);
 				}
 	        } else {
