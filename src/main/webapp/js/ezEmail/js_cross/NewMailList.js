@@ -929,11 +929,14 @@ function makePageSelPage() {
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
-            PagingHTML += "<span class=\"on\">" + i + "</span>";
+        	PagingHTML += "<span class=\"on\">" + i + "</span>";
         }
         else {
             PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
         }
+    }
+    if (MaxNum == 0) {
+    	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {

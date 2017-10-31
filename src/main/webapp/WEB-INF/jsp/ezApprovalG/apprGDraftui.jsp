@@ -149,6 +149,7 @@
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var totalMemSN = "0";
 			
 		    window.onload = function ()
 		    {
@@ -801,7 +802,7 @@
 		            return;
 		        }
 		        
-		        if (addLastKyulJeYN == "1") {
+		        if (addLastKyulJeYN != "0") {
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",

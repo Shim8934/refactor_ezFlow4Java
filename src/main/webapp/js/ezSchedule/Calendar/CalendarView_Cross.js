@@ -526,6 +526,7 @@ function MonthData(oThisDate, TDIndex) {
     subTable.setAttribute("cellpadding", "0");
     subTable.setAttribute("cellspacing", "0");
     subTable.setAttribute("border", "0");
+    subTable.style.overflowX = "auto";    
     subSpan.appendChild(subTable);
     objTd.appendChild(subSpan);
 

@@ -106,7 +106,7 @@
 		    		return;
 		    	}
 		    	
-		        if (document.getElementById("keyword").value == "" && document.getElementById("usedate").checked == false) {
+		        if (document.getElementById("keyword").value.trim() == "" && document.getElementById("usedate").checked == false) {
 		            alert("<spring:message code='ezSchedule.t346'/>");
 		            document.getElementById("keyword").focus();
 		            return;
@@ -200,7 +200,7 @@
 		          			<option value="title"selected><spring:message code='ezSchedule.t272'/></option> 
 		          			<option value="location"><spring:message code='ezSchedule.t273'/></option> 
 		        		</select> 
-		        		<input type="text" id="keyword" size="21" value="${keyword}" onkeypress="return search_keypress(event)" /> 
+		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        	</td> 
 		    	</tr> 
