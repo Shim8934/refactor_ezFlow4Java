@@ -354,8 +354,7 @@
 	                    return;
 	                }
 	
-	                if (!check_length(document.getElementById("TextName").value, 50, "<spring:message code='ezAddress.t304' />"))
-	                    return;
+	                if (!check_length(document.getElementById("TextName").value, 50, "<spring:message code='ezAddress.t304' />")) return;
 	
 	                var xmlHTTP = createXMLHttpRequest();
 	                var xmlDom = createXmlDom();
@@ -918,65 +917,66 @@
 	        if (document.getElementById("emailname").value == "") {
 	            document.getElementById("emailname").focus();
 	            alert("<spring:message code='ezAddress.t349' />");
-	                return;
-	            }
-	        else if (document.getElementById("emailaddr").value == "") {
+	            return;
+	        } else if (document.getElementById("emailaddr").value == "") {
 	            document.getElementById("emailaddr").focus();
-	                alert("<spring:message code='ezAddress.t350' />");
-	                    return;
-	                }
-	
-	            var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
-	            if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
-	                alert("<spring:message code='ezAddress.t1100' />");
-	                return;
-	            }
-	
-	            var pparsingXML = "";
-	            var pparsingXML2 = "";
-	            var strName = "";
-	            var strEmail = "";
-	            var listid = "MsgToList";
-	
-	            var listview = new ListView();
-	            listview.LoadFromID(listid);
-	            strName = document.getElementById("emailname").value;
-	            strEmail = document.getElementById("emailaddr").value;
-	
-	            var bFlag = listview.ExistRow("DATA2", strEmail);
-	            if (bFlag) {
-	                alert(strName + "<spring:message code='ezAddress.t1101' />");
-	
-	                return;
-	            }
-	
-	            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	            pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
-	            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	            pparsingXML = pparsingXML + "<DATA3></DATA3>";
-	            pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
-	            pparsingXML = pparsingXML + "<DATA5>" + "email" + "</DATA5>";
-	            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
-	            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	            Resultxml = loadXMLString(pparsingXML2);
-	
-	            var MaxID = 0;
-	            var InitTr = listview.GetDataRows();
-	
-	            for (var j = 0  ; j < InitTr.length  ; j++) {
-	                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                if (MaxID < curnum)
-	                    MaxID = curnum;
-	            }
-	
-	            var objTr = listview.AddRow(0);
-	            var trid = listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1);
-	            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	            listview.AddDataRow(objTr, Resultxml);
-	            document.getElementById(trid).style.whiteSpace = "nowrap";
-	            document.getElementById("emailname").value = "";
-	            document.getElementById("emailaddr").value = "";
-	        }
+                alert("<spring:message code='ezAddress.t350' />");
+                return;
+	        } 
+	        
+            var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
+            if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
+                alert("<spring:message code='ezAddress.t1100' />");
+                return;
+            }
+            
+            if (!check_length(document.getElementById("emailaddr").value, 100, "<spring:message code='ezAddress.t224' />")) return;
+
+            var pparsingXML = "";
+            var pparsingXML2 = "";
+            var strName = "";
+            var strEmail = "";
+            var listid = "MsgToList";
+
+            var listview = new ListView();
+            listview.LoadFromID(listid);
+            strName = document.getElementById("emailname").value;
+            strEmail = document.getElementById("emailaddr").value;
+
+            var bFlag = listview.ExistRow("DATA2", strEmail);
+            if (bFlag) {
+                alert(strName + "<spring:message code='ezAddress.t1101' />");
+
+                return;
+            }
+
+            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+            pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
+            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+            pparsingXML = pparsingXML + "<DATA3></DATA3>";
+            pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
+            pparsingXML = pparsingXML + "<DATA5>" + "email" + "</DATA5>";
+            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
+            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+            Resultxml = loadXMLString(pparsingXML2);
+
+            var MaxID = 0;
+            var InitTr = listview.GetDataRows();
+
+            for (var j = 0  ; j < InitTr.length  ; j++) {
+                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+                if (MaxID < curnum)
+                    MaxID = curnum;
+            }
+
+            var objTr = listview.AddRow(0);
+            var trid = listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1);
+            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+            listview.AddDataRow(objTr, Resultxml);
+            document.getElementById(trid).style.whiteSpace = "nowrap";
+            document.getElementById("emailname").value = "";
+            document.getElementById("emailaddr").value = "";
+		}
 	
 	        function SelectReceiverWindow(selectedWindow) {
 	            selectedWindow.normalColor = m_titleSelectedColor;
@@ -1822,7 +1822,7 @@
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
 	                                <td>
-	                                    <input type="text" id="emailname" style="WIDTH: 98%">
+	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="24">
 	                                </td>
 	                            </tr>
 	                            <tr>
