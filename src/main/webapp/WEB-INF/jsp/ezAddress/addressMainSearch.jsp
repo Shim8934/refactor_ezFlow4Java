@@ -73,7 +73,10 @@
 	            document.getElementById("search_text").value = "";
 	        }
 	        function search_start() {
-	            if (document.getElementById("search_text").value == "") {
+	        	
+	        	var searchText = document.getElementById("search_text").value.trim();
+	        	
+	            if (searchText == "") {
 	                alert("<spring:message code='ezAddress.t310' />");
 	                document.getElementById("search_text").focus();
 	                return;
@@ -108,7 +111,6 @@
 	            }
 	
 	            var subtype = document.getElementById("search_case").value;
-	            var searchText = document.getElementById("search_text").value;
 	            filter = subtype + "," + searchText;
 	            pCurrentPage = "1";
 	            Get_SearchAddressList();
@@ -170,8 +172,6 @@
 	                var pTop = (pheight - conHeight) / 2;
 	                var pLeft = (pwidth - 890) / 2;
 	
-	
-	
 	                if (CrossYN() || pNoneActiveX == "YES")
 	                    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
 	                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -183,10 +183,9 @@
 	                        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
 	                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                }
-	
-	
 	            }
 	        }
+	        
 	        function isValidEmail(email_address) {
 	            var format = /^[_0-9a-zA-Z-]+(\.[_0-9a-zA-Z-]+)*@[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*$/;
 	            if (email_address.search(format) != -1) {
