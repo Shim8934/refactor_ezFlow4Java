@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -675,7 +676,8 @@ public class EzPollController extends EgovFileMngUtil {
 		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String folderPath = request.getParameter("folderPath");
 		String fileName = request.getParameter("filename");
-		File file = null;
+		File file = null;		
+		logger.debug("FileName: " + fileName + ", folderPath: " + folderPath);
 		
 		if (folderPath == null || fileName == null || folderPath.equals("") || fileName.equals("")) {
 			logger.debug("downloadAttach illegal arguments!");
@@ -719,22 +721,19 @@ public class EzPollController extends EgovFileMngUtil {
 	        }	        
 	        logger.debug("MIME type: " + mimeType);	 
 	        	
-	        fileName = URLEncoder.encode(fileName, "UTF-8");
-	        fileName = fileName.replace("+", " ");	        
-	        String browserType = request.getHeader("User-Agent");
+	        fileName = URLEncoder.encode(fileName, "UTF-8")
+	        		 .replaceAll("\\+", "%20")
+	                 .replaceAll("\\%21", "!")
+	                 .replaceAll("\\%27", "'")
+	                 .replaceAll("\\%28", "(")
+	                 .replaceAll("\\%29", ")")
+	                 .replaceAll("\\%7E", "~");
 	        
 	        //Set content attributes and header for the response
 	        response.setContentType(mimeType);
 	        response.setContentLength((int) file.length());
-	        response.setCharacterEncoding("UTF-8");       	    	        
-	                             
-	        if (browserType.contains("Firefox")) {	
-	        	fileName = fileName.replace(" ", "%20");	
-	            response.setHeader("Content-Disposition","attachment; filename*=UTF-8''" + fileName );
-	        }  
-	        else {
-	        	response.setHeader("Content-Disposition","attachment; filename=" + "'" + fileName + "'");
-	        }
+	        response.setCharacterEncoding("UTF-8");      	    	        
+	        response.setHeader("Content-Disposition","attachment; filename*=UTF-8''" + fileName );
 
 	        //Get output stream of the response
 	        outStream = response.getOutputStream();
@@ -981,8 +980,8 @@ public class EzPollController extends EgovFileMngUtil {
 			pollCmtVO.setFilePath("");			
 		}
 		else if (fileType.equals("file")) {
-			pollCmtVO.setImageAttach("");			
-			if (fileName.equals("")){				
+			pollCmtVO.setImageAttach("");				
+			if (fileName.equals("")) {				
 				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
 				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName("");
@@ -1159,8 +1158,8 @@ public class EzPollController extends EgovFileMngUtil {
             pFileName = _pFileName;           
         }       
         
-        pFileName = pFileName.replace("+", "%2b");
-        pFileName = pFileName.replace(";", "%3b");       
+/*        pFileName = pFileName.replace("+", "%2b");
+        pFileName = pFileName.replace(";", "%3b"); */      
         
         String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1);
         
@@ -1231,10 +1230,10 @@ public class EzPollController extends EgovFileMngUtil {
             }
         }
 
-        for (int i = 0; i < cnt; i++) {
+/*        for (int i = 0; i < cnt; i++) {
             pFileName[i] = pFileName[i].replace("+", "%2b");
             pFileName[i] = pFileName[i].replace(";", "%3b");
-        }           
+        }    */       
         
         String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
         pDirPath = realPath + pDirPath;
@@ -1269,7 +1268,7 @@ public class EzPollController extends EgovFileMngUtil {
 				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
             }
         }
-        strXML.append("</NODES></ROOT>");
+        strXML.append("</NODES></ROOT>");        
        
         logger.debug("Upload file finishes!");        
         return strXML.toString();

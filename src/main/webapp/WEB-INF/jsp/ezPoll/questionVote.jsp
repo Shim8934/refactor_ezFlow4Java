@@ -516,7 +516,9 @@
 		        }
 		    }
 		    
-		    function DownloadAttach(downloadUrl) {
+		    function DownloadAttach(downloadPath, fileName) {	
+		    	var downloadUrl = "/ezPoll/downloadAttach.do?folderPath=" + encodeURIComponent(downloadPath) + "&filename=" + encodeURIComponent(fileName);
+		    	console.log("Download URL: " + downloadUrl);
 		        AttachDownFrame.location.href = downloadUrl;
 		    }
 		    
@@ -963,7 +965,7 @@
 						    	imgForinnerDiv1.setAttribute("_type", "file");
 						    	imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 						    	imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo")); 
-						    	imgForinnerDiv1.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+						    	imgForinnerDiv1.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 						    	imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 						    	innerDiv1.appendChild(imgForinnerDiv1);
 						    	
@@ -971,12 +973,13 @@
 					    		innerDiv2.innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
 					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
-					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		
 					    		innerDiv1.appendChild(innerDiv2);
 					    		div2Cmt.appendChild(innerDiv1);
-					    		fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+					    		//fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+					    		fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");					    		
 					    		fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 			    			}
 					    	
@@ -1016,7 +1019,7 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "file");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
-			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 			    				
@@ -1024,7 +1027,7 @@
 			    					div2Cmt.firstElementChild.children[1].innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;
 			    					div2Cmt.firstElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
 			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo")); 
-			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+			    					div2Cmt.firstElementChild.children[1].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 			    					div2Cmt.firstElementChild.children[1].onclick = function () { downloadFileInCmt(this); };
 			    				}
 			    				else {
@@ -1032,12 +1035,13 @@
 						    		innerDiv2.innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;					    		
 						    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
 						    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
-						    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+						    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 						    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 						    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 			    				}
 			    				
-			    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+			    				//fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+			    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");	
 			    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 			    			}
 		    				
@@ -1078,7 +1082,7 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "file");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo")); 
-		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 		    				
@@ -1086,7 +1090,7 @@
 		    					div2Cmt.lastElementChild.children[1].innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;
 		    					div2Cmt.lastElementChild.children[1].setAttribute("style", "cursor: pointer; padding-left: 15px;");
 		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));   
-		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+		    					div2Cmt.lastElementChild.children[1].setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 		    					div2Cmt.lastElementChild.children[1].onclick = function () { downloadFileInCmt(this); };
 		    				}
 		    				else {
@@ -1094,12 +1098,13 @@
 					    		innerDiv2.innerHTML = document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML;					    		
 					    		innerDiv2.setAttribute("style", "cursor: pointer; padding-left: 15px;");
 					    		innerDiv2.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
-					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		div2Cmt.lastElementChild.appendChild(innerDiv2);
 		    				}
 		    				
-		    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+		    				//fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+		    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");	
 		    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 		    			}
 		    			
@@ -1280,7 +1285,7 @@
 			    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 			    		innerDiv1.appendChild(innerDiv2);
 			    		
-			    		fd.append("fileName", innerDiv2.innerHTML);
+			    		fd.append("fileName", fileinfo.split("/")[1]);
 			    		fd.append("filePath", fileinfo.split("/")[0]);
 			    	}	
 			    	fd.append("cmtAttach", imgForinnerDiv1.src);
@@ -1385,7 +1390,7 @@
 		    	if (strXML == "ERROR") {    	
 		            alert("Upload Failed!");
 		            return;
-		        }     
+		        }		    	
 		    	
 		        var xml = loadXMLString(strXML); 	        	        
 		    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		
@@ -1421,6 +1426,7 @@
 							var nameDiv = document.createElement("div");
 							nameDiv.innerHTML = orgFileName;
 							nameDiv.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							nameDiv.setAttribute("_orgName", orgFileName);
 							nameDiv.setAttribute("style", "padding-left: 6px;");
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
@@ -1436,6 +1442,7 @@
 							var nameDiv = document.createElement("div");
 							nameDiv.innerHTML = orgFileName;	
 							nameDiv.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							nameDiv.setAttribute("_orgName", orgFileName);
 							nameDiv.setAttribute("style", "padding-left: 6px;");
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
@@ -1450,6 +1457,7 @@
 							imagePreview.setAttribute("_type", "file"); 
 							imagePreview.parentElement.lastElementChild.innerHTML = orgFileName;
 							imagePreview.parentElement.lastElementChild.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							imagePreview.parentElement.lastElementChild.setAttribute("_orgName", orgFileName);
 							imagePreview.parentElement.lastElementChild.setAttribute("style", "padding-left: 6px;");
 						}	
 						else {
@@ -1999,8 +2007,8 @@
 		    		filePath = filePath.substring(pos, filePath.length);
 		    	}	
 		    	
-		    	var param = "/ezPoll/downloadAttach.do?folderPath=" + filePath +  "&filename=" + fileName;
-		    	DownloadAttach(param);
+		    	//var param1 = "/ezPoll/downloadAttach.do?folderPath=" + filePath +  "&filename=" + fileName;
+		    	DownloadAttach(filePath, fileName);
 		    }
 		    
 		    function randString(x) {
@@ -2072,10 +2080,10 @@
 							<table class="content" style="width: 100%;">
 								<tr>
 									<td>
-										<span onclick="DownloadAttach('/ezPoll/downloadAttach.do?folderPath=${filePaths[status.index]}&filename=${list}');" style="cursor:pointer;" _filehref="/ezPoll/downloadAttach.do?folderPath=${filePaths[status.index]}&filename=${list}" name="file_path">
+										<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">
 											<img src="/images/icon_adddownload.gif" width="16" height="16" style="padding-left: 5px;">											
 										</span>
-										<span onclick="DownloadAttach('/ezPoll/downloadAttach.do?folderPath=${filePaths[status.index]}&filename=${list}');" style="cursor:pointer;">	
+										<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">	
 											<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);">${list} (${fileSizes[status.index]})</span>								
 										</span>									
 									</td>
