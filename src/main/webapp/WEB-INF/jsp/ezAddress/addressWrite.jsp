@@ -202,9 +202,10 @@
 		        if (!check_length(document.getElementById("TextDept").value, 50, "<spring:message code='ezAddress.t54' />")) return;
 		        if (!check_length(document.getElementById("TextTitle").value, 50, "<spring:message code='ezAddress.t359' />")) return;
 		        if (!check_length(document.getElementById("TextEmail").value, 100, "<spring:message code='ezAddress.t224' />")) return;
-		        if (!check_length(document.getElementById("TextHomePage").value, 250, "<spring:message code='ezAddress.t293' />")) return;
-		        if (!check_length(document.getElementById("TextComAddr").value, 250, "<spring:message code='ezAddress.t295' />")) return;
-		        if (!check_length(document.getElementById("TextHomeAddr").value, 250, "<spring:message code='ezAddress.t296' />")) return;
+		        if (!check_length(document.getElementById("TextHomePage").value, 200, "<spring:message code='ezAddress.t293' />")) return;
+		        if (!check_length(document.getElementById("TextComAddr").value, 200, "<spring:message code='ezAddress.t295' />")) return;
+		        if (!check_length(document.getElementById("TextHomeAddr").value, 200, "<spring:message code='ezAddress.t296' />")) return;
+		        if (!check_length(document.getElementById("TextMemo").value, 20000, "<spring:message code='ezAddress.t91' />")) return;
 		        
 		        if ((document.getElementById("TextEmail").value != "" && addressid == "") ||
 					     (document.getElementById("TextEmail").value != "" && addressid != "" && document.getElementById("TextEmail").value != textEmail)) {
