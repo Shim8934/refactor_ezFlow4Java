@@ -980,7 +980,8 @@ public class EzPollController extends EgovFileMngUtil {
 			pollCmtVO.setFilePath("");			
 		}
 		else if (fileType.equals("file")) {
-			pollCmtVO.setImageAttach("");				
+			pollCmtVO.setImageAttach("");	
+			
 			if (fileName.equals("")) {				
 				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
 				pollCmtVO.setFileAttach(attachFilePath);
@@ -1593,8 +1594,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 	@MessageMapping("/finish")
 	public void finishVote(JSONObject message) throws org.json.simple.parser.ParseException {
-		logger.debug("Finish vote is running!");	
-		logger.debug("Message is: " + message);		
+		logger.debug("Finish vote is running!");		
 		int qstId = Integer.parseInt((String) message.get("question"));
 		int tenantId = Integer.parseInt((String)message.get("tenant"));	
 		

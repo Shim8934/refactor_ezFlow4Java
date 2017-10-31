@@ -978,7 +978,7 @@
 					    		
 					    		innerDiv1.appendChild(innerDiv2);
 					    		div2Cmt.appendChild(innerDiv1);
-					    		//fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
+					    		
 					    		fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");					    		
 					    		fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 			    			}
@@ -1038,9 +1038,8 @@
 						    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 						    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 						    		div2Cmt.lastElementChild.appendChild(innerDiv2);
-			    				}
+			    				}			    				
 			    				
-			    				//fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 			    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");	
 			    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 			    			}
@@ -1101,9 +1100,8 @@
 					    		innerDiv2.setAttribute("_fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");
 					    		innerDiv2.onclick = function () { downloadFileInCmt(this); };
 					    		div2Cmt.lastElementChild.appendChild(innerDiv2);
-		    				}
+		    				}		    				
 		    				
-		    				//fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.innerHTML);
 		    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");	
 		    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
 		    			}
