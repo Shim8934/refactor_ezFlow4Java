@@ -208,14 +208,20 @@
 			var g_progresswin;
 			function btn_AttachAdd_onclick() 
 			{
-			    if (document.form.file1.value != "") {        
-			        document.getElementById("btn_AttachDel").disabled = false;
-			        document.getElementById("attachsn").value = pAttachSN;            
-			        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
-			        var frm = document.getElementById('form');
-			        frm.submit();
-			        
-			        document.form.file1.value = "";
+			    if (document.form.file1.value != "") {
+					if (document.form.file1.files[0].name.length > 104) {
+						alert("<spring:message code='main.jjh08' />");
+						document.form.file1.value = "";
+						return;
+					} else {
+				        document.getElementById("btn_AttachDel").disabled = false;
+				        document.getElementById("attachsn").value = pAttachSN;            
+				        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
+				        var frm = document.getElementById('form');
+				        frm.submit();
+				        
+				        document.form.file1.value = "";
+					}
 			    } else {
 			    	return;
 // 			        alert("<spring:message code='ezApprovalG.pjj01'/>");
@@ -647,9 +653,11 @@
 		<h1><spring:message code='ezApprovalG.t264'/></h1>
 		<table>
 		  <tr>
-		    <td style="text-align:center;"><div class="listview" style="width:515px;">
-		        <div id="ATTACH" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
-		      </div></td>
+		    <td style="text-align:center;">
+		    	<div class="listview" style="width:515px;">
+		        	<div id="ATTACH" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
+		      	</div>
+		    </td>
 		    <th style="display:none;width:75px;text-align:center;">
 		      <input id="btn_AttachEdit" type="button" name="btn_AttachEdit" onClick="return btn_AttachEdit_onclick()" value="<spring:message code='ezApprovalG.t269'/>" class="imginput" style="margin-top:3px;display:none;" /><br />
 		      <span id="BtnBodyAttach" style="display:none">

@@ -40,3 +40,6 @@ var strLang82 = "総 "
 var strLang83 = "件"
 var strLang535 = "データが存在しません。";
 var strLang5351 = "人";
+
+/* 2017-11-01 장진혁 */
+var strLang84 = "파일명은 100자를 넘을 수 없습니다.";

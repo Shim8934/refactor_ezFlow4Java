@@ -10,9 +10,14 @@ function btn_AttachAdd_onclick() {
     if( document.getElementById("cnt").value > 0) {
     	var formData = new FormData();
        	
-       	$.each($('#file1')[0].files, function(i, file) {          
-       		formData.append('file-' + i, file);
-        });
+       	$.each($('#file1')[0].files, function(i, file) {
+       		if (file.name.length > 104) {
+       			alert(strLang84);
+       			return;
+       		} else {
+       			formData.append('file-' + i, file);
+       		}
+       	});
        	
        	formData.append('mode',  document.getElementById('mode').value);
        	formData.append("boardID", document.getElementById("boardID").value);
