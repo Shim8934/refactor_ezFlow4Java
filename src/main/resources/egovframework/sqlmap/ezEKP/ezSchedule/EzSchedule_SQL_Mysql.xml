@@ -875,7 +875,6 @@
 			</isNotEmpty>	
 			<![CDATA[	
 				title = #v_TITLE#,
-				scheduletype = #v_SCHEDULETYPE#,
 				location = ifnull(#v_LOCATION#, '')
 	   		where  
 	   			(scheduleid = #v_SCHEDULEID# or parentid = #v_SCHEDULEID#)	   		
