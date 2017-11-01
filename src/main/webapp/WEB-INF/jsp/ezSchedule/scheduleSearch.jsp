@@ -208,8 +208,8 @@
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
 		      			<input type="checkbox" value="1" id="usedate" /><spring:message code='ezSchedule.t350'/>
-		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" /> ~
-		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" />
+		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
+		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		          		<div style="margin-top:9px">&nbsp;(<spring:message code='ezSchedule.t351'/></div> 
 		          		<!-- <tr style="DISPLAY:none"> 
 		            		<td colspan="2">
