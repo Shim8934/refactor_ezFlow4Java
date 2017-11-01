@@ -279,10 +279,6 @@ public class EzAddressController{
 			
 			int start = pListPageSize * (pCurrentPage - 1);
 			
-			if (start < 1) {
-				start = 1;
-			}
-			
 			int pFolderMaxCount = ezAddressService.getAddressCount(userInfo.getTenantId(), pFolderID, pOwnerID, pFilter);
 			
 			List<AddressVO> addressList = ezAddressService.getAddressList(userInfo.getTenantId(), pFolderID, pOwnerID, pOrderOption, pFilter, pListPageSize, start);
@@ -1457,12 +1453,7 @@ public class EzAddressController{
 			int pListPageSize = Integer.parseInt(strListPageSize);
 			int pCurrentPage = Integer.parseInt(strCurrentPage);
 			
-			if (pCurrentPage < 1) {
-				pCurrentPage = 1;
-			}
-			
 			int start = pListPageSize * (pCurrentPage - 1);
-			
 			//TODO: pFilter가 항상 a,b 형식인지 확인하기
 			logger.debug("pFilter=" + pFilter);
 			

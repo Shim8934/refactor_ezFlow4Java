@@ -161,11 +161,17 @@
     var g_progresswin;
     function btn_AttachAdd_onclick() {
         if (document.form.file1.value != "") {
-            document.getElementById("btn_AttachDel").disabled = false;
-            document.getElementById("attachsn").value = pAttachSN;
-            document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024;
-            var frm = document.getElementById('form');
-            frm.submit();
+        	if (document.form.file1.files[0].name.length > 104) {
+				alert("<spring:message code='main.jjh08' />");
+				document.form.file1.value = "";
+				return;
+			} else {
+	            document.getElementById("btn_AttachDel").disabled = false;
+	            document.getElementById("attachsn").value = pAttachSN;
+	            document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024;
+	            var frm = document.getElementById('form');
+	            frm.submit();
+			}
         }
         else {
             alert("<spring:message code='ezApprovalG.pjj01'/>");

@@ -517,7 +517,10 @@
 	        	$("#addpopup").modal();
 	        }	
 	        function search_start() {
-	            if (document.getElementById("search_text").value == "") {
+	        	
+	        	var searchText = document.getElementById("search_text").value.trim();
+	        	
+	            if (searchText == "") {
 	                alert("<spring:message code='ezAddress.t310' />");
 	                document.getElementById("search_text").focus();
 	                return;
@@ -552,7 +555,6 @@
 	            }	
 	
 	            var subtype = document.getElementById("search_case").value;
-	            var searchText = document.getElementById("search_text").value;
 	            filter = subtype + "," + searchText;
 	            pCurrentPage = "1";
 	            searchFlag = true;

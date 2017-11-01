@@ -486,7 +486,7 @@ function td_Create1(strtext) {
     document.getElementById("tblPageRayer").innerHTML = strtext;
 }
 function makePageSelPage() {
-    var strtext;
+	var strtext;
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     strtext = "<div class=\"pagenavi\">";
@@ -526,13 +526,18 @@ function makePageSelPage() {
         MaxNum = totalPage;
     }
     for (i = startNum; i <= MaxNum; i++) {
-        if (i == pageNum) {
+        if (i == pageNum){
             PagingHTML += "<span class=\"on\">" + i + "</span>";
         }
         else {
             PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
         }
     }
+    
+    if (pTotalCnt == 0 ){
+    	PagingHTML += "<span class=\"on\">" + i + "</span>";
+    }
+    	
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
             PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" width=\"16\" height=\"16\"></span>";
