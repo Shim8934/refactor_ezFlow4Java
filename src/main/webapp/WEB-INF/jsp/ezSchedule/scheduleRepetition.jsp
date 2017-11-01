@@ -206,6 +206,13 @@
 		    	}
 		    	else
 		    	{
+		    		
+		    	    if(!check_time())
+		    	    {
+		    	        alert("<spring:message code='ezSchedule.t60' />");
+		    	        return;
+		    	    }
+		    	    
 		    		repetition = "0";				
 		    	}
 		    	
@@ -814,6 +821,47 @@
 		            showMonthAfterYear: true
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    }
+		    
+		    //2017-11-01 #9736  일정반복설정시, 시작일과 종료일을 반대로 지정해도 경고없이 등록되는 현상 
+		    function check_time() {
+		        var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+		        var startYear = startDate.split("-")[0];
+		        var startMonth = startDate.split("-")[1];
+		        var startDay = startDate.split("-")[2];
+		        var endYear = endDate.split("-")[0];
+		        var endMonth = endDate.split("-")[1];
+		        var endDay = endDate.split("-")[2];
+		        var stime = $('#Stimepicker').val()
+
+		        var shour, sminute;
+		        var ehour, eminute;
+
+		        shour = stime.split(":")[0];
+		        sminute = stime.split(":")[1];
+
+		        var etime = $('#Etimepicker').val()
+
+		        ehour = etime.split(":")[0];
+		        eminute = etime.split(":")[1];
+
+		        if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
+		            return false;
+		        }
+		        else if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) == parseInt(endDay))) {
+		            if (document.getElementById("alldaycheck").checked == false) {
+		                if (shour > ehour || (shour == ehour && sminute >= eminute)) {
+		                    return false;
+		                }
+		                else
+		                    return true;
+		            }
+		            return true;
+		        }
+		        
+		        return true;
 		    }
 		</script>
 	</head>
