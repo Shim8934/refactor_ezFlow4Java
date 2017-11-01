@@ -630,8 +630,9 @@ function preWeek() {
 
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
-    if (DayItem)
+    if (DayItem && DayItem.parentElement.className !== " gray") {
         DayItem.onclick();
+    }
     else {
         preWeekMonth();
         var DayItem = document.getElementById(itemID);
@@ -643,14 +644,15 @@ function preWeek() {
 }
 
 function nextWeek() {
-
-    sDate.setDate(sDate.getDate() + 7);
+    sDate.setDate(sDate.getDate() + 7);    
 
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
-    if (DayItem)
-        DayItem.onclick();
-    else {
+    
+    if (DayItem && DayItem.parentElement.className !== " gray") {    	
+        DayItem.onclick();        
+    }
+    else {    	
         nextWeekMonth();
 
         var DayItem = document.getElementById(itemID);
@@ -667,8 +669,9 @@ function preDay() {
 
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
-    if (DayItem)
+    if (DayItem && DayItem.parentElement.className !== " gray") {
         DayItem.onclick();
+    }
     else {
         preWeekMonth();
         var DayItem = document.getElementById(itemID);
@@ -685,8 +688,9 @@ function nextDay() {
 
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
-    if (DayItem)
+    if (DayItem && DayItem.parentElement.className !== " gray") {
         DayItem.onclick();
+    }
     else {
         nextWeekMonth();
 
