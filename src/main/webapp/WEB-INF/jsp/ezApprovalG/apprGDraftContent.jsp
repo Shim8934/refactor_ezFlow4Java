@@ -145,9 +145,12 @@
 	        }
 	        function SelectOnchange(obj) {
 	            for (var i = 0; i < obj.options.length; i++) {
-	                obj.childNodes.item(i).setAttribute("selected", "");
+	            	if (i == obj.selectedIndex) {
+	            		obj.childNodes.item(i).setAttribute("selected", "selected");
+	            	} else {
+	            		obj.childNodes.item(i).removeAttribute("selected");
+	            	}
 	            }
-	            obj.childNodes.item(obj.selectedIndex).setAttribute("selected", "selected");
 	        }
 	        function CheckBoxOnclick(obj) {
 	            obj.removeAttribute("checked");
