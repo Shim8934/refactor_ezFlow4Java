@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
+
 
 
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -391,6 +393,13 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
     	
 		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
+		orgFileName = URLEncoder.encode(orgFileName, "UTF-8")
+       		 		.replaceAll("\\+", "%20")
+       		 		.replaceAll("\\%21", "!")
+       		 		.replaceAll("\\%27", "'")
+       		 		.replaceAll("\\%28", "(")
+       		 		.replaceAll("\\%29", ")")
+       		 		.replaceAll("\\%7E", "~");
 		
 		File file = new File(downFileName);
 		//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
@@ -417,7 +426,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 //	    	    response.setBufferSize(fSize);
 	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");
+				//response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");				
+				response.setHeader("Content-Disposition","attachment; filename*=UTF-8''" + orgFileName);
 //				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
 				response.setContentLength(fSize);
 //				response.setHeader("Content-Transfer-Encoding","binary");
