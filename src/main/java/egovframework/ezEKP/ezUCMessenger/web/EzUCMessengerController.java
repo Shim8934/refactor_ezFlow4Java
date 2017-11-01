@@ -54,8 +54,9 @@ public class EzUCMessengerController {
 			
 			String orgId = id.split(":")[0];
 			String orgPw = id.split(":")[1];
+			String timestamp = id.split(":")[2];
 			
-			logger.debug("orgId=" + orgId);
+			logger.debug("orgId=" + orgId + ",timestamp=" + timestamp);
 			
 			String serverName = request.getServerName();
 	        int serverPort = request.getServerPort();
@@ -91,32 +92,40 @@ public class EzUCMessengerController {
 	@RequestMapping("/ezUCMessenger/sso.do")
 	public String sso(
 					@RequestParam String id,
-					@RequestParam String type,
+					@RequestParam(required = false) String type,
 					HttpServletRequest request,
 					HttpServletResponse response
 					) throws Exception {
 		logger.debug("sso started.");
+		System.out.println(id);
+		id = ezUCMessengerUtil.decryptAES(id);
 		
-		String orgId = ezUCMessengerUtil.decryptAES(id);
-		
-		logger.debug("orgId=" + orgId + ",type=" + type);
+		String orgId = id.split(":")[0];
+		String orgPw = id.split(":")[1];
+		String timestamp = id.split(":")[2];
+		logger.debug("orgId=" + orgId + ",timestamp=" + timestamp + ",type=" + type);
 		
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
         int tenantId = loginService.getTenantId(serverName);
         logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 		
-		boolean isUserExists = checkIfUserExists(orgId, null, tenantId);
+		boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
 		logger.debug("isUserExists=" + isUserExists);
 		
 		String redirectUrl = "redirect:/user/login/login.do";
 		if (isUserExists) {
-			loginController.createLoginCookie(orgId, " ", " ", tenantId, request, response);
+			String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
+			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response);
 			
-			if (type.equals("1")) { //메일 화면으로 이동
+			if (type == null) { // 홈 화면으로 이동
+				redirectUrl = "redirect:/ezPortal/portalMain.do";
+			} else if (type.equals("1")) { //메일 화면으로 이동
 				redirectUrl = "redirect:/ezPortal/portalMain.do?mode=mail";
 			} else if (type.equals("2")) { //전자결재 화면으로 이동
 				redirectUrl = "redirect:/ezPortal/portalMain.do?mode=approval";
+			} else {
+				redirectUrl = "redirect:/ezPortal/portalMain.do";
 			}
 		}
 		
@@ -128,28 +137,22 @@ public class EzUCMessengerController {
 		logger.debug("checkIfUserExists started. id=" + id + ",tenantId=" + tenantId);
 		
 		boolean isUserExists = false;
+		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
 		
 		LoginVO loginVO = new LoginVO();	
 		
 		loginVO.setId(id);
 		loginVO.setTenantId(tenantId);
-		
-		if (pw == null) {
-			loginVO.setDn("NOPASSWORD");
-		} else {
-			String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
-			loginVO.setPassword(encryptedPw);
-		}
+		loginVO.setPassword(encryptedPw);
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		logger.debug("resultVO=" + resultVO);
 		
 		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
 			isUserExists = true;
-		} 
+		}
 		
 		logger.debug("checkIfUserExists ended.");
-		
 		return isUserExists;
 	}	
     

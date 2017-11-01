@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezUCMessenger.util;
 
 import java.util.Base64;
+import java.util.Calendar;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -25,6 +26,30 @@ public class EzUCMessengerUtil {
 	private static final String apb = "S0LKK1EAY021BOH1LNY3U8O3E7MI00I0";
     private static final String iv = "S2H1S4GU5S7E7H3D";
 
+    /**
+	 * id, pw 조합하여 암호화된 문자열 리턴.
+	 * 
+	 * @param id
+	 * @param pw
+	 * @return 암호화된 문자열, exception 발생 시 null 리턴
+	 */
+	public String encryptId(String id, String pw) {
+		String result = null;
+		
+		try {
+			Calendar cal = Calendar.getInstance();
+			String timeStamp = cal.getTimeInMillis() + "";
+			
+			result = id + ":" + pw + ":" + timeStamp;
+			result = encryptAES(result);
+		} catch (Exception e) {
+			result = null;
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+    
 	public String encryptAES(String s) throws Exception {               	
         SecretKeySpec skeySpec = new SecretKeySpec(apb.getBytes("UTF-8"), "AES");            
 
@@ -34,7 +59,7 @@ public class EzUCMessengerUtil {
         byte[] encryptedData = cipher.doFinal(s.getBytes("UTF-8"));
         
         return Base64.getEncoder().encodeToString(encryptedData);
-    }     
+    }
 
 	public String decryptAES(String s) throws Exception {               	
         SecretKeySpec skeySpec = new SecretKeySpec(apb.getBytes("UTF-8"), "AES");            
@@ -46,6 +71,6 @@ public class EzUCMessengerUtil {
         byte[] decryptedData = cipher.doFinal(byteData);
                                 
         return new String(decryptedData, "UTF-8");
-    }  
+    }
 	
 }
