@@ -949,7 +949,7 @@
 		    		return;
 		    	}
 		        
-		        if (keyword.value == "") {
+		        if (keyword.value.trim() == "") {
 		            alert("<spring:message code='ezSchedule.t8' />");
 		            keyword.focus();
 		            return;

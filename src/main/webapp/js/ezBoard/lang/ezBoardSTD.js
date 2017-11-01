@@ -53,6 +53,3 @@ var strLang176 = "삭제 권한이 없습니다.";
 var strLang177 = "게시물을 선택해 주세요.";
 var strLang178 = "읽음 표시 하시겠습니까?";
 var strLang179 = "를(을) 선택하세요.";
-
-
-

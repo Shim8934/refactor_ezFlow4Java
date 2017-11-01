@@ -148,6 +148,8 @@
 			var singImageType = "${signImageType}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var totalMemSN = "0";
 			
 		    window.onload = function ()
 		    {
@@ -799,8 +801,25 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
+		        
+		        if (addLastKyulJeYN != "0") {
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+                		data : {
+                				docID     : pDocID,
+                				flag      : "draft"
+                				},
+                		success : function(result){
+                			totalMemSN = result;
+                		}
+                	});
+		        }
+		        
 		        pOrgHtml = message.Get_EditorBodyHTML();
-		        if (LastSignSN == 1 || DraftLastFlag) {
+		        if ((LastSignSN == 1 && totalMemSN == 0) || DraftLastFlag) {
 		            var rtnVal;
 		            rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
 		            if (!rtnVal) {
@@ -811,7 +830,7 @@
 		        }
 		        
 		        var rtnval;
-		        if (LastSignSN == 1 || DraftLastFlag)
+		        if ((LastSignSN == 1 && totalMemSN == 0)|| DraftLastFlag)
 		            rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
 		        else
 		            rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);

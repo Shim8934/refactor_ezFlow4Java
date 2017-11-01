@@ -1342,6 +1342,9 @@ function getCurApproverAprLine(type) {
 
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     LastKyulSN = getLastSignSN(objNodes);
+    
+    //최종 결재에 개인 합의 추가 하기 위해 결재선에 표시된 전체 개수
+    LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
 
     for (var i = 0; i < objNodes.length; i++) {
@@ -2583,38 +2586,65 @@ function getLastSignSN(pNodes) {
         var dataNodes = GetLastChildNodes(pNodes[i], params);
 
         var pCurrentAprType = getNodeText(dataNodes[11]);
-        if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3) {
-            if (pCurrentAprType == strAprType4) junkyulflag = true;
+        
+        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 ) {
+                if (pCurrentAprType == strAprType4) junkyulflag = true;
 
-            switch (pCurrentAprType) {
-                case strAprType1:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                switch (pCurrentAprType) {
+                    case strAprType1:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType18:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType18:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType19:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType19:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType4:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType4:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType16:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType16:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType3:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType3:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
+                }
             }
         }
-    }
-    return lastaprlineSN
+        
+    return lastaprlineSN;
 }
+
+function getLastTotalSignSN(pNodes) {
+    var i;
+    var aprlineSN;
+    var junkyulflag = false;
+
+    aprlineSN = pNodes.length;
+    lastHabYuiSN = 0;
+    
+    
+	var params = new Array();
+    params[0] = "0";
+    
+    //결재선 인덱스가 높은숫자가 sn 1번이라 최종이 0 
+    var dataNodes = GetLastChildNodes(pNodes[0], params);
+
+    var pCurrentAprType = getNodeText(dataNodes[11]);
+    
+    if (pCurrentAprType == "001") {
+    	lastHabYuiSN = 1;
+    }
+
+	 return lastHabYuiSN;
+}
+
 function HabyuiResultOpinion() {
     try {
         var parameter = new Array();

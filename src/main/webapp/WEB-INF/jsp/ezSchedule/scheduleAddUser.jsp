@@ -440,8 +440,7 @@
 	        				<td style="text-align:center">
 	            			<img onClick="dateMove_onClick( '-1' )" style="cursor:pointer; width:13px; height:13px;" src="/images/etc/calendar_prev.gif">
 	            			<span id="currDate"></span>
-	            			<img onClick="dateMove_onClick( '1' )" style="cursor:pointer; width:13px; height:13px;" src="/images/etc/calendar_next.gif"></td>
-							<td style="width:60px"><img <spring:message code='ezSchedule.i1' /> /></td>
+	            			<img onClick="dateMove_onClick( '1' )" style="cursor:pointer; width:13px; height:13px;" src="/images/etc/calendar_next.gif"></td>							
 	   				 	</tr>
 					</table>
 					<table style="margin-bottom:2px; width:663px; border:0px; padding:0px; border-collapse:collapse;border-spacing:0px">
@@ -519,6 +518,9 @@
 	         			</table>
 	       			</div>
 	       		</td>
+	     	</tr>
+	     	<tr>
+	     		<td style="width:60px;text-align:right;"><img <spring:message code='ezSchedule.i1' /> /></td>
 	     	</tr>
 		</table>	
 		<script type="text/javascript">

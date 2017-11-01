@@ -34,8 +34,8 @@
 		        }
 		        if (startdate != "") {
 		            document.getElementById("usedate").checked = true;
-		            document.getElementById('keyword').value = keyword;
-		        }
+		            //document.getElementById('keyword').value = keyword;
+		        }	        
 		    }
 			
 		    $(function () {
@@ -106,7 +106,7 @@
 		    		return;
 		    	}
 		    	
-		        if (document.getElementById("keyword").value == "" && document.getElementById("usedate").checked == false) {
+		        if (document.getElementById("keyword").value.trim() == "" && document.getElementById("usedate").checked == false) {
 		            alert("<spring:message code='ezSchedule.t346'/>");
 		            document.getElementById("keyword").focus();
 		            return;
@@ -200,7 +200,7 @@
 		          			<option value="title"selected><spring:message code='ezSchedule.t272'/></option> 
 		          			<option value="location"><spring:message code='ezSchedule.t273'/></option> 
 		        		</select> 
-		        		<input type="text" id="keyword" size="21" value="${keyword}" onkeypress="return search_keypress(event)" /> 
+		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        	</td> 
 		    	</tr> 
@@ -208,8 +208,8 @@
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
 		      			<input type="checkbox" value="1" id="usedate" /><spring:message code='ezSchedule.t350'/>
-		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" /> ~
-		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" />
+		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
+		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		          		<div style="margin-top:9px">&nbsp;(<spring:message code='ezSchedule.t351'/></div> 
 		          		<!-- <tr style="DISPLAY:none"> 
 		            		<td colspan="2">

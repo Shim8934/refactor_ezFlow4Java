@@ -9,6 +9,8 @@
 		<script type="text/javascript" src="/js/ezEditor/tfxEditor/js/xfe_main.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script  type="text/javascript">
+			var type = "${type}";
+			
 			function SetEditorContent(Data) {
 	            try {
 	                xfe.setHtmlValue(Data);
@@ -162,10 +164,10 @@
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do";
 	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do";
 	    	
-	    	if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
+	    	if (type == "MAILSIGNATURE") {
 	   			uploadFilePath = "/ezEditor/tfxUploadMail.do";
 	   			uploadPasteContentsPath = "/ezEditor/tfxSimpleUploadMail.do";
-	   		} else if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofoffice.do") > -1) {
+	   		} else if (type == "MAILOUTOFOFFICE") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
 	   		}
 	    	
@@ -184,10 +186,8 @@
 	        
 	        xfe.render('xfe');
 	        
-	        if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofoffice.do") > -1) {
-	        	xfe.showToolbarItem(0, 12, false);
-	        	xfe.showToolbarItem(0, 13, false);
-	        	xfe.showToolbarItem(0, 14, false);
+	        if (type == "MAILOUTOFOFFICE") {
+	        	xfe.showToolbarItem(0, 10, false);
 	        }
 	        
 	        window.onload = parent.Editor_Complete;

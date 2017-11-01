@@ -141,6 +141,12 @@
 			var approvalType = "DRAFT";
 			var signImageType = "${signImageType}";
 			
+			//최종 결재 개인합의 추가
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var totalMemSN = "0";
+			var LastTotalKyulSN = "0";
+			var lastHabYuiSN;
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -628,11 +634,28 @@
 		                }
 		            }
 		        }
+		        
+		        if (addLastKyulJeYN != "0") {
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+                		data : {
+                				docID     : pDocID,
+                				flag      : "approvUi"
+                				},
+                		success : function(result){
+                			totalMemSN = result;
+                		}
+                	});
+		        }
+		        
 		        // getDocNumber를 이용한 문서번호 채번
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
-			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
-			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0) || pAprLineType == strAprType4 || totalMemSN > 0) {
+			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {

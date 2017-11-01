@@ -279,6 +279,10 @@ public class EzAddressController{
 			
 			int start = pListPageSize * (pCurrentPage - 1);
 			
+			if (start < 1) {
+				start = 1;
+			}
+			
 			int pFolderMaxCount = ezAddressService.getAddressCount(userInfo.getTenantId(), pFolderID, pOwnerID, pFilter);
 			
 			List<AddressVO> addressList = ezAddressService.getAddressList(userInfo.getTenantId(), pFolderID, pOwnerID, pOrderOption, pFilter, pListPageSize, start);
