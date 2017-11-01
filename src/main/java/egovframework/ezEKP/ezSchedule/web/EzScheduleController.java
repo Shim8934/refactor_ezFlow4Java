@@ -2075,10 +2075,10 @@ public class EzScheduleController extends EgovFileMngUtil {
             }
         }
 
-        for (int i = 0; i < cnt; i++) {
+/*        for (int i = 0; i < cnt; i++) {
             pFileName[i] = pFileName[i].replace("+", "%2b");
             pFileName[i] = pFileName[i].replace(";", "%3b");
-        }
+        }*/
         
         String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
 

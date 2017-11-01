@@ -93,7 +93,7 @@ function save_schedule()
     
 	if (scheduleid == "") check_name();
 	
-	if (document.getElementById("TextTitle").value == "")
+	if (document.getElementById("TextTitle").value.trim() == "")
 	{
 	    alert(strLang9);
 	    Tab1_MouseClick(document.getElementById("1tab1"));

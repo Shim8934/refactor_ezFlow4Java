@@ -297,13 +297,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		//topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
 		
 		String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID, userInfo.getTenantId());
-
-		if (req.getParameter("mode") != null && req.getParameter("mode").equals("new")) {
+		String mode = req.getParameter("mode");
+		
+		if (mode != null && mode.equals("new")) {
 			mainUrl = "/myoffice/main/index_environment2.htm";
-		} else if ("mail".equals(req.getParameter("mode"))) {
-			mainUrl = "/ezEmail/mailMain.do?funCode=1";
-		} else if ("approval".equals(req.getParameter("mode"))) {
-			mainUrl = "/ezApproval/apprMain.do";
+		} else if (mode != null && mode.equals("mail")) {
+			mainUrl = "/ezEmail/mailMain.do";
+		} else if (mode != null && mode.equals("approval")) {
+			mainUrl = "/ezApprovalG/apprGMain.do";
 		} else if (!useStartPageURL.trim().equals("NO")) {
 			mainUrl = useStartPageURL;
 		} else {

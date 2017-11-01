@@ -192,7 +192,16 @@
 		        var fd = new FormData();
 
 		        for (var i = 0; i < file.length; i++) {
-		            fd.append("fileToUpload", file[i]);
+					var fnl = file[i].name.length;
+		        	
+		        	if (fnl > 104) {
+		        		alert("<spring:message code='main.jjh08' />");
+		        		isfileup = false;		        		
+		        		
+		        		return;
+		        	} else {
+		        		fd.append("fileToUpload", file[i]);
+		        	}		            
 		        }
 		        fd.append("boardid", window.parent.pBoardID);
 		        fd.append("maxsize", window.parent.AttachLimit * 1024 * 1024);

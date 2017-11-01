@@ -663,16 +663,18 @@
 		    	/* if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
-		    	} */
+		    	} */		    	
 		    	
-		        if (document.all("groupname").value == "") {
+		        if (document.all("groupname").value.replace(/\s/g, '') == "") {
 		            alert("<spring:message code='ezSchedule.t195' />");
+		            document.all("groupname").value = "";
 		            document.all("groupname").focus();
 		            return;
 		        }
 
-		        if (document.all("description").value == "") {
+		        if (document.all("description").value.replace(/\s/g, '') == "") {
 		            alert("<spring:message code='ezSchedule.t196' />");
+		            document.all("description").value = "";
 		            document.all("description").focus();
 		            return;
 		        }
