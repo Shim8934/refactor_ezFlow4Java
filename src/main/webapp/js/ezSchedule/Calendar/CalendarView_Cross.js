@@ -224,13 +224,13 @@ function CalendarView(pTagetID) {
                 dTd.appendChild(dDiv);
                 dTr.appendChild(dTd);
                 dTable.appendChild(dTr);
-                var dTr = document.createElement("TR")
+                /*var dTr = document.createElement("TR")
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_text";
                 dTd.setAttribute("dispDate", dayText);
                 dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
                 dTr.appendChild(dTd);
-                dTable.appendChild(dTr);
+                dTable.appendChild(dTr);*/
                 oTd.appendChild(dTable);
                 oTr.appendChild(oTd);
                 oTBody.appendChild(oTr);
@@ -880,13 +880,13 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.appendChild(dDiv);
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
-        var dTr = document.createElement("TR")
+/*        var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("dispDate", divID);
         dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
         dTr.appendChild(dTd);
-        dTable.appendChild(dTr);
+        dTable.appendChild(dTr);*/
         tTd.appendChild(dTable);
         calTr.appendChild(tTd);
     }
@@ -909,14 +909,14 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
-        var dTr = document.createElement("TR")
+       /* var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":3_Value");
         dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
         dTr.appendChild(dTd);
-        dTable.appendChild(dTr);
+        dTable.appendChild(dTr);*/
         objTd.appendChild(dTable);
 
     }
@@ -1002,14 +1002,14 @@ function DayData(j) {
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
     s_Tr.appendChild(s_Td);
     sTable.appendChild(s_Tr);
-    var s_Tr = document.createElement("TR");
+/*    var s_Tr = document.createElement("TR");
     var s_Td = document.createElement("TD");
     s_Td.className = "calendar_t_text";
     s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
     s_Tr.appendChild(s_Td);
-    sTable.appendChild(s_Tr);
+    sTable.appendChild(s_Tr);*/
     return sTable;
 }
 
