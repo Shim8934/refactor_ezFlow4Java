@@ -1231,12 +1231,6 @@ function ListView() {
 //ROW 선택 함수
 function tr_select(pRowID, pTableID, callbackFunc) {
 	
-	console.log(pRowID);
-	console.log(pTableID);
-	console.log(callbackFunc);
-	console.log(listEventCheckbox);
-	console.log('tr_select');
-	
     if (!listEventCheckbox) {
         var oList = document.getElementById(pTableID);
         if (!oList)
@@ -1309,7 +1303,7 @@ function tr_unselectedAll(pTableID) {
         return;
 
     if (document.getElementById("HeaderAllCheckBox").checked) {
-    	console.log('allCheck!!!!');
+    	
     }
     else {
 

@@ -230,8 +230,6 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("GroupListView");
 		        
-		        console.log(listview.GetSelectedRows());
-		        
 		        if(document.getElementById("HeaderAllCheckBox").checked) {
 			        document.getElementById("HeaderAllCheckBox").checked = false;
 			        event_HeaderCheckBoxClick(document.getElementById("HeaderAllCheckBox"));
