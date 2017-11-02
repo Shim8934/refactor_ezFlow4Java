@@ -53,6 +53,13 @@
 		    };
 			
 		    $(document).ready(function(){
+				if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua)) && pEditor == "FORM") {
+					$('#btnInsForm1').hide();
+					$('#btnInsForm2').hide();
+					$('#btnUpForm').hide();
+					$('#btnFormListView').hide();
+				}
+		    	
 				companyID = document.getElementById("ListCompany").value;
 				Tree_setconfig();
 				InitFormCont();
@@ -309,7 +316,8 @@
 									url = "/admin/ezApprovalG/formMain.do";
 								}
 							} else {
-								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+// 								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
 									url = "/admin/ezApprovalG/formMain.do";
@@ -371,7 +379,8 @@
 								url = "/admin/ezApprovalG/formMain.do";
 							}
 						} else {
-							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+// 							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";
@@ -434,7 +443,11 @@
 		    }
 	
 		    function lvtForm_Row_Dbclick() {
-		        UpdateForm();
+		        if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua)) && pEditor == "FORM") {
+		        	return;
+		        } else {
+		        	UpdateForm();
+		        }
 		    }
 	
 		    function MoveUp_onclick() {
