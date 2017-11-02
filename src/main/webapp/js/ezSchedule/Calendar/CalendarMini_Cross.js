@@ -19,6 +19,12 @@ var groupid = "";
 var firstYN = false;
 
 var nowDate = new Date();
+
+if (typeof UserOffset !== 'undefined' && UserOffset) {
+	var _timez = nowDate.getTime() + (nowDate.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000);
+	nowDate.setTime(_timez);	
+}
+
 var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
 function CalendarMiniView(pTagetID) {

@@ -17,7 +17,9 @@
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		
+		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
 		
 		<script type="text/javascript">
 			var OrderCell = "";
@@ -33,6 +35,8 @@
 		    var formURL = "";
 		    var beforeHTML = "";
 		    var FormProcSpelling = "0";
+		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
+		    var useEditor = "${useEditor}";
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -58,13 +62,15 @@
 		        
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
+		        $("#tr_setAutoItemCode").hide();
 
 		        if (formID != "") {
 		            get_FormInfo();
 		        }
 	
-		        getDeptFullTree("<c:out value = '${topID}' />");
+		        getDeptFullTree("<c:out value = '${companyID}' />");
 		        getFormRecv();
+		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        
 		        add_doc_maker(companyID);
 		    });
@@ -118,13 +124,27 @@
 		        	data : {formID : formID, companyID : companyID},
 		        	success : function(result) {
 		        		if (result != "") {
-			                document.getElementsByName("tbFormName")[0].value = result.vo.formName;
-			                document.getElementsByName("tbFormName2")[0].value = result.vo.formName;
-			                document.getElementsByName("tbDescript")[0].value = result.vo.formDescription;
-			                document.getElementsByName("selFormKind")[0].value = result.vo.formDocType;
-			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);			                
+		        			tbFormName.value = result.vo.formName;
+		        			tbFormName2.value = result.vo.formName2;
+		        			tbDescript.value = result.vo.formDescription;
+		        			selFormKind.value = result.vo.formDocType;
+			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);
+			                
 			                if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
+			                }
+			                
+			                if (approvalFlag == 'S') {
+				                if (result.vo.useFlag == "Y") {
+				                    setAutoItemCode.checked = true;
+				                    $('#tr_setAutoItemCode').show();
+				                    document.getElementById("isPublic").value = result.vo.isPublic;
+				                    document.getElementById("tbItemCode").value = result.vo.itemCode;
+				                    document.getElementById("tbItemName").value = result.vo.itemName;
+				                    document.getElementById("tbItemName2").value = result.vo.itemName2;
+				                    document.getElementById("keepperiod").value = result.vo.keepPeriodCode;
+				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
+			                	}
 			                }
 			            }
 		        	}
@@ -160,8 +180,9 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${topID}' />");
-		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${companyID}' />");
+// 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
+					createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 	
 		            var xmlHTTP = createXMLHttpRequest();
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -175,7 +196,14 @@
 		            treeView.SetRequestData("RequestData");
 		            treeView.SetNodeClick("TreeViewNodeClick");
 		            treeView.DataSource(xmlpara);
-		            treeView.DataBind("divUserContTree");
+		            treeView.DataBind("TreeView");
+		
+		            treeView.SetID("LineUserTree");
+		            treeView.SetUseAgency(true);
+		            treeView.SetRequestData("RequestData");
+		            treeView.SetNodeClick("TreeView2NodeClick");
+		            treeView.DataSource(xmlpara);
+		            treeView.DataBind("divLineUserTree");
 		        }
 		        catch (e) { alert(e.description); }
 		    }
@@ -189,32 +217,38 @@
 	
 		    function RequestData(pNodeID, pTreeID) {
 		        TreeIdx = pNodeID;
-	
 		        treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
 	
 		        var xmlHTTP = createXMLHttpRequest();
-	
 		        var xmlpara = createXmlDom();
 	
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "DATA");
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", treeNode.GetNodeData("CN"));
-		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
+// 		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
+				createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 	
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
 	
 		        var treeView = new TreeView();
 		        treeView.LoadFromID(pTreeID);
-		        treeView.AppendChildNodes(xmlHTTP.responseXML.documentElement, pNodeID);
+		        treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+		    }
+		    
+		    function TreeView2NodeClick(pNodeID, pNodeNM) {
+		        TreeIdx = pNodeID;
+		        treeNode = new TreeNode();
+		        treeNode.LoadFromID(TreeIdx);
+		        displayUserList2(treeNode.GetNodeData("CN"));
 		    }
 	
 		    function TreeViewNodeClick(pNodeID, pNodeNM) {
 		        TreeIdx = pNodeID;
-	
 		        treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
+		        displayUserList(treeNode.GetNodeData("CN"));
 		    }
 	
 		    function getFormRecv() {
@@ -224,7 +258,10 @@
 		        	type : "POST",
 		        	url : "/admin/ezApprovalG/getFormRecvAdmin.do",
 		        	async : false,
-		        	data : {formID : formID},
+		        	data : {
+		    			formID 	  : formID,
+		    			companyID : companyID
+		    		},
 		        	success : function(result) {
 						xmlpara = loadXMLString(result);
 	        		}
@@ -244,7 +281,7 @@
 		        var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
 
 		        if (DuplicateFlag) {
-		            AprLineAddDept(treeNode.GetNodeData("VALUE"), treeNode.GetNodeData("CN"));
+		            AprLineAddDept(treeNode.GetNodeData("VALUE"), treeNode.GetNodeData("CN"), "D");
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t2001' />";
 		            OpenAlertUI(pAlertContent);
@@ -266,7 +303,7 @@
 		        try {
 		            var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
 		            if (DuplicateFlag) {
-		                AprLineAddDept(aDeptName, aDeptID);
+		                AprLineAddDept(aDeptName, aDeptID, "D");
 		            }
 		            
 		            var xmlHTTP = createXMLHttpRequest();
@@ -310,13 +347,33 @@
 		        return true;
 		    }
 	
-		    function AprLineAddDept(TNAME, TID) {
-		        var Resultxml = createXmlDom();
-		        Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1></CELL></ROW></ROWS></LISTVIEWDATA>");
+		    function AprLineAddDept(TNAME, TID, TYPE) {
+				var Resultxml = createXmlDom();
+		        
+		        if (approvalFlag == 'S') {
+		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1><DATA2></DATA2></CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        } else {
+		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        }
+		        
 		        var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
 		        setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
 		        setNodeText(GetChildNodes(objNodes[0])[1], TID);
-	
+		        
+		        if (approvalFlag == 'S') {
+		        	if (TYPE == "D") {
+			            setNodeText(GetChildNodes(objNodes[0])[2], "");
+			            setNodeText(GetChildNodes(objNodes[1])[0], "");
+			        } else {
+			            var pUserList = new ListView();
+			            pUserList.LoadFromID("lvUserList");
+			
+			            var selnode = pUserList.GetSelectedRows();
+			            setNodeText(GetChildNodes(objNodes[0])[2], GetAttribute(selnode[0], "DATA2"));
+			            setNodeText(GetChildNodes(objNodes[1])[0], GetAttribute(selnode[0], "DATA4"));
+			        }
+		        }
+		        
 		        var lvtFormView = new ListView();
 		        lvtFormView.LoadFromID("lvtForm");
 	
@@ -332,6 +389,7 @@
 		        }
 	
 		        var MaxID = 0;
+		        
 		        if (noitem) {
 		            MaxID = 0;
 		        } else {
@@ -525,41 +583,174 @@
 	
 		    function viewAutoItemCode() {
 		        if (setAutoItemCode.checked) {
-		            document.getElementById("tr_setAutoItemCode").style.display = "";
+		            $("#tr_setAutoItemCode").show();
 		            btnItemCode_onclick();
 		        } else {
-		            document.getElementById("tr_setAutoItemCode").style.display = "none";
+		            $("#tr_setAutoItemCode").hide();
 		            DeleteItemCode();
 		        }
 		    }
 	
+		    var itemcode_dialogArgument = new Array();
 		    function btnItemCode_onclick() {
-		        var url = "/myoffice/ezApprovalG/DocNum/docnumui.aspx";
-		        var retVal = window.showModalDialog(url, "", "dialogWidth:745px;dialogHeight:370px;status:no;help:no;scroll:no;edge:sunken");
-	
+		
+		        itemcode_dialogArgument[0] = "";
+		        itemcode_dialogArgument[1] = btnItemCode_Complete;
+		        var url = "/admin/ezApprovalG/apprGDocNumUI.do";
+		        GetOpenWindow(url, "docnumui_Cross", 745, 370, "NO");
+		    }
+		
+		    function btnItemCode_Complete(retVal) {
 		        if (retVal[0] != "cancel") {
-		            tbItemCode.value = retVal[0];
-		            tbItemName.value = retVal[1];
-		            keepperiod.value = retVal[2];
-		            securitylevel.value = retVal[3];
-		            isPublic.value = retVal[4];
-		            tbItemName2.value = retVal[6];
-		            setAutoItemCode.checked = true;
-		        } else {
-		            if (tbItemCode.value == "") {
-		                setAutoItemCode.checked = false;
-		            }
+		            document.getElementById("tbItemCode").value = retVal[0];
+		            document.getElementById("tbItemName").value = retVal[1];
+		            document.getElementById("keepperiod").value = retVal[2];
+		            document.getElementById("securitylevel").value = retVal[3];
+		            document.getElementById("isPublic").value = retVal[4];
+		            document.getElementById("tbItemName2").value = retVal[6];
+		            document.getElementById("setAutoItemCode").checked = true;
+		        }
+		        else {
+		            if (document.getElementById("tbItemCode").value == "")
+		                document.getElementById("setAutoItemCode").checked = false;
 		        }
 		    }
-	
+		
 		    function DeleteItemCode() {
-		        tbItemCode.value = "";
-		        tbItemName.value = "";
-		        tbItemName2.value = "";
-		        securitylevel.selectedIndex = 0;
-		        keepperiod.selectedIndex = 0;
-		        isPublic.selectedIndex = 0;
-		        setAutoItemCode.checked = false;
+		        document.getElementById("tbItemCode").value = "";
+		        document.getElementById("tbItemName").value = "";
+		        document.getElementById("tbItemName2").value = "";
+		        document.getElementById("securitylevel").selectedIndex = 0;
+		        document.getElementById("keepperiod").selectedIndex = 0;
+		        document.getElementById("isPublic").selectedIndex = 0;
+		        document.getElementById("setAutoItemCode").checked = false;
+		    }
+		    
+		    var xmlhttpUserlist;
+		    function displayUserList(pDeptID) {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezOrgan/getDeptMemberList.do",
+		    		data : {
+		    				deptID   : pDeptID, 
+		    				cell 	 : "displayName;description;title;telephonenumber",
+		    				prop     : "department;displayName;description;title",
+		    				type 	 : "user"
+		    				},
+		    		success: function(result){
+		    			var retXml = createXmlDom();
+		    			
+			            if (document.getElementById("UserList").innerHTML != "")
+			                document.getElementById("UserList").innerHTML = "";
+			
+			            var headerData = createXmlDom();
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+			            
+			            if (result != "") {
+			                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
+			                headerData.documentElement.appendChild(xmlRtn);
+			            }
+			            
+			            var pUserList = new ListView();
+			            pUserList.SetID("lvUserList");
+			            pUserList.SetRowOnClick("list_onSel_Click");
+			            pUserList.SetRowOnDblClick("list_onSel_DBclick");
+			            pUserList.SetSelectFlag(false);
+			            pUserList.SetHeightFree(true);
+			            pUserList.DataSource(headerData);
+			            pUserList.DataBind("UserList");
+			
+			            var userRows = pUserList.GetDataRows();
+			            if (userRows.length <= 0) {
+			                OpenAlertUI(linealt1);
+			            }
+		    		}
+		    	});
+		    }
+		
+		    function displayUserList2(pDeptID) {
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezOrgan/getDeptMemberList.do",
+		    		data : {
+		    				deptID   : pDeptID, 
+		    				cell 	 : "displayName;description;title;telephonenumber",
+		    				prop     : "department;displayName;description;title",
+		    				type 	 : "user"
+		    				},
+		    		success: function(result){
+		                var retXml = createXmlDom();
+		        		
+			            if (document.getElementById("LineUserList").innerHTML != "")
+			                document.getElementById("LineUserList").innerHTML = "";
+			
+			            var headerData = createXmlDom();
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+			            
+			            if (result != "") {
+			                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
+			                headerData.documentElement.appendChild(xmlRtn);
+			            }
+			            
+			            var pUserList = new ListView();
+			            pUserList.SetID("lvLineUserList");
+			            pUserList.SetRowOnClick("list2_onSel_Click");
+			            pUserList.SetRowOnDblClick("list2_onSel_DBclick");
+			            pUserList.SetSelectFlag(false);
+			            pUserList.SetHeightFree(true);
+			            pUserList.DataSource(headerData);
+			            pUserList.DataBind("LineUserList");
+			
+			            var userRows = pUserList.GetDataRows();
+			            if (userRows.length <= 0) {
+			                OpenAlertUI(linealt1);
+			            }
+		    		}
+		    	});
+		    }
+		    function list_onSel_Click() {
+		
+		    }
+		
+		    function list_onSel_DBclick() {
+		        insertContUser_onclick();
+		    }
+		
+		    function list2_onSel_Click() {
+		
+		    }
+		
+		    function list2_onSel_DBclick() {
+		        var pUserList = new ListView();
+		        pUserList.LoadFromID("lvLineUserList");
+		
+		        var selnode = pUserList.GetSelectedRows();
+		        var RtnVal = CheckSignCellValue();
+		        InsertMode = "Add";
+		        var pAPRLINE = new ListView();
+		        pAPRLINE.LoadFromID("lvAPRAUTORULELINE");
+		
+		        if (RtnVal) {
+		            APRLINEATTENDADDFunction(selnode, "PERSON");
+		            initJunGyul();
+		        }
+		    }
+		    function insertContUser_onclick() {
+		        var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
+		        if (DuplicateFlag) {
+		            AprLineAddDept(treeNode.GetNodeData("VALUE"), treeNode.GetNodeData("CN"), "U");
+		        } else {
+		            var pAlertContent = "<spring:message code='ezApproval.t205'/><br>  <spring:message code='ezApproval.t206'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
 		    }
 		    
 		    function btn_OpinionAdd1_onclick() {
@@ -634,33 +825,63 @@
              </h2>
              <table class="content" style="width:100%;">                
                 <tr>                
-                    <th style="width:10%; text-align:center"><c:out value = '${primary}' /></th>
+					<th style="width:100px; text-align:center">${primary}</th>
                     <td style="width:40%;">
-                        <input type="text" name="tbFormName" maxlength="50" style="width:100%" >
-                        <input type="text" name="tbFormID" style="display: none" readonly>
+                        <input type="text" id="tbFormName" name="tbFormName" maxlength="50" style="width:100%">
+                        <input type="text" id="tbFormID" name="tbFormID" style="display: none" readonly>
                     </td>
-                    <th style="width:10%; text-align:center"><c:out value = '${secondary}' /></th>
+                    <th style="width:100px; text-align:center">${secondary}</th>
                     <td style="width:40%;" colspan="5">
-                        <input type="text" name="tbFormName2" maxlength="50" style="width:100%" >
+                        <input type="text" id="tbFormName2" name="tbFormName2" maxlength="50" style="width:100%" >
                     </td>        
                 </tr>
                 <tr>
-                    <th style="width:10%; text-align:center"><spring:message code = 'ezApprovalG.t598' /></th>
+                    <th style="width:100px; text-align:center"><spring:message code='ezApprovalG.t598'/></th>
                     <td style="width:40%;">
-                        <input type="text" name="tbDescript" style="WIDTH: 100%" maxlength="50">
+                        <input type="text" id="tbDescript" name="tbDescript" style="WIDTH: 100%" maxlength="50">
                     </td>
-                    <th style="width:10%; text-align:center"><spring:message code = 'ezApprovalG.t1664' /></th>
+                    <th style="width:100px; text-align:center"><spring:message code='ezApproval.t758'/></th>
                     <td style="width:40%;" colspan="5">
-                        <select name="selFormKind" style="WIDTH: 170px;">
-                            ${docType}
-                        </select>
+                        <select id="selFormKind" name="selFormKind" style="WIDTH: 170px;">${docType}</select>
                     </td>
-                </tr>        
-                  <tr>
-                    <td colspan="8" style="width:10%; text-align:center">
+                </tr>
+				<tr>
+                    <td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
                         <input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
                     </td>                    
                 </tr>                        
+            </table>
+            <br />
+            <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
+            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
+            	<span><spring:message code='ezApproval.t00004'/></span>
+            </div>
+            <table class="content" style="width:100%;">
+				<tr id="tr_setAutoItemCode">
+					<th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t1197'/></th>
+                    <td style="width:400px;">
+                        <input type="text" id="tbItemCode" name="tbItemCode" style="WIDTH: 80px" readonly>
+                        <input type="text" id="tbItemName" name="tbItemName" style="WIDTH: 100px" readonly>
+                        <input type="hidden" id="tbItemName2" name="tbItemName2">
+                        <a class="imgbtn"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t321'/></span></a>
+                        <a class="imgbtn"><span onclick="DeleteItemCode()"><spring:message code='ezApprovalG.t266'/></span></a>
+                    </td>
+                    <th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t118'/></th>
+                    <td style="width:100px; text-align:center">
+                        <select id="securitylevel" name="select">${securityNode}</select>
+                    </td>
+                    <th style="width:10%; text-align:center"><spring:message code='ezApproval.t336'/></th>
+                    <td style="width:100px; text-align:center">
+                        <select id="keepperiod" name="select">${periodNode}</select>
+                    </td>
+                    <th style="width:10%; text-align:center"><spring:message code='ezApproval.t82'/></th>
+                    <td style="width:100px; text-align:center">
+                        <select id="isPublic" name="select">
+                            <option value="Y" selected><spring:message code='ezApprovalG.t47'/></option>
+                            <option value="N"><spring:message code='ezApprovalG.t46'/></option>
+                        </select>
+                    </td>
+                </tr>
             </table>   
         </div>
            
@@ -697,7 +918,7 @@
                         &lt;/xml&gt; </td>
                     <th>
                         <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_OpinionAdd_onclick()"><spring:message code = 'ezApprovalG.t268' /></span></a><br>      
-                        <a class="imgbtn" id="btn_OpinionSave"><span onclick="btn_OpinionSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>              
+                        <a class="imgbtn" id="btn_OpinionSave" style="<c:if test="{approvalFlag == 'S'}">display: none;</c:if>"><span onclick="btn_OpinionSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>              
                     </th>
                 </tr>
             </table>              
@@ -720,26 +941,29 @@
 					<th> 
 						<a class="imgbtn" id="Submit1"><span onclick="btn_OpinionAdd1_onclick()"><spring:message code = 'ezApprovalG.t268' /> 1</span></a><br>      
 						<a class="imgbtn" id="Submit2"><span onclick="btn_OpinionAdd2_onclick()"><spring:message code = 'ezApprovalG.t268' /> 2</span></a><br>   
-						<a class="imgbtn" id="Submit3"><span onclick="btn_WorkFlowSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>
+						<a class="imgbtn" id="Submit3" style="<c:if test="${approvalFlag == 'S'}">display: none;</c:if>"><span onclick="btn_WorkFlowSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>
 					</th>
 				</tr>
 			</table>
         </div>
         
         <!-- 고정수신처 -->
-        <div id="ApvForm_content5" style="width:100%;height:100%;display:none; padding-top:10px;">         
-            
+        <div id="ApvForm_content5" style="width:100%;height:100%;display:none; padding-top:10px;">
             <h2 id="group" class="receiver_tltype01" style="margin-bottom:5px;">
             	<span style="min-width: 45px;" id="groupstr"><spring:message code = 'ezApprovalG.t1577' /></span>
             </h2>
 
-            <table style="width:100%; height:565px; border : none;">         
+            <table style="width:100%; height:565px; border : none;">
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border:none">
-                        <h2>
-                            <spring:message code = 'ezApprovalG.t232' />
-                        </h2>
-                        <div id="divUserContTree" style="height: 530px; width: 100%; overflow-x: auto; overflow-y: auto; border: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <h2><spring:message code = 'ezApprovalG.t232' /></h2>
+<!--                         <div id="divUserContTree" style="height: 775px; width: 100%; overflow-x: auto; overflow-y: auto; border: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div> -->
+                        <div id="TreeView" style="<c:if test="${approvalFlag != 'S'}">height: 775px;</c:if><c:if test="${approvalFlag == 'S'}">height: 355px;</c:if> width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <c:if test="${approvalFlag == 'S'}"><br /></c:if>
+                        <div class="div_scroll" style="border:none; <c:if test="${approvalFlag != 'S'}">display:none;</c:if>">
+                            <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
+                        </div>
+                        
                     </td>
                     <td style="text-align:center; width:50px; border-left:none; border:none">
                         <img style="cursor:pointer" src="/images/arr_r.gif" width="24" height="24" onclick="return insertCont_onclick()"><br>
@@ -748,18 +972,22 @@
                         <img style="cursor:pointer" src="/images/arr_ll.gif" width="24" height="24" onclick="return deleteAllCont_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_u.gif" width="24" height="24" onclick="return moveUp_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_d.gif" width="24" height="24" onclick="return moveDown_onclick()">
+                        <div style="height:250px;<c:if test="${approvalFlag != 'S'}">display:none;</c:if>">&nbsp;</div>
+                        <img style="cursor:pointer;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()"><br>
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border:none;">
-                        <h2>
-                            <spring:message code = 'ezApprovalG.t999932' />
-                        </h2>
-                        <div class="listview" style="border-top:none; height:530px;">
-                            <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%; overflow-x:auto;overflow-y:auto; padding:0px;"></div>
+                        <h2><spring:message code = 'ezApprovalG.t999932' /></h2>
+                        <div class="div_scroll" style="border:none; height:775px;">
+                            <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
+        <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel">&nbsp;</div>	
+	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
         <table id="TForm" style="height:0px;">
             <tr>
                 <td valign="top">
@@ -768,9 +996,40 @@
                 <td id="rootTD"></td>
             </tr>
         </table>
+        <form id="bodyForm">
+        	<input type="hidden" id="hidCompanyID" value="${companyID}">
+        	<input type="hidden" id="hidFormID" value="${formID}">
+        	<input type="hidden" id="hidListHeader" value="${listHeader}">
+        	<input type="hidden" id="hidAprRule" value="${aprRule}">
+        	<input type="hidden" id="hidAprRuleLine" value="${aprRuleLine}">
+        	<input type="hidden" id="hidAprTypeXml" value="${aprTypeXML}">
+        </form>
         
         <script type="text/javascript">
             Tab1_NewTabIni("tab1");
         </script>
+        <xml id="userlist_h" style="display: none">
+            <LISTVIEWDATA>
+                <HEADERS>
+                    <HEADER>
+                        <NAME><spring:message code='ezApproval.t265'/></NAME>
+                        <WIDTH>70</WIDTH>
+                    </HEADER>
+                    <HEADER>
+                        <NAME><spring:message code='ezApproval.t216'/></NAME>
+                        <WIDTH>100</WIDTH>
+                    </HEADER>
+                    <HEADER>
+                        <NAME><spring:message code='ezApproval.t266'/></NAME>
+                        <WIDTH>60</WIDTH>
+                    </HEADER>
+                    <HEADER>
+                        <NAME><spring:message code='ezApproval.t172'/></NAME>
+                        <WIDTH>80</WIDTH>
+                    </HEADER>
+                </HEADERS>
+                <ROWS></ROWS>
+            </LISTVIEWDATA>
+        </xml>
     </body>
 </html>

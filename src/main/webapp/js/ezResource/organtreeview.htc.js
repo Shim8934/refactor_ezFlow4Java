@@ -1129,12 +1129,12 @@ function organtreeview(thisobjid, elobjid) {
 
                 //if (childNode.selectSingleNode("SELECT") != null) {
                 if (findchildnodevalue(childNode, "SELECT") != null) {
-                    nodeHtml += ("<a href='#" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
 						g_baseClass["selected"] + "' style='display:inline-block;'>");
                     g_selectedIdx = nodeCount;
                 }
                 else {
-                    nodeHtml += ("<a href='#" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
 						g_baseClass["normal"] + "' style='display:inline-block;'>");
                 }
 
@@ -1253,12 +1253,12 @@ function organtreeview(thisobjid, elobjid) {
 				}
 
                 if (childNode.selectSingleNode("SELECT") != null) {
-                    nodeHtml += ("<a href='#" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
 						g_baseClass["selected"] + "' style='display:inline-block;'>");
                     g_selectedIdx = nodeCount;
                 }
                 else
-                    nodeHtml += ("<a href='#" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
 						g_baseClass["normal"] + "' style='display:inline-block;'>");
 
                 nodeHtml += (childNode.selectSingleNode("VALUE").text + "</span></a></span>");

@@ -64,8 +64,10 @@
 		        else
 		            return true;
 		    };
-		
-		    window.onload = function () {
+		    
+// 		    var onloadflag = false;
+		    $(document).ready(function() {
+// 			window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -78,7 +80,7 @@
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
 		
-		        getDeptFullTree("${topID}");
+		        getDeptFullTree("${companyID}");
 		        getFormRecv();
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
@@ -87,7 +89,6 @@
 		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
-		            flag = false;
 		            get_FormInfo();
 		            if (useEditor != "HWP") {
 		                var tempXML = createXmlDom();
@@ -138,52 +139,51 @@
 		                Editor_Complete();
 		            }
 		        }
-		    }
+		        
+// 		        onloadflag = true;
+		    });
+// 			}
 		
-		    var flag = false;
 		    function Editor_Complete() {
-		        if (flag == false) {
-		            flag = true;
-		            if (formURL != "") {
-		                if (useEditor == "HWP") {
+	            if (formURL != "") {
+	                if (useEditor == "HWP") {
 // 		                    document.getElementById("btn_OpinionSave").style.display = "";
-		                    message.HWP_LoadFile(realPath + formURL);
+	                    message.HWP_LoadFile(realPath + formURL);
 		                    
-		                    if (message.HWP_GetDocumentElement() != "") {
-		                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
-		                        
-		                        if (connXML == "") {
-		                            return;
-		                        }
-		                        
-		                        g_XmlDoc = loadXMLString(connXML);
-		                        
-		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
-		                            if (i == 0) {
-		                                setNodeText(txt_OpinionContent, getXmlString(g_XmlDoc.documentElement.childNodes[i]));
-		                            } else {
-		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + getXmlString(g_XmlDoc.documentElement.childNodes[i]));
-		                            }
-		                        }
-		                    }
-		                } else {
-		                    document.getElementById("ApvForm_sub4").style.display = "";
-		                    //위임전결
+	                    if (message.HWP_GetDocumentElement() != "") {
+	                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
+	                        
+	                        if (connXML == "") {
+	                            return;
+	                        }
+	                        
+	                        g_XmlDoc = loadXMLString(connXML);
+	                        
+	                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
+	                            if (i == 0) {
+	                                setNodeText(txt_OpinionContent, getXmlString(g_XmlDoc.documentElement.childNodes[i]));
+	                            } else {
+	                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + getXmlString(g_XmlDoc.documentElement.childNodes[i]));
+	                            }
+	                        }
+	                    }
+	                } else {
+	                    document.getElementById("ApvForm_sub4").style.display = "";
+	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
-		                    document.getElementById("rootTD").style.display = "";
-		                    message.SetEditorContent(htmlData);
-		                }
-		            } else {
-		                if (useEditor != "HWP") {
-		                    document.getElementById("ApvForm_sub4").style.display = "";
-		                    //위임전결
+	                    document.getElementById("rootTD").style.display = "";
+	                    message.SetEditorContent(htmlData);
+	                }
+	            } else {
+	                if (useEditor != "HWP") {
+	                    document.getElementById("ApvForm_sub4").style.display = "";
+	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
-		                    document.getElementById("rootTD").style.display = "";
-		                } else {
+	                    document.getElementById("rootTD").style.display = "";
+	                } else {
 // 		                    document.getElementById("btn_OpinionSave").style.display = "";
-		                }
-		            }
-		        }
+	                }
+	            }
 		        
 		        add_doc_maker();
 		    }
@@ -204,12 +204,16 @@
 		        			companyID : companyID
 		        	},
 		        	success : function(result) {
-		        		if (result != "") {
+						if (result != "") {
 		        			tbFormName.value = result.vo.formName;
 		        			tbFormName2.value = result.vo.formName2;
 		        			tbDescript.value = result.vo.formDescription;
 		        			selFormKind.value = result.vo.formDocType;
 		        			formURL = encodeURI(result.vo.formFileLocation);
+		        			
+		        			if (result.vo.formConnFlag == "Y") {
+			                    document.getElementById("setConnFlag").checked = true;
+			                }
 			                
 			                if (approvalFlag == 'S') {
 				                if (result.vo.useFlag == "Y") {
@@ -265,7 +269,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${topID}");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		
 		            var xmlHTTP = createXMLHttpRequest();
@@ -372,12 +376,21 @@
 		
 		    function insertAllCont_onclick() {
 		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><br><spring:message code='ezApprovalG.t1362'/>";
-		        var Ans = OpenInformationUI(pAlertContent);
+		        var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
 		
-		        if (!Ans)
+		        if (!Ans) {
 		            return;
-		
-		        chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("VALUE"));
+		        }
+		    }
+		    
+		    function insertAllCont_complete(ret) {
+		    	if (!ret) {
+		    		DivPopUpHidden();
+		    		return;
+		    	}
+		    	
+		    	chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("VALUE"));
+		    	DivPopUpHidden();
 		    }
 		
 		    function chkAllDept(aDeptID, aDeptName) {
@@ -404,8 +417,7 @@
 		
 		            if (objNodes.length > 0) {
 		                for (var i = 0; i < objNodes.length; i++) {
-		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue,
-					            objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
+		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
 		                }
 		            }
 		            return;
@@ -431,26 +443,34 @@
 		
 		    function AprLineAddDept(TNAME, TID, TYPE) {
 		        var Resultxml = createXmlDom();
-		        Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1><DATA2></DATA2></CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        
+		        if (approvalFlag == 'S') {
+		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1><DATA2></DATA2></CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        } else {
+		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1></CELL></ROW></ROWS></LISTVIEWDATA>");
+		        }
+		        
 		        var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
 		        setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
 		        setNodeText(GetChildNodes(objNodes[0])[1], TID);
-		
-		        if (TYPE == "D") {
-		            setNodeText(GetChildNodes(objNodes[0])[2], "");
-		            setNodeText(GetChildNodes(objNodes[1])[0], "");
-		        } else {
-		            var pUserList = new ListView();
-		            pUserList.LoadFromID("lvUserList");
-		
-		            var selnode = pUserList.GetSelectedRows();
-		            setNodeText(GetChildNodes(objNodes[0])[2], GetAttribute(selnode[0], "DATA2"));
-		            setNodeText(GetChildNodes(objNodes[1])[0], GetAttribute(selnode[0], "DATA4"));
+		        
+		        if (approvalFlag == 'S') {
+		        	if (TYPE == "D") {
+			            setNodeText(GetChildNodes(objNodes[0])[2], "");
+			            setNodeText(GetChildNodes(objNodes[1])[0], "");
+			        } else {
+			            var pUserList = new ListView();
+			            pUserList.LoadFromID("lvUserList");
+			
+			            var selnode = pUserList.GetSelectedRows();
+			            setNodeText(GetChildNodes(objNodes[0])[2], GetAttribute(selnode[0], "DATA2"));
+			            setNodeText(GetChildNodes(objNodes[1])[0], GetAttribute(selnode[0], "DATA4"));
+			        }
 		        }
-		
+
 		        var lvtFormView = new ListView();
 		        lvtFormView.LoadFromID("lvtForm");
-		
+
 		        var InitTr = lvtFormView.GetDataRows();
 		        var length = InitTr.length;
 		        var noitem = false;
@@ -461,20 +481,21 @@
 		                noitem = true;
 		            }
 		        }
-		
+
 		        var MaxID = 0;
-		        
+
 		        if (noitem) {
 		            MaxID = 0;
 		        } else {
 		            for (var j = 0; j < length; j++) {
 		                var curnum = Number(lvtFormView.GetSelectedRowID(j).substring(lvtFormView.GetSelectedRowID(j).lastIndexOf('_') + 1), lvtFormView.GetSelectedRowID(j).length);
-		                if (MaxID < curnum)
+		                if (MaxID < curnum) {
 		                    MaxID = curnum;
+		                }
 		            }
 		        }
 		        MaxID += 1;
-		
+
 		        var objTr = lvtFormView.AddRow(length);
 		        SetAttribute(objTr, "id", "lvtForm" + "_TR_" + MaxID);
 		        lvtFormView.AddDataRow(objTr, GetElementsByTagName(Resultxml.documentElement, "ROW")[0]);
@@ -686,7 +707,7 @@
 			            if (userRows.length <= 0) {
 			                OpenAlertUI(linealt1);
 			            }
-		    		}        			
+		    		}
 		    	});
 		    }
 		    function list_onSel_Click() {
@@ -817,11 +838,19 @@
                     <td style="width:40%;" colspan="5">
                         <select id="selFormKind" name="selFormKind" style="WIDTH: 170px;">${docType}</select>
                     </td>
-                </tr>    
-			</table>   
+                </tr>
+                <tr>
+					<td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
+						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
+					</td>
+				</tr>
+			</table>
             <br />
-            <div style="padding-bottom:5px; vertical-align:middle"><input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" /><span><spring:message code='ezApproval.t00004'/></span></div>
-            <table class="content" style="width:100%;">               
+            <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
+            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
+            	<span><spring:message code='ezApproval.t00004'/></span>
+            </div>
+            <table class="content" style="width:100%;">
 				<tr id="tr_setAutoItemCode">
 					<th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t1197'/></th>
                     <td style="width:400px;">
@@ -871,7 +900,7 @@
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>
@@ -928,6 +957,7 @@
             </table>
         </div>
         
+        <!-- 고정 수신처 -->
         <div id="ApvForm_content5" style="width:100%;height:90%;display:none; padding-top:10px;">         
             <h2 id="group" class="receiver_tltype01" style="margin-bottom:5px;">
             	<span style="min-width: 45px;" id="groupstr"><spring:message code='ezApproval.t646'/></span>
@@ -937,9 +967,9 @@
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
                         <h2><spring:message code='ezApprovalG.t232'/></h2>
-                        <div id="TreeView" style="height: 355px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
-                        <br />
-                        <div class="div_scroll" style="border:none;">
+                        <div id="TreeView" style="<c:if test="${approvalFlag != 'S'}">height: 775px;</c:if><c:if test="${approvalFlag == 'S'}">height: 355px;</c:if> width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <c:if test="${approvalFlag == 'S'}"><br /></c:if>
+                        <div class="div_scroll" style="border:none; <c:if test="${approvalFlag != 'S'}">display:none;</c:if>">
                             <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
                     </td>
@@ -950,8 +980,8 @@
                         <img style="cursor:pointer" src="/images/arr_ll.gif" width="24" height="24" onclick="return deleteAllCont_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_u.gif" width="24" height="24" onclick="return moveUp_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_d.gif" width="24" height="24" onclick="return moveDown_onclick()"><br>
-                        <div style="height:250px;">&nbsp;</div>
-                        <img style="cursor:pointer;" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()"><br>
+                        <div style="height:250px;<c:if test="${approvalFlag != 'S'}">display:none;</c:if>">&nbsp;</div>
+                        <img style="cursor:pointer;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()"><br>
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
                         <h2><spring:message code='ezApproval.t61'/></h2>

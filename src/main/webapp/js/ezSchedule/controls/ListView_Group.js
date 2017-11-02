@@ -1230,6 +1230,7 @@ function ListView() {
 
 //ROW 선택 함수
 function tr_select(pRowID, pTableID, callbackFunc) {
+	
     if (!listEventCheckbox) {
         var oList = document.getElementById(pTableID);
         if (!oList)
@@ -1247,10 +1248,10 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
         //멀티선택이 가능한 리스트이고 쉬프트키가 눌려져 있으면
         //구간을 모두 선택한다.
-        if (bMultiSelectable && PressShiftKey) {
+/*        if (bMultiSelectable && PressShiftKey) {
             tr_selectBlock(pRowID, pTableID);
             return;
-        }
+        }*/
 
         //멀티선택이 불가능한 리스트이거나 컨트롤키가 눌려있지 않으면 
         //모든 선택된 Row를 Unselect 한다.
@@ -1296,11 +1297,13 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
 //모든 ROW를 선택 해제하는 함수
 function tr_unselectedAll(pTableID) {
+
     var oList = document.getElementById(pTableID);
     if (!oList)
         return;
 
     if (document.getElementById("HeaderAllCheckBox").checked) {
+    	
     }
     else {
 
@@ -1314,10 +1317,15 @@ function tr_unselectedAll(pTableID) {
             strListInfo = "";
         }
     }
+
 }
 
 //컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
 function tr_selectBlock(pRowID, pTableID) {
+	
+	console.log(pRowID);
+	console.log(pTableID);
+	
     var oList = document.getElementById(pTableID);
     if (!oList)
         return;
@@ -1494,24 +1502,39 @@ function getOriginXML(pTagetID)
 
 function event_HeaderCheckBoxClick(obj) {
 
+	console.log('event_HeaderCheckBoxClick');
+	strListInfo = "";
     var SelList = new ListView();
     SelList.LoadFromID("GroupListView");
     
+    if (SelList.GetSelectedRows() != "") {
+    	SelList.GetSelectedRows()[0].childNodes[0].childNodes[0].checked = false;
+    }
+    
+    console.log(SelList);
+    console.log(obj);
+    console.log(obj.checked); 
+    
     if (obj.checked) {
-        strListInfo = "";
+    	
+    	
+    	if (SelList.GetRowCount() > 0) {
+        	SelList.GetDataRows()[0].onclick();
+        	strListInfo = "";
+        };
+    	    	
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            //if (i == 0)
-                //SelList.GetDataRows()[0].onclick();
+                   
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-        }
+            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;           
+        }     
+
     }
     else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-            strListInfo = "";
         }
     }
 }

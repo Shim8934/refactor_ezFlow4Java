@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Shortcut</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+    <script type="text/javascript">
+        document.write('<scr' + 'ipt type="text/javascript" src="../config/editor_crossdomain_config.js?t=' + (new Date).getTime() + '"><\/scr' + 'ipt>');
+    </script>
+
+    <script type="text/javascript">
+        var DEXTTOP = parent;
+        var Dext5LayerFrame = DEXTTOP.DEXTDOC.getElementById("dext_frame_" + DEXTTOP.G_CURREDITOR.ID);
+        if (DEXTTOP.G_CURREDITOR.dialogWindow != null) {
+            DEXTTOP = Dext5LayerFrame.contentWindow.DEXTTOP;
+        }
+        var Dext5LayerWin = Dext5LayerFrame.contentWindow;
+
+        document.write('<link href="' + Dext5LayerWin._dext_editor._config.popupCssUrl + '?ver=' + DEXTTOP.DEXT5.ReleaseVer + '" rel="stylesheet" type="text/css" />');
+        document.write('<scr' + 'ipt src="' + Dext5LayerWin._dext_editor._config.dialogJSUrl + '?ver=' + DEXTTOP.DEXT5.ReleaseVer + '" type="text/javascript"><\/scr' + 'ipt>');
+    </script>
+
+    <script type="text/javascript">
+        function load_page() {
+            var _skin_name = LayerWin._dext_editor._config.style.skinName;
+            document.getElementById('dext_dialog_box').className = 'DEXT_fiVe_ED_Popup_Type02 DEXT_fiVe_PUi_' + _skin_name;
+
+            var span_ok = document.getElementById('span_ok');
+            span_ok.innerHTML = LayerWin.dext5_lang.ok_cancel.ok;
+
+            document.title = '단축키 도움말';
+
+            setTimeout(function () {
+                window.focus();
+                document.getElementsByTagName('div')[4].focus();
+            }, 10);
+
+            LayerWin.setFocusFirstAndLast(document, document.getElementsByTagName('div')[4], document.getElementById('a_ok'));
+        }
+    </script>
+</head>
+<body style="margin:0px; padding:0px;" onload="load_page();">
+    <div class="DEXT_fiVe_ED_Popup_Type02 DEXT_fiVe_PUi_green" id="dext_dialog_box">
+        <!-- Header -->
+        <div class="EdiTor_Popup_header">
+            <span class="subject">DEXT5 단축키 도움말</span><span class="text"></span>
+            <div class="close">
+                <a href="javascript:event_dext_close();" title="close"></a>
+            </div>
+        </div>
+        <!-- // Header -->
+        <!-- Contents -->
+        <div class="EdiTor_Popup_contents" style="overflow: scroll; overflow-x: hidden; background-color: #ffffff; width:100%;">
+            <div tabindex="0" class="contents" style="height: 307px">
+                <div class="con border">
+                    <span><b>일반 단축키</b></span><br /><br />
+                    <script>
+                        if (DEXTTOP.G_CURREDITOR._config.EditorTabDisable != '1') {
+                            document.write('<span>Tab : 1. 다음 컨트롤로 포커스 이동</span><br />');
+                            document.write('<span style="margin-left:32px;">2. 디자인 영역에서 커서가 셀 안에 있는 경우 다음 셀로 커서 이동</span><br />');
+                            document.write('<span style="margin-left:32px;">3. 디자인 영역에서 테이블 밖의 영역에 커서가 있는 경우 \t을 입력</span><br /><br />');
+                        } else {
+                            document.write('<span>Tab : 다음 컨트롤로 포커스 이동</span><br /><br />');
+                        }
+                    </script>
+                    <span>Shift + Tab : 이전 컨트롤로 포커스 이동</span><br /><br />
+                    <span>ESC : 팝업 창, 글꼴 적용 리스트 창 등에서 입력 시 열려있는 창이 닫힘</span><br /><br />
+                    <span>Ctrl + F12 : 에디터의 단축키 도움말 팝업창 열림</span><br /><br />
+                </div>
+                <div class="con border">
+                    <span><b>이동 단축키</b></span><br /><br />
+                    <span>Ctrl + 1 : 메뉴바로 포커스 이동</span><br /><br />
+                    <span>Ctrl + 2 : 첫번째 툴바로 포커스 이동</span><br /><br />
+                    <span>Ctrl + 3 : 두번째 툴바로 포커스 이동</span><br /><br />
+                    <span>Ctrl + 4 : 편집 영역으로 커서를 이동</span><br /><br />
+                    <span>Ctrl + 5 : 하단 상태바로 포커스 이동</span><br /><br />
+                    <span>Ctrl + 6 : 상단 상태바로 포커스 이동</span><br /><br />
+                    <script>
+                        if (DEXTTOP.G_CURREDITOR._config.nextTabElementId != '') {
+                            document.write('<span>Ctrl + 0 : 에디터 밖의 영역에 지정한 컨트롤로 포커스 이동</span><br /><br />');
+                        }
+                    </script>
+                </div>
+                <div class="con border" style="line-height:18px">
+                    <span><b>명령 단축키</b></span><br /><br />
+                    <span>Ctrl + Z : 실행 취소</span><br />
+                    <span>Ctrl + Y : 실행 복구</span><br />
+                    <span>Ctrl + C : 복사하기</span><br />
+                    <span>Ctrl + V : 붙여넣기</span><br />
+                    <span>Ctrl + X : 잘라내기</span><br />
+                    <span>Ctrl + B : 굵게</span><br />
+                    <span>Ctrl + I : 기울이기</span><br />
+                    <span>Ctrl + U : 밑줄</span><br />
+                    <span>Ctrl + D : 취소선</span><br />
+                    <span>Ctrl + L : 왼쪽정렬</span><br />
+                    <span>Ctrl + E : 가운데정렬</span><br />
+                    <span>Ctrl + H : 오른쪽정렬</span><br />
+                    <span>Ctrl + '(single quote) : 아래첨자</span><br />
+                    <span>Ctrl + Shift + "(double quotes) : 위첨자</span><br />
+                </div>
+                <div class="con" style="line-height:18px">
+                    <span><b>테이블 단축키</b></span><br /><br />
+                    <span>Ctrl + F5 : 현재 커서위치의 셀 선택</span><br />
+                    <span>Ctrl + F6 : 현재 커서위치의 가로줄 선택</span><br />
+                    <span>Ctrl + F7 : 현재 커서위치의 세로줄 선택</span><br />
+                    <span>Ctrl + F8 : 테이블 전체 선택</span><br />
+                    <span>Ctrl + F9 : 선택된 셀 병합</span><br />
+                    <span>Ctrl + F10 : 선택된 셀의 너비를 같게</span><br />
+                    <span>Ctrl + F11 : 선택된 셀의 높이를 같게</span><br />
+                    <span>Ctrl + Shift + ] : 테이블 들여쓰기</span><br />
+                    <span>Ctrl + Shift + [ : 테이블 내어쓰기</span><br />
+                    <span>Ctrl + Enter : 1. 테이블 첫번째 셀에서 테이블 위쪽으로 한 줄 삽입</span><br />
+                    <span style="margin-left:75px;">2. 테이블 마지막 셀에서 테이블 아래로 한 줄 삽입</span><br />
+                    <span>Ctrl + Shift + C : 테이블 복사하기</span><br />
+                    <span>Ctrl + Shift + V : 테이블 붙여넣기</span><br />
+                    <span>Ctrl + Shift + T : 테이블 내용 붙여넣기</span><br /><br />
+                </div>
+            </div>
+        </div>
+        <!-- // Contents -->
+        <!-- Footer -->
+        <div class="EdiTor_Popup_footer">
+            <a href="javascript:event_dext_close();" class="confirm" id="a_ok"><span id="span_ok">확인</span></a>
+        </div>
+        <!-- // Footer -->
+    </div>
+</body>
+</html>

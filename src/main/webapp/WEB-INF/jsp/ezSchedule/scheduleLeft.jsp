@@ -17,6 +17,9 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>
+	    <script type="text/javascript">
+	    	var UserOffset = "${userOffset}";
+	    </script>
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_Cross.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 
@@ -29,7 +32,7 @@
 	        var xmlDom_treeview = createXmlDom();	        
 	        var ch_selected = false;
 			var totalCnt = 0;
-			select_memorialDays(uselang);
+			select_memorialDays(uselang);			
 				   	    
 		    function schedule_get_holiday() {
 		        $.ajax({

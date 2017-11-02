@@ -4,13 +4,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
-import java.util.UUID;
 import java.util.Base64.Decoder;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,21 +70,25 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		String height = request.getParameter("height");
-		String id = request.getParameter("id");
+		String id = request.getParameter("id") == null ? "" : request.getParameter("id");
 		String isUsed = request.getParameter("isUsed");
+		
+		//TODO: http/https 설정값
+		String serverUrl = "http://" + userInfo.getServerName();
+		logger.debug("serverUrl=" + serverUrl);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String returnPath = "";
 		
 		switch (useEditor) {
-			/* 2017-05-23 이효민 : DEXT, NAMO 추후 개발
 			case "DEXT":
 				model.addAttribute("id", id);
 				returnPath = "ezEditor/dextEditor";
 	            break;
 			case "NAMO":
+				model.addAttribute("serverUrl", serverUrl);
 				returnPath = "ezEditor/namoEditor";
-                break; */
+                break;
 			case "TAGFREE":
 				returnPath = "ezEditor/tfxEditor";
 				break;
@@ -113,20 +119,24 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		String height = request.getParameter("height");
-		String id = request.getParameter("id");
+		String formID = request.getParameter("formID").equals("") ? "editor1" : request.getParameter("formID");
+		
+		//TODO: http/https 설정값
+		String serverUrl = "http://" + userInfo.getServerName();
+		logger.debug("serverUrl=" + serverUrl);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String returnPath = "";
 		
 		switch (useEditor) {
-			/* 2017-05-23 이효민 : DEXT, NAMO 추후 개발
 			case "DEXT":
-				model.addAttribute("id", id);
+				model.addAttribute("formID", formID);
 				returnPath = "admin/ezEditor/dextEditor";
 	            break;
 			case "NAMO":
+				model.addAttribute("serverUrl", serverUrl);
 				returnPath = "admin/ezEditor/namoEditor";
-                break; */
+                break;
 			case "TAGFREE":
 				returnPath = "admin/ezEditor/tfxEditor";
 				break;
@@ -521,4 +531,131 @@ public class EzEditorController extends EgovFileMngUtil{
 		return "ezEditor/tfxSimpleUpload";
 	}
 	
+	/**
+	 * namo에디터 업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezEditor/namoUpload.do")
+	@ResponseBody
+	public String namoUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		logger.debug("namoUpload started");
+		
+		JSONObject resultObj = new JSONObject();
+		JSONArray resultArray = new JSONArray();
+		String result = "";
+		
+		try {
+			String type = request.getParameter("type");
+			logger.debug("type=" + type);
+			
+			if (type.equals("MAILOUTOFOFFICE")) { //메일 부재중설정 시 이미지 업로드되지 않도록.
+				logger.debug("type is MAILOUTOFOFFICE. no upload.");
+				result = "fail_image"; //TODO: 적절한 result가 필요함..
+			} else {
+				LoginVO userInfo = commonUtil.userInfo(loginCookie);
+				
+				MultipartFile multiFile = request.getFile("imageFile");
+				String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+				long fileSize = multiFile.getSize();
+				long maxSize = 10485760;
+				logger.debug("fileType=" + fileType + ",fileSize=" + fileSize);
+				
+				if (!(fileType.equals("gif") || fileType.equals("jpeg") || fileType.equals("jpg") || 
+						fileType.equals("png") || fileType.equals("bmp"))) { //이미지 파일이 아닐 경우
+					logger.debug("fileType is not image.");
+					result = "invalid_image";
+					
+				} else if (fileSize> maxSize) {
+					logger.debug("file size over. fileSize=" + fileSize);
+					resultArray.add(maxSize);
+					result = "invalid_size";
+					
+				} else {
+					String filePath = "";
+					if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+						filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+					} else {
+						filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+					}
+					
+					String realPath = commonUtil.getRealPath(request);
+					String today = EgovDateUtil.getToday("");
+					String fileName = UUID.randomUUID() + "." + fileType;
+					
+					filePath = filePath + commonUtil.separator + today;
+					File file = new File(realPath + filePath);
+					if (!file.exists()) {
+						file.mkdirs();
+					}
+					
+					int width = 0;
+					int height = 0;
+					
+					writeUploadedFile(multiFile, fileName, realPath + filePath);
+					
+					String urlFilePath = filePath + commonUtil.separator + fileName;
+					File imageFile = new File(realPath + urlFilePath);			
+					
+					if (imageFile.exists()) {
+						try {
+							BufferedImage bi = ImageIO.read(new File(realPath + urlFilePath));			    
+							width = bi.getWidth();
+							height = bi.getHeight();
+						} catch (Exception e) {
+							logger.debug(e.getMessage());
+						}
+						
+						String imageOrgPath = request.getParameter("imageOrgPath");
+						
+						if (imageOrgPath != null && !imageOrgPath.equalsIgnoreCase("")) {
+							imageOrgPath += "|" + urlFilePath;
+						}
+						
+						JSONObject jsonObj = new JSONObject();
+						jsonObj.put("imageURL", urlFilePath);
+						jsonObj.put("imageTitle", request.getParameter("imageTitle") == null ? "" : request.getParameter("imageTitle"));
+						jsonObj.put("imageAlt", request.getParameter("imageAlt") == null ? "" : request.getParameter("imageAlt"));
+						jsonObj.put("imageWidth", request.getParameter("imageWidth") == null ? "" : request.getParameter("imageWidth"));
+						jsonObj.put("imageWidthUnit", request.getParameter("imageWidthUnit") == null ? "" : request.getParameter("imageWidthUnit"));
+						jsonObj.put("imageHeight", request.getParameter("imageHeight") == null ? "" : request.getParameter("imageHeight"));
+						jsonObj.put("imageHeightUnit", request.getParameter("imageHeightUnit") == null ? "" : request.getParameter("imageHeightUnit"));
+						jsonObj.put("imageMarginLeft", request.getParameter("imageMarginLeft") == null ? "" : request.getParameter("imageMarginLeft"));
+						jsonObj.put("imageMarginLeftUnit", request.getParameter("imageMarginLeftUnit") == null ? "" : request.getParameter("imageMarginLeftUnit"));
+						jsonObj.put("imageMarginRight", request.getParameter("imageMarginRight") == null ? "" : request.getParameter("imageMarginRight"));
+						jsonObj.put("imageMarginRightUnit", request.getParameter("imageMarginRightUnit") == null ? "" : request.getParameter("imageMarginRightUnit"));
+						jsonObj.put("imageMarginTop", request.getParameter("imageMarginTop") == null ? "" : request.getParameter("imageMarginTop"));
+						jsonObj.put("imageMarginTopUnit", request.getParameter("imageMarginTopUnit") == null ? "" : request.getParameter("imageMarginTopUnit"));
+						jsonObj.put("imageMarginBottom", request.getParameter("imageMarginBottom") == null ? "" : request.getParameter("imageMarginBottom"));
+						jsonObj.put("imageMarginBottomUnit", request.getParameter("imageMarginBottomUnit") == null ? "" : request.getParameter("imageMarginBottomUnit"));
+						jsonObj.put("imageAlign", request.getParameter("imageAlign") == null ? "" : request.getParameter("imageAlign"));
+						jsonObj.put("imageId", request.getParameter("imageId") == null ? "" : request.getParameter("imageId"));
+						jsonObj.put("imageClass", request.getParameter("imageClass") == null ? "" : request.getParameter("imageClass"));
+						jsonObj.put("imageBorder", request.getParameter("imageBorder") == null ? "" : request.getParameter("imageBorder"));
+						jsonObj.put("imageKind", request.getParameter("imageKind") == null ? "" : request.getParameter("imageKind"));
+						jsonObj.put("imageOrgPath", imageOrgPath);
+						jsonObj.put("imageOrgWidth", width);
+						jsonObj.put("imageOrgHeight", height);
+						jsonObj.put("editorFrame", request.getParameter("editorFrame") == null ? "" : request.getParameter("editorFrame"));
+						
+						resultArray.add(jsonObj);
+						result = "success";
+						
+					} else {
+						logger.debug("image upload fail.");
+					}
+					
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			result = "";
+			e.printStackTrace();
+		}
+		
+		resultObj.put("result", result);
+		resultObj.put("addmsg", resultArray);
+		
+		logger.debug("namoUpload ended. result=" + resultObj.toString());
+		return resultObj.toString();
+	}
 }

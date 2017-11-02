@@ -1023,7 +1023,7 @@
 							<option value="2"><spring:message code='ezSchedule.t93' /></option>
 							<option value="3"><spring:message code='ezSchedule.t94' /></option>
 							<option value="4"><spring:message code='ezSchedule.t95' /></option>
-							<option value="-1"><spring:message code='ezSchedule.t96' /></option>
+							<option value="5"><spring:message code='ezSchedule.t96' /></option>
 		            	</select>
 		            	<select name="select" id="list_YearlyDay" onFocus='window.document.all["optYearly"][1].checked=true;'>
 		              		<option value="0"><spring:message code='ezSchedule.t81' /></option>
@@ -1045,7 +1045,7 @@
 			<tr>
 		    	<th align="right"><spring:message code='ezSchedule.t103' /><u>S</u>)</th>
 		    	<td width="100%">
-		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" />
+		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		    	</td>
 		  	</tr>
 		  	<tr>
@@ -1063,7 +1063,7 @@
 		    	<th align="right"></th>
 		    	<td>
 		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezSchedule.t114' />
-		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
+		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		    	</td>
 		  	</tr>
 		</table>

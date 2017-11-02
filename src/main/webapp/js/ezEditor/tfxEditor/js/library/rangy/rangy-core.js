@@ -2939,6 +2939,7 @@
                 // will result in the selection direction begin reversed if the original selection was backwards and the
                 // browser does not support setting backwards selections (Internet Explorer, I'm looking at you).
                 var sel = window.getSelection();
+                
                 if (sel) {
                     // Store the current selection
                     var originalSelectionRangeCount = sel.rangeCount;
@@ -2960,7 +2961,6 @@
 
                             
                     if(xfeBrowserFlag.isIE()) {
-
                         if(IE_version !== 9 && IE_version !== 10) {
                             r1.setStart(textNode, 1);
                             r1.collapse(true);
@@ -2988,7 +2988,8 @@
                     }
                     
                     
-
+                    //2017-09-29 이효진(양식작성기 IE11 빈 div생성되는 문제때문에 주석처리)
+                    
                     // Test whether the native selection is capable of supporting multiple ranges.
                     /*if (!selectionHasMultipleRanges) {
                         // Doing the original feature test here in Chrome 36 (and presumably later versions) prints a
