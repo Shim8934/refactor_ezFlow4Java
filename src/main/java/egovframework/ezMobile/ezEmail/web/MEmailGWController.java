@@ -4461,7 +4461,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale);
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
-					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+					pAttachListHtmlSub = bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + " (" + strSize + ")";
 					
 					if (!folderId.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
 					    String[] messageIds = message.getHeader("Message-ID");

@@ -99,7 +99,7 @@
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
 				'' as BOARDITEMID,
-				'' as BOARDGUBUN
+				URGENTAPPROVAL as BOARDGUBUN
 			FROM 
 				VAPRDOINGDOCLIST
 			WHERE
@@ -126,7 +126,7 @@
 				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
 		<![CDATA[		
 				'' as APPRID,
-				'' as APRMEMBERSN,
+				A.IMPORTANCE as APRMEMBERSN,
 				A.BOARDID,
 				A.ITEMID as BOARDITEMID,
 				P.GUBUN as BOARDGUBUN
