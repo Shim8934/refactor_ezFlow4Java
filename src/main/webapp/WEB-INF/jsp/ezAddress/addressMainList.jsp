@@ -233,7 +233,7 @@
 	                            var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                            if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")) {
 	                                alert("<spring:message code='ezAddress.t170' />");
-	                            return;
+	                                return;
 	                        	}
 	                    	}
 		                }

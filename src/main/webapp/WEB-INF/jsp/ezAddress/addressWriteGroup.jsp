@@ -1850,7 +1850,7 @@
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
 	                                <td>
-	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="50">
+	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="24">
 	                                </td>
 	                            </tr>
 	                            <tr>

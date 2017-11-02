@@ -1,4 +1,4 @@
-﻿var xmlHTTPAddressList = null;
+﻿﻿var xmlHTTPAddressList = null;
 var ListXML = null;
 function View_Change() {
     listContentArry = new Array();
@@ -198,14 +198,14 @@ function MakeAddressList() {
             var _TD3 = document.createElement("TD");
             _TD3.style.width = "20%";
             _TD3.style.margin = "0px";
-            _TD3.style.padding = "0px";
+            _TD3.style.padding = "0px 0px 0px 5px";
             _TD3.style.whiteSpace = "nowrap";
-            _TD3.style.textOverflow = "ellipsis";
             _TD3.style.overflow = "hidden";
+            _TD3.style.textOverflow = "ellipsis";
             if (CrossYN())
-                _TD3.innerHTML = "&nbsp;"+Sname;
+                _TD3.innerText = Sname;
             else
-                _TD3.innerHTML = "&nbsp;"+Sname;
+                _TD3.innerHTML = "&nbsp;" + Sname;
             _TR.appendChild(_TD3);
 
             var _TD4 = document.createElement("TD");            
@@ -319,13 +319,18 @@ function MakeAddressList() {
             var SubDivLayer = document.createElement("DIV");
             SubDivLayer.className = "back";
 
-            var SubPTag = document.createElement("P");
+            var SubPTag = document.createElement("p");
             SubPTag.className = "topinfo";
-            if (SType == "P")
-                SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + Sname;
-            else
-                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + Sname;
 
+            var pContentSub = document.createElement("span");
+            pContentSub.innerText = Sname;
+            
+            if (SType == "P"){
+            	SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
+            } else {
+                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + Sname;
+            }
+            SubPTag.appendChild(pContentSub);
 
             var ULTag = document.createElement("ul");
 
@@ -341,10 +346,21 @@ function MakeAddressList() {
                 UITag2.textContent = Scompany;
             else
                 UITag2.innerText = Scompany;
+            
             var UITag3 = document.createElement("li");
-            UITag3.innerHTML = CardHeader1 + ":<span class=\"point_txt\">" + ScompnayPhone + "</span>";
+            var span3 = document.createElement("span");
+            span3.setAttribute("class", "point_txt");
+            span3.innerText = ScompnayPhone;
+            UITag3.innerText =  CardHeader1 + ":";
+            UITag3.appendChild(span3);
+            
             var UITag4 = document.createElement("li");
-            UITag4.innerHTML = CardHeader2 + ":<span class=\"point_txt\">" + Smobile + "</span>";
+            var span4 = document.createElement("span");
+            span4.setAttribute("class", "point_txt");
+            span4.innerText = Smobile;
+            UITag4.innerText = CardHeader2 + ":";
+            UITag4.appendChild(span4);
+            
             var UITag5 = document.createElement("li");
             UITag5.innerHTML = CardHeader3 + ":<span class=\"point_txt\">" + Semail + "</span>";
 

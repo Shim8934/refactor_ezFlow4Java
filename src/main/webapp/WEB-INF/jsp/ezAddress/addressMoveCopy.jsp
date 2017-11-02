@@ -53,26 +53,28 @@
 	                AddressTreeView.select(1);
 	            }
 	        }
-	        function requestdata(event) {
-	            if (!event) {
-	                event = window.event;
-	            }
-	            var nodeIdx = event.nodeIdx;
-	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-	                nodeIdx = arguments[0].nodeIdx;
-	            }
-	            var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
-	            AddressTreeView.putchildxml(nodeIdx, childxml);
-	        }
-	        function btn_Copy_onclick() {
-	            var nodeIdx = AddressTreeView.selectedIndex();
-	            if (nodeIdx == -1) {
-	                alert("<spring:message code='ezAddress.t267' />");
-		        return;
+
+        function requestdata(event) {
+            if (!event) {
+                event = window.event;
+            }
+            var nodeIdx = event.nodeIdx;
+            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
+                nodeIdx = arguments[0].nodeIdx;
+            }
+            var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
+            alert(AddressTreeView.getvalue(nodeIdx, "type"));
+            AddressTreeView.putchildxml(nodeIdx, childxml);
+        }
+	    function btn_Copy_onclick() {
+            var nodeIdx = AddressTreeView.selectedIndex();
+            if (nodeIdx == -1) {
+                alert("<spring:message code='ezAddress.t267' />");
+	        	return;
 		    }
 	        if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
 	            alert("<spring:message code='ezAddress.t168' />");
-		        return;
+	        	return;
 		    }
 	        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
 	            alert("<spring:message code='ezAddress.t169' />");
