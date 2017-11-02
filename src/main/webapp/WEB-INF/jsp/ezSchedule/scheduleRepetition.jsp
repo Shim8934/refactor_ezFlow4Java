@@ -1045,7 +1045,7 @@
 			<tr>
 		    	<th align="right"><spring:message code='ezSchedule.t103' /><u>S</u>)</th>
 		    	<td width="100%">
-		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" />
+		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		    	</td>
 		  	</tr>
 		  	<tr>
@@ -1063,7 +1063,7 @@
 		    	<th align="right"></th>
 		    	<td>
 		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezSchedule.t114' />
-		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
+		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		    	</td>
 		  	</tr>
 		</table>
