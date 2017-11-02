@@ -231,15 +231,21 @@
 		        listview.LoadFromID("GroupListView");
 		        
 		        console.log(listview.GetSelectedRows());
-		        document.getElementById("HeaderAllCheckBox").checked = false;
-		        event_HeaderCheckBoxClick(document.getElementById("HeaderAllCheckBox"));
-		        		        
-		        if (listview.GetSelectedRows() == "") {
-		            alert(strLang266);
-		            return;
-		        }
 		        
-		        listview.GetDataRows()[0].onclick();
+		        if(document.getElementById("HeaderAllCheckBox").checked) {
+			        document.getElementById("HeaderAllCheckBox").checked = false;
+			        event_HeaderCheckBoxClick(document.getElementById("HeaderAllCheckBox"));
+			        listview.GetDataRows()[0].onclick();
+		        } else {
+		        	
+			        if (listview.GetSelectedRows() == "") {
+			            alert(strLang266);
+			            return;
+			        }
+			        
+			        listview.GetSelectedRows()[0].onclick(); 
+		        }
+      		            
 		        var Selected = listview.GetSelectedRows();
 		        var feature = GetOpenPosition(430, 370);
 		        //window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
