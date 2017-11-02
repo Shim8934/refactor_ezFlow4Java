@@ -1023,7 +1023,7 @@
 							<option value="2"><spring:message code='ezSchedule.t93' /></option>
 							<option value="3"><spring:message code='ezSchedule.t94' /></option>
 							<option value="4"><spring:message code='ezSchedule.t95' /></option>
-							<option value="-1"><spring:message code='ezSchedule.t96' /></option>
+							<option value="5"><spring:message code='ezSchedule.t96' /></option>
 		            	</select>
 		            	<select name="select" id="list_YearlyDay" onFocus='window.document.all["optYearly"][1].checked=true;'>
 		              		<option value="0"><spring:message code='ezSchedule.t81' /></option>
