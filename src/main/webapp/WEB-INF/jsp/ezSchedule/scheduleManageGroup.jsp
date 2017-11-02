@@ -101,7 +101,7 @@
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "xml",
-		    		async : true,
+		    		async : false,
 		    		data : {
 		    			groupID : GetAttribute(Selected[0], "data1")
 		    		},
