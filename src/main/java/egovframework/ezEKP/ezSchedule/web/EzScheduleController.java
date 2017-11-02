@@ -147,6 +147,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         }
         
         loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+        String userOffset = loginSimpleVO.getOffset().split("\\|")[1];
         
 		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(loginSimpleVO.getId(), loginSimpleVO.getTenantId());
 		
@@ -160,6 +161,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("defautView", defaultView);
 		model.addAttribute("startDay", startDay);
 		model.addAttribute("lang", loginSimpleVO.getLang());
+		model.addAttribute("userOffset", userOffset);
 		
 		return "/ezSchedule/scheduleLeft";
 	}

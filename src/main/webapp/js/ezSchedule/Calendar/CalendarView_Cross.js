@@ -471,6 +471,12 @@ function MonthData(oThisDate, TDIndex) {
 
 
     var nowDate = new Date();
+    
+    if (typeof UserOffset !== 'undefined' && UserOffset) {
+    	var _timez = nowDate.getTime() + (nowDate.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000);
+    	nowDate.setTime(_timez);	
+    }
+    
     var cell_ID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
