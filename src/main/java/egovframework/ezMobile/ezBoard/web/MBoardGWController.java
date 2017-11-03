@@ -598,13 +598,14 @@ public class MBoardGWController {
 			String fileSize = "";
 			for (int i=0; i<list.size(); i++) {
 				fileSize = list.get(i).getFileSize();
+				double fs = Double.parseDouble(fileSize);
 				
-				if (Integer.parseInt(fileSize) / 1024 / 1024 > 1) {
-					fileSize = ((Integer.parseInt(fileSize) / 1024 / 1024 * 10) / 10) + "MB";
-				} else if ((Integer.parseInt(fileSize) / 1024) > 1) {
-					fileSize = (Integer.parseInt(fileSize)/1024) + "KB"; 
+				if (fs / 1024 / 1024 > 1) {
+					fileSize = Math.floor(fs / 1024 / 1024 * 10) / 10 + "MB";
+				} else if ((fs / 1024) > 1) {
+					fileSize = (int)(fs/1024) + "KB"; 
 				} else {
-					fileSize = fileSize + "B";
+					fileSize = Integer.parseInt(fileSize) + "B";
 				}
 				
 				list.get(i).setFileSize(fileSize);
