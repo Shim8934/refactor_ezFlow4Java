@@ -1255,7 +1255,7 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
         //멀티선택이 불가능한 리스트이거나 컨트롤키가 눌려있지 않으면 
         //모든 선택된 Row를 Unselect 한다.
-        if (bMultiSelectable == false || PressCtrlKey == false)
+        //if (bMultiSelectable == false || PressCtrlKey == false)
             tr_unselectedAll(pTableID);
 
         //현재 클릭한 Row를 Select 한다.
