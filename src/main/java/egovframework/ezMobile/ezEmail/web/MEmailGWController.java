@@ -752,7 +752,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (request.getParameter("msgto") != null) {
 				msgto = request.getParameter("msgto").trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
 			}
-			
+
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+			ia.makeTopLevelFolders();
+
 			if (!messageId.equals("") && !folderId.equals("")){
 				long uid = 0;
 
@@ -763,21 +767,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				uid = Long.parseLong(messageId);
 				
 				LOGGER.debug("tenantID" + tenantID + "userId" + userId);
-				try {
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
-					ia.makeTopLevelFolders();
-				} catch (Exception e){
-					e.printStackTrace();
-				} finally {
-					if (ia != null) {
-						ia.close();
-						ia = null;
-					}
-				}
-				
-				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale);
 				
 	    		Folder orgFolder = ia.getFolder(folderPath);
 	    		orgFolder.open(Folder.READ_ONLY);       
