@@ -76,6 +76,8 @@ public interface EzScheduleService {
 	public void deleteScheduleMember(String groupId, String memberId, int tenantId) throws Exception;
 
 	public void updateScheduleMember(String groupId, String memberId, String status, int tenantId) throws Exception;
+	
+	public void updateAttendantStatus(String scheduleId, String attendantId, String status, int tenantId) throws Exception;	
 
 	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception;
 

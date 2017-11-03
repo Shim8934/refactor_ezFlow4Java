@@ -1248,14 +1248,14 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
         //멀티선택이 가능한 리스트이고 쉬프트키가 눌려져 있으면
         //구간을 모두 선택한다.
-        if (bMultiSelectable && PressShiftKey) {
+/*        if (bMultiSelectable && PressShiftKey) {
             tr_selectBlock(pRowID, pTableID);
             return;
-        }
+        }*/
 
         //멀티선택이 불가능한 리스트이거나 컨트롤키가 눌려있지 않으면 
         //모든 선택된 Row를 Unselect 한다.
-        if (bMultiSelectable == false || PressCtrlKey == false)
+        //if (bMultiSelectable == false || PressCtrlKey == false)
             tr_unselectedAll(pTableID);
 
         //현재 클릭한 Row를 Select 한다.
@@ -1322,6 +1322,10 @@ function tr_unselectedAll(pTableID) {
 
 //컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
 function tr_selectBlock(pRowID, pTableID) {
+	
+	console.log(pRowID);
+	console.log(pTableID);
+	
     var oList = document.getElementById(pTableID);
     if (!oList)
         return;

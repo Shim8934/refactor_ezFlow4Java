@@ -145,6 +145,18 @@
 		        DisplayUserImageList();
 		    }
 			
+		    function onDragEnter(evt) {
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		        evt.dataTransfer.dropEffect = "copy";
+		        evt.dataTransfer.effectAllowed = "copy";
+		    }
+		    function onDrop(evt, element) {
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		        InsertReceiver(element);
+		    }
+		    
 		    function RequestData(pNodeID, pTreeID) {
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();

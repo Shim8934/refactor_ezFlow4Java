@@ -36,7 +36,13 @@
 		            document.getElementById("selectfolder").style.display = "";
 		            changetype();
 		        }
+		        
+		        var getMemo = document.getElementById("TextMemo").value;
+		        getMemo = getMemo.replace(/(<br>|<br\/>|<br \/>)/g, "\r\n");
+		        document.getElementById("TextMemo").innerText = "";
+		        document.getElementById("TextMemo").innerText = getMemo;
 		    }
+
 		    function change_photo() {
 		        var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 		        var imgName = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx\0All Files (*.*)\0*.*\0\0", "")
@@ -213,7 +219,7 @@
 		        }
 				
 		        var pTextEmail = TrimText(document.getElementById("TextEmail").value);
-		        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([a-zA-Z]{2,100}(?:\.[a-zA-Z]{2})?)$/;
+		        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
 		        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 		            alert("<spring:message code='ezAddress.t1100' />");
 		            document.getElementById("TextEmail").value = pTextEmail;
@@ -244,7 +250,8 @@
 		        createNodeAndInsertCDataText(xmlDom, objNode, "SCOMPANYADDR", document.getElementById("TextComAddr").value);
 		        createNodeAndInsertText(xmlDom, objNode, "SHOMEZIP", document.getElementById("TextHomeZip").value);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "SHOMEADDR", document.getElementById("TextHomeAddr").value);
-		        createNodeAndInsertCDataText(xmlDom, objNode, "SMEMO", document.getElementById("TextMemo").value);
+		        var transMemo = document.getElementById("TextMemo").value.replace(/(\n|\r\n)/g , "<br>");
+		        createNodeAndInsertCDataText(xmlDom, objNode, "SMEMO", transMemo);
 		        createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);
@@ -452,69 +459,69 @@
 		    <tr>
 		      <!-- <th rowspan="4" align="center" ><span id="LiteralPhoto" width="119"></span></th> -->
 		      <th><spring:message code='ezAddress.t124' /></th>
-		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sName}"></td>
+		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass" value="<c:out value="${addressInfo.sName}"/>"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t51' /></th>
-		      <td><input type="text" id="TextCompany" name="TextCompany" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sCompany}"></td>
+		      <td><input type="text" id="TextCompany" name="TextCompany" style="width:100%" maxlength="24" class="txtClass" value="<c:out value="${addressInfo.sCompany}"/>"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t54' /></th>
-		      <td><input type="text" id="TextDept" name="TextDept" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sDept}"></td>
+		      <td><input type="text" id="TextDept" name="TextDept" style="width:100%" maxlength="50" class="txtClass" value="<c:out value="${addressInfo.sDept}"/>"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t359' /></th>
-		      <td><input type="text" id="TextTitle" name="TextTitle" style="width:100%" maxlength="50" class="txtClass" value="${addressInfo.sTitle}"></td>
+		      <td><input type="text" id="TextTitle" name="TextTitle" style="width:100%" maxlength="50" class="txtClass" value="<c:out value="${addressInfo.sTitle}"/>"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t291' /></th>
-		      <td><input type="text" id="TextEmail" name="TextEmail" style="width:100%" maxlength="100" class="txtClass" value="${addressInfo.sEmail}"></td>
+		      <td><input type="text" id="TextEmail" name="TextEmail" style="width:100%" maxlength="100" class="txtClass" value="<c:out value="${addressInfo.sEmail}"/>"></td>
 		    </tr>
 		  </table>
 		  <table class="popuplist" style="margin-top:10px;width:100%">
 		    <tr>
 		      <th style="white-space:nowrap"><spring:message code='ezAddress.t192' /></th>
-		      <td style="width:185px"><input type="text" id="TextCompanyPhone" name="TextCompanyPhone" style="width:185px" class="txtClass" value="${addressInfo.sCompanyPhone}"></td>
+		      <td style="width:185px"><input type="text" id="TextCompanyPhone" name="TextCompanyPhone" style="width:185px" class="txtClass" value="<c:out value="${addressInfo.sCompanyPhone}"/>"></td>
 		      <th style="white-space:nowrap"><spring:message code='ezAddress.t189' /></th>
-		      <td style="width:100%"><input type="text" id="TextMobile" name="TextMobile" style="width:100%" class="txtClass" value="${addressInfo.sMobile}"></td>
+		      <td style="width:100%"><input type="text" id="TextMobile" name="TextMobile" style="width:100%" class="txtClass" value="<c:out value="${addressInfo.sMobile}"/>"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t292' /></th>
-		      <td><input type="text" id="TextFax" name="TextFax" style="width:185px" class="txtClass" value="${addressInfo.sFax}"></td>
+		      <td><input type="text" id="TextFax" name="TextFax" style="width:185px" class="txtClass" value="<c:out value="${addressInfo.sFax}"/>"></td>
 		      <th><spring:message code='ezAddress.t293' /></th>
-		      <td><input type="text" id="TextHomePage" name="TextHomePage" style="width:100%" class="txtClass" value="${addressInfo.sHomePage}"></td>
+		      <td><input type="text" id="TextHomePage" name="TextHomePage" style="width:100%" class="txtClass" value="<c:out value="${addressInfo.sHomePage}"/>"></td>
 		    </tr>
 		    <tr>
 		      <th rowSpan="2"><spring:message code='ezAddress.t295' /></th>
 		      <td colSpan="3">
               <c:if test="${primaryLang == '1'}">
-              <input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="${addressInfo.sCompanyZip}">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              <input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               </c:if>
               <c:if test="${primaryLang != '1'}">
-              <input type="text" id="TextComZip" name="TextComZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="${addressInfo.sCompanyZip}">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
+              <input type="text" id="TextComZip" name="TextComZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
               </c:if>
               </td>
 		    </tr>
 		    <tr>
-		      <td colSpan="3"><input type="text" id="TextComAddr" name="TextComAddr" style="width:100%" class="txtClass" value="${addressInfo.sCompanyAddr}"></td>
+		      <td colSpan="3"><input type="text" id="TextComAddr" name="TextComAddr" style="width:100%" class="txtClass" value="<c:out value="${addressInfo.sCompanyAddr}"/>"></td>
 		    </tr>
 		    <tr>
 		      <th rowSpan="2"><spring:message code='ezAddress.t296' /></th>
 		      <td colSpan="3">
               <c:if test="${primaryLang == '1'}">
-              <input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="${addressInfo.sHomeZip}">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              <input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               </c:if>
               <c:if test="${primaryLang != '1'}">
-              <input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="${addressInfo.sHomeZip}">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
+              <input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
               </c:if>
               </td>
 		    </tr>
 		    <tr>
-		      <td colSpan="3"><input type="text" id="TextHomeAddr" name="TextHomeAddr" style="width:100%" class="txtClass" value="${addressInfo.sHomeAddr}"></td>
+		      <td colSpan="3"><input type="text" id="TextHomeAddr" name="TextHomeAddr" style="width:100%" class="txtClass" value="<c:out value="${addressInfo.sHomeAddr}"/>"></td>
 		    </tr>
 		    <tr style="height:74px;">
 		      <th style="height:74px;"><spring:message code='ezAddress.t91' /></th>
-		      <td colSpan="3" style="height:74px;"><textarea id="TextMemo" name="TextMemo" style="width:100%;height:69px;word-break:break-all;" class="txtClass">${addressInfo.sMemo}</textarea></td>
+		      <td colSpan="3" style="height:74px;"><textarea id="TextMemo" name="TextMemo" style="width:100%;height:69px;word-break:break-all;" class="txtClass"><c:out value="${addressInfo.sMemo}"></c:out> </textarea></td>
 		    </tr>
 		    <tr style="display:none;height:62px;">
 		      <th><spring:message code='ezAddress.t298' /></th>

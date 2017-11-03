@@ -101,7 +101,7 @@
 		    }
 	
 		    function del_attendant() {
-		        var checks = document.getElementById("receivelist").getElementsByTagName("input")
+		        var checks = document.getElementById("receivelist").getElementsByTagName("input");
 		        var check_Value = true;		        	
 		        var count = 0;		        
 		        var attendantIdList = new Array();
@@ -147,6 +147,50 @@
 					}
 				});		       
 		    }
+		    
+		    function renew_member() {
+		        var checks = document.getElementById("receivelist").getElementsByTagName("input");
+		        var memberId = [];
+		        var count = 0;              
+		        
+		        for (var i = 0; i < checks.length; i++) {		        	
+		            if (checks.item(i).checked == true) {
+		                if (GetAttribute(checks.item(i), "attendantstatus") != 2) {
+		                    alert("<spring:message code='ezSchedule.t179' />");
+		                    return;
+		                }
+		                memberId[count] = GetAttribute(checks.item(i), "attendantid");
+		                count++;		                
+		            }
+		        }
+		       
+		        if (count == 0) {
+		            alert("<spring:message code='ezSchedule.t181' />");
+		            return;
+		        }
+	
+		        if (!confirm(count + "<spring:message code='ezSchedule.t182' />"))
+		            return;
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "html",
+		    		async : false,
+		    		data : {
+		    			scheduleId : scheduleid,
+		    			status : 3,
+		    			memberID : memberId
+		    		},
+		    		url : "/ezSchedule/scheduleUpdateAttendant.do",
+		    		success: function(text){
+		    			alert(count + "<spring:message code='ezSchedule.t184' />");
+			            window.location.reload(false);
+		    		},
+		    		error: function(err){
+		    			alert("<spring:message code='ezSchedule.t183' />");
+		    		}
+		        });		
+		    }
 		</script>
 	</head>
 	
@@ -156,6 +200,7 @@
 		  		<ul>
 		    		<li><span onClick="add_attendant()" title="<spring:message code='ezSchedule.t247' />"><spring:message code='ezSchedule.t186' /></span></li>
 		    		<li><span onClick="del_attendant()" title="<spring:message code='ezSchedule.t248' />"><spring:message code='ezSchedule.t188' /></span></li>
+		    		<li><span onClick="renew_member()"  title="<spring:message code='ezSchedule.t189' />"><spring:message code='ezSchedule.t169' /></span></li>
 		  		</ul>
 			</div>
 			<div id="close">
