@@ -39,6 +39,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
@@ -85,7 +86,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 	@Resource(name="EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
-		
+	
+	@Resource(name="EzOrganService")	
+	private EzOrganService ezOrganService;
+	
 	@Autowired
 	private EgovMessageSource msg;
 	
@@ -875,6 +879,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			startDate = startDate.substring(0,10);
 			endDate = endDate.substring(0,10);
+			
+			for(ScheduleInfoVO test: sList) {
+				logger.debug("Schedule user name 1: " + test.getOwnerName());
+				logger.debug("Schedule user name 2: " + test.getOwnerName2());
+				logger.debug("Schedule creator name 1: " + test.getCreatorName());
+				logger.debug("Schedule creator name 2: " + test.getCreatorName2());
+				logger.debug("Schedule Title: " + test.getTitle());
+				logger.debug("-------------------------------------------");
+				logger.debug("-------------------------------------------");
+			}
 		}		
 		model.addAttribute("offSetMin", offSetMin);
 		model.addAttribute("filter", filter);
@@ -1454,7 +1468,24 @@ public class EzScheduleController extends EgovFileMngUtil {
         String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
         String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();	        
         
-        String pattern = "";
+        //Set ownername and ownername2
+        if (scheduletype.equals("1")) {
+        	ownername = creatorname;
+        	ownername2 = creatorname2;
+        }
+        else if (scheduletype.equals("2") || scheduletype.equals("3")) {
+        	String organName = ezOrganService.getPropertyValue(ownerid, "displayname", loginVO.getTenantId());
+        	
+        	if (organName.equals(ownername)) {
+        		String organName2 = ezOrganService.getPropertyValue(ownerid, "displayname2", loginVO.getTenantId());
+        		ownername2 = organName2;
+        	}
+        	else {
+        		ownername = organName;
+        	}
+        }
+        
+        String pattern = "";       
 
         if (scheduleid != null && !scheduleid.equals("")) {
         	pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
