@@ -646,6 +646,22 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 	}
 	
+	@RequestMapping(value="/ezSchedule/scheduleUpdateAttendant.do")
+	@ResponseBody
+	public void scheduleUpdateAttendant(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleUpdateAttendant started ============");		
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String scheduleId = request.getParameter("scheduleId");
+		String status = request.getParameter("status");
+		
+		for (int i=0; i < member.length; i++) {	
+			ezScheduleService.updateAttendantStatus(scheduleId, member[i], status, loginSimpleVO.getTenantId());
+		}		
+	}
+	
 	/**
 	 * 일정그룹관리 멤버 선택 팝업 창
 	 */
@@ -682,7 +698,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("deptID", loginVO.getDeptID());
                 		
 		return "ezSchedule/scheduleSelectAttendant";
-	}
+	}	
 	
 	/**
 	 * 일정그룹관리 멤버 추가 
@@ -879,17 +895,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			startDate = startDate.substring(0,10);
 			endDate = endDate.substring(0,10);
-			
-			for(ScheduleInfoVO test: sList) {
-				logger.debug("Schedule user name 1: " + test.getOwnerName());
-				logger.debug("Schedule user name 2: " + test.getOwnerName2());
-				logger.debug("Schedule creator name 1: " + test.getCreatorName());
-				logger.debug("Schedule creator name 2: " + test.getCreatorName2());
-				logger.debug("Schedule Title: " + test.getTitle());
-				logger.debug("-------------------------------------------");
-				logger.debug("-------------------------------------------");
-			}
-		}		
+		}
+		
 		model.addAttribute("offSetMin", offSetMin);
 		model.addAttribute("filter", filter);
 		model.addAttribute("keyword", keyword);

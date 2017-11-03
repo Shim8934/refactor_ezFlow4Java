@@ -542,6 +542,17 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		ezScheduleDAO.updateScheduleMember(map);
 	}
+	
+	@Override
+	public void updateAttendantStatus(String scheduleId, String attendantId, String status, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_ATTENDANTID", attendantId);
+		map.put("v_STATUS", status);
+		map.put("v_TENANTID", tenantId);
+		
+		ezScheduleDAO.updateAttendantStatus(map);
+	}
 
 	@Override
 	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception {
