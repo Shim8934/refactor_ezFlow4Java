@@ -1559,7 +1559,7 @@
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li ><span id="btnCabDel" onclick="return DeleteCab();"><spring:message code='ezApprovalG.t266'/></span> </li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="cab_year" name="cab_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  
 	        </ul>
@@ -1589,7 +1589,7 @@
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="rec_year" name="rec_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>    
 	        </ul>
@@ -1599,7 +1599,7 @@
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="del_year" name="del_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>    
 	        </ul>
