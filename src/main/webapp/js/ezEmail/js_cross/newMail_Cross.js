@@ -729,7 +729,7 @@ function Send_onClick_Complete(ReturnValue) {
             }
             
             // 보안메일 체크되어있을 경우 보안메일 설정 팝업창을 띄운다.
-            if (document.getElementById("chkSecureMail").checked) {
+            if (useSecureMail == "YES" && document.getElementById("chkSecureMail").checked) {
             	secureMailParams["securePassword"] = securePassword;
             	secureMailParams["secureReadCount"] = secureReadCount;
             	secureMailParams["secureReadDate"] = secureReadDate;
@@ -906,7 +906,7 @@ function Save_onClick_Complete(ReturnValue) {
             }
             
             // 보안메일 체크되어있을 경우 request xml에 보안메일정보 추가
-            if (document.getElementById("chkSecureMail").checked) {
+            if (useSecureMail == "YES" && document.getElementById("chkSecureMail").checked) {
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREMAIL", "TRUE");
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);

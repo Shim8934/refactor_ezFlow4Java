@@ -237,11 +237,14 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 						message.removeHeader("X-JMocha-Each-Mail");
 					}
 					
+					String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId);
+			        logger.debug("useSecureMail=" + useSecureMail);
+					
 					String[] secureMailHeaders = message.getHeader("X-JMocha-Secure-Mail");
 					String secureMailHeader = secureMailHeaders != null ? secureMailHeaders[0] : null;		
 					
 					// 보안메일 처리
-					if (secureMailHeader != null && secureMailHeader.equals("true")) {
+					if (useSecureMail.equals("YES") && secureMailHeader != null && secureMailHeader.equals("true")) {
 						
 						// get Info from secureMail header
 						secureMailHeader = MimeUtility.decodeText(secureMailHeader);

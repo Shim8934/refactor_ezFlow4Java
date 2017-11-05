@@ -115,7 +115,7 @@
 		        document.getElementById("securePassword").value = RetValue["securePassword"];
 		        document.getElementById("securePasswordCheck").value = RetValue["securePassword"];
 		        
-		        if (RetValue["secureReadCount"] != "0") {
+		        if (RetValue["secureReadCount"] != "" && RetValue["secureReadCount"] != "0") {
 		        	document.getElementById("maxReadCount").value = RetValue["secureReadCount"];
 		        	document.getElementById("maxReadCount").disabled = false;
 		        	document.getElementById("countUnlimit").checked = false;

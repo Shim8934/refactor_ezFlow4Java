@@ -254,7 +254,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
-		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
+		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail);
 		
 		//메일 색상 관련 설정
 		String inMailColor = "#808080";
@@ -934,6 +935,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
 		model.addAttribute("importance", importance);
 		model.addAttribute("isEach", isEach);
+		model.addAttribute("useSecureMail", useSecureMail);
 		model.addAttribute("isSecureMail", isSecureMail);
 		model.addAttribute("bodyType", bodyType);
 		model.addAttribute("replySendTime", replySendTime);
@@ -2819,6 +2821,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	throw new Exception("OVERMESSAGESIZE:" + maxMessageSizeD + "MB:" + messageSizeD + "MB");
 		        }
 		        
+		        String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", userInfo.getTenantId());
+		        logger.debug("useSecureMail=" + useSecureMail);
+		        
 		        if (cmd.equalsIgnoreCase("SAVE")) {
 		        	logger.debug("Saving the message");
 		        	
@@ -2830,7 +2835,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		if (delaySendTime != ""){
 		    			message.setHeader("Delivery-Date", delaySendTime);
 		    		}
-		    		if (isSecureMail) {
+		    		if (useSecureMail.equals("YES") && isSecureMail) {
 		    			message.setHeader("X-JMocha-Secure-Mail", "true");
 		    		}
 		    		
@@ -2875,7 +2880,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			        	String delaySendTimeUTC = commonUtil.getDateStringInUTC(delaySendTime, userInfo.getOffset(), true);
 			            
 			        	// 보안메일 처리
-		            	if (isSecureMail) {
+		            	if (useSecureMail.equals("YES") && isSecureMail) {
 	    		        	message.setHeader("X-JMocha-Secure-Mail", "true");
 	    		        	message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
@@ -2912,7 +2917,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 			            	
 			            	// 보안메일 처리
-			            	if (isSecureMail) {
+			            	if (useSecureMail.equals("YES") && isSecureMail) {
 			            		if (!secureReadDate.equals("")) {
 			            			Date date = new Date(Long.parseLong(secureReadDate));
 			            			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

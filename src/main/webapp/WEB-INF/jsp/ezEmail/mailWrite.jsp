@@ -86,7 +86,6 @@
 	    var g_newid = "${newWindowId}";
 	    var FileUploadtype = "${fileUploadType}";
 	    var iseachMail = "${isEach}";
-	    var isSecureMail = "${isSecureMail}";
 	    var individualmailuser = "${individualMailUser}";
 	    var pSecurity = "${pSecurity}";
 	    var docHref = "${docHref}";
@@ -117,6 +116,8 @@
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
 	    var isCrossBrowser = "${isCrossBrowser}";
+	    var useSecureMail = "${useSecureMail}";
+	    var isSecureMail = "${isSecureMail}";
 	    var securePassword = "";
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
@@ -135,9 +136,7 @@
 	                window.opener.document.Script.refreshUnreadCount()
 	            } catch (e) { }
 	        }
-	        if (isSecureMail == "true") {
-	        	document.getElementById("chkSecureMail").checked = true;
-	        }
+	        
 	        if (pSecurity == "Security") {
 	            pSecurity = "3";
 	        }
@@ -938,10 +937,10 @@
 	                            ${mailSendObject}
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
 	                        </li>
-	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+	                        <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
 	                        	<input type="checkbox" id="chkSecureMail" />
 	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
 	                        </li>
@@ -957,6 +956,14 @@
 	                <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		      			
+		      			if (useSecureMail == "YES") {
+		    	        	$('.securemail').css('display', '');
+		    	        	
+		    	        	if (isSecureMail == "true") {
+		    	        		document.getElementById("chkSecureMail").checked = true;
+		    	        	}
+		    	        }
 		  			</script>
 	            </td>
 	        </tr>

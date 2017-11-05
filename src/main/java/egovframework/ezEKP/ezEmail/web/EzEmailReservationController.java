@@ -322,7 +322,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
-		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
+		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail);
 		
 		String senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
 		logger.debug("senderInfo=" + senderInfo);
@@ -587,6 +588,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
+		model.addAttribute("useSecureMail", useSecureMail);
 		model.addAttribute("isSecureMail", isSecureMail);
 		model.addAttribute("securePassword", securePassword);
 		model.addAttribute("secureMaxReadCount", secureReadCount);
