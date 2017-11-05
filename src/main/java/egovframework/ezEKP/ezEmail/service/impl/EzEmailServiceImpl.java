@@ -1102,6 +1102,109 @@ public class EzEmailServiceImpl implements EzEmailService {
         logger.debug("sendMail ended.");
 	}
 	
+	/**
+	 * 메일 보내기 서비스
+	 * @param recipients SMTP의 rcpt to에 지정될 수신자 목록
+	 * @param loginCookie 로그인 쿠키
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @param isSaved 보낸편지함에 저장 여부
+	 * @throws Exception
+	 */
+	@Override
+	public void sendMailWithExplicitRecipients(InternetAddress[] recipients, String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception {
+		logger.debug("sendMailWithExplicitRecipients started. recipients=" + recipients);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userId + "@" + domainName;
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		IMAPAccess ia = null;
+		
+		try {
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userAccount, password);
+			
+			MimeMessage message = sa.createMimeMessage();
+			
+			// set from
+			logger.debug("from=" + from.getAddress());
+			message.setFrom(from);
+			
+			// set to
+			for (InternetAddress to : toArr) {
+				logger.debug("to=" + to.getAddress());
+				message.addRecipient(RecipientType.TO, to);
+			}
+			
+			// set cc
+			if (ccArr != null) {
+				for (InternetAddress cc : ccArr) {
+					logger.debug("cc=" + cc.getAddress());
+					message.addRecipient(RecipientType.CC, cc);
+				}
+			}
+			
+			// set bcc
+			if (bccArr != null) {
+				for (InternetAddress bcc : bccArr) {
+					logger.debug("bcc=" + bcc.getAddress());
+					message.addRecipient(RecipientType.BCC, bcc);
+				}
+			}
+			
+			// set subject
+			logger.debug("subject=" + subject);
+			message.setSubject(subject, "UTF-8");
+			
+			// set content
+			message.setContent(content, "text/html; charset=utf-8");
+			
+			// set sentDate
+	        message.setSentDate(Calendar.getInstance().getTime());
+	        
+	        // set User-Agent header
+	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+	        
+	        Transport.send(message, recipients);
+	        logger.debug("Mail send success.");
+	        
+	        if (isSaved) {
+	        	//보낸편지함에 저장
+	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+	        			userAccount, password, egovMessageSource, userInfo.getLocale());
+	        	
+	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
+	    		
+	    		if (!sentFolder.exists()) {
+	    			sentFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
+	    		}
+	    		
+	    		message.setFlag(Flags.Flag.SEEN, true);
+    			sentFolder.open(Folder.READ_WRITE);
+    			sentFolder.appendMessages(new Message[]{message});
+    			sentFolder.close(true);
+    			logger.debug("Mail is successfully saved in sent folder.");
+	        }
+        
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+        logger.debug("sendMailWithExplicitRecipients ended.");
+	}
+	
 	@Override
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception {
 		logger.debug("mailContentDownload started. url=" + url);
