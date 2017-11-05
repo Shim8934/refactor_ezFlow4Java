@@ -2,10 +2,10 @@
 
 <xfeEditor>
 <menu1>
-	<newfile visible="false">New File</newfile>	
-	<savefile visible="false">Save File</savefile>
+<!-- 	<newfile visible="false">New File</newfile>	 -->
+<!-- 	<savefile visible="false">Save File</savefile> -->
 	<print visible="true">Print</print>
-	<pagebreak visible="false">Page Break</pagebreak>
+<!-- 	<pagebreak visible="false">Page Break</pagebreak> -->
 	<split/>
 	<cut visible="true">Cut</cut>
 	<copy visible="true">Copy</copy>
@@ -20,15 +20,15 @@
 	<InsertImage visible="true">Insert Image</InsertImage>
 	<ImageProperty visible="true">Image Property</ImageProperty>
 <!-- 	<split/> -->
-	<InsertFlash visible="false">Insert Flash</InsertFlash>
-	<InsertMedia visible="false">Insert Media</InsertMedia>
-	<InsertMediaLink visible="false">Insert Media Link</InsertMediaLink>
-	<Background visible="false">Insert Background</Background>
-	<InsertGrid visible="false">Insert Grid</InsertGrid>
+<!-- 	<InsertFlash visible="false">Insert Flash</InsertFlash> -->
+<!-- 	<InsertMedia visible="false">Insert Media</InsertMedia> -->
+<!-- 	<InsertMediaLink visible="false">Insert Media Link</InsertMediaLink> -->
+<!-- 	<Background visible="false">Insert Background</Background> -->
+<!-- 	<InsertGrid visible="false">Insert Grid</InsertGrid> -->
 	<split/>
 	<InsertSymbol visible="true">Insert Symbol</InsertSymbol>
 	<HorizontalRule visible="true">Horizontal Rule</HorizontalRule>
-	<Bookmark visible="false">Insert Bookmark</Bookmark>	
+<!-- 	<Bookmark visible="false">Insert Bookmark</Bookmark>	 -->
 	<Superscript visible="true">Superscript</Superscript>
 	<Subscript visible="true">Subscript</Subscript>
 	<split/>
@@ -37,11 +37,11 @@
 	<split/>
 	<SelectAll visible="true">Select All</SelectAll>
 <!-- 	<split/> -->
-	<layout visible="false">Insert Layout</layout>
+<!-- 	<layout visible="false">Insert Layout</layout> -->
 <!-- 	<split/> -->
-	<FullScreen visible="false">Full Screen</FullScreen>	
-	<split/>
-	<about visible="true">About X-free Editor</about>
+<!-- 	<FullScreen visible="false">Full Screen</FullScreen>	 -->
+<!-- 	<split/> -->
+<!-- 	<about visible="false">About X-free Editor</about> -->
 </menu1>
 <menu2>	
 	<inserttable visible="true">Insert Table</inserttable>
@@ -81,7 +81,7 @@
 	</group>
 </menu2>
 <menu3>
-	<Template visible="false">		
+<!-- 	<Template visible="false">		 -->
 		<!-- 불러올 양식들을 설정 해줍니다. -->
 		<!-- ie 의 경우 경로 또는 파일명이 한글일 경우 불러오지 못합니다. -->
 		<!-- xhtml 문법에 어긋나는 문서는 에러 메세지가 발생 할 수 있습니다. -->
@@ -114,7 +114,7 @@
 		<item title="업무협조" show="true"></item>
 		<item title="출장품의서" show="true"></item>		
 		-->
-	</Template>		
+<!-- 	</Template>		 -->
 	<FontFamily visible="true">Font</FontFamily>
 	<FontSize visible="true">Font Size</FontSize>
 	<LineHeight visible="true">Line Height</LineHeight>
@@ -132,6 +132,6 @@
 	</group>
 	<AdminLock visible="true">EditableOn</AdminLock>
 	<AdminUnlock visible="true">EditableOff</AdminUnlock>	
-	<Userguide visible="false">User Guide</Userguide>
+<!-- 	<Userguide visible="false">User Guide</Userguide> -->
 </menu3>
 </xfeEditor>
