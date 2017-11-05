@@ -1922,7 +1922,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        if (Files.probeContentType(f.toPath()) != null) {
 				        	contentType = Files.probeContentType(f.toPath());
 				        } else {
-				        	if (path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+				        	if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
 				        		contentType = "message/rfc822";
 				        	}
 				        }
