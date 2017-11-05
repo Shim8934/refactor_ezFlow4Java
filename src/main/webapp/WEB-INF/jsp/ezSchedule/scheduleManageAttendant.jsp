@@ -200,7 +200,7 @@
 		  		<ul>
 		    		<li><span onClick="add_attendant()" title="<spring:message code='ezSchedule.t247' />"><spring:message code='ezSchedule.t186' /></span></li>
 		    		<li><span onClick="del_attendant()" title="<spring:message code='ezSchedule.t248' />"><spring:message code='ezSchedule.t188' /></span></li>
-		    		<li><span onClick="renew_member()"  title="<spring:message code='ezSchedule.t189' />"><spring:message code='ezSchedule.t169' /></span></li>
+		    		<li style="display: none;"><span onClick="renew_member()"  title="<spring:message code='ezSchedule.t189' />"><spring:message code='ezSchedule.t169' /></span></li>
 		  		</ul>
 			</div>
 			<div id="close">

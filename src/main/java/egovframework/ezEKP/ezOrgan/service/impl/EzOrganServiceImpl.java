@@ -326,6 +326,26 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    return nodeInfo.toString();
 	}
 
+	public List<OrganDeptVO> getDeptMemberList(String pClass, String deptID, String lang, int tenantID) throws Exception {
+		logger.debug("getDeptMemberList started");
+		logger.debug("deptID=" + deptID + ",lang=" + lang + ",tenantID=" + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		
+		map.put("v_CLASS", pClass);
+		map.put("v_CN", deptID);
+		map.put("v_LANGDATA", lang);
+		map.put("v_TENANT_ID", tenantID);
+		
+		// 지정된 부서의 멤버 목록을 구한다.
+		List<OrganDeptVO> memberList = ezOrganDAO.getDeptMemberList(map);
+		
+		logger.debug("getDeptMemberList ended");
+		
+		return memberList;
+	}
+	
 	@Override
 	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID) throws Exception {
 	    logger.debug("getDeptMemberList started");

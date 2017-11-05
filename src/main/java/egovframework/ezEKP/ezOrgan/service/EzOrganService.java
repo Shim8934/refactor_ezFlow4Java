@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezOrgan.service;
 
+import java.util.List;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 
@@ -15,6 +17,8 @@ public interface EzOrganService {
 	
 	public String getDeptTreeInfo(String userID, String deptID, String topID, String propList, String primary, int tenantID) throws Exception;
 
+	public List<OrganDeptVO> getDeptMemberList(String pClass, String deptID, String lang, int tenantID) throws Exception;
+	
 	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID) throws Exception;
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
