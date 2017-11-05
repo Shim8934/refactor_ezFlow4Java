@@ -184,7 +184,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String bodyType = "0";
 		String importance = "1";
 		String isEach = "FALSE";
-		String isSecureMail = "FALSE";
+		String isSecureMail = "false";
 		String securePassword = null;
 		String secureReadCount = null;
 		String secureReadDate = null;

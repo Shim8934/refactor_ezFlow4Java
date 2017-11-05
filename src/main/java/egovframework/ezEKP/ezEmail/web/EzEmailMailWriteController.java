@@ -182,7 +182,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String attach = "";
 		String importance = "1";
 		String isEach = "FALSE";
-		String isSecureMail = "FALSE";
+		String isSecureMail = "false";
 		String bodyType = "0";
 		String replySendTime = "0";
 		String replyReadTime = "1";
