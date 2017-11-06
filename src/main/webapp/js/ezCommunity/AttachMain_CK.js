@@ -11,7 +11,7 @@ function btn_AttachAdd_onclick() {
     	var formData = new FormData();
        	
        	$.each($('#file1')[0].files, function(i, file) {
-       		if (file.name.length > 104) {
+       		if (file.name.length > 54) {
        			alert(strLang84);
        			return;
        		} else {
