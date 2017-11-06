@@ -362,6 +362,51 @@ public class MBoardGWController {
 	}
 	
 	/**
+	 * 모바일 G/W 게시판 [GET] 등록화면 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object insertBoardSelect(@PathVariable String boardId, HttpServletRequest request,Locale locale) throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
+			
+			//boardInfo
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			LOGGER.debug("deptPathCode = "+deptPathCode);
+			
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+
+			data.put("boardInfo", boardInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}		
+		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] ended.");
+		
+		return result;
+	}
+	
+	/**
 	 * 모바일 G/W 게시판 [POST] 게시물 등록
 	 */
 	@SuppressWarnings("unchecked")
