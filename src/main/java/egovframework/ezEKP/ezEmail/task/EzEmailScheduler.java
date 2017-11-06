@@ -327,9 +327,13 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
     		        	secureAttachPart.setHeader("Content-Type", "text/html");
     		        	
+    		        	String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", tenantId);
+    		        	logger.debug("useHttps=" + useHttps);
+    		        	
+    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
+    		        	
     		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
     		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
-    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale);
     		        	
     		        	secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
     		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");

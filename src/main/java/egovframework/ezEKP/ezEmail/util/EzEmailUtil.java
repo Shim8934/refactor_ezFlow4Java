@@ -2443,7 +2443,12 @@ public class EzEmailUtil {
     	return sb.toString();
     }
     
-    public String getSecureAttachHtml(String serverName, Locale locale) {
+    public String getSecureAttachHtml(String serverName, Locale locale, String useHttps) {
+    	String protocol = "http";
+    	if (useHttps.equals("YES")) {
+    		protocol = "https";
+    	}
+    	
     	StringBuilder sb = new StringBuilder();
     	sb.append("<!DOCTYPE html>\n");
     	sb.append("<html style=\"height:100%;\">\n");
@@ -2459,7 +2464,7 @@ public class EzEmailUtil {
     	sb.append("            .security_layerpopup form{width:465px; margin: 35px auto;}\n");
     	sb.append("            .security_layerpopup form fieldset {margin:0; padding:0; border:0; clear:both;}\n");
     	sb.append("            .security_layerpopup legend {visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0}\n");
-    	sb.append("            .security_layerpopup .password{float:left; width:380px; height:45px; margin:0px; padding::0px; background:url(http://" + serverName + "/images/email/secureMail/input_pw_bg.gif) no-repeat;}\n");
+    	sb.append("            .security_layerpopup .password{float:left; width:380px; height:45px; margin:0px; padding::0px; background:url(" + protocol + "://" + serverName + "/images/email/secureMail/input_pw_bg.gif) no-repeat;}\n");
     	sb.append("            .security_layerpopup #TextPassword {width:300px; height:43px; margin:1px 0px 0px 46px; padding:0px 0px 0px 10px; line-height:21px; color:#777; font-size:18px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}\n");
     	sb.append("            .security_layerpopup .input_text.focus, .input_text.focusnot{background:#fff !important;}\n");
     	sb.append("            .security_layerpopup .btn{float:left; width:75px; height:45px; margin:0px 0px 0px 10px; padding:0px;}\n");
@@ -2478,9 +2483,9 @@ public class EzEmailUtil {
     	sb.append("    </head>\n");
     	sb.append("    <body style=\"margin:0;height:100%;\">\n");
     	sb.append("        <div class=\"security_layerpopup\">\n");
-    	sb.append("            <p class=\"popup_img\"><img src=\"http://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
+    	sb.append("            <p class=\"popup_img\"><img src=\"" + protocol + "://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
     	sb.append("            <p class=\"popup_txt\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "<br /><span>" + egovMessageSource.getMessage("ezEmail.lhm40", locale) + "</span></p>\n");
-    	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"http://" + serverName + "/ezEmail/readSecureMail.do\">\n");
+    	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"" + protocol + "://" + serverName + "/ezEmail/readSecureMail.do\">\n");
     	sb.append("                <fieldset>\n");
     	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" placeholder=\"" + egovMessageSource.getMessage("ezEmail.lhm42", locale) + "\" /></p>\n");
     	sb.append("                    <p class=\"btn\"><input type=\"button\" name=\"Button\" id=\"Button\" value=\"" + egovMessageSource.getMessage("ezEmail.t38", locale) + "\" tabindex=\"3\" class=\"btn_check\" onclick=\"submitForm()\" /></p>\n");

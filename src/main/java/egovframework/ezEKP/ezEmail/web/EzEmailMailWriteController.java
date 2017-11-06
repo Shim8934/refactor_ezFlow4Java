@@ -2983,10 +2983,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	
 		    		        	String serverName = userInfo.getServerName();
 		    		        	
+		    		        	String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId());
+		    		        	logger.debug("useHttps=" + useHttps);
+		    		        	
+		    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
+		    		        	
 		    		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
 		    		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
 		    		        	
-		    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale);
 		    		        	secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureMixedPart.addBodyPart(secureAttachPart);
