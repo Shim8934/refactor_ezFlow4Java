@@ -229,12 +229,12 @@ function MonthMiniData(oThisDate) {
     if (oThisMonth != oThisDate.getMonth()) // 현재월 이외의 날
     {
         objTd.className = "gray";
-        className = " gray";
+        className += " gray";
     }
     else if (oThisDate.getDay() == 0)  // 일요일
-        className = " sun";
+        className += " sun";
     else if (oThisDate.getDay() == 6)  // 토요일
-        className = " sat";
+        className += " sat";
 
     objTd.className = className;
     oDiv.innerHTML = pDateData;
