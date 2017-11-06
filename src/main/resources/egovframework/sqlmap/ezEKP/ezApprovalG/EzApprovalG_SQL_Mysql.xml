@@ -6119,7 +6119,8 @@
 					        AND
 					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 					        AND
-					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTID  ,
+					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID# 
+					        LIMIT 1 ) RECEIVEDDEPTID  ,
 	                      (
 	                       SELECT 
 	                      	  *  
