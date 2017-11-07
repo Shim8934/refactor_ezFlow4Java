@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+	<title>Namo CrossEditor</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	
+	<script type="text/javascript" src="./js/namo_scripteditor.js"></script>
+	
+	<script src="./lib/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" language="javascript">
+		$(function() {
+			var Profanitystr = "염병,병신,멍청이,바보,얼간이";
+
+			$("#pe_apm").val(Profanitystr);
+			$("#pe_bcR").click(function(){
+				if (CrossEditor.IsPrivacyInfo(true,true,true)) {
+					alert('개인정보 발견');
+				} else {
+					alert('개인정보가 발견되지 않았습니다.');
+				}
+			});
+			$("#pe_bdh").click(function(){
+				if (CrossEditor.IsProhibitProfanity()) {
+					var arr = CrossEditor.GetProhibitProfanity();
+					alert("욕설단어가 발견되었습니다. " + "\n [" + arr.toString() + "]");
+				} else {
+					alert('욕설단어가 발견되지 않았습니다.');
+				}
+			});
+			$("#pe_bbb").click(function(){
+				var len = CrossEditor.GetTextValueLength();
+				alert(len);
+			});
+			$("#pe_bcy").click(function(){
+				CrossEditor.params.ProfanityStr = $("#pe_apm").val();
+			});
+			$("#pe_bdc").click(function(){
+				$("#pe_apm").val(Profanitystr);
+				CrossEditor.params.ProfanityStr = Profanitystr;
+			});
+			$(".pe_bpm").click(function(){
+				if (CrossEditor) {
+					pe_bH({Csslist:$("#pe_aGi").val()});
+				}
+			});
+			$(".pe_bnw").click(function(){
+				if (CrossEditor) {
+					pe_bH ({Placeholder:$("#pe_aGJ").val()});
+				}
+			});
+			$(".pe_bon").click(function(){
+				if (CrossEditor) {
+					var pe_akU = 2;
+					var id = $("input:radio[name=pe_aNE]:checked").attr("id");
+					switch (id) {
+					case "pe_aSe":
+						pe_akU = 1;
+						break;
+					case "pe_akU":
+						pe_akU = 2;
+						break;
+
+					}
+					pe_bH ({pe_uk :pe_akU});
+				}
+			});
+
+			});
+
+		function pe_bH(obj)
+		{
+			if (CrossEditor) {
+				CrossEditor.destroyEditor();
+				$.extend(CrossEditor.params, obj);
+				CrossEditor.params.ParentEditor = $("#ce-parent-node").get(0);
+				CrossEditor.EditorStart();
+			}
+
+		}
+
+
+		function pe_dv(obj){
+			if (obj.value == "ShowTab(false)"){
+				CrossEditor.ShowTab(false);
+				obj.value = "ShowTab(true)";
+			}else{
+				CrossEditor.ShowTab(true);
+				obj.value = "ShowTab(false)";
+			}
+		}
+
+		function pe_bk(obj){
+			if (obj.value == "ShowToolbar(Hide All)"){
+				CrossEditor.ShowToolbar(0, 0);
+				CrossEditor.ShowToolbar(1, 0);
+				obj.value = "ShowToolbar(Show FirstLine)";
+			}else if (obj.value == "ShowToolbar(Show FirstLine)"){
+				CrossEditor.ShowToolbar(0, 1);
+				CrossEditor.ShowToolbar(1, 0);
+				obj.value = "ShowToolbar(Show All)";
+			}else{
+				CrossEditor.ShowToolbar(0, 1);
+				CrossEditor.ShowToolbar(1, 1);
+				obj.value = "ShowToolbar(Hide All)";
+			}
+		}
+
+		function pe_cX(obj){
+			if (obj.value == "SetUISize(800,600)"){
+				CrossEditor.SetUISize("800", "600");
+				obj.value = "SetUISize(100%,600)";
+			}else if (obj.value == "SetUISize(100%,600)"){
+				CrossEditor.SetUISize("100%", "600");
+				obj.value = "SetUISize(720,450)";
+			}else if (obj.value == "SetUISize(720,450)"){
+				CrossEditor.SetUISize("720", "450");
+				obj.value = "SetUISize(800,600)";
+			}
+		}
+
+		</script>
+	<style type="text/css">
+		body, td, textarea, input {
+			font-family:굴림, gulim, Arial, MS UI Gothic, SimSun, MingLiU, AppleGothic, sans-serif;
+			font-size:12px;
+			color:#666666;
+			line-height:16px;
+		}
+	</style>
+</head>
+
+<body>
+	
+	
+	<table>
+		<tr>
+			<td><h3><span id="pe_Nc"></span>&nbsp;Sample Page - <span id="pe_aVb"></span></h3></td>
+		</tr>
+		<tr>
+			<td id="ce-parent-node" style="width:730px; padding:0px; line-height:8px;">
+				<textarea id="pe_aVt" name="pe_aVt" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 3.0</span> sample page</p></textarea>
+				<script type="text/javascript" language="javascript">
+					var CrossEditor = new NamoSE('pe_aVt');
+					CrossEditor.params.Width = "100%";
+					CrossEditor.params.UserLang = "auto";
+					CrossEditor.params.UserLang = "kor";
+					CrossEditor.params.IconColor = "default"; 
+					CrossEditor.params.FullScreen = false;
+
+					
+
+					CrossEditor.EditorStart();
+					function OnInitCompleted(e){
+						}
+				</script>
+			</td>
+		</tr>
+	</table>
+	
+	
+	<div style="width:724px;border:none;padding:5px;">
+		<input id="pe_bnI" type="radio" checked name="pe_aNE" /><label for="pe_bnI" style="margin-right:13px">도메인 제외 URL</label>
+		<input id="pe_aSe" type="radio" name="pe_aNE"/><label for="pe_aSe" style="margin-right:13px">전체 URL</label>
+		<button class="pe_bon" style="margin-left:448px">적용</button>
+	</div>
+	<div style="width:724px;border:none;padding:5px;">
+		<label for="pe_aGi" style="margin-right:13px">css file url </label><input  style="width:584px" id="pe_aGi" type="text" value="" placeholder="css파일간의 구분자 ',' (예 - test.css,test1.css)" />
+		<button class="pe_bpm">적용</button>
+	</div>
+	<div style="width:724px;border:none;padding:5px;">
+		<label for="pe_aGJ" style="margin-right:10px">placeholder</label><input  style="width:584px" id="pe_aGJ" type="text" value="" placeholder="placeholder문자열 (예 - 여기에 내용을 입력하세요.)" />
+		<button class="pe_bnw">적용</button>
+	</div>
+	<div style="width:724px;border:none;padding:5px;">
+		<div style="width:100%;border-bottom: 1px dotted rgb(100,100,100);padding-bottom: 9px;text-align: center;">	
+			<input type="button" style="width:162px;background-color: rgb(240,100,100);color:rgb(255,255,255)" id="getvalue" name="getvalue" value="GetValue()" onclick="document.getElementById('value').value = CrossEditor.GetValue();">
+			<input type="button" style="width:162px;background-color: rgb(240,100,100);color:rgb(255,255,255)"id="t" name="setValue" value="setValue()" onclick="CrossEditor.SetValue(document.getElementById('value').value)">
+			<input type="button" style="width:162px;margin-left:10px;background-color: rgb(100,100,255);color:rgb(255,255,255)"id="getbodyvalue" name="getbodyvalue" value="GetBodyValue()" onclick="document.getElementById('value').value = CrossEditor.GetBodyValue();">
+			<input type="button" style="width:162px;background-color: rgb(100,100,255);color:rgb(255,255,255)"id="setBodyValue" name="setBodyValue" value="SetBodyValue()" onclick="CrossEditor.SetBodyValue(document.getElementById('value').value)">
+		</div>
+		<div style="width:100%;padding-top:9px;border-bottom: 1px dotted rgb(100,100,100);padding-bottom: 9px;text-align: center;">	
+			<label style="margin-right:5px" for="pe_apm">욕설금지단어</label>
+			<input style="width:531px" type="text" id="pe_apm" />
+			<input id="pe_bcy" style="margin-left:5px" type="button" name="" value="적용" />
+			<input id="pe_bdc" style="margin-left:3px" type="button" name="" value="초기화" />
+		</div>
+		<div style="width:100%;padding-top:9px;">	
+			<button id="pe_bcR">개인정보 유무 검사</button>
+			<button id="pe_bdh">욕설 유무 검사</button>
+			<button id="pe_bbb">본문 내용의 문자 길이</button>
+		</div>
+	</div>
+
+	<textarea placeholder="HTML 소스 내용" id="value" style="width:730px; height:150px;background-color: rgb(200,200,240)"></textarea>
+</body>
+</html>
+
+
+

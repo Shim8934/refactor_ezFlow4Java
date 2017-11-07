@@ -1,0 +1,1 @@
+var pe_asT={Upload:function(form,pe_bae,pe_Kl,pe_bil,pe_bhQ){ce$(form).ajaxForm({url:pe_bae,beforeSend:function(e){pe_Kl();},complete:function(xhr){pe_bil(xhr);},pe_bqt:function(event,position,total,pe_bfO){var pe_bgt=pe_bfO+'\x25';console.log(pe_bgt);},error:function(pe_apb,status,request){pe_bhQ();}}).submit();}};

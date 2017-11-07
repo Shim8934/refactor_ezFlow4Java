@@ -11,8 +11,8 @@
 		<WebServerInfo>ETC</WebServerInfo>
 		<WebLanguage>JSP</WebLanguage>
 		<ImageSavePath></ImageSavePath>
-		<Width>100%</Width>
-		<Height></Height>
+		<Width>730</Width>
+		<Height>450</Height>
 		<UploadFileNameType>real</UploadFileNameType>
 		<UploadFileViewer>false</UploadFileViewer>
 		<UploadFileSizeLimit>movie:50000000</UploadFileSizeLimit>
@@ -23,10 +23,10 @@
 		<TagBlockList>0|script,iframe</TagBlockList>
 		<Template></Template>
 		<ServerUrl></ServerUrl>
-		<ResizeBar>false</ResizeBar>
+		<ResizeBar>true</ResizeBar>
 	</General>
 	<Editor>
-		<SetFocus>false</SetFocus>
+		<SetFocus>true</SetFocus>
 		<LineHeight></LineHeight>
 		<UnloadWarning>false</UnloadWarning>
 		<SetDebug>false</SetDebug>
@@ -34,8 +34,8 @@
 		<HTMLTabContents>body</HTMLTabContents>
 		<AccessibilityOption>0</AccessibilityOption>
 		<FontColor>#000000</FontColor>
-		<FontSizeList>8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,30px,36px,54px,72px</FontSizeList>
-		<LineHeightList>80%,100%,120%,140%,160%,180%,200%</LineHeightList>
+		<FontSizeList>7.5pt,8pt,9pt,10pt,11pt,12pt,14pt,16pt,18pt,20pt,22pt,24pt,26pt,28pt,36pt,40pt</FontSizeList>
+		<LineHeightList>100%,120%,140%,150%,160%,180%,200%</LineHeightList>
 		<IndentPaddingValue>40</IndentPaddingValue>
 		<ReturnKeyActionBR>false</ReturnKeyActionBR>
 		<ImgLineColor>#000000</ImgLineColor>
@@ -43,9 +43,9 @@
 		<TableBGColor>#FFFFFF</TableBGColor>
 		<DefaultFont></DefaultFont>
 		<DefaultFontSize></DefaultFontSize>
-		<Placeholder></Placeholder>
+		<Placeholder>여기에 내용을 입력하세요.</Placeholder>
 		<Csslist></Csslist>
-		<ProfanityStr></ProfanityStr>
+		<ProfanityStr>염병,병신,멍청이,바보,얼간이</ProfanityStr>
 	</Editor>
 	<Document>
 		<CharSet>auto</CharSet>
@@ -62,9 +62,9 @@
 		<Css></Css>
 		<UserToolbar>true</UserToolbar>
 		<CreateToolbar></CreateToolbar>
-		<CreateTab>0|1</CreateTab>
+		<CreateTab>0|1|2</CreateTab>
 		<IsQuestAutoSave></IsQuestAutoSave>
-		<Menu>false</Menu>
+		<Menu>true</Menu>
 		<QuickMenu>false</QuickMenu>
 		<DisplayLoadingBar>true</DisplayLoadingBar>
 	</UI>

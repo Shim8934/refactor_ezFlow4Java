@@ -12,15 +12,15 @@
 		$(function() {
 			var Profanitystr = "염병,병신,멍청이,바보,얼간이";
 
-			$("#pe_apm").val(Profanitystr);
-			$("#pe_bcR").click(function(){
+			$("#pe_ajI").val(Profanitystr);
+			$("#pe_bkE").click(function(){
 				if (CrossEditor.IsPrivacyInfo(true,true,true)) {
 					alert('개인정보 발견');
 				} else {
 					alert('개인정보가 발견되지 않았습니다.');
 				}
 			});
-			$("#pe_bdh").click(function(){
+			$("#pe_bkN").click(function(){
 				if (CrossEditor.IsProhibitProfanity()) {
 					var arr = CrossEditor.GetProhibitProfanity();
 					alert("욕설단어가 발견되었습니다. " + "\n [" + arr.toString() + "]");
@@ -28,47 +28,47 @@
 					alert('욕설단어가 발견되지 않았습니다.');
 				}
 			});
-			$("#pe_bbb").click(function(){
+			$("#pe_bbP").click(function(){
 				var len = CrossEditor.GetTextValueLength();
 				alert(len);
 			});
-			$("#pe_bcy").click(function(){
-				CrossEditor.params.ProfanityStr = $("#pe_apm").val();
+			$("#pe_bkA").click(function(){
+				CrossEditor.params.ProfanityStr = $("#pe_ajI").val();
 			});
-			$("#pe_bdc").click(function(){
-				$("#pe_apm").val(Profanitystr);
+			$("#pe_bla").click(function(){
+				$("#pe_ajI").val(Profanitystr);
 				CrossEditor.params.ProfanityStr = Profanitystr;
 			});
-			$(".pe_bpm").click(function(){
+			$(".pe_aWE").click(function(){
 				if (CrossEditor) {
-					pe_bH({Csslist:$("#pe_aGi").val()});
+					pe_bR({Csslist:$("#pe_aWl").val()});
 				}
 			});
-			$(".pe_bnw").click(function(){
+			$(".pe_bak").click(function(){
 				if (CrossEditor) {
-					pe_bH ({Placeholder:$("#pe_aGJ").val()});
+					pe_bR ({Placeholder:$("#pe_aSY").val()});
 				}
 			});
-			$(".pe_bon").click(function(){
+			$(".pe_bhY").click(function(){
 				if (CrossEditor) {
-					var pe_akU = 2;
-					var id = $("input:radio[name=pe_aNE]:checked").attr("id");
+					var pe_aku = 2;
+					var id = $("input:radio[name=pe_aKg]:checked").attr("id");
 					switch (id) {
-					case "pe_aSe":
-						pe_akU = 1;
+					case "pe_aRj":
+						pe_aku = 1;
 						break;
-					case "pe_akU":
-						pe_akU = 2;
+					case "pe_aku":
+						pe_aku = 2;
 						break;
 
 					}
-					pe_bH ({pe_uk :pe_akU});
+					pe_bR ({pe_wy :pe_aku});
 				}
 			});
 
 			});
 
-		function pe_bH(obj)
+		function pe_bR(obj)
 		{
 			if (CrossEditor) {
 				CrossEditor.destroyEditor();
@@ -80,7 +80,7 @@
 		}
 
 
-		function pe_dv(obj){
+		function pe_du(obj){
 			if (obj.value == "ShowTab(false)"){
 				CrossEditor.ShowTab(false);
 				obj.value = "ShowTab(true)";
@@ -90,7 +90,7 @@
 			}
 		}
 
-		function pe_bk(obj){
+		function pe_bB(obj){
 			if (obj.value == "ShowToolbar(Hide All)"){
 				CrossEditor.ShowToolbar(0, 0);
 				CrossEditor.ShowToolbar(1, 0);
@@ -106,7 +106,7 @@
 			}
 		}
 
-		function pe_cX(obj){
+		function pe_dQ(obj){
 			if (obj.value == "SetUISize(800,600)"){
 				CrossEditor.SetUISize("800", "600");
 				obj.value = "SetUISize(100%,600)";
@@ -135,23 +135,22 @@
 	
 	<table>
 		<tr>
-			<td><h3><span id="pe_Nc"></span>&nbsp;Sample Page - <span id="pe_aVb"></span></h3></td>
+			<td><h3><span id="pe_NW"></span>&nbsp;Sample Page - <span id="pe_aPO"></span></h3></td>
 		</tr>
 		<tr>
-			<td id="ce-parent-node" style="width:730px; padding:0px; line-height:8px;">
-				<textarea id="pe_aVt" name="pe_aVt" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 3.0</span> sample page</p></textarea>
+			<td id="ce-parent-node" style="width:730px;">
+				<textarea id="pe_azh" name="pe_azh" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 4.0</span> sample page</p></textarea>
 				<script type="text/javascript" language="javascript">
-					var CrossEditor = new NamoSE('pe_aVt');
+					var CrossEditor = new NamoSE('pe_azh');
 					CrossEditor.params.Width = "100%";
 					CrossEditor.params.UserLang = "auto";
-					CrossEditor.params.UserLang = "kor";
-					CrossEditor.params.IconColor = "default"; 
 					CrossEditor.params.FullScreen = false;
 
 					
 
 					CrossEditor.EditorStart();
 					function OnInitCompleted(e){
+						e.editorTarget.SetBodyValue(document.getElementById("pe_azh").value);
 						}
 				</script>
 			</td>
@@ -160,17 +159,17 @@
 	
 	
 	<div style="width:724px;border:none;padding:5px;">
-		<input id="pe_bnI" type="radio" checked name="pe_aNE" /><label for="pe_bnI" style="margin-right:13px">도메인 제외 URL</label>
-		<input id="pe_aSe" type="radio" name="pe_aNE"/><label for="pe_aSe" style="margin-right:13px">전체 URL</label>
-		<button class="pe_bon" style="margin-left:448px">적용</button>
+		<input id="pe_bjw" type="radio" checked name="pe_aKg" /><label for="pe_bjw" style="margin-right:13px">도메인 제외 URL</label>
+		<input id="pe_aRj" type="radio" name="pe_aKg"/><label for="pe_aRj" style="margin-right:13px">전체 URL</label>
+		<button class="pe_bhY" style="margin-left:448px">적용</button>
 	</div>
 	<div style="width:724px;border:none;padding:5px;">
-		<label for="pe_aGi" style="margin-right:13px">css file url </label><input  style="width:584px" id="pe_aGi" type="text" value="" placeholder="css파일간의 구분자 ',' (예 - test.css,test1.css)" />
-		<button class="pe_bpm">적용</button>
+		<label for="pe_aWl" style="margin-right:13px">css file url </label><input  style="width:584px" id="pe_aWl" type="text" value="" placeholder="css파일간의 구분자 ',' (예 - test.css,test1.css)" />
+		<button class="pe_aWE">적용</button>
 	</div>
 	<div style="width:724px;border:none;padding:5px;">
-		<label for="pe_aGJ" style="margin-right:10px">placeholder</label><input  style="width:584px" id="pe_aGJ" type="text" value="" placeholder="placeholder문자열 (예 - 여기에 내용을 입력하세요.)" />
-		<button class="pe_bnw">적용</button>
+		<label for="pe_aSY" style="margin-right:10px">placeholder</label><input  style="width:584px" id="pe_aSY" type="text" value="" placeholder="placeholder문자열 (예 - 여기에 내용을 입력하세요.)" />
+		<button class="pe_bak">적용</button>
 	</div>
 	<div style="width:724px;border:none;padding:5px;">
 		<div style="width:100%;border-bottom: 1px dotted rgb(100,100,100);padding-bottom: 9px;text-align: center;">	
@@ -180,15 +179,15 @@
 			<input type="button" style="width:162px;background-color: rgb(100,100,255);color:rgb(255,255,255)"id="setBodyValue" name="setBodyValue" value="SetBodyValue()" onclick="CrossEditor.SetBodyValue(document.getElementById('value').value)">
 		</div>
 		<div style="width:100%;padding-top:9px;border-bottom: 1px dotted rgb(100,100,100);padding-bottom: 9px;text-align: center;">	
-			<label style="margin-right:5px" for="pe_apm">욕설금지단어</label>
-			<input style="width:531px" type="text" id="pe_apm" />
-			<input id="pe_bcy" style="margin-left:5px" type="button" name="" value="적용" />
-			<input id="pe_bdc" style="margin-left:3px" type="button" name="" value="초기화" />
+			<label style="margin-right:5px" for="pe_ajI">욕설금지단어</label>
+			<input style="width:531px" type="text" id="pe_ajI" />
+			<input id="pe_bkA" style="margin-left:5px" type="button" name="" value="적용" />
+			<input id="pe_bla" style="margin-left:3px" type="button" name="" value="초기화" />
 		</div>
 		<div style="width:100%;padding-top:9px;">	
-			<button id="pe_bcR">개인정보 유무 검사</button>
-			<button id="pe_bdh">욕설 유무 검사</button>
-			<button id="pe_bbb">본문 내용의 문자 길이</button>
+			<button id="pe_bkE">개인정보 유무 검사</button>
+			<button id="pe_bkN">욕설 유무 검사</button>
+			<button id="pe_bbP">본문 내용의 문자 길이</button>
 		</div>
 	</div>
 

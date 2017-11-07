@@ -692,6 +692,7 @@ var ce_ImageEditorPlugin = {
 				var img = item.dom;
 				var $img = $(img);
 				$img.attr('src', data.src);
+				$img.attr('namose_imgsetuptemp', 'True');
 				$img.css('width', data.width);
 				$img.css('height', data.height);
 				if(data.alt) {
@@ -701,14 +702,14 @@ var ce_ImageEditorPlugin = {
 			} else {
 				console.log('INSERT_IMAGE on text', data);
 				data.alt = data.alt || '';
-				var img = '<img alt="'+data.alt+'" src="'+data.src+'" style="width:'+data.width+'px;height:'+data.height+'px;"/>';
+				var img = '<img alt="'+data.alt+'" src="'+data.src+'" style="width:'+data.width+'px;height:'+data.height+'px;" namose_imgsetuptemp="True"/>';
 				var idoc = t._oThis.editorFrame.contentWindow.document;
 
 				if(agentInfo.IsIE) {
 					var sel = idoc.selection;
 					var range = sel.createRange();
 					range.pasteHTML(img);
-				} else if(agentInfo.IsIE11 || agentInfo.IsSafari || agentInfo.IsEdge || agentInfo.IsGecko){
+				} else if(agentInfo.IsIE11 || agentInfo.IsSafari || agentInfo.IsEdge || agentInfo.IsGecko || agentInfo.IsChrome){
 					var nodeSelection = t._oThis.getSelection();
 					nodeSelection.sel = nodeSelection.getSelection();
 					nodeSelection.setInsertHTML(img);
@@ -723,6 +724,20 @@ var ce_ImageEditorPlugin = {
 					idoc.execCommand("InsertHTML", false, img||null);
 				}
 				CE_ItemManager.insertItem();
+			}
+			if(t._oThis.params.event.CBInsertedImage){
+				var idoc = t._oThis.editorFrame.contentWindow.document;
+				var insertImg = null;
+				var x =  NamoSE.Util.getElementNodeList(idoc, "img");
+				for (i = 0; i < x.length; i++) {
+					if (x[i].getAttribute('namose_imgsetuptemp') && x[i].getAttribute('namose_imgsetuptemp') == "True") {
+						insertImg = x[i];
+						break;
+					}
+				}
+				if(insertImg){
+					t._oThis.params.event.CBInsertedImage(insertImg, "0");
+				}
 			}
 		} catch(e) {
 			console.log(e);
