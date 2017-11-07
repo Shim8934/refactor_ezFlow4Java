@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.ezEKP.ezUCMessenger.util.EzUCMessengerUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -40,6 +41,9 @@ public class EzEmailController {
 		}
 		
 		model.addAttribute("funCode", funCode);
+		
+		System.out.println(new EzUCMessengerUtil().encryptAES("user1"));
+		System.out.println(new EzUCMessengerUtil().encryptAES("user1:123qwe!"));
 		
 		return "ezEmail/mailMain";
 	}
