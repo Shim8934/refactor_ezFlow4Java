@@ -19,7 +19,8 @@ import org.springframework.stereotype.Component;
 public class EzUCMessengerUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzUCMessengerUtil.class);
 	
-	private static final String APB = "S0LKK1EAY021BOH1LNY3U8O3E7MI00I0";
+//	private static final String APB = "S0LKK1EAY021BOH1LNY3U8O3E7MI00I0";
+	private static final String APB = "S0LKK1EAY021BOH1";
     private static final String IV = "S2H1S4GU5S7E7H3D";
 
     /**
