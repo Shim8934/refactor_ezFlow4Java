@@ -95,10 +95,9 @@ public class EzUCMessengerController {
 					HttpServletResponse response
 					) throws Exception {
 		logger.debug("sso started.");
-		System.out.println(id);
-		id = ezUCMessengerUtil.decryptAES(id);
 		
-		String orgId = id.split(":")[0];
+		id = ezUCMessengerUtil.decryptAES(id);
+		String orgId = id;
 		logger.debug("orgId=" + orgId);
 		
         String serverName = request.getServerName();
