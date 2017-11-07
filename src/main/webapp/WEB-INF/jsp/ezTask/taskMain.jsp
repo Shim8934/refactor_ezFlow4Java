@@ -313,6 +313,8 @@
 // 			    selectelem = null;
 				alert("Type: " + type);
 			    var length = list_body.children[1].rows.length;
+			    var progress_th = document.getElementById("_thprogress");
+				var column_prg = document.getElementById("col_progress");
 
 			    // 리스트 다시 가져올때 기존에 있던 것 삭제
 			    for (var i = 3; i < length; i++) {
@@ -320,175 +322,180 @@
 			    }
 
 			    var tr = "";
-			    var onTaskCount = 0;
-
-			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
-			    	if (currentCount == 0 || i == currentCount) {
-			            break;
-			        }
-			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
-
-			        tr = row_body.cloneNode(true);
-			        document.getElementById("tr_ing").style.display = "none";
-
-			        tr.style.display = "";
-			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
-
-			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
-			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
-      
-			        if (SelectSingleNodeValue(node, "REPEATCOUNT") != "0") {
-			        	tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
-			        }
-		
-			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
-			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
-			        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
-
-			        tr.setAttribute("startdate", startdate);
-
-			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
-			        "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
-
-			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
-			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
-			        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
-			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
-
-			        tr.cells[1].style.textAlign = "center";
-
-			        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
-			            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
-			        else
-			            tr.cells[2].innerHTML += "&nbsp;";
-
-		            if (SelectSingleNodeValue(node, "TASKTYPE") == 1) {
-				        if (primary == "1") {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME"));
-				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "CREATORNAME"));
-				        } else {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME2"));
-				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "CREATORNAME2"));
-				        }			        	
-			        } else {
-			        	if (primary == "1") {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
-				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "PERSONNAME"));
-				        } else {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
-				            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "PERSONNAME2"));
+			    var onTaskCount = 0;   
+			    		    
+			    if (currentCount == 0) {
+			    	 if (type === "3") {
+			    		 column_prg.style.width = "0px";
+			    		 progress_th.innerHTML = "";
+			    	 }
+			    	 else {
+			    		 column_prg.style.width = "110px";
+			    		 progress_th.innerHTML = "<spring:message code='ezTask.t120' />";
+			    	 }
+			    }
+			    else {
+				    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
+				        if (i == currentCount) {
+				        	break;
 				        }
-			        }
-		            
-		            tr.cells[3].style.overflow = "hidden";
-		            tr.cells[3].style.textOverflow = "ellipsis";
-
-		            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
-			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font></span>";
-			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
-			        } else {
-			        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
-			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
-
-			            tr.cells[4].style.overflow = "hidden";
-			            tr.cells[4].style.textOverflow = "ellipsis";
-			        }
-
-			        if (useTodoMemo == "YES") {
-				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
-				        tr.cells[6].style.overflow = "hidden";
-				        tr.cells[6].style.textOverflow = "ellipsis";
-				        tr.cells[6].setAttribute("title", SelectSingleNodeValue(node, "MEMO"));
-			        }
-
-			        var div = document.createElement("DIV");
-			        div.style.width = "72px";
-	                div.style.lineHeight = "18px";
-	                div.style.height = "17px";
-	                div.style.textAlign = "center";
-	                div.style.color = "white";
-	                div.style.verticalAlign = "top";
-
-			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
-			            case "1":
-			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
-			                break;
-			            case "2":
-			                div.style.background = "url(/images/icon/section_orderbg.gif)";
-			                break;
-			            case "3":
-			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
-			                break;
-			            case "4":
-			            	div.style.background = "url(/images/icon/section_Individualbg.gif)";
-			                break;
-			        }
-
-			        tr.cells[7].appendChild(div);
-
-			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
-			        var span = document.createElement("SPAN");
-			        span.className = "workProgressBar";
-			        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
-
-					var span2 = document.createElement("SPAN");
-			        span2.style.display = "inline-block";
-
-			        span.appendChild(span2);
-
-			        tr.cells[8].appendChild(span);
-			        setNodeText(tr.cells[9], startdate);
-			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
-
-			        list_body.children[1].appendChild(tr);
-			        onTaskCount++;			        
-			        
-			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
-	/* 		        if (type === "3") {
-				        var progress_th = document.getElementById("_thprogress");
-				        var progress_td = document.getElementById("_tdprogress");
-				        progress_th.style.display = "none";
-				        progress_td.style.display = "none";
-			        }
-			        else {
-			        	initProgressBar("taskProgressBar" + i, taskstatus, completerate);
-			        } */
-
-			        if (useTodoMemo == 'YES') {
-						if ($("#titleid" + i + "").outerWidth() > 900) {
-							$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
-						} else {
-					        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
-						}
-			        } else {
-						if ($("#titleid" + i + "").outerWidth() > 1000) {
-							$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
-						} else {
-					        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
-						}
-			        }
-
-					if (taskstatus == '4' && completerate == '0') {
-						$(".bar[taskid=taskProgressBar" + i + "]").find(".percentCount").css("color", delayColor);
+				        
+				        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
+	
+				        tr = row_body.cloneNode(true);
+				        document.getElementById("tr_ing").style.display = "none";
+	
+				        tr.style.display = "";
+				        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
+	
+				        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
+				        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
+	      
+				        if (SelectSingleNodeValue(node, "REPEATCOUNT") != "0") {
+				        	tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
+				        }
+			
+				        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
+				        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
+				        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
+	
+				        tr.setAttribute("startdate", startdate);
+	
+				        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
+				        "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+	
+				        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
+				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
+				        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
+				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
+	
+				        tr.cells[1].style.textAlign = "center";
+	
+				        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
+				            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
+				        else
+				            tr.cells[2].innerHTML += "&nbsp;";
+	
+			            if (SelectSingleNodeValue(node, "TASKTYPE") == 1) {
+					        if (primary == "1") {
+					            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME"));
+					            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "CREATORNAME"));
+					        } else {
+					            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "CREATORNAME2"));
+					            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "CREATORNAME2"));
+					        }			        	
+				        } else {
+				        	if (primary == "1") {
+					            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
+					            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "PERSONNAME"));
+					        } else {
+					            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
+					            tr.cells[3].setAttribute("title", SelectSingleNodeValue(node, "PERSONNAME2"));
+					        }
+				        }
+			            
+			            tr.cells[3].style.overflow = "hidden";
+			            tr.cells[3].style.textOverflow = "ellipsis";
+	
+			            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
+				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
+				            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font></span>";
+				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
+				        } else {
+				        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
+				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
+	
+				            tr.cells[4].style.overflow = "hidden";
+				            tr.cells[4].style.textOverflow = "ellipsis";
+				        }
+	
+				        if (useTodoMemo == "YES") {
+					        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
+					        tr.cells[6].style.overflow = "hidden";
+					        tr.cells[6].style.textOverflow = "ellipsis";
+					        tr.cells[6].setAttribute("title", SelectSingleNodeValue(node, "MEMO"));
+				        }
+	
+				        var div = document.createElement("DIV");
+				        div.style.width = "72px";
+		                div.style.lineHeight = "18px";
+		                div.style.height = "17px";
+		                div.style.textAlign = "center";
+		                div.style.color = "white";
+		                div.style.verticalAlign = "top";
+	
+				        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
+				            case "1":
+				                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+				                break;
+				            case "2":
+				                div.style.background = "url(/images/icon/section_orderbg.gif)";
+				                break;
+				            case "3":
+				                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+				                break;
+				            case "4":
+				            	div.style.background = "url(/images/icon/section_Individualbg.gif)";
+				                break;
+				        }
+	
+				        tr.cells[7].appendChild(div);
+				        
+				        if (type !== "3") {			        	
+				    		column_prg.style.width = "110px";
+				    		progress_th.innerHTML = "<spring:message code='ezTask.t120' />";
+				        	var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
+					        var span = document.createElement("SPAN");
+					        span.className = "workProgressBar";
+					        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
+	
+							var span2 = document.createElement("SPAN");
+					        span2.style.display = "inline-block";
+					        span.appendChild(span2);
+					        tr.cells[8].appendChild(span);  				        
+					        
+					        setNodeText(tr.cells[9], startdate);
+					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
+					        list_body.children[1].appendChild(tr);
+					        
+					        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+	
+					        if (useTodoMemo == 'YES') {
+								if ($("#titleid" + i + "").outerWidth() > 900) {
+									$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+								} else {
+							        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+								}
+					        } else {
+								if ($("#titleid" + i + "").outerWidth() > 1000) {
+									$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
+								} else {
+							        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+								}
+					        }
+	
+							if (taskstatus == '4' && completerate == '0') {
+								$(".bar[taskid=taskProgressBar" + i + "]").find(".percentCount").css("color", delayColor);
+							}
+				        }
+				        else {			        	
+				    		column_prg.style.width = "0px";
+				    		progress_th.innerHTML = "";				        			        				        	
+					        setNodeText(tr.cells[9], startdate);
+					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
+					        list_body.children[1].appendChild(tr);
+				        }
+				        
+						onTaskCount++;
 					}
-				}
+			    }
+			    
 			    if (onTaskCount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
 			    }
 
-			    $(".progressbar").css("display", "inline-table");
-		        /* var progress_th = document.getElementById("_thprogress");
-		        var progress_td = document.getElementById("_tdprogress");
-		        
-			    if (type === "3") {
-			        progress_th.style.display = "none";
-			        progress_td.style.display = "none";
-		        }
-			    else {
-			        progress_th.style.display = "table-cell";
-			        progress_td.style.display = "table-cell";
-			    } */
+			    $(".progressbar").css("display", "inline-table");	
+			    
 			}
 
 			/* progressBar 조회 */
@@ -941,7 +948,7 @@
 							<col style ="width:30px;">
 						</c:if>
 		                <col style ="width:90px;">
-						<col style ="width:110px;">
+						<col style ="width:110px;" id="col_progress">
 						<col style ="width:80px;">
 						<col style ="width:97px;">
 						<tr>
