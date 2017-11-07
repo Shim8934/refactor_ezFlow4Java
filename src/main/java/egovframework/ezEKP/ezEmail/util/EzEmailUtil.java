@@ -539,9 +539,9 @@ public class EzEmailUtil {
                 logger.debug("Content-Transfer-Encoding=" + encodingName);
                 if (encodingName.equalsIgnoreCase("base64")) {
                     // decrease the size because base64 increases the size to 4/3 times.
-                    size = (int)(size*0.75); 
+                    size = size / 138 * 101;
                 }
-            }                                       
+            }
             
             String strSize = getSizeWithUnit(size);
 		    
