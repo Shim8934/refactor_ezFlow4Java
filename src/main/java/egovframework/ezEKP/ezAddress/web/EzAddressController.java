@@ -2053,6 +2053,11 @@ public class EzAddressController{
 	        		csvBody[0] = csvBody[0].trim();
 	        	}
 	        	
+	        	// 가져오기시 메모에 줄바꿈이 있을 경우 치환
+	        	if (csvBody[14].contains("\n")) {
+	        		csvBody[14] = csvBody[14].replaceAll("\n", "<br>");
+	        	}
+	        	
         		if (csvBody[8].equals(groupMailStr)) {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
         					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
