@@ -419,7 +419,8 @@
 	            }
 	        }
 	        function quick_add() {
-	            if (document.getElementById("qname").value.trim() == "") {
+	        	var pQname = document.getElementById("qname").value.trim();
+	            if (pQname == "") {
 	                alert("<spring:message code='ezAddress.t220' />");
 	                document.getElementById("qname").focus();
 	                return;
@@ -452,7 +453,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", "");
 	            createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", "");
 	            createNodeAndInsertText(xmlDom, objNode, "PHOTOPATH", "");
-	            createNodeAndInsertText(xmlDom, objNode, "SNAME", document.getElementById("qname").value);
+	            createNodeAndInsertText(xmlDom, objNode, "SNAME", pQname);
 	            createNodeAndInsertText(xmlDom, objNode, "SCOMPANY", document.getElementById("qcompany").value);
 	            createNodeAndInsertText(xmlDom, objNode, "SDEPT", "");
 	            createNodeAndInsertText(xmlDom, objNode, "STITLE", "");
@@ -799,11 +800,11 @@
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px"><spring:message code='ezAddress.t124' /></th>
-						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
+						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="24"></td>
 					</tr>
 					<tr>
 			  			<th style="width:90px"><spring:message code='ezAddress.t51' /></th>
-						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
+						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="24"></td>
 					</tr>
 					<tr>
 			  			<th style="width:90px" ><spring:message code='ezAddress.t222' /></th>
