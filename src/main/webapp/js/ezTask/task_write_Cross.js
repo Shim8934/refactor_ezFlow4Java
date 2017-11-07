@@ -473,19 +473,20 @@ function save_task() {
         startdate = sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate();
         enddate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate();
 	}
-alert(startdate + " / " + enddate);
-    if (startdate > enddate) {
+	alert(startdate + " / " + enddate);
+    if (sdate > edate) {
     	doubleSubmitFlag = false;
     	alert(strLang45);
         return;
-    }
+    }       
 
     if (repetition == "") {
-    	tasktype = $(":input:radio[name=tasktypesel]:checked").val();    	
-    } else {
-    	tasktype = 4;
+    	tasktype = $(":input:radio[name=tasktypesel]:checked").val();	
+    } 
+    else {   		
+    	tasktype = 4; 
     }
-
+    
     importance = $(":input:radio[name=important]:checked").val();
 
     var sharelist = document.getElementById("sharelist").innerHTML;

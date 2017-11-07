@@ -542,7 +542,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	
 							if (generated) {
 								count++;
-								
+								logger.debug("Count value: " + count);
 								String calcuDate = nsdf.format(date_cal.getTime());
 	
 								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
@@ -731,6 +731,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 					break;	
 				}
 			} else {
+				vo.setRepeatCount(1);
 				resultList.add(vo);
 			}
 		}

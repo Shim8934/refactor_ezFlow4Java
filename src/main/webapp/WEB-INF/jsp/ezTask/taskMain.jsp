@@ -311,7 +311,7 @@
 
 			function show_page() {
 // 			    selectelem = null;
-
+				alert("Type: " + type);
 			    var length = list_body.children[1].rows.length;
 
 			    // 리스트 다시 가져올때 기존에 있던 것 삭제
@@ -442,9 +442,18 @@
 			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 
 			        list_body.children[1].appendChild(tr);
-			        onTaskCount++;
-
+			        onTaskCount++;			        
+			        
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+	/* 		        if (type === "3") {
+				        var progress_th = document.getElementById("_thprogress");
+				        var progress_td = document.getElementById("_tdprogress");
+				        progress_th.style.display = "none";
+				        progress_td.style.display = "none";
+			        }
+			        else {
+			        	initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+			        } */
 
 			        if (useTodoMemo == 'YES') {
 						if ($("#titleid" + i + "").outerWidth() > 900) {
@@ -469,6 +478,17 @@
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
+		        /* var progress_th = document.getElementById("_thprogress");
+		        var progress_td = document.getElementById("_tdprogress");
+		        
+			    if (type === "3") {
+			        progress_th.style.display = "none";
+			        progress_td.style.display = "none";
+		        }
+			    else {
+			        progress_th.style.display = "table-cell";
+			        progress_td.style.display = "table-cell";
+			    } */
 			}
 
 			/* progressBar 조회 */
@@ -937,8 +957,8 @@
 							<c:if test="${useTodoMemo == 'NO'}">
 								<th ></th>
 							</c:if>
-		                    <th ><spring:message code='ezTask.t2003' /></th>
-							<th ><spring:message code='ezTask.t120' /></th>
+		                    <th ><spring:message code='ezTask.t2003' /></th>		                    
+							<th id="_thprogress"><spring:message code='ezTask.t120' /></th>							
 							<th ><spring:message code='ezTask.t121' /></th>
 							<th ><spring:message code='ezTask.t122' /></th>
 						</tr>
@@ -950,8 +970,8 @@
 		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>							
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)" id="_tdprogress"></td>							
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>

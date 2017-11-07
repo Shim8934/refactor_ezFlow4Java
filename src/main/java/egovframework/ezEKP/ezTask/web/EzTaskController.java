@@ -924,6 +924,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	resultXML.append("</DATA>");
 
     	logger.debug("taskGetList ended.");
+    	logger.debug(resultXML.toString());
 
     	return resultXML.toString();
     }

@@ -36,8 +36,8 @@
 			var completeColor = "${completeColor }";
 		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
-		    var date = "${date }";
-		    var type = "${type }";
+		    var date = "${date}";
+		    var type = "${type}";
 		    var personid = "${taskInfoVO.personID }";
 		    var taskCommentListSize = "${taskCommentListSize }";
 		    var tempbody = "";
@@ -52,8 +52,9 @@
 		    var repeatCount = "${repeatCount}";
 		    var createDate = "${taskInfoVO.createDate}";
 		    var repetition = "${repetition}";
+		    var endDate = "${taskInfoVO.endDate}";
 		    
-		    $(document).ready(function() {
+		    $(document).ready(function() { 	 
 				load_bodyhtml();
 				if (hasTaskAttach == 'Y') {
 					document.getElementById('attachedfileDIV').innerHTML = taskAttachList;
@@ -70,7 +71,7 @@
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 390 + "PX");
 		    	$("#taskCommentList").height(document.documentElement.clientHeight - 390 + "PX");
 
-		        if (tasktype == "1") {
+		        if (tasktype == "1" || tasktype == "4") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
@@ -771,12 +772,13 @@
 		            	var selectDate = new Date(dateText);
 		            	var SD = selectDate.getDay();
     	
-						if (SD == 0 || SD == 6) {
+/* 						if (SD == 0 || SD == 6) {
 							alert("주말은 선택할 수 없습니다.");
 							$("#Sdatepicker").datepicker("setDate", date);
 						} else {
 			            	dayOnMouseClick(dateText);							
-						}
+						} */
+		            	dayOnMouseClick(dateText);
 		            }
 		        });
 
@@ -827,7 +829,7 @@
 		    });
 			
 			function dayOnMouseClick(changeDate) {
-				var repetitionCount = repetition.split("|");
+				var repetitionCount = repetition.split("|");				
 
 // 				var changeDateVal = new Date(changeDate);
 // 				var CDV = changeDateVal.getDay();
@@ -848,6 +850,15 @@
 					$("#Sdatepicker").datepicker("setDate", date);
 					return;
 				} else {
+					var endDateArray = endDate.substring(0,10).split("-");
+					var endDateObj = new Date(endDateArray[0], Number(endDateArray[1]) - 1, endDateArray[2]);
+					
+					if ((changeDateObj.getTime() - endDateObj.getTime()) > 0) {
+						alert("반복업무 종료일 이후의 날짜는 선택할 수 없습니다.");
+						$("#Sdatepicker").datepicker("setDate", date);
+						return;
+					}
+					
 // 					if ((repetitionCount[0] > 0) && (Math.abs(count3) - repetitionCount[0] > 0)) {						
 // 						alert("반복업무 횟수를 초과하였습니다.");
 // 						$("#Sdatepicker").datepicker("setDate", date);
