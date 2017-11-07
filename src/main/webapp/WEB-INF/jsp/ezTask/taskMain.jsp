@@ -310,8 +310,7 @@
 		    }
 
 			function show_page() {
-// 			    selectelem = null;
-				alert("Type: " + type);
+// 			    selectelem = null;				
 			    var length = list_body.children[1].rows.length;
 			    var progress_th = document.getElementById("_thprogress");
 				var column_prg = document.getElementById("col_progress");

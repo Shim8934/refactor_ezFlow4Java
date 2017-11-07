@@ -834,8 +834,11 @@
 // 				var changeDateVal = new Date(changeDate);
 // 				var CDV = changeDateVal.getDay();
 				
-				var dateArray = date.split("-");
-				var dateObj = new Date(dateArray[0], Number(dateArray[1]) - 1, dateArray[2]); // 오늘날짜의 반복업무
+/* 				var dateArray = date.split("-");
+				var dateObj = new Date(dateArray[0], Number(dateArray[1]) - 1, dateArray[2]); // 오늘날짜의 반복업무 	 */
+				
+				var dateArray = startdate.substring(0,10).split("-");
+				var dateObj = new Date(dateArray[0], Number(dateArray[1]) - 1, dateArray[2]);
 
 				var changeDateArray = changeDate.split("-");
 				var changeDateObj = new Date(changeDateArray[0], Number(changeDateArray[1]) - 1, changeDateArray[2]); // 달력에서 선택한 다른날짜의 반복업무				
@@ -845,7 +848,8 @@
 				var createDateObj = new Date(createDateArray[0], Number(createDateArray[1]) - 1, createDateArray[2]); // 반복업무 작성일
 				var count2 = (dateObj.getTime() - createDateObj.getTime())/1000/60/60/24; // 처음날짜 - 업무생성날짜
 
-				if ((count2 - count) < 0) {
+				/* if ((count2 - count) < 0) { */
+				if (count > 0) {
 					alert("반복업무 작성일 이전의 날짜는 선택할 수 없습니다.");
 					$("#Sdatepicker").datepicker("setDate", date);
 					return;

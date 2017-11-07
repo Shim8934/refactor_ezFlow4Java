@@ -541,8 +541,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							}
 	
 							if (generated) {
-								count++;
-								logger.debug("Count value: " + count);
+								count++;								
 								String calcuDate = nsdf.format(date_cal.getTime());
 	
 								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
@@ -778,15 +777,19 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("getTaskCount started.");
 		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
 
+		String utcStartTime = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 00:00:00";
+		logger.debug("Current Time:" + utcStartTime);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("userID", userID);
+		map.put("userID", userID);		
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("type", type);
 		map.put("filter", filter);
 		map.put("chkValue", chkValue);
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
+		map.put("currentDate", utcStartTime);
 
 		String rtnCnt = "";
 		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count

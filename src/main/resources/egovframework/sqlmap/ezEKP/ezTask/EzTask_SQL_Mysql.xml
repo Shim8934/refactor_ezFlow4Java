@@ -321,6 +321,8 @@
 				(B.sharerid = #userID# and A.TASKID = B.TASKID))
 			AND
 				A.taskstatus != 3
+			AND
+				(DATE_ADD(DATE_FORMAT(A.startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) = #currentDate#)
 		]]>
 
 		<isNotEqual property="filter" compareValue="" prepend="AND">
@@ -606,7 +608,7 @@
         ]]>
     </insert>
 
-	<insert id="EzTaskDAO.insertTaskRepeDel" parameterClass="map">
+	<insert id="EzTaskDAO.insertTaskRepeDel" parameterClass="map">			
         <![CDATA[
             INSERT INTO TBL_TASKINSTANCESTATUS
                 (taskid, repeatcount, taskstatus, completerate, startdate, enddate, tenantid) 
