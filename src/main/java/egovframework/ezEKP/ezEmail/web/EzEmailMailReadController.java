@@ -1288,6 +1288,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String isAttach = "NO";
 		String pAttachListHtml = "";
 		String pBody = "";
+		boolean isSentItems =false;
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
@@ -1414,6 +1415,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						isAttach = "OK";
 					}
 					
+					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+						isSentItems = true;
+					}
+					
 				}
 			}
 		} catch (MessagingException e) {
@@ -1430,6 +1435,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pReciverCc", pReciverCc);
 		model.addAttribute("pSubject", pSubject);
 		model.addAttribute("isAttach", isAttach);
+		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("pAttachListHtml", pAttachListHtml);
 		model.addAttribute("pBody", pBody);
 		
