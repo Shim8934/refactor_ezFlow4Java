@@ -305,15 +305,27 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (result != null && !result.equals("")) {
 			String[] info = result.split(":");
-			
-			userID = info[0];
-			textName = info[1];
-			deptID = info[2];
-			startDate = info[3];
-			endDate = info[4];
-			
-			if (info.length > 5) {
-				bReason = info[5];
+
+			if (info.length > 6) {
+				userID = info[0];
+				textName = info[1];
+				deptID = info[2];
+				startDate = info[3] + ":" + info[4];
+				endDate = info[5] + ":" + info[6];
+				
+				if (info.length > 7) {
+					bReason = info[7];
+				}
+			} else {
+				userID = info[0];
+				textName = info[1];
+				deptID = info[2];
+				startDate = info[3];
+				endDate = info[4];
+				
+				if (info.length > 5) {
+					bReason = info[5];
+				}
 			}
 		}
 		

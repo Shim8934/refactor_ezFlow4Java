@@ -17187,8 +17187,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String bujaeInfo = doc.getElementsByTagName("DATA4").item(k).getTextContent(); 
 				String[] bujae = bujaeInfo.split(":");
 				
-				if (bujae.length >= 5) {
+				if (bujae.length > 6) {
  					if (nowDate.compareTo(bujae[5] + ":" + bujae[6] + ":" + "00") <= 0) {
+						if (!chkFirst) {
+							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+							chkFirst = true;
+						} else {
+							rtnVal += ", '" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+						}
+					}
+				} else {
+					if (nowDate.compareTo(bujae[3].replace("/", ":").substring(0, 16)) >= 0 && nowDate.compareTo(bujae[4].replace("/", ":").substring(0, 16)) <= 0) {
 						if (!chkFirst) {
 							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
 							chkFirst = true;
