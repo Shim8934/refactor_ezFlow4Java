@@ -608,6 +608,7 @@
 		            pURL = tr.getAttribute("DATA2");
 		
 		            var formid = tr.getAttribute("DATA6");
+		            var docState =  tr.getAttribute("DATA12");
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
@@ -616,7 +617,7 @@
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid);
+		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }

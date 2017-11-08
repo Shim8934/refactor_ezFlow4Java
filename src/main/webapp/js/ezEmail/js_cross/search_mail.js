@@ -23,7 +23,7 @@ function HiddenMailProgress() {
     document.getElementById("MailProgress").style.display = "none";
 }
 function MailListRefresh() {
-	start_search();
+//	start_search();
 }
 function start_search() {
     listContentArry = new Array();
