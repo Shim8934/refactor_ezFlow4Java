@@ -75,13 +75,14 @@
 	            </td>
 	        </tr>
 	        </c:if>
-	        <tr style="height:100%;">
-	            <td colspan="4" style="height:100%; border:1px solid #b6b6b6;vertical-align:top;">
-	               <div style="padding:10px;">
+	        </table>
+	        <div style="height:100%; margin:5px;">
+	            <div style="height:100%; border:1px solid #b6b6b6;vertical-align:top;">
+	               <div style="padding:10px; overflow:auto;">
 	                    ${pBody}
 	                </div>
-	            </td>
-	        </tr>
-	    </table>
+	            </div>
+	        </div>
+	    
 	</body>
 </html>
