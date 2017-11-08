@@ -21,7 +21,7 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
-		    var getMemo = "${addressInfo.sMemo}";
+		    var getMemo = "${getsMemo}";
 		    
 		    window.onload = function () {
 		        getMemo = getMemo.replace(/(<br>|<br\/>|<br \/>)/g, "\r\n");
