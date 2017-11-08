@@ -196,7 +196,7 @@ public class EzAddressController{
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
 		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
-		if (useAddressAdmin.equals("YES")) {
+		if (!useAddressAdmin.equals("NO")) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 	        	compAdmin = "Y";
 	        	deptAdmin = "Y";
@@ -491,7 +491,7 @@ public class EzAddressController{
 			
 			// 주소록을 추가/수정 할 권한이 있는지 체크.
 			String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
-			if (useAddressAdmin.equals("YES")) {
+			if (!useAddressAdmin.equals("NO")) {
 				if (folderType.equals("C")) {
 					if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
 						return "NO_AUTHORITY";
@@ -552,7 +552,7 @@ public class EzAddressController{
 		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		
 		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
-		if (useAddressAdmin.equals("YES")) {
+		if (!useAddressAdmin.equals("NO")) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 	        	compAdmin = "Y";
 	        	deptAdmin = "Y";
@@ -714,7 +714,7 @@ public class EzAddressController{
         }
 		
 		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
-		if (useAddressAdmin.equals("YES")) {
+		if (!useAddressAdmin.equals("NO")) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 				compAdmin = "Y";
 				deptAdmin = "Y";
@@ -813,7 +813,7 @@ public class EzAddressController{
 		String companyAdmin = "";
 		
 		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
-		if (useAddressAdmin.equals("YES")) {
+		if (!useAddressAdmin.equals("NO")) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 	        	companyAdmin = "Y";
 	        	deptAdmin = "Y";
@@ -1138,7 +1138,7 @@ public class EzAddressController{
 		String title = egovMessageSource.getMessage("ezAddress.t144", locale);
 		
 		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
-		if (useAddressAdmin.equals("YES")) {
+		if (!useAddressAdmin.equals("NO")) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 				companyAdmin = "Y";
 				deptAdmin = "Y";
@@ -1405,7 +1405,7 @@ public class EzAddressController{
 		}
 		
 		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
-		if (useAddressAdmin.equals("YES")) {
+		if (!useAddressAdmin.equals("NO")) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
 				bAdmin = "Y";
 			}
