@@ -160,6 +160,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		if (taskInfoVO.getPersonAttach().equals("Y")) {
 			taskWorkAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
 		}
+		
+		//baonk added
+		if (taskInfoVO.getTaskType().equals("4")) {
+			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, Integer.toString(repeatCount), tenantID);
+			taskInfoVO.setCompleteRate(completionPercentage);
+		}
+		//end
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 
@@ -378,8 +385,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		String taskStatus = request.getParameter("taskStatus");
 		String completeRate = request.getParameter("completeRate");
+		String repeateCount = request.getParameter("repeatCount");
+		String tasktype = request.getParameter("tasktype");
+		String realDate = request.getParameter("realDate");
 		
-		ezTaskService.updateTaskStatus(taskID, taskStatus, completeRate, userInfo.getTenantId());
+		logger.debug("CHECK REPEAT COUNT: " + repeateCount + "|| taskType: " + tasktype + "|| realDate: " + realDate);
+		
+		ezTaskService.updateTaskStatus(taskID, taskStatus, tasktype, repeateCount, realDate, completeRate, userInfo.getTenantId());
 		
 		logger.debug("updateTaskStatus ended.");
 		
@@ -457,12 +469,24 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();
+		int repeatCnt = 0;
+		String date = request.getParameter("date");
+		String realDate = commonUtil.getDateStringInUTC(date, userInfo.getOffset(), true);
 		
-		String taskID = request.getParameter("taskID");
+		if (request.getParameter("repeatCount") != null || !request.getParameter("repeatCount").equals("")) {
+			repeatCnt = Integer.parseInt(request.getParameter("repeatCount"));
+		}
+		
+		if (repeatCnt != 0) {
+			model.addAttribute("repeatCount", repeatCnt);
+		}
+		
+		String taskID = request.getParameter("taskID");		
 		
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
-		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), tenantID);
-		
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), tenantID);		
+
+		model.addAttribute("realDate", realDate);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("delayColor", configVO.getDelayColor());

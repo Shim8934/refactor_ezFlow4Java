@@ -25,13 +25,17 @@
 	        var creatorid = "${taskInfoVO.creatorID }";
 	        var personid = "${taskInfoVO.personID }";
 	        var delayColor = "${delayColor }";
-	        var completeColor = "${completeColor }";
+	        var completeColor = "${completeColor }";	
+	        var tasktype = "<c:out value = '${taskInfoVO.taskType}' />";
+	        var repeatCount = "<c:out value = '${repeatCount}' />";
+	        var realDate = "<c:out value = '${realDate}' />";
 	        var duration = 500;
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
 	        
 	        $(document).ready(function() {
+	        	
 	        	initProgressBar(completerate)
         	
 	        	if (taskstatus == '1') {
@@ -137,7 +141,10 @@
 					data : {
 						taskID : taskid,
 						taskStatus : taskstatus,
-						completeRate : completerate
+						completeRate : completerate,
+						tasktype : tasktype,
+						repeatCount	 : repeatCount,
+						realDate : realDate
 					},
 					success : function(result) {
 						//alert("<spring:message code='ezTask.t150' />");

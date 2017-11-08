@@ -43,6 +43,10 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public TaskConfigVO getOriginColor(Map<String, Object> map) throws Exception {
 		return (TaskConfigVO) select("EzTaskDAO.getOriginColor", map);
 	}
+	
+	public int selectCompletionOfRepTask(Map<String, Object> map) throws Exception {
+		return (int) select("EzTaskDAO.selectCompletionOfRepTask", map);
+	}
 
 	public TaskGeneralVO getTaskGeneral(Map<String, Object> map) throws Exception {
 		return (TaskGeneralVO) select("EzTaskDAO.getTaskGeneral", map);
@@ -105,6 +109,10 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		update("EzTaskDAO.updateTaskStatus", map);
 	}
 	
+	public void updateRepetionTaskStatus(Map<String, Object> map) {
+		insert("EzTaskDAO.updateRepetionTaskStatus", map);
+	}	
+	
 	public void updateTaskWork(Map<String, Object> map) {
 		update("EzTaskDAO.updateTaskWork", map);
 	}
@@ -113,9 +121,14 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		update("EzTaskDAO.updateTask", map);
 	}
 	
+	public void updateTaskStartDate(Map<String, Object> map) throws Exception {
+		update("EzTaskDAO.updateTaskStartDate", map);
+	}
+	
+	
 	public void taskUpdateConfig(Map<String, Object> map) throws Exception {
 		update("EzTaskDAO.taskUpdateConfig", map);
-	}
+	}	
 	
 	public void updateTaskGeneral(Map<String, Object> map) {
 		update("EzTaskDAO.updateTaskGeneral", map);

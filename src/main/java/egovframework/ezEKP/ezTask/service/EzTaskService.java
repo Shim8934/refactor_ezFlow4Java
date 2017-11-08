@@ -34,7 +34,9 @@ public interface EzTaskService {
 	
 	void deleteComment(String taskID, String commentID, int tenantID) throws Exception;
 	
-	void updateTaskStatus(String taskID, String taskStatus, String completeRate, int tenantID) throws Exception;
+	void updateTaskStatus(String taskID, String taskStatus, String tasktype, String repeatCount, String realDate, String completeRate, int tenantID) throws Exception;
+	
+	void updateTaskStartDate(String taskID, String startDate, int tenantID) throws Exception;
 	
 	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID) throws Exception;
 	
@@ -49,4 +51,6 @@ public interface EzTaskService {
 	void updateTaskGeneral(String userID, int listCount, String selectTaskStatus, int tenantID) throws Exception;
 
 	void insertTaskRepeDel(String taskID, String repeatCount, String taskStatus, String completeRate, String realDate, int tenantID) throws Exception;
+	
+	int selectCompletionOfRepTask(String taskID, String repeatCount, int tenantID) throws Exception;
 }

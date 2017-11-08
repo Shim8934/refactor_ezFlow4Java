@@ -135,7 +135,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public void updateTaskStatus(String taskID, String taskStatus, String completeRate, int tenantID) throws Exception {
+	public void updateTaskStatus(String taskID, String taskStatus, String tasktype, String repeatCount, String realDate, String completeRate, int tenantID) throws Exception {
 		logger.debug("updateTaskStatus started.");
 		logger.debug("taskID = " + taskID + " || taskStatus = " + taskStatus + " || completeRate = " + completeRate);
 		
@@ -144,8 +144,16 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("taskStatus", taskStatus);
 		map.put("completeRate", completeRate);
 		map.put("tenantID", tenantID);
+		map.put("tasktype", tasktype);
+		map.put("repeateCount", repeatCount);
+		map.put("realDate", realDate);		
 		
-		ezTaskDAO.updateTaskStatus(map);
+		if (!tasktype.equals("4")) {
+			ezTaskDAO.updateTaskStatus(map);
+		}
+		else {
+			ezTaskDAO.updateRepetionTaskStatus(map);
+		}			
 		
 		logger.debug("updateTaskStatus ended.");
 	}
@@ -777,8 +785,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("getTaskCount started.");
 		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
 
-		String utcStartTime = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 00:00:00";
-		logger.debug("Current Time:" + utcStartTime);
+		String utcStartTime = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 00:00:00";		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -1080,18 +1087,53 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	public void insertTaskRepeDel(String taskID, String repeatCount, String taskStatus, String completeRate, String startDate, int tenantID) throws Exception {
 		logger.debug("insertTaskRepeDel started.");
 		logger.debug("taskID : " + taskID + " | repeatCount : " + repeatCount + " | taskStatus : " + taskStatus + " | completeRate : " + completeRate + " | startDate : " + startDate);
+		//baonk added
+		if (repeatCount.equals("1")) {	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Calendar date_cal = Calendar.getInstance();
+			date_cal.setTime(sdf.parse(startDate));			
+			date_cal.add(Calendar.DATE, 1);
+			String newStartDate = nsdf.format(date_cal.getTime());
+			updateTaskStartDate(taskID, newStartDate, tenantID);
+		}
+		else {			
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("taskID", taskID);
+			map.put("repeatCount", repeatCount);
+			map.put("taskStatus", taskStatus);
+			map.put("completeRate", completeRate);
+			map.put("startDate", startDate);
+			map.put("tenantID", tenantID);
 
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("taskID", taskID);
-		map.put("repeatCount", repeatCount);
-		map.put("taskStatus", taskStatus);
-		map.put("completeRate", completeRate);
-		map.put("startDate", startDate);
-		map.put("tenantID", tenantID);
-
-		ezTaskDAO.insertTaskRepeDel(map);
+			ezTaskDAO.insertTaskRepeDel(map);
+		}
+		//end
 
 		logger.debug("insertTaskRepeDel ended.");
+	}
+
+	@Override
+	public void updateTaskStartDate(String taskID, String startDate, int tenantID) throws Exception {
+		logger.debug("updateTaskStartDate started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("taskID", taskID);					
+		map.put("startDate", startDate);
+		map.put("tenantID", tenantID);
+		ezTaskDAO.updateTaskStartDate(map);
+	}
+
+	@Override
+	public int selectCompletionOfRepTask(String taskID, String repeatCount,	int tenantID) throws Exception {		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("taskID", taskID);
+		map.put("repeatCount", repeatCount);
+		map.put("tenantID", tenantID);
+		
+		int result = ezTaskDAO.selectCompletionOfRepTask(map);
+		return result;
 	}
 }
