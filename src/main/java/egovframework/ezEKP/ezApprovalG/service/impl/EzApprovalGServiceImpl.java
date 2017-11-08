@@ -3164,6 +3164,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		ezApprovalGDAO.createNewDoc(map);
 		ezApprovalGDAO.createNewDoc2(map);
+		
 		returnVal = tmpDocID.trim();
 		
 		return returnVal;
@@ -16403,7 +16404,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return receiptSN;
 	}
 
-	public String getNewID(String companyID, int tenantID) throws Exception{
+	public String getNewID(String companyID, int tenantID) throws Exception {
+		logger.debug("getNewID started");
+		
 		String rtnVal = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -16414,6 +16417,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
 		rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
+
+		logger.debug("getNewID newDocID : " + rtnVal);
+		logger.debug("getNewID ended");
 
 		return rtnVal;
 	}
@@ -17181,8 +17187,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String bujaeInfo = doc.getElementsByTagName("DATA4").item(k).getTextContent(); 
 				String[] bujae = bujaeInfo.split(":");
 				
-				if (bujae.length >= 5) {
+				if (bujae.length > 6) {
  					if (nowDate.compareTo(bujae[5] + ":" + bujae[6] + ":" + "00") <= 0) {
+						if (!chkFirst) {
+							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+							chkFirst = true;
+						} else {
+							rtnVal += ", '" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+						}
+					}
+				} else {
+					if (nowDate.compareTo(bujae[3].replace("/", ":").substring(0, 16)) >= 0 && nowDate.compareTo(bujae[4].replace("/", ":").substring(0, 16)) <= 0) {
 						if (!chkFirst) {
 							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
 							chkFirst = true;
