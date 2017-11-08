@@ -133,6 +133,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int repeatCount = Integer.parseInt(request.getParameter("repeatCount"));
 		String date = request.getParameter("date");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
+		String dateList = "";
 
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
@@ -162,10 +163,38 @@ public class EzTaskController extends EgovFileMngUtil {
 		}
 		
 		//baonk added
-		if (taskInfoVO.getTaskType().equals("4")) {
-			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, Integer.toString(repeatCount), tenantID);
+		if (taskInfoVO.getTaskType().equals("4")) {					
+			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date today = new Date(); 
+	        Calendar calendar = Calendar.getInstance();  
+	        calendar.setTime(today); 
+	        
+	        calendar.add(Calendar.MONTH, 1);  
+	        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+	        calendar.add(Calendar.DATE, -1); 
+	        String lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 
+	        
+	        calendar.set(Calendar.DAY_OF_MONTH, 1);
+	        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+			
+			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+			
+			for (String test : result) {
+				//logger.debug("BBBBBBBBBBBBBBBBB: " + test);
+				dateList += test + ",";
+			}
+			dateList = dateList.substring(0, dateList.length() - 1);
+			if(!result.contains(date)) {
+				date = result.get(0);	
+			}
+			
+			String realStartDate = date + " 00:00:00";
+			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
+			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
 			taskInfoVO.setCompleteRate(completionPercentage);
+			//logger.debug("BBBBBBBBBBBBBdateList: " + dateList);
 		}
+		
 		//end
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
@@ -186,7 +215,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("repeatCount", repeatCount);
 		model.addAttribute("date", date);
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
-
+		model.addAttribute("dateList", dateList);
+		
 		logger.debug("taskRead ended.");
 		
 		return "/ezTask/taskRead";
@@ -469,9 +499,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();
-		int repeatCnt = 0;
+		int repeatCnt = 0;		
+		String startDate = request.getParameter("startDate");
 		String date = request.getParameter("date");
-		String realDate = commonUtil.getDateStringInUTC(date, userInfo.getOffset(), true);
+		String realStartDate = date + "" + startDate.substring(10, 19);		
+
+		String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
 		
 		if (request.getParameter("repeatCount") != null || !request.getParameter("repeatCount").equals("")) {
 			repeatCnt = Integer.parseInt(request.getParameter("repeatCount"));
@@ -1089,7 +1122,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String completeRate = request.getParameter("completeRate");
 		String selectDate = request.getParameter("selectDate");
 		String startDate = request.getParameter("startDate");		
-		String realStartDate = selectDate + "" + startDate.substring(10, 16);		
+		String realStartDate = selectDate + "" + startDate.substring(10, 19);		
 
 		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
 

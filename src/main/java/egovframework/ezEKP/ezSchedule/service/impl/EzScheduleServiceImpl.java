@@ -17,6 +17,8 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.NodeList;
@@ -51,6 +53,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzScheduleServiceImpl.class);
 
 	@Override
 	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId) throws Exception {
@@ -150,6 +154,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 	@Override
 	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, int tenantId) throws Exception {						
+		//logger.debug(" BAONKKKKKKK startDate : " + orgStartDate + "|| orgEndDate: " + orgEndDate);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PIDLIST", pidList);		
 		map.put("v_PFILTER", filter);

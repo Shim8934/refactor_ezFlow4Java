@@ -448,6 +448,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		logger.debug("taskUpdateConfig ended.");
 	}
+	
+	
 
 	@Override
 	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception {
@@ -496,12 +498,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				map.put("taskID", vo.getTaskID());
 		
 				List<String> rList = ezTaskDAO.getTaskRepeDelList(map);
-				
-				//baonk check
-				for (String test : rList) {
-					logger.debug("BAONKKKKK rLIST: " + test);
-				}
-				//end
 				
 				String currentEndDate = vo.getEndDate();
 				String[] info = vo.getRepetition().split("\\|");
@@ -761,7 +757,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 		TaskInfoVO innerVO = new TaskInfoVO();
 
-		logger.debug("vo.getStartDate : " + vo.getStartDate() + " | vo.getEndDate() : " + vo.getEndDate());
+		//logger.debug("vo.getStartDate : " + vo.getStartDate() + " | vo.getEndDate() : " + vo.getEndDate());
 
 		String dateTime1 = nsdf.format(date) + vo.getStartDate().substring(10);
 		String dateTime2 = nsdf.format(date) + vo.getEndDate().substring(10);
@@ -1107,7 +1103,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("repeatCount", repeatCount);
 		map.put("taskStatus", taskStatus);
 		map.put("completeRate", completeRate);
-		map.put("startDate", startDate.substring(0, 10));
+		map.put("startDate", startDate);
 		map.put("tenantID", tenantID);
 
 		ezTaskDAO.insertTaskRepeDel(map);
@@ -1127,14 +1123,278 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public int selectCompletionOfRepTask(String taskID, String repeatCount,	int tenantID) throws Exception {		
+	public int selectCompletionOfRepTask(String taskID, String date, int tenantID) throws Exception {		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("taskID", taskID);
-		map.put("repeatCount", repeatCount);
+		map.put("date", date);
 		map.put("tenantID", tenantID);
 		
 		int result = ezTaskDAO.selectCompletionOfRepTask(map);
 		return result;
+	}
+
+	@Override
+	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, int tenantID) throws Exception {
+		logger.debug("getDatesOfRepTask started.");
+		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		map.put("taskID", taskID);
+		
+		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
+		
+		List<String> resultList = new ArrayList<String>();
+		List<String> rList = ezTaskDAO.getTaskRepeDelList(map);
+		
+		//baonk check
+		for (String test : rList) {
+			logger.debug("BAONKKKKK rLIST: " + test);
+		}
+		//end
+		
+		String currentEndDate = vo.getEndDate();
+		String[] info = vo.getRepetition().split("\\|");
+
+		if (!info[0].equals("0")) {
+			currentEndDate = endDate;
+		} // 반복주기 설정범위가 다음회수 반복 후 종료 일때 '0'
+
+		if (currentEndDate.compareTo(endDate) > 0) {
+			currentEndDate = endDate;
+		}
+
+		int maxCount = Integer.parseInt(info[0]);
+		int count = 0;
+		boolean isFirst = true;
+
+		if (maxCount == 0) {
+			maxCount = -1;
+		}
+
+		Calendar sDate_cal = Calendar.getInstance();
+		Calendar eDate_cal = Calendar.getInstance();
+		Calendar date_cal = Calendar.getInstance();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		logger.debug("endDate : " + endDate + " | currentEndDate : " + currentEndDate);
+
+		sDate_cal.setTime(sdf.parse(startDate));
+		eDate_cal.setTime(sdf.parse(currentEndDate));
+		date_cal.setTime(sdf.parse(vo.getStartDate()));		
+
+		switch (info[2]) {
+			case "0" : // 매일
+				while (true) {
+					if (date_cal.compareTo(eDate_cal) > 0) break;
+					if (maxCount == count) break;
+					
+					boolean generated = false;
+					int dayOFWeek = date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+
+					if (info[3].equals("0")) {
+						if (dayOFWeek != 0 && dayOFWeek != 6) {
+							generated = true;
+						}
+					} else {
+						generated = true;
+					}
+
+					if (generated) {
+						count++;								
+						String calcuDate = nsdf.format(date_cal.getTime());						
+						logger.debug("calcuDate : " + calcuDate);
+						
+						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+							//row 추가
+							if (!rList.contains(calcuDate)) {
+								TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
+								resultList.add(rVo.getStartDate().substring(0, 10));
+							}
+						}
+					}
+					
+					if (info[3].equals("0")) {
+						date_cal.add(Calendar.DATE, 1);
+					} else {
+						date_cal.add(Calendar.DATE, Integer.parseInt(info[3]));
+					}
+				}
+			break;
+			
+			case "1" : //매주
+				int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+				
+				while (true) {
+					if (date_cal.compareTo(eDate_cal) > 0) break;
+					if (maxCount == count) break;
+					
+					boolean generated = false;
+
+					if (info[4].indexOf((date_cal.get(Calendar.DAY_OF_WEEK) - 1) + "") > -1) {
+						generated = true;
+					}
+					
+					if (generated) {
+						count++;
+						
+						String calcuDate = nsdf.format(date_cal.getTime());
+						
+						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+							//row 추가
+							if (!rList.contains(calcuDate)) {
+								TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+								resultList.add(rVo.getStartDate().substring(0, 10));
+							}
+						}
+					}
+					
+					if (weekcount == 0) {
+						date_cal.add(Calendar.DATE, (Integer.parseInt(info[3]) - 1) * 7 + 1);
+						weekcount = 6;
+					} else {
+						date_cal.add(Calendar.DATE, 1);
+						weekcount--;
+					}
+				}						
+			break;	
+			
+			case "2" : // 매월
+				while (true) {						
+					int year = date_cal.get(Calendar.YEAR);
+					int month = date_cal.get(Calendar.MONTH) + 1;
+
+					if ((year >= eDate_cal.get(Calendar.YEAR) && month > eDate_cal.get(Calendar.MONTH) + 1) || year > eDate_cal.get(Calendar.YEAR)) break;
+					if (maxCount == count) break;
+					
+					boolean generated = false;
+					
+					Calendar newCal = Calendar.getInstance();
+					newCal.set(year, month-1, 1);
+
+					if (info[3].equals("1")) {
+						newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+					} else {
+						int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1);
+						
+						if (diff < 0) {
+							diff += 7;									
+						}								
+						newCal.add(Calendar.DATE, diff);
+						
+						if (Integer.parseInt(info[5]) < 5) {
+							newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+						} else {
+							while (true) {
+								newCal.add(Calendar.DATE, 7);
+								
+								if (newCal.get(Calendar.MONTH) + 1 != month) {
+									newCal.add(Calendar.DATE, -7);
+									break;
+								}
+							}
+						}
+					}
+
+					if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+						generated = true;
+					}
+					
+					isFirst = false;
+
+					if (generated) {
+						count++;
+
+						String calcuDate = nsdf.format(newCal.getTime());
+						
+						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+							//row 추가
+							if (!rList.contains(calcuDate)) {
+								TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+								resultList.add(rVo.getStartDate().substring(0, 10));
+							}
+						}
+					}
+					
+					date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+					date_cal.add(Calendar.MONTH, Integer.parseInt(info[4]));							
+				}
+			break;
+			
+			case "3" : // 매년
+				while (true) {
+					int year = date_cal.get(Calendar.YEAR);
+					int month = Integer.parseInt(info[4]);
+							
+					if (year > eDate_cal.get(Calendar.YEAR)) break;
+					if (maxCount == count) break;
+					
+					boolean generated = false;
+					
+					Calendar newCal = Calendar.getInstance();
+					newCal.set(year, month-1, 1);
+					
+					if (info[3].equals("1")) {
+						newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+						
+						if (info[5].equals("2")) {
+							//음력으로 newCal 다시 만듬									
+							if (!isFirst || newCal.compareTo(date_cal) >= 0) {
+								generated = true;
+							}
+						}
+					} else {
+						int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1); 
+						
+						if (diff < 0) {
+							diff += 7;									
+						}								
+						newCal.add(Calendar.DATE, diff);
+						
+						if (Integer.parseInt(info[5]) < 5) {
+							newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+						} else {
+							while (true) {
+								newCal.add(Calendar.DATE, 7);
+								
+								if (newCal.get(Calendar.MONTH) + 1 != month) {
+									newCal.add(Calendar.DATE, -7);
+									break;
+								}
+							}
+						}
+					}
+					
+					if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+						generated = true;
+					}
+					
+					isFirst = false;
+					
+					if (generated) {
+						count++;
+						
+						String calcuDate = nsdf.format(newCal.getTime());
+						
+						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+							//row 추가
+							if (!rList.contains(calcuDate)) {
+								TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+								resultList.add(rVo.getStartDate().substring(0, 10));
+							}
+						}
+					}
+					
+					date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+					date_cal.add(Calendar.YEAR, 1);
+				}						
+			break;	
+		}		
+		return resultList;
 	}
 }

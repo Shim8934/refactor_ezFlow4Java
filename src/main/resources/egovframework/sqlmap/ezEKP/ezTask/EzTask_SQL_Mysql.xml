@@ -314,15 +314,15 @@
 			ON
 				A.tenantid = B.tenantid
 			WHERE
-				A.tenantid = #tenantID#
-			AND
-					((A.creatorid = #userID# and A.tasktype = 1)
-				OR
-					(A.personid = #userID#)
-				OR	
-					(B.sharerid = #userID# and A.TASKID = B.TASKID))
-			AND
-				A.taskstatus != 3
+					A.tenantid = #tenantID#
+				AND
+						((A.creatorid = #userID# and A.tasktype = 1)
+					OR
+						(A.personid = #userID#)
+					OR	
+						(B.sharerid = #userID# and A.TASKID = B.TASKID))
+				AND
+					A.taskstatus != 3				
 		]]>
 
 		<isNotEqual property="filter" compareValue="" prepend="AND">
@@ -625,7 +625,7 @@
                          			WHERE
                          					TASKID			= #taskID#
                          				AND
-                         					REPEATCOUNT		= #repeatCount#
+                         					STARTDATE		= #startDate#
                                    		AND
                                    			TENANTID 		= #tenantID#
 								)
@@ -650,7 +650,7 @@
 	            WHERE
 	            		TASKID			= #taskID#
 	            	AND
-	            		REPEATCOUNT 	= #repeatCount#
+	            		STARTDATE 		= #startDate#
 	            	AND
 	            		TENANTID		= #tenantID#
             ]]> 
@@ -775,7 +775,7 @@
                          			WHERE
                          					TASKID			= #taskID#
                          				AND
-                         					REPEATCOUNT		= #repeatCount#
+                         					STARTDATE		= #realDate#
                                    		AND
                                    			TENANTID 		= #tenantID#
 								)
@@ -800,7 +800,7 @@
 	            WHERE
 	            		TASKID			= #taskID#
 	            	AND
-	            		REPEATCOUNT 	= #repeatCount#
+	            		STARTDATE 		= #realDate#
 	            	AND
 	            		TENANTID		= #tenantID#
             ]]> 
@@ -930,7 +930,7 @@
 							WHERE
 								TASKID = #taskID#
 							AND
-								REPEATCOUNT = #repeatCount#
+								STARTDATE = #date#
 							AND
 								TENANTID = #tenantID#
 				), 0)	

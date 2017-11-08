@@ -53,8 +53,18 @@
 		    var createDate = "${taskInfoVO.createDate}";
 		    var repetition = "${repetition}";
 		    var endDate = "${taskInfoVO.endDate}";
+		    var dateList = "${dateList}";
+		    var dateArray = null;
 		    
-		    $(document).ready(function() { 	 
+		    $(document).ready(function() {
+		    	if (dateList !== "") {
+		    		dateArray = dateList.split(",");
+		    	}
+		    	
+		    	for (var i = 0; i < dateArray.length; i++) {
+					console.log(dateArray[i]);
+				}
+		    	
 				load_bodyhtml();
 				if (hasTaskAttach == 'Y') {
 					document.getElementById('attachedfileDIV').innerHTML = taskAttachList;
@@ -474,7 +484,7 @@
 			/* 진행상태 수정 */
 			function update_status() {
 				if (personid == userid || creatorid == userid) {
-					DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date);
+					DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&startDate=" + startdate);
 				} else {
 					alert("<spring:message code='ezTask.t149' />");
 				}
@@ -777,6 +787,7 @@
 		            onSelect:function(dateText, inst) {
 		            	var selectDate = new Date(dateText);
 		            	var SD = selectDate.getDay();
+		            	var test = 0;
     	
 /* 						if (SD == 0 || SD == 6) {
 							alert("주말은 선택할 수 없습니다.");
@@ -784,7 +795,23 @@
 						} else {
 			            	dayOnMouseClick(dateText);							
 						} */
-		            	dayOnMouseClick(dateText);
+						
+						for (var i = 0; i < dateArray.length; i++) {
+							if (dateArray[i] ==  dateText) {
+								test = 1;
+								break;
+							}
+						}
+						
+						console.log("Test value: " + test + "|| current select date: " + dateText + "|| current position: " + i);
+						
+						if (test == 0) {
+							alert("이날 에 Task를 없어요. 다를 날을 선택 하세요.");
+							$("#Sdatepicker").datepicker("setDate", date);
+						}
+						else {
+							dayOnMouseClick(dateText, (i + 1));
+						}
 		            }
 		        });
 
@@ -834,57 +861,11 @@
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 			
-			function dayOnMouseClick(changeDate) {
-				var repetitionCount = repetition.split("|");				
-
-// 				var changeDateVal = new Date(changeDate);
-// 				var CDV = changeDateVal.getDay();
-				
-/* 				var dateArray = date.split("-");
-				var dateObj = new Date(dateArray[0], Number(dateArray[1]) - 1, dateArray[2]); // 오늘날짜의 반복업무 	 */
-				
-				var dateArray = startdate.substring(0,10).split("-");
-				var dateObj = new Date(dateArray[0], Number(dateArray[1]) - 1, dateArray[2]);
-
-				var changeDateArray = changeDate.split("-");
-				var changeDateObj = new Date(changeDateArray[0], Number(changeDateArray[1]) - 1, changeDateArray[2]); // 달력에서 선택한 다른날짜의 반복업무				
-				var count = (dateObj.getTime() - changeDateObj.getTime())/1000/60/60/24; // 처음날짜 - 바꿀날짜
-
-/* 				var createDateArray = createDate.substring(0,10).split("-");
-				var createDateObj = new Date(createDateArray[0], Number(createDateArray[1]) - 1, createDateArray[2]); // 반복업무 작성일
-				var count2 = (dateObj.getTime() - createDateObj.getTime())/1000/60/60/24; // 처음날짜 - 업무생성날짜 */
-
-				/* if ((count2 - count) < 0) { */
-				if (count > 0) {
-					alert("반복업무 작성일 이전의 날짜는 선택할 수 없습니다.");
-					$("#Sdatepicker").datepicker("setDate", date);
-					return;
-				} else {
-					var endDateArray = endDate.substring(0,10).split("-");
-					var endDateObj = new Date(endDateArray[0], Number(endDateArray[1]) - 1, endDateArray[2]);
-					
-					if ((changeDateObj.getTime() - endDateObj.getTime()) > 0) {
-						alert("반복업무 종료일 이후의 날짜는 선택할 수 없습니다.");
-						$("#Sdatepicker").datepicker("setDate", date);
-						return;
-					}
-					
-// 					if ((repetitionCount[0] > 0) && (Math.abs(count3) - repetitionCount[0] > 0)) {						
-// 						alert("반복업무 횟수를 초과하였습니다.");
-// 						$("#Sdatepicker").datepicker("setDate", date);
-// 						return;
-// 					}
-/* 					if (count2 > repeatCount) {
-						repeatCount = repeatCount - count + 2;
-					} else {
-						repeatCount = repeatCount - count;
-					} */
-					repeatCount =  1 - count;
-
-					var feature = GetOpenPosition(750, 740);
-					window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-					window.close();					
-				}
+			function dayOnMouseClick(changeDate, order) {							
+				repeatCount = order;
+				var feature = GetOpenPosition(750, 740);
+				window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				window.close();
 			}
 		</script>
 	</head>
