@@ -2697,6 +2697,12 @@ function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListVi
             document.getElementById("MsgBCC_TRu").style.display = "";
             document.getElementById("MsgBCC_TR").style.display = "";
             document.getElementById("BccViewer").setAttribute("status", "on");
+            
+            if (isCrossBrowser == 'true') {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 240 + "PX";
+        	} else {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
+        	}
         }
         addReceiverOneListView(0, pListViewMsgTo);
         addReceiverOneListView(1, pListViewMsgCC);
