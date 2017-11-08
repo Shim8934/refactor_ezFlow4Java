@@ -301,35 +301,40 @@
 				});
 			}
 			
-			var deltaskid = "";
-			function delete_task() {
+			function check_delete() {
 				if (tasktype == "4") {	
 					repetition_Delete();
-				} else {
-					if (!confirm("<spring:message code='ezTask.t106' />")) {
-						return;
-					}
-		
-					deltaskid = taskid + ";";
-					
-					$.ajax({
-						type : "POST",
-						url : "/ezTask/taskDelete.do",
-						dataType : "json",
-						data : {
-							taskIDList : deltaskid
-						},
-						success : function(result) {
-							window.opener.RefreshView();
-						},
-						error : function(jqXHR, textStatus, errorThrown) {
-							alert("<spring:message code='ezTask.t108' />");
-						},
-						complete : function() {
-							window.close();
-						}
-					});
+				} 
+				else {
+					delete_task();
 				}
+			}
+			
+			var deltaskid = "";
+			function delete_task() {
+				if (!confirm("<spring:message code='ezTask.t106' />")) {
+					return;
+				}	
+				
+				deltaskid = taskid + ";";
+				
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/taskDelete.do",
+					dataType : "json",
+					data : {
+						taskIDList : deltaskid
+					},
+					success : function(result) {
+						window.opener.RefreshView();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezTask.t108' />");
+					},
+					complete : function() {
+						window.close();
+					}
+				});				
 			}
 
 			var task_delete_confirm_cross_dialogArguments = new Array();
@@ -888,7 +893,7 @@
 		<div id="menu">
 			<ul>
 				<c:if test="${userInfo.id == taskInfoVO.creatorID }">
-					<li id="delete"><SPAN onClick="delete_task()"><spring:message code='ezTask.t115' /></SPAN></li>
+					<li id="delete"><SPAN onClick="check_delete()"><spring:message code='ezTask.t115' /></SPAN></li>
 				</c:if>
 				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 			</ul>

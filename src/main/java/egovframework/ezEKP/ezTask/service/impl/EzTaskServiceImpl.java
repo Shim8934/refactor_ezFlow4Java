@@ -145,7 +145,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("completeRate", completeRate);
 		map.put("tenantID", tenantID);
 		map.put("tasktype", tasktype);
-		map.put("repeateCount", repeatCount);
+		map.put("repeatCount", repeatCount);
 		map.put("realDate", realDate);		
 		
 		if (!tasktype.equals("4")) {
@@ -497,6 +497,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 				List<String> rList = ezTaskDAO.getTaskRepeDelList(map);
 				
+				//baonk check
+				for (String test : rList) {
+					logger.debug("BAONKKKKK rLIST: " + test);
+				}
+				//end
+				
 				String currentEndDate = vo.getEndDate();
 				String[] info = vo.getRepetition().split("\\|");
 
@@ -551,6 +557,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							if (generated) {
 								count++;								
 								String calcuDate = nsdf.format(date_cal.getTime());
+								logger.debug("BAONKKKK CHECK CALCUDATE: " + calcuDate);
 	
 								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
 									//row 추가
@@ -826,6 +833,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			map.put("taskID", taskID);
 
 			TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
+			
+			//baonk added
+			if (vo.getTaskType().equals("4")) {
+				ezTaskDAO.repTaskDelete(map);
+			}
+			//end
 
 			// 첨부파일이 있으면 첨부파일 삭제
 			if (vo.getHasAttach().equals("Y")) {
@@ -1087,30 +1100,18 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	public void insertTaskRepeDel(String taskID, String repeatCount, String taskStatus, String completeRate, String startDate, int tenantID) throws Exception {
 		logger.debug("insertTaskRepeDel started.");
 		logger.debug("taskID : " + taskID + " | repeatCount : " + repeatCount + " | taskStatus : " + taskStatus + " | completeRate : " + completeRate + " | startDate : " + startDate);
-		//baonk added
-		if (repeatCount.equals("1")) {	
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Calendar date_cal = Calendar.getInstance();
-			date_cal.setTime(sdf.parse(startDate));			
-			date_cal.add(Calendar.DATE, 1);
-			String newStartDate = nsdf.format(date_cal.getTime());
-			updateTaskStartDate(taskID, newStartDate, tenantID);
-		}
-		else {			
-			Map<String, Object> map = new HashMap<String, Object>();
-			
-			map.put("taskID", taskID);
-			map.put("repeatCount", repeatCount);
-			map.put("taskStatus", taskStatus);
-			map.put("completeRate", completeRate);
-			map.put("startDate", startDate);
-			map.put("tenantID", tenantID);
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("taskID", taskID);
+		map.put("repeatCount", repeatCount);
+		map.put("taskStatus", taskStatus);
+		map.put("completeRate", completeRate);
+		map.put("startDate", startDate.substring(0, 10));
+		map.put("tenantID", tenantID);
 
-			ezTaskDAO.insertTaskRepeDel(map);
-		}
-		//end
-
+		ezTaskDAO.insertTaskRepeDel(map);
+		
 		logger.debug("insertTaskRepeDel ended.");
 	}
 

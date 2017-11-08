@@ -316,17 +316,13 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-					((A.creatorid = #userID# and (A.tasktype = 1 or A.tasktype = 4))
+					((A.creatorid = #userID# and A.tasktype = 1)
 				OR
 					(A.personid = #userID#)
 				OR	
 					(B.sharerid = #userID# and A.TASKID = B.TASKID))
 			AND
 				A.taskstatus != 3
-			AND
-					(DATE_ADD(DATE_FORMAT(A.startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) <= #currentDate#
-				 AND
-				 	DATE_ADD(DATE_FORMAT(A.enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) >= #currentDate#)
 		]]>
 
 		<isNotEqual property="filter" compareValue="" prepend="AND">
@@ -612,13 +608,54 @@
         ]]>
     </insert>
 
-	<insert id="EzTaskDAO.insertTaskRepeDel" parameterClass="map">			
-        <![CDATA[
-            INSERT INTO TBL_TASKINSTANCESTATUS
-                (taskid, repeatcount, taskstatus, completerate, startdate, enddate, tenantid, deletestatus) 
-            VALUES
-                (#taskID#, #repeatCount#, #taskStatus#, #completeRate#, #startDate#, #startDate#, #tenantID#, 1)
-        ]]>
+	<insert id="EzTaskDAO.insertTaskRepeDel" parameterClass="map">	
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								TASKID , 
+     								REPEATCOUNT ,     								                              		
+                               		TENANTID 
+                        			FROM
+                        				TBL_TASKINSTANCESTATUS                        				
+                         			WHERE
+                         					TASKID			= #taskID#
+                         				AND
+                         					REPEATCOUNT		= #repeatCount#
+                                   		AND
+                                   			TENANTID 		= #tenantID#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_TASKINSTANCESTATUS(	            	
+	               TASKID, 	REPEATCOUNT,  TASKSTATUS,  COMPLETERATE,  STARTDATE,  ENDDATE,  TENANTID,  DELETESTATUS
+	            )
+	            VALUES(
+	               #taskID#, #repeatCount#, #taskStatus#,  #completeRate#, #startDate#, #startDate#, #tenantID#, 1  
+	            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_TASKINSTANCESTATUS
+	            SET 
+	            	 DELETESTATUS	 	= 1          	 
+	            WHERE
+	            		TASKID			= #taskID#
+	            	AND
+	            		REPEATCOUNT 	= #repeatCount#
+	            	AND
+	            		TENANTID		= #tenantID#
+            ]]> 
+        </isNotEqual>     
+
     </insert>
 
     <update id="EzTaskDAO.updateTask" parameterClass="Map">
@@ -738,7 +775,7 @@
                          			WHERE
                          					TASKID			= #taskID#
                          				AND
-                         					REPEATCOUNT		= #repeateCount#
+                         					REPEATCOUNT		= #repeatCount#
                                    		AND
                                    			TENANTID 		= #tenantID#
 								)
@@ -750,7 +787,7 @@
 	               TASKID, 	REPEATCOUNT,  TASKSTATUS,  COMPLETERATE,  STARTDATE,  ENDDATE,  TENANTID,  DELETESTATUS
 	            )
 	            VALUES(
-	               #taskID#, #repeateCount#, #taskStatus#,  #completeRate#, #realDate#, #realDate#, #tenantID#, 0  
+	               #taskID#, #repeatCount#, #taskStatus#,  #completeRate#, #realDate#, #realDate#, #tenantID#, 0  
 	            )  
         	]]>
         </isEqual>
@@ -759,11 +796,11 @@
 	            UPDATE 
 	            	TBL_TASKINSTANCESTATUS
 	            SET 
-	            	 COMPLETERATE	 	= #completeRate#,            	 
+	            	 COMPLETERATE	 	= #completeRate#            	 
 	            WHERE
 	            		TASKID			= #taskID#
 	            	AND
-	            		REPEATCOUNT 	= #repeateCount#
+	            		REPEATCOUNT 	= #repeatCount#
 	            	AND
 	            		TENANTID		= #tenantID#
             ]]> 
@@ -873,20 +910,16 @@
 	    ]]>
 	</delete>
 	
-<!-- 	<select id="EzTaskDAO.selectCompletionOfRepTask" resultClass="Integer">
+	<delete id="EzTaskDAO.repTaskDelete" parameterClass="map">
 		<![CDATA[
-			SELECT
-				ISNULL (COMPLETERATE, 0)
-			FROM
+			DELETE FROM
 				TBL_TASKINSTANCESTATUS
 			WHERE
-				TASKID = #taskID#
-			AND
-				REPEATCOUNT = #repeatCount#
-			AND
 				TENANTID = #tenantID#
+			AND
+				TASKID = #taskID#
 		]]>
-	</select>	 -->
+	</delete>
 	
 	<select id="EzTaskDAO.selectCompletionOfRepTask" resultClass="Integer">
 		<![CDATA[
