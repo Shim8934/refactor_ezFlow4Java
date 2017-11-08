@@ -42,7 +42,7 @@ function getDocList() {
 				listType : pListTypeValue, 
 				docType  : pDocTypeValue,
 				userID 		 : pUserID,
-				userDeptID   : arr_userinfo[4],
+				deptID   : arr_userinfo[4],
 				pageSize 	 : pageSize,
 				pageNum 	 : pageNum,
 				companyID    : companyID,
