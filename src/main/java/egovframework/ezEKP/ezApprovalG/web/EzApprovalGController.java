@@ -1868,6 +1868,98 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 기안 첨부 업로드(멀티) 호출 Method
+	 * 2017-11-08 장진혁 구현
+	 */
+	@RequestMapping(value = "/ezApprovalG/multiUpload.do")	
+	public String multiUpload(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, MultipartHttpServletRequest request, Model model) throws Exception{
+		logger.debug("multiUpload started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);		 
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String companyID = request.getParameter("compid");		
+		String docID = request.getParameter("docid");
+		String fileAttachSN = request.getParameter("attachsn");
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, companyID, userInfo.getTenantId());
+		
+		// uploadFile, tempUploadFile 디렉토리 경로
+		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
+		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
+		File uFile = new File(upd);
+		File tFile = new File(tempUpd);
+		
+		if (uFile.isDirectory()) {
+			uFile.mkdir();
+		}
+		
+		if (!tFile.isDirectory()) {
+			tFile.mkdirs();
+		}
+		
+		if (!uFile.isDirectory()) {
+			uFile.mkdirs();
+		}
+		
+		//2017-11-08 장진혁 멀티 파일업로드 작업
+		List<MultipartFile> multiFile = request.getFiles("file1");
+		int cnt = multiFile.size();
+		String[] resultUploadArray = new String[cnt];
+		String[] fileLocationArray = new String[cnt];
+		String[] fileNameArray = new String[cnt];
+		int[] fileSizeArray = new int[cnt];		
+		
+		for (int i = 0; i < cnt; i++) {
+			String fileName = multiFile.get(i).getOriginalFilename();		
+			
+			int fileSize = (int) multiFile.get(i).getSize();
+			int maxSize = 0;
+			
+			if (request.getParameter("maxsize") != null) {
+				maxSize = Integer.parseInt(request.getParameter("maxsize"));
+			}
+			
+			if (fileName.indexOf("\\") > -1) {
+				fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+			}
+			
+			fileNameArray[i] = fileName;
+			fileSizeArray[i] = fileSize;
+			
+			// 첨부파일 순번 설정 4자리
+			String fileAttachFormatSN = "00000" + fileAttachSN;
+			fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4, fileAttachFormatSN.length());
+		
+			String saveFileName = docID + fileAttachFormatSN + fileName;
+			
+			if (fileSize > maxSize) {
+				resultUploadArray[i] = "overflow";
+			} else {
+				// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
+				if (useExtension.indexOf(fileName.substring(fileName.lastIndexOf(".") + 1)) == -1 && !useExtension.equals("*")) {
+					resultUploadArray[i] = "denied";
+				} else {
+					// tempUploadFile에 파일 생성
+					writeUploadedFile(multiFile.get(i), saveFileName, tempUpd);
+					fileLocationArray[i] = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator + saveFileName;
+					resultUploadArray[i] = "true";
+					
+					fileAttachSN = Integer.toString(Integer.parseInt(fileAttachSN) + 1);
+				}
+			}
+		}
+			
+		model.addAttribute("resultUpload", resultUploadArray);
+		model.addAttribute("fileLocation", fileLocationArray);
+		model.addAttribute("fileName", fileNameArray);
+		model.addAttribute("fileSize", fileSizeArray);
+		
+		logger.debug("multiUpload ended");
+		
+		return "json";
+	}
+	
+	/**
 	 * 전자결재G 기안 첨부업로드 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/upload.do")
