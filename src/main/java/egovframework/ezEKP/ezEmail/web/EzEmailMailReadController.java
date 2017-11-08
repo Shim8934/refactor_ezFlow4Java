@@ -1080,7 +1080,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// received date
 					date = message.getReceivedDate();
 					if (date != null) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 						String receivedDateStr = sdf.format(date);
 						
@@ -1393,7 +1393,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					// received date
 					if (message.getReceivedDate() != null) {
-						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
+						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 						pReciveDT = sdFormat.format(message.getReceivedDate());
 						pReciveDT = commonUtil.getDateStringInUTC(pReciveDT, loginInfo.getOffset(), false);
