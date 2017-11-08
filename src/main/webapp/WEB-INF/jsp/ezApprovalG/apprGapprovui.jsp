@@ -1258,7 +1258,7 @@
 		        }
 		        return getXmlString(rtnXml);
 		    }
-		    function btnhistory_onclick() {
+		    function btnhistory_onclick() {		    	
 		        getHistory();
 		    }
 		    var ezapprovalinfo_dialogArguments = new Array();
