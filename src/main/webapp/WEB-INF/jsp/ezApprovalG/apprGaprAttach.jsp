@@ -644,6 +644,106 @@
 			        alert(filename + "<spring:message code='ezApprovalG.pjj07'/>" + "\n\n" + result);
 			    }
 			}
+			function onDragEnter(evt) {
+		        evt.dataTransfer.dropEffect = "copy";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
+		    function onDragOver(evt) {
+		        evt.dataTransfer.dropEffect = "copy";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
+		    var filesize = 0;
+		    var file = new Array;
+		    var xhr = new XMLHttpRequest();
+		    var lstAttachLink = document.getElementById("ATTACH");
+		    var isfileup = false;
+		    function onDrop(evt) {
+		        file = new Array;
+		        if (evt != undefined) {
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		        }
+		        if (isfileup) {
+		            alert(strLang258);
+		            return;
+		        }
+		        var filelist;
+		        if (evt == undefined) {
+		            filelist = document.getElementById("file1").files;
+		        }
+		        else {
+		            filelist = evt.dataTransfer.files;
+		        }
+	
+		        var tempfilesize = 0;
+		        var filecnt = file.length;
+		        for (var i = 0; i < filelist.length; i++) {
+		            if (filelist[i].size / 1024 / 1024 > 5) {
+		                alert(strLang25);
+		                return;
+		            }
+		            else {
+		                file[filecnt + i] = filelist[i];
+		                tempfilesize += filelist[i].size;
+		            }
+		        }
+		        filesize += tempfilesize;
+	
+/* 		        if (CrossYN()) {
+		            document.getElementById("file").value = "";
+		        }
+		        else {
+		            document.getElementById("file").type = "text";
+		            document.getElementById("file").type = "file";
+		        } */
+
+		        fileupload();
+		    }
+		    
+		    function fileupload() {
+		        var fd = new FormData();
+
+		        for (var i = 0; i < file.length; i++) {
+					var fnl = file[i].name.length;
+		        	
+		        	if (fnl > 54) {
+		        		alert("<spring:message code='main.jjh08' />");
+		        		isfileup = false;		        		
+		        		
+		        		return;
+		        	} else {
+		        		fd.append("file1", file[i]);
+		        	}		            
+		        }
+		        
+		        isfileup = true;
+		        fd.append("boardid", window.parent.pBoardID);
+		        fd.append("maxsize", pBoardFileSize * 1024 * 1024);
+		        fd.append("compid", document.getElementById("compid").value);
+		        fd.append("docid", document.getElementById("docid").value);
+		        fd.append("attachsn", pAttachSN);
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : true,
+		    		url : "/ezApprovalG/multiUpload.do",
+		    		data : fd,
+		    		processData: false, 
+		    		contentType: false,
+		    		success: function(text){
+		    			var uFileCnt = text.resultUpload.length
+
+		    			for (var i = 0; i < uFileCnt; i++) {
+		    				returnvalue(text.resultUpload[i], text.fileName[i], text.fileLocation[i], text.fileSize[i]);
+		    			}
+		    			
+		    			isfileup = false;
+		    		}
+		    	});
+		    }		    
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -655,7 +755,7 @@
 		  <tr>
 		    <td style="text-align:center;">
 		    	<div class="listview" style="width:515px;">
-		        	<div id="ATTACH" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
+		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
 		      	</div>
 		    </td>
 		    <th style="display:none;width:75px;text-align:center;">
@@ -668,7 +768,7 @@
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition">       
-		        <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="margin-left:100px; display: none;">
+		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
