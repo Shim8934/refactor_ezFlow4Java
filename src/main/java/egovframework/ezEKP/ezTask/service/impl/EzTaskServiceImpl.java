@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -453,7 +454,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 	@Override
 	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception {
-		logger.debug("getTaskList started.");
+		logger.debug("____________________________getTaskList started._________________________");
 		logger.debug("userID : " + userID + " | startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount + " | pSelectTab : " + pSelectTab);
 
 		if (!startDate.equals("")) {			
@@ -480,23 +481,33 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map);
 		
-		logger.debug("TEST LIST SIZE: " + list.size());
-		
 		List<TaskInfoVO> resultList = new ArrayList<TaskInfoVO>();
 		
 		for (int i=0; i < list.size(); i++) {		
 			TaskInfoVO vo = list.get(i);
 			
-			if (startDate.equals("")) {
+			if (startDate.equals("") && endDate.equals("")) {
 //				startDate = vo.getStartDate();
-				startDate = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 00:00:00";
+				SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
+				String[] offsetArr = offset.split("\\|");
+				
+				simple.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+			    String utcTime = simple.format(new Date());		    
+			    
+				startDate = utcTime + " 00:00:00";
+				endDate = utcTime + " 23:59:59";
 			}
-			
+/*			
 			if (endDate.equals("")) {
+				SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
+				String[] offsetArr = offset.split("\\|");
+				
+				simple.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+			    String utcTime = simple.format(new Date());	
 //				endDate = vo.getEndDate();
-				endDate = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59";
+				endDate = utcTime + " 23:59:59";
 			}
-
+*/
 			if (vo.getTaskType().equals("4") && !pSelectTab.equals("taskrepetition")) {
 				map.put("taskID", vo.getTaskID());
 		
@@ -525,7 +536,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				Calendar eDate_cal = Calendar.getInstance();
 				Calendar date_cal = Calendar.getInstance();
 
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 
 				logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | currentEndDate : " + currentEndDate);
@@ -553,10 +564,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	
 							if (generated) {
 								count++;								
-								String calcuDate = nsdf.format(date_cal.getTime());								
+								String calcuDate = nsdf.format(date_cal.getTime());	
+								logger.debug("CHECK CALCUDATE: " + calcuDate);
 	
-								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
-									//row 추가									
+								//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+								if ((date_cal.after(sDate_cal) || date_cal.equals(sDate_cal)) && (date_cal.before(eDate_cal) || date_cal.equals(eDate_cal))) {
+									logger.debug("CHECK POINT1 : " + calcuDate);
+									//row 추가	
 									if (!rList.contains(calcuDate)) {										
 										TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
 										resultList.add(rVo);
@@ -590,7 +604,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 								
 								String calcuDate = nsdf.format(date_cal.getTime());
 								
-								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+								//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+								if ((date_cal.after(sDate_cal) || date_cal.equals(sDate_cal)) && (date_cal.before(eDate_cal) || date_cal.equals(eDate_cal))) {
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
@@ -657,7 +672,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+								//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+								if ((newCal.after(sDate_cal) || newCal.equals(sDate_cal)) && (newCal.before(eDate_cal) || newCal.equals(eDate_cal))) {
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
@@ -726,7 +742,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 								
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+								//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+								if ((newCal.after(sDate_cal) || newCal.equals(sDate_cal)) && (newCal.before(eDate_cal) || newCal.equals(eDate_cal))) {
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
@@ -790,7 +807,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		}
 
 		logger.debug("listsize = " + list.size());
-		logger.debug("getTaskList ended.");
+		logger.debug("_____________________________getTaskList ended.______________________________");
 
 		return resultList;
 	}
@@ -871,9 +888,17 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 
 		for (String taskID : taskIDList.split(";")) {
+			if (taskID.equals("")) {
+				continue;
+			}
+				
 			map.put("taskID", taskID);
-
+			
 			TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
+			
+			if (vo == null) {
+				continue;
+			}
 			
 			//baonk added
 			if (vo.getTaskType().equals("4")) {
@@ -1239,7 +1264,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						count++;								
 						String calcuDate = nsdf.format(date_cal.getTime());	
 						
-						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+						//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+						if ((date_cal.after(sDate_cal) || date_cal.equals(sDate_cal)) && (date_cal.before(eDate_cal) || date_cal.equals(eDate_cal))) {
 							//row 추가
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);								
@@ -1275,7 +1301,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						
 						String calcuDate = nsdf.format(date_cal.getTime());
 						
-						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
+						//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+						if ((date_cal.after(sDate_cal) || date_cal.equals(sDate_cal)) && (date_cal.before(eDate_cal) || date_cal.equals(eDate_cal))) {
 							//row 추가
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
@@ -1344,7 +1371,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 						String calcuDate = nsdf.format(newCal.getTime());
 						
-						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+						//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+						if ((newCal.after(sDate_cal) || newCal.equals(sDate_cal)) && (newCal.before(eDate_cal) || newCal.equals(eDate_cal))) {
 							//row 추가
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
@@ -1415,7 +1443,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						
 						String calcuDate = nsdf.format(newCal.getTime());
 						
-						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+						//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+						if ((newCal.after(sDate_cal) || newCal.equals(sDate_cal)) && (newCal.before(eDate_cal) || newCal.equals(eDate_cal))) {
 							//row 추가
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);

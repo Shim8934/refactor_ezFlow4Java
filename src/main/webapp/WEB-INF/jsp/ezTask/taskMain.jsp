@@ -71,12 +71,11 @@
 		    
 // 		    document.onselectstart = function () { return false; };
 		    
-		    function select_row(elem) {
-				if ($("#checkboxAll").is(":checked")) {
+		    function select_row(elem) {		    	
+				if ($("#checkboxAll").is(":checked")) {					
 					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 						$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
-
 						strListInfo = ReplaceText(strListInfo, $(elem).attr("taskID") + ";", "");
 			            strListIdInfo = ReplaceText(strListIdInfo, $("input[taskid='" + $(elem).attr("taskid") + "']").attr("creatorid") + ";", "");
 			    		return;
@@ -86,17 +85,15 @@
 					if ((selectelem != null && selectelem != elem)) {
 						strListInfo += $(elem).attr("taskID") + ";";
 			            strListIdInfo += $(elem).find("input").attr("creatorID") + ";";
-
 			        	selectelem = null;
 			    	}
-				} else {
+				} else {					
 					// 목록에서 하나씩 다른거 선택할 때
 			    	if ((selectelem != null && selectelem != elem)) {
 	 					$("input[type=checkbox]").prop("checked", false);
-	 					$(".row_body").css("background", "#ffffff");
+	 					$(".row_body").css("background", "#ffffff");	 					
 						strListInfo = $(elem).attr("taskID") + ";";
-			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
-
+			            strListIdInfo = $(elem).find("input").attr("creatorID") + ";";			            
 			        	selectelem = null;
 			    	}
 				}
@@ -106,13 +103,11 @@
 					if ($("#checkboxAll").is(":checked")) {
 			        	$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
-
 						return;
 					} else {
 			        	selectelem.style.backgroundColor = "#ffffff";
 			        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
 			            selectelem = null;
-
 			            return;
 					}
 		        }
@@ -125,7 +120,7 @@
 		        if (strListInfo == "") {
 		        	strListInfo = $(elem).attr("taskID") + ";";
 		        	strListIdInfo = $(elem).find("input").attr("creatorID") + ";";
-		        }
+		        }		        
 		    }
 
 		    function ReadTask(elem) {
@@ -635,7 +630,7 @@
 
 			            return;
 			        }
-				}
+				}							
 
 				if (confirm("<spring:message code='ezTask.t106' />")) {
 					$.ajax({
@@ -805,7 +800,7 @@
 		        getTaskList();
 		    }
 		    
-		    function getTaskList() {
+		    function getTaskList() {		    	
 		    	if ($("#checkboxAll").is(":checked")) {
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body").css("background", "");

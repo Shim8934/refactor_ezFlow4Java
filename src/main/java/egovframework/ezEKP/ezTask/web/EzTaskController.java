@@ -987,7 +987,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);    			
 		}
 		
-		logger.debug("taskStatusCount: " +  taskStatusCount + "|| pSelectTab: " + pSelectTab);
+		logger.debug("taskStatusCount: " +  taskStatusCount + "|| pSelectTab: " + pSelectTab + "|| Type: " + type);
 
     	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);
     	List<TaskInfoVO> list2 = new ArrayList<TaskInfoVO>();
@@ -1010,7 +1010,7 @@ public class EzTaskController extends EgovFileMngUtil {
     			currentCnt2 = list3.size();
     		}
     	}
-    	else {
+    	else {    		
     		currentCnt = list.size();
     	}
     	
@@ -1073,7 +1073,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	resultXML.append("</DATA>");
 
     	logger.debug("taskGetList ended.");
-    	//logger.debug(resultXML.toString());
+    	logger.debug(resultXML.toString());
 
     	return resultXML.toString();
     }
