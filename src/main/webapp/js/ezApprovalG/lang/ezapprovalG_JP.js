@@ -986,3 +986,8 @@ var strLangpjj27 = "編集するお気に入りを供覧者リストに適用す
 var strLangHYJ28 = "循環者リストが存在しません。";
 
 var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
+
+//2017-11-09 장진혁 추가
+var strLangjjh01 = "첨부파일은 총 ";
+var strLangjjh02 = "MB까지 업로드 가능합니다.";
+var strLangjjh03 = "添付ファイルを追加中です。";
