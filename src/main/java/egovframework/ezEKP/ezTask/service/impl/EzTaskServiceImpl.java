@@ -740,8 +740,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						}						
 					break;	
 				}
-			} else {
-				vo.setRepeatCount(1);
+			} else {				
 				resultList.add(vo);
 			}
 		}
@@ -1124,9 +1123,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, int tenantID) throws Exception {
+	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, String currentDate, int tenantID) throws Exception {
 		logger.debug("getDatesOfRepTask started.");
-		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate);
+		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate + " | currentDate : " + currentDate);
+		String currentPos = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -1137,13 +1137,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 		
 		List<String> resultList = new ArrayList<String>();
-		List<String> rList = ezTaskDAO.getTaskRepeDelList(map);
-		
-		//baonk check
-		for (String test : rList) {
-			logger.debug("BAONKKKKK rLIST: " + test);
-		}
-		//end
+		List<String> rList = ezTaskDAO.getTaskRepeDelList(map);	
+		Map<String, Integer> mapDateAndRepeatCount = new HashMap<String, Integer>();
 		
 		String currentEndDate = vo.getEndDate();
 		String[] info = vo.getRepetition().split("\\|");
@@ -1196,14 +1191,14 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 					if (generated) {
 						count++;								
-						String calcuDate = nsdf.format(date_cal.getTime());						
-						logger.debug("calcuDate : " + calcuDate);
+						String calcuDate = nsdf.format(date_cal.getTime());	
 						
 						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
 							//row 추가
 							if (!rList.contains(calcuDate)) {
-								TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
-								resultList.add(rVo.getStartDate().substring(0, 10));
+								//TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);								
+								resultList.add(calcuDate);								
+								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
 					}
@@ -1237,8 +1232,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
 							//row 추가
 							if (!rList.contains(calcuDate)) {
-								TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-								resultList.add(rVo.getStartDate().substring(0, 10));
+								//TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+								//resultList.add(rVo.getStartDate().substring(0, 10));
+								resultList.add(calcuDate);								
+								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
 					}
@@ -1304,8 +1301,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
 							//row 추가
 							if (!rList.contains(calcuDate)) {
-								TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-								resultList.add(rVo.getStartDate().substring(0, 10));
+								//TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+								//resultList.add(rVo.getStartDate().substring(0, 10));
+								resultList.add(calcuDate);								
+								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
 					}
@@ -1373,8 +1372,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
 							//row 추가
 							if (!rList.contains(calcuDate)) {
-								TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-								resultList.add(rVo.getStartDate().substring(0, 10));
+								//TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+								//resultList.add(rVo.getStartDate().substring(0, 10));
+								resultList.add(calcuDate);								
+								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
 					}
@@ -1383,7 +1384,20 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 					date_cal.add(Calendar.YEAR, 1);
 				}						
 			break;	
-		}		
+		}
+		
+		if (resultList.size() == 0) {
+			currentPos = Integer.toString(-1);					
+		}
+		else {
+			if (!resultList.contains(currentDate)) {
+				currentDate = resultList.get(0);
+			}
+			
+			currentPos = Integer.toString(mapDateAndRepeatCount.get(currentDate));			
+		}
+		
+		resultList.add(currentPos);
 		return resultList;
 	}
 }

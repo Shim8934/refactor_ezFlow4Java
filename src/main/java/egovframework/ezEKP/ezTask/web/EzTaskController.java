@@ -129,11 +129,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
-		String taskID = request.getParameter("taskID");
-		int repeatCount = Integer.parseInt(request.getParameter("repeatCount"));
+		String taskID = request.getParameter("taskID");		
 		String date = request.getParameter("date");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
+		String orderNumber = "";
 
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
@@ -177,7 +177,28 @@ public class EzTaskController extends EgovFileMngUtil {
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);
 	        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
 			
-			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
+			orderNumber = result.get(result.size() - 1);
+			result.remove(result.size() - 1);
+			
+			while (result.size() == 0) {
+				//Move to next month
+				calendar.add(Calendar.MONTH, 1);
+				date = nsdf.format(calendar.getTime());
+				firstDayOfMonth = date + " 00:00:00"; 				
+				calendar.add(Calendar.MONTH, 1); 
+		        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+		        calendar.add(Calendar.DATE, -1); 
+		        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
+		        result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
+				orderNumber = result.get(result.size() - 1);
+				result.remove(result.size() - 1);
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+			}			
+			
+			if (!result.contains(date)) {			
+				date = result.get(0);
+			}			
 			
 			for (String test : result) {				
 				dateList += test + ",";
@@ -185,27 +206,15 @@ public class EzTaskController extends EgovFileMngUtil {
 			
 			dateList = dateList.substring(0, dateList.length() - 1);
 			
-			if (!result.contains(date)) {				
-				if (!(date.substring(0, 7).equals(result.get(0).substring(0, 7)))) {
-					date = result.get(0);
-					result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
-				}
-				else {
-					date = result.get(0);
-				}					
-			}
-			
 			String realStartDate = date + " 00:00:00";
 			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
 			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
-			taskInfoVO.setCompleteRate(completionPercentage);			
-		}
-		
+			taskInfoVO.setCompleteRate(completionPercentage);		
+			taskInfoVO.setRepeatCount(Integer.parseInt(orderNumber));
+		}	
 		//end
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
-		
-		logger.debug("Completion: " + taskInfoVO.getCompleteRate());
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
@@ -220,10 +229,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);
-		model.addAttribute("repeatCount", repeatCount);
+		model.addAttribute("repeatCount", taskInfoVO.getRepeatCount());
 		model.addAttribute("date", date);
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
-		model.addAttribute("dateList", dateList);
+		model.addAttribute("dateList", dateList);	
 		
 		return "/ezTask/taskRead";
 	}
@@ -258,7 +267,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String taskID = request.getParameter("taskID");
-		String date = request.getParameter("currentDate");
+		String date = request.getParameter("currentDate");		
 		
 		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = nsdf.parse(date); 
@@ -271,11 +280,14 @@ public class EzTaskController extends EgovFileMngUtil {
         String lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 
         
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";  
 		
-		List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+		List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
+		String orderNumber = result.get(result.size() - 1);
+		result.remove(result.size() - 1);
 		
 		model.addAttribute("dateList", result);
+		model.addAttribute("orderNum", orderNumber);
 		
 		logger.debug("getRepTaskDateList ended.");
 		
@@ -459,7 +471,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String tasktype = request.getParameter("tasktype");
 		String realDate = request.getParameter("realDate");
 		
-		logger.debug("CHECK REPEAT COUNT: " + repeateCount + "|| taskType: " + tasktype + "|| realDate: " + realDate);
+		logger.debug("RepeatCount: " + repeateCount + "|| taskType: " + tasktype + "|| realDate: " + realDate);
 		
 		ezTaskService.updateTaskStatus(taskID, taskStatus, tasktype, repeateCount, realDate, completeRate, userInfo.getTenantId());
 		

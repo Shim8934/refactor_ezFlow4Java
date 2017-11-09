@@ -54,9 +54,9 @@
 		    var repetition = "${repetition}";
 		    var endDate = "${taskInfoVO.endDate}";
 		    var dateList = "${dateList}";
-		    var dateArray = null;
+		    var dateArray = null;		    
 		    
-		    $(document).ready(function() {
+		    $(document).ready(function() {		    	
 		    	if (dateList !== "") {
 		    		dateArray = dateList.split(",");
 		    	}
@@ -788,24 +788,30 @@
 		            		showResult(dateText);							
 		            	}
 		            	else {
-		            		//Get new data from server
-		            		console.log("Month or Year has changed!");
+		            		//Get new data from server			            		
 		    				$.ajax({
 		    					type : "POST",
 		    					dataType : "json",
 		    					async : false,
 		    					url : "/ezTask/getRepTaskDateList.do",
 		    					data : {
-		    							taskID : taskid,
+		    							taskID 		: taskid,
 		    							currentDate : dateText
 		    					},
 		    					success: function(result) {
-		    						var list = result.dateList;
-		    						dateArray = [];
-		    						list.forEach(function(strDate, index) {
-		    							dateArray.push(strDate);
-		    						});
-		    						showResult(dateText);		    						
+		    						var list = result.dateList;		    								    						
+		    						
+		    						if (list.length != 0) {
+			    						dateArray = [];
+			    						repeatCount = parseInt(result.orderNum, 10);
+			    						list.forEach(function(strDate, index) {
+			    							dateArray.push(strDate);
+			    						});
+			    						showResult(dateText, repeatCount);	
+		    						}
+		    						else {
+		    							showResult(dateText, repeatCount);
+		    						}	    						
 		    					},
 		    					error : function(jqXHR, textStatus, errorThrown) {
 		    						alert("Get data from server failed!");
@@ -861,8 +867,7 @@
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 			
-			function dayOnMouseClick(changeDate, order) {							
-				repeatCount = order;
+			function dayOnMouseClick(changeDate) {								
 				var feature = GetOpenPosition(750, 740);
 				window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				window.close();
@@ -883,7 +888,7 @@
 					$("#Sdatepicker").datepicker("setDate", date);
 				}
 				else {
-					dayOnMouseClick(dateText, (i + 1));
+					dayOnMouseClick(dateText);
 				}
 			}
 		</script>

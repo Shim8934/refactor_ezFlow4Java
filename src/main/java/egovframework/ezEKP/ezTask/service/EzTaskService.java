@@ -18,7 +18,7 @@ public interface EzTaskService {
 	
 	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception;
 	
-	List<String> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, int tenantID) throws Exception;
+	List<String> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String currentDate, int tenantID) throws Exception;
 
 	TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception;
 
