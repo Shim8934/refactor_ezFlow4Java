@@ -991,11 +991,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailConfirmDialog.do")
 	public String mailConfirmDialog(
+					@CookieValue("loginCookie") String loginCookie,
 					@RequestParam("CAPTION") String caption,
 					@RequestParam("MESSAGE") String message,
 					@RequestParam("BUTTONNAMES") String buttonNames,
 					HttpServletRequest request,
+					LoginVO userInfo,
 					Model model) throws Exception {
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		caption = caption != null ? caption : "";
 		message = message != null ? message : "";
 		buttonNames = buttonNames != null ? buttonNames : "";
@@ -1003,7 +1008,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String buttonName0 = "";
 		String buttonName1 = "";
 		String buttonName2 = "";
-		String[] buttonNamesArray = buttonNames.split(",");
+		String[] buttonNamesArray = buttonNames.split(".");
+		
+		if (userInfo.getLang().equals("3")) {
+			buttonNamesArray = buttonNames.split("、");
+		}
 		
 		for (int i = 0; i < buttonNamesArray.length; i++) {
 			switch (i) {

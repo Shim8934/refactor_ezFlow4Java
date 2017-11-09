@@ -2516,6 +2516,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String title = request.getParameter("title");
 		String uFlag = request.getParameter("uFlag");
 		String admin = request.getParameter("admin");
+		String docState = request.getParameter("docState");
 		String pass = "";
 		String formUrl = "";
 		String formDocType = "";
@@ -2564,8 +2565,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (title == null || title.equals("")) {
 					String reUseInfo = ezApprovalGService.getDocInfoS(docID, "END", "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 					Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
-					formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-					formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+					if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
+						formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+					}
+					if (resultXML2.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
+						formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+					}
 				}
 			}
 		} 
@@ -2587,7 +2592,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("formUrl", formUrl);
 		model.addAttribute("formDocType", formDocType);
 		model.addAttribute("approvalFlag", approvalFlag);
-
+		model.addAttribute("docState", docState);
+		
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";

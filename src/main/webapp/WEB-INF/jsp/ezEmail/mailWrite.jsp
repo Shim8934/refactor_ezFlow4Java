@@ -800,9 +800,8 @@
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
-	        		message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
+	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
                     document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-		        	
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -816,8 +815,11 @@
 	            textData = "";
 	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 	            for (var i=0; i<texts.length; i++) {
-	            	if (texts[i] != "") {
+	            	if (texts[i] != "" && texts[i] != " ") {
+	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;");
 	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+	            	} else {
+	            		textData += "<p " + defaultFontAndSize + ">" + " " + "</p>";
 	            	}
 	            }
 	            
