@@ -195,12 +195,18 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	compAdmin = "Y";
+		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
+		if (!useAddressAdmin.equals("NO")) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	compAdmin = "Y";
+	        	deptAdmin = "Y";
+	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+	        	deptAdmin = "Y";
+	        }
+		} else {
+			compAdmin = "Y";
         	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		}
 		
 		String pOwerId = "";
 		if (pFolderType.equals("D")) {
@@ -484,13 +490,16 @@ public class EzAddressController{
 			}
 			
 			// 주소록을 추가/수정 할 권한이 있는지 체크.
-			if (folderType.equals("C")) {
-				if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
-					return "NO_AUTHORITY";
-				}
-			} else if (folderType.equals("D")) {
-				if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
-					return "NO_AUTHORITY";
+			String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
+			if (!useAddressAdmin.equals("NO")) {
+				if (folderType.equals("C")) {
+					if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
+						return "NO_AUTHORITY";
+					}
+				} else if (folderType.equals("D")) {
+					if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
+						return "NO_AUTHORITY";
+					}
 				}
 			}
 			
@@ -542,12 +551,19 @@ public class EzAddressController{
 		
 		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	compAdmin = "Y";
+		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
+		if (!useAddressAdmin.equals("NO")) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	compAdmin = "Y";
+	        	deptAdmin = "Y";
+	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+	        	deptAdmin = "Y";
+	        }
+		} else {
+			compAdmin = "Y";
         	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		}
+		
 		
 		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
 		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
@@ -698,12 +714,18 @@ public class EzAddressController{
         	useIE11Browser = "CK";
         }
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	compAdmin = "Y";
-        	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
+		if (!useAddressAdmin.equals("NO")) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				compAdmin = "Y";
+				deptAdmin = "Y";
+			} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
+		} else {
+			compAdmin = "Y";
+			deptAdmin = "Y";
+		}
 		
 		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		String address = addressInfo.getsMemo();
@@ -791,12 +813,18 @@ public class EzAddressController{
 		String deptAdmin = "";
 		String companyAdmin = "";
 		
-        if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	companyAdmin = "Y";
+		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
+		if (!useAddressAdmin.equals("NO")) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	companyAdmin = "Y";
+	        	deptAdmin = "Y";
+	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+	        	deptAdmin = "Y";
+	        }
+		} else {
+			companyAdmin = "Y";
         	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		}
         
         StringBuilder rootAddressXML = new StringBuilder();
         
@@ -1110,11 +1138,17 @@ public class EzAddressController{
 		String show = "N";
 		String title = egovMessageSource.getMessage("ezAddress.t144", locale);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
+		if (!useAddressAdmin.equals("NO")) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				companyAdmin = "Y";
+				deptAdmin = "Y";
+			}
+			else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
+		} else {
 			companyAdmin = "Y";
-			deptAdmin = "Y";
-		}
-		else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
 			deptAdmin = "Y";
 		}
 
@@ -1371,13 +1405,18 @@ public class EzAddressController{
 			filter = request.getParameter("filter");
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
+		String useAddressAdmin = ezCommonService.getTenantConfig("UseAddressAdmin", userInfo.getTenantId());
+		if (!useAddressAdmin.equals("NO")) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
+				bAdmin = "Y";
+			}
+	        if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	cAdmin = "Y";
+	        }
+		} else {
 			bAdmin = "Y";
+			cAdmin = "Y";
 		}
-
-        if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	cAdmin = "Y";
-        }
 		
         pListType = ezAddressService.getListType(userInfo.getTenantId(), userInfo.getId());
         if (pListType == null) {
