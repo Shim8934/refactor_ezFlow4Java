@@ -153,8 +153,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, int tenantId) throws Exception {						
-		//logger.debug(" BAONKKKKKKK startDate : " + orgStartDate + "|| orgEndDate: " + orgEndDate);
+	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PIDLIST", pidList);		
 		map.put("v_PFILTER", filter);

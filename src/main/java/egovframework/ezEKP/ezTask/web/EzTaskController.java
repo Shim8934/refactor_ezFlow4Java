@@ -165,9 +165,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		//baonk added
 		if (taskInfoVO.getTaskType().equals("4")) {					
 			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date today = new Date(); 
+			Date startDate = nsdf.parse(date); 
 	        Calendar calendar = Calendar.getInstance();  
-	        calendar.setTime(today); 
+	        calendar.setTime(startDate); 
 	        
 	        calendar.add(Calendar.MONTH, 1);  
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);  
@@ -179,25 +179,33 @@ public class EzTaskController extends EgovFileMngUtil {
 			
 			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
 			
-			for (String test : result) {
-				//logger.debug("BBBBBBBBBBBBBBBBB: " + test);
+			for (String test : result) {				
 				dateList += test + ",";
 			}
+			
 			dateList = dateList.substring(0, dateList.length() - 1);
-			if(!result.contains(date)) {
-				date = result.get(0);	
+			
+			if (!result.contains(date)) {				
+				if (!(date.substring(0, 7).equals(result.get(0).substring(0, 7)))) {
+					date = result.get(0);
+					result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+				}
+				else {
+					date = result.get(0);
+				}					
 			}
 			
 			String realStartDate = date + " 00:00:00";
 			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
 			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
-			taskInfoVO.setCompleteRate(completionPercentage);
-			//logger.debug("BBBBBBBBBBBBBdateList: " + dateList);
+			taskInfoVO.setCompleteRate(completionPercentage);			
 		}
 		
 		//end
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
+		
+		logger.debug("Completion: " + taskInfoVO.getCompleteRate());
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
@@ -216,8 +224,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("date", date);
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
 		model.addAttribute("dateList", dateList);
-		
-		logger.debug("taskRead ended.");
 		
 		return "/ezTask/taskRead";
 	}
@@ -241,6 +247,40 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		return "json";
 	}
+	
+	@RequestMapping(value = "/ezTask/getRepTaskDateList.do")
+	public String getRepTaskDateList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getRepTaskDateList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
+		String taskID = request.getParameter("taskID");
+		String date = request.getParameter("currentDate");
+		
+		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = nsdf.parse(date); 
+        Calendar calendar = Calendar.getInstance();  
+        calendar.setTime(startDate); 
+        
+        calendar.add(Calendar.MONTH, 1);  
+        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+        calendar.add(Calendar.DATE, -1); 
+        String lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 
+        
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+		
+		List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+		
+		model.addAttribute("dateList", result);
+		
+		logger.debug("getRepTaskDateList ended.");
+		
+		return "json";
+	}	
 	
 	/**
 	 * 업무작성 저장 Method
@@ -953,7 +993,15 @@ public class EzTaskController extends EgovFileMngUtil {
     	
     	resultXML.append("<DATA>");
     	
-    	for (TaskInfoVO vo : list) {
+    	for (TaskInfoVO vo : list) {    		
+    		//Baonk added
+    		if (vo.getTaskType().equals("4")) {    			
+    			String realDate = commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), true);
+    			int completionPercentage = ezTaskService.selectCompletionOfRepTask(vo.getTaskID(), realDate, tenantID);
+    			vo.setCompleteRate(completionPercentage);
+    		}
+    		//end
+    		
     		resultXML.append("<ROW>");
     		
     		resultXML.append("<TASKID>" + vo.getTaskID() + "</TASKID>");

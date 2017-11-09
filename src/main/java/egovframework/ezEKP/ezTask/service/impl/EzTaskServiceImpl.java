@@ -1112,17 +1112,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public void updateTaskStartDate(String taskID, String startDate, int tenantID) throws Exception {
-		logger.debug("updateTaskStartDate started.");
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("taskID", taskID);					
-		map.put("startDate", startDate);
-		map.put("tenantID", tenantID);
-		ezTaskDAO.updateTaskStartDate(map);
-	}
-
-	@Override
 	public int selectCompletionOfRepTask(String taskID, String date, int tenantID) throws Exception {		
 		Map<String, Object> map = new HashMap<String, Object>();
 		

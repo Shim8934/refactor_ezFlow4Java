@@ -38,8 +38,6 @@ public interface EzTaskService {
 	
 	void updateTaskStatus(String taskID, String taskStatus, String tasktype, String repeatCount, String realDate, String completeRate, int tenantID) throws Exception;
 	
-	void updateTaskStartDate(String taskID, String startDate, int tenantID) throws Exception;
-	
 	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID) throws Exception;
 	
 	void taskSaveConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception;

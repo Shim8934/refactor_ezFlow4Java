@@ -61,10 +61,6 @@
 		    		dateArray = dateList.split(",");
 		    	}
 		    	
-		    	for (var i = 0; i < dateArray.length; i++) {
-					console.log(dateArray[i]);
-				}
-		    	
 				load_bodyhtml();
 				if (hasTaskAttach == 'Y') {
 					document.getElementById('attachedfileDIV').innerHTML = taskAttachList;
@@ -784,34 +780,38 @@
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true,
-		            onSelect:function(dateText, inst) {
-		            	var selectDate = new Date(dateText);
-		            	var SD = selectDate.getDay();
-		            	var test = 0;
-    	
-/* 						if (SD == 0 || SD == 6) {
-							alert("주말은 선택할 수 없습니다.");
-							$("#Sdatepicker").datepicker("setDate", date);
-						} else {
-			            	dayOnMouseClick(dateText);							
-						} */
-						
-						for (var i = 0; i < dateArray.length; i++) {
-							if (dateArray[i] ==  dateText) {
-								test = 1;
-								break;
-							}
-						}
-						
-						console.log("Test value: " + test + "|| current select date: " + dateText + "|| current position: " + i);
-						
-						if (test == 0) {
-							alert("이날 에 Task를 없어요. 다를 날을 선택 하세요.");
-							$("#Sdatepicker").datepicker("setDate", date);
-						}
-						else {
-							dayOnMouseClick(dateText, (i + 1));
-						}
+		            onSelect:function(dateText, inst) {		            	
+		            	//Get new list if change month or year
+		            	var theFirstDay = dateArray[0].substring(0, 7);		            	
+		            	
+		            	if (dateText.substring(0, 7) == theFirstDay) {
+		            		showResult(dateText);							
+		            	}
+		            	else {
+		            		//Get new data from server
+		            		console.log("Month or Year has changed!");
+		    				$.ajax({
+		    					type : "POST",
+		    					dataType : "json",
+		    					async : false,
+		    					url : "/ezTask/getRepTaskDateList.do",
+		    					data : {
+		    							taskID : taskid,
+		    							currentDate : dateText
+		    					},
+		    					success: function(result) {
+		    						var list = result.dateList;
+		    						dateArray = [];
+		    						list.forEach(function(strDate, index) {
+		    							dateArray.push(strDate);
+		    						});
+		    						showResult(dateText);		    						
+		    					},
+		    					error : function(jqXHR, textStatus, errorThrown) {
+		    						alert("Get data from server failed!");
+		    					}
+		    				});
+		            	}
 		            }
 		        });
 
@@ -866,6 +866,25 @@
 				var feature = GetOpenPosition(750, 740);
 				window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				window.close();
+			}
+			
+			function showResult(dateText) {
+        		var test = 0;
+        		
+				for (var i = 0; i < dateArray.length; i++) {					
+					if (dateArray[i] ==  dateText) {
+						test = 1;
+						break;
+					}
+				}						
+				
+				if (test == 0) {
+					alert("이날 에 Task를 없어요. 다를 날을 선택 하세요.");
+					$("#Sdatepicker").datepicker("setDate", date);
+				}
+				else {
+					dayOnMouseClick(dateText, (i + 1));
+				}
 			}
 		</script>
 	</head>
