@@ -456,7 +456,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("getTaskList started.");
 		logger.debug("userID : " + userID + " | startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount + " | pSelectTab : " + pSelectTab);
 
-		if (!startDate.equals("")) {
+		if (!startDate.equals("")) {			
 			startDate += " 00:00:00";
 			endDate += " 23:59:59";
 			
@@ -479,9 +479,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map);
+		
+		logger.debug("TEST LIST SIZE: " + list.size());
+		
 		List<TaskInfoVO> resultList = new ArrayList<TaskInfoVO>();
 		
-		for (int i=0; i < list.size(); i++) {
+		for (int i=0; i < list.size(); i++) {		
 			TaskInfoVO vo = list.get(i);
 			
 			if (startDate.equals("")) {
@@ -498,7 +501,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				map.put("taskID", vo.getTaskID());
 		
 				List<String> rList = ezTaskDAO.getTaskRepeDelList(map);
-				
+					
 				String currentEndDate = vo.getEndDate();
 				String[] info = vo.getRepetition().split("\\|");
 
@@ -529,9 +532,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 				sDate_cal.setTime(sdf.parse(startDate));
 				eDate_cal.setTime(sdf.parse(currentEndDate));
-				date_cal.setTime(sdf.parse(vo.getStartDate()));
-
-				logger.debug("sDate_cal : " + sDate_cal + " | eDate_cal : " + eDate_cal + " | date_cal : " + date_cal);
+				date_cal.setTime(sdf.parse(vo.getStartDate()));				
 
 				switch (info[2]) {
 					case "0" : // 매일
@@ -552,12 +553,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	
 							if (generated) {
 								count++;								
-								String calcuDate = nsdf.format(date_cal.getTime());
-								logger.debug("BAONKKKK CHECK CALCUDATE: " + calcuDate);
+								String calcuDate = nsdf.format(date_cal.getTime());								
 	
 								if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
-									//row 추가
-									if (!rList.contains(calcuDate)) {
+									//row 추가									
+									if (!rList.contains(calcuDate)) {										
 										TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
 										resultList.add(rVo);
 									}
@@ -740,8 +740,52 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						}						
 					break;	
 				}
-			} else {				
-				resultList.add(vo);
+			} else {
+				if (!vo.getTaskType().equals("4")) {
+					resultList.add(vo);
+				}
+				else {
+					int count = 0;
+					SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+					String today = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 00:00:00";
+					Date _startDate = nsdf.parse(today); 
+			        Calendar calendar = Calendar.getInstance();  
+			        calendar.setTime(_startDate); 
+			        
+			        calendar.add(Calendar.MONTH, 1);  
+			        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+			        calendar.add(Calendar.DATE, -1); 
+			        String lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 
+			        
+			        calendar.set(Calendar.DAY_OF_MONTH, 1);
+			        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+					
+					List<String> result = getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfMonth, firstDayOfMonth, today, tenantID);				
+					result.remove(result.size() - 1);
+					
+					while (result.size() == 0) {
+						if (count > 12) {
+							//Task has been deleted
+							break;
+						}
+						count++;
+						//Move to next month
+						calendar.add(Calendar.MONTH, 1);
+						today = nsdf.format(calendar.getTime());
+						firstDayOfMonth = today + " 00:00:00"; 				
+						calendar.add(Calendar.MONTH, 1); 
+				        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+				        calendar.add(Calendar.DATE, -1); 
+				        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
+				        result = getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfMonth, firstDayOfMonth, today, tenantID);					
+						result.remove(result.size() - 1);
+						calendar.set(Calendar.DAY_OF_MONTH, 1);
+					}	
+					
+					if (count <= 12) {
+						resultList.add(vo);
+					}				
+				}				
 			}
 		}
 
@@ -783,11 +827,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int tenantID) throws Exception {
+	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int currentCnt, int currentCnt2, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
 		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
-
-		String utcStartTime = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 00:00:00";		
+		int distance = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -798,13 +841,16 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("chkValue", chkValue);
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
-		map.put("currentDate", utcStartTime);
 
 		String rtnCnt = "";
-		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count
+		//String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count
+		String cnt = Integer.toString(currentCnt);
 		String cnt2 = ezTaskDAO.getTaskCount2(map); // 지시,협조 중 진행중 count
-		String cnt3 = ezTaskDAO.getTaskCount3(map); // 지시,협조 중 진행중 count
-		String allCnt = ezTaskDAO.getTaskAllCount(map); // 개인 + 지시,협조 count
+		String totalTasks = ezTaskDAO.getTaskCount3(map); // 지시,협조 중 진행중 count
+		distance = Integer.parseInt(totalTasks) - currentCnt2;
+		String cnt3 = Integer.toString(currentCnt2);
+		String totalCnt = ezTaskDAO.getTaskAllCount(map); // 개인 + 지시,협조 count
+		String allCnt = Integer.toString(Integer.parseInt(totalCnt) - distance);
 
 		rtnCnt = cnt + "," + cnt2 + "," + cnt3 + "," + allCnt;
 

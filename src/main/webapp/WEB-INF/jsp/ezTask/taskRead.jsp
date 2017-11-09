@@ -376,8 +376,8 @@
 						startDate : startdate						
 					},
 					success: function() {
-		                try { window.opener.RefreshView(); } catch (e) { }
-		
+		                try { RefreshView(); } catch (e) { }
+						
 /* 		                if (window.opener.reload != undefined) {
 		                	window.opener.reload();
 		                }	 */	                    

@@ -123,7 +123,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String userID = userInfo.getId();
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
-		int tenantID = userInfo.getTenantId();
+		int tenantID = userInfo.getTenantId();		
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
@@ -303,8 +303,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskSave started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int tenantID = userInfo.getTenantId();		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		int tenantID = userInfo.getTenantId();			
 		
 		String realPath = commonUtil.getRealPath(request);
 		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID);
@@ -337,20 +336,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		taskInfoVO.setContentPath(param.get("contentPath").toString());
 		taskInfoVO.setMemo(param.get("memo").toString());
 		taskInfoVO.setRepetition((param.get("repetition").toString()));
-			
-		//Baonk added
-		if (taskInfoVO.getRepetition() != null && !taskInfoVO.getRepetition().equals("")) {
-			String[] info = taskInfoVO.getRepetition().split("\\|");	
-		
-			if (info[2].equals("0") && Integer.parseInt(info[0]) > 0) {
-				Calendar date_cal = Calendar.getInstance();
-				date_cal.setTime(sdf.parse(taskInfoVO.getEndDate()));			
-				date_cal.add(Calendar.DATE, Integer.parseInt(info[0]));
-				String newEndDate = sdf.format(date_cal.getTime());
-				taskInfoVO.setEndDate(newEndDate);
-			}		
-		}
-		//end
 		
 		List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("shareList");
 		List<TaskShareVO> shareList = new ArrayList<TaskShareVO>();
@@ -968,6 +953,8 @@ public class EzTaskController extends EgovFileMngUtil {
     	String primary = userInfo.getPrimary();
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();
+    	int currentCnt = 0;
+    	int currentCnt2 = 0;
     	
     	String type = request.getParameter("type");
     	String filter = request.getParameter("filter");
@@ -977,7 +964,11 @@ public class EzTaskController extends EgovFileMngUtil {
     	String startDate = request.getParameter("startDate");
     	String endDate = request.getParameter("endDate");
     	String useDate = request.getParameter("useDate");
-    	String pSelectTab = request.getParameter("pSelectTab");
+    	String pSelectTab = "";
+    	
+    	if (request.getParameter("pSelectTab") != null) {
+    		pSelectTab = request.getParameter("pSelectTab");
+    	}
     	
     	// 검색 시 날짜사용 안하면 최근 3개월이내 검색
 		if (useDate.equals("false")) {
@@ -995,9 +986,35 @@ public class EzTaskController extends EgovFileMngUtil {
 			cal.add(Calendar.MONTH, 3);
 			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false).substring(0, 10);    			
 		}
+		
+		logger.debug("taskStatusCount: " +  taskStatusCount + "|| pSelectTab: " + pSelectTab);
 
     	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);
-    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, tenantID);
+    	List<TaskInfoVO> list2 = new ArrayList<TaskInfoVO>();
+    	List<TaskInfoVO> list3 = new ArrayList<TaskInfoVO>();
+    	
+    	if (type != null) {
+    		if (!type.equals("1")) {
+    			list2 = ezTaskService.getTaskList(userID, startDate, endDate, offset, "1", filter, chkValue, searchClass, taskStatusCount, primary, "taskprog", tenantID);
+    			currentCnt = list2.size();
+    			if (type.equals("2")) {
+    				list3 = ezTaskService.getTaskList(userID, startDate, endDate, offset, "3", filter, chkValue, searchClass, taskStatusCount, primary, "taskrepetition", tenantID);
+    				currentCnt2 = list3.size();
+    			}
+    			else {
+    				currentCnt2 = list.size();
+    			}
+    		}
+    		else {
+    			list3 = ezTaskService.getTaskList(userID, startDate, endDate, offset, "3", filter, chkValue, searchClass, taskStatusCount, primary, "taskrepetition", tenantID);
+    			currentCnt2 = list3.size();
+    		}
+    	}
+    	else {
+    		currentCnt = list.size();
+    	}
+    	
+    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, currentCnt, currentCnt2, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 
@@ -1056,7 +1073,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	resultXML.append("</DATA>");
 
     	logger.debug("taskGetList ended.");
-    	logger.debug(resultXML.toString());
+    	//logger.debug(resultXML.toString());
 
     	return resultXML.toString();
     }

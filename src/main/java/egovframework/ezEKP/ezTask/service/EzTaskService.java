@@ -30,7 +30,7 @@ public interface EzTaskService {
 	
 	String taskWorkSave(String taskID, String content, String attachList, String fileName, String fileSize, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception;
 	
-	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int tenantID) throws Exception;
+	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int currCnt, int currCnt2, int tenantID) throws Exception;
 	
 	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception;
 	

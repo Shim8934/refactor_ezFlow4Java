@@ -275,7 +275,9 @@
 	           	OR
 	           		(enddate >= #startDate# and enddate < #endDate#) 
 	           	OR
-	           		(startdate < #startDate# and enddate >= #endDate#))
+	           		(startdate < #startDate# and enddate >= #endDate#)
+	           	OR
+	           		TASKTYPE = "4")
 	           	AND
 					(A.personid = #userID# or (B.sharerid = #userID# and A.taskid = B.taskid) or A.creatorid = #userID#)
            	]]>
@@ -318,9 +320,9 @@
 				AND
 						((A.creatorid = #userID# and A.tasktype = 1)
 					OR
-						(A.personid = #userID#)
+						(A.personid = #userID# and A.tasktype = 1)
 					OR	
-						(B.sharerid = #userID# and A.TASKID = B.TASKID))
+						(B.sharerid = #userID# and A.TASKID = B.TASKID and A.tasktype = 1))
 				AND
 					A.taskstatus != 3				
 		]]>
