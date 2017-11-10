@@ -23,6 +23,12 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		
+		<style type="text/css">
+			   .css-class-to-highlight{
+			       background-color: #00bfff;
+			   }
+		</style>
+		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
@@ -780,6 +786,19 @@
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true,
+		            beforeShowDay: function(date) {
+		                var m = date.getMonth() + 1;
+		                var d = date.getDate();
+		                var y = date.getFullYear();
+		                
+		                for (i = 0; i < dateArray.length; i++) {
+		                    if($.inArray(y + "-" + (m) + "-" + d, dateArray) != -1) {
+		                        //return [false];
+		                        return [true, 'css-class-to-highlight', 'tooltipText'];
+		                    }
+		                }
+		                return [true];
+		            },
 		            onSelect:function(dateText, inst) {		            	
 		            	//Get new list if change month or year
 		            	var theFirstDay = dateArray[0].substring(0, 7);		            	

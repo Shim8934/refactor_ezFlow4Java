@@ -1029,6 +1029,71 @@ public class EzTaskController extends EgovFileMngUtil {
     			String realDate = commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), true);
     			int completionPercentage = ezTaskService.selectCompletionOfRepTask(vo.getTaskID(), realDate, tenantID);
     			vo.setCompleteRate(completionPercentage);
+    			
+    			//Set enddate
+    			if (pSelectTab.equals("taskrepetition")) {
+    				
+    				String[] info = vo.getRepetition().split("\\|");    				
+    				if (info[0].equals("-1")) {
+    					vo.setEndDate("없습");
+    				}
+    				else { 
+    					List<String> result = new ArrayList<String>();
+    					if (info[0].equals("0")) {
+	    					String endD = vo.getEndDate();
+	    					String startD = vo.getStartDate();
+	    					result = ezTaskService.getDatesOfRepTask(vo.getTaskID(), offset, primary, endD, startD, startD, tenantID);
+	    					result.remove(result.size() - 1);
+    					}
+    					else {
+    						int totalTime = Integer.parseInt(info[0]);    						
+    						int count = 0; 
+    						
+    						SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+    	    				String date = vo.getStartDate();
+    	    				
+    	    				Date startD = nsdf.parse(date.substring(0, 10)); 
+    	    		        Calendar calendar = Calendar.getInstance();  
+    	    		        calendar.setTime(startD); 
+    	    		        
+/*    	    		        calendar.add(Calendar.MONTH, 1);  
+    	    		        calendar.set(Calendar.DAY_OF_MONTH, 1);  */
+    	    		        calendar.add(Calendar.YEAR, 1);
+    	    		        calendar.set(Calendar.DAY_OF_YEAR, 1);
+    	    		        calendar.add(Calendar.DATE, -1); 
+    	    		        
+    	    		        String lastDayOfYear = nsdf.format(calendar.getTime()) + " 23:59:59"; 
+    	    		        
+    	    		        calendar.set(Calendar.DAY_OF_YEAR, 1);
+    	    		        String firstDayOfYear = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+    	    				
+    	    				result = ezTaskService.getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfYear, firstDayOfYear, date, tenantID); 
+    	    				result.remove(result.size() - 1);
+    						count = result.size();
+    						
+    						while (count < totalTime) { 								
+    							if (count == totalTime) {
+    								break;
+    							}  						 							     							
+    	    					//Move to next year
+    	    					calendar.add(Calendar.YEAR, 1);
+    	    					date = nsdf.format(calendar.getTime());
+    	    					firstDayOfYear = date + " 00:00:00"; 				
+    	    					calendar.add(Calendar.YEAR, 1); 
+    	    			        calendar.set(Calendar.DAY_OF_YEAR, 1);  
+    	    			        calendar.add(Calendar.DATE, -1); 
+    	    			        lastDayOfYear = nsdf.format(calendar.getTime()) + " 23:59:59"; 	
+    	    			        calendar.set(Calendar.DAY_OF_YEAR, 1);    	    			        							
+    							
+    	    			        result = ezTaskService.getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfYear, firstDayOfYear, date, tenantID);    					
+    	    					result.remove(result.size() - 1);
+    	    					       	    				
+        	    				count += result.size();
+    						}  					
+    					}
+    					vo.setEndDate(result.get(result.size() - 1));
+    				}    				
+    			}
     		}
     		//end
     		
