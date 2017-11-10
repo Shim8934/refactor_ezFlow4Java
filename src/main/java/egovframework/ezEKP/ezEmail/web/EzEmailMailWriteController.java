@@ -1008,7 +1008,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String buttonName0 = "";
 		String buttonName1 = "";
 		String buttonName2 = "";
-		String[] buttonNamesArray = buttonNames.split(".");
+		String[] buttonNamesArray = buttonNames.split(",");
 		
 		if (userInfo.getLang().equals("3")) {
 			buttonNamesArray = buttonNames.split("、");
