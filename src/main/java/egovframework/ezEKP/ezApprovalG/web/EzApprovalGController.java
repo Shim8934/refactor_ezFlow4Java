@@ -1834,6 +1834,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String serverName = userInfo.getServerName();
 		String susinAdmin = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
+		String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
+		
 		// a=1은 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -1861,6 +1864,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isBody", isBody);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
+		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
+		model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
 		
 		logger.debug("aprAttach ended");
 		

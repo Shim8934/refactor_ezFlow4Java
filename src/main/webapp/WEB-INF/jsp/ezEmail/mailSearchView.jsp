@@ -638,7 +638,7 @@
 		<tr> 
 			<th nowrap><spring:message code="ezEmail.t642" /></th> 
 			<td width="100%">
-			    <select id="select2">
+			    <select id="select2" style="height: 23px">
 			    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
 			    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
 			    <option value="${folderName}">
@@ -653,13 +653,13 @@
 			    </option>
 			    </c:forEach>
 			    </select>
-			    <select name="select" class="text" id="select"> 
+			    <select name="select" class="text" id="select" style="height: 23px;">
 					<option selected value="<spring:message code="ezEmail.t98" />"><spring:message code="ezEmail.t98" /></option> 
 					<option value="<spring:message code="ezEmail.t649" />"><spring:message code="ezEmail.t649" /></option> 
 					<option value="<spring:message code="ezEmail.t161" />"><spring:message code="ezEmail.t161" /></option> 
 					<option value="<spring:message code="ezEmail.t650" />"><spring:message code="ezEmail.t651" /></option> 
 			    </select>
-		    	<input name="keyword" id = "keyword"  onkeyup="return search_keypress(event)" /> 
+		    	<input name="keyword" id = "keyword" style="vertical-align: top;" onkeyup="return search_keypress(event)" />
 		    	<a class="imgbtn"><span onClick="start_search()"><spring:message code="ezEmail.t37" /></span></a>
 		    </td> 
 		</tr> 
