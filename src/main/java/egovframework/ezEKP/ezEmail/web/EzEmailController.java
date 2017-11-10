@@ -42,9 +42,6 @@ public class EzEmailController {
 		
 		model.addAttribute("funCode", funCode);
 		
-		System.out.println(new EzUCMessengerUtil().encryptAES("user1"));
-		System.out.println(new EzUCMessengerUtil().encryptAES("user1:123qwe!"));
-		
 		return "ezEmail/mailMain";
 	}
 
