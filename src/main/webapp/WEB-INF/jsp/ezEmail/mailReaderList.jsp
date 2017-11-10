@@ -14,6 +14,9 @@
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <script>
 	        var _url = decodeURIComponent('${url}');
+	        var docWidth = window.outerWidth;
+	        var docHeight = window.outerHeight;
+	        
 	        document.onselectstart = function () { return false; };
 	        function ReSend(pEmail) {
 	            var pEmail = pEmail.getAttribute("EMAIL");
@@ -252,6 +255,10 @@
 	        }
 	        function Window_Print() {
 	            window.print();
+	        }
+	        
+	        window.onresize = function(){
+	        	resizeTo(docWidth, docHeight);
 	        }
 	    </script>
 	</head>
