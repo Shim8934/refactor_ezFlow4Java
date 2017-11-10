@@ -486,7 +486,18 @@
 			/* 진행상태 수정 */
 			function update_status() {
 				if (personid == userid || creatorid == userid) {
-					DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&startDate=" + startdate);
+					//Baonk added
+					var selctDate = new Date(date + " 00:00:00");
+					var curDate = new Date();
+					
+					if (selctDate.getTime() <= curDate.getTime()) {
+						DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&startDate=" + startdate);
+					}
+					else {
+						alert("안됩니다.");
+						return;
+					}					
+					//end								
 				} else {
 					alert("<spring:message code='ezTask.t149' />");
 				}
