@@ -91,7 +91,7 @@
 		    <tr> 
 		        <td height="20">
 		        	<div id="menu"></div>
-		            <div id="close"><ul><li><span onClick="OnBtnClose()"><spring:message code="ezEmail.t63" /></span></li></ul></div>	
+		            <div id="close" style="display: none;"><ul><li><span onClick="OnBtnClose()"><spring:message code="ezEmail.t63" /></span></li></ul></div>	
 		        </td> 
 		    </tr>  
 		    <tr> 
