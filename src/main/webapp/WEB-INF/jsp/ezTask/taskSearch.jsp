@@ -235,7 +235,7 @@
 			function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
-	            totalcount = GetChildNodes(listdom.documentElement).length - 3;
+	            totalcount = GetChildNodes(listdom.documentElement).length - 4;
 	            totalpage = Math.ceil(new Number(totalcount / pagesize));
 
                 currentpage = 1;
@@ -252,7 +252,7 @@
 		    }
 			
 			function show_page() {
-// 			    makePageSelPage();
+// 			    makePageSelPage();				
 
 			    var length = list_body.children[1].rows.length;
 
@@ -267,7 +267,7 @@
 					if (totalcount == 0 || i == totalcount) {
 			            break;
 			        }
-			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
+			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];			        
 
 				    tr = row_body.cloneNode(true);
 				    document.getElementById("tr_ing").style.display = "none";
@@ -444,16 +444,17 @@
 			{
 				var taskid = $(obj).closest("tr").attr("taskid");
 				var feature = "";
+				var startD = obj.parentElement.getAttribute("startdate");				
 
-				feature = GetOpenPosition(750, 740);
+ 				feature = GetOpenPosition(750, 740);
 	        	
 	        	if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        } else {
 		            if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            } else {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskid, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD, "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            }
 		        }
 			}
