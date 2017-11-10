@@ -2780,7 +2780,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     				+config.getProperty("config.Common_Name1")+",DC="+config.getProperty("config.Common_Name2");
     		
     		logger.debug("retireDN : " + retireDN);
-    		ctx.rename(getDN, retireDN);
+    		ctx.rename(getDN, retireDN);	
     	} else if (passBy.equalsIgnoreCase("restore")) {
     		/**
     		 * 1. 부서의 이동 PARENTCN : 이동할 부서, CN : 현재 유저ID
@@ -2926,10 +2926,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	logger.debug("retireUserInAD started.");
     	//empty VO 생성.
     	OrganUserVO vo = new OrganUserVO();
-    	   	
-//    	String getDN = getADdata(ctx, map.get("v_CN").toString(), "user", "dn");
-//    	
-//    	logger.debug("<<<getDN : " + getDN);
 
     	vo.setCn(map.get("v_CN").toString());
     	
