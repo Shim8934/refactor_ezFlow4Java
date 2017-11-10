@@ -30,9 +30,6 @@ public class ADConnection {
 		/**
 		 * AD 접속을 위한 서버 정보 입력
 		 * */		
-//    	String address = "10.0.100.185";
-//    	String security = "administrator@syl2017.dev";
-//    	String passwd = "P@ssw0rd";
 		
     	String address = config.getProperty("config.PROVIDER_URL");
     	String security = config.getProperty("config.SECURITY_PRINCIPAL");

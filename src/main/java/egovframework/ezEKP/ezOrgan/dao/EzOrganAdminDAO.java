@@ -70,7 +70,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     private EzEmailUtil ezEmailUtil;
     
     @Autowired
-    private ADConnection conn;
+    private ADConnection conn;  
     
     private List<OrganDeptVO> getCompanyListForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("tenantID");
@@ -2634,20 +2634,21 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * */   
     public void insertUserInAD(DirContext ctx, Map<String, Object> map) throws Exception {
     	logger.debug("insertUserInAD started.");    	
-
+    	
     	String baseDN = ", OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" 	+ config.getProperty("config.Common_Name1") 
     			+ ", DC=" + config.getProperty("config.Common_Name2");
     	
     	Attributes container = new BasicAttributes(true);
     	Attribute objClasses = new BasicAttribute("objectClass");
-
+    	
+    	
 		/**
 		 * v_CN에는 유저 아이디 정보
 		 * v_PARENTCN에는 그룹 아이디 정보
 		 * */
 		String userDN = ", OU=사용자" + baseDN;   
 		String domainName = config.getProperty("config.Domain_Name");    		
-		String quotedPassword = "\"" + map.get("v_PASS") + "\"";
+		String quotedPassword = "\"" + map.get("v_INSERTADPASS") + "\"";
 		
 	    byte[] pwdArray = quotedPassword.getBytes("UTF-16LE");
 

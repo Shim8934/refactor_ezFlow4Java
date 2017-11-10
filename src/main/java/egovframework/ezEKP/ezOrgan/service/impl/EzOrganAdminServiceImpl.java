@@ -388,6 +388,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
 			DirContext ctx = conn.setConnection();
+			// Active Direcrtory 사용자 비밀번호
+			loginVO.setPassword(password);
 			ezOrganAdminDao.changePasswordInAD(ctx, loginVO);
 		}
 	}
@@ -700,7 +702,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void insertDBData_user(OrganUserVO vo) throws Exception {
+	public void insertDBData_user(OrganUserVO vo, String oriPass) throws Exception {
         logger.debug("insertDBData_user started");
         logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn() + ",displayName=" + vo.getDisplayName()
                 + ",displayName2=" + vo.getDisplayName2() + ",parentCn=" + vo.getParentCn());
@@ -750,6 +752,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTH", vo.getBirth() != null ? vo.getBirth() : "");		
 		map.put("v_BIRTHTYPE", vo.getBirthType() != null ? vo.getBirthType() : "");
 		map.put("v_PASS", vo.getPassword());
+		map.put("v_INSERTADPASS", oriPass);
 				
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
