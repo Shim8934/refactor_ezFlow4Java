@@ -333,6 +333,7 @@
 
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
+			            case "4":	
 			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
 			                break;
 			            case "2":
