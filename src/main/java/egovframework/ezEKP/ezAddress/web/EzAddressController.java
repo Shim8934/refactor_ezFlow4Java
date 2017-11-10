@@ -583,6 +583,7 @@ public class EzAddressController{
 		model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
+		model.addAttribute("getsMemo", addressInfo.getsMemo().replace("\n", "<br/>"));
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo

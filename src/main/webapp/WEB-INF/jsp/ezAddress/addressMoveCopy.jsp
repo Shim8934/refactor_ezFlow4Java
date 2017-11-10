@@ -63,7 +63,6 @@
                 nodeIdx = arguments[0].nodeIdx;
             }
             var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
-            alert(AddressTreeView.getvalue(nodeIdx, "type"));
             AddressTreeView.putchildxml(nodeIdx, childxml);
         }
 	    function btn_Copy_onclick() {
