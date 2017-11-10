@@ -60,7 +60,7 @@
 			var primary = "${userInfo.primary}";
 			var defaultFont = "<spring:message code='main.t246' />";
 			var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
-			var repetition = "";
+			var repetition = "<c:out value = '${taskInfoVO.repetition}' />";		
 			var repetitiondel = "";
 
 			$(function () {
@@ -164,6 +164,10 @@
 					if (hasattach == "Y") {
 			            setAttachFileInfo("${taskAttachList}");
 			        }
+					
+					if (repetition) {
+						show_repetition_info();
+					}
 				}
 				
 				if (useTodoMemo == 'YES') {

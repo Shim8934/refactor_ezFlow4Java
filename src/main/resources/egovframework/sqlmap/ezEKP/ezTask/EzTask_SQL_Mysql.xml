@@ -681,7 +681,8 @@
 				persondeptname = #personDeptName#,
 				persondeptname2 = #personDeptName2#,
 				personemail = #personEmail#,
-				memo = #memo#
+				memo = #memo#,
+				repetition = #repetition#
     		WHERE
     			tenantID = #tenantID#
     		AND

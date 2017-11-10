@@ -984,7 +984,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		String taskID = vo.getTaskID();
 		String nowDate = commonUtil.getTodayUTCTime("");
 		
-		logger.debug("taskID = " + taskID);
+		logger.debug("taskID = " + taskID + " || Repetition: " + vo.getRepetition());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -1004,6 +1004,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("personEmail", vo.getPersonEmail());
 		map.put("memo", vo.getMemo());
 		map.put("tenantID", tenantID);
+		map.put("repetition", vo.getRepetition());
 		
 		ezTaskDAO.updateTask(map);
 		
