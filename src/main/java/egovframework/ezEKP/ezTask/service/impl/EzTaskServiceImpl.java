@@ -775,7 +775,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			        calendar.set(Calendar.DAY_OF_MONTH, 1);
 			        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
 					
-					List<String> result = getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfMonth, firstDayOfMonth, today, tenantID);				
+					List<String> result = getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);				
 					result.remove(result.size() - 1);
 					
 					while (result.size() == 0) {
@@ -785,14 +785,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						}
 						count++;
 						//Move to next month
-						calendar.add(Calendar.MONTH, 1);
-						today = nsdf.format(calendar.getTime());
-						firstDayOfMonth = today + " 00:00:00"; 				
+						calendar.add(Calendar.MONTH, 1);						
+						firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00"; 				
 						calendar.add(Calendar.MONTH, 1); 
 				        calendar.set(Calendar.DAY_OF_MONTH, 1);  
 				        calendar.add(Calendar.DATE, -1); 
 				        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
-				        result = getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfMonth, firstDayOfMonth, today, tenantID);					
+				        result = getDatesOfRepTask(vo.getTaskID(), offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);					
 						result.remove(result.size() - 1);
 						calendar.set(Calendar.DAY_OF_MONTH, 1);
 					}	
@@ -1192,9 +1191,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, String currentDate, int tenantID) throws Exception {
+	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, int tenantID) throws Exception {
 		logger.debug("getDatesOfRepTask started.");
-		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate + " | currentDate : " + currentDate);
+		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate);
 		String currentPos = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1462,12 +1461,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		if (resultList.size() == 0) {
 			currentPos = Integer.toString(-1);					
 		}
-		else {
-			if (!resultList.contains(currentDate)) {
-				currentDate = resultList.get(0);
-			}
-			
-			currentPos = Integer.toString(mapDateAndRepeatCount.get(currentDate));			
+		else {			
+			currentPos = Integer.toString(mapDateAndRepeatCount.get(resultList.get(0)));			
 		}
 		
 		resultList.add(currentPos);

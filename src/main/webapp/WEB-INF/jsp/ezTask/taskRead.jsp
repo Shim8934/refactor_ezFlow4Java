@@ -60,7 +60,8 @@
 		    var repetition = "${repetition}";
 		    var endDate = "${taskInfoVO.endDate}";
 		    var dateList = "${dateList}";
-		    var dateArray = null;		    
+		    var dateArray = null;
+		    var backupCount = "${repeatCount}";
 		    
 		    $(document).ready(function() {		    	
 		    	if (dateList !== "") {
@@ -797,57 +798,55 @@
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true,
-		            beforeShowDay: function(date) {
+		            format: 'yyyy-mm-dd',
+		            beforeShowDay: function(date) {		            	
 		                var m = date.getMonth() + 1;
 		                var d = date.getDate();
-		                var y = date.getFullYear();
+		                var y = date.getFullYear();		                
 		                
-		                for (i = 0; i < dateArray.length; i++) {
-		                    if($.inArray(y + "-" + (m) + "-" + d, dateArray) != -1) {
+		                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
+		                
+		                for (i = 0; i < dateArray.length; i++) {		                	
+		                    if($.inArray(test, dateArray) != -1) {
 		                        //return [false];
 		                        return [true, 'css-class-to-highlight', 'tooltipText'];
 		                    }
 		                }
 		                return [true];
 		            },
-		            onSelect:function(dateText, inst) {		            	
-		            	//Get new list if change month or year
-		            	var theFirstDay = dateArray[0].substring(0, 7);		            	
-		            	
-		            	if (dateText.substring(0, 7) == theFirstDay) {
-		            		showResult(dateText);							
-		            	}
-		            	else {
-		            		//Get new data from server			            		
-		    				$.ajax({
-		    					type : "POST",
-		    					dataType : "json",
-		    					async : false,
-		    					url : "/ezTask/getRepTaskDateList.do",
-		    					data : {
-		    							taskID 		: taskid,
-		    							currentDate : dateText
-		    					},
-		    					success: function(result) {
-		    						var list = result.dateList;		    								    						
-		    						
-		    						if (list.length != 0) {
-			    						dateArray = [];
-			    						repeatCount = parseInt(result.orderNum, 10);
-			    						list.forEach(function(strDate, index) {
-			    							dateArray.push(strDate);
-			    						});
-			    						showResult(dateText, repeatCount);	
-		    						}
-		    						else {
-		    							showResult(dateText, repeatCount);
-		    						}	    						
-		    					},
-		    					error : function(jqXHR, textStatus, errorThrown) {
-		    						alert("Get data from server failed!");
-		    					}
-		    				});
-		            	}
+		            onSelect:function(dateText, inst) {
+		            	showResult(dateText);
+		            },
+		            onChangeMonthYear: function (year, month, inst) {		            	
+		            	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";
+						var theFirstDay = dateArray[0].substring(0, 7);		            	
+	
+	            		//Get new data from server			            		
+	    				$.ajax({
+	    					type : "POST",
+	    					dataType : "json",
+	    					async : false,
+	    					url : "/ezTask/getRepTaskDateList.do",
+	    					data : {
+	    							taskID 		: taskid,
+	    							currentDate : firstDayOfMonth
+	    					},
+	    					success: function(result) {
+	    						var list = result.dateList;		    								    						
+	    						
+	    						if (list.length != 0) {
+		    						dateArray = [];
+		    						repeatCount = parseInt(result.orderNum, 10);
+		    						list.forEach(function(strDate, index) {
+		    							dateArray.push(strDate);			    							
+		    						});
+		    						//showResult(dateText, repeatCount);	
+	    						}    						
+	    					},
+	    					error : function(jqXHR, textStatus, errorThrown) {
+	    						alert("Get data from server failed!");
+	    					}
+		    			});		            	
 		            }
 		        });
 
@@ -909,11 +908,14 @@
 				for (var i = 0; i < dateArray.length; i++) {					
 					if (dateArray[i] ==  dateText) {
 						test = 1;
+						repeatCount += i;
 						break;
 					}
 				}						
 				
 				if (test == 0) {
+					dateArray = dateList.split(",");
+					repeatCount = backupCount;
 					alert("이날 에 Task를 없어요. 다를 날을 선택 하세요.");
 					$("#Sdatepicker").datepicker("setDate", date);
 				}
