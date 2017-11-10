@@ -844,7 +844,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int currentCnt, int currentCnt2, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
-		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
+		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue + "Current Task Cnt: " + currentCnt  + "Current rep Task Cnt: " + currentCnt2);
 		int distance = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -861,7 +861,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		//String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count
 		String cnt = Integer.toString(currentCnt);
 		String cnt2 = ezTaskDAO.getTaskCount2(map); // 지시,협조 중 진행중 count
-		String totalTasks = ezTaskDAO.getTaskCount3(map); // 지시,협조 중 진행중 count
+		String totalTasks = ezTaskDAO.getTaskCount3(map); // 지시,협조 중 진행중 count		
 		distance = Integer.parseInt(totalTasks) - currentCnt2;
 		String cnt3 = Integer.toString(currentCnt2);
 		String totalCnt = ezTaskDAO.getTaskAllCount(map); // 개인 + 지시,협조 count

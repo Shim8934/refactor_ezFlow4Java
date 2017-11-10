@@ -219,7 +219,9 @@
 
 			<isEqual property="type" compareValue="3" prepend="AND">
 				<![CDATA[
-						(A.creatorid = #userID# AND A.tasktype = 4)
+						((A.creatorid = #userID# AND A.tasktype = 4)
+					OR
+						(B.sharerid = #userID# and A.TASKID = B.TASKID))
 				]]>
 			</isEqual>
 		</isNotNull>
@@ -400,7 +402,7 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				(A.creatorid = #userID# AND A.tasktype = 4)
+				(((A.creatorid = #userID#) OR (B.sharerid = #userID# and A.TASKID = B.TASKID)) AND A.tasktype = 4)
 			AND
 				A.taskstatus != 3
 		]]>
