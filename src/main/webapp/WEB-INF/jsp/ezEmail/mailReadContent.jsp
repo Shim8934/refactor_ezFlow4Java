@@ -168,7 +168,7 @@
 			        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 			            var oRoot = xmlHTTP.responseXML.documentElement;
 			            var ret = oRoot.childNodes[0].nodeValue;
-			            if (ret != "FAIL") {
+			            if (ret != "FAIL" && ret != "") {
 			            	window.parent.reloadReadContent(ret);
 			            }
 			            else {
