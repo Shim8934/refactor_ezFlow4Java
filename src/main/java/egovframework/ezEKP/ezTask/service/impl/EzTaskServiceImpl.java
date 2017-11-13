@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -1190,7 +1189,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, int tenantID) throws Exception {
+	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception {
 		logger.debug("getDatesOfRepTask started.");
 		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate);
 		String currentPos = "";
@@ -1460,8 +1459,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		if (resultList.size() == 0) {
 			currentPos = Integer.toString(-1);					
 		}
-		else {			
-			currentPos = Integer.toString(mapDateAndRepeatCount.get(resultList.get(0)));			
+		else {
+			if (!selectDate.equals("") && resultList.contains(selectDate)) {
+				currentPos = Integer.toString(mapDateAndRepeatCount.get(selectDate));
+			}
+			else {
+				currentPos = Integer.toString(mapDateAndRepeatCount.get(resultList.get(0)));	
+			}					
 		}
 		
 		resultList.add(currentPos);

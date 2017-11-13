@@ -130,7 +130,7 @@
 		        var feature = "";
 		        
 		        if (repeatcount == "") {
-		        	repeatcount = 0;
+		        	repeatcount = 1;
 		        }
 		        
 	        	feature = GetOpenPosition(750, 740);

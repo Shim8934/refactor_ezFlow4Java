@@ -63,7 +63,7 @@
 		    var dateArray = null;
 		    var backupCount = "${repeatCount}";
 		    
-		    $(document).ready(function() {		    	
+		    $(document).ready(function() {			    	    	
 		    	if (dateList !== "") {
 		    		dateArray = dateList.split(",");
 		    	}
@@ -807,14 +807,13 @@
 		                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
 		                
 		                for (i = 0; i < dateArray.length; i++) {		                	
-		                    if($.inArray(test, dateArray) != -1) {
-		                        //return [false];
+		                    if($.inArray(test, dateArray) != -1) {		                        
 		                        return [true, 'css-class-to-highlight', 'tooltipText'];
 		                    }
 		                }
 		                return [true];
 		            },
-		            onSelect:function(dateText, inst) {
+		            onSelect: function(dateText, inst) {
 		            	showResult(dateText);
 		            },
 		            onChangeMonthYear: function (year, month, inst) {		            	
@@ -908,7 +907,7 @@
 				for (var i = 0; i < dateArray.length; i++) {					
 					if (dateArray[i] ==  dateText) {
 						test = 1;
-						repeatCount += i;
+						repeatCount = parseInt(repeatCount, 10) + i;						
 						break;
 					}
 				}						
@@ -954,14 +953,14 @@
 
 			<div class="progress_txt" style="magin-left:20px;">
 				<ul>
-					<c:if test="${taskInfoVO.taskType == 4 && taskInfoVO.taskType == 5 && taskInfoVO.taskType == 6}">
+					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 						<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
 						<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
 						
 					</c:if>
-					<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 5 && taskInfoVO.taskType != 6}">
+					<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
 						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
 					</c:if>

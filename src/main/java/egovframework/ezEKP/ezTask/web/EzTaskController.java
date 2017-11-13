@@ -123,7 +123,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String userID = userInfo.getId();
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
-		int tenantID = userInfo.getTenantId();		
+		int tenantID = userInfo.getTenantId();	
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
@@ -133,7 +133,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String date = request.getParameter("date");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
-		String orderNumber = "";
+		String orderNumber = "";		
 
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
@@ -163,7 +163,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		}
 		
 		//baonk added
-		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {					
+		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {			
 			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date startDate = nsdf.parse(date); 
 	        Calendar calendar = Calendar.getInstance();  
@@ -177,7 +177,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);
 	        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
 			
-			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
 			orderNumber = result.get(result.size() - 1);
 			result.remove(result.size() - 1);
 			
@@ -190,7 +190,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		        calendar.set(Calendar.DAY_OF_MONTH, 1);  
 		        calendar.add(Calendar.DATE, -1); 
 		        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
-		        result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+		        result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
 				orderNumber = result.get(result.size() - 1);
 				result.remove(result.size() - 1);
 				calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -209,8 +209,10 @@ public class EzTaskController extends EgovFileMngUtil {
 			String realStartDate = date + " 00:00:00";
 			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
 			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
-			taskInfoVO.setCompleteRate(completionPercentage);		
+			taskInfoVO.setCompleteRate(completionPercentage);			
 			taskInfoVO.setRepeatCount(Integer.parseInt(orderNumber));
+
+			
 		}	
 		//end
 
@@ -282,7 +284,7 @@ public class EzTaskController extends EgovFileMngUtil {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";  
 		
-		List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, tenantID);
+		List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, "", tenantID);
 		String orderNumber = result.get(result.size() - 1);
 		result.remove(result.size() - 1);
 		
