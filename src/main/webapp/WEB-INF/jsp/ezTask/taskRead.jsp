@@ -954,14 +954,14 @@
 
 			<div class="progress_txt" style="magin-left:20px;">
 				<ul>
-					<c:if test="${taskInfoVO.taskType == 4}">
+					<c:if test="${taskInfoVO.taskType == 4 && taskInfoVO.taskType == 5 && taskInfoVO.taskType == 6}">
 						<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
 						<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
 						
 					</c:if>
-					<c:if test="${taskInfoVO.taskType != 4}">
+					<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 5 && taskInfoVO.taskType != 6}">
 						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
 					</c:if>

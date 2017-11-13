@@ -483,8 +483,16 @@ function save_task() {
     if (repetition == "") {
     	tasktype = $(":input:radio[name=tasktypesel]:checked").val();	
     } 
-    else {   		
-    	tasktype = 4; 
+    else {     	
+    	if ($(":input:radio[name=tasktypesel]:checked").val() == "1") {
+    		tasktype = 4; 
+    	}
+    	else if ($(":input:radio[name=tasktypesel]:checked").val() == "2") {
+    		tasktype = 5; 
+    	}
+    	else {
+    		tasktype = 6;
+    	}    	
     }
     
     importance = $(":input:radio[name=important]:checked").val();

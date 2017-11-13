@@ -19,6 +19,8 @@ public interface EzTaskService {
 	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception;
 	
 	List<String> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, int tenantID) throws Exception;
+	
+	void getRepTaskInfo(TaskInfoVO vo) throws Exception;
 
 	TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception;
 
@@ -52,5 +54,5 @@ public interface EzTaskService {
 
 	void insertTaskRepeDel(String taskID, String repeatCount, String taskStatus, String completeRate, String realDate, int tenantID) throws Exception;
 	
-	int selectCompletionOfRepTask(String taskID, String repeatCount, int tenantID) throws Exception;
+	int selectCompletionOfRepTask(String taskID, String repeatCount, int tenantID) throws Exception;	
 }

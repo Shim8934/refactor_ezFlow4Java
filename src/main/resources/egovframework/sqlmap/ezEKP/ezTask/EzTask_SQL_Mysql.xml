@@ -41,7 +41,8 @@
 				personattach,
 				personcontentpath,
 				memo,
-				repetition
+				repetition,
+				totalrep
 			FROM
 				TBL_TASK
 			WHERE
@@ -178,7 +179,8 @@
 				personemail,
 				hascomment,
 				memo,
-				repetition
+				repetition,
+				totalrep
 			FROM
 				TBL_TASK A
 			LEFT JOIN
@@ -213,13 +215,13 @@
 
 			<isEqual property="type" compareValue="2" prepend="AND">
 				<![CDATA[
-						(A.creatorid = #userID# AND (A.tasktype = 2 OR A.tasktype = 3))
+						(A.creatorid = #userID# AND (A.tasktype = 2 OR A.tasktype = 3 OR A.tasktype = 5 OR A.tasktype = 6))
 				]]>
 			</isEqual>
 
 			<isEqual property="type" compareValue="3" prepend="AND">
 				<![CDATA[
-						((A.creatorid = #userID# AND A.tasktype = 4)
+						((A.creatorid = #userID# AND (A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6))
 					OR
 						(B.sharerid = #userID# and A.TASKID = B.TASKID))
 				]]>
@@ -279,7 +281,11 @@
 	           	OR
 	           		(startdate < #startDate# and enddate >= #endDate#)
 	           	OR
-	           		TASKTYPE = "4")
+	           		TASKTYPE = "4" 
+	           	OR 
+	           		TASKTYPE = "5" 
+	           	OR 
+	           		TASKTYPE = "6")
 	           	AND
 					(A.personid = #userID# or (B.sharerid = #userID# and A.taskid = B.taskid) or A.creatorid = #userID#)
            	]]>
@@ -517,6 +523,7 @@
 				personattach,
 				memo,
 				repetition,
+				totalrep,
 				tenantid)
 			VALUES
 		]]>
@@ -551,6 +558,7 @@
 				'N',
 				#memo#,
 				#repetition#,
+				#totalrepetition#,
 				#tenantID#)
 			]]>
 		</isNull>
@@ -682,7 +690,8 @@
 				persondeptname2 = #personDeptName2#,
 				personemail = #personEmail#,
 				memo = #memo#,
-				repetition = #repetition#
+				repetition = #repetition#,
+				totalrep   = #totalrepetition#
     		WHERE
     			tenantID = #tenantID#
     		AND

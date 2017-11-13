@@ -74,6 +74,7 @@ public class TaskInfoVO {
 	/** 반복 */
 	private String repetition;
 	private int repeatCount;
+	private int totalRep;
 	/** 테넌트ID*/
 	private int tenantID;
 	public String getTaskID() {
@@ -298,4 +299,10 @@ public class TaskInfoVO {
 	public void setRepeatCount(int repeatCount) {
 		this.repeatCount = repeatCount;
 	}
+	public int getTotalRep() {
+		return totalRep;
+	}
+	public void setTotalRep(int totalRep) {
+		this.totalRep = totalRep;
+	}	
 }
