@@ -357,13 +357,13 @@
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
 						document.getElementById("periodblock").style.display = "";
-						document.getElementById("trrepeatinfo").style.display = "none";
+						//document.getElementById("trrepeatinfo").style.display = "none";
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
 						document.getElementById("periodblock").style.display = "";
-						document.getElementById("trrepeatinfo").style.display = "none";
+						//document.getElementById("trrepeatinfo").style.display = "none";
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					}
 				} else {
@@ -376,13 +376,13 @@
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
 						document.getElementById("periodblock").style.display = "";
-						document.getElementById("trrepeatinfo").style.display = "none";
+						//document.getElementById("trrepeatinfo").style.display = "none";
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
 						document.getElementById("periodblock").style.display = "";
-						document.getElementById("trrepeatinfo").style.display = "none";
+						//document.getElementById("trrepeatinfo").style.display = "none";
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 					}
 				}
