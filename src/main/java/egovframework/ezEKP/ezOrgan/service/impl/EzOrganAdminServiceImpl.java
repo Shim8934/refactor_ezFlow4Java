@@ -479,10 +479,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID, LoginVO userInfo) throws Exception {
+	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr,
+					String parentCn, String ldapPath, String skipInitData, int tenantID, LoginVO userInfo) throws Exception {
 	    logger.debug("insertDBData_company started");
 	    logger.debug("cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 
-	            + ",parentCn=" + parentCn + ",tenantID=" + tenantID);
+	            + ",skipInitData=" + skipInitData + ",parentCn=" + parentCn + ",tenantID=" + tenantID);
 	    
         if (displayName2 == null || displayName2.equals("")) {
             displayName2 = displayName;
@@ -505,7 +506,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		ezOrganAdminDao.insertDBData_company(map);
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
+		if (!skipInitData.equals("YES")) {
 			try {
 				Map<String, Object> map1 = new HashMap<String, Object>();
 				map1.put("tenantID", tenantID);
