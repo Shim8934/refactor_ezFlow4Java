@@ -795,9 +795,9 @@
 		            changeMonth: true,
 		            changeYear: true,
 		            autoSize: true,
-		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true,
+/*		            showOn: "both",
+ 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true, */
 		            format: 'yyyy-mm-dd',
 		            beforeShowDay: function(date) {		            	
 		                var m = date.getMonth() + 1;
@@ -952,13 +952,14 @@
 				<strong></strong>
 			</div>
 
-			<div class="progress_txt">
+			<div class="progress_txt" style="magin-left:20px;">
 				<ul>
 					<c:if test="${taskInfoVO.taskType == 4}">
-						<span class="txt_title">반복업무(${repeatCount}회차)</span>
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" >
+						<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
+						<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
 						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
+						
 					</c:if>
 					<c:if test="${taskInfoVO.taskType != 4}">
 						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
@@ -967,8 +968,9 @@
 				</ul>
 				<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
 			</div>
+			<div id="Sdatepicker" style="float:right;"></div>
 		</div>
-
+		
 		
 		 
 		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 10px; margin-bottom: 3px; border-top: 0px;">
