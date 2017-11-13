@@ -191,8 +191,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String displayName = request.getParameter("displayName");
 		String displayName2 = request.getParameter("displayName2");
 		String mailId = request.getParameter("mailId");
+		String skipInitData = request.getParameter("skipInitData");
+		skipInitData = skipInitData != null ? skipInitData : "";
 		
-		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 + ",mailId=" + mailId);
+		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
+				+ ",displayName2=" + displayName2 + ",mailId=" + mailId + ",skipInitData=" + skipInitData);
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -257,7 +260,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						
 						// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 						try {
-							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID, userInfo);
+							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
+									mailAddr, parentCn, ldapPath, skipInitData, tenantID, userInfo);
 							result = "OK";	
 						} catch (Exception e) {
 							e.printStackTrace();
