@@ -684,17 +684,17 @@
 	            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
 
 	            if ($(".tabon").attr("divname") == "taskprog") {
-	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + currentCount + ")";
-		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
-		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t214' />" + " (" + cnt3 + ")";
+	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + currentCount + ")";
+		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
+		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + cnt3 + ")";
 	            } else if ($(".tabon").attr("divname") == "taskdictate") {
-	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
-		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + currentCount + ")";
-		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t214' />" + " (" + cnt3 + ")";
+	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + cnt + ")";
+		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + currentCount + ")";
+		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + cnt3 + ")";
 	            } else {
-	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
-		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
-		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t214' />" + " (" + currentCount + ")";
+	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + cnt + ")";
+		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
+		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + currentCount + ")";
 	            }
 
 	            show_page();
@@ -884,9 +884,9 @@
 		
 		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right">
 		    <div class="portlet_tabpart01_top" id="tab1">
-		        <p><span id="1tab1" divname="taskprog"><spring:message code='ezTask.t2007' /></span></p>
-		        <p><span id="1tab2" divname="taskdictate"><spring:message code='ezTask.t2008' /></span></p>
-		        <p><span id="1tab3" divname="taskrepetition"><spring:message code='ezTask.t214' /></span></p>
+		        <p><span id="1tab1" divname="taskprog"><spring:message code='ezTask.t200901' /></span></p>
+		        <p><span id="1tab3" divname="taskrepetition"><spring:message code='ezTask.t200902' /></span></p>
+		        <p><span id="1tab2" divname="taskdictate"><spring:message code='ezTask.t200903' /></span></p>		        
 		    </div>
 		</div>
 		<br />
