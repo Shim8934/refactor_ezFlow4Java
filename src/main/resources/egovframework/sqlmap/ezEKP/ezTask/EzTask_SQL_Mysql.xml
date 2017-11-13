@@ -221,7 +221,9 @@
 
 			<isEqual property="type" compareValue="3" prepend="AND">
 				<![CDATA[
-						((A.creatorid = #userID# AND (A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6))
+						((A.creatorid = #userID# AND A.tasktype = 4)
+					OR										
+						(A.personid = #userID#)
 					OR
 						(B.sharerid = #userID# and A.TASKID = B.TASKID))
 				]]>
@@ -328,9 +330,9 @@
 				AND
 						((A.creatorid = #userID# and A.tasktype = 1)
 					OR
-						(A.personid = #userID# and A.tasktype = 1)
+						(A.personid = #userID# and (A.tasktype = 2 OR A.tasktype = 3))
 					OR	
-						(B.sharerid = #userID# and A.TASKID = B.TASKID and A.tasktype = 1))
+						(B.sharerid = #userID# and A.TASKID = B.TASKID and (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3)))
 				AND
 					A.taskstatus != 3				
 		]]>
@@ -369,7 +371,7 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				(A.creatorid = #userID# and (A.tasktype = 2 OR A.tasktype = 3))
+				(A.creatorid = #userID# and ((A.tasktype = 2 OR A.tasktype = 3) OR ((A.tasktype = 5 OR A.tasktype = 6) AND A.totalrep != 0)))
 			AND
 				A.taskstatus != 3
 		]]>
@@ -408,7 +410,13 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				(((A.creatorid = #userID#) OR (B.sharerid = #userID# and A.TASKID = B.TASKID)) AND A.tasktype = 4)
+				(
+						((A.creatorid = #userID#) AND (A.tasktype = 4 AND A.totalrep != 0))
+					OR 
+						((B.sharerid = #userID# and A.TASKID = B.TASKID) AND ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND A.totalrep != 0))
+					OR 
+						(A.personid = #userID# AND ((A.tasktype = 5 OR A.tasktype = 6) AND A.totalrep != 0) )
+				)
 			AND
 				A.taskstatus != 3
 		]]>
@@ -447,9 +455,9 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				((A.creatorid = #userID# and (A.tasktype = 2 or A.tasktype = 3))
+				((A.creatorid = #userID# and ((A.tasktype = 2 or A.tasktype = 3) or ((A.tasktype = 5 or A.tasktype = 6) and A.totalrep != 0)))
 			OR
-				(A.creatorid = #userID# AND A.tasktype = 4)
+				(A.creatorid = #userID# AND (A.tasktype = 4 and A.totalrep != 0))
 			OR
 				((A.creatorid = #userID# and A.tasktype = 1)
 			OR
@@ -850,6 +858,21 @@
                 tenantid = #tenantID#      
         ]]>
     </update>
+    
+    <update id="EzTaskDAO.updateNumberOfTotalReps" parameterClass="map">
+        <![CDATA[
+            UPDATE
+                TBL_TASK
+            SET
+                totalrep = totalrep - 1
+            WHERE 
+                taskid = #taskID#
+            AND
+                tenantid = #tenantID#      
+        ]]>
+    </update>
+    
+    
     
     <update id="EzTaskDAO.updateTaskGeneral" parameterClass="map">
         <![CDATA[

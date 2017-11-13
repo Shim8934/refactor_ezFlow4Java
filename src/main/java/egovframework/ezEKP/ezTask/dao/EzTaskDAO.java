@@ -105,6 +105,10 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		update("EzTaskDAO.updateHasComment", map);
 	}
 	
+	public void updateNumberOfTotalReps(Map<String, Object> map) {
+		update("EzTaskDAO.updateNumberOfTotalReps", map);
+	}	
+	
 	public void updateTaskStatus(Map<String, Object> map) {
 		update("EzTaskDAO.updateTaskStatus", map);
 	}

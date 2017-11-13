@@ -959,8 +959,6 @@ public class EzTaskController extends EgovFileMngUtil {
     	String primary = userInfo.getPrimary();
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();
-    	int currentCnt = 0;
-    	int currentCnt2 = 0;
     	
     	String type = request.getParameter("type");
     	String filter = request.getParameter("filter");
@@ -995,33 +993,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		logger.debug("startDate: " +  startDate + "endDate: " +  endDate + "taskStatusCount: " +  taskStatusCount + "|| pSelectTab: " + pSelectTab + "|| Type: " + type);
 		
-    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);
-    	/*List<TaskInfoVO> list2 = new ArrayList<TaskInfoVO>();
-    	List<TaskInfoVO> list3 = new ArrayList<TaskInfoVO>();
-    	
-    	if (type != null) {
-    		if (!type.equals("1")) {
-    			list2 = ezTaskService.getTaskList(userID, startDate, endDate, offset, "1", filter, chkValue, searchClass, taskStatusCount, primary, "taskprog", tenantID);
-    			currentCnt = list2.size();
-    			if (type.equals("2")) {
-    				list3 = ezTaskService.getTaskList(userID, startDate, endDate, offset, "3", filter, chkValue, searchClass, taskStatusCount, primary, "taskrepetition", tenantID);
-    				currentCnt2 = list3.size();
-    			}
-    			else {
-    				currentCnt2 = list.size();
-    			}
-    		}
-    		else {    			
-    			list3 = ezTaskService.getTaskList(userID, startDate, endDate, offset, "3", filter, chkValue, searchClass, taskStatusCount, primary, "taskrepetition", tenantID);
-    			currentCnt2 = list3.size();
-    			currentCnt = list.size();
-    		}
-    	}
-    	else {    		
-    		currentCnt = list.size();
-    	}*/
-    	
-    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, currentCnt, currentCnt2, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);   	
+    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 
@@ -1217,6 +1190,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		String realStartDate = selectDate + "" + startDate.substring(10, 19);		
 
 		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
+		
+		//Baonk added
+		ezTaskService.updateNumberOfTotalReps(taskID, loginSimpleVO.getTenantId());
+		//end
 
 		//일정데이터 삭제
 		ezTaskService.insertTaskRepeDel(taskID, repeatCount, taskStatus, completeRate, realDate, loginSimpleVO.getTenantId());

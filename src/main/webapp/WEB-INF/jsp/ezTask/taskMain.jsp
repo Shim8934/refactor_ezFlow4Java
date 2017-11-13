@@ -309,6 +309,7 @@
 			    var length = list_body.children[1].rows.length;
 			    var progress_th = document.getElementById("_thprogress");
 				var column_prg = document.getElementById("col_progress");
+				var flagType = 0;
 
 			    // 리스트 다시 가져올때 기존에 있던 것 삭제
 			    for (var i = 3; i < length; i++) {
@@ -423,14 +424,20 @@
 				            case "4":
 				                div.style.background = "url(/images/icon/section_Individualbg.gif)";
 				                break;
-				            case "2":
-				            case "5":
+				            case "2":			            			            	
 				                div.style.background = "url(/images/icon/section_orderbg.gif)";
 				                break;
-				            case "3":
-				            case "6":
+				            case "3":				            
 				                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
 				                break;
+				            case "5":
+				            	flagType = 1;
+				                div.style.background = "url(/images/icon/section_orderbg.gif)";
+				                break;
+				            case "6":
+				            	flagType = 1;
+				                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+				                break;				            	
 				        }
 	
 				        tr.cells[7].appendChild(div);
@@ -452,7 +459,13 @@
 					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 					        list_body.children[1].appendChild(tr);
 					        
-					        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+					        if (type == "2" && flagType == 1) {
+					        	span.innerHTML= "&nbsp;&nbsp;반복";
+					        }
+					        else {
+					        	initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+					        }
+					        
 	
 					        if (useTodoMemo == 'YES') {
 								if ($("#titleid" + i + "").outerWidth() > 900) {
