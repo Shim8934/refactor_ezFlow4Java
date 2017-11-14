@@ -276,6 +276,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
+		List<String> rateList = new ArrayList<String>();
 		
 		String taskID = request.getParameter("taskID");
 		String date = request.getParameter("currentDate");		
@@ -297,6 +298,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		String orderNumber = result.get(result.size() - 1);
 		result.remove(result.size() - 1);
 		
+		for (String test: result) {
+			String covertDate = commonUtil.getDateStringInUTC(test + " 00:00:00", userInfo.getOffset(), true);
+			int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
+			rateList.add(Integer.toString(comRate));
+		}	
+		
+		model.addAttribute("rateList", rateList);
 		model.addAttribute("dateList", result);
 		model.addAttribute("orderNum", orderNumber);
 		

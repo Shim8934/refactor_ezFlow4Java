@@ -651,7 +651,23 @@
 			    }
 			}
 			
+			function showEmptyTable() {
+				var new_list_body = document.getElementById("new_list_body");
+				var length = new_list_body.rows.length;				
+				 
+				for (var i = 2; i < length; i++) {
+					new_list_body.removeChild(new_list_body.rows[2]);			    	
+				}	
+			}
+			
 			function renderTable() {
+				var new_list_body = document.getElementById("new_list_body");
+				var length = new_list_body.rows.length;				
+				 
+				for (var i = 2; i < length; i++) {
+					new_list_body.removeChild(new_list_body.rows[2]);			    	
+				}				
+				
 				for (var i = 0; i < completeRateArray.length; i++) {
 					tr = new_row_body.cloneNode(true);				    
 
@@ -669,7 +685,7 @@
 			        tr.setAttribute("startdate", startdate);
 			        setNodeText(tr.cells[1], startdate);
 			        tr.cells[2].innerHTML = "<B>" + enddate + "</B>";
-			        document.getElementById("new_list_body").appendChild(tr);
+			        new_list_body.appendChild(tr);
 				}
 			}
 			
@@ -901,16 +917,27 @@
 	    							currentDate : firstDayOfMonth
 	    					},
 	    					success: function(result) {
-	    						var list = result.dateList;		    								    						
+	    						var list = result.dateList;
+	    						var rList = result.rateList;
 	    						
 	    						if (list.length != 0) {
 		    						dateArray = [];
+		    						completeRateArray = [];
 		    						repeatCount = parseInt(result.orderNum, 10);
+		    						
 		    						list.forEach(function(strDate, index) {
 		    							dateArray.push(strDate);			    							
 		    						});
-		    						//showResult(dateText, repeatCount);	
-	    						}    						
+		    						
+		    						rList.forEach(function(strRate, index) {
+		    							completeRateArray.push(strRate);			    							
+		    						});		    						
+		    						//showResult(dateText, repeatCount);
+		    						renderTable();
+	    						}
+	    						else {
+	    							showEmptyTable();
+	    						}
 	    					},
 	    					error : function(jqXHR, textStatus, errorThrown) {
 	    						alert("Get data from server failed!");
@@ -1302,9 +1329,9 @@
 				<td>
 					<table class="content" id="new_list_body" >
 						<tr >
-							<th ><spring:message code='ezTask.t120' /></th>
-							<th ><spring:message code='ezTask.t121' /></th>
-							<th ><spring:message code='ezTask.t122' /></th>
+							<th style="width: 230px;"><spring:message code='ezTask.t120' /></th>
+							<th style="width: 250px;"><spring:message code='ezTask.t121' /></th>
+							<th style="width: 250px;"><spring:message code='ezTask.t122' /></th>
 						</tr>	
 						<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
 							<td class="tr_Read" style="white-space:nowrap; width: 230px;" ondblclick="ReadTask(this)"></td>
