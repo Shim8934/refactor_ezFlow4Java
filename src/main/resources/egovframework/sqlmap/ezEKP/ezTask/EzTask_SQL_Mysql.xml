@@ -66,8 +66,13 @@
 			WHERE
 				tenantid = #tenantID#
 			AND
-				taskid = #taskID#
+				taskid = #taskID#				
 		]]>
+		<isNotEqual property="startDate" compareValue="" prepend="AND">
+			<![CDATA[
+				startdate = #startDate#
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
@@ -760,9 +765,9 @@
     <update id="EzTaskDAO.insertComment" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASKCOMMENT
-				(taskid, commentorid, commentorname, commentorname2, commentdate, comment, tenantID)
+				(taskid, commentorid, commentorname, commentorname2, commentdate, startdate, comment, tenantID)
 			VALUES
-				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#, #tenantID#)
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #startDate#, #comment#, #tenantID#)
         ]]>
     </update>
     

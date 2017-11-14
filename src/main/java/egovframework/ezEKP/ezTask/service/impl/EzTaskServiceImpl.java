@@ -58,7 +58,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public List<TaskCommentVO> getCommentList(String taskID, String offset, String primary, int tenantID) throws Exception {
+	public List<TaskCommentVO> getCommentList(String taskID, String offset, String primary, String date, int tenantID) throws Exception {
 		logger.debug("getCommentList started.");
 		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
 		
@@ -67,6 +67,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
+		map.put("startDate", date);
 		
 		List<TaskCommentVO> list = ezTaskDAO.getCommentList(map);
 		
@@ -95,7 +96,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception {
+	public int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, String date, int tenantID) throws Exception {
 		logger.debug("insertComment started.");
 		logger.debug("taskID = " + taskID + " || commentorID = " + commentorID + " || commentorName = " + commentorName + " || commentorName2 = " + commentorName2 + " || comment = " + comment);
 		
@@ -108,6 +109,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("hasComment", "Y");
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("startDate", date);
 		
 		ezTaskDAO.updateHasComment(map);
 		int result = ezTaskDAO.insertComment(map);
@@ -1853,5 +1855,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 		
 		ezTaskDAO.updateNumberOfTotalReps(map);		
+	}
+
+	@Override
+	public List<TaskInfoVO> getRepTaskList(String taskID, String offset, String primary, String date, int tenantID) throws Exception {		
+		return null;
 	}
 }

@@ -10,7 +10,7 @@ import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 
 public interface EzTaskService {
-	List<TaskCommentVO> getCommentList(String taskID, String offset, String primary, int tenantID) throws Exception;
+	List<TaskCommentVO> getCommentList(String taskID, String offset, String primary, String date, int tenantID) throws Exception;
 	
 	List<TaskShareVO> getShareList(String taskID, String primary, int tenantID) throws Exception;
 	
@@ -19,6 +19,8 @@ public interface EzTaskService {
 	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception;
 	
 	List<String> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception;
+	
+	List<TaskInfoVO> getRepTaskList(String taskID, String offset, String primary, String date, int tenantID) throws Exception;
 	
 	void getRepTaskInfo(TaskInfoVO vo) throws Exception;
 
@@ -34,7 +36,7 @@ public interface EzTaskService {
 	
 	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int tenantID) throws Exception;
 	
-	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception;
+	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, String date, int tenantID) throws Exception;
 	
 	void deleteComment(String taskID, String commentID, int tenantID) throws Exception;
 	

@@ -133,6 +133,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String date = request.getParameter("date");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
+		String completeRateList = "";
 		String orderNumber = "";		
 
 		//업무정보 조회
@@ -141,7 +142,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
 		if (taskInfoVO.getHasComment().equals("Y")) {
-			taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
+			String realDate = commonUtil.getDateStringInUTC(date + " 00:00:00", userInfo.getOffset(), true);
+			taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, realDate, tenantID);
 		}
 		
 		//업무공유자목록조회
@@ -202,9 +204,13 @@ public class EzTaskController extends EgovFileMngUtil {
 			
 			for (String test : result) {				
 				dateList += test + ",";
+				String covertDate = commonUtil.getDateStringInUTC(test + " 00:00:00", userInfo.getOffset(), true);
+				int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
+				completeRateList += Integer.toString(comRate) + ",";
 			}
 			
 			dateList = dateList.substring(0, dateList.length() - 1);
+			completeRateList = completeRateList.substring(0, completeRateList.length() - 1);
 			
 			String realStartDate = date + " 00:00:00";
 			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
@@ -235,6 +241,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("date", date);
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
 		model.addAttribute("dateList", dateList);	
+		model.addAttribute("completeRateList", completeRateList);
 		
 		return "/ezTask/taskRead";
 	}
@@ -249,8 +256,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String taskID = request.getParameter("taskID");
+		String startDate = request.getParameter("startDate");
+		String realDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", userInfo.getOffset(), true);
 		
-		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), realDate, userInfo.getTenantId());
 		
 		model.addAttribute("taskCommentList", taskCommentList);
 		
@@ -485,8 +494,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");
 		String textComment = request.getParameter("textComment");
+		String date = request.getParameter("startDate");
 		
-		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, tenantID);
+		logger.debug("BAONK CHECK DATE: " + date);
+		String realDate = commonUtil.getDateStringInUTC(date + " 00:00:00", userInfo.getOffset(), true);
+		
+		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, realDate, tenantID);
 		
 		model.addAttribute("result", result);
 		
@@ -1039,7 +1052,11 @@ public class EzTaskController extends EgovFileMngUtil {
     		int commentLength = 0;
 
     		if (vo.getHasComment().equals("Y")) {
-				taskCommentList = ezTaskService.getCommentList(vo.getTaskID(), offset, primary, tenantID);
+    			String realDate = "";
+    			if (vo.getTaskType().equals("1") || vo.getTaskType().equals("2") || vo.getTaskType().equals("3")) {    			
+        			realDate = commonUtil.getDateStringInUTC(vo.getStartDate() + " 00:00:00", userInfo.getOffset(), true);    				
+    			}
+    			taskCommentList = ezTaskService.getCommentList(vo.getTaskID(), offset, primary, realDate, tenantID);
 				commentLength = taskCommentList.size();
     		}
 
@@ -1063,10 +1080,82 @@ public class EzTaskController extends EgovFileMngUtil {
     	resultXML.append("</DATA>");
 
     	logger.debug("taskGetList ended.");
-    	logger.debug(resultXML.toString());
+    	//logger.debug(resultXML.toString());
 
     	return resultXML.toString();
-    }
+    }   
+    
+    @RequestMapping(value = "/ezTask/taskRepGetList.do", produces = "text/xml; charset=utf-8")
+    @ResponseBody
+    public String taskGetRepList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+    	logger.debug("taskGetRepList started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);    	
+    	String primary = userInfo.getPrimary();
+    	String offset = userInfo.getOffset();
+    	int tenantID = userInfo.getTenantId();    	
+
+    	String date = request.getParameter("currentDate");
+    	String taskID = request.getParameter("taskID");
+		
+    	TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+    	taskInfoVO.setStartDate(date + " 00:00:00");
+    	taskInfoVO.setEndDate(date + " 23:59:59");		
+    	
+		String realStartDate = date + " 00:00:00";
+		String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
+		int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
+		taskInfoVO.setCompleteRate(completionPercentage);    	
+    	
+    	StringBuffer resultXML = new StringBuffer();
+    	
+    	resultXML.append("<DATA>"); 	
+
+    		
+		resultXML.append("<ROW>");
+		
+		resultXML.append("<TASKID>" + taskInfoVO.getTaskID() + "</TASKID>");
+		resultXML.append("<CREATORID>" + taskInfoVO.getCreatorID() + "</CREATORID>");
+		resultXML.append("<CREATORNAME>" + taskInfoVO.getCreatorName() + "</CREATORNAME>");
+		resultXML.append("<CREATORNAME2>" + taskInfoVO.getCreatorName2() + "</CREATORNAME2>");
+		resultXML.append("<TASKSTATUS>" + taskInfoVO.getTaskStatus() + "</TASKSTATUS>");
+		resultXML.append("<COMPLETERATE>" + taskInfoVO.getCompleteRate() + "</COMPLETERATE>");
+		resultXML.append("<IMPORTANCE>" + taskInfoVO.getImportance() + "</IMPORTANCE>");
+		resultXML.append("<STARTDATE>" + taskInfoVO.getStartDate() + "</STARTDATE>");
+		resultXML.append("<ENDDATE>" + taskInfoVO.getEndDate() + "</ENDDATE>");
+		resultXML.append("<TITLE>" + commonUtil.cleanValue(taskInfoVO.getTitle()) + "</TITLE>");
+		resultXML.append("<HASATTACH>" + taskInfoVO.getHasAttach() + "</HASATTACH>");
+		resultXML.append("<CONTENTPATH>" + taskInfoVO.getContentPath() + "</CONTENTPATH>");
+		resultXML.append("<PERSONALCONTENTPATH>" + taskInfoVO.getPersonContentPath() + "</PERSONALCONTENTPATH>");
+		
+
+		List<TaskCommentVO> taskCommentList = null;
+		int commentLength = 0;
+
+		if (taskInfoVO.getHasComment().equals("Y")) {			
+			taskCommentList = ezTaskService.getCommentList(taskInfoVO.getTaskID(), offset, primary, realDate, tenantID);
+			commentLength = taskCommentList.size();
+		}
+
+		resultXML.append("<HASCOMMENT>" + commentLength + "</HASCOMMENT>");
+		resultXML.append("<PERSONID>" + taskInfoVO.getPersonID() + "</PERSONID>");
+		resultXML.append("<PERSONNAME>" + taskInfoVO.getPersonName() + "</PERSONNAME>");
+		resultXML.append("<PERSONNAME2>" + taskInfoVO.getPersonName2() + "</PERSONNAME2>");
+		resultXML.append("<TASKTYPE>" + taskInfoVO.getTaskType() + "</TASKTYPE>");
+		resultXML.append("<MEMO>" + commonUtil.cleanValue(taskInfoVO.getMemo()) + "</MEMO>");
+		resultXML.append("<REPETITION>" + taskInfoVO.getRepetition() + "</REPETITION>");
+		resultXML.append("<REPEATCOUNT>" + taskInfoVO.getRepeatCount() + "</REPEATCOUNT>");
+	
+		resultXML.append("</ROW>");
+    	
+
+    	resultXML.append("</DATA>");
+
+    	logger.debug("taskGetRepList ended.");
+    	//logger.debug(resultXML.toString());
+
+    	return resultXML.toString();
+    }	
     
     /**
 	 * 업무 삭제 Method

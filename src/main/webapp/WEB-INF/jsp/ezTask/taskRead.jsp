@@ -60,12 +60,18 @@
 		    var repetition = "${repetition}";
 		    var endDate = "${taskInfoVO.endDate}";
 		    var dateList = "${dateList}";
+		    var completeRateList = "${completeRateList}";
 		    var dateArray = null;
+		    var completeRateArray = null;
 		    var backupCount = "${repeatCount}";
 		    
 		    $(document).ready(function() {			    	    	
 		    	if (dateList !== "") {
 		    		dateArray = dateList.split(",");
+		    	}
+		    	
+		    	if (completeRateList !== "") {
+		    		completeRateArray = completeRateList.split(",");
 		    	}
 		    	
 				load_bodyhtml();
@@ -80,9 +86,10 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 390 + "PX");
-		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 390 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 390 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#new_list_body").height(document.documentElement.clientHeight - 360 + "PX");
 
 		        if (tasktype == "1" || tasktype == "4") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -93,6 +100,10 @@
 		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
 		        } else {
 		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
+		        }
+		        
+		        if (dateArray != null) {
+		        	renderTable();
 		        }
 
 				/* 의견카운트 */
@@ -298,6 +309,7 @@
 					url : "/ezTask/taskSaveComment.do",
 					data : {
 							taskID : taskid,
+							startDate : date,
 							textComment : taskComment
 					},
 					success: function(result){
@@ -450,6 +462,7 @@
 					async : false,
 					url : "/ezTask/getTaskCommentList.do",
 					data : {
+							startDate : date,
 							taskID : taskid
 					},
 					success: function(result){
@@ -487,7 +500,7 @@
 			/* 진행상태 수정 */
 			function update_status() {
 				if (personid == userid || creatorid == userid) {
-					//Baonk added
+					//Baonk added				
 					var selctDate = new Date(date + " 00:00:00");
 					var curDate = new Date();
 					
@@ -554,6 +567,7 @@
 			            document.getElementById("normalScreen").style.display = "none";
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
+			            document.getElementById("taskRep").style.display = "none";
 			            
 			        	document.getElementById("editTask").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";
@@ -565,6 +579,7 @@
 			            document.getElementById("normalScreen").style.display = "";
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
+			            document.getElementById("taskRep").style.display = "none";
 			            
 			            if (creatorid == userid) {
 				        	document.getElementById("editTask").style.display = "";
@@ -581,6 +596,7 @@
 			            document.getElementById("normalScreen").style.display = "none";
 			            document.getElementById("tablework").style.display = "";
 			            document.getElementById("tablecomment").style.display = "none";
+			            document.getElementById("taskRep").style.display = "none";
 			            
 			            if (personid == userid) {
 			            	document.getElementById("editTask").style.display = "none";
@@ -597,12 +613,64 @@
 			            document.getElementById("normalScreen").style.display = "none";
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "";
+			            document.getElementById("taskRep").style.display = "none";
 			            
 			        	document.getElementById("editTask").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";
 			            
 			            break;
+			        case "MailEnv_div4":
+			            selecttab = "4";
+			            
+/* 			            $.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezTask/taskRepGetList.do",
+							data : {
+								currentDate : date												
+							},
+							success : function(xml) {
+								renderTable(xml);
+							},
+							error : function() {
+								alert("<spring:message code='ezTask.t992' />");
+							}
+						});	 */	            		            			            
+			            
+			            document.getElementById("taskInfo").style.display = "none";
+			            document.getElementById("normalScreen").style.display = "none";
+			            document.getElementById("tablework").style.display = "none";
+			            document.getElementById("tablecomment").style.display = "none";
+			            document.getElementById("taskRep").style.display = "";
+			            
+			        	document.getElementById("editTask").style.display = "none";
+			        	document.getElementById("editTaskWork").style.display = "none";			        			        			        				        	
+			            
+			            break;
 			    }
+			}
+			
+			function renderTable() {
+				for (var i = 0; i < completeRateArray.length; i++) {
+					tr = new_row_body.cloneNode(true);				    
+
+				    tr.style.display = "";
+			        tr.id = "taskID_" + i;
+
+			        tr.setAttribute("taskid", taskid);			        
+
+			        var startdate = dateArray[i];
+			        var enddate = startdate;
+			        var span = document.createElement("SPAN");
+			        span.innerHTML += completeRateArray[i] + "%";
+			        tr.cells[0].appendChild(span);
+
+			        tr.setAttribute("startdate", startdate);
+			        setNodeText(tr.cells[1], startdate);
+			        tr.cells[2].innerHTML = "<B>" + enddate + "</B>";
+			        document.getElementById("new_list_body").appendChild(tr);
+				}
 			}
 			
 			function comment_keydown() {
@@ -799,19 +867,21 @@
  		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true, */
 		            format: 'yyyy-mm-dd',
-		            beforeShowDay: function(date) {		            	
-		                var m = date.getMonth() + 1;
-		                var d = date.getDate();
-		                var y = date.getFullYear();		                
-		                
-		                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
-		                
-		                for (i = 0; i < dateArray.length; i++) {		                	
-		                    if($.inArray(test, dateArray) != -1) {		                        
-		                        return [true, 'css-class-to-highlight', 'tooltipText'];
-		                    }
-		                }
-		                return [true];
+		            beforeShowDay: function(date) {	
+		            	if (dateArray != null) {
+			                var m = date.getMonth() + 1;
+			                var d = date.getDate();
+			                var y = date.getFullYear();		                
+			                
+			                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
+			                
+			                for (i = 0; i < dateArray.length; i++) {		                	
+			                    if($.inArray(test, dateArray) != -1) {		                        
+			                        return [true, 'css-class-to-highlight', 'tooltipText'];
+			                    }
+			                }
+			                return [true];
+		            	}	            	
 		            },
 		            onSelect: function(dateText, inst) {
 		            	showResult(dateText);
@@ -896,9 +966,90 @@
 		    });
 			
 			function dayOnMouseClick(changeDate) {								
-				var feature = GetOpenPosition(750, 740);
-				window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-				window.close();
+				//var feature = GetOpenPosition(750, 740);
+				//window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				//window.close();
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskRepGetList.do",
+					data : {
+						taskID	    : taskid,
+						currentDate : changeDate												
+					},
+					success : function(xml) {					
+						document.getElementById("prog1").innerHTML = changeDate + "(" + repeatCount + "회차)";
+						document.getElementById("prog2").innerHTML = changeDate;
+						document.getElementById("prog3").innerHTML = changeDate;
+						repeatCount = backupCount;
+						date = changeDate;
+						renderPage(xml);
+					},
+					error : function() {
+						alert("<spring:message code='ezTask.t992' />");
+					}
+				});
+				
+			}
+			
+			function renderPage(xml) {
+				listdom = loadXMLString(xml);
+				var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[0];
+				contentpath = SelectSingleNodeValue(node, "CONTENTPATH");
+				personContentpath = SelectSingleNodeValue(node, "PERSONALCONTENTPATH");
+				completerate = SelectSingleNodeValue(node, "COMPLETERATE");
+				taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");				
+				
+				/*****************************/
+/* 				if (dateList !== "") {
+		    		dateArray = dateList.split(",");
+		    	}
+		    	
+		    	if (completeRateList !== "") {
+		    		completeRateArray = completeRateList.split(",");
+		    	} */
+		    	
+				load_bodyhtml();
+				if (hasTaskAttach == 'Y') {
+					document.getElementById('attachedfileDIV').innerHTML = taskAttachList;
+		    	}
+				
+				load_bodyhtml2(personContentpath);
+				if (hasTaskWorkAttach == 'Y') {
+					document.getElementById('attachedfileDIV2').innerHTML = taskWorkAttachList
+		    	}
+		    	
+		        setTimeout(scrollTop, 1000);
+		        
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#new_list_body").height(document.documentElement.clientHeight - 360 + "PX");
+		    	
+
+		        if (tasktype == "1" || tasktype == "4") {
+		            document.getElementById("MailEnv_sub2").style.display = "none";
+		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
+		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
+		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
+		        } else if (tasktype == "2") {
+		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
+		        } else {
+		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
+		        }		        
+		        
+		        renderTable();		        
+
+				/* 의견카운트 */
+				getCommentList();
+
+				setTimeout(onloadchangtab, 100);
+				
+				initProgressBar(taskstatus, completerate);
+				
+				/****************************/						
+				
 			}
 			
 			function showResult(dateText) {
@@ -955,9 +1106,9 @@
 				<ul>
 					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 						<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
-						<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${date}' /></span></li>
+						<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
+						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
+						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
 						
 					</c:if>
 					<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
@@ -978,8 +1129,9 @@
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
 				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
+				<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 				<p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezTask.t200904' /></span></p>
-				
+				</c:if>
 				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
 				<div style="float: right; margin-top: 3px;">
 					<a id="editTask" class="imgbtn" style="display:none; "><span onclick="return edit_task()"><spring:message code='ezTask.t151' /></span></span></a>
@@ -1144,6 +1296,28 @@
 				</td>
 			</tr>
 		</table>
+		
+		<table id="taskRep" class="layout" style="overflow-y: scroll;">
+		 	<tr>
+				<td>
+					<table class="content" id="new_list_body" >
+						<tr >
+							<th ><spring:message code='ezTask.t120' /></th>
+							<th ><spring:message code='ezTask.t121' /></th>
+							<th ><spring:message code='ezTask.t122' /></th>
+						</tr>	
+						<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
+							<td class="tr_Read" style="white-space:nowrap; width: 230px;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
+						</tr>					
+					</table>
+				</td>
+			</tr>
+		
+		</table>
+		
+		
 		
 		<div id="printScreen" style="display: none;">
 			<table class="layout" >
