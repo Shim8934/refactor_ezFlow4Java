@@ -567,6 +567,7 @@
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "none";
+			            document.getElementById("taskDescription").style.display = "";			            
 			            
 			        	document.getElementById("editTask").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";
@@ -579,6 +580,7 @@
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "none";
+			            document.getElementById("taskDescription").style.display = "none";
 			            
 			            if (creatorid == userid) {
 				        	document.getElementById("editTask").style.display = "";
@@ -596,6 +598,7 @@
 			            document.getElementById("tablework").style.display = "";
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "none";
+			            document.getElementById("taskDescription").style.display = "none";
 			            
 			            if (personid == userid) {
 			            	document.getElementById("editTask").style.display = "none";
@@ -613,6 +616,7 @@
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "";
 			            document.getElementById("taskRep").style.display = "none";
+			            document.getElementById("taskDescription").style.display = "none";
 			            
 			        	document.getElementById("editTask").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";
@@ -642,6 +646,7 @@
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "";
+			            document.getElementById("taskDescription").style.display = "none";
 			            
 			        	document.getElementById("editTask").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";			        			        			        				        	
@@ -1220,7 +1225,7 @@
 						<tr>
 							<th><spring:message code='ezTask.t157' /></th>
 							<td colspan="3" style="width:100%">
-								<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
+								<div id="taskShareList" style="overflow-Y: auto; height: 40px; line-height: 1.5em;">
 									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
 											<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
@@ -1235,7 +1240,7 @@
 							<tr>
 				            	<th><spring:message code='ezTask.t170' /></th>
 				            	<td id="TextMemo" colspan="3">
-				            		<div style="overflow-y:auto;padding-top:2px;">
+				            		<div style="overflow-y:auto;padding-top:2px; height: 40px;">
 				            			<c:out value = '${taskInfoVO.memo }' />
 				            		</div>
 				            	</td>
@@ -1324,29 +1329,36 @@
 			</tr>
 		</table>
 		
-		<table id="taskRep" class="layout" style="overflow-y: scroll;">
+		<table id="taskRep" class="layout">
 		 	<tr>
 				<td>
 					<div id="new_div_body" style="height: 450px; overflow-y: auto;">
-					<table class="content" id="new_list_body" >
-						<tr >
-							<th style="width: 230px;"><spring:message code='ezTask.t120' /></th>
-							<th style="width: 250px;"><spring:message code='ezTask.t121' /></th>
-							<th style="width: 250px;"><spring:message code='ezTask.t122' /></th>
-						</tr>	
-						<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-							<td class="tr_Read" style="white-space:nowrap; width: 230px;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
-						</tr>					
-					</table>
+						<table class="content" id="new_list_body" style="text-align: center;">
+							<tr >
+								<th style="width: 230px; text-align: center;"><spring:message code='ezTask.t120' /></th>
+								<th style="width: 250px; text-align: center;"><spring:message code='ezTask.t121' /></th>
+								<th style="width: 250px; text-align: center;"><spring:message code='ezTask.t122' /></th>
+							</tr>	
+							<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
+								<td class="tr_Read" style="white-space:nowrap; width: 230px;" ondblclick="ReadTask(this)"></td>
+								<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
+								<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
+							</tr>					
+						</table>
 					</div>
 				</td>
-			</tr>
-		
+			</tr>		
 		</table>
 		
-		
+		<div id="taskDescription" style="padding-top: 20px;">
+			<ul style="padding-left: 0px;">
+				<li style="padding-top: 10px;"> ▒ 업무정보 : 업무에 대한  정보입니다. </li>
+				<li style="padding-top: 10px;"> ▒ 지시사황 : 지시사황에 대한 정보입니다.</li>
+				<li style="padding-top: 10px;"> ▒ 업무내용 : 업무내용에 대한 정보입니다.</li>
+				<li style="padding-top: 10px;"> ▒ 의견       : 의견에 대한 정보입니다. </li>				
+				<li style="padding-top: 10px;"> ▒ 반복목록 : 반복목록에 대한 정보입니다. </li>				
+			</ul>
+		</div>
 		
 		<div id="printScreen" style="display: none;">
 			<table class="layout" >
