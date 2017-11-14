@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		
 		<style type="text/css">
+			   .ui-datepicker { font-size:9.5pt !important}
 			   .css-class-to-highlight{
 			       background-color: #00bfff;
 			   }
@@ -89,7 +90,7 @@
 	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
-		    	$("#new_list_body").height(document.documentElement.clientHeight - 360 + "PX");
+		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
 
 		        if (tasktype == "1" || tasktype == "4") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -1050,7 +1051,7 @@
 	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
-		    	$("#new_list_body").height(document.documentElement.clientHeight - 360 + "PX");
+		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
 		    	
 
 		        if (tasktype == "1" || tasktype == "4") {
@@ -1325,6 +1326,7 @@
 		<table id="taskRep" class="layout" style="overflow-y: scroll;">
 		 	<tr>
 				<td>
+					<div id="new_div_body" style="height: 450px; overflow-y: auto;">
 					<table class="content" id="new_list_body" >
 						<tr >
 							<th style="width: 230px;"><spring:message code='ezTask.t120' /></th>
@@ -1337,6 +1339,7 @@
 							<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
 						</tr>					
 					</table>
+					</div>
 				</td>
 			</tr>
 		
