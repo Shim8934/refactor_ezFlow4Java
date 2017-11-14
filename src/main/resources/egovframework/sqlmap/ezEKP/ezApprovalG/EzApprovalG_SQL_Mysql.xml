@@ -6562,7 +6562,7 @@
 		</isNotEqual>
 	</select>
 	
-	<select id="EzApprovalG.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+	<select id="EzApprovalG.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
 		SELECT 
 			* 
 		FROM(
