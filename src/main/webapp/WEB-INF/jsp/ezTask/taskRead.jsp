@@ -923,6 +923,7 @@
 		    						dateArray = [];
 		    						completeRateArray = [];
 		    						repeatCount = parseInt(result.orderNum, 10);
+		    						backupCount = repeatCount;
 		    						
 		    						list.forEach(function(strDate, index) {
 		    							dateArray.push(strDate);			    							
