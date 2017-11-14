@@ -308,8 +308,7 @@
 					async : false,
 					url : "/ezTask/taskSaveComment.do",
 					data : {
-							taskID : taskid,
-							startDate : date,
+							taskID : taskid,							
 							textComment : taskComment
 					},
 					success: function(result){
@@ -461,8 +460,7 @@
 					dataType : "json",
 					async : false,
 					url : "/ezTask/getTaskCommentList.do",
-					data : {
-							startDate : date,
+					data : {							
 							taskID : taskid
 					},
 					success: function(result){

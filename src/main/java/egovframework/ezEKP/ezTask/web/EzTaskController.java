@@ -141,9 +141,8 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
-		if (taskInfoVO.getHasComment().equals("Y")) {
-			String realDate = commonUtil.getDateStringInUTC(date + " 00:00:00", userInfo.getOffset(), true);
-			taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, realDate, tenantID);
+		if (taskInfoVO.getHasComment().equals("Y")) {			
+			taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
 		}
 		
 		//업무공유자목록조회
@@ -256,10 +255,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String taskID = request.getParameter("taskID");
-		String startDate = request.getParameter("startDate");
-		String realDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", userInfo.getOffset(), true);
 		
-		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), realDate, userInfo.getTenantId());
+		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		model.addAttribute("taskCommentList", taskCommentList);
 		
@@ -502,12 +499,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");
 		String textComment = request.getParameter("textComment");
-		String date = request.getParameter("startDate");
 		
-		logger.debug("BAONK CHECK DATE: " + date);
-		String realDate = commonUtil.getDateStringInUTC(date + " 00:00:00", userInfo.getOffset(), true);
-		
-		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, realDate, tenantID);
+		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, tenantID);
 		
 		model.addAttribute("result", result);
 		
@@ -1060,11 +1053,7 @@ public class EzTaskController extends EgovFileMngUtil {
     		int commentLength = 0;
 
     		if (vo.getHasComment().equals("Y")) {
-    			String realDate = "";
-    			if (vo.getTaskType().equals("1") || vo.getTaskType().equals("2") || vo.getTaskType().equals("3")) {    			
-        			realDate = commonUtil.getDateStringInUTC(vo.getStartDate() + " 00:00:00", userInfo.getOffset(), true);    				
-    			}
-    			taskCommentList = ezTaskService.getCommentList(vo.getTaskID(), offset, primary, realDate, tenantID);
+    			taskCommentList = ezTaskService.getCommentList(vo.getTaskID(), offset, primary, tenantID);
 				commentLength = taskCommentList.size();
     		}
 
@@ -1117,8 +1106,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	
     	StringBuffer resultXML = new StringBuffer();
     	
-    	resultXML.append("<DATA>"); 	
-
+    	resultXML.append("<DATA>"); 
     		
 		resultXML.append("<ROW>");
 		
@@ -1141,7 +1129,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int commentLength = 0;
 
 		if (taskInfoVO.getHasComment().equals("Y")) {			
-			taskCommentList = ezTaskService.getCommentList(taskInfoVO.getTaskID(), offset, primary, realDate, tenantID);
+			taskCommentList = ezTaskService.getCommentList(taskInfoVO.getTaskID(), offset, primary, tenantID);
 			commentLength = taskCommentList.size();
 		}
 
