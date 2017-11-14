@@ -480,10 +480,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr,
-					String parentCn, String ldapPath, String skipInitData, int tenantID, LoginVO userInfo) throws Exception {
+					String parentCn, String ldapPath, String extensionAttribute15, String skipInitData,
+					int tenantID, LoginVO userInfo) throws Exception {
 	    logger.debug("insertDBData_company started");
-	    logger.debug("cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 
-	            + ",skipInitData=" + skipInitData + ",parentCn=" + parentCn + ",tenantID=" + tenantID);
+	    logger.debug("cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2
+	    		+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData
+	    		+ ",parentCn=" + parentCn + ",tenantID=" + tenantID);
 	    
         if (displayName2 == null || displayName2.equals("")) {
             displayName2 = displayName;
@@ -497,7 +499,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_DISPLAYNAME2", displayName2);
 		map.put("v_MAIL", mailAddr);
 		map.put("v_PARENTCN", parentCn);
-		map.put("v_LDAPPATH", ldapPath);
+		map.put("v_LDAPPATH", ldapPath);		
+		map.put("v_EXTENSIONATTRIBUTE15", extensionAttribute15);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
