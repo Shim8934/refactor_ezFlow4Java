@@ -5511,14 +5511,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						if (totalLineSN == tmps) {
 							doc.getElementById(signAdd + "sign" + lastSignNum).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(signAdd + "seumyungdate" + lastSignNum).html(lastCnt);
+							
+							if (doc.getElementById(signAdd + "seumyungdate" + lastSignNum) != null) {
+								doc.getElementById(signAdd + "seumyungdate" + lastSignNum).html(lastCnt);
+							}
 						} else {
 							strSign = signAdd + "sign" + tmps;
 							strSeumyungDate = signAdd + "seumyungdate" + tmps;
 							strJikwe = signAdd + "jikwe" + tmps;
 							
 							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							
+							if (doc.getElementById(strSeumyungDate) != null) {
+								doc.getElementById(strSeumyungDate).html(lastCnt);
+							}
 						}
 					} else {
 						int tmps = signCnt - refResult;
@@ -5528,14 +5534,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
 							
 							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							
+							if (doc.getElementById(strSeumyungDate) != null) {	
+								doc.getElementById(strSeumyungDate).html(lastCnt);
+							}
 						} else {
 							strSign = signAdd + "sign" + tmps;
 							strSeumyungDate = signAdd + "seumyungdate" + tmps;
 							strJikwe = signAdd + "jikwe" + tmps;
 							
 							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							
+							if (doc.getElementById(strSeumyungDate) != null) {	
+								doc.getElementById(strSeumyungDate).html(lastCnt);
+							}
 						}
 					}
 					
