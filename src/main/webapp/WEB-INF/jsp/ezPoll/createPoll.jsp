@@ -603,23 +603,23 @@
 	<form id="frmCreate" method="post" action="/ezPoll/pollComplete.do" name="frmCreate"> 	
 		<h1><spring:message code="ezPoll.t206" /></h1>
 
-		<table class="content" style="width: 100%;"> 
+		<table class="content content_poll" style="width: 100%;"> 
 			<tr>    <!------------Question title----------------> 
 				<%-- <th>Question</th>			--%>
-				<td style="width: 100%;">							
-					<input id="qst_title" name="qst_title" type="text"  placeholder="Question" style="width: 100%;">
+				<td style="width: 100%;" class="pollTd01">							
+					<input id="qst_title" name="qst_title" type="text"  placeholder="Question" style="width: 100%;" class="createPoll_title">
 				</td>
 
 			</tr>
 			<tr>
-				<td style="width:100%;height:350px;" id="EdtorSize">
-	               <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px" ></iframe>
+				<td style="width:100%;height:350px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
+	               <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%;overflow:auto; border-top:0px" ></iframe>
            		</td>
 			</tr>		
 			
 			<tr>
-				<td>					
-					<div style="width:100%;white-space:nowrap;display:inline-block;height:22px">
+				<td class="pollTd01">					
+					<div style="width:100%;white-space:nowrap;display:none;height:22px">
 						<div id="progdiv" class="progarea" style="display: none">
 							<p class="prog_bar">
 								<span id="prog_bar" style="width: 0%"></span>
@@ -628,13 +628,13 @@
 						</div>
 						<div style="clear: both"></div>
 					</div>
-					<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 100px;border: 1px solid #3C2F2E;overflow: auto;">
-						<div id="addFile" style="color: #818181;padding-left: 10px;padding-top: 10px;">
+					<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #b6b6b6;overflow: auto; margin:8px 0px 0px 0px;">
+						<div id="addFile" class="pollAddFile">
 							<img src="/images/plus1600.png" style="height:24px;width:24px;vertical-align:middle" onclick="uploadbtn()">
 							<spring:message code="ezPoll.t151"/>
 						</div>
 					</div> 
-					<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px" /> 
+					<input id="file" type="file" onchange="onDrop()" multiple style="width: 1px; height: 1px" /> 
 					<input type="hidden" onclick="fileupload()"/>
 				</td>
 			</tr>
@@ -642,9 +642,9 @@
 		</table> 
 		
 			    <!------------Answer option---------------->
-		<table class="content" style="width: 100%;"> 
+		<table class="content" style="width: 100%; margin:0px 0px 10px 0px;"> 
 			<tr>
-				<td style="padding-left: 0px;">
+				<td style="padding-left: 0px;"  class="pollTd01">
 					<ul id="columnsbnk" >
 						<li>
 							<span>1</span>
@@ -666,15 +666,15 @@
 			</tr>
 		</table>
 
-		<button type="button" id="addOpt" onclick="javascript:addOption();"><spring:message code="ezPoll.t153"/></button>
+		<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01"><spring:message code="ezPoll.t153"/></button>
 
-		<table class="content" style="width: 100%;"> 
+		<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 			<tr>    <!------------Question setting---------------->
 				<td>
-				<div class="qstSetting">
+				<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px dotted #DDD; margin:0px; padding:0px 5px;">
 					<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
 				</div>
-				<div id="numberOfMultiSelect">
+				<div id="numberOfMultiSelect" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 					<spring:message code="ezPoll.t155"/>
 					<select id="myList">
 						<option value="1"><spring:message code="ezPoll.t156"/></option>
@@ -684,30 +684,30 @@
 						<option value="5">5</option>
 					</select>
 				</div>
-				<div class="qstSetting">
+				<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 					<input id="seeResultFirst" type="checkbox" checked> 
 					<span><spring:message code="ezPoll.t157"/></span>
 				</div>
-					<div class="qstSetting">
+					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 					<input id="anonymousVote" type="checkbox">
 					<span><spring:message code="ezPoll.t158"/></span>
 				</div>
 				
-				<div class="qstSetting">
+				<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 					<input id="endDate" type="checkbox">
 					<span><spring:message code="ezPoll.t159"/></span>
 				</div>	
 				
-				<div id="_dateTimePicker">		
+				<div id="_dateTimePicker" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">		
 					<span><spring:message code="ezPoll.t160"/></span>			
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" >
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
 					<select id="sTimePicker"></select>
 					<span><spring:message code="ezPoll.t161"/></span>
-					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" >
+					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
 					<select id="eTimePicker"></select>						
 				</div>
 	
-				<div id="target_select">
+				<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px;">
 					<span><spring:message code="ezPoll.t162"/></span>
 					<select id="set_Target">
 						<option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option>
@@ -734,9 +734,9 @@
 			</tr>						
 		</table> 
 		
-		<div class="button" style="padding-top: 20px;">				
-			<a class="imgbtn" onclick="fun_OK()" style="padding-right: 25px;"><span><spring:message code="ezQuestion.t484" /></span></a>				
-			<a class="imgbtn" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>				
+		<div class="button pollButton02" style="padding-top: 20px;">				
+			<a class="imgbtn pollButton03" onclick="fun_OK()" style="background:#004896; color:#FFF;"><span><spring:message code="ezQuestion.t484" /></span></a>				
+			<a class="imgbtn pollButton03" onclick="fun_Cancel()" style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><span><spring:message code="ezQuestion.t38" /></span></a>				
 		</div>
 			
 	</form>

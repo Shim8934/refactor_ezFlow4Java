@@ -24,3 +24,6 @@
 .poll_list1 .graphbar1{margin:5px 0px 10px 0px; padding:0px; border:1px solid #c9c9c9; height:7px; width:220px; background-color:#E8E8E8;}
 .poll_list1 .graphbar1 .gx_bar11 {background:#68bbef; height:7px; margin:0px; padding:0px;}
 
+/* 20171115 */
+.voteInfo{width:203px; height:60px; background:#f4f9ff; border:1px solid #e1ebf7;}
+.voteTextTest{line-height:27px; margin:3px 8px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}

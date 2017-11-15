@@ -2025,16 +2025,16 @@
 	<body class="mainbody"  id="mainbodytag">
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
-			<div id="mainmenu3" style="overflow: hidden;">
-				  <div style="float: left; display: block;width:300px;">
+			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 10px">
+				  <div style="float: left; display: block;" class="voteInfo">
 				  		<img src="${question.creatorImage}" style="display:inline-block;float:left; height:60px;width:60px; padding-bottom: 1px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
-						<div id="textTest" style="display:inline-block;">
-							<span style="display:block;padding-top: 8px;padding-left: 5px;"><c:out value='${question.creatorName}'/></span>
-							<span style="display:block;padding-top: 8px;padding-left: 5px;"><c:out value='${question.startDate}'/></span>
+						<div id="textTest" style="display:inline-block;" class="voteTextTest">
+							<span style="display:block; font-size:18px; color:#000;"><c:out value='${question.creatorName}'/></span>
+							<span style="display:block; font-size:12px; color:#969595;"><c:out value='${question.startDate}'/></span>
 						</div>
 				  </div>
-				  <div style="float: left; display: block;padding-top: 30px;padding-left: 420px;">
-				  	<a style="display:inline-block;cursor: pointer;" id="seenPeople" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/></a>
+				  <div style="float: left; display: block; width:137px; height:60px; line-height:52px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; margin:0px 0px 0px 10px; text-align:center; color:#000; font-xize:18px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;">
+				  	<a style="display:inline-block;cursor: pointer;" id="seenPeople" onClick="menuDetailSeenUserInfo('${question.qstId}')"><!--<spring:message code = 'ezPoll.t112'/>-->투표 확인 <span style="color:#004896;">(4)</span></a>
 				  </div>
 				  <c:if test="${curentUser == question.creator || adminPrivilege == 1}">
 					  <div style="float: right; display: block;" id="_editVote">
@@ -2042,8 +2042,8 @@
 					  </div>
 				  </c:if>
 			</div>
-			<div id="titleAndContent" style="border: 1px solid #b6b6b6; background-color: #e5d5df; overflow: hidden;padding-top: 8px;padding-bottom: 8px;">				
-				<div id="title" style="display:inline-block;float:left;padding-left: 10px;"><font size="5"><c:out value='${question.title}'/></font></div>
+			<div id="titleAndContent" style="border: 1px solid #b6b6b6; background: #FFF; overflow: hidden;">				
+				<div id="title" style="display:inline-block;float:left; width:100%; padding:8px;"><!--<font size="5"><c:out value='${question.title}'/></font>-->질문 01)</div>
 				<div id="status" style="display:inline-block;padding-left: 1330px;">
 					<c:choose>
 						<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
@@ -2063,9 +2063,9 @@
 	             <iframe onload="resizeFrame()" id="message_test" style="border: #b6b6b6 0px solid; overflow: auto;width: 100%; padding-top: 6px; background-color: white;"></iframe>   	                                 
 	        </div>
 	        <c:if test="${numOfFile != 0}">
-	        	<div id="attachedFile" style="overflow: hidden;display:inline-block; width: 100%;">
+	        	<div id="attachedFile" style="overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7;">
 	        		<img src="/images/attach_file.png" style="hegith:20px; width:20px;float: left;display:block;" >
-	        		<div style="float: left;display:block; padding-top: 4px;">
+	        		<div style="float: left;display:block; width:100%; height:50px; line-height:48px; padding:0px 10px 0px 30px; backgorund:#f4f9ff;">
 	        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> 개(<c:out value='${totalFilesSize}'/>)
 	        		</div>
 	        		<div style="float: left;display:block;">
@@ -2075,7 +2075,7 @@
 	        		</div>
 	        		<div id="fileList" style="width: 100%;">	        		
 	  					<c:forEach var="list" items="${fileNames}" varStatus="status">
-							<table class="content" style="width: 100%;">
+							<table class="content" style="width: 100%; height:32px; line-height:30px; border-bottom:1px solid #e1ebf7;">
 								<tr>
 									<td>
 										<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">
@@ -2091,7 +2091,7 @@
 					</div>  
 			</div>
 	        </c:if>	
-			<table class="content" style="width:100%; table-layout: fixed" id="_content1">
+			<table class="content" style="width:100%; table-layout: fixed; height:32px; line-height:30px; border-bottom:1px solid #e1ebf7; border-bottom:1px solid #e1ebf7;" id="_content1">
 				<c:forEach var="_option" items="${listOptions}" varStatus="loop">
 		        	<tr>
 		               <td style="width:30px; border-right: none;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    

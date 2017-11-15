@@ -1921,3 +1921,10 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .content_propertyInfo table td #mainmenu li.on span{background:url('../images/kr/cm/btn_default_onright.gif') no-repeat top right; color:#fff;}
 .content_propertyInfo table td #mainmenu li.dis{background:url('../images/i_onleft.gif') no-repeat top left;}
 .content_propertyInfo table td #mainmenu li.dis span{background:url('../images/i_onright.gif') no-repeat top right;}
+
+/* 20171114 */
+.content_poll{border:0px !important;}
+.content_poll .pollTd01{ border:none;}
+.content_poll tbody{border:0px;}
+.content td .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px;}
+.content_poll .pollButton02, .content_poll .pollButton03{background:none;}
