@@ -1352,11 +1352,11 @@
 		
 		<div id="taskDescription" style="padding-top: 20px;">
 			<ul style="padding-left: 0px;">
-				<li style="padding-top: 10px;"> ▒ 업무정보 : 업무에 대한  정보입니다. </li>
-				<li style="padding-top: 10px;"> ▒ 지시사황 : 지시사황에 대한 정보입니다.</li>
-				<li style="padding-top: 10px;"> ▒ 업무내용 : 업무내용에 대한 정보입니다.</li>
-				<li style="padding-top: 10px;"> ▒ 의견       : 의견에 대한 정보입니다. </li>				
-				<li style="padding-top: 10px;"> ▒ 반복목록 : 반복목록에 대한 정보입니다. </li>				
+				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200906' /></li>
+				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200907' /></li>
+				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200908' /></li>
+				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
+				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 			</ul>
 		</div>
 		
