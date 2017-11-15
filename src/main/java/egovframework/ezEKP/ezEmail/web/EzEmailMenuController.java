@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -12,17 +13,29 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +66,15 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  * @author 오픈솔루션팀 이효민
  * @Modification Information
  *
- *    수정일        수정자         수정내용
+ *    수정일                       수정자              수정내용
  *    ----------    ------    -------------------
- *    2016.04.14    이효민    신규작성
+ *    2016.04.14    이효민              신규작성
+ *    2017.08.25    김유진              웹 소켓 적용
  *
  * @see
  */
 
+@ServerEndpoint(value = "/websocket/{getID}")
 @Controller
 public class EzEmailMenuController extends EgovFileMngUtil {
 	
@@ -83,13 +98,17 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
+	// 웹소켓 커넥션은 인스턴스가 싱글톤이 아니기 때문에 힙에 생성되는 1개의 인스턴스 Map을 공유할 수 있도록 Static으로 선언하였다. 
+	private static Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+	
+	
 	/**
 	 * 메일 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailLeft.do")
 	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("showMailLeft started.");
-		
+		System.out.println("mailLeft="+this);
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
 		
@@ -816,6 +835,146 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * PC에서 메일함(메일파일묶음) 가져오기 실행 함수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezEmail/mailboxImportZip.do")
+	public String mailboxImportZip(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception{
+		logger.debug("mailboxImportZip started.");
+
+		String returnValue = "OK";
+		ZipInputStream zis = null;
+		IMAPAccess ia = null;
+		int messageCount = 0;
+		int currCount = 1;
+		
+		String userkey = request.getParameter("userkey");
+		String sessionKeyName = "percent";
+		Session session = null;
+		
+		try {
+			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+			String password  = userIdAndPassword.get(1);
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			String userAccount = userInfo.getId() + "@" + domainName;
+			
+			String folderPath = request.getParameter("folderPath");
+			logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath);
+			
+			List<MultipartFile> multiFile = request.getFiles("file1");
+			if (multiFile == null || multiFile.get(0) == null) {
+				logger.error("Cannot find file.");
+				throw new Exception("Cannot find file.");
+			}
+			
+			logger.debug("file name=" + multiFile.get(0));
+
+			zis = new ZipInputStream(multiFile.get(0).getInputStream());	
+
+			ZipEntry ze = zis.getNextEntry();
+			
+			// 유저정보를 키로 가지고있는 세션맵에서 메세지 보낼 세션정보를 확인하고, 메일의 갯수를 확인한다.
+			if (userkey != null) {
+				ZipInputStream zis1 = new ZipInputStream(multiFile.get(0).getInputStream());	
+				
+				while (zis1.getNextEntry() != null) {
+					messageCount++;
+				}
+				
+				session = sessionMap.get(userkey);
+				logger.debug("[WebSocket] mailBoxImportZip Started. SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
+			}
+			
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userAccount, password);
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale);
+			
+			Folder folder = ia.getFolder(folderPath);
+			
+			if (folder == null || !folder.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				folder.open(Folder.READ_WRITE);
+				List<Message> messageList = new ArrayList<Message>();
+				Message message = null;
+				int count = 0;
+
+				long lastTime = System.currentTimeMillis();
+				
+				while (ze != null) {
+					count++;
+
+					if (count % 20 == 0) {
+						folder.appendMessages(messageList.toArray(new Message[0]));
+						messageList = new ArrayList<Message>();
+						
+						System.gc();
+					}
+					
+					message = sa.readMimeMessage(zis);
+					messageList.add(message);
+					
+					ze = zis.getNextEntry();
+					
+					// 진행율 클라이언트에게 전송
+					if (userkey != null) {
+						
+						int percent = (int)((double) currCount / (double) (messageCount -1) * 100.0 );
+						long currTime = System.currentTimeMillis();
+						int interval = (int) (currTime - lastTime);
+						
+						JSONObject jsonObj = new JSONObject();
+						jsonObj.put("status" , "progress"); 
+						jsonObj.put("userkey", userkey);
+
+						if (interval >= 2000) {
+							jsonObj.put(sessionKeyName, percent); 
+							String json2 = jsonObj.toJSONString();
+							
+							try {
+								handleMessage(json2, session);
+							} catch (IllegalStateException e) {
+								e.printStackTrace();
+								break;
+							}
+							lastTime = currTime; 
+						}
+						currCount = currCount + 1;
+					}
+				}
+				
+				logger.debug("count=" + count);
+				
+				folder.appendMessages(messageList.toArray(new Message[0]));
+				folder.close(true);
+			}
+			
+			zis.closeEntry();
+ 			
+		} catch (Exception e) {
+			returnValue = "ERROR";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+			if (zis != null) {
+				zis.close();
+			}
+		}
+
+		model.addAttribute("result", returnValue);
+		model.addAttribute("userkey", userkey);
+
+		logger.debug("mailboxImportZip ended.");
+		return "ezEmail/mailboxImportZip";
+	}
+	
+	/**
 	 * 메일 zip파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadMailZip.do")
@@ -845,4 +1004,364 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("downloadMailZip ended.");
 	}
 	
+	/**
+	 * 특정 메일함의 모든 메일을 zip파일로 서버에 저장하기 실행 함수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezEmail/mailboxExportZip.do")
+	@ResponseBody
+	public String mailboxExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale,
+				Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("mailboxExportZip started.");
+		
+		String returnValue = "";
+		
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userAccount=" + userAccount);
+		
+		String folderPath = request.getParameter("folderPath");
+		logger.debug("folderPath=" + folderPath);
+		
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		pDirPath = realPath + pDirPath;
+		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
+		
+		File f = new File(pDirTempPath);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		
+		String guid = UUID.randomUUID().toString();
+		pDirTempPath += commonUtil.separator + guid;
+		
+		IMAPAccess ia = null;
+		ZipOutputStream zos = null;
+		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+		
+		Session session = null;
+		boolean sessionFlag = true;
+		String userkey = request.getParameter("userkey");
+		String sessionKeyName = "percent";
+		
+		// 유저정보를 키로 가지고있는 세션맵에서 메세지 보낼 세션정보를 가지고온다.
+		if (userkey != null) {
+			session = sessionMap.get(userkey);
+			logger.debug("[WebSocket] mailBoxExportZip Started. SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
+		}
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale);
+			
+			File tempFile = new File(pDirTempPath + ".zip");
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"));
+			
+			Folder folder = ia.getFolder(folderPath);
+			
+			if (folder == null || !folder.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				folder.open(Folder.READ_ONLY);
+
+				Message[] messages = ((IMAPFolder)folder).getMessages();
+				
+				boolean isRead = false;
+		
+				int messageCount = messages.length; // 총 메일 갯수
+				int currCount = 1;
+				long lastTime = System.currentTimeMillis();
+				
+				for (Message message : messages) {
+
+					String subject = ezEmailUtil.getSubject(message);
+					
+					if(subject.trim().equals("")){
+						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+					}
+					
+					String fileName = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+					String fileNameLowerCase = fileName.toLowerCase();
+					
+					// rename fileName if the fileName already exists
+					if (fileNameMap.containsKey(fileNameLowerCase)) {
+						int count = fileNameMap.get(fileNameLowerCase);
+						
+						if (count > -1) {
+							while (true) {
+								if (!fileNameMap.containsKey(fileNameLowerCase + " (" + ++count + ")")) {
+									break;
+								}
+							}
+							
+							fileNameMap.put(fileNameLowerCase, count);
+							
+							fileName += " (" + count + ")";
+							fileNameMap.put(fileName.toLowerCase(), -1);
+						} else {
+							fileNameMap.put(fileNameLowerCase, 1);
+							
+							fileName += " (1)";
+							fileNameMap.put(fileName.toLowerCase(), -1);
+						}
+					} else {
+						fileNameMap.put(fileNameLowerCase, 0);
+					}
+					
+					fileName += ".eml";
+//					logger.debug("fileName=" + fileName);
+					
+					ZipEntry zipEntry = new ZipEntry("/" + fileName);
+					zos.putNextEntry(zipEntry);
+					
+					isRead = message.isSet(Flags.Flag.SEEN);
+					
+					message.writeTo(zos);
+
+					if (!isRead) {
+						message.setFlag(Flags.Flag.SEEN, false);
+					}
+					
+					zos.closeEntry();
+
+					// 진행율 클라이언트에게 전송
+					if (userkey != null) {
+						JSONObject jsonObj = new JSONObject();
+						
+						long currTime = System.currentTimeMillis();
+						int interval = (int) (currTime - lastTime);
+						int percent = (int)((double) currCount / (double) (messageCount -1) * 100.0 );
+						
+						jsonObj.put("status", "progress"); // 현재 퍼센트
+						jsonObj.put("userkey", userkey);
+						
+						if (interval >= 2000) {
+							
+							jsonObj.put(sessionKeyName, percent); // 현재 퍼센트
+							String json1 = jsonObj.toJSONString();
+
+							try {
+								
+								handleMessage(json1, session);
+							
+							} catch (IllegalStateException e) {
+								
+								if (zos != null) {
+									zos.flush();
+									zos.close();
+									zos = null;
+								}
+								
+								File file = new File(pDirTempPath + ".zip");
+								
+								if (file.exists() == true) {
+									file.delete();
+								}
+								
+								returnValue = "CANCEL";
+								sessionFlag = false;
+								
+								e.printStackTrace();
+								break;
+								
+							} 
+							lastTime = currTime;
+						}
+						currCount = currCount + 1; // 현재 메일 카운트
+					}
+				}
+				
+				folder.close(true);
+			}
+
+			if (sessionFlag == true) {
+				returnValue = guid;
+			} 
+			
+		} catch (Exception e) {
+			if (zos != null) {
+				zos.flush();
+				zos.close();
+				zos = null;
+			}
+			
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+			
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+			if (zos != null) {
+				zos.flush();
+				zos.close();
+			}
+			
+		}
+		
+		logger.debug("mailboxExportZip ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+	
+	/**
+	 * 메일함 zip파일 다운로드 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/downloadMailboxZip.do")
+	public void downloadMailboxZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadMailboxZip started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userAccount=" + userAccount);
+		
+		String folderName = request.getParameter("folderName");
+		String tempZipName = request.getParameter("temp");
+		logger.debug("folderName=" + folderName + ",tempZipName=" + tempZipName);
+		
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String filePath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempZipName + ".zip";
+		logger.debug("filePath=" + filePath);
+		
+		downFile(request, response, filePath, userAccount + "_" + folderName + ".zip");
+		
+		File zipFile = new File(filePath);
+		if (zipFile.delete()) {
+			logger.debug(tempZipName + ".zip file is deleted.");
+		}
+		
+		logger.debug("downloadMailboxZip ended.");
+	}
+	
+	/**
+	 * zip파일 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/deleteZipFile.do")
+	public void deleteZipFile(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("deleteZipFile started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String temp = request.getParameter("temp");
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		pDirPath = realPath + pDirPath;
+		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + temp;
+		
+		File file = new File(pDirTempPath + ".zip");
+		
+		if (file.exists()) {
+			file.delete();
+		}
+		
+		logger.debug("deleteZipFile ended.");
+	}
+
+	/**
+	 * 웹소켓 처음 커넥션 맺을 때 호출되는 함수
+	 */
+    @SuppressWarnings("unchecked")
+	@OnOpen
+    public void handleOpen(Session session, @PathParam("getID") String getID){
+    	
+    	logger.info("[WebSocket] OnOpen called. WebSocket Connected.");
+    	
+    	// 세션에 연결한 유저ID에 고유문자를 붙여서 메세지전송 대상의 유저를 구별하는 유일한 값을 부여한다.
+    	UUID uuid = UUID.randomUUID();
+    	String userkey = getID + String.valueOf(uuid);
+        
+    	// 특정유저의 세션을 Map에 보관한다.
+        sessionMap.put(userkey, session);
+        session = sessionMap.get(userkey);
+        
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("status", "start");
+        jsonObj.put("userkey", userkey);
+        
+        String jsonStr = jsonObj.toJSONString();
+        
+        try {
+        	// 클라이언트 연결을 확인하고 시작을 알린다.(유저의 고유문자를 전송)
+        	this.handleMessage(jsonStr, session);
+        } catch (Exception e) {
+        	logger.debug("[WebSocket] handleOpen error occured.");
+        	e.printStackTrace();
+        }
+        
+        logger.info("[Websocket] UserKey="+ userkey + " sessionId=" + session.getId() + " sessionInfo=" + session.getBasicRemote());
+        logger.info("[Websocket] SessionMap size=" + sessionMap.size() + " this=" + this);
+        
+    }
+
+
+    /**
+     * 웹소켓 클라이언트와 메세지 송수신시 호출되는 함수
+     */
+	@SuppressWarnings("unchecked")
+	@OnMessage
+    public void handleMessage(String jsonStr, Session session) throws Exception{
+    	
+		JSONObject sendObj = new JSONObject();
+		JSONObject recObj = new JSONObject();
+		JSONParser jsonParser = new JSONParser();
+		
+		recObj = (JSONObject) jsonParser.parse(jsonStr);
+		String userkey = (String) recObj.get("userkey");
+		
+		if ( recObj.get("status").equals("start")) {
+			session = sessionMap.get(userkey);
+			sendObj.put("status", "transferStart");
+			sendObj.put("userkey", userkey);
+			jsonStr = sendObj.toJSONString();
+
+			session.getBasicRemote().sendText(jsonStr);
+		} else if (recObj.get("status").equals("progress")) {
+			session.getBasicRemote().sendText(jsonStr);
+		} 
+		
+    }
+
+    /**
+     * 웹소켓 커넥션 종료시 호출 함수
+     */
+    @OnClose
+    public void handleClose(Session session) throws IOException{
+    	
+    	logger.info("[WebSocket] OnClose called. WebSocket Disconnected." + session.getId());
+    	
+    	for (String userkey : sessionMap.keySet()) {
+    		Session tempSession = sessionMap.get(userkey);
+    		if (session == tempSession) {
+    			logger.debug("userkey=" + userkey + " session is found" );
+    			sessionMap.remove(userkey);
+    			break;
+    		}
+    	}
+    	
+    	logger.info("[WebSocket] SessionMap Size=" + sessionMap.size());
+    }
+
+    /**
+     * 웹소켓 커넥션 에러시 호출 함수
+     * @param e
+     */
+    @OnError
+    public void handleError(Throwable e){
+        e.printStackTrace();
+    }
+
 }

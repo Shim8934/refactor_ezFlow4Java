@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page session="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%
+	out.clear();
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,8 +12,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
@@ -73,13 +77,39 @@
 		    var nextMailListRefreshTime = 0;
 		    var refreshIntervalTimerId = 0;
 		    var refreshTimeoutTimerId = 0;
+		    var webSocket =  null;
+		    var userkey = "";
+		    var pclose = "close";
+		    var protocol = window.location.protocol;
+		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
+		   
+		    function defineHost(protocol){
+	    		var host = "";
+
+	    		if (protocol == "https:") {
+			    	host = 'wss://';
+			    } else {
+			    	host = 'ws://';
+			    }
+	    		
+		    	return host;
+		    }
 		    
 		    // commented out to allow users to be able to select text in the preview : dhlee
-//		    document.onselectstart = function () { return false; };
+			// document.onselectstart = function () { return false; };
 		    window.onresize = Window_resize;
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
+		    	
+		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
+		        if ('WebSocket' in window) {
+	           	} else if ('MozWebSocket' in window) {
+	           	} else {
+	           		document.getElementById("mailbox_export").style.display = "none";
+					document.getElementById("mailbox_import").style.display = "none";
+	           	}
+		        
 		        CurrentHeight = document.body.clientHeight;
 		        CurrenWidth = document.body.clientWidth;
 		        switch (g_foldertype) {
@@ -201,7 +231,7 @@
 	                    document.addEventListener('visibilitychange', onVisibilityChange);
 	                    recordNextMailListRefreshTime();
 	                }		            
-		        }		        
+		        }		
 		    }
 		    
 		    function getCurrentTime() {
@@ -355,6 +385,191 @@
 	            }
 		        MailListRefresh();
 		    }
+
+		    // 메일박스 내보내기
+			function mailbox_export() {
+
+		    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+					// 웹소켓 연결
+		            webSocket= new WebSocket(host);
+					
+			        // 서버로부터 메세지가 왔을 때 실행되는 함수 
+	 				webSocket.onmessage = function(message){
+			        	var obj = JSON.parse(message.data);
+			        	
+			        	if (obj.status == "transferStart") {
+			            	userkey = obj.userkey;
+				            ShowMailProgressNew();
+				            ShowPercent(0);
+				            
+							$.ajax({
+								type : "POST",
+								dataType : "text",
+								async : true,
+								url : "/ezEmail/mailboxExportZip.do",
+								data : { folderPath : '${url}', userkey : userkey },
+								success : function(result) {
+									if (result == "") {
+										alert("<spring:message code='ezEmail.lhm33' />");
+									} else if (result == "CANCEL") {
+										console.log('User Cancel');
+									} else {
+										var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
+												+ encodeURIComponent('${folderName}')
+												+ "&temp=" + result;
+										AttachDownFrame.location.href = fullpath;
+										AttachDownFrame.target = "_blank";
+									}
+					        		HiddenMailProgressNew();
+					        		webSocket.close();
+								}
+
+							});
+							
+			            } else if (obj.status == 'progress') {
+			            	ShowPercent(obj.percent);
+			            } 
+			        }
+			        
+			        // 웹소켓 연결 해제시 실행 되는 함수
+			        webSocket.onclose = function(event){
+			        	webSocket = null;
+			        };
+			        
+			        window.onbeforeunload = function(){
+			        	webSocket.close();
+			        }
+
+		    	}
+			}
+			
+			// 메일박스 가져오기
+			function mailbox_attach_import() {
+	        
+				console.log('mailbox_attach_import started.');
+				
+				// mailbox_attach_import() function이 2번 호출됨으로 인해 websocket 객체 존재유무를 판단하여 진입을 막는다.
+				if (webSocket != null) {
+					console.log('websocket is not null');
+					return;					
+				}
+				
+		        webSocket = new WebSocket(host);
+				
+				var tempname = document.importMailboxform.file1.value;
+				
+				if (tempname == "") {
+					return;
+				}
+
+				var last = tempname.split(".").length;
+				var extension = tempname.split(".")[last - 1];
+
+				if (extension.toUpperCase() != "ZIP") {
+					alert("<spring:message code='ezEmail.lhm34' />");
+					return;
+				}
+			
+		        webSocket.onmessage = function(message){
+		        	
+		        	var obj = JSON.parse(message.data);
+		            ShowMailProgressNew();
+		            ShowPercent(0);
+		            
+		        	if (obj.status == "transferStart") {
+		            	userkey = obj.userkey;
+			            
+			            var frm = document.getElementById("importMailboxform");
+						frm.action = "/ezEmail/mailboxImportZip.do?folderPath="
+								+ encodeURIComponent('${url}') + "&userkey=" + encodeURIComponent(userkey);
+						frm.submit();
+			            
+		            } else if (obj.status == 'progress') {
+		            	ShowPercent(obj.percent);
+		            }            
+		        };
+		        
+		        webSocket.onclose = function(event){
+		        	webSocket = null;
+		        };
+		        
+		        window.onbeforeunload = function(){
+		        	webSocket.close();
+		        }
+		        				
+			}
+			
+	        function sendMessage(data) {
+	        	var sendObj = {};
+	            sendObj.status = encodeURIComponent(data);
+	            sendObj.userkey = encodeURIComponent(userkey);
+	            
+	            var json = JSON.stringify(sendObj);
+	            console.log(json);
+	            
+	            webSocket.send(json);
+	        }
+			
+	        function mailboxImportComplete(result) {
+				document.importMailboxform.file1.value = "";
+				
+				if (result == "ERROR") {
+					alert("<spring:message code='ezEmail.lhm33' />");
+				}
+				
+				webSocket.close();
+				MailListRefresh();
+				HiddenMailProgressNew();
+			}
+	        
+			function mailbox_import() {
+				document.getElementById("file1").click();
+			}
+			
+			function ScriptEngineMinorVersion(){                                        
+				var agt = navigator.userAgent.toLowerCase();
+				// IE 10 이하 버전 체크
+				if (agt.indexOf("msie") != -1){
+			   		alert('Internet Explorer');
+			        return 'YES';
+			    } 
+			}
+			
+			function ShowPercent(data) {
+				$('#progressNum').text('');
+				$('#progressNum').text("<spring:message code='ezEmail.kyj01' /> : " + data + " %");
+			}
+			
+			function HiddenMailProgressNew() {
+				$('#progressNum').text('');
+				document.getElementById("mailPanel").style.display = "none";
+				document.getElementById("mailPanel").style.backgroundColor = "";
+				document.getElementById("MailProgress").style.backgroundColor = "";
+				document.getElementById("MailProgress").style.display = "none";
+			    document.getElementById("cancleProgressBtn").style.display = "none";
+				parent.document.getElementById("left").contentWindow.hideProgress();
+				parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+			}
+			
+			function ShowMailProgressNew() {
+			    document.getElementById("mailPanel").style.display = "block";
+			    document.getElementById("mailPanel").style.opacity = 0.5;
+			    document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+			    document.getElementById("MailProgress").style.backgroundColor = "#ffffff";
+			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 150 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			    document.getElementById("cancleProgressBtn").style.display = "block";
+			    parent.document.getElementById("left").contentWindow.showProgress();
+			    parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+			}
+
+			function cancleProgress(){
+	        	HiddenMailProgressNew();
+	        	webSocket.close();
+	        	location.reload();
+			}			
+			
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -391,6 +606,9 @@
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
 		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
+		  <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+		  <li id="mailbox_export"><span onClick="mailbox_export()"><spring:message code="ezEmail.lhm31" /></span></li>
+		  <li id="mailbox_import"><span><label for="file1" style="cursor: pointer;"><spring:message code="ezEmail.lhm32" /></label></span></li>
 		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
           </ul>
         </div>
@@ -443,8 +661,13 @@
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" >&nbsp;</div>
         <div style="width:8px;height:100%;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarH"></div>
         <div style="width:100px;height:8px;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarW"></div>
-        <div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
-            <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+        <div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+            <a class="btnposition" id="cancleProgressBtn" style="display: none; padding-top: 10px; width: 50px; height:20px; 
+      			cursor:pointer; margin:0 auto;" onclick="cancleProgress();">
+            <input type="button" value="<spring:message code="ezEmail.t39" />"/></a>
+           
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
             <table style="width:100%;border:1px solid #B6B6B6;" id="MailHeader" class="mainlist" >               
@@ -568,6 +791,10 @@
 		<form name="PrevViewFormW" action="mailPreviewContent.do" method="post" target="ifrmPreViewW">
 		<input  type="hidden"  name="iptURL" value="">
 		<input  type="hidden" name="iSecurity" value="">
-		</form>               
+		</form>
+		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
+		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
+	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>
+	    </form>
 	</body>
 </html>
