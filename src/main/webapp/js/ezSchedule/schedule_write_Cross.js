@@ -66,19 +66,21 @@ var SaveScheduleId = "";
 function save_schedule()
 {
     if (scheduleid == "") {
-        var selectValue = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value.split(';;')[1];
-        if (selectValue == companyID) {
-            if (pCompanyAdmin != "Y") {
-                alert(strLang1000);
-                return;
-            }
-        }
-        else if (selectValue == deptID) {
-            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
-                alert(strLang1001);
-                return;
-            }
-        }
+    	if (useAnyoneEdit != "YES") {
+	        var selectValue = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value.split(';;')[1];
+	        if (selectValue == companyID) {
+	            if (pCompanyAdmin != "Y") {
+	                alert(strLang1000);
+	                return;
+	            }
+	        }
+	        else if (selectValue == deptID) {
+	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
+	                alert(strLang1001);
+	                return;
+	            }
+	        }
+    	}
     }
     if(!check_time())
     {
