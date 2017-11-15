@@ -20,6 +20,7 @@
 	        var pOwerID = "${pOwerId}";
 	        var deptAdmin = "${deptAdmin}";
 	        var compAdmin = "${compAdmin}";
+	        var useAnyoneEdit = "${useAnyoneEdit}";
 	        var pCurrentPage = "1";
 	        var pOrderOption = "S_NAME:0";
 	        var pFilter = "";
@@ -78,14 +79,17 @@
 	
 	        }
 	        function new_address() {
-	            if (deptAdmin != "Y" && pFolderType == "D") {
-	                alert("<spring:message code='ezAddress.t999900003' />");
-	                return;
-	            }
-	            else if (compAdmin != "Y" && pFolderType == "C") {
-	                alert("<spring:message code='ezAddress.t999900004' />");
-	                return;
-	            }
+	        	if (useAnyoneEdit != "YES") {
+	        		if (deptAdmin != "Y" && pFolderType == "D") {
+		                alert("<spring:message code='ezAddress.t999900003' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		                alert("<spring:message code='ezAddress.t999900004' />");
+		                return;
+		            }
+	        	}
+	            
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var conHeight = 500;
@@ -96,14 +100,17 @@
 	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function new_group() {
-	        	if (deptAdmin != "Y" && pFolderType == "D") {
-	                alert("<spring:message code='ezAddress.t999900003' />");
-	                return;
-	            }
-	            else if (compAdmin != "Y" && pFolderType == "C") {
-	                alert("<spring:message code='ezAddress.t999900004' />");
-	                return;
-	            }
+	        	if (useAnyoneEdit != "YES") {
+		        	if (deptAdmin != "Y" && pFolderType == "D") {
+		                alert("<spring:message code='ezAddress.t999900003' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		                alert("<spring:message code='ezAddress.t999900004' />");
+		                return;
+		            }
+	        	}
+	        	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var conHeight = 655;
@@ -247,7 +254,7 @@
 	                        for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
 	                            var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                            if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+                            		if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
 	                            		alert("<spring:message code='ezAddress.t217' />");
 	                                    return;
 	                            	}
@@ -306,7 +313,7 @@
 	                        var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                        if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
 	                        	if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                        		if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
 	                            		alert("<spring:message code='ezAddress.t217' />");
 	                                    return;
 	                            	}
@@ -444,7 +451,7 @@
 	            
 	            var xmlHTTP = createXMLHttpRequest();
 	            var xmlDom = createXmlDom();
-	
+				
 	            var objNode, objRow;
 	            objNode = createNodeInsert(xmlDom, objNode, "DATA");
 	            createNodeAndInsertText(xmlDom, objNode, "FOLDERID", pFolderID);
@@ -515,6 +522,17 @@
 	        	$.modal.close();
 	        }	        
 	        function ShowQuickAddres() {
+	        	if (useAnyoneEdit != "YES") {
+		        	if (deptAdmin != "Y" && pFolderType == "D") {
+		                alert("<spring:message code='ezAddress.t999900003' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		                alert("<spring:message code='ezAddress.t999900004' />");
+		                return;
+		            }
+	        	}
+	        	
 	        	$("#addpopup").modal();
 	        }	
 	        function search_start() {
@@ -590,14 +608,16 @@
             	document.getElementById("loadingLayer").style.display = "none";
 	        }	        
 	        function crossImport() {
-	        	if (deptAdmin != "Y" && pFolderType == "D") {
-	        		alert("<spring:message code='ezAddress.t1' />");
-	                return;
-	            }
-	            else if (compAdmin != "Y" && pFolderType == "C") {
-	            	alert("<spring:message code='ezAddress.t1' />");
-	                return;
-	            }
+	        	if (!useAnyoneEdit == "YES") {
+	        		if (deptAdmin != "Y" && pFolderType == "D") {
+		        		alert("<spring:message code='ezAddress.t1' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		            	alert("<spring:message code='ezAddress.t1' />");
+		                return;
+		            }
+	        	}
 	        	
 	            document.getElementById("file1").click();
 	        }	        
