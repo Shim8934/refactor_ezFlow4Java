@@ -3508,7 +3508,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				pAddressFilter = tempNode.getTextContent();
 			}
 		}
-        
+
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
