@@ -429,7 +429,9 @@ form{display:inline;margin:0}
 
 #menu ul{margin:0; padding:0;}
 #menu ul.on{padding-left:0px;}
-#close{position:absolute;right:10px; top:7px;height:35px; }
+#close{position:absolute;right:10px; top:8px;height:35px; }
+#close ul {margin: 0; padding: 0;}
+#taskChangeMode {float: left; padding-top: 8px; color: #ffffff;	font-size: 16px; font-weight: bold;}
 #menu ul li, #close ul li {
 	display: block;
 	float:left;

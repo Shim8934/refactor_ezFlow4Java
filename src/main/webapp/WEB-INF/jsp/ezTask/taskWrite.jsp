@@ -266,8 +266,14 @@
 				}		
 				
 				if (mode != "") {
+					document.getElementById("menu").setAttribute("style", "float: right; padding-right: 42px;");										
+					
 					if (mode == "1") {						
 						//Edit task infor mode
+						document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1512' />";
+						document.getElementById("taskChangeMode").style.display = "";
+						document.getElementById("menuTable").style.display = "";
+						
 						document.getElementById("menuTaskInf").style.display = "";
 						if (document.getElementById("menuTaskMemo")) {
 							document.getElementById("menuTaskMemo").style.display = "";
@@ -283,7 +289,11 @@
 						document.getElementById("dadiframe").style.display = "none"; */
 					}
 					else {
-						//Edit task content						
+						//Edit task content		
+						document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1511' />";
+						document.getElementById("taskChangeMode").style.display = "";
+						document.getElementById("menuTable").style.display = "";
+						
 						document.getElementById("menuTaskInf").style.display = "none";
 						document.getElementById("EdtorSize").style.display = "";
 						document.getElementById("dadiframe").style.display = "";
@@ -292,6 +302,7 @@
 					}
 				}
 				else {
+					document.getElementById("menuTable").style.display = "";
 					document.getElementById("menuTaskInf").style.display = "";
 					document.getElementById("EdtorSize").style.display = "";
 					
@@ -305,7 +316,7 @@
 			window.onresize = function () {
 				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
 				
-				if (useTodoMemo == 'YES') {
+				if (useTodoMemo == 'YES') {													
 					if (tasktype == "1") {
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 					} else if (tasktype == "2") {
@@ -629,7 +640,8 @@
 		<div id="main_body">
 			<table id="normalScreen" class="layout">
 				<tr>
-					<td height="20" id="menuTable">
+					<td height="20" id="menuTable" style="display: none;">
+						<div class="new_popup_title_txt" id="taskChangeMode" style="display: none;"></div>
 						<div id="menu">
 							<ul>
 		                        <c:choose>
