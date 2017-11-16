@@ -1290,7 +1290,7 @@
 		<table id="normalScreen" class="layout" style="height:100%; display:none;">
 			<tr>
 				<td style="padding-bottom:4px;height: 440px;">
-					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+					<iframe id="message" class="viewbox" name="message" style="padding:0; height:101%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
 			
@@ -1352,10 +1352,10 @@
 			<tr>
 				<td style="padding-top:10px">
 					<table class="content">
-						<tr style="padding-top:10px;padding-bottom:4px;height:50px">
+						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
 							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
-							<td class="pos1"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;'></textarea></td>
+							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:2px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;margin-top:1px;padding:7px;'></textarea></td>
 							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()"><spring:message code='ezTask.t96' /></span></a></td>
 							
 						</tr>
