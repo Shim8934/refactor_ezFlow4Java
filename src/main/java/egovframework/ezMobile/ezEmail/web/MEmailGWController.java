@@ -5038,6 +5038,86 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/tempmail/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public Object mTempMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
+			
+		JSONObject result = new JSONObject();
+		
+		IMAPAccess ia = null;
+		// get user credentials
+		try{
+			
+			folderId = URLDecoder.decode(folderId, "UTF-8");
+			
+			boolean permanentlyDelete = true;
+
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+		
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+
+			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
+			if ( opt.getLang().equals("1") ) {
+				locale = new Locale("ko");	
+			} else if ( opt.getLang().equals("3") ) {
+				locale = new Locale("ja");
+			}
+			
+			if(folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))){
+				permanentlyDelete = true;
+			}
+			
+			String[] MsgIdArray = messageId.split(",");		
+			long[] uids = new long[MsgIdArray.length];
+			
+			for (int i = 0; i < MsgIdArray.length; i++) {
+				uids[i] = Long.parseLong(MsgIdArray[i]);
+			}
+		
+			LOGGER.debug("folderId=" + folderId);
+
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+						
+			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);		
+	        
+	        Message deleteMsgs = null;
+
+	        deleteMsgs = ((IMAPFolder)sourceFolder).getMessageByUID(Long.parseLong(messageId));
+
+			if (deleteMsgs != null) {
+				deleteMsgs.setFlag(Flags.Flag.DELETED, true);
+            }
+			sourceFolder.close(true);
+		
+					
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "success");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");
+			
+		} finally {
+			if (ia != null) {
+				ia.close();		
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");		
+		
+		return result;
+	}
 	 
 	@RequestMapping(value="/mobile/ezemail/write/checkname/users/{userId}", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public Object mailNameCheck(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
