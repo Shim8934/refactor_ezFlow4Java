@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 		
 		<style type="text/css">
 			   .ui-datepicker { font-size:9.5pt !important}
@@ -704,9 +705,9 @@
 				 
 				for (var i = 2; i < length; i++) {
 					new_list_body.removeChild(new_list_body.rows[2]);			    	
-				}				
+				}			
 				
-				for (var i = 0; i < completeRateArray.length; i++) {
+				for (var i = 0; i < completeRateArray.length; i++) {					
 					tr = new_row_body.cloneNode(true);				    
 
 				    tr.style.display = "";
@@ -717,15 +718,76 @@
 			        var startdate = dateArray[i];
 			        var enddate = startdate;
 			        var span = document.createElement("SPAN");
-			        span.innerHTML += completeRateArray[i] + "%";
+			        //span.innerHTML += completeRateArray[i] + "%";
+			        span.innerHTML += parseInt(backupCount + "") + i;
 			        tr.cells[0].appendChild(span);
 
 			        tr.setAttribute("startdate", startdate);
 			        setNodeText(tr.cells[1], startdate);
-			        tr.cells[2].innerHTML = "<B>" + enddate + "</B>";
+			        tr.cells[2].innerHTML = "<B>" + enddate + "</B>";	
+			        
+			        //Process complete rate
+			        var taskstatus = parseInt(taskstatus + "");
+			        var completerate = parseInt(completeRateArray[i] + "");
+			        var span = document.createElement("SPAN");
+			        span.className = "workProgressBar";
+			        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
+
+					var span2 = document.createElement("SPAN");
+			        span2.style.display = "inline-block";
+
+			        span.appendChild(span2);
+
+			        tr.cells[3].appendChild(span);
 			        new_list_body.appendChild(tr);
+			        
+			        initProgressBar2("taskProgressBar" + i, taskstatus, completerate);			        
+				}
+				
+				$(".progressbar").css("display", "inline-table");
+			}
+			
+			/* progressBar 조회 */
+			function initProgressBar2(barID, taskstatus, completerate) {
+				if (completerate == '0') {
+					duration = 0;
+				} else {
+					duration = 500;
+				}
+
+				if (taskstatus == '4') {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: delayColor,
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
+				} else if (taskstatus == '3') {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: completeColor,
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
+				} else {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: '#3498db',
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
 				}
 			}
+			
 			
 			function comment_keydown() {
 			    if (window.event.keyCode == "13")
@@ -1370,14 +1432,16 @@
 					<div id="new_div_body" style="height: 450px; overflow-y: auto;">
 						<table class="content" id="new_list_body" style="text-align: center;">
 							<tr >
+								<th style="width:  50px; text-align: center;"><spring:message code='ezTask.t1221' /></th>
+								<th style="width: 225px; text-align: center;"><spring:message code='ezTask.t121' /></th>
+								<th style="width: 225px; text-align: center;"><spring:message code='ezTask.t122' /></th>
 								<th style="width: 230px; text-align: center;"><spring:message code='ezTask.t120' /></th>
-								<th style="width: 250px; text-align: center;"><spring:message code='ezTask.t121' /></th>
-								<th style="width: 250px; text-align: center;"><spring:message code='ezTask.t122' /></th>
 							</tr>	
-							<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-								<td class="tr_Read" style="white-space:nowrap; width: 230px;" ondblclick="ReadTask(this)"></td>
-								<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
-								<td class="tr_Read" style="white-space:nowrap; width: 250px;" ondblclick="ReadTask(this)"></td>
+							<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" >
+								<td class="tr_Read" style="white-space:nowrap; width: 50px;" ></td>
+								<td class="tr_Read" style="white-space:nowrap; width: 225px;" ></td>
+								<td class="tr_Read" style="white-space:nowrap; width: 225px;" ></td>
+								<td class="tr_Read" style="white-space:nowrap; width: 230px;" ></td>
 							</tr>					
 						</table>
 					</div>
