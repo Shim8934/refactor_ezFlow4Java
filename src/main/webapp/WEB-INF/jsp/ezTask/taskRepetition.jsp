@@ -460,29 +460,29 @@
 						<input id="id0D2" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;">
 						<label for="id0D2" accesskey="K" style="vertical-align:middle;"><spring:message code='ezTask.t40' /><u>K</u>)</label>
 					</div>
-					<div id='divRecurPatterns1'><spring:message code='ezTask.t41' />
+					<div id='divRecurPatterns1'>&nbsp;<spring:message code='ezTask.t41' />
 						<label for="txt_We" accesskey="C">
 						<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1">
 						<spring:message code='ezTask.t42' /></label>
 						<table id="daytable">
 							<tr>
-								<td><input type="checkbox" name="day" value="0" style="vertical-align:middle">
+								<td style="height:0px;"><input type="checkbox" name="day" value="0" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t43' /></span></td>
-								<td><input type="checkbox" name="day" value="1" style="vertical-align:middle">
+								<td style="height:0px;"><input type="checkbox" name="day" value="1" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t44' /></span></td>
-								<td><input type="checkbox" name="day" value="2" style="vertical-align:middle">
+								<td style="height:0px;"><input type="checkbox" name="day" value="2" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t45' /></span></td>
-								<td><input type="checkbox" name="day" value="3" style="vertical-align:middle">
+								<td style="height:0px;"><input type="checkbox" name="day" value="3" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t46' /></span></td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" name="day" value="4" style="vertical-align:middle">
+								<td style="height:0px;"><input type="checkbox" name="day" value="4" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t47' /></span></td>
-								<td><input type="checkbox" name="day" value="5" style="vertical-align:middle">
+								<td style="height:0px;"><input type="checkbox" name="day" value="5" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t48' /></span></td>
-								<td><input type="checkbox" name="day" value="6" style="vertical-align:middle">
+								<td style="height:0px;"><input type="checkbox" name="day" value="6" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t49' /></span></td>
-								<td>&nbsp;</td>
+								<td style="height:0px;">&nbsp;</td>
 							</tr>
 						</table>
 					</div>
@@ -576,19 +576,19 @@
 					</div>
 				</td>
 			</tr>
-		</table><br>
+		</table>
 		<h2><spring:message code='ezTask.t64' /></h2>
 		<table class="content">
-			<tr>
-				<th style="vertical-align:top"><spring:message code='ezTask.t65' /></th>
-				<td>
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+			<tr style="height:90px;">
+				<th><spring:message code='ezTask.t65' /></th>
+				<td style="padding:0px;">
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-left:5px;margin-bottom:1px;" readonly="readonly">
 					<br>
-					<input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t73' /></span><br>
-					<input type="radio" id="range2" name="optRangeEnd" value="1" style="vertical-align:middle;margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t74' /></span>
+					<input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:3px"><span style="vertical-align:bottom"><spring:message code='ezTask.t73' /></span><br>
+					<input type="radio" id="range2" name="optRangeEnd" value="1" style="vertical-align:middle;margin-top:5px"><span style="vertical-align:bottom"><spring:message code='ezTask.t74' /></span>
 					<input id="list_ReCount" maxlength="3" onFocus="range2.checked = true" size="4" value='10'>
 					<span style="vertical-align:middle"><spring:message code='ezTask.t75' /></span><br>
-					<input id="range3" type="radio" name="optRangeEnd" value="0" style="vertical-align:middle;margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
+					<input id="range3" type="radio" name="optRangeEnd" value="0" style="margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 				</td>
 			</tr>
