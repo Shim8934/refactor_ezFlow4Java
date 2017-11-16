@@ -1162,29 +1162,30 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<div class="wrap_progress">
+		<div class="wrap_progress" style="height:220px;">
 			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="'${taskInfoVO.title }' />">${taskInfoVO.title }</h4>
-			<div class="circle progress_graph" style="width:30%; margin: 10px 20px;">
-				<strong></strong>
+			<div style="">
+				<div class="circle progress_graph" style="width:30%; margin: 10px 20px; top:15px;">
+					<strong></strong>
+				</div>
+				<div class="progress_txt" style="magin-left:20px;margin-top:40px;">
+					<ul>
+						<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
+							<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
+							<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
+							
+						</c:if>
+						<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
+							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
+						</c:if>
+					</ul>
+					<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
+				</div>
+				<div id="Sdatepicker" style="float:right;"></div>
 			</div>
-
-			<div class="progress_txt" style="magin-left:20px;">
-				<ul>
-					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
-						<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
-						<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
-						
-					</c:if>
-					<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
-						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
-					</c:if>
-				</ul>
-				<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
-			</div>
-			<div id="Sdatepicker" style="float:right;"></div>
 		</div>
 		
 		
