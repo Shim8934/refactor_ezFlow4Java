@@ -433,9 +433,9 @@
 	                return;
 	            }
 	
-	            var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-	            if (regex.test(document.getElementById("qemail").value) === false) {
-	                alert("<spring:message code='ezAddress.t350' />");
+	            var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	            if (document.getElementById("qemail").value != "" && regex.test(document.getElementById("qemail").value) === false) {
+	                alert("<spring:message code='ezAddress.t1100' />");
 	                document.getElementById("qemail").focus();
 	                return;
 	            }

@@ -932,7 +932,7 @@
 	        } 
 	        
 	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
 	        
 	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 	            alert("<spring:message code='ezAddress.t1100' />");
