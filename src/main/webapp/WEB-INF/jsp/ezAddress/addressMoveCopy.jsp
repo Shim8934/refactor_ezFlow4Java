@@ -106,7 +106,7 @@
 		        return;
 		    }
 	        
-	        if (useAnyoneEdit == "YES") {
+	        if (useAnyoneEdit != "YES") {
 		        if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
 		            alert("<spring:message code='ezAddress.t168' />");
 			        return;
