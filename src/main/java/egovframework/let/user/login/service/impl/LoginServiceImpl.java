@@ -1,10 +1,11 @@
 package egovframework.let.user.login.service.impl;
 
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.service.LoginService;
@@ -14,6 +15,7 @@ import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 
 import javax.annotation.Resource;
@@ -55,6 +57,15 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         
     @Autowired
     private EzEmailUtil ezEmailUtil;
+    
+    @Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+    
+    @Autowired
+    private EzEmailUserAdminService ezEmailUserAdminService;
+    
+    @Autowired
+	private EzOrganAdminService ezOrganAdminService;
     
     /**
 	 * 일반 로그인을 처리한다
@@ -237,17 +248,37 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     
     /**
      * Active Directory
-     * - AD와 암호와 비교
+     * - AD 암호로 그룹웨어 암호 변경
      * */
-    public String compareADInfo(String uid, String upwd) throws Exception {
+    public String syncADandGWpass(String uid, String rpwd, int tenantId) throws Exception {
     	
     	ADConnection conn = new ADConnection();
     	
     	String address = config.getProperty("config.PROVIDER_URL");   	
     	String security = uid + "@" + config.getProperty("config.Domain_Name");
     	
-    	String chk = conn.setConnection(address, security, upwd);
+    	String chk = conn.setConnection(address, security, rpwd);
+    	
+    	if (chk.equalsIgnoreCase("TRUE")) {
+    		/**
+    		 * 비밀 번호를 변경해야할 것들
+    		 * 1. 그룹웨어 비밀번호
+    		 * 2. 이메일 비밀번호 
+    		 * */
+    		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+    		String mailAddr = uid + "@" + domain;
 
+    		ezEmailUserAdminService.updateUserPassword(mailAddr, rpwd);
+    		ezOrganAdminService.setPassword(uid, rpwd, tenantId);
+    		
+//    		//email 비밀번호 변경 확인
+//    		IMAPAccess ia = null;
+//    		ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+//    				mailAddr, rpwd, egovMessageSource, locale);
+//    		ia.getTopLevelFolders();    		
+    	}		
+
+    	
     	return chk;
     }
 

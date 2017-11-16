@@ -28,7 +28,6 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.service.LoginService;
@@ -174,29 +173,11 @@ public class LoginController {
 	            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
 	            	// true 이면 그룹웨어 암호 변경
 	            	// false 이면 그냥 로그인 금지
-	            	chkADpass = loginService.compareADInfo(_uid, rpwd);
+	            	chkADpass = loginService.syncADandGWpass(_uid, rpwd, tenantId);	            	
 	            	
-	            	if (chkADpass.equalsIgnoreCase("TRUE")) {
-	            		/**
-	            		 * 비밀 번호를 변경해야할 것들
-	            		 * 1. 그룹웨어 비밀번호
-	            		 * 2. 이메일 비밀번호 
-	            		 * */
-	            		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-	            		String mailAddr = _uid + "@" + domain;
-
-	            		ezEmailUserAdminService.updateUserPassword(mailAddr, rpwd);
-	            		ezOrganAdminService.setPassword(_uid, rpwd, tenantId);
-	            		
-	            		//email 비밀번호 변경 확인
-//	            		IMAPAccess ia = null;
-//						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-//								mailAddr, rpwd, egovMessageSource, locale);
-//						ia.getTopLevelFolders();
-	            		
-	            	} else {
+	            	if (chkADpass.equalsIgnoreCase("false")) {
 	            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
-	            		loginVO.setPassword(null);
+	            		loginVO.setPassword(null);	            		
 	            	}
 	            }
 	            // 암호가 맞는 지 확인한다.
