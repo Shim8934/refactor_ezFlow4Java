@@ -250,7 +250,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
      * Active Directory
      * - AD 암호로 그룹웨어 암호 변경
      * */
-    public String syncADandGWpass(String uid, String rpwd, int tenantId) throws Exception {
+    public String chkADAndUpdatePassword(String uid, String rpwd, int tenantId) throws Exception {
     	
     	ADConnection conn = new ADConnection();
     	

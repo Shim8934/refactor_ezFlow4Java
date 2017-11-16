@@ -61,6 +61,6 @@ public interface LoginService {
 	
 	public int getTenantId(String serverName) throws Exception;
 	
-	public String syncADandGWpass(String uid, String upwd, int tenantId) throws Exception;
+	public String chkADAndUpdatePassword(String uid, String upwd, int tenantId) throws Exception;
 
 }
