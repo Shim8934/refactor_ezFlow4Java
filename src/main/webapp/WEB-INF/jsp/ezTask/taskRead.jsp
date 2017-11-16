@@ -1364,7 +1364,7 @@
 		
 		<table id="normalScreen" class="layout" style="height:100%; display:none;">
 			<tr>
-				<td style="padding-bottom:4px;height: 340px;">
+				<td style="padding-bottom:3px;height: 340px;">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:101%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
@@ -1390,12 +1390,12 @@
 		
 		<table id="tablework" class="layout" style="height:100%; display:none;">
 			<tr style="vertical-align:top">
-				<td colspan="3" style="padding-bottom:4px; height:440px;">
-					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+				<td colspan="3" style="padding-bottom:3px; height:440px;">
+					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:101%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
 			<tr style="vertical-align:top">
-				<td style="padding-top:4px">
+				<td style="padding-top:0px">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
