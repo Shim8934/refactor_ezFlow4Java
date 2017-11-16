@@ -1206,7 +1206,7 @@
 	</head>
 	
 	<body class="popup" style="overflow:hidden; height:99%">
-		<div id="menu">
+		<div id="menu" style="margin-bottom:10px;">
 			<ul>
 				<c:if test="${userInfo.id == taskInfoVO.creatorID }">
 					<li id="delete"><SPAN onClick="check_delete()"><spring:message code='ezTask.t115' /></SPAN></li>
@@ -1225,34 +1225,35 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<div class="wrap_progress">
+		<div class="wrap_progress" style="height:220px;">
 			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="'${taskInfoVO.title }' />">${taskInfoVO.title }</h4>
-			<div class="circle progress_graph" style="width:30%; margin: 10px 20px;">
-				<strong></strong>
+			<div style="">
+				<div class="circle progress_graph" style="width:30%; margin: 10px 20px; top:15px;">
+					<strong></strong>
+				</div>
+				<div class="progress_txt" style="magin-left:20px;margin-top:40px;">
+					<ul>
+						<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
+							<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
+							<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' /> (${repeatCount}회차)</span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
+							
+						</c:if>
+						<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
+							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
+						</c:if>
+					</ul>
+					<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
+				</div>
+				<div id="Sdatepicker" style="float:right;"></div>
 			</div>
-
-			<div class="progress_txt" style="magin-left:20px;">
-				<ul>
-					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
-						<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
-						<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' />(${repeatCount}회차)</span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
-						
-					</c:if>
-					<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
-						<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
-						<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
-					</c:if>
-				</ul>
-				<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
-			</div>
-			<div id="Sdatepicker" style="float:right;"></div>
 		</div>
 		
 		
 		 
-		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 10px; margin-bottom: 3px; border-top: 0px;">
+		<div id="tabpart" class="portlet_tabpart03" style="margin-bottom: 3px; border-top: 0px; padding:0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
 				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0"><spring:message code='ezTask.lhj02' /></span></p>
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
@@ -1352,13 +1353,13 @@
 		
 		<table id="normalScreen" class="layout" style="height:100%; display:none;">
 			<tr>
-				<td style="padding-bottom:4px;height: 440px;">
+				<td style="padding-bottom:4px;height: 340px;">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:101%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
 			
 			<tr>
-				<td style="padding-top:4px;">
+				<td style="padding-top:0px;">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
@@ -1406,14 +1407,14 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="taskCommentList" style="overflow: auto; width:100%; height: 430px; background-color: white; padding-top:3px;"></div>
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 330px; background-color: white; padding-top:3px;"></div>
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-top:10px">
+				<td style="padding-top:6px">
 					<table class="content">
 						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
@@ -1451,7 +1452,7 @@
 		</table>
 		
 		<div id="taskDescription" style="padding-top: 20px;">
-			<ul style="padding-left: 0px;">
+			<ul style="padding-left: 0px; list-style:none;">
 				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200906' /></li>
 				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200907' /></li>
 				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200908' /></li>
