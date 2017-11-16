@@ -29,7 +29,7 @@
 			   .ui-datepicker { font-size:9.5pt !important}
 			   
 			   .css-class-to-highlight a{
-			   	color: #ff5722 !important;
+			   	color: #3498db !important;
 			   	font-weight: bold !important;	
 			   }
 		   
