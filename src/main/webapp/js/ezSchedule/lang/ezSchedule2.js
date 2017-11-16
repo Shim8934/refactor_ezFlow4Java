@@ -91,7 +91,7 @@ var strLang91 = "You did not select an agent. Please check back"
 var strLang92 = "Please choose only one representative."
 var strLang93 = "Please choose a user."
 var strLang94 = "Please choose the department."
-var strLang95 = "The user belongs to the same department.\r\n Please choose another department."
+var strLang95 = "The user belongs to the same department.\r\nPlease choose another department."
 
 // ### 2011-06 GoogleCalendar
 var strLang96 = "Google Enter your e-mail."
@@ -163,3 +163,5 @@ var strLang1000 = "Can not insert company schedule.";
 var strLang1001 = "Can not insert department schedule.";
 /* 2017-07-11 */
 var strLang1002 = "leap ";
+/* 2017-11-17 */
+var strLang1003 = "이미 등록된 일정공유정보가 있습니다.";
