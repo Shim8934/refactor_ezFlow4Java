@@ -500,7 +500,7 @@
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
 							
 							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")' onMouseOver='this.style.color=\"#006BB6\"' onMouseOut='this.style.color=\"#393939\"'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/popup_list_close.png' style='cursor:pointer;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
+							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/ImgIcon/comment_del.gif' style='cursor:pointer;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
 							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
 						
