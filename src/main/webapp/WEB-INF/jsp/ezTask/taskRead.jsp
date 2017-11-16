@@ -420,12 +420,12 @@
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 600, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 700, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
 			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
 					var feature = GetOpenPosition(760, 645);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 545, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 645, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
 			                "height = 645px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 				
@@ -841,12 +841,21 @@
 				
 			    document.getElementById("printScreen").style.display = "block";
 			    document.getElementById("taskInfo").style.display = "none";
+			    document.getElementById("taskDescription").style.display = "none";
 			    document.getElementById("normalScreen").style.display = "none";
 			    document.getElementById("menu").style.display = "none";
 			    document.getElementById("close").style.display = "none";
 			    document.getElementById("tabpart").style.display = "none";
 			    document.getElementById("tablework").style.display = "none";
 			    document.getElementById("tablecomment").style.display = "none";
+			    document.getElementById("taskRep").style.display = "none";
+			    
+			    if(tasktype == 4 || tasktype == 5 ||  tasktype == 6) {
+				    document.getElementById("reptr").style.display = "block";
+				    var repData = $("#taskRep").html();
+				    $("#printTable").append(repData);			    	
+			    }
+			    
 			    $("#updateStatus").hide();
 			
 			    var status = "";
@@ -1474,7 +1483,7 @@
 		</div>
 		
 		<div id="printScreen" style="display: none;">
-			<table class="layout" >
+			<table id="printTable" class="layout" >
 				<tr>
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.lhj02' />
@@ -1555,6 +1564,20 @@
 							</c:if>
 						</table>
 					</td>
+				</tr>				
+				<!-- 주석 -->
+				<tr>
+					<td>
+						<div style="padding-bottom: 10px;">
+							<ul style="padding-left: 0px; list-style:none;">
+								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200906' /></li>
+								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200907' /></li>
+								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200908' /></li>
+								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
+								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
+							</ul>
+						</div>
+					</td>
 				</tr>
 				<tr style="height:20px;">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
@@ -1614,7 +1637,14 @@
 							</tr>
 						</table>
 					</td>
+				</tr>				
+				<!-- 반복업무현황 -->
+				<tr id ="reptr" style="height:20px;padding-bottom:20px;display:none;">
+					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
+						<spring:message code='ezTask.t200904' />
+					</td>
 				</tr>
+			
 			</table>
 		</div>
 
