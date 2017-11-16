@@ -507,7 +507,7 @@
 						DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&startDate=" + startdate);
 					}
 					else {
-						alert("안됩니다.");
+						alert("<spring:message code='ezTask.t200911' />");
 						return;
 					}					
 					//end								
@@ -945,7 +945,7 @@
 	    						}
 	    					},
 	    					error : function(jqXHR, textStatus, errorThrown) {
-	    						alert("Get data from server failed!");
+	    						alert("<spring:message code='ezTask.t200913' />");
 	    					}
 		    			});		            	
 		            }
@@ -1098,7 +1098,7 @@
 				if (test == 0) {
 					dateArray = dateList.split(",");
 					repeatCount = backupCount;
-					alert("이날 에 Task를 없어요. 다를 날을 선택 하세요.");
+					alert("<spring:message code='ezTask.t200912' />");
 					$("#Sdatepicker").datepicker("setDate", date);
 				}
 				else {
