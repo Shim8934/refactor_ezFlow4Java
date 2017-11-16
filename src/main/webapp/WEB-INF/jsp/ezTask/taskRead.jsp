@@ -1143,7 +1143,7 @@
 	</head>
 	
 	<body class="popup" style="overflow:hidden; height:99%">
-		<div id="menu">
+		<div id="menu" style="margin-bottom:10px;">
 			<ul>
 				<c:if test="${userInfo.id == taskInfoVO.creatorID }">
 					<li id="delete"><SPAN onClick="check_delete()"><spring:message code='ezTask.t115' /></SPAN></li>
@@ -1190,7 +1190,7 @@
 		
 		
 		 
-		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 10px; margin-bottom: 3px; border-top: 0px;">
+		<div id="tabpart" class="portlet_tabpart03" style="margin-bottom: 3px; border-top: 0px; padding:0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
 				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0"><spring:message code='ezTask.lhj02' /></span></p>
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
@@ -1290,13 +1290,13 @@
 		
 		<table id="normalScreen" class="layout" style="height:100%; display:none;">
 			<tr>
-				<td style="padding-bottom:4px;height: 440px;">
+				<td style="padding-bottom:4px;height: 340px;">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:101%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
 			
 			<tr>
-				<td style="padding-top:4px;">
+				<td style="padding-top:0px;">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
@@ -1344,14 +1344,14 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="taskCommentList" style="overflow: auto; width:100%; height: 430px; background-color: white; padding-top:3px;"></div>
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 330px; background-color: white; padding-top:3px;"></div>
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-top:10px">
+				<td style="padding-top:6px">
 					<table class="content">
 						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
