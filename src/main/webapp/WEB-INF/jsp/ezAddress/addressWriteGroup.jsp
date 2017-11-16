@@ -383,7 +383,15 @@
 	                xmlHTTP.send(xmlDom);
 	
 	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                    alert("<spring:message code='ezAddress.t347' />");
+	                	if (xmlHTTP.status != 200) {
+			            	alert("<spring:message code='ezAddress.t347' />");
+			            }
+			            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
+			            	alert("<spring:message code='ezAddress.t1' />");
+			            }
+			            else {
+		                    alert("<spring:message code='ezAddress.t347' />");
+			            }
 				    }
 				    else {
 				        alert("<spring:message code='ezAddress.t348' />");

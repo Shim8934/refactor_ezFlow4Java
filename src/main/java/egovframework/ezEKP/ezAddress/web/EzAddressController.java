@@ -486,30 +486,12 @@ public class EzAddressController{
 				}
 			}
 			
-			// 부서/회사주소록 수정가능 옵션.
-			String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
-			
-			if (useAnyoneEdit.equals("YES")) {
-				if (addressId.equals("")) { //주소록 생성
-					ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
-							sName, sEmail, sCompany, sDept, sTitle, 
-							sCompanyPhone, sFax, sMobile, sHomePage, 
-							sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
-				} else { //주소록 수정
-					AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
-					
-					if (!addressInfo.getCreatorId().equals(userInfo.getId())) { //작성자가 아닐 경우
-						return "NO_WRITER";
-					}
-					
-					ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
-							sName, sEmail, sCompany, sDept, sTitle, 
-							sCompanyPhone, sFax, sMobile, sHomePage, 
-							sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
-				}
-			} else {
-				if (addressId.equals("")) { //주소록 생성
-					//권한이 있는지 체크
+			if (addressId.equals("")) { //주소록 생성
+				String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+				logger.debug("useAnyoneEdit="+ useAnyoneEdit);
+				
+				// UseAnyoneEdit이 YES가 아닐 경우 관리자인지 체크
+				if (!useAnyoneEdit.equals("YES")) {
 					if (folderType.equals("C")) {
 						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
 							return "NO_AUTHORITY";
@@ -519,32 +501,32 @@ public class EzAddressController{
 							return "NO_AUTHORITY";
 						}
 					}
-					
-					ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
-							sName, sEmail, sCompany, sDept, sTitle, 
-							sCompanyPhone, sFax, sMobile, sHomePage, 
-							sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
-				} else { //주소록 수정
-					AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
-					
-					if (!addressInfo.getCreatorId().equals(userInfo.getId())) { //작성자가 아닐 경우
-						//관리자 권한이 있는지 체크
-						if (folderType.equals("C")) {
-							if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
-								return "NO_AUTHORITY";
-							}
-						} else if (folderType.equals("D")) {
-							if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
-								return "NO_AUTHORITY";
-							}
+				}
+				
+				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
+						sName, sEmail, sCompany, sDept, sTitle, 
+						sCompanyPhone, sFax, sMobile, sHomePage, 
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
+			} else { //주소록 수정
+				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
+				
+				if (!addressInfo.getCreatorId().equals(userInfo.getId()) && !addressInfo.getModifierId().equals(userInfo.getId())) { //작성자나 최종편집인이 아닐 경우
+					//관리자인지 체크
+					if (folderType.equals("C")) {
+						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
+							return "NO_AUTHORITY";
+						}
+					} else if (folderType.equals("D")) {
+						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
+							return "NO_AUTHORITY";
 						}
 					}
-					
-					ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
-							sName, sEmail, sCompany, sDept, sTitle, 
-							sCompanyPhone, sFax, sMobile, sHomePage, 
-							sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
 				}
+				
+				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
+						sName, sEmail, sCompany, sDept, sTitle, 
+						sCompanyPhone, sFax, sMobile, sHomePage, 
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
 			}
 		} catch (Exception e) {
 			returnVaule = "ERROR";
@@ -552,7 +534,6 @@ public class EzAddressController{
 		}
 		
 		logger.debug("addressSave ended. returnVaule=" + returnVaule);
-		
 		return returnVaule;
 	}
 	
@@ -697,12 +678,43 @@ public class EzAddressController{
 			String sEmail = egovMessageSource.getMessage("ezAddress.t180", locale);
 			String sType = "G";
 			
-			if (addressId.equals("")) {
+			if (addressId.equals("")) { //주소록 생성
+				String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+				logger.debug("useAnyoneEdit="+ useAnyoneEdit);
+				
+				// UseAnyoneEdit이 YES가 아닐 경우 관리자인지 체크
+				if (!useAnyoneEdit.equals("YES")) {
+					if (folderType.equals("C")) {
+						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
+							return "NO_AUTHORITY";
+						}
+					} else if (folderType.equals("D")) {
+						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
+							return "NO_AUTHORITY";
+						}
+					}
+				}
+				
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
 						"", "", "", "", sMemo, sType);
-			} else {
+			} else { //주소록 수정
+				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
+				
+				if (!addressInfo.getCreatorId().equals(userInfo.getId()) && !addressInfo.getModifierId().equals(userInfo.getId())) { //작성자나 최종편집인이 아닐 경우
+					//관리자인지 체크
+					if (folderType.equals("C")) {
+						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
+							return "NO_AUTHORITY";
+						}
+					} else if (folderType.equals("D")) {
+						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
+							return "NO_AUTHORITY";
+						}
+					}
+				}
+				
 				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
