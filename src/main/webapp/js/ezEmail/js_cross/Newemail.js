@@ -36,6 +36,7 @@ function PreviewW_onMouserDown(e) {
     document.getElementById("ResizeBarW").style.display = "";
     document.getElementById("mailPanel").style.display = "";
     PreviewW_Move = true;
+	SmallSizeList = false;
     
     // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
     document.onselectstart = function () { return false; };

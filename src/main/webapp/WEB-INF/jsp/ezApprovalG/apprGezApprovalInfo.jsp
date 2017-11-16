@@ -185,6 +185,7 @@
 			var chamjoAfterYN = "${chamjoAfterYN}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){

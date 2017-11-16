@@ -98,8 +98,12 @@
 		            	    	hideProgress();
 		            	    }
 		            	    
-		            	    setTimeout(function() {		            	    
-		            			alert(CheckBoxArr.length + "<spring:message code='ezOrgan.t31' />");
+		            	    setTimeout(function() {		   
+		            	        if (result == "OK") {
+		            				alert(CheckBoxArr.length + "<spring:message code='ezOrgan.t31' />");
+		            	        } else {
+		            	            alert("<spring:message code='ezOrgan.t30' />")
+		            	        }
 		            			
 		    				    refresh_onclick();		            			
 		            	    }, 100);
@@ -174,12 +178,16 @@
 
 			        $.ajax({
 			        	type : "POST",
-			        	dataType : "xml",
+			        	dataType : "html",
 			        	url : "/admin/ezOrgan/restoreRetireUser.do",
 			        	async : false,
 			        	data : {deptID : rtnValue, cn : data},
-			        	success : function(result){
-			        		alert(strLang9);
+			        	success : function(result) {			        	    
+			        	    if (result == "OK") {
+			        			alert(strLang9);
+			        	    } else {
+			        	        alert(strLang10);
+			        	    }
 			        	},
 			        	error : function(){
 			        		alert(strLang10);	

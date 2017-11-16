@@ -765,7 +765,9 @@
 		                var field2 = message.GetListItem(fields, "chief");
 		                var chiefwidth = 1;
 		                if (field2) {
-		                    chiefwidth = parseInt(field2.width);
+		                    if (isNaN(chiefwidth)) {
+	                            chiefwidth = parseInt(field2.clientWidth);
+	                        }
 		                    field2.height = signHeight;
 		                }
 		                var sealwidth = (maxwidth + chiefwidth) / 2 + 20;
@@ -1355,7 +1357,7 @@
 			</tr>
 		  <tr>
 		    <td style="vertical-align: top; height: 90%;">
-		         <iframe id="Iframe1" name="message" class="viewbox" frameborder="0" style="margin: 0px; padding: 0px; width: 99.8%; height: 99.7%; overflow: hidden;" src="enforceContent.do"></iframe>
+		         <iframe id="Iframe1" name="message" class="viewbox" frameborder="0" style="margin: 0px; padding: 0px; width: 100%; height: 99.7%; overflow: hidden;" src="enforceContent.do"></iframe>
 		    </td>
 		  </tr>
 			<tr> 

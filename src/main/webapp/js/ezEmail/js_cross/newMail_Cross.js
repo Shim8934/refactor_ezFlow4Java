@@ -1609,7 +1609,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 
     if (DocHref.toLowerCase().indexOf(".doc") == -1 && DocHref.toLowerCase().indexOf(".hwp") == -1) {
         if (DocHref == "IMAGE") {
-            var HtmlBody = "<div class='margin' id='ezFormProc_div'><hr></hr><div align='center'>";
+            var HtmlBody = "<div style='position:relative;display:inline-block' class='margin' id='ezFormProc_div'><hr></hr><div align='center'>";
             if (ImagCnt == "") {
                 HtmlBody = HtmlBody + "<img src='" + uploadCommonPath + "/" + GetDateFormatString() + "/" + DocID + ".png' embedding='1'/>";
             }
@@ -1711,7 +1711,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
                 filename = filename + ".hwp";
                 filesize = strLang116;
             }
-            else if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+            else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
                 filename = filename + ".mht";
                 filesize = strLang116;
             }
@@ -2666,6 +2666,12 @@ function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListVi
             document.getElementById("MsgBCC_TRu").style.display = "";
             document.getElementById("MsgBCC_TR").style.display = "";
             document.getElementById("BccViewer").setAttribute("status", "on");
+            
+            if (isCrossBrowser == 'true') {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 240 + "PX";
+        	} else {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
+        	}
         }
         addReceiverOneListView(0, pListViewMsgTo);
         addReceiverOneListView(1, pListViewMsgCC);

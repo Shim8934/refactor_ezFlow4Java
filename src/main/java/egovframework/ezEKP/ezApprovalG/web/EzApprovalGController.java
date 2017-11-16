@@ -759,6 +759,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		
 		String docSN = "";
 		String beforeUrl = "";
@@ -878,6 +879,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 
 		logger.debug("draftui ended.");
 
@@ -977,6 +979,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String chamjoAfterYN = ezCommonService.getTenantConfig("chamjoAfterYN", userInfo.getTenantId());
 		String isUsed = request.getParameter("isUsed");
 		String beforeDocID = request.getParameter("beforeDocID");
+		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		
 		if (isUsed == null) {
 			isUsed = "";
@@ -1025,6 +1028,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("chamjoAfterYN", chamjoAfterYN);
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("beforeDocID", beforeDocID);
+		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		
 		logger.debug("ezApprovalInfo ended.");
 		
@@ -1830,6 +1834,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String serverName = userInfo.getServerName();
 		String susinAdmin = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
+		String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
+		
 		// a=1은 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -1857,10 +1864,104 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isBody", isBody);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
+		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
+		model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
 		
 		logger.debug("aprAttach ended");
 		
 		return "ezApprovalG/apprGaprAttach";
+	}
+	
+	/**
+	 * 전자결재G 기안 첨부 업로드(멀티) 호출 Method
+	 * 2017-11-08 장진혁 구현
+	 */
+	@RequestMapping(value = "/ezApprovalG/multiUpload.do")	
+	public String multiUpload(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, MultipartHttpServletRequest request, Model model) throws Exception{
+		logger.debug("multiUpload started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);		 
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String companyID = request.getParameter("compid");		
+		String docID = request.getParameter("docid");
+		String fileAttachSN = request.getParameter("attachsn");
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, companyID, userInfo.getTenantId());
+		
+		// uploadFile, tempUploadFile 디렉토리 경로
+		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
+		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
+		File uFile = new File(upd);
+		File tFile = new File(tempUpd);
+		
+		if (uFile.isDirectory()) {
+			uFile.mkdir();
+		}
+		
+		if (!tFile.isDirectory()) {
+			tFile.mkdirs();
+		}
+		
+		if (!uFile.isDirectory()) {
+			uFile.mkdirs();
+		}
+		
+		//2017-11-08 장진혁 멀티 파일업로드 작업
+		List<MultipartFile> multiFile = request.getFiles("file1");
+		int cnt = multiFile.size();
+		String[] resultUploadArray = new String[cnt];
+		String[] fileLocationArray = new String[cnt];
+		String[] fileNameArray = new String[cnt];
+		int[] fileSizeArray = new int[cnt];		
+		
+		for (int i = 0; i < cnt; i++) {
+			String fileName = multiFile.get(i).getOriginalFilename();		
+			
+			int fileSize = (int) multiFile.get(i).getSize();
+			int maxSize = 0;
+			
+			if (request.getParameter("maxsize") != null) {
+				maxSize = Integer.parseInt(request.getParameter("maxsize"));
+			}
+			
+			if (fileName.indexOf("\\") > -1) {
+				fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+			}
+			
+			fileNameArray[i] = fileName;
+			fileSizeArray[i] = fileSize;
+			
+			// 첨부파일 순번 설정 4자리
+			String fileAttachFormatSN = "00000" + fileAttachSN;
+			fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4, fileAttachFormatSN.length());
+		
+			String saveFileName = docID + fileAttachFormatSN + fileName;
+			
+			if (fileSize > maxSize) {
+				resultUploadArray[i] = "overflow";
+			} else {
+				// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
+				if (useExtension.indexOf(fileName.substring(fileName.lastIndexOf(".") + 1)) == -1 && !useExtension.equals("*")) {
+					resultUploadArray[i] = "denied";
+				} else {
+					// tempUploadFile에 파일 생성
+					writeUploadedFile(multiFile.get(i), saveFileName, tempUpd);
+					fileLocationArray[i] = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator + saveFileName;
+					resultUploadArray[i] = "true";
+					
+					fileAttachSN = Integer.toString(Integer.parseInt(fileAttachSN) + 1);
+				}
+			}
+		}
+			
+		model.addAttribute("resultUpload", resultUploadArray);
+		model.addAttribute("fileLocation", fileLocationArray);
+		model.addAttribute("fileName", fileNameArray);
+		model.addAttribute("fileSize", fileSizeArray);
+		
+		logger.debug("multiUpload ended");
+		
+		return "json";
 	}
 	
 	/**
@@ -2420,6 +2521,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String title = request.getParameter("title");
 		String uFlag = request.getParameter("uFlag");
 		String admin = request.getParameter("admin");
+		String docState = request.getParameter("docState");
 		String pass = "";
 		String formUrl = "";
 		String formDocType = "";
@@ -2468,8 +2570,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (title == null || title.equals("")) {
 					String reUseInfo = ezApprovalGService.getDocInfoS(docID, "END", "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 					Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
-					formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-					formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+					if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
+						formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+					}
+					if (resultXML2.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
+						formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+					}
 				}
 			}
 		} 
@@ -2491,7 +2597,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("formUrl", formUrl);
 		model.addAttribute("formDocType", formDocType);
 		model.addAttribute("approvalFlag", approvalFlag);
-
+		model.addAttribute("docState", docState);
+		
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";
@@ -3294,7 +3401,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator;
 		String docDir = docID.substring(docID.length() - 3);
 		String approvalPWD = ezApprovalGService.getApprovalPWD(uID, userInfo.getTenantId(), userInfo.getCompanyID());
-		
+		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+
 		if (docDir.substring(0, 1).equals("0")) {
 			docDir = docDir.substring(docDir.length() - 2);
 		} else if (docDir.substring(0, 2).equals("00")) {
@@ -3377,7 +3485,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("signImageType", signImageType);
-
+		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
+		
 		logger.debug("approvui ended");
 		
 		return "ezApprovalG/apprGapprovui";
@@ -7269,5 +7378,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("selectExpCabDocInfo ended");
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/deleteOpinionTypeInfo.do")
+	public String deleteOpinionTypeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteOpinionTypeInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String opinionType = request.getParameter("opinionType");
+		
+		ezApprovalGService.deleteOpinionTypeInfo(docID, opinionType, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("deleteOpinionTypeInfo ended.");
+		
+		return "json";
 	}
 }

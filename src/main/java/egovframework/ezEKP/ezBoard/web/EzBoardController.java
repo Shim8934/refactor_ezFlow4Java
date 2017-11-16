@@ -1457,11 +1457,11 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
     					if (primaryData.equals("1")) {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
     					} else {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME2") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME2")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME>");
     					}
     					resultXML.append("<WRITEDATE>" + noticeList.get(k).get("WRITEDATE") + "</WRITEDATE>");
     					resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
@@ -1546,8 +1546,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
-					resultXML.append("<WRITERDEPTNAME>" + boardListItem.get(j).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
-					resultXML.append("<WRITERDEPTNAME2>" + boardListItem.get(j).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME2>");
+					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
+					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + boardListItem.get(j).get("WRITEDATE") + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
                 }
@@ -2453,11 +2453,11 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
     					if (primaryData.equals("1")) {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
     					} else {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME2") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME2")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME>");
     					}
     					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)noticeList.get(k).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
     					resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
@@ -2554,8 +2554,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
-					resultXML.append("<WRITERDEPTNAME>" + boardListItem.get(j).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
-					resultXML.append("<WRITERDEPTNAME2>" + boardListItem.get(j).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME2>");
+					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
+					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
 					resultXML.append("<GUBUN>" + boardListItem.get(j).get("GUBUN") + "</GUBUN>");
@@ -3963,7 +3963,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String result = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezBoard.t208", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS><ROWS>";
 		
         for (int i = nList.getLength() - 1; i >= 0; i--) {
-            result += "<ROW><CELL><VALUE><![CDATA[" + commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(i).getTextContent()) + "]]></VALUE>";
+            result += "<ROW><CELL><VALUE>" + commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(i).getTextContent()) + "</VALUE>";
             result += "<DATA1><![CDATA[" + doc.getElementsByTagName("ITEMID").item(i).getTextContent() + "]]></DATA1></CELL></ROW>";
         }
         result += "</ROWS></LISTVIEWDATA>";

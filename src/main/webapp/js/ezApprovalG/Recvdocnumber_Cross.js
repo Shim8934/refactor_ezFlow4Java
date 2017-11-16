@@ -51,11 +51,11 @@ function setDocNumFormat() {
                 break;
 
             case "YY":
-                numHeader = numHeader + d.getYear() + Tail;
+                numHeader = numHeader + d.getFullYear() + Tail;
                 break;
 
             case "yy":
-                var yyear = d.getYear();
+                var yyear = d.getFullYear();
                 numHeader = numHeader + yyear.toString().substr(2) + Tail;
                 break;
 
@@ -88,7 +88,7 @@ function setDocNumFormat() {
             	break;
             	
             case "YM":
-            	numHeader = numHeader + d.getYear();
+            	numHeader = numHeader + d.getFullYear().substr(2);
             	
             	var mmonth = d.getMonth() + 1;
                 if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;

@@ -929,11 +929,14 @@ function makePageSelPage() {
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
-            PagingHTML += "<span class=\"on\">" + i + "</span>";
+        	PagingHTML += "<span class=\"on\">" + i + "</span>";
         }
         else {
             PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
         }
+    }
+    if (MaxNum == 0) {
+    	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
@@ -973,7 +976,9 @@ function event_listContextMenu(event) {
         var Div_ = EventDivSize - listsizewidth;
         EventMouseX = EventMouseX - Div_;
     }
-
+    if (g_foldertype == "draft") {
+    	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
+    }
     document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
@@ -1111,6 +1116,11 @@ function event_HeaderCheckBoxClick(obj) {
 var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
+	
+	if (event.target.className == "Mail_Input") {
+		return;
+	}
+	
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (!event) event = window.event;
     }

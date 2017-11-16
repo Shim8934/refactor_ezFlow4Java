@@ -54,9 +54,9 @@
 	    </script>
 	</head>
 	<body>
-		<table class="content" style="width:790px;height:600px;margin-top:10px;">
+		<table class="content" style="width:790px;height:600px;margin-top:10px;border:0;">
 			<tr>
-				<td style="height:600px">                   
+				<td style="height:600px;border:0;">                   
 				    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; border:0px;"></iframe>
 				</td>
 			</tr>

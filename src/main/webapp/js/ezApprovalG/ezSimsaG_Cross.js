@@ -1348,3 +1348,12 @@ function rtrim(parm_str) {
 	}
 return str_temp;
 }
+
+function setMenuDisable(id, flag) {
+    if (document.getElementById(id) != null) {
+        if (flag)
+            document.getElementById(id).disabled = true;
+        else
+            document.getElementById(id).disabled = false;
+    }
+}
