@@ -1756,7 +1756,7 @@
 	        }
 	        var issearch = false;
 	        function search_click(type) {
-	            if (keyword.value == "") {
+	            if ($.trim(keyword.value) == "") {
 	                alert("<spring:message code='ezEmail.t10' />");
 	                keyword.focus();
 	                return;

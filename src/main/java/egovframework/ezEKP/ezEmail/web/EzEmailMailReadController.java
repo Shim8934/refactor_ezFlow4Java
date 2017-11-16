@@ -1080,7 +1080,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// received date
 					date = message.getReceivedDate();
 					if (date != null) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 						String receivedDateStr = sdf.format(date);
 						
@@ -1288,6 +1288,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String isAttach = "NO";
 		String pAttachListHtml = "";
 		String pBody = "";
+		boolean isSentItems =false;
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
@@ -1393,7 +1394,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					// received date
 					if (message.getReceivedDate() != null) {
-						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
+						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 						pReciveDT = sdFormat.format(message.getReceivedDate());
 						pReciveDT = commonUtil.getDateStringInUTC(pReciveDT, loginInfo.getOffset(), false);
@@ -1414,6 +1415,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						isAttach = "OK";
 					}
 					
+					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+						isSentItems = true;
+					}
+					
 				}
 			}
 		} catch (MessagingException e) {
@@ -1430,6 +1435,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pReciverCc", pReciverCc);
 		model.addAttribute("pSubject", pSubject);
 		model.addAttribute("isAttach", isAttach);
+		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("pAttachListHtml", pAttachListHtml);
 		model.addAttribute("pBody", pBody);
 		

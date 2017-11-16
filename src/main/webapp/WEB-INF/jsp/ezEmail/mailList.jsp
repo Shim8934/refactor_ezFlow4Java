@@ -398,7 +398,7 @@
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
         <div id="layer_popup" style="width:250px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
-          <div class="popupwrap1">
+          <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
             <div class="popupwrap2">
               <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="list_element">
 		          <colgroup>

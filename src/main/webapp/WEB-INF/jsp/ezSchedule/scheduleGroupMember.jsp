@@ -197,7 +197,7 @@
 		        for (var i = 0; i < checks.length; i++) {
 		            if (checks.item(i).checked == true) {
 		                if (GetAttribute(checks.item(i), "memberstatus") != 2) {
-		                    alert("<spring:message code='ezSchedule.t179' />");
+		                    alert("<spring:message code='ezSchedule.t17901' />");
 		                    return;
 		                }
 		                memberId[i] = GetAttribute(checks.item(i), "memberid");
@@ -243,6 +243,7 @@
 			  	</ul>
 			</div>
 			<div id="close"><ul><li><span onClick="window.close()"><spring:message code='ezSchedule.t16' /></span></li></ul></div>
+			<span class="txt">▒ <spring:message code="ezSchedule.t17902" /></span>
 			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:403px; HEIGHT:277px"> 
 				<table width="100%" class="popuplist">
 			    	<tr>

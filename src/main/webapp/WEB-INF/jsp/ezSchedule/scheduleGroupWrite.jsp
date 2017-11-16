@@ -145,6 +145,18 @@
 		        DisplayUserImageList();
 		    }
 			
+		    function onDragEnter(evt) {
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		        evt.dataTransfer.dropEffect = "copy";
+		        evt.dataTransfer.effectAllowed = "copy";
+		    }
+		    function onDrop(evt, element) {
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		        InsertReceiver(element);
+		    }
+		    
 		    function RequestData(pNodeID, pTreeID) {
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
@@ -663,16 +675,18 @@
 		    	/* if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
-		    	} */
+		    	} */		    	
 		    	
-		        if (document.all("groupname").value == "") {
+		        if (document.all("groupname").value.replace(/\s/g, '') == "") {
 		            alert("<spring:message code='ezSchedule.t195' />");
+		            document.all("groupname").value = "";
 		            document.all("groupname").focus();
 		            return;
 		        }
 
-		        if (document.all("description").value == "") {
+		        if (document.all("description").value.replace(/\s/g, '') == "") {
 		            alert("<spring:message code='ezSchedule.t196' />");
+		            document.all("description").value = "";
 		            document.all("description").focus();
 		            return;
 		        }
@@ -772,7 +786,7 @@
 		    		return;
 		    	}
 		        
-		        if (keywordObj.value == "") {
+		        if (keywordObj.value.trim() == "") {
 		            alert("<spring:message code='ezSchedule.t8' />");
 		            keywordObj.focus();
 		            return;
@@ -879,14 +893,21 @@
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-                            if("<c:out value='${userInfo.lang}' />" == "1")
+                            
+		                    
+/* 		                    if("<c:out value='${userInfo.lang}' />" == "1")
                                 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " (" + strDeptNM + ") " + "]]></VALUE></CELL></ROW>";
 		                    else
                                 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " (" + strName2 + ") " + "]]></VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 
-		                    Resultxml = loadXMLString(pparsingXML2);
+		                    Resultxml = loadXMLString(pparsingXML2); */
 
+	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                        Resultxml = loadXMLString(pparsingXML2);
+		                    
+		                    
 		                    var listview = new ListView();
 		                    listview.LoadFromID(listid);
 

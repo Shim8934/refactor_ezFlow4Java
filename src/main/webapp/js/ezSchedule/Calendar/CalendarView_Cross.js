@@ -224,13 +224,13 @@ function CalendarView(pTagetID) {
                 dTd.appendChild(dDiv);
                 dTr.appendChild(dTd);
                 dTable.appendChild(dTr);
-                var dTr = document.createElement("TR")
+                /*var dTr = document.createElement("TR")
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_text";
                 dTd.setAttribute("dispDate", dayText);
                 dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
                 dTr.appendChild(dTd);
-                dTable.appendChild(dTr);
+                dTable.appendChild(dTr);*/
                 oTd.appendChild(dTable);
                 oTr.appendChild(oTd);
                 oTBody.appendChild(oTr);
@@ -471,6 +471,12 @@ function MonthData(oThisDate, TDIndex) {
 
 
     var nowDate = new Date();
+    
+    if (typeof UserOffset !== 'undefined' && UserOffset) {
+    	var _timez = nowDate.getTime() + (nowDate.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000);
+    	nowDate.setTime(_timez);	
+    }
+    
     var cell_ID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
@@ -526,6 +532,7 @@ function MonthData(oThisDate, TDIndex) {
     subTable.setAttribute("cellpadding", "0");
     subTable.setAttribute("cellspacing", "0");
     subTable.setAttribute("border", "0");
+    subTable.style.overflowX = "auto";    
     subSpan.appendChild(subTable);
     objTd.appendChild(subSpan);
 
@@ -879,13 +886,13 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.appendChild(dDiv);
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
-        var dTr = document.createElement("TR")
+/*        var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("dispDate", divID);
         dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
         dTr.appendChild(dTd);
-        dTable.appendChild(dTr);
+        dTable.appendChild(dTr);*/
         tTd.appendChild(dTable);
         calTr.appendChild(tTd);
     }
@@ -908,7 +915,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
-        var dTr = document.createElement("TR")
+       var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":3_Value");

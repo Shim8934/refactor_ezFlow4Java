@@ -195,12 +195,18 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	compAdmin = "Y";
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		if (useAnyoneEdit.equals("YES")) {
+			compAdmin = "Y";
         	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		} else {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	compAdmin = "Y";
+	        	deptAdmin = "Y";
+	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+	        	deptAdmin = "Y";
+	        }
+		}
 		
 		String pOwerId = "";
 		if (pFolderType.equals("D")) {
@@ -484,13 +490,16 @@ public class EzAddressController{
 			}
 			
 			// 주소록을 추가/수정 할 권한이 있는지 체크.
-			if (folderType.equals("C")) {
-				if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
-					return "NO_AUTHORITY";
-				}
-			} else if (folderType.equals("D")) {
-				if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
-					return "NO_AUTHORITY";
+			String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+			if (!useAnyoneEdit.equals("YES")) {
+				if (folderType.equals("C")) {
+					if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
+						return "NO_AUTHORITY";
+					}
+				} else if (folderType.equals("D")) {
+					if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
+						return "NO_AUTHORITY";
+					}
 				}
 			}
 			
@@ -542,12 +551,19 @@ public class EzAddressController{
 		
 		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	compAdmin = "Y";
-        	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		if (useAnyoneEdit.equals("YES")) {
+			compAdmin = "Y";
+			deptAdmin = "Y";
+		} else {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				compAdmin = "Y";
+				deptAdmin = "Y";
+			} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
+		}
+		
 		
 		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
 		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
@@ -567,6 +583,7 @@ public class EzAddressController{
 		model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
+		model.addAttribute("getsMemo", addressInfo.getsMemo().replace("\n", "<br/>"));
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
@@ -697,12 +714,18 @@ public class EzAddressController{
         	useIE11Browser = "CK";
         }
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	compAdmin = "Y";
-        	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		if (useAnyoneEdit.equals("YES")) {
+			compAdmin = "Y";
+			deptAdmin = "Y";
+		} else {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				compAdmin = "Y";
+				deptAdmin = "Y";
+			} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
+		}
 		
 		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		String address = addressInfo.getsMemo();
@@ -790,12 +813,18 @@ public class EzAddressController{
 		String deptAdmin = "";
 		String companyAdmin = "";
 		
-        if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	companyAdmin = "Y";
-        	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		if (useAnyoneEdit.equals("YES")) {
+			companyAdmin = "Y";
+			deptAdmin = "Y";
+		} else {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				companyAdmin = "Y";
+				deptAdmin = "Y";
+			} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
+		}
         
         StringBuilder rootAddressXML = new StringBuilder();
         
@@ -1109,12 +1138,18 @@ public class EzAddressController{
 		String show = "N";
 		String title = egovMessageSource.getMessage("ezAddress.t144", locale);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		if (useAnyoneEdit.equals("YES")) {
 			companyAdmin = "Y";
 			deptAdmin = "Y";
-		}
-		else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-			deptAdmin = "Y";
+		} else {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				companyAdmin = "Y";
+				deptAdmin = "Y";
+			}
+			else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
 		}
 
 		if (request.getParameter("mode") != null) {
@@ -1370,13 +1405,18 @@ public class EzAddressController{
 			filter = request.getParameter("filter");
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		if (useAnyoneEdit.equals("YES")) {
 			bAdmin = "Y";
+			cAdmin = "Y";
+		} else {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
+				bAdmin = "Y";
+			}
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				cAdmin = "Y";
+			}
 		}
-
-        if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	cAdmin = "Y";
-        }
 		
         pListType = ezAddressService.getListType(userInfo.getTenantId(), userInfo.getId());
         if (pListType == null) {
@@ -1453,12 +1493,7 @@ public class EzAddressController{
 			int pListPageSize = Integer.parseInt(strListPageSize);
 			int pCurrentPage = Integer.parseInt(strCurrentPage);
 			
-			if (pCurrentPage < 1) {
-				pCurrentPage = 1;
-			}
-			
 			int start = pListPageSize * (pCurrentPage - 1);
-			
 			//TODO: pFilter가 항상 a,b 형식인지 확인하기
 			logger.debug("pFilter=" + pFilter);
 			
@@ -2056,6 +2091,11 @@ public class EzAddressController{
 	        	if (!userInfo.getLang().equals("2")) {
 	        		csvBody[0] = csvBody[1] + " " + csvBody[0];
 	        		csvBody[0] = csvBody[0].trim();
+	        	}
+	        	
+	        	// 가져오기시 메모에 줄바꿈이 있을 경우 치환
+	        	if (csvBody[14].contains("\n")) {
+	        		csvBody[14] = csvBody[14].replaceAll("\n", "<br>");
 	        	}
 	        	
         		if (csvBody[8].equals(groupMailStr)) {

@@ -191,8 +191,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String displayName = request.getParameter("displayName");
 		String displayName2 = request.getParameter("displayName2");
 		String mailId = request.getParameter("mailId");
+		String extensionAttribute15 = request.getParameter("extensionAttribute15");
+		extensionAttribute15 = extensionAttribute15 != null ? extensionAttribute15 : "";		
+		String skipInitData = request.getParameter("skipInitData");
+		skipInitData = skipInitData != null ? skipInitData : "";
 		
-		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 + ",mailId=" + mailId);
+		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
+				+ ",displayName2=" + displayName2 + ",mailId=" + mailId
+				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData);
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -257,10 +263,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						
 						// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 						try {
-							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID, userInfo);
+							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
+									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
 							result = "OK";	
 						} catch (Exception e) {
 							e.printStackTrace();
+							
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeGroup(mailAddr);
 							result = "EMAIL_ERROR";
@@ -829,7 +837,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
         
 		// 현재 관리자의 암호를 구한다.
-		List<String> userCookieInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
 		String adminPassword = userCookieInfo.get(1);
         
         int tenantID = userInfo.getTenantId();        

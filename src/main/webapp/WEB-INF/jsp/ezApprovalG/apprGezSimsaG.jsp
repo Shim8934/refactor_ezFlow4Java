@@ -765,7 +765,9 @@
 		                var field2 = message.GetListItem(fields, "chief");
 		                var chiefwidth = 1;
 		                if (field2) {
-		                    chiefwidth = parseInt(field2.width);
+		                    if (isNaN(chiefwidth)) {
+	                            chiefwidth = parseInt(field2.clientWidth);
+	                        }
 		                    field2.height = signHeight;
 		                }
 		                var sealwidth = (maxwidth + chiefwidth) / 2 + 20;

@@ -169,6 +169,8 @@ public interface EzPortalService {
 	
 	public String checkViewRight (String uID, String accessIDList, int tenantID) throws Exception;
 	
+	public boolean checkViewRightBln (String uID, String accessIDList, int tenantID) throws Exception;
+	
 	public String checkEditRight (String uID, String accessIDList, int tenantID) throws Exception;
 	
 	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception;
