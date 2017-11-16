@@ -442,7 +442,7 @@
 						
 						//document.getElementById("periodblock").style.display = "";
 						//document.getElementById("trrepeatinfo").style.display = "none";
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 435 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -456,7 +456,7 @@
 						
 						//document.getElementById("periodblock").style.display = "";
 						//document.getElementById("trrepeatinfo").style.display = "none";
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 435 + "PX";
 					}
 				} else {					
 					if (obj.id == "P") {
@@ -485,7 +485,7 @@
 						
 						//document.getElementById("periodblock").style.display = "";
 						//document.getElementById("trrepeatinfo").style.display = "none";
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -499,7 +499,7 @@
 						
 						//document.getElementById("periodblock").style.display = "";
 						//document.getElementById("trrepeatinfo").style.display = "none";
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					}
 				}
 				
