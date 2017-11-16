@@ -168,6 +168,25 @@
 					if (repetition) {
 						show_repetition_info();
 					}
+					
+					//baonk added
+					var radioTasks = document.getElementsByName("tasktypesel");
+					if (tasktype == "1" || tasktype == "4") {								
+						for (var i = 0; i < radioTasks.length; i++) {
+							if (radioTasks[i].getAttribute("id") != "P") {
+								radioTasks[i].disabled = true;						
+							}
+						}
+					}
+					else {
+						for (var i = 0; i < radioTasks.length; i++) {
+							if (radioTasks[i].getAttribute("id") == "P") {
+								radioTasks[i].disabled = true;
+								break;
+							}
+						}
+					}
+					//end
 				}
 				
 				if (useTodoMemo == 'YES') {
@@ -573,7 +592,7 @@
 								<th><spring:message code='ezTask.t2003' /></th>
 								<td style="width:300px">
 									<c:choose>
-										<c:when test="${taskInfoVO.taskType == '2'}">
+										<c:when test="${taskInfoVO.taskType == '2' || taskInfoVO.taskType == '5'}">
 											<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="P"><spring:message code='ezTask.t2000' /></label>
 											<input type ="radio" id="I" name="tasktypesel" value ="2" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
@@ -581,7 +600,7 @@
 											<input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="C"><spring:message code='ezTask.t2002' /></label>
 										</c:when>
-										<c:when test="${taskInfoVO.taskType == '3'}">
+										<c:when test="${taskInfoVO.taskType == '3' || taskInfoVO.taskType == '6'}">
 											<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="P"><spring:message code='ezTask.t2000' /></label>
 											<input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
