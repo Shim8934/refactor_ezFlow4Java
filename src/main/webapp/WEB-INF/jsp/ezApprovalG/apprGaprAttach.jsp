@@ -791,7 +791,7 @@
 		  <tr>
 		    <td style="text-align:center;">
 		    	<div class="listview" style="width:515px;">
-		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
+		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:260px;margin:1px 1px 1px 1px;"></div>					
 		      	</div>
 		    </td>
 		    <th style="display:none;width:75px;text-align:center;">
