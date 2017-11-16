@@ -700,14 +700,17 @@
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + currentCount + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
 		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + cnt3 + ")";
+		            $(".sort_radio").show();
 	            } else if ($(".tabon").attr("divname") == "taskdictate") {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + cnt + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + currentCount + ")";
 		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + cnt3 + ")";
+		            $(".sort_radio").show();
 	            } else {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + cnt + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
 		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + currentCount + ")";
+		            $(".sort_radio").hide();
 	            }
 
 	            show_page();
@@ -911,19 +914,19 @@
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
 
 				<!-- 완료 -->
-				<li id="right" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
+				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
 					<input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t99' /></label>
 				</li>
 
 				<!-- 진행중 -->
-				<li id="right" style="float:right;font-weight:normal;color:black;">
+				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;">
 					<input name="check" id="checkRadio2" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="checkRadio2" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
 
 				<!-- 전체보기 -->
-				<li id="right" style="float:right;font-weight:normal;color:black;">
+				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;">
 					<input name="check" id="checkRadio3" type="radio" value="all" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="checkRadio3" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
 				</li>
