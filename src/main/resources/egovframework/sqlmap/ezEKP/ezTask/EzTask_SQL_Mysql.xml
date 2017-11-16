@@ -455,15 +455,13 @@
 			WHERE
 				A.tenantid = #tenantID#
 			AND
-				((A.creatorid = #userID# and ((A.tasktype = 2 or A.tasktype = 3) or ((A.tasktype = 5 or A.tasktype = 6) and A.totalrep != 0)))
-			OR
-				(A.creatorid = #userID# AND (A.tasktype = 4 and A.totalrep != 0))
-			OR
-				((A.creatorid = #userID# and A.tasktype = 1)
-			OR
-				(A.personid = #userID#)
-			OR
-				(B.sharerid = #userID# and A.TASKID = B.TASKID)))
+				(
+					(A.creatorid = #userID# and ((A.tasktype = 2 or A.tasktype = 3 or A.tasktype = 1) or ((A.tasktype = 4 or A.tasktype = 5 or A.tasktype = 6) and A.totalrep != 0)))
+				OR
+					(A.personid = #userID# and ((A.tasktype = 2 or A.tasktype = 3 or A.tasktype = 1) or ((A.tasktype = 4 or A.tasktype = 5 or A.tasktype = 6) and A.totalrep != 0)))
+				OR
+					((B.sharerid = #userID# and A.TASKID = B.TASKID) AND ((A.tasktype = 2 or A.tasktype = 3 or A.tasktype = 1) or ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND A.totalrep != 0)))	
+				)			
 		]]>
 
 		<isNotEqual property="filter" compareValue="" prepend="AND">
