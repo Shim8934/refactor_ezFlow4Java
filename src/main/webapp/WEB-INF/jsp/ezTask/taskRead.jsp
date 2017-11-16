@@ -27,9 +27,12 @@
 		
 		<style type="text/css">
 			   .ui-datepicker { font-size:9.5pt !important}
-			   .css-class-to-highlight{
-			       background-color: #00bfff;
+			   
+			   .css-class-to-highlight a{
+			   	color: #ff5722 !important;
+			   	font-weight: bold !important;	
 			   }
+		   
 		</style>
 		
 		<script type="text/javascript">
@@ -746,6 +749,7 @@
 				}
 				
 				$(".progressbar").css("display", "inline-table");
+				
 			}
 			
 			/* progressBar 조회 */
@@ -1040,7 +1044,13 @@
 	    						else {
 	    							showEmptyTable();
 	    						}
+	    						
 	    					},
+	    					afterShow: function() {
+	    						console.log('afterShow');
+	    						$(".css-class-to-highlight").css("background-color","red");
+	    					}
+	    					,
 	    					error : function(jqXHR, textStatus, errorThrown) {
 	    						alert("<spring:message code='ezTask.t200913' />");
 	    					}
@@ -1201,6 +1211,7 @@
 				else {
 					dayOnMouseClick(dateText);
 				}
+				
 			}
 		</script>
 	</head>
