@@ -165,7 +165,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 									userId = userId.substring(0, atSignPos);
 								}
 								
-								loginController.createLoginCookie(userId, "", "", tenantId, request, response);
+								loginController.createLoginCookie(userId, " ", " ", tenantId, request, response);
 								
 								response.sendRedirect(request.getRequestURI());
 							}														
