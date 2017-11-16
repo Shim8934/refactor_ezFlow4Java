@@ -1418,7 +1418,7 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="taskCommentList" style="overflow: auto; width:100%; height: 330px; background-color: white; padding-top:3px;"></div>
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 330px; background-color: white; padding-top:3px; padding-bottom: 1px;"></div>
 							</td>
 						</tr>
 					</table>
