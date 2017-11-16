@@ -94,6 +94,7 @@
 
 		        if (tasktype == "1" || tasktype == "4") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
+		            document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
@@ -413,15 +414,32 @@
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + taskid, "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 600, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
 			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
 					var feature = GetOpenPosition(760, 645);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + taskid, "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 545, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
 			                "height = 645px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 				
+			}			
+			
+			function edit_taskInfo() {
+				var win;
+				
+				/* 레이어팝업으로 taskWrite 호출 */
+				if (useTodoMemo == 'YES') {
+					var feature = GetOpenPosition(760, 700);
+		        	
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 500, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
+			                "height = 220px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		        } else {
+					var feature = GetOpenPosition(760, 645);
+		        	
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 500, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
+			                "height = 220px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		        }
 			}
 			
 			/* 의견삭제 */
@@ -569,8 +587,15 @@
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "";			            
 			            
-			        	document.getElementById("editTask").style.display = "none";
+			            if (creatorid == userid) {
+			            	document.getElementById("editTaskInfo").style.display = "";
+			            }
+			            else{
+			            	document.getElementById("editTaskInfo").style.display = "none";
+			            }
+			        	
 			        	document.getElementById("editTaskWork").style.display = "none";
+			        	document.getElementById("editTaskChisi").style.display = "none";
 			            
 			            break;
 			        case "MailEnv_div1":
@@ -581,13 +606,13 @@
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "none";
+			            document.getElementById("editTaskInfo").style.display = "none";
+			            document.getElementById("editTaskWork").style.display = "none";
 			            
-			            if (creatorid == userid) {
-				        	document.getElementById("editTask").style.display = "";
-				        	document.getElementById("editTaskWork").style.display = "none";
+			            if (creatorid == userid) {				        	
+				        	document.getElementById("editTaskChisi").style.display = "";				        	
 				        } else {
-				        	document.getElementById("editTask").style.display = "none";
-				        	document.getElementById("editTaskWork").style.display = "none";
+				        	document.getElementById("editTaskChisi").style.display = "none";				        	
 				        }
 			            
 			            break;
@@ -600,12 +625,19 @@
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "none";
 			            
-			            if (personid == userid) {
-			            	document.getElementById("editTask").style.display = "none";
+			            document.getElementById("editTaskInfo").style.display = "none";
+			            document.getElementById("editTaskChisi").style.display = "none";
+			            
+			            if (personid == userid) {			            	
 				        	document.getElementById("editTaskWork").style.display = "";
-				        } else {
-				        	document.getElementById("editTask").style.display = "none";
-				        	document.getElementById("editTaskWork").style.display = "none";
+				        } 
+			            else {
+			            	if(creatorid != userid) {
+			            		document.getElementById("editTaskWork").style.display = "";
+			            	}
+			            	else {
+			            		document.getElementById("editTaskWork").style.display = "none";
+			            	}				        	
 				        }
 			            
 			            break;
@@ -618,8 +650,9 @@
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "none";
 			            
-			        	document.getElementById("editTask").style.display = "none";
+			        	document.getElementById("editTaskInfo").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";
+			        	document.getElementById("editTaskChisi").style.display = "none";
 			            
 			            break;
 			        case "MailEnv_div4":
@@ -648,8 +681,9 @@
 			            document.getElementById("taskRep").style.display = "";
 			            document.getElementById("taskDescription").style.display = "none";
 			            
-			        	document.getElementById("editTask").style.display = "none";
-			        	document.getElementById("editTaskWork").style.display = "none";			        			        			        				        	
+			        	document.getElementById("editTaskInfo").style.display = "none";
+			        	document.getElementById("editTaskWork").style.display = "none";	
+			        	document.getElementById("editTaskChisi").style.display = "none";
 			            
 			            break;
 			    }
@@ -1166,8 +1200,9 @@
 				</c:if>
 				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
 				<div style="float: right; margin-top: 3px;">
-					<a id="editTask" class="imgbtn" style="display:none; "><span onclick="return edit_task()"><spring:message code='ezTask.t151' /></span></span></a>
-					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t151' /></span></a>
+					<a id="editTaskInfo" class="imgbtn" style="display:none; "><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></span></a>
+					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>
+					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
 			</div>
 		</div> 

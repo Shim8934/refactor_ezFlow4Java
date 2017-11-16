@@ -62,9 +62,10 @@
 			var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 			var repetition = "<c:out value = '${taskInfoVO.repetition}' />";		
 			var repetitiondel = "";
+			var mode = "<c:out value = '${mode}' />";	
 
 			$(function () {
-				$("#Sdatepicker").datepicker({
+				 $("#Sdatepicker").datepicker({
 					changeMonth: true,
 					changeYear: true,
 					autoSize: true,
@@ -154,10 +155,10 @@
 						showMonthAfterYear: true
 				  };
 				  
-				  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+				  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]); 
 			});
 
-			$(window).load(function() {
+			$(window).load(function() {												
 				if (taskid != "") {
 					document.getElementById("importantSelect").value = importance;
 					
@@ -262,7 +263,44 @@
 	            
 				if (document.getElementById("TextTitle").value == "") {
 					document.getElementById("TextTitle").focus();
+				}		
+				
+				if (mode != "") {
+					if (mode == "1") {						
+						//Edit task infor mode
+						document.getElementById("menuTaskInf").style.display = "";
+						if (document.getElementById("menuTaskMemo")) {
+							document.getElementById("menuTaskMemo").style.display = "";
+							document.getElementById("memoTd").style.height = "40px";
+							document.getElementById("menuTaskMemo").style.paddingTop = "5px";
+						}	
+/* 						document.getElementById("EdtorSize").style.display = "none";
+						
+						if (document.getElementById("menuTaskMemo")) {
+							document.getElementById("menuTaskMemo").style.display = "none";
+						}						
+						
+						document.getElementById("dadiframe").style.display = "none"; */
+					}
+					else {
+						//Edit task content						
+						document.getElementById("menuTaskInf").style.display = "none";
+						document.getElementById("EdtorSize").style.display = "";
+						document.getElementById("dadiframe").style.display = "";
+						document.getElementById("EdtorSize").style.height = "375PX";
+						document.getElementById("dadiframe").style.height = "160px";
+					}
 				}
+				else {
+					document.getElementById("menuTaskInf").style.display = "";
+					document.getElementById("EdtorSize").style.display = "";
+					
+					if (document.getElementById("menuTaskMemo")) {
+						document.getElementById("menuTaskMemo").style.display = "";
+					}	
+					document.getElementById("dadiframe").style.display = "";
+				}
+				
 			})
 			window.onresize = function () {
 				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
@@ -630,7 +668,7 @@
 				</tr>
 
 				<tr>
-					<td height="20">
+					<td height="20" id="menuTaskInf" style="display: none;">
 						<table class="content">
 							<tr>
 								<th><spring:message code='ezTask.t118' /></th>
@@ -737,19 +775,19 @@
 					</td>
 				</tr>
 				<tr>
-					<td id="EdtorSize" style="height:100%;">
+					<td id="EdtorSize" style="display: none;">
 						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
 					</td>
 				</tr>
 				<!-- 메모  -->
 				<c:if test="${useTodoMemo == 'YES' }">
 					<tr>
-						<td>
+						<td id="menuTaskMemo" style="display:none;">
 							<table class="content">
 								<tr>
 									<th><spring:message code='ezTask.t170' /></th>
-									<td colspan="3" style="width:100%;">
-										<input type="text" id="TextMemo" style="width:100%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+									<td colspan="3" id ="memoTd" style="width:100%;">
+										<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 									</td>
 								</tr>
 							</table>
@@ -760,7 +798,7 @@
 				<tr>
 					<td>
 						<br/> 
-						<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>
+						<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px; display: none;" src="/ezTask/dragAndDrop.do"></iframe>
 					</td>
 				</tr>
 			</table>

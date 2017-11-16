@@ -70,12 +70,14 @@
 			}
 			
 			function close_onclick() {
-			    if (!confirm("" + strLang8 + "")) {
+/* 			    if (!confirm("" + strLang8 + "")) {
 					parent.DivPopUpHidden();
 					window.close();
 			    } else {
 			    	save_taskWork();
-			    }
+			    } */
+				parent.DivPopUpHidden();
+				window.close();
 			}
 			
 			function beforeprint() {

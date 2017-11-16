@@ -878,6 +878,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
+		String mode = "";
+		
+		if(request.getParameter("mode") != null) {
+			mode = request.getParameter("mode");
+		}
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
@@ -946,6 +951,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 		}
 		
+		model.addAttribute("mode", mode);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useTodoMemo", useTodoMemo);

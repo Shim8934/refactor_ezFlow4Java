@@ -1,10 +1,12 @@
 ﻿function close_onclick() {
-    if (!confirm("" + strLang8 + "")) {
+/*    if (!confirm("" + strLang8 + "")) {
 		parent.DivPopUpHidden();
 		window.close();
     } else {
         save_task();
-    }
+    }*/
+	parent.DivPopUpHidden();
+	window.close();
 }
 
 function show_personinfo(userid) {
