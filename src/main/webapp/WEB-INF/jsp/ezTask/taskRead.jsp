@@ -1387,7 +1387,7 @@
 		</table>
 		
 		<div id="taskDescription" style="padding-top: 20px;">
-			<ul style="padding-left: 0px;">
+			<ul style="padding-left: 0px; list-style:none;">
 				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200906' /></li>
 				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200907' /></li>
 				<li style="padding-top: 10px;"> ▒ <spring:message code='ezTask.t200908' /></li>
