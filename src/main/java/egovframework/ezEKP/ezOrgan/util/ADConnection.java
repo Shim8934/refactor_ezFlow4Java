@@ -4,6 +4,7 @@ import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.naming.Context;
+import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
@@ -24,6 +25,9 @@ public class ADConnection {
 		
 	}	
 	
+	/**
+	 * AD 연결 확인
+	 * */
 	public DirContext setConnection() throws Exception {
 		logger.debug("setConnection started.");
 		
@@ -53,9 +57,38 @@ public class ADConnection {
     	env.put("java.naming.ldap.factory.socket", "egovframework.ezEKP.ezOrgan.util.MySSLSocketFactory"); // SSL 인증을 거치지 않고 사용
 
     	DirContext ctx = new InitialDirContext(env);
-    	logger.debug("AD server connections is sucess.");
+    	logger.debug("AD server connections is success.");
     	
-    	logger.debug("setConnection started.");
+    	logger.debug("setConnection ended.");
     	return ctx;
+	}
+	
+	
+	/**
+	 * 로그인 페이지에서 비밀번호 확인하는 함수.
+	 * */
+	public String setConnection(String address, String security, String passwd) {
+		String chk = "true";
+
+    	try {
+    		Hashtable<String, String> env = new Hashtable<String, String>();
+    		
+        	env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        	env.put(Context.PROVIDER_URL, "ldaps://" + address + ":636");
+        	env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        	env.put(Context.SECURITY_PRINCIPAL, security);
+        	env.put(Context.SECURITY_CREDENTIALS, passwd);
+        	env.put(Context.SECURITY_PROTOCOL, "ssl");
+        	// SSL 인증을 패스하기 위한 부분
+        	env.put("java.naming.ldap.factory.socket", "egovframework.ezEKP.ezOrgan.util.MySSLSocketFactory"); // SSL 인증을 거치지 않고 사용
+			DirContext ctx = new InitialDirContext(env);
+			
+		} catch (NamingException e) {
+			chk = "false";
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+		
+		return chk;
 	}
 }

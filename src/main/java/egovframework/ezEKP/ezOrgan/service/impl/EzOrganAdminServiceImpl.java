@@ -354,7 +354,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         		 * Active Directory
         		 * - 부서의 부서이동
         		 * */
-        		if(config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+        		if(ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
         			DirContext ctx = conn.setConnection();
         			ezOrganAdminDao.moveDeptInAD(ctx, map, parentCn);
         		}
@@ -365,7 +365,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	    	 * Active Directory
     	    	 * - 유저의 부서 이동
     	    	 * */
-    	    	if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+    	    	if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
     	    		DirContext ctx = conn.setConnection();
     	    		ezOrganAdminDao.moveUserInAD(ctx, map, parentCn);    	    		
     	    	}
@@ -386,7 +386,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		loginDAO.updatePassword(loginVO);
 		
-		if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+		if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
 			DirContext ctx = conn.setConnection();
 			// Active Direcrtory 사용자 비밀번호
 			loginVO.setPassword(password);
@@ -463,7 +463,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		     * Active Directory
 		     * - 퇴작자 처리
 		     * */
-		    if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+		    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
 		    	DirContext ctx = conn.setConnection();
 		    	ezOrganAdminDao.retireUserInAD(ctx, map);
 		    }
@@ -806,7 +806,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			 * Active Directory
 			 * - 부서 정보 수정
 			 * */
-			if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+			if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
 				DirContext ctx = conn.setConnection();
 				ezOrganAdminDao.updateDeptInAD(ctx, vo);				
 			}
@@ -857,7 +857,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			     * Active Directory
 			     * - 부서 정보 삭제
 			     * */
-			    if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+			    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
 			    	DirContext ctx = conn.setConnection();
 			    	ezOrganAdminDao.deleteDeptInAD(ctx, cn);
 			    }			        
@@ -872,7 +872,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			     * Active Directory
 			     * - 유저 정보 삭제
 			     * */
-			    if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+			    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
 			    	DirContext ctx = conn.setConnection();
 			    	ezOrganAdminDao.deleteUserInAD(ctx, cn);
 			    }		        

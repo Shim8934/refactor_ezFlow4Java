@@ -60,5 +60,7 @@ public interface LoginService {
 	public void updatePassword(String userID, String pwd) throws Exception;
 	
 	public int getTenantId(String serverName) throws Exception;
+	
+	public String compareADInfo(String uid, String upwd) throws Exception;
 
 }

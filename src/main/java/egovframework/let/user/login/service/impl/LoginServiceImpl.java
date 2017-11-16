@@ -14,15 +14,14 @@ import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.ezEKP.ezOrgan.util.ADConnection;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -234,6 +233,22 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         } else {
             return getTenantIdForLocal(serverName);
         }
+    }
+    
+    /**
+     * Active Directory
+     * - AD와 암호와 비교
+     * */
+    public String compareADInfo(String uid, String upwd) throws Exception {
+    	
+    	ADConnection conn = new ADConnection();
+    	
+    	String address = config.getProperty("config.PROVIDER_URL");   	
+    	String security = uid + "@" + config.getProperty("config.Domain_Name");
+    	
+    	String chk = conn.setConnection(address, security, upwd);
+
+    	return chk;
     }
 
 }

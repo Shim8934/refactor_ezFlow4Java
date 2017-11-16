@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.annotation.Resource;
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -71,6 +73,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     @Autowired
     private ADConnection conn;  
+    
+    @Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
     
     private List<OrganDeptVO> getCompanyListForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("tenantID");
@@ -1172,7 +1177,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	             * Active Directory
 	             * - 부서 추가
 	             * */
-	            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+	            if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
 	            	DirContext ctx = conn.setConnection();
 	            	insertDeptInAD(ctx, map);
 	            }
@@ -1285,7 +1290,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	        try {
 	            insertDBData_userForLocal(map);
 	            //AD를 사용하는 경우 AD에도 사용자 추가
-	            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+	            if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
 	            	DirContext ctx = conn.setConnection();
 	            	insertUserInAD(ctx, map);
 	            }
@@ -1542,7 +1547,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) { 	    
             updateDBData_userForLocal(vo);
             // AD에도 내용을 수정
-            if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+            if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
             	DirContext ctx = conn.setConnection();
             	updateUserInAD(ctx, vo, "user");
             }
@@ -1653,7 +1658,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    		 * Active Directory
 	    		 * - 퇴직자 복구
 	    		 * */
-	    		if (config.getProperty("config.USE_AD").equalsIgnoreCase("YES")) {
+	    		if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
 	    			DirContext ctx = conn.setConnection();
 	    			//retireUserInAD(ctx, map);	    
 	    			restoreUserInAD(ctx, map);
