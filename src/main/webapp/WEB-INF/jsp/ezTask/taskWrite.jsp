@@ -268,7 +268,7 @@
 				if (mode != "") {
 					document.getElementById("menu").setAttribute("style", "float: right; padding-right: 42px;");										
 					
-					if (mode == "1") {						
+					if (mode == "1") {
 						//Edit task infor mode
 						document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1512' />";
 						document.getElementById("taskChangeMode").style.display = "";
@@ -289,8 +289,13 @@
 						document.getElementById("dadiframe").style.display = "none"; */
 					}
 					else {
-						//Edit task content		
-						document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1511' />";
+						//Edit task content
+						if (taskType == '1' || taskType == '4') {
+							document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1511' />";
+						} else {
+							document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1513' />";
+						}
+						
 						document.getElementById("taskChangeMode").style.display = "";
 						document.getElementById("menuTable").style.display = "";
 						
@@ -318,23 +323,23 @@
 				
 				if (useTodoMemo == 'YES') {													
 					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					} else if (tasktype == "2") {
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					} else if (tasktype == "3") {
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 					}
 				} else {
 					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 					} else if (tasktype == "2") {
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 					} else if (tasktype == "3") {
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 					}
 				}
 			}
@@ -861,23 +866,23 @@
 		<script>
 			if (useTodoMemo == 'YES') {
 				if (tasktype == "1") {
-					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 				} else if (tasktype == "2") {
 					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 				} else if (tasktype == "3") {
 					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 				} else {
-					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 405 + "PX";
 				}
 			} else {
 				if (tasktype == "1") {
-					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 				} else if (tasktype == "2") {
 					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 				} else if (tasktype == "3") {
 					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 				} else {
-					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 345 + "PX";
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 375 + "PX";
 				}
 			}
 		</script>
