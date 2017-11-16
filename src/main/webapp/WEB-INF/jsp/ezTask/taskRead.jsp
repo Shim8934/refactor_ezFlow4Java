@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
