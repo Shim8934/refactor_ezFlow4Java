@@ -335,6 +335,8 @@
 				        	break;
 				        }
 				        
+				        flagType = 0;
+				        
 				        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
 	
 				        tr = row_body.cloneNode(true);
