@@ -732,14 +732,24 @@
 		
 		            if (window.screen.width > 800) {
 		                var pleftpos;
-		
+
 		                pleftpos = parseInt(width) - 967;
 		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
 		                width = parseInt(width) - pleftpos;
 		                left = pleftpos / 2;
 		            }
 		            else {
 		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
 		                width = parseInt(width) - 10;
 		            }
 		

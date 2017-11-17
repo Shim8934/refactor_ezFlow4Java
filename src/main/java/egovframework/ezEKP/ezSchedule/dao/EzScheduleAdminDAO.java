@@ -56,5 +56,9 @@ public class EzScheduleAdminDAO extends EgovAbstractDAO {
 		update("EzScheduleAdminDAO.scheduleUpdateRegi", map);		
 	}
 
+	public int scheduleShareCheck(Map<String, Object> map) throws Exception {
+		return (int) select("EzScheduleAdminDAO.scheduleShareCheck", map);		
+	}
+
 }
 

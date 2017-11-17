@@ -142,7 +142,7 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveShareDept.do")
 	@ResponseBody
-	public void  scheduleSaveShareDept(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, OrganDeptVO organDeptVO, HttpServletRequest request) throws Exception {
+	public String scheduleSaveShareDept(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, OrganDeptVO organDeptVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleSaveShareDept started ============");
 		
@@ -152,21 +152,29 @@ public class EzScheduleAdminController {
 		String userID = request.getParameter("userID");
 		String deptID = request.getParameter("deptID");
 		
-		loginVO.setId(userID);
-		loginVO.setDn("NOPASSWORD");
-		loginVO.setTenantId(tenantID);
+		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID);
 		
-		LoginVO user = loginService.selectUser(loginVO);
-		
-		String userName = user.getDisplayName1();
-		String userName2 = user.getDisplayName2();
-		
-		organDeptVO = ezOrganService.getDeptInfo(deptID, loginVO.getPrimary(), tenantID);
-		
-		String deptName = organDeptVO.getDisplayName();
-		String deptName2 = organDeptVO.getDisplayName2();
-
-		ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID);
+		if (checkCnt == 0) {
+			loginVO.setId(userID);
+			loginVO.setDn("NOPASSWORD");
+			loginVO.setTenantId(tenantID);
+			
+			LoginVO user = loginService.selectUser(loginVO);
+			
+			String userName = user.getDisplayName1();
+			String userName2 = user.getDisplayName2();
+			
+			organDeptVO = ezOrganService.getDeptInfo(deptID, loginVO.getPrimary(), tenantID);
+			
+			String deptName = organDeptVO.getDisplayName();
+			String deptName2 = organDeptVO.getDisplayName2();
+	
+			ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID);
+			
+			return "SUCCESS";
+		} else {
+			return "FAIL";
+		}
 	}
 	
 	/**

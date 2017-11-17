@@ -324,11 +324,11 @@
 		            alert("<spring:message code='ezOrgan.t257' />");
 		            return;
 		        }
-				if (!CheckPassword(document.getElementById('Password').value)) {
+				if (RetValue[2] == "" && !CheckPassword(document.getElementById('Password').value)) {
 					alert("<spring:message code='main.jjh04'/>");
 					document.getElementById('Password').focus();
 					return;
-				}		        
+				}	        
 		        if (UserName.value.indexOf("(") != -1 || UserName.value.indexOf(")") != -1) {
 		            alert("<spring:message code='ezOrgan.t258' />");
 		            return;

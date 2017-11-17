@@ -383,7 +383,15 @@
 	                xmlHTTP.send(xmlDom);
 	
 	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                    alert("<spring:message code='ezAddress.t347' />");
+	                	if (xmlHTTP.status != 200) {
+			            	alert("<spring:message code='ezAddress.t347' />");
+			            }
+			            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
+			            	alert("<spring:message code='ezAddress.t1' />");
+			            }
+			            else {
+		                    alert("<spring:message code='ezAddress.t347' />");
+			            }
 				    }
 				    else {
 				        alert("<spring:message code='ezAddress.t348' />");
@@ -924,7 +932,7 @@
 	        } 
 	        
 	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
 	        
 	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 	            alert("<spring:message code='ezAddress.t1100' />");

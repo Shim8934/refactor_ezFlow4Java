@@ -16,6 +16,7 @@
 	        var checkadmin = "${checkAdmin}";
 	        var deptadmin = "${deptAdmin}";
 	        var companyadmin = "${companyAdmin}";
+	        var useAnyoneEdit = "${useAnyoneEdit}";
 	        var ReturnFunction;
 	        var CancelFunction;
 	        var isDivPopup = false;
@@ -71,14 +72,18 @@
                 alert("<spring:message code='ezAddress.t267' />");
 	        	return;
 		    }
-	        if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
-	            alert("<spring:message code='ezAddress.t168' />");
-	        	return;
-		    }
-	        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
-	            alert("<spring:message code='ezAddress.t169' />");
-		        return;
-		    }
+            
+            if (useAnyoneEdit != "YES") {
+            	if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
+    	            alert("<spring:message code='ezAddress.t168' />");
+    	        	return;
+    		    }
+    	        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
+    	            alert("<spring:message code='ezAddress.t169' />");
+    		        return;
+    		    }
+            }
+	        
 	        var retVal = new Array();
 	        retVal["cmd"] = "COPY";
 	        retVal["folderid"] = AddressTreeView.getvalue(nodeIdx, "folderid");
@@ -100,14 +105,18 @@
 	            alert("<spring:message code='ezAddress.t268' />");
 		        return;
 		    }
-	        if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
-	            alert("<spring:message code='ezAddress.t168' />");
-		        return;
-		    }
-	        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
-	            alert("<spring:message code='ezAddress.t169' />");
-		        return;
-		    }
+	        
+	        if (useAnyoneEdit != "YES") {
+		        if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
+		            alert("<spring:message code='ezAddress.t168' />");
+			        return;
+			    }
+		        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
+		            alert("<spring:message code='ezAddress.t169' />");
+			        return;
+			    }
+	        }
+	        
 	        var retVal = new Array();
 	        retVal["cmd"] = "MOVE";
 	        retVal["folderid"] = AddressTreeView.getvalue(nodeIdx, "folderid");

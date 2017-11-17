@@ -1098,12 +1098,16 @@
 
 	            $.ajax({
 	            	type : "POST",
-	            	dataType : "xml",
+	            	dataType : "html",
 	            	url : "/admin/ezOrgan/retireUser.do",
 	            	async : false,
 	            	data : {cn : data},
-	            	success : function(result){
-	            		alert(strLang3);
+	            	success : function(result) {
+	            	    if (result == "OK") {
+	            			alert(strLang3);
+	            	    } else {
+	            	        alert(strLang4);
+	            	    }
 	            	},
 	            	error : function(){
 	            		alert(strLang4);            		
@@ -1266,7 +1270,11 @@
 	            	    }
 	            	    
 	            	    setTimeout(function() {
-  	            			alert(length + "<spring:message code='ezOrgan.t31' />");
+	            	        if (result == "OK") {	            	        
+  	            				alert(length + "<spring:message code='ezOrgan.t31' />");
+	            	        } else {
+	            	            alert("<spring:message code='ezOrgan.t30' />");
+	            	        }
   	            		
   	    					if (TreeView.selectedIndex != -1){
   	    						displayUserList(treeNode.GetNodeData("CN"));
