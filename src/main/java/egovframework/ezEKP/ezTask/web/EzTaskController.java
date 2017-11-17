@@ -213,6 +213,8 @@ public class EzTaskController extends EgovFileMngUtil {
 			
 			String realStartDate = date + " 00:00:00";
 			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
+			int status = ezTaskService.getStatusOfRepTask(taskID, realDate, tenantID);
+			taskInfoVO.setTaskStatus(status);
 			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
 			taskInfoVO.setCompleteRate(completionPercentage);			
 			taskInfoVO.setRepeatCount(Integer.parseInt(orderNumber));
@@ -478,7 +480,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String tasktype = request.getParameter("tasktype");
 		String realDate = request.getParameter("realDate");
 		
-		logger.debug("RepeatCount: " + repeateCount + "|| taskType: " + tasktype + "|| realDate: " + realDate);
+		logger.debug("RepeatCount: " + repeateCount + "|| taskType: " + tasktype + "|| realDate: " + realDate + " || Task status: " + taskStatus);
 		
 		ezTaskService.updateTaskStatus(taskID, taskStatus, tasktype, repeateCount, realDate, completeRate, userInfo.getTenantId());
 		
@@ -580,6 +582,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		//baonk added		
 		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {
+			int status = ezTaskService.getStatusOfRepTask(taskInfoVO.getTaskID(), realDate, tenantID);
+			taskInfoVO.setTaskStatus(status);			
 			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskInfoVO.getTaskID(), realDate, tenantID);		
 			taskInfoVO.setCompleteRate(completionPercentage);
 		}
@@ -1041,8 +1045,10 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 			
 			if (pSelectTab.equals("taskrepetition") && (vo.getTaskType().equals("5") || vo.getTaskType().equals("6"))) {
-				//Set percentage
+				//Set percentage and status
 				String realDate = commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), true);
+				int status = ezTaskService.getStatusOfRepTask(vo.getTaskID(), realDate, tenantID);
+				vo.setTaskStatus(status);				
     			int completionPercentage = ezTaskService.selectCompletionOfRepTask(vo.getTaskID(), realDate, tenantID);
     			vo.setCompleteRate(completionPercentage);  	
 			}
@@ -1114,6 +1120,8 @@ public class EzTaskController extends EgovFileMngUtil {
     	
 		String realStartDate = date + " 00:00:00";
 		String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
+		int status = ezTaskService.getStatusOfRepTask(taskID, realDate, tenantID);
+		taskInfoVO.setTaskStatus(status);
 		int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
 		taskInfoVO.setCompleteRate(completionPercentage);    	
     	

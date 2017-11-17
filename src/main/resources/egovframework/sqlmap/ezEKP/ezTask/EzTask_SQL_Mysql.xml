@@ -816,7 +816,8 @@
 	            UPDATE 
 	            	TBL_TASKINSTANCESTATUS
 	            SET 
-	            	 COMPLETERATE	 	= #completeRate#            	 
+	            	 COMPLETERATE	 	= #completeRate#,
+	            	 TASKSTATUS      	= #taskStatus#	 
 	            WHERE
 	            		TASKID			= #taskID#
 	            	AND
@@ -960,6 +961,23 @@
 		<![CDATA[
 			SELECT
 				IFNULL ( (SELECT COMPLETERATE
+						  	FROM
+								TBL_TASKINSTANCESTATUS
+							WHERE
+								TASKID = #taskID#
+							AND
+								STARTDATE = #date#
+							AND
+								TENANTID = #tenantID#
+				), 0)	
+	
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getStatusOfRepTask" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL ( (SELECT TASKSTATUS
 						  	FROM
 								TBL_TASKINSTANCESTATUS
 							WHERE

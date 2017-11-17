@@ -414,7 +414,7 @@
 						width: '70%',
 						duration : duration
 					});
-				} else if (taskstatus == '3') {
+				} else if (taskstatus == '3' || completerate == '100') {
 					$(".bar[taskid='" + barID + "']").LineProgressbar({
 						percentage: completerate,
 						fillBackgroundColor: completeColor,

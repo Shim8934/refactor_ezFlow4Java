@@ -1859,4 +1859,16 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	public List<TaskInfoVO> getRepTaskList(String taskID, String offset, String primary, String date, int tenantID) throws Exception {		
 		return null;
 	}
+
+	@Override
+	public int getStatusOfRepTask(String taskID, String date, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("taskID", taskID);
+		map.put("date", date);
+		map.put("tenantID", tenantID);
+		
+		int result = ezTaskDAO.getStatusOfRepTask(map);
+		return result;		
+	}
 }

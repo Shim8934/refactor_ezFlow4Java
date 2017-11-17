@@ -58,5 +58,7 @@ public interface EzTaskService {
 
 	void insertTaskRepeDel(String taskID, String repeatCount, String taskStatus, String completeRate, String realDate, int tenantID) throws Exception;
 	
-	int selectCompletionOfRepTask(String taskID, String repeatCount, int tenantID) throws Exception;	
+	int selectCompletionOfRepTask(String taskID, String repeatCount, int tenantID) throws Exception;
+	
+	int getStatusOfRepTask(String taskID, String repeatCount, int tenantID) throws Exception;	
 }
