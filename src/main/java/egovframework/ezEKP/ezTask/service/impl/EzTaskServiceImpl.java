@@ -148,7 +148,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("repeatCount", repeatCount);
 		map.put("realDate", realDate);		
 		
-		if (!tasktype.equals("4")) {
+		if (tasktype.equals("1") || tasktype.equals("2") || tasktype.equals("3")) {
 			ezTaskDAO.updateTaskStatus(map);
 		}
 		else {

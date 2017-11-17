@@ -576,7 +576,14 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");		
 		
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
-		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), tenantID);		
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), tenantID);
+		
+		//baonk added		
+		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {
+			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskInfoVO.getTaskID(), realDate, tenantID);		
+			taskInfoVO.setCompleteRate(completionPercentage);
+		}
+		//end
 
 		model.addAttribute("realDate", realDate);
 		model.addAttribute("taskInfoVO", taskInfoVO);

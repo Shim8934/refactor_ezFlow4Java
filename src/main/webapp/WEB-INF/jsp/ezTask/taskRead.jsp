@@ -149,7 +149,7 @@
 							$(this).find('strong').css("color", "");
 						}
 					});
-				} else if (taskstatus == '3') {	
+				} else if (taskstatus == '3' || completerate == '100') {	
 					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
 						fill: {color: completeColor},
@@ -771,7 +771,7 @@
 						width: '70%',
 						duration : duration
 					});
-				} else if (taskstatus == '3') {
+				} else if (taskstatus == '3' || completerate == '100') {
 					$(".bar[taskid='" + barID + "']").LineProgressbar({
 						percentage: completerate,
 						fillBackgroundColor: completeColor,

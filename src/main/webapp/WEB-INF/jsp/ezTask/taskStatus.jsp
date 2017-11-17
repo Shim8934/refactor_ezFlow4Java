@@ -37,15 +37,21 @@
 	        $(document).ready(function() {
 	        	
 	        	initProgressBar(completerate)
+	        	
+	        	console.log("Completerate: " + completerate);	        	
         	
 	        	if (taskstatus == '1') {
 // 	        		$("#taskStatus").attr("disabled", true);
 	        	} else if (taskstatus == '2') {
 	        		$("#taskStatus").attr("checked", false);
-	        	} else if (taskstatus == '3') {
+	        	} else if (taskstatus == '3') {	        		
 	        		$("#taskStatus").attr("disabled", true);
 	        	} else if (taskstatus == '4') {
 	        		$("#taskStatus").attr("checked", true);
+	        	}
+	        	
+	        	if (completerate == '100') {
+	        		$("#taskStatus").attr("disabled", true);
 	        	}
 				
 				$("#completeRate").val(completerate);
@@ -111,7 +117,7 @@
 							$(this).find('strong').css("color", "");
 						}
 					});
-				} else if (taskstatus == '3') {
+				} else if (taskstatus == '3' || completerate == '100') {
 					$('.taskProgressBar').circleProgress({
 						value: ((completerate*1) / 100),
 						fill: {color: completeColor},
