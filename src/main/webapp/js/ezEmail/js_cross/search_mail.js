@@ -75,6 +75,7 @@ function start_search() {
     var sMailFolder = TrimText(select2.value);
     ShowMailProgress();
     searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate);
+    prekeyword.value = keyword.value;
 }
 function GetBoxPath(Url, boxinfo, sKeyword, sCategory, startDate, endDate) {
     var strXml = "<?xml version='1.0' encoding='utf-8'?>" +

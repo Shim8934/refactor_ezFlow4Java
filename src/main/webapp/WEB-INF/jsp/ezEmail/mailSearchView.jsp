@@ -121,6 +121,7 @@
 			}
 		    function set_searchKey() {
 		    	if (TrimText(prekeyword.value) == null || TrimText(prekeyword.value) == "") {
+		    		alert(strLang254);
 		            return;
 		        } else {
 		        	keyword.value = prekeyword.value;
