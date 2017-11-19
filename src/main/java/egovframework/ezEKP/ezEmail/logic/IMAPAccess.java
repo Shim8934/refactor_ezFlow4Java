@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -277,6 +278,13 @@ public class IMAPAccess {
 				
 				folderList = rootFolder.listSubscribed();
 				
+				Arrays.sort(folderList, new Comparator<Folder>(){
+					@Override
+					public int compare(Folder f1, Folder f2) {
+						return f1.getFullName().compareTo(f2.getFullName());
+					}
+				});
+				
 				//add the other folders into top-level folder list
 				for (Folder folder : folderList) {
 					if (folder.exists()) {
@@ -334,6 +342,13 @@ public class IMAPAccess {
 			
 			if (isSubscribe) {
 				folders = getStore().getFolder(parent).listSubscribed();
+				
+				Arrays.sort(folders, new Comparator<Folder>(){
+					@Override
+					public int compare(Folder f1, Folder f2) {
+						return f1.getFullName().compareTo(f2.getFullName());
+					}
+				});
 				
 				for (Folder f : folders) {
 					if (f.exists()) {
