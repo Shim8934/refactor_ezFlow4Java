@@ -1347,6 +1347,29 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
 							String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
 							if (useInitInboxRule.equals("YES")) {
+								//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
+								List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
+								
+								IMAPAccess ia = null;
+						        try {
+									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+											mailAddr, vo.getPassword(), egovMessageSource, locale);
+									
+									for (int i = 0; i < mailboxList.size(); i++) {
+										Folder mailbox = ia.getFolder(mailboxList.get(i));
+										
+										if (!mailbox.exists()) {
+											mailbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+											logger.debug(mailbox.getFullName() + " created.");
+										}
+									}
+								} finally {
+									if (ia != null) {
+										ia.close();
+										ia = null;
+									}
+								}
+								
 								ezEmailService.setInitInboxRule(tenantID, cn);
 							}
 							

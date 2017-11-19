@@ -1948,7 +1948,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setInitInboxRule";			
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setInitInboxRule";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 		
 		if (response != null) {
@@ -1962,6 +1962,34 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("setInitInboxRule ended. returnValue=" + returnValue);
 		return returnValue;
+	}
+
+	@Override
+	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception {
+		logger.debug("getInitInboxRuleMailbox started. tenantId=" + tenantId);
+		
+		List<String> mailboxList = new ArrayList<String>();
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "domain=" + domain;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getInitInboxRuleMailbox", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+	    	JSONArray resultArray = (JSONArray)object.get("result");
+	    	
+	    	for (int i=0; i<resultArray.size(); i++) {
+	    		mailboxList.add((String)resultArray.get(i));
+	    	}
+		}
+		
+		logger.debug("getInitInboxRuleMailbox ended.");
+		return null;
 	}
 	
 }

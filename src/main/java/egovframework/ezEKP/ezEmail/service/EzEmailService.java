@@ -71,4 +71,5 @@ public interface EzEmailService {
 	public List<String> getInitMailBox(int tenantId) throws Exception;
 	public boolean setInitMailSignature(int tenantId, String userId) throws Exception;
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
+	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
 }
