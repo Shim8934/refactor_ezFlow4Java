@@ -199,6 +199,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String fileUploadType = "";
 		String newWindowId = "";
 		
+		String dotNetUrl = "";
+		
 		// check if parameter is valid
 		String tempStr = "";
 		if (request.getParameter("cmd") != null) {
@@ -208,7 +210,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
-				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND") || tempStr.equals("RESEND")
+				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
+				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -377,10 +380,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	to = msgto;
         }
         // in case of board/Community
-        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community"))) {
+        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community")
+        		|| _cmd.equals("boardDotNet"))) {
         	boardID = request.getParameter("boardID") == null ? "" : request.getParameter("boardID");
         	itemID = request.getParameter("itemID") == null ? "" : request.getParameter("itemID");
         	retransType = request.getParameter("retransType") == null ? "" : request.getParameter("retransType");
+        	
+        	if (_cmd.equals("boardDotNet")) {
+        		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
+        	}
         }
         // in case of approvalG
         else if (_url.equals("") && _cmd.equals("docsend")) {
@@ -978,6 +986,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
+		model.addAttribute("dotNetUrl", dotNetUrl);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		

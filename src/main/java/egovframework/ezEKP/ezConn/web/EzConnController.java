@@ -38,13 +38,13 @@ public class EzConnController {
 	private LoginController loginController;
 	
 	@RequestMapping("/ezConn/mailMain.do")
-	public String mailMain(
+	public void mailMain(
 					@RequestParam String id,
 					HttpServletRequest request,
 					HttpServletResponse response
 					) throws Exception {
 		logger.debug("mailMain started.");
-		String resultPage = "redirect:/user/login/login.do";
+		String resultPage = "/user/login/login.do";
 		
 		try {
 			id = ezConnUtil.decryptAES(id);
@@ -71,14 +71,24 @@ public class EzConnController {
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
 				response.setHeader("P3P", "CP=\"Potato\"");
 				
-				resultPage = "redirect:/ezEmail/mailMain.do";
+				String cmd = request.getParameter("cmd");
+				
+				if (cmd != null && cmd.equals("boardDotNet")) {
+					String boardID = request.getParameter("boardID");
+					String itemID = request.getParameter("itemID");
+					
+					resultPage = "/ezEmail/mailWrite.do?boardID=" + boardID + "&itemID=" + itemID + "&cmd=boardDotNet";
+				} else {
+					resultPage = "/ezEmail/mailMain.do";
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		logger.debug("mailMain ended.");
-		return resultPage;
+		
+		response.sendRedirect(resultPage);
 	}
 	
 	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {
