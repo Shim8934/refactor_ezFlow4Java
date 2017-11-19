@@ -1317,10 +1317,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							if (useInitMailBox.equals("YES")) {
 								List<String> mailboxList = ezEmailService.getInitMailBox(tenantID);
 								
+								String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+								
 								IMAPAccess ia = null;
 						        try {
 									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-											mailAddr, vo.getPassword(), egovMessageSource, locale);
+											mailAddr, password, egovMessageSource, locale);
 									
 									for (int i = 0; i < mailboxList.size(); i++) {
 										Folder mailbox = ia.getFolder(mailboxList.get(i));
@@ -1349,11 +1351,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							if (useInitInboxRule.equals("YES")) {
 								//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
 								List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
+								String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
 								
 								IMAPAccess ia = null;
 						        try {
 									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-											mailAddr, vo.getPassword(), egovMessageSource, locale);
+											mailAddr, password, egovMessageSource, locale);
 									
 									for (int i = 0; i < mailboxList.size(); i++) {
 										Folder mailbox = ia.getFolder(mailboxList.get(i));
