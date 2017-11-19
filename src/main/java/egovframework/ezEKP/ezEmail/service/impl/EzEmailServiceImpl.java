@@ -1989,7 +1989,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
 		logger.debug("getInitInboxRuleMailbox ended.");
-		return null;
+		return mailboxList;
 	}
 	
 }
