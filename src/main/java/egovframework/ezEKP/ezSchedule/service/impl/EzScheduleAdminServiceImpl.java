@@ -155,6 +155,17 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 				
 		ezScheduleAdminDAO.scheduleUpdateRegi(map);			
 	}
+
+	@Override
+	public int scheduleShareCheck(String userID, String deptID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_DEPTID", deptID);
+		map.put("v_TENANTID", tenantId);
+				
+		return ezScheduleAdminDAO.scheduleShareCheck(map);
+	}
+	
 	
 	
 }
