@@ -1499,11 +1499,11 @@
 		
 		<div id="taskDescription" style="padding-top: 20px;">
 			<ul style="padding-left: 0px; list-style:none;">
-				<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200906' /></li>
-				<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200907' /></li>
-				<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200908' /></li>
-				<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
-				<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
+				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200906' /></li>
+				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200907' /></li>
+				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200908' /></li>
+				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
+				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 			</ul>
 		</div>
 		

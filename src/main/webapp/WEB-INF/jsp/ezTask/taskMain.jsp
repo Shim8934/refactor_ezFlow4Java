@@ -458,12 +458,11 @@
 					        tr.cells[8].appendChild(span);  				        
 					        
 					        setNodeText(tr.cells[9], startdate);
-					        //tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
-					        tr.cells[10].innerHTML =  enddate;
+					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 					        list_body.children[1].appendChild(tr);
 					        
 					        if (type == "2" && flagType == 1) {
-					        	span.innerHTML= "&nbsp;&nbsp;반복";
+					        	span.innerHTML= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;반복";
 					        }
 					        else {
 					        	initProgressBar("taskProgressBar" + i, taskstatus, completerate);
@@ -492,7 +491,7 @@
 				    		column_prg.style.width = "0px";
 				    		progress_th.innerHTML = "";				        			        				        	
 					        setNodeText(tr.cells[9], startdate);
-					        tr.cells[10].innerHTML = enddate;
+					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 					        list_body.children[1].appendChild(tr);
 				        }
 				        
@@ -963,7 +962,7 @@
 		                <col style ="width:80px;">
 						<col style ="width:110px;" id="col_progress">
 						<col style ="width:80px;">
-						<col style ="width:97px;">
+						<col style ="width:80px;">
 						<tr>
 							<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 							<th  style="text-align:center;"><spring:message code='ezTask.t156'/></th>

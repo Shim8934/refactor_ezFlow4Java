@@ -1050,7 +1050,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	
 			if (pSelectTab.equals("taskrepetition")) { 				
 				if (vo.getTotalRep() == -1) {
-					vo.setEndDate("없습");
+					vo.setEndDate("");
 				}   				
 			}
 			
