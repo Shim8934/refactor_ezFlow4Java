@@ -289,7 +289,7 @@
 						document.getElementById("dadiframe").style.display = "none"; */
 					} else {
 						//Edit task content
-						if (taskType == '1' || taskType == '4') {
+						if (tasktype == '1' || tasktype == '4') {
 							document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1511' />";
 						} else {
 							document.getElementById("taskChangeMode").innerHTML = "<spring:message code='ezTask.t1513' />";
