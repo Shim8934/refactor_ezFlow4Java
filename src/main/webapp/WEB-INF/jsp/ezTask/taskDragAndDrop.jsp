@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<style>
 			#lstAttachLink {
-			height: 115px;
+			height: 105px;
 			border: 1px solid #3C2F2E;
 			}
 		</style>
