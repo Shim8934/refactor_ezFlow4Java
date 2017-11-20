@@ -746,7 +746,7 @@
 
 			        tr.setAttribute("startdate", startdate);
 			        setNodeText(tr.cells[1], startdate);
-			        tr.cells[2].innerHTML = "<B>" + enddate + "</B>";	
+			        tr.cells[2].innerHTML = enddate;	
 			        
 			        //Process complete rate
 			        var taskstatus = parseInt(statusArray[i] + "");			        
