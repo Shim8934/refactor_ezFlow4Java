@@ -169,16 +169,18 @@ public class LoginController {
 	        	loginVO.setId(_uid);
 	        	loginVO.setPassword(_pwd);
 	            loginVO.setDn("PASSWORD");
-	            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
-	            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
-	            	// true 이면 그룹웨어 암호 변경
-	            	// false 이면 그냥 로그인 금지
-	            	chkADpass = loginService.chkADAndUpdatePassword(_uid, rpwd, tenantId);	            	
-	            	
-	            	if (chkADpass.equalsIgnoreCase("false")) {
-	            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
-	            		loginVO.setPassword(null);	            		
-	            	}
+	            if (!_uid.equalsIgnoreCase("MASTERADMIN")) {
+		            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
+		            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+		            	// true 이면 그룹웨어 암호 변경
+		            	// false 이면 그냥 로그인 금지
+		            	chkADpass = loginService.chkADAndUpdatePassword(_uid, rpwd, tenantId);	            	
+		            	
+		            	if (chkADpass.equalsIgnoreCase("false")) {
+		            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
+		            		loginVO.setPassword(null);	            		
+		            	}
+		            }
 	            }
 	            // 암호가 맞는 지 확인한다.
 	            resultVO = loginService.selectUser(loginVO);
