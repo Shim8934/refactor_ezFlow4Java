@@ -454,8 +454,8 @@ public class IMAPAccess {
 			// 예) Content-Type: application/octet-stream;
 			//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 		    //    Content-Transfer-Encoding: base64	    											
-			else if ((part.getDisposition()!= null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
-						|| part.isMimeType("application/*")) {
+			else if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+						|| (part.isMimeType("application/*") && !(part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.INLINE)))) {
 				isAttached = true;
 			}			
 		} catch (Exception e) {

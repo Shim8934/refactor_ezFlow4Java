@@ -303,7 +303,7 @@ function CheckPassword(str){
 	var eng = pw.search(/[a-z]/ig);
 	var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);				 
 	
-	if (pw.length < 6 || pw.length > 50) {
+	if (pw.length < 8 || pw.length > 50) {
 		return false;
 	}
 	

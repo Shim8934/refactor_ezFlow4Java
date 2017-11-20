@@ -4,24 +4,35 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
+import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.search.AndTerm;
+import javax.mail.search.DateTerm;
+import javax.mail.search.ReceivedDateTerm;
+import javax.mail.search.SearchTerm;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -50,6 +61,8 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
+import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
+import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1085,7 +1098,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
 	    		}
 	    		
-	    		message.setFlag(Flags.Flag.SEEN, true);
     			sentFolder.open(Folder.READ_WRITE);
     			sentFolder.appendMessages(new Message[]{message});
     			sentFolder.close(true);
@@ -1101,6 +1113,109 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
         logger.debug("sendMail ended.");
+	}
+	
+	/**
+	 * 메일 보내기 서비스
+	 * @param recipients SMTP의 rcpt to에 지정될 수신자 목록
+	 * @param loginCookie 로그인 쿠키
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @param isSaved 보낸편지함에 저장 여부
+	 * @throws Exception
+	 */
+	@Override
+	public void sendMailWithExplicitRecipients(InternetAddress[] recipients, String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception {
+		logger.debug("sendMailWithExplicitRecipients started. recipients=" + recipients);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userId + "@" + domainName;
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		IMAPAccess ia = null;
+		
+		try {
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userAccount, password);
+			
+			MimeMessage message = sa.createMimeMessage();
+			
+			// set from
+			logger.debug("from=" + from.getAddress());
+			message.setFrom(from);
+			
+			// set to
+			for (InternetAddress to : toArr) {
+				logger.debug("to=" + to.getAddress());
+				message.addRecipient(RecipientType.TO, to);
+			}
+			
+			// set cc
+			if (ccArr != null) {
+				for (InternetAddress cc : ccArr) {
+					logger.debug("cc=" + cc.getAddress());
+					message.addRecipient(RecipientType.CC, cc);
+				}
+			}
+			
+			// set bcc
+			if (bccArr != null) {
+				for (InternetAddress bcc : bccArr) {
+					logger.debug("bcc=" + bcc.getAddress());
+					message.addRecipient(RecipientType.BCC, bcc);
+				}
+			}
+			
+			// set subject
+			logger.debug("subject=" + subject);
+			message.setSubject(subject, "UTF-8");
+			
+			// set content
+			message.setContent(content, "text/html; charset=utf-8");
+			
+			// set sentDate
+	        message.setSentDate(Calendar.getInstance().getTime());
+	        
+	        // set User-Agent header
+	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+	        
+	        Transport.send(message, recipients);
+	        logger.debug("Mail send success.");
+	        
+	        if (isSaved) {
+	        	//보낸편지함에 저장
+	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+	        			userAccount, password, egovMessageSource, userInfo.getLocale());
+	        	
+	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
+	    		
+	    		if (!sentFolder.exists()) {
+	    			sentFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
+	    		}
+	    		
+	    		message.setFlag(Flags.Flag.SEEN, true);
+    			sentFolder.open(Folder.READ_WRITE);
+    			sentFolder.appendMessages(new Message[]{message});
+    			sentFolder.close(true);
+    			logger.debug("Mail is successfully saved in sent folder.");
+	        }
+        
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+        logger.debug("sendMailWithExplicitRecipients ended.");
 	}
 	
 	@Override
@@ -1225,7 +1340,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMaxMessageSize";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
 		logger.debug("response=" + response);
 
 		String resultCode = "Error";
@@ -1264,7 +1378,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getAliasAddress";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
 		logger.debug("response=" + response);
 
 		String resultCode = "Error";
@@ -1295,6 +1408,81 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return aliasAddressList;		
 	}
+
+	@Override
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count)
+			throws Exception {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000);
+		
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));		
+			folder.open(Folder.READ_ONLY);
+	        UIDFolder uidFolder = (UIDFolder)folder;
+	        
+	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false);
+	        
+	        // sort the messages
+ 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
+	        
+ 			// set mailCount
+ 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));
+ 			if (unreadCount < count) {
+ 				count = unreadCount;
+ 			}
+ 			
+ 			int messageCount = messages.length;
+ 			
+ 			if ( messageCount < 0 ) {
+ 				messageCount = 0;
+ 			}
+ 			
+ 			messages = Arrays.copyOfRange(messages, 0, messageCount);
+
+ 			// pre-fetch
+	        FetchProfile fp = new FetchProfile();
+	        fp.add(UIDFolder.FetchProfileItem.UID);
+	        fp.add(FetchProfile.Item.ENVELOPE);
+	        folder.fetch(messages, fp);
+	        
+	        for (int i=0; i<messages.length; i++) {
+	        	Message message = messages[i];
+	        	
+	        	Date receivedDate = message.getReceivedDate();
+	        	String receivedDateStr = sdf.format(receivedDate);
+//	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+	        	
+	        	String subject = ezEmailUtil.getSubject(message);
+				subject = (subject != null) ? subject : "";
+	        	
+	        	Map<String, String> map = new HashMap<String, String>();
+	        	map.put("subject", subject);
+	        	map.put("sender", ezEmailUtil.getFromNameOrAddressOfMessage(message));
+	        	map.put("receivedDate", receivedDateStr);
+	        	map.put("uid", String.valueOf(uidFolder.getUID(message)));
+	        	
+	        	list.add(map);
+	        }
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		return list;
+	}
 	
 	@Override
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception {
@@ -1309,7 +1497,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionList";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
 		logger.debug("response=" + response);
 
 		String resultCode = "Error";
@@ -1363,7 +1550,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchList";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
 		logger.debug("response=" + response);
 
 		String resultCode = "Error";
@@ -1401,6 +1587,292 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug(distributionList.toString());
 		
 		return distributionList;
+	}
+
+	@Override
+	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount,
+			String maxReadDate) throws Exception {
+		logger.debug("setMailSecure started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId
+				+ ",password=" + password + ",maxReadCount=" + maxReadCount + ",maxReadDate=" + maxReadDate);
+		
+		int returnValue = 0;
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+		
+		String inputParams = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		inputParams += "&password=" + URLEncoder.encode(password, "UTF-8");
+		inputParams += "&maxReadCount=" + maxReadCount;
+		inputParams += "&maxReadDate=" + URLEncoder.encode(maxReadDate, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailSecure";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				int secureId = ((Long)responseObj.get("result")).intValue();
+				
+				if (secureId != 0) {
+					returnValue = secureId;
+				}
+			}
+		}
+		
+		logger.debug("setMailSecure ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+
+	@Override
+	public String updateMailSecure(int tenantId, String userId, int secureId, String url) throws Exception {
+		logger.debug("updateMailSecure started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",secureId=" + secureId + ",url=" + url);
+		
+		String returnValue = "ERROR";
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+		
+		String inputParams = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		inputParams += "&url=" + URLEncoder.encode(url, "UTF-8");
+		inputParams += "&secureId=" + secureId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailSecure";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				returnValue = "OK";
+			}
+		}
+		
+		logger.debug("updateMailSecure ended. returnValue=" + returnValue);
+		return returnValue;
+		
+	}
+
+	@Override
+	public int checkSecureMailPassword(String secureId, String reader, String password) throws Exception {
+		logger.debug("checkSecureMailPassword started.");
+		logger.debug("secureId=" + secureId + ",reader=" + reader + ",password=" + password);
+		
+		String inputParams = "secureId=" + secureId;
+		inputParams += "&reader=" + URLEncoder.encode(reader, "UTF-8");
+		inputParams += "&password=" + URLEncoder.encode(password, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkSecureMailPassword";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		int returnValue = -100;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK")) {
+				returnValue = ((Long)responseObj.get("reasonCode")).intValue();
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("checkSecureMailPassword ended.");
+		return returnValue;
+	}
+
+	@Override
+	public MailSecureVO getSecureMailInfo(String secureId, String reader) throws Exception {
+		logger.debug("getSecureMailInfo started.");
+		logger.debug("secureId=" + secureId + ",reader=" + reader);
+		
+		String inputParams = "secureId=" + secureId;
+		inputParams += "&reader=" + URLEncoder.encode(reader, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSecureMailInfo";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		MailSecureVO vo = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONObject obj = (JSONObject)responseObj.get("result");
+				
+				vo = new MailSecureVO();
+				vo.setUserAccount((String)obj.get("userAccount"));
+        		vo.setFolderPath((String)obj.get("folderPath"));
+        		vo.setMailUid((String)obj.get("mailUid"));
+        		vo.setMaxReadCount((String)obj.get("maxReadCount"));
+        		vo.setMaxReadDate((String)obj.get("maxReadDate"));
+        		vo.setReadCount((String)obj.get("readCount"));
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getSecureMailInfo ended.");
+		return vo;
+	}
+
+	@Override
+	public String updateSecureMailReaderInfo(String secureId, String reader) throws Exception {
+		logger.debug("updateSecureMailReaderInfo started.");
+		logger.debug("secureId=" + secureId + ",reader=" + reader);
+		
+		String inputParams = "secureId=" + secureId;
+		inputParams += "&reader=" + URLEncoder.encode(reader, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateSecureMailReaderInfo";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String returnValue = "ERROR";
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				returnValue = "OK";
+			}
+		}
+		
+		logger.debug("updateSecureMailReaderInfo ended.");
+		return returnValue;
+	}
+
+	@Override
+	public MailSecureVO getSecureMailInfoWithPassword(String secureId) throws Exception {
+		logger.debug("getSecureMailInfoWithPassword started.");
+		logger.debug("secureId=" + secureId);
+		
+		String inputParams = "secureId=" + secureId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSecureMailInfoWithPassword";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		MailSecureVO vo = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONObject obj = (JSONObject)responseObj.get("result");
+				
+				vo = new MailSecureVO();
+				vo.setPassword((String)obj.get("password"));
+        		vo.setMaxReadCount((String)obj.get("maxReadCount"));
+        		vo.setMaxReadDate((String)obj.get("maxReadDate"));
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getSecureMailInfoWithPassword ended.");
+		return vo;
+	}
+	
+	@Override
+	public MailSecureVO getSecureMailInfoWithPassword(String userId, int tenantId, String url) throws Exception {
+		logger.debug("getSecureMailInfoWithPassword started.");
+		logger.debug("userId=" + userId + ",tenantId=" + tenantId + ",url=" + url);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+		
+		String inputParams = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		inputParams += "&url=" + URLEncoder.encode(url, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSecureMailInfoWithPassword2";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		MailSecureVO vo = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONObject obj = (JSONObject)responseObj.get("result");
+				
+				vo = new MailSecureVO();
+				vo.setSecureId((String)obj.get("secureId"));
+				vo.setPassword((String)obj.get("password"));
+        		vo.setMaxReadCount((String)obj.get("maxReadCount"));
+        		vo.setMaxReadDate((String)obj.get("maxReadDate"));
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getSecureMailInfoWithPassword ended.");
+		return vo;
+	}
+	
+	@Override
+	public List<MailSecureReaderVO> getSecureMailReaderInfo(String secureId) throws Exception {
+		logger.debug("getSecureMailReaderInfo started.");
+		logger.debug("secureId=" + secureId);
+		
+		String inputParams = "secureId=" + secureId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSecureMailReaderInfo";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+		
+		List<MailSecureReaderVO> list = new ArrayList<MailSecureReaderVO>();
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONArray array = (JSONArray)responseObj.get("result");
+				
+				MailSecureReaderVO vo = null;
+				JSONObject obj = null;
+				
+				for (int i = 0; i < array.size(); i++) {
+					obj = (JSONObject)array.get(i);
+					vo = new MailSecureReaderVO();
+					
+					vo.setReader((String)obj.get("reader"));
+					vo.setReadCount((String)obj.get("readCount"));
+					vo.setReadDate((String)obj.get("readDate"));
+					
+					list.add(vo);
+				}
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getSecureMailReaderInfo ended.");
+		return list;
 	}
 	
 }

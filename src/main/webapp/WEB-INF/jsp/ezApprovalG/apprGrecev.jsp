@@ -63,7 +63,7 @@
 			var AppendFileAttach = "";
 			var AppenAprDocAttachList = "";
 			var pDocNumCode = "";
-			var RootURL = document.location.protocol + "//" + document.location.hostname;  
+			var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 			var arr_userinfo = new Array();
 			arr_userinfo[0]  = "user";								// 사용자-부서구분
 			arr_userinfo[1]  = "${userInfo.id}";              // 사용자ID
@@ -372,8 +372,7 @@
 			
 			
 			// 결재선지정 버튼 선택시 처리함수
-			function btnSetAprLine_onclick()
-			{
+			function btnSetAprLine_onclick() {
 				var ret = openAprLineUI();
 				if(ret[3] != "" && ret[3] != "cancel") 
 					pPublic = ret[3];
@@ -723,14 +722,13 @@
 			}
 			
 			//지정
-			function btnAssign_onclick() 
-			{
+			function btnAssign_onclick() {
 				var parameter = new Array();
 				parameter[0] = pDocID;						//문서ID
 				parameter[1] = pSusinSN;					//수발신SN
 				parameter[2] = pAprState;					//결재상태
 			  
-				var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveAssignUI_Cross.aspx";
+				var url = "/ezApprovalG/ezReceiveAssignUI.do";
 				var feature = "status:no;dialogWidth:388px;dialogHeight:345px;edge:sunken;scroll:no";
 				 	
 				feature =  feature + GetShowModalPosition(388, 345);

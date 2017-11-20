@@ -27,14 +27,6 @@
 		        }
 		
 		        Make_RuleDetail();
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("RuleDisplayName"));
-		            }
-		        }
-		        catch (e)
-		        { }
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();

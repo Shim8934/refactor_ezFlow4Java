@@ -608,6 +608,7 @@
 		            pURL = tr.getAttribute("DATA2");
 		
 		            var formid = tr.getAttribute("DATA6");
+		            var docState =  tr.getAttribute("DATA12");
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
@@ -616,7 +617,7 @@
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid);
+		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
@@ -731,14 +732,24 @@
 		
 		            if (window.screen.width > 800) {
 		                var pleftpos;
-		
+
 		                pleftpos = parseInt(width) - 967;
 		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
 		                width = parseInt(width) - pleftpos;
 		                left = pleftpos / 2;
 		            }
 		            else {
 		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
 		                width = parseInt(width) - 10;
 		            }
 		
@@ -759,7 +770,7 @@
 		        if (typeof (subCondition) == "undefined")
 		            subCondition = "";
 		
-		        var tempPageSize = "65530";
+		        var tempPageSize = PageSize;
 		        var tempPageNum = "1";
 		        if (AllFG != 1) {
 		            tempPageSize = PageSize;
@@ -780,7 +791,7 @@
 			        if (DocListType == "DocList") {
 			            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-			                "&OO=" + encodeURI(OrderOption);
+			                "&OO=" + encodeURI(OrderOption) + "&allFG=" + AllFG ;
 		        	} else {
 		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
@@ -792,7 +803,7 @@
 		                "&P19=" + encodeURI(condition[19]) + "&P20=" + encodeURI(condition[20]) + "&P21=" + encodeURI(condition[21]) +
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition);
+		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition)+ "&allFG=" + AllFG ;
 		             }
 		        	window.frames["saveExcel"].location.href = url;
                 }
@@ -1304,7 +1315,7 @@
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            </c:if>
-	            <select id="sel_year" name="sel_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  
 	        </ul>

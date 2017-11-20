@@ -9,13 +9,23 @@
 <title><spring:message code="ezTalkGate.ldh001" /></title>
 <link rel="stylesheet" href="/css/ezTalkGate/ktb2b.css" type="text/css">
 <link rel="stylesheet" href="/css/ezTalkGate/main.css" type="text/css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<spring:message code='ezTalkGate.e1' />"></script>
+<style type="text/css">
+.ui-widget-header
+{
+    background-color: #0073e6;
+    background-image: none;
+    color: white;
+}
+</style>
 <script>
 
 var Count = 5; //공지사항 게시게수 
 
-function ItemRead_onclick(itemseq)
-{  
+function ItemRead_onclick(itemseq) {  
     if (itemseq == "0") {
       return;     
     }
@@ -27,10 +37,10 @@ function ItemRead_onclick(itemseq)
     pheigth = pheigth - 300;
     pwidth = pwidth - 330;
       
-    // window.open("/myoffice/ezMsn/shownotice.aspx?itemid=" + itemseq, "", "height=657,width=720px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,""); 
+    // window.open("/myoffice/ezMsn/shownotice.aspx?itemid=" + itemseq, "", "height=657,width=720px, status=no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,""); 
 
     var pURL = "/ezTalkGate/showNoticeBoardItem.do?itemId=" + itemseq
-    window.showModalDialog(pURL, null, "dialogHeight:314px; dialogWidth:617px; status:no;scroll:no; help:no;edge:sunken"); 
+    window.showModalDialog(pURL, null, "dialogHeight:604px; dialogWidth:773px; status:no; scroll:no; help:no; edge:sunken; resizable=yes; center:yes"); 
 }
   
 </script>

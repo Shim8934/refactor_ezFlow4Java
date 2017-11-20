@@ -11,15 +11,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
 		    window.onload = function () {
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("imgwidth"));
-		                KeEventControl(document.getElementById("imgheight"));
-		            }
-		        }
-		        catch (e)
-		        { }
 		    };
 		    function filesearch() {
 		        document.getElementById("file1").click();

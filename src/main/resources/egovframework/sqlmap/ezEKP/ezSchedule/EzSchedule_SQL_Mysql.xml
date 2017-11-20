@@ -278,6 +278,12 @@
             and
             	tenant_id = #v_TENANTID#
             ]]>
+            <isNotEmpty property="v_SEARCHTITLE">
+            <![CDATA[
+            and 
+            	title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            ]]>
+            </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
         	order by startdate asc
 	</select>
@@ -863,7 +869,11 @@
 				datetype = #v_DATETYPE#,
 				startdate = #v_STARTDATE#,				
 				enddate = #v_ENDDATE#,
+			]]>	
+			<isNotEmpty property="v_REPETITION">
 				repetition = ifnull(#v_REPETITION#, ''),
+			</isNotEmpty>	
+			<![CDATA[	
 				title = #v_TITLE#,
 				location = ifnull(#v_LOCATION#, '')
 	   		where  

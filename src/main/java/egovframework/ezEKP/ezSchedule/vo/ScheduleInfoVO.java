@@ -54,6 +54,8 @@ public class ScheduleInfoVO {
 	private String title;
 
 	private String location;
+	
+	private String content;
 
 	private String contentPath;
 
@@ -474,5 +476,14 @@ public class ScheduleInfoVO {
 	public void setRepeatCount(int repeatCount) {
 		this.repeatCount = repeatCount;
 	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
 	
 }

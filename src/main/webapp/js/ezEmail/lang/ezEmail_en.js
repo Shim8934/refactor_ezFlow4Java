@@ -38,8 +38,12 @@ var strLang37 = "By Sender";
 var strLang41 = "Two-Line View";
 var strLang42 = "Select message to export.";
 var strLang43 = "Select message to reply.";
+var strLang44 = "Select a message to reply."
 var strLang45 = "Select message to reply to all.";
+var strLang46 = "Select a message to reply to all."
 var strLang47 = "Select message to forward";
+var strLang48 = "Select a message to forward"
+var strLang49 = "Select message to view read receipt list."
 var strLang50 = "Select a message to view read receipt list.";
 var strLang51 = "Select item to move or copy.";
 var strLang52 = "Error occurred while copying message.";
@@ -183,7 +187,7 @@ var strLang218 = "You can not add any more conditions.\nPlease change through mo
 var strLang219 = "To select";
 var strLang220 = "\"(a) move";
 var strLang221 = "Has the same value.";
-var strLang222 = "The value entered is not e-mail address format.\nExample) hongkildong@naver.com please enter in the same format.";
+var strLang222 = "The value entered is not e-mail address format.\nExample) hongkildong@kaoni.com please enter in the same format.";
 var strLang223 = "Please enter a value.";
 var strLang224 = "Has already been selected for that condition. Modify your changes.";
 var strLang225 = "Set values. The value of continuing the existing settings will be deleted.\nDo you want to continue?";
@@ -291,11 +295,15 @@ var strLangLHM15 = ", 현재 크기 : ";
 var strLangLHM16 = "유효하지 않은 수신인이 있습니다. 이메일 주소를 확인해주세요.";
 var strLangLHM17 = "해당 수신인을 제외하고 메일을 발송하시겠습니까?";
 var strLangLHM18 = "/blank_us.htm";
+var strLangLHM19 = "보안메일을 삭제하시면 수신자도 보안메일의 열람이 불가능합니다.\n그래도 삭제하시겠습니까?";
+var strLangLHM20 = "보안메일을 이동하시면 보안메일의 열람과 보안정보 확인이 불가능합니다.\n그래도 이동하시겠습니까?";
 var strLangKMS01 = "";
 var strLangKMS02 = "첨부파일 총 크기가 ";
 var strLangKMS03 = "No mail.";
 var strLangKMS04 = "수신자가 "; 
 var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다.\n개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
+var strLangKMS06 = "보안메일을 삭제하시면 수신자도 보안메일의 열람이 불가능합니다.\n그래도 삭제하시겠습니까?";
+var strLangKMS07 = "보안메일을 이동하시면 보안메일의 열람과 보안정보 확인이 불가능합니다.\n그래도 이동하시겠습니까?";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -367,7 +367,10 @@
         for (i = 0; !x && d.layers && i < d.layers.length; i++) x = MM_findObj(n, d.layers[i].document);
         if (!x && d.getElementById) x = d.getElementById(n); return x;
     }
-</SCRIPT>
+</script>
+<style>
+	.mainlist tr th {border-top:0px}
+</style>
 </head><body class="popup">
 <xml id="OrganListHeader" style="display:none">
 <LISTVIEWDATA>
@@ -407,8 +410,8 @@
 <table>
         <tr> 
           <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1174'/></h2>
-        <div class="listview"  style="HEIGHT: 235px; WIDTH: 290px; overflow:AUTO" id="divList">
-        <div ID="OrgListView" style="margin: 1px 1px 1px 1px;"></div></div>
+        <div class="listview"  style="HEIGHT: 235px; WIDTH: 360px; overflow:AUTO" id="divList">
+        <div ID="OrgListView"></div></div>
         </td>
           <td style="width:25px;text-align:center"><img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
 						onClick="return AddUser_onclick()" style="cursor:pointer"><img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" 
@@ -416,7 +419,7 @@
 
           <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1175'/></h2>
           <div class="listview"  style="HEIGHT: 235px; WIDTH: 180px;overflow-x:hidden;overflow-y:AUTO" id="divList2">
-          <div ID="UserListView" style="margin: 1px 1px 1px 1px;"></div></div></td>
+          <div ID="UserListView"></div></div></td>
         </tr>
 </table>
 

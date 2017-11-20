@@ -136,6 +136,8 @@
 		            document.getElementById("file").type = "text";
 		            document.getElementById("file").type = "file";
 		        }
+		        
+		        isbigyn = "N";
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
@@ -385,7 +387,15 @@
 		        var fd = new FormData();
 		
 		        for (var i = 0; i < filelist.length; i++) {
-		            fd.append("fileToUpload", filelist[i]);
+					var fnl = filelist[i].name.length;
+		        	
+		        	if (fnl > 54) {
+		        		alert("<spring:message code='main.jjh08' />");
+		        		isfileup = false;
+		        		return;
+		        	} else {
+		        		fd.append("fileToUpload", filelist[i]);
+		        	}		            
 		        }
 		
 		        var newid = window.parent.g_newid;

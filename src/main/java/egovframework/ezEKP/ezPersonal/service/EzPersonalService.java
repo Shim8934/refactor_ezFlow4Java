@@ -40,7 +40,7 @@ public interface EzPersonalService {
 	
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID, String companyID) throws Exception;
 
-	public String getApprovNotiConfig(String userID, int tenantID) throws Exception;
+	public String getApprovNotiConfig(String userID, String currentID, int tenantID) throws Exception;
 
 	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception;
 	

@@ -22,15 +22,6 @@
 		        ConArea.innerHTML += "<span style='margin-left:25px;'>" + inboxRuleCon.innerHTML + "</span>";
 		        ActArea.innerHTML += "<span style='margin-left:20px;'>" + inboxRuleAct.innerHTML + "</span>";
 		        ExptArea.innerHTML += "<span style='margin-left:20px;'>" + inboxRuleExpt.innerHTML + "</span>";
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("RuleDisplayName"));
-		                KeEventControl(document.getElementById("inboxRuleCon1"));
-		            }
-		        }
-		        catch (e)
-		        { }
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
@@ -735,7 +726,7 @@
 	    <div style="border:1px solid #dbdbda;width:585px;height:475px;overflow-y:auto;margin:5px 5px 5px 5px;">
 		    <div style="margin-top:20px;margin-left:20px;">
 			    <img src="/images/ImgIcon/rul-sml.gif" align="absmiddle"  height="16" style="margin-top:-3px;" hspace="2" /><span class="txt"><spring:message code='ezEmail.t812' /></span><p />
-			    <span class="txt"><spring:message code='ezEmail.t813' /></span> <input type="text" style='width:80%;' id="RuleDisplayName" name="RuleDisplayName" maxlength="75" /><p />
+			    <span class="txt"><spring:message code='ezEmail.t813' /></span> <input type="text" style='width:70%;' id="RuleDisplayName" name="RuleDisplayName" maxlength="75" /><p />
 			    <span class="txt"><spring:message code='ezEmail.t814' /></span><br />
 			    <div id="ConArea" name="ConArea" style="margin-top:8px;"></div>
 			    <br />

@@ -191,9 +191,11 @@
 	                if (get_unreadend_2010.href == PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")) {
 	                    if (unreadcount == "0") {
 	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption);
+	                        PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : ''");
 	                    }
 	                    else {
 	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + "(" + unreadcount + ")");
+	                        PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : bold");
 	                    }
 	                    
 	                    var pageTitle = parent.frames["right"].document.title;

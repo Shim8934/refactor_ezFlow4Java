@@ -351,11 +351,12 @@
 					}        			
 				});	
 //FreeT 요구사항 마이게시판 트리 없을때 안보여주기~
-		    	if (returnXML == "<TREEVIEWDATA></TREEVIEWDATA>") {
-		    		$("#TreeCtrl_MyBoardTree").css("display", "none");
-		    	} else {
-		    		$("#TreeCtrl_MyBoardTree").css("display", "");
-		    	}
+//다시 메뉴 스펙이 바껴서 트리 안보여주기 없어도 안보여줄수있어서 재수정
+// 		    	if (returnXML == "<TREEVIEWDATA></TREEVIEWDATA>") {
+// 		    		$("#TreeCtrl_MyBoardTree").css("display", "none");
+// 		    	} else {
+// 		    		$("#TreeCtrl_MyBoardTree").css("display", "");
+// 		    	}
 		    	
 		    	return loadXMLString(returnXML);
 		    }
@@ -483,6 +484,7 @@
 		        }
 		    }
 		    function favoriteList() {
+		    	$(".on").attr("class", "off");
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
@@ -509,17 +511,22 @@
 	<body class="leftbody" style="overflow: auto; height:100%">
 	    <div id="left" style="overflow: auto">
 	        <div class="left_board" title="BOARD"></div>
-	        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-	            <h2><spring:message code="ezBoard.t360"/></h2>
-	        </div>
-	        <ul id="TreeCtrl_MyBoardTree_ul">
-	            <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span  style="width: 100%; display: inline-block;width: 100%;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
-	            <div class="tree" style='display: none; width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
-	        </ul>
+	        <c:if test="${MyBoardTopFlag != 'NO'}">
+		        <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
+		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
+		            <h2>
+	<%-- 	            	<span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
+		            	<img alt="" src="/images/i_group.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t360"/></span>
+		            </h2>
+		        </div>
+		        <ul id="TreeCtrl_MyBoardTree_ul">
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
+		        </ul>
+	        </c:if>
 	        <div id='TopBoardsList'>
 	        	<script type="text/javascript">
 	        		parser = new DOMParser();
@@ -536,6 +543,22 @@
         			});
 	        	</script>
 	        </div>
+	        <c:if test="${MyBoardTopFlag == 'NO'}">
+		        <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
+		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
+		            <h2>
+	<%-- 	            	<span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
+		            	<img alt="" src="/images/i_group.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t360"/></span>
+		            </h2>
+		        </div>
+		        <ul id="TreeCtrl_MyBoardTree_ul">
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
+		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
+		        </ul>
+	        </c:if>
 	        <h2><span onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></h2>
 	        <ul>
 	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
@@ -554,6 +577,7 @@
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
+	        $(".on").attr("class", "off");
 	    </script>
 	</body>
 </html>

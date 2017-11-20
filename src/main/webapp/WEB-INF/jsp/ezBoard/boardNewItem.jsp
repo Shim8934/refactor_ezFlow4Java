@@ -926,14 +926,14 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            else {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
@@ -1997,7 +1997,7 @@
 								</c:if>	
 		                        </td>
 	                    </tr>
-             <!-- 추가 항목이 있을 경우 -->
+             			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>
              					<c:choose>
@@ -2031,7 +2031,7 @@
              					</c:choose>
              				</tr>
              			</c:forEach>
-	          <!-- 추가 항목이 있을 경우 끝-->
+	         			<!-- 추가 항목이 있을 경우 끝-->
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">
@@ -2224,28 +2224,11 @@
 	            </c:otherwise>
         	</c:choose>
 	        </tr>
-	        <c:choose>
-	        	<c:when test="${boardInfo.guBun != '3'}">
-			        <tr>
-			            <td style="vertical-align: top; height: 100%" class="pad2" id="EdtorSize">
-			                <table style="width: 100%; height: 100%">
-			                    <tr>
-			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0px; width: 99.7%; height: 100%; overflow: auto; border-top-width: 0px;"></iframe>
-			                        </td>
-			                    </tr>
-			                </table>
-			            </td>
-			        </tr>
-	        	</c:when>
-	        	<c:otherwise>
-			        <tr>
-			            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-			                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
-			            </td>
-			        </tr>
-	        	</c:otherwise>
-	        </c:choose>
+	        <tr>
+	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
+	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	            </td>
+	        </tr>
 	        <tr id="docTR" style="display: none">
 	            <td>
 	                <div id="docContentBorder" style="border: #B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top: 5px;">

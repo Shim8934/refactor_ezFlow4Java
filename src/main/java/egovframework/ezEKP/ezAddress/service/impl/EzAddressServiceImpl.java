@@ -386,6 +386,8 @@ public class EzAddressServiceImpl implements EzAddressService {
 			filterValue = pFilter.substring(splitIndex + 1);
 		}
 		
+		filterValue = filterValue.replace("%", "\\%").replace("_", "\\_");
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String orderOptionParam = "orderOption=" + URLEncoder.encode(pOrderOption, "UTF-8");

@@ -34,16 +34,15 @@
 		        if (p_AprLineTempletName == "") {
 		        	var pAlertContent;
 		        	if (type == "") {
-	                    pAlertContent = "<spring:message code='ezApprovalG.t387'/>";
+	                    alert("<spring:message code='ezApprovalG.t387'/>");
 		        	} else {
 		        		if (approvalFlag == "G") {
-			        		pAlertContent = "<spring:message code='ezApprovalG.t6003'/>";
+			        		alert("<spring:message code='ezApprovalG.t6003'/>");
 		        		} else {
-			        		pAlertContent = "<spring:message code='ezApprovalG.hyj10'/>";
+			        		alert("<spring:message code='ezApprovalG.hyj10'/>");
 		        		}
 		        	}
 		        	
-		            OpenAlertUI(pAlertContent);
 		            if (!CrossYN())
 		                document.getElementById("TxtAprLineTempletName").focus();
 		
@@ -64,16 +63,7 @@
 		    }
 		    var RetValue;
 		    var ReturnFunction;
-		    window.onload = function () {
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("TxtAprLineTempletName"));
-		            }
-		        }
-		        catch (e)
-		        { }
-		
+		    window.onload = function () {		
 		        try {
 		            RetValue = parent.aprlinetempletname_cross_dialogArguments[0];
 		            ReturnFunction = parent.aprlinetempletname_cross_dialogArguments[1];

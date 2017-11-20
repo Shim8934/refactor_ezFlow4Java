@@ -42,7 +42,7 @@ function getDocList() {
 				listType : pListTypeValue, 
 				docType  : pDocTypeValue,
 				userID 		 : pUserID,
-				userDeptID   : arr_userinfo[4],
+				deptID   : arr_userinfo[4],
 				pageSize 	 : pageSize,
 				pageNum 	 : pageNum,
 				companyID    : companyID,
@@ -571,8 +571,12 @@ function getAprLine(tr) {
 //      닷넷에서는 2가지 값만 보내서 controller 에서 노드(0),노드(1) 로 빼서 사용해서  mode로 통일
     	pMode = "TMP";
     } else if (pListTypeValue == "10" || pListTypeValue == "99") {
-    	pDocID = GetAttribute(tr, "DATA2");
-    	pMode = "END";
+    	if (approvalFlag == "S") {
+    		pDocID = GetAttribute(tr, "DATA2");
+    		pMode = "END";
+    	} else {
+    		pMode = "APR";
+    	}
     } else {
     	pMode = "APR";
     }
@@ -1062,7 +1066,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
 
 function OpenReceiveDistributeUI(pCurSelRow) {
     var parameter = pCurSelRow;
-    var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI_Cross.aspx";
+    var url = "/ezApprovalG/ezReceiveDistributeUI.do";
     var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(453, 410);
     var ret = window.showModalDialog(url, parameter, feature);
@@ -1497,7 +1501,7 @@ function makePageSelPage() {
     else {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
     }
-
+    //document.getElementById("presentcell").innerHTML = " - " + localValue;
     document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 
     try {
@@ -2576,7 +2580,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
     openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-alert("openServerDraftUI");
+
     openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pubdoc>
+	<head>
+		<organ></organ>
+		<receiptinfo>
+			<recipient refer="">
+				<rec></rec>
+			</recipient>
+		</receiptinfo>
+	</head>
+	<body>
+		<title></title>
+	</body>
+	<foot>
+		<sendername></sendername>
+		<seal omit=""></seal>
+		<approvalinfo></approvalinfo>
+		<processinfo>
+			<regnumber regnumbercode=""></regnumber>
+			<enforcedate></enforcedate>
+		</processinfo>
+		<sendinfo>
+		</sendinfo>							
+	</foot>
+</pubdoc>

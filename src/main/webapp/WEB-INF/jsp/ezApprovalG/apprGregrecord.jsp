@@ -56,27 +56,6 @@
     var pDocID =""; 
     var pDocSN = "0";
     window.onload = function () {
-        var ua = navigator.userAgent;
-        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-            KeEventControl(document.getElementById("txtTitle"));
-            KeEventControl(document.getElementById("txtRegY"));
-            KeEventControl(document.getElementById("txtRegM"));
-            KeEventControl(document.getElementById("txtRegD"));
-            KeEventControl(document.getElementById("txtRegH"));
-            KeEventControl(document.getElementById("txtRegMi"));
-            KeEventControl(document.getElementById("txtTotalPage"));
-            KeEventControl(document.getElementById("txtAprMemberTitle"));
-            KeEventControl(document.getElementById("txtDrafter"));
-            KeEventControl(document.getElementById("txtExeY"));
-            KeEventControl(document.getElementById("txtExeM"));
-            KeEventControl(document.getElementById("txtExeD"));
-            KeEventControl(document.getElementById("txtReceiptMember"));
-            KeEventControl(document.getElementById("txtDeliveryNo"));
-            KeEventControl(document.getElementById("txtOriginSN"));
-            KeEventControl(document.getElementById("txtLimitRange"));
-            KeEventControl(document.getElementById("txtSummary"));
-        }
-
         if (window.dialogArguments != null) {
             var objWinDlgArgs = window.dialogArguments;
         }

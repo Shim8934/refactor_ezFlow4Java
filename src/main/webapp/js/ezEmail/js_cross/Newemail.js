@@ -36,6 +36,7 @@ function PreviewW_onMouserDown(e) {
     document.getElementById("ResizeBarW").style.display = "";
     document.getElementById("mailPanel").style.display = "";
     PreviewW_Move = true;
+	SmallSizeList = false;
     
     // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
     document.onselectstart = function () { return false; };
@@ -196,6 +197,11 @@ function reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang43);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang44);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -228,6 +234,11 @@ function all_reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang45);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang46);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -253,6 +264,11 @@ function all_reply_mail_onclick() {
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);
+    }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang48);
+        return;
     }
     else {
         var pSelectItem;
@@ -311,6 +327,7 @@ function move_mail_onclick() {
         alert(strLang51);
         return;
     }
+    
     mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
     mail_movecopy_cross_dialogArguments[2] = "CLOSE";
     var OpenWin = window.open("/ezEmail/mailMoveCopy.do", "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
@@ -321,6 +338,20 @@ function move_mail_onclick_Complete(moveUrl) {
         return;
 
     if (moveUrl["cmd"] == "MOVE") {
+    	var includeSecureMail = false;
+    	for (var i = 0; i < listContentArry.length; i++) {
+    		if (document.getElementById(listContentArry[i]).getAttribute("securemail") == "1") {
+    			includeSecureMail = true;
+    	    	break;
+    	    }
+    	}
+    	
+    	if (includeSecureMail) {
+    		if (!confirm(strLangLHM20)) {
+	    		return;
+	    	}
+    	}
+    	
         var szItemID = "";
         for (var i = 0; i < listContentArry.length; i++) {
             szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
@@ -430,19 +461,43 @@ function deleteWork(bDel) {
         alert(strLang57);
         return;
     }
+    
+    var includeSecureMail = false;
+	for (var i = 0; i < listContentArry.length; i++) {
+		if (document.getElementById(listContentArry[i]).getAttribute("securemail") == "1") {
+			includeSecureMail = true;
+	    	break;
+	    }
+	}
+	
     var cmd = "";
     if (bDel == true || g_szRootFolderName.replace(' ', '') == strLang4) {
         cmd = "BDELETE";
-        if (!confirm(strLang58))
-            return;
+        if (includeSecureMail) {
+        	if (!confirm(strLangLHM19)) {
+        		return;
+        	}
+        } else {
+        	if (!confirm(strLang58)) {
+            	return;
+            }
+        }
+        
     }
     else {
         if (g_foldertype == "delete")
             cmd = "SOFTDEL";
         else
             cmd = "BMOVE";
-        if (!confirm(strLang59))
-            return;
+        if (includeSecureMail) {
+        	if (!confirm(strLangLHM19)) {
+        		return;
+        	}
+        } else {
+        	if (!confirm(strLang59)) {
+            	return;
+            }
+        }
     }
     var szItemID = "";
     for (var i = 0; i < listContentArry.length; i++) {

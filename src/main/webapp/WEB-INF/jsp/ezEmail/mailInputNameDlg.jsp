@@ -32,10 +32,6 @@
 	            }
 	            try {
 	                txt_FolderName.focus();
-	                var ua = navigator.userAgent;
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    KeEventControl(document.getElementById("txt_FolderName"));
-	                }
 	            }
 	            catch (e)
 	            { }
@@ -64,26 +60,6 @@
 	        function folderName_onkeydown() {
 	            if (event.keyCode == 13)
 	                btn_ok_onclick();
-	        }
-	        function KeEventControl(obj) {
-	            useragt = navigator.userAgent.toUpperCase();
-	            if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
-	            {
-	                useragt = useragt.substring(useragt.indexOf("VERSION/") + 8, useragt.indexOf("VERSION/") + 9);
-	                if (parseInt(useragt) > 5) {
-	                    return;
-	                }
-	            }
-	            obj.onkeydown = function () {
-	                if (parseInt(window.event.keyCode) >= 48 && parseInt(window.event.keyCode) <= 126)
-	                    return false;
-	                if (parseInt(window.event.keyCode) == 189 || parseInt(window.event.keyCode) == 187 ||
-	                        parseInt(window.event.keyCode) == 220 || parseInt(window.event.keyCode) == 219 ||
-	                        parseInt(window.event.keyCode) == 221 || parseInt(window.event.keyCode) == 222 ||
-	                        parseInt(window.event.keyCode) == 186 || parseInt(window.event.keyCode) == 188 ||
-	                        parseInt(window.event.keyCode) == 190 || parseInt(window.event.keyCode) == 191 || parseInt(window.event.keyCode) == 32)
-	                    return false;
-	            };
 	        }
 	    </script>
 	</head>

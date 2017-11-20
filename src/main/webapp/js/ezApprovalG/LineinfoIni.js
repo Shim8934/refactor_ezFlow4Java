@@ -371,7 +371,8 @@ function InitListView() {
     				userID 	 : pUserID,
     				formID   : pFormID,
     				deptID 	 : arr_userinfo[4],
-    				reDraft  : pReDraftFlag
+    				reDraft  : pReDraftFlag,
+    				isUsed   : ""
     				},
     		success: function(xml){
     			result = xml;

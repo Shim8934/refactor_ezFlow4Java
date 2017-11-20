@@ -236,7 +236,7 @@
 		  </tr>
 		    <tr>
 		    <td class="pad1" style="height:100%;">
-		        <div id ="contenttable" class ="viewbox"></div>
+		        <div id ="contenttable" class ="viewbox" style="border:1px solid #b6b6b6"></div>
 		    </td> 
 		  </tr>
 		  </table>

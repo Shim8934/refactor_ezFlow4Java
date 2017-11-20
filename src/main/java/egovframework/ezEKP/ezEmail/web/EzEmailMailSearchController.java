@@ -366,6 +366,13 @@ public class EzEmailMailSearchController {
 					subject = (subject != null) ? subject : "";
 					sb.append(String.format("<SUBJECT><![CDATA[%s]]></SUBJECT>", subject));
 					
+					// secureMail
+					if (ezEmailUtil.hasSecureMailFlag(message)) {
+						sb.append(String.format("<SECUREMAIL>1</SECUREMAIL>"));
+					} else {
+						sb.append(String.format("<SECUREMAIL>0</SECUREMAIL>"));
+					}
+					
 					String[] headers = message.getHeader("X-Priority");
 					String header = headers != null ? headers[0] : "normal";
 					int importance = 1;

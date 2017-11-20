@@ -242,7 +242,7 @@
 	        </tr>
 	        <tr>
 	            <td class="pad1">
-	                <div id="ItemOverflow" class="viewbox" style="overflow: auto; height: 520px; width:737px;">
+	                <div id="ItemOverflow" class="viewbox" style="overflow: auto; height: 520px; width:737px; border:1px solid #b6b6b6;">
 	                    <div id="txtContent" class="white" style="width: 100%;height:100%; overflow-y: auto"></div>
 	                </div>
 	            </td>

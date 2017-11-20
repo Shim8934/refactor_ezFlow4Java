@@ -7,7 +7,7 @@ function btnSetTaskCode_onclick() {
         selectcabinet_cross_dialogArguments[0] = para;
         selectcabinet_cross_dialogArguments[1] = btnSetTaskCode_onclick_Complete;
 
-        DivPopUpShow(850, 455, "/ezApprovalG/selectCabinet.do?initFlag=1");
+        DivPopUpShow(870, 500, "/ezApprovalG/selectCabinet.do?initFlag=1");
     } catch (e) {
         alert("btnSetTaskCode_onclick : " + e.description);
     }
@@ -2349,7 +2349,7 @@ function chk_Passwd() {
 }
 
 function setFirstDrafter() {
-    var ret = getAutoAprLine();
+    var ret = getAutoAprLine("");
 
     if (ret[0] != "NONE") {
     	if (approvalFlag == "S") {
@@ -2514,7 +2514,21 @@ function getSignDate() {
 }
 
 function delOpinionInfo() {
-    var xmlhttp = createXMLHttpRequest();
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
+		data : {
+			docID : pDocID,
+			opinionType : "002",
+		},
+		success: function(result) {
+			pHasOpinionYN = "";
+		}
+	});
+	
+    /*var xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
 
     var objNode;
@@ -2526,7 +2540,7 @@ function delOpinionInfo() {
     xmlhttp.send(xmlpara);
 
     pHasOpinionYN = "";
-    return xmlhttp.responseText;
+    return xmlhttp.responseText;*/
 }
 
 function SignCheck() {
@@ -2593,8 +2607,12 @@ function putSignXML(SignXML) {
                         var signHeight = parseInt(field.offsetHeight) - 4
                         signWidth = 50;
                         if (seumyung) {
-                        	if (img[1].indexOf(strLang7) > -1) {
-                        		signHeight = 28;
+                        	if (img[1] != null) {
+	                        	if (img[1].indexOf(strLang7) > -1) {
+	                        		signHeight = 28;
+	                        	} else {
+	                        		signHeight = 50;
+	                        	}
                         	} else {
                         		signHeight = 50;
                         	}

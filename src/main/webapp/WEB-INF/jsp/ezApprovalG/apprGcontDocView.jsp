@@ -59,18 +59,24 @@
 		    var admin = "${admin}";
 		    var formDocType = "${formDocType}";
 		    var formUrl = "${formUrl}";
+		    var docState = "${docState}";
+		    
 		    $(function () {
-			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
+			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
 		    		QuitWindow();
 			    }
 			    
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
-	        	} else{
+	        	} else {
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
 	        	}
+		      	
+		      	if (docState == "012" || docState == "013") {
+		      		document.getElementById("btnReuse").style.display = "none";
+		      	}
 		    });
 	
 		    var aprendopinion_dialogArgument = new Array();
@@ -137,8 +143,9 @@
 		    }
 		    function FieldsAvailable() {
 		        CheckSignImg();
-		        if (SignCheckFlag == "N")
-		            SignCheck();
+		        //없이 테스트
+// 		        if (SignCheckFlag == "N")
+// 		            SignCheck();
 		
 		        var fields = message.GetFieldsList();
 		        if (pListSusin == 1 || pListSusin == "") {
@@ -431,8 +438,18 @@
 		                            signWidth = 50;
 		                            
 		                            if (seumyung) {
-		                            	if (img[1].indexOf(strLang7) > -1) {
-		                            		signHeight = 28;
+		                            	if (img[1] != null) {
+			                            	if (img[1].indexOf(strLang7) > -1) {
+			                            		signHeight = 28;
+			                            	} else {
+			                            		signHeight = 50;
+			                            		
+			                            		if (SignName.indexOf("habyuisign") > -1) {
+			                            			if (!habyuiDate) {
+					                            		signHeight = 28;
+				                            		}
+			                            		}
+			                            	}
 		                            	} else {
 		                            		signHeight = 50;
 		                            		
@@ -628,7 +645,7 @@
 
 		            openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=" + escape(pListTypeValue) + "&aprState=" + escape(pArgument[6]);
-		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&isuesd=" +  editable;
+		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&isUsed=" +  editable;
 		        }
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;

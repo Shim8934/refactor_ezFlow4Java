@@ -185,7 +185,7 @@
 		                is_newfile = document.getElementById("filelist").childNodes[i].getAttribute("NEWFILE");
 		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
 		                window.parent.DelAttachFileAtList(pNewNodeName);
-		
+		                
 		                var delfilesize;
 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
 		                filesize -= delfilesize;
@@ -229,7 +229,17 @@
 		        var fd = new FormData();
 
 		        for (var i = 0; i < file.length; i++) {
-		            fd.append("fileToUpload", file[i]);
+		        	var fnl = file[i].name.length;
+		        	
+		        	if (fnl > 54) {
+		        		alert("<spring:message code='main.jjh08' />");
+		        		isfileup = false;
+		        		document.getElementById("file").value = "";
+		        		
+		        		return;
+		        	} else {
+		            	fd.append("fileToUpload", file[i]);
+		        	}
 		        }
 		        
 		        fd.append("boardID", window.parent.pBoardID);
@@ -248,7 +258,7 @@
 		
 		</script>
 	</head>  
-	<body style ="width:100%;height:100%;overflow:hidden">   
+	<body style ="width:100%;height:100%;overflow:hidden">
         <div style="width:100%;white-space:nowrap;display:inline-block; height: 20px;">
             <div style="float:left">
                 <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezBoard.t440' /></span></a>

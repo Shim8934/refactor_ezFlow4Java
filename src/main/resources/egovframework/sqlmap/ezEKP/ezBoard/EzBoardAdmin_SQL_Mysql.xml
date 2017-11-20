@@ -773,7 +773,10 @@
           	  WHERE  
           	  	TENANT_ID = #v_TENANTID#
           	  AND
-          	  	BOARDID = #v_PDEFAULTBOARDID# )
+          	  	BOARDID = #v_PDEFAULTBOARDID#
+          	  AND
+          	  	ACCESSID IN ($tempCopyList$) 
+          	)
 		]]>
 	</insert>
 	
@@ -1294,6 +1297,9 @@
       		AND  
       			BoardID = #v_pBoardID#
 		]]>
+		<isNotEmpty property="tempCopyList" prepend="AND">
+			ACCESSID IN ($tempCopyList$)
+		</isNotEmpty>
 	</delete>
 	
 	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
