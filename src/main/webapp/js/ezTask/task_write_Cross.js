@@ -447,7 +447,7 @@ function save_task() {
 
 	if (document.getElementById("TextTitle").value == "" || $.trim($("#TextTitle").val()) == "") {
 		doubleSubmitFlag = false;
-    	alert(strLang9);
+    	alert(strLang66);
         document.getElementById("TextTitle").focus();
         return;
     }

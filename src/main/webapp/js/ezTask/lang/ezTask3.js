@@ -60,4 +60,5 @@ var strLang61	=	"リストのIDが指定されていません。";
 var strLang62	=	"データが指定されていません。";
 var strLang63	=	"ノードが存在しません。";
 var strLang64	=	"メモ";
-var strLang65   =   "업무을 저장하였습니다."
+var strLang65   =   "업무을 저장하였습니다.";
+var strLang66	=	"업무명을 입력해주세요.";
