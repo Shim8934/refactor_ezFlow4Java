@@ -27,7 +27,6 @@
 		    
 		    var flag = true;
 		    function btn_OpinionOK_onclick() {
-
 		    	if (flag) {
 		    		flag = false;
 					
@@ -53,7 +52,7 @@
 		            return;
 		        }
 		    }
-		    
+		    }
 		    var ezapralert_cross_dialogArguments = new Array();
 		    function OpenAlertUI(pAlertContent) {
 		        if (CrossYN()) {

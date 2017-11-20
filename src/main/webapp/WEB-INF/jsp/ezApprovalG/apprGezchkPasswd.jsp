@@ -56,6 +56,7 @@
 			            return;
 				}
 		    }
+		    }
 		    
 		    var ezapralert_cross_dialogArguments = new Array();
 		    function OpenAlertUI(pAlertContent) {
@@ -197,8 +198,8 @@
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition">
-		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
+		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick();"><span><spring:message code='ezApprovalG.t20'/></span></a>
+		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
