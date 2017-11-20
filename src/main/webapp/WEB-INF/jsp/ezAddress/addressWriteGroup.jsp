@@ -349,12 +349,11 @@
 	        }
 	
 	        function add() {
-	            if (document.getElementById("TextName").value.trim() == "") {
+	        	var pTextName = document.getElementById("TextName").value.trim();
+	            if ( pTextName == "") {
 	                alert("<spring:message code='ezAddress.t346' />");
 	                    return;
 	                }
-	
-	                if (!check_length(document.getElementById("TextName").value, 50, "<spring:message code='ezAddress.t304' />")) return;
 	
 	                var xmlHTTP = createXMLHttpRequest();
 	                var xmlDom = createXmlDom();
@@ -366,7 +365,7 @@
 	                createNodeAndInsertText(xmlDom, objNode, "TYPE", foldertype);
 	                createNodeAndInsertText(xmlDom, objNode, "OWNERID", ownerid);
 	                createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
-	                createNodeAndInsertCDataText(xmlDom, objNode, "SNAME", document.getElementById("TextName").value);
+	                createNodeAndInsertCDataText(xmlDom, objNode, "SNAME", pTextName);
 	                createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
 	                createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);
 	                objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "CONTACTGROUP");
@@ -384,7 +383,15 @@
 	                xmlHTTP.send(xmlDom);
 	
 	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                    alert("<spring:message code='ezAddress.t347' />");
+	                	if (xmlHTTP.status != 200) {
+			            	alert("<spring:message code='ezAddress.t347' />");
+			            }
+			            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
+			            	alert("<spring:message code='ezAddress.t1' />");
+			            }
+			            else {
+		                    alert("<spring:message code='ezAddress.t347' />");
+			            }
 				    }
 				    else {
 				        alert("<spring:message code='ezAddress.t348' />");
@@ -925,7 +932,7 @@
 	        } 
 	        
 	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
 	        
 	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 	            alert("<spring:message code='ezAddress.t1100' />");
@@ -1809,7 +1816,7 @@
 	            <tr>
 	                <th><spring:message code='ezAddress.t360' /></th>
 	                <td>
-	                    <input type="text" id="TextName" name="TextName" style="width:100%" MaxLength="50" class="txtClass"></td>
+	                    <input type="text" id="TextName" name="TextName" style="width:100%" MaxLength="24" class="txtClass"></td>
 	            </tr>
 	        </table>
 	        <table style="margin-top: 10px">
@@ -1850,7 +1857,7 @@
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
 	                                <td>
-	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="50">
+	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="24">
 	                                </td>
 	                            </tr>
 	                            <tr>

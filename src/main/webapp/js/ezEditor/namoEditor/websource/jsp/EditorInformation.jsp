@@ -1,9 +1,7 @@
 <%
-	String ce_editorkey="Q4FB69Z1PMBEZZPX3K";
+	String ce_editorkey="XGOPGTH6B2VSY85HCW";
 	String ce_company="%uB9AC%uB529%uD22C%uC790%uC99D%uAD8C";
-	String ce_use="Test_Version";
-	String ce_serial="9504-9999-000327";
+	String ce_use="Intranet";
+	String ce_serial="9504-0101-170036";
 	String ce_lkt="CDHMT";
-	ce_domain="MTcyLjMxLjIwLjI4LDEyNy4wLjAuMQ==";
-	ce_exp="MjAxNy0xMi0zMQ==";
 %>

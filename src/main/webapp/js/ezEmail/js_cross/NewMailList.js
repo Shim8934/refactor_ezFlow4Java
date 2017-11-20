@@ -1162,6 +1162,10 @@ var listSubContentArry = new Array();
 var listEventCheckbox = false;
 var listSubEventCheckbox = false;
 function event_listclick(obj) {
+	if (!event) {
+		var event = obj;
+	}
+	
 	if (obj.tagName == "TD") {
         obj = obj.parentElement;
     }

@@ -7,26 +7,26 @@
 <script type="text/javascript" src="../lib/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 	var ce$ = $.noConflict(true);
-	function addEvent(elm, pe_ln, fn) {
+	function addEvent(elm, pe_kH, fn) {
 		if (elm.addEventListener) {
-			elm.addEventListener(pe_ln, fn, false);
+			elm.addEventListener(pe_kH, fn, false);
 		} else if (elm.attachEvent) {
-			elm.attachEvent('on' + pe_ln, fn);
+			elm.attachEvent('on' + pe_kH, fn);
 		} else {
-			elm['on' + pe_ln] = fn;
+			elm['on' + pe_kH] = fn;
 		}
 	}
-	function pe_bQ(){
-		var pe_akB = document.getElementById("pe_akB");
-		addEvent(pe_akB, 'keydown', function(e){
+	function pe_aQ(){
+		var pe_apC = document.getElementById("pe_apC");
+		addEvent(pe_apC, 'keydown', function(e){
 			if(e.keyCode == "13"){
-				login.pe_aAn.click();
+				login.pe_aCI.click();
 			}
 		});
 
-		var pe_aYB = document.getElementById("pe_aAf");
-		addEvent(pe_aYB, 'click', function(e){
-			login.pe_aAn.click();
+		var pe_bhO = document.getElementById("pe_aCO");
+		addEvent(pe_bhO, 'click', function(e){
+			login.pe_aCI.click();
 		});
 	}
 
@@ -37,7 +37,7 @@
 <script type="text/javascript" src="./manager.js"></script>
 </head>
 
-<body style="background-color:#eeeff0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="pe_bQ()">
+<body style="background-color:#eeeff0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="pe_aQ()">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
     <tr>
         <td background="images/intro_bg.gif">
@@ -51,38 +51,38 @@
                 </tr>
                 <tr>
                     <td height="180" background="images/login_bg.jpg">
-                    <table class="pe_cO">
+                    <table class="pe_dt">
 						 <tr>
-							<td id="pe_aXS">&nbsp;</td>
+							<td id="pe_bhJ">&nbsp;</td>
 							<td style="text-align:center">
 							
-								<table id="pe_akB">
+								<table id="pe_apC">
 									<tr>
-										<td class="pe_aLI" >&nbsp;&nbsp;&nbsp;<span id="pe_Nm" style="font-weight: bold;"></span></td>
-										<td class="pe_aKR" ><input type="text" class="pe_aMn" name="pe_SN" id="pe_SN" /></td>
+										<td class="pe_aMB" >&nbsp;&nbsp;&nbsp;<span id="pe_MI" style="font-weight: bold;"></span></td>
+										<td class="pe_aNc" ><input type="text" class="pe_aOm" name="pe_QC" id="pe_QC" /></td>
 										<td></td>
 									</tr>
 									<tr>
-										<td class="pe_aZx" colspan="3"></td>
+										<td class="pe_bfM" colspan="3"></td>
 									<tr>
 									<tr>
-										<td class="pe_aLI">&nbsp;&nbsp;&nbsp;<span id="pe_AC" style="font-weight: bold;"></span></td>
-										<td class="pe_aKR"><input type="password" class="pe_aMn" name="pe_aUf" id="pe_aUf"  autocomplete="off"/></td>
+										<td class="pe_aMB">&nbsp;&nbsp;&nbsp;<span id="pe_zx" style="font-weight: bold;"></span></td>
+										<td class="pe_aNc"><input type="password" class="pe_aOm" name="pe_aWa" id="pe_aWa"  autocomplete="off"/></td>
 										<td>
 											<ul>
-												<li class="pe_eL">
-													<input type="submit" id="pe_aAf" value="" class="pe_ec pe_eD" style="width:66px; height:26px;"/>
+												<li class="pe_ea">
+													<input type="submit" id="pe_aCO" value="" class="pe_eM pe_fk" style="width:66px; height:26px;"/>
 												</li>
 											</ul>
 										</td>
 									</tr>
 									<tr>
 										<td></td>
-										<td class="pe_hn">
+										<td class="pe_hc">
 											<table cellpadding="0" cellspacing="0" border="0">
 												<tr>
-													<td><input type="checkbox" id="pe_api" name="pe_api" /></td>
-													<td><span id="pe_aWG"></span></td>
+													<td><input type="checkbox" id="pe_asP" name="pe_asP" /></td>
+													<td><span id="pe_bgP"></span></td>
 												</tr>
 											</table>
 										</td>
@@ -91,16 +91,16 @@
 								</table>
 							
 							</td>
-							<td id="pe_aWX">&nbsp;</td>
+							<td id="pe_bjp">&nbsp;</td>
 						</tr>
 					</table>
-                    <form method="post" id="login" name="login" action="" onsubmit="return pe_aV(this);" style='display:inline'>
+                    <form method="post" id="login" name="login" action="" onsubmit="return pe_aM(this);" style='display:inline'>
 						<input type="hidden" name="m_id" id="m_id" value="" />
 						<input type="hidden" name="passwd" id="passwd" />
 						<input type="hidden" name="webPageKind" id="webPageKind" value="" />
-						<input type="hidden" name="pe_aBA" id="pe_aBA" />
-						<input type="hidden" name="pe_avg" id="pe_avg" />
-						<input type="submit" id="pe_aAn" name="pe_aAn" value="" class="pe_ec pe_eD" style="width:0px; height:0px; display:none;"/>
+						<input type="hidden" name="pe_aCn" id="pe_aCn" />
+						<input type="hidden" name="pe_aDt" id="pe_aDt" />
+						<input type="submit" id="pe_aCI" name="pe_aCI" value="" class="pe_eM pe_fk" style="width:0px; height:0px; display:none;"/>
 					</form>
                     
                     </td>
@@ -114,49 +114,49 @@
 	</tr>
 </table>
 
-<div id="pe_aBl">
+<div id="pe_aCe">
 	<table border="0" style="width:610px;">
 		<tr style="height:40px;">
 			<td style="width:10px"><img src="images/popup_top_left.gif" /></td>
-			<td id="pe_beH"><span id="pe_Ki" style="color:#FFFFFF"></span></td>
+			<td id="pe_bkQ"><span id="pe_Mr" style="color:#FFFFFF"></span></td>
 			<td style="width:10px"><img src="images/popup_top_right.gif" /></td>
 		</tr>
 		<tr>
-			<td id="pe_bfk"></td>
-			<td id="pe_bfm">
+			<td id="pe_bkC"></td>
+			<td id="pe_bks">
 			
-				<table class="pe_bej">
+				<table class="pe_bkD">
 					<tr>
 						<td style="padding:10px;">
-							<b><span id="pe_MF"></span></b>
-							&nbsp;&nbsp;&nbsp;<input type="text" class="pe_aOL" name="contextPath" id="contextPath" /><br />
-							<span id="pe_NO" class="pe_aOE"></span>
+							<b><span id="pe_Ml"></span></b>
+							&nbsp;&nbsp;&nbsp;<input type="text" class="pe_aXx" name="contextPath" id="contextPath" /><br />
+							<span id="pe_Ln" class="pe_aXC"></span>
 						</td>
 					</tr>
 					<tr>
-						<td class="pe_aOx"></td>
+						<td class="pe_aWV"></td>
 					</tr>
 					<tr style="height:">
 						<td style="padding:10px;">
-						<b><span id="pe_Mv"></span></b>
-							&nbsp;&nbsp;&nbsp;<input type="text" class="pe_aOL" name="pe_aUd" id="pe_aUd" /><br />
-							<span id="pe_Nt" class="pe_aOE"></span>
+						<b><span id="pe_Qm"></span></b>
+							&nbsp;&nbsp;&nbsp;<input type="text" class="pe_aXx" name="pe_aTE" id="pe_aTE" /><br />
+							<span id="pe_Ph" class="pe_aXC"></span>
 						</td>
 					</tr>
 					<tr>
-						<td class="pe_aOx"></td>
+						<td class="pe_aWV"></td>
 					</tr>
 				</table>
 		
 			</td>
-			<td id="pe_beg"></td>
+			<td id="pe_blc"></td>
 		</tr>
 		<tr style="height:50px">
 			<td style="width:10px"><img src="images/popup_bot_left.gif" /></td>
-			<td id="pe_beF">
+			<td id="pe_blo">
 				<ul style="margin:0 auto; width:80px;">
-					<li class="pe_eL">
-						<input type="submit" id="pe_aVy" value="" class="pe_ec pe_eD" style="width:66px; height:26px;" />
+					<li class="pe_ea">
+						<input type="submit" id="pe_aMI" value="" class="pe_eM pe_fk" style="width:66px; height:26px;" />
 					</li>
 				</ul>
 			</td>
@@ -168,7 +168,7 @@
 <div id="bgDiv"></div>
 
 <script type="text/javascript" language="javascript">
-	pe_bI();
+	pe_aJ();
 	
 </script>
 

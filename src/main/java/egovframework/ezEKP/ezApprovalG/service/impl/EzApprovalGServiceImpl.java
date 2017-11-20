@@ -3164,6 +3164,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		ezApprovalGDAO.createNewDoc(map);
 		ezApprovalGDAO.createNewDoc2(map);
+		
 		returnVal = tmpDocID.trim();
 		
 		return returnVal;
@@ -5510,14 +5511,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						if (totalLineSN == tmps) {
 							doc.getElementById(signAdd + "sign" + lastSignNum).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(signAdd + "seumyungdate" + lastSignNum).html(lastCnt);
+							
+							if (doc.getElementById(signAdd + "seumyungdate" + lastSignNum) != null) {
+								doc.getElementById(signAdd + "seumyungdate" + lastSignNum).html(lastCnt);
+							}
 						} else {
 							strSign = signAdd + "sign" + tmps;
 							strSeumyungDate = signAdd + "seumyungdate" + tmps;
 							strJikwe = signAdd + "jikwe" + tmps;
 							
 							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							
+							if (doc.getElementById(strSeumyungDate) != null) {
+								doc.getElementById(strSeumyungDate).html(lastCnt);
+							}
 						}
 					} else {
 						int tmps = signCnt - refResult;
@@ -5527,14 +5534,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
 							
 							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							
+							if (doc.getElementById(strSeumyungDate) != null) {	
+								doc.getElementById(strSeumyungDate).html(lastCnt);
+							}
 						} else {
 							strSign = signAdd + "sign" + tmps;
 							strSeumyungDate = signAdd + "seumyungdate" + tmps;
 							strJikwe = signAdd + "jikwe" + tmps;
 							
 							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							
+							if (doc.getElementById(strSeumyungDate) != null) {	
+								doc.getElementById(strSeumyungDate).html(lastCnt);
+							}
 						}
 					}
 					
@@ -16403,7 +16416,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return receiptSN;
 	}
 
-	public String getNewID(String companyID, int tenantID) throws Exception{
+	public String getNewID(String companyID, int tenantID) throws Exception {
+		logger.debug("getNewID started");
+		
 		String rtnVal = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -16414,6 +16429,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
 		rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
+
+		logger.debug("getNewID newDocID : " + rtnVal);
+		logger.debug("getNewID ended");
 
 		return rtnVal;
 	}
@@ -17181,8 +17199,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String bujaeInfo = doc.getElementsByTagName("DATA4").item(k).getTextContent(); 
 				String[] bujae = bujaeInfo.split(":");
 				
-				if (bujae.length >= 5) {
+				if (bujae.length > 6) {
  					if (nowDate.compareTo(bujae[5] + ":" + bujae[6] + ":" + "00") <= 0) {
+						if (!chkFirst) {
+							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+							chkFirst = true;
+						} else {
+							rtnVal += ", '" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+						}
+					}
+				} else {
+					if (nowDate.compareTo(bujae[3].replace("/", ":").substring(0, 16)) >= 0 && nowDate.compareTo(bujae[4].replace("/", ":").substring(0, 16)) <= 0) {
 						if (!chkFirst) {
 							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
 							chkFirst = true;

@@ -19,6 +19,12 @@ var groupid = "";
 var firstYN = false;
 
 var nowDate = new Date();
+
+if (typeof UserOffset !== 'undefined' && UserOffset) {
+	var _timez = nowDate.getTime() + (nowDate.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000);
+	nowDate.setTime(_timez);	
+}
+
 var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
 function CalendarMiniView(pTagetID) {
@@ -232,6 +238,10 @@ function MonthMiniData(oThisDate) {
 
     var divID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
 
+    console.log(divID);
+    console.log(nowDay);
+    
+    
     var className = "";
     if (divID == nowDay) {
         className = "today";  // 현재일
@@ -247,12 +257,12 @@ function MonthMiniData(oThisDate) {
     if (oThisMonth != oThisDate.getMonth()) // 현재월 이외의 날
     {
         objTd.className = "gray";
-        className = " gray";
+        className += " gray";
     }
     else if (oThisDate.getDay() == 0)  // 일요일
-        className = " sun";
+        className += " sun";
     else if (oThisDate.getDay() == 6)  // 토요일
-        className = " sat";
+        className += " sat";
 
     objTd.className = className;
     oDiv.innerHTML = pDateData;

@@ -54,9 +54,7 @@ public class EzUCMessengerController {
 			
 			String orgId = id.split(":")[0];
 			String orgPw = id.split(":")[1];
-			String timestamp = id.split(":")[2];
-			
-			logger.debug("orgId=" + orgId + ",timestamp=" + timestamp);
+			logger.debug("orgId=" + orgId);
 			
 			String serverName = request.getServerName();
 	        int serverPort = request.getServerPort();
@@ -97,26 +95,22 @@ public class EzUCMessengerController {
 					HttpServletResponse response
 					) throws Exception {
 		logger.debug("sso started.");
-		System.out.println(id);
-		id = ezUCMessengerUtil.decryptAES(id);
 		
-		String orgId = id.split(":")[0];
-		String orgPw = id.split(":")[1];
-		String timestamp = id.split(":")[2];
-		logger.debug("orgId=" + orgId + ",timestamp=" + timestamp + ",type=" + type);
+		id = ezUCMessengerUtil.decryptAES(id);
+		String orgId = id;
+		logger.debug("orgId=" + orgId);
 		
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
         int tenantId = loginService.getTenantId(serverName);
         logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 		
-		boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+		boolean isUserExists = checkIfUserExists(orgId, null, tenantId);
 		logger.debug("isUserExists=" + isUserExists);
 		
 		String redirectUrl = "redirect:/user/login/login.do";
 		if (isUserExists) {
-			String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
-			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response);
+			loginController.createLoginCookie(orgId, " ", " ", tenantId, request, response);
 			
 			if (type == null) { // 홈 화면으로 이동
 				redirectUrl = "redirect:/ezPortal/portalMain.do";
@@ -143,7 +137,12 @@ public class EzUCMessengerController {
 		
 		loginVO.setId(id);
 		loginVO.setTenantId(tenantId);
-		loginVO.setPassword(encryptedPw);
+		
+		if (pw == null) {
+			loginVO.setDn("NOPASSWORD");
+		} else {
+			loginVO.setPassword(encryptedPw);
+		}
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		logger.debug("resultVO=" + resultVO);

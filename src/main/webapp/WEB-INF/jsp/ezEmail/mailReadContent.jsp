@@ -168,7 +168,7 @@
 			        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 			            var oRoot = xmlHTTP.responseXML.documentElement;
 			            var ret = oRoot.childNodes[0].nodeValue;
-			            if (ret != "FAIL") {
+			            if (ret != "FAIL" && ret != "") {
 			            	window.parent.reloadReadContent(ret);
 			            }
 			            else {
@@ -192,6 +192,8 @@
 			                }
 			                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
 			                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
+			                document.getElementById("ifrmPreViewRayer").style.MozTransform = "scale(" + MozNowZoom + ")";
+			                document.getElementById("ifrmPreViewRayer").style.MozTransformOrigin = "0 0";
 			            }
 			            else {
 			                if (nowZoom < maxZoom) {
@@ -200,6 +202,7 @@
 			                    return;
 			                }
 			                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
+			                document.getElementById("ifrmPreViewRayer").style.zoom = nowZoom + "%";
 			            }
 			        }
 			        function Smaller() {
@@ -211,6 +214,8 @@
 			                }
 			                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
 			                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
+			                document.getElementById("ifrmPreViewRayer").style.MozTransform = "scale(" + MozNowZoom + ")";
+			                document.getElementById("ifrmPreViewRayer").style.MozTransformOrigin = "0 0";
 			
 			            }
 			            else {
@@ -220,6 +225,7 @@
 			                    return;
 			                }
 			                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
+			                document.getElementById("ifrmPreViewRayer").style.zoom = nowZoom + "%";
 			            }
 			        }
 			        function Schedule_btn(pGubun) {

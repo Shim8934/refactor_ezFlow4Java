@@ -471,6 +471,12 @@ function MonthData(oThisDate, TDIndex) {
 
 
     var nowDate = new Date();
+    
+    if (typeof UserOffset !== 'undefined' && UserOffset) {
+    	var _timez = nowDate.getTime() + (nowDate.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000);
+    	nowDate.setTime(_timez);	
+    }
+    
     var cell_ID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
@@ -909,14 +915,14 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
-       /* var dTr = document.createElement("TR")
+       var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":3_Value");
         dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
         dTr.appendChild(dTd);
-        dTable.appendChild(dTr);*/
+        dTable.appendChild(dTr);
         objTd.appendChild(dTable);
 
     }
@@ -1002,14 +1008,14 @@ function DayData(j) {
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
     s_Tr.appendChild(s_Td);
     sTable.appendChild(s_Tr);
-/*    var s_Tr = document.createElement("TR");
+    var s_Tr = document.createElement("TR");
     var s_Td = document.createElement("TD");
     s_Td.className = "calendar_t_text";
     s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
     s_Tr.appendChild(s_Td);
-    sTable.appendChild(s_Tr);*/
+    sTable.appendChild(s_Tr);
     return sTable;
 }
 

@@ -2,10 +2,10 @@
 
 <xfeEditor>
 <menu1>
-	<newfile visible="false">新しいドキュメント</newfile>	
-	<savefile visible="false">ファイルの保存</savefile>
+<!-- 	<newfile visible="false">新しいドキュメント</newfile>	 -->
+<!-- 	<savefile visible="false">ファイルの保存</savefile> -->
 	<print visible="true">印刷</print>
-	<pagebreak visible="false">ページ分割</pagebreak>
+<!-- 	<pagebreak visible="false">ページ分割</pagebreak> -->
 	<split/>
 	<cut visible="true">カット</cut>
 	<copy visible="true">コピー</copy>
@@ -20,15 +20,15 @@
 	<InsertImage visible="true">画像の挿入</InsertImage>
 	<ImageProperty visible="true">画像編集</ImageProperty>
 <!-- 	<split/> -->
-	<InsertFlash visible="false">Flashの挿入</InsertFlash>
-	<InsertMedia visible="false">動画の挿入</InsertMedia>
-	<InsertMediaLink visible="false">外部ビデオの挿入</InsertMediaLink>
-	<Background visible="false">ビデオの挿入</Background>
-	<InsertGrid visible="false">グリッド挿入</InsertGrid>
+<!-- 	<InsertFlash visible="false">Flashの挿入</InsertFlash> -->
+<!-- 	<InsertMedia visible="false">動画の挿入</InsertMedia> -->
+<!-- 	<InsertMediaLink visible="false">外部ビデオの挿入</InsertMediaLink> -->
+<!-- 	<Background visible="false">ビデオの挿入</Background> -->
+<!-- 	<InsertGrid visible="false">グリッド挿入</InsertGrid> -->
 	<split/>
 	<InsertSymbol visible="true">記号を挿入</InsertSymbol>
 	<HorizontalRule visible="true">水平線の挿入</HorizontalRule>
-	<Bookmark visible="false">ブックマークの挿入</Bookmark>		
+<!-- 	<Bookmark visible="false">ブックマークの挿入</Bookmark>		 -->
 	<Superscript visible="true">上付き文字</Superscript>
 	<Subscript visible="true">下付き文字</Subscript>	
 	<split/>
@@ -37,11 +37,11 @@
 	<split/>	
 	<SelectAll visible="true">すべて選択</SelectAll>
 <!-- 	<split/> -->
-	<layout visible="false">レイアウト</layout>
+<!-- 	<layout visible="false">レイアウト</layout> -->
 <!-- 	<split/> -->
-	<FullScreen visible="false">フルスクリーン</FullScreen>
-	<split/>
-	<about visible="true">製品情報</about>
+<!-- 	<FullScreen visible="false">フルスクリーン</FullScreen> -->
+<!-- 	<split/> -->
+<!-- 	<about visible="false">製品情報</about> -->
 </menu1>
 <menu2>
 	<inserttable visible="true">表の挿入</inserttable>
@@ -81,7 +81,7 @@
 	</group>			
 </menu2>
 <menu3>
-	<Template visible="false">
+<!-- 	<Template visible="false"> -->
 		<!-- 불러올 양식들을 설정 해줍니다. -->
 		<!-- ie 의 경우 경로 또는 파일명이 한글일 경우 불러오지 못합니다. -->
 		<!-- xhtml 문법에 어긋나는 문서는 에러 메세지가 발생 할 수 있습니다. -->
@@ -114,7 +114,7 @@
 		<item title="업무협조" show="true"></item>
 		<item title="출장품의서" show="true"></item>		
 		-->
-	</Template>	
+<!-- 	</Template>	 -->
 	<Fontfamily visible="true">フォントの種類</Fontfamily>
 	<Fontsize visible="true">フォントサイズ</Fontsize>
 	<LineHeight visible="true">行間隔</LineHeight>
@@ -132,6 +132,6 @@
 	</group>
 	<AdminLock visible="true">書き込み領域の設定</AdminLock>
 	<AdminUnlock visible="true">書き込み領域を解除</AdminUnlock>		
-	<Userguide visible="false">ユーザーヘルプ</Userguide>
+<!-- 	<Userguide visible="false">ユーザーヘルプ</Userguide> -->
 </menu3>
 </xfeEditor>

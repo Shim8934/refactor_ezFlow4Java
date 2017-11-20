@@ -6,7 +6,7 @@
 <html>
 <head>
 <title>Namo CrossEditor : Admin</title>
-	<script type="text/javascript">var pe_rZ="pe_AX"; </script>
+	<script type="text/javascript">var pe_sl="pe_Fs"; </script>
 	<script type="text/javascript" src="../../lib/jquery-1.7.2.min.js"> </script>
 	<script type="text/javascript">var ce$=$.noConflict(true); </script>
 	<script type="text/javascript" src="../manage_common.js"> </script>
@@ -19,80 +19,80 @@
 
 <%@include file = "../include/top.html"%>
 
-<div id="pe_asO" class="pe_fM">	
-	<table class="pe_qy">
+<div id="pe_atq" class="pe_hE">	
+	<table class="pe_qf">
 	  <tr>
-		<td class="pe_fM">
+		<td class="pe_hE">
 		
 			<table id="Info">
 				<tr>
 					<td style="padding:0 0 0 10px;height:30px;text-align:left">
-					<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_Cq"></span></font></td>
-					<td id="InfoText"><span id="pe_vg"></span></td>
+					<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_Er"></span></font></td>
+					<td id="InfoText"><span id="pe_uQ"></span></td>
 				</tr>
 				<tr>
-					<td colspan="2"><img id="pe_yY" src="../images/title_line.jpg" alt="" /></td>
+					<td colspan="2"><img id="pe_wG" src="../images/title_line.jpg" alt="" /></td>
 				</tr>
 			</table>
 		
 		</td>
 	  </tr>
 	  <tr>
-		<td class="pe_fM">
+		<td class="pe_hE">
 			
-				<form method="post" id="pe_avD" action="account_proc.jsp" onsubmit="return pe_p(this);">
-				<table class="pe_kh" >
+				<form method="post" id="pe_azG" action="account_proc.jsp" onsubmit="return pe_z(this);">
+				<table class="pe_kJ" >
 				  <tr>
 					<td>
 
-						<table class="pe_cO">
-						  <tr><td class="pe_ft" colspan="3"></td></tr>
+						<table class="pe_dt">
+						  <tr><td class="pe_ek" colspan="3"></td></tr>
 						</table>
 						 
-						<table class="pe_cO" >
+						<table class="pe_dt" >
 						  <tr>
-							<td class="pe_cV">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_AC"></span></b></td>
-							<td class="pe_dp"></td>
-							<td class="pe_cf">
+							<td class="pe_dd">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_zx"></span></b></td>
+							<td class="pe_ch"></td>
+							<td class="pe_cc">
 								<input type="hidden" name="u_id" id="u_id" value="<%=detectXSSEx(session.getAttribute("memId").toString())%>" autocomplete="off"/>
-								<input type="password" name="passwd" id="passwd" value="" class="pe_kB" autocomplete="off"/>
+								<input type="password" name="passwd" id="passwd" value="" class="pe_kL" autocomplete="off"/>
 							</td>
 						  </tr>
 						  <tr>
-							<td class="pe_dR" colspan="3"></td>
+							<td class="pe_bX" colspan="3"></td>
 						  </tr>
 						  <tr>
-							<td class="pe_cV">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Hk"></span></b></td>
-							<td class="pe_dp"></td>
-							<td class="pe_cf">
-								<input type="password" name="newPasswd" id="newPasswd" value="" class="pe_kB" autocomplete="off"/>
+							<td class="pe_dd">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Gr"></span></b></td>
+							<td class="pe_ch"></td>
+							<td class="pe_cc">
+								<input type="password" name="newPasswd" id="newPasswd" value="" class="pe_kL" autocomplete="off"/>
 							</td>
 						  </tr>
 						  <tr>
-							<td class="pe_dR" colspan="3"></td>
+							<td class="pe_bX" colspan="3"></td>
 						  </tr>
 						  <tr>
-							<td class="pe_cV">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ht"></span></b></td>
-							<td class="pe_dp"></td>
-							<td class="pe_cf">
-								<input type="password" name="newPasswdCheck" id="newPasswdCheck" value="" class="pe_kB" autocomplete="off"/>
+							<td class="pe_dd">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FX"></span></b></td>
+							<td class="pe_ch"></td>
+							<td class="pe_cc">
+								<input type="password" name="newPasswdCheck" id="newPasswdCheck" value="" class="pe_kL" autocomplete="off"/>
 							</td>
 						  </tr>
 						</table>
 					
-						<table class="pe_cO">
-						  <tr><td class="pe_ft" colspan="3"></td></tr>
+						<table class="pe_dt">
+						  <tr><td class="pe_ek" colspan="3"></td></tr>
 						</table>
 								
 					</td>
 				  </tr>
-				  <tr id="pe_GJ">
-					<td id="pe_Gf">
+				  <tr id="pe_FZ">
+					<td id="pe_Gz">
 						<ul style="margin:0 auto;width:170px;">
-							<li class="pe_eL">
-								<input type="submit" id="pe_Bg" value="" class="pe_ec pe_eD" style="width:66px;height:26px;" />
+							<li class="pe_ea">
+								<input type="submit" id="pe_Eh" value="" class="pe_eM pe_fk" style="width:66px;height:26px;" />
 							</li>
-							<li class="pe_eL"><input type="button" id="pe_tE" value="" class="pe_ec pe_eD" style="width:66px;height:26px;"></li>
+							<li class="pe_ea"><input type="button" id="pe_uU" value="" class="pe_eM pe_fk" style="width:66px;height:26px;"></li>
 						</ul>
 					</td>
 				  </tr>
@@ -108,7 +108,7 @@
 <%@include file = "../include/bottom.html"%>
 
 </body>
-<script>var webPageKind='<%=detectXSSEx(session.getAttribute("webPageKind").toString())%>';topInit();pe_z(); </script>
+<script>var webPageKind='<%=detectXSSEx(session.getAttribute("webPageKind").toString())%>';topInit();pe_S(); </script>
 
 </html>
 

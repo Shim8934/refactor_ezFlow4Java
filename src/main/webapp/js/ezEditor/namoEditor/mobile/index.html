@@ -20,32 +20,32 @@
 					<input type="text" class="form-control" id="name" name="name" placeholder="Name">
 				</div>
 				<div class="col-xs-6">
-					<input type="text" class="form-control" id="pe_rv" name="pe_rv" placeholder="Email">
+					<input type="text" class="form-control" id="pe_te" name="pe_te" placeholder="Email">
 				</div>
 			</div>
-			<div class="form-group" id="pe_axX">
+			<div class="form-group" id="pe_auN">
 				<div class="col-xs-12">
-					<textarea id="pe_aFT" name="pe_aFT" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 4.0</span> sample page</p></textarea>
+					<textarea id="pe_aGp" name="pe_aGp" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 4.0</span> sample page</p></textarea>
 					<script type="text/javascript" language="javascript">
 
-						var CrossEditor = new NamoSE('pe_aFT');
+						var CrossEditor = new NamoSE('pe_aGp');
 						CrossEditor.params.Width = "100%";
 						CrossEditor.params.ConfigXmlURL = "mobile/config/Config_mobile.xml";
 						CrossEditor.params.CreateTab = "9|9|9";
 						CrossEditor.EditorStart();
 						
 						function OnInitCompleted(e){
-							e.editorTarget.SetBodyValue(document.getElementById("pe_aFT").value);
+							e.editorTarget.SetBodyValue(document.getElementById("pe_aGp").value);
 
-							var pe_axX = document.getElementById("pe_axX");
-							var pe_bcY = window.innerHeight - pe_axX.offsetTop - 85;
-							CrossEditor.SetUISize("100%", pe_bcY);
+							var pe_auN = document.getElementById("pe_auN");
+							var pe_bcy = window.innerHeight - pe_auN.offsetTop - 85;
+							CrossEditor.SetUISize("100%", pe_bcy);
 						}
 					</script>
 				</div>
 			</div>
 			<div class="text-center">
-				<button class="btn btn-info" id="pe_bsM" onclick="alert('[내용]\n' + CrossEditor.GetBodyValue('XHTML'));">등록하기</button>
+				<button class="btn btn-info" id="pe_bsG" onclick="alert('[내용]\n' + CrossEditor.GetBodyValue('XHTML'));">등록하기</button>
 			</div>
 		</div>
 	</body>	

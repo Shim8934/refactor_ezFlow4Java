@@ -145,6 +145,18 @@
 		        DisplayUserImageList();
 		    }
 			
+		    function onDragEnter(evt) {
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		        evt.dataTransfer.dropEffect = "copy";
+		        evt.dataTransfer.effectAllowed = "copy";
+		    }
+		    function onDrop(evt, element) {
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		        InsertReceiver(element);
+		    }
+		    
 		    function RequestData(pNodeID, pTreeID) {
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
@@ -881,14 +893,21 @@
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-                            if("<c:out value='${userInfo.lang}' />" == "1")
+                            
+		                    
+/* 		                    if("<c:out value='${userInfo.lang}' />" == "1")
                                 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " (" + strDeptNM + ") " + "]]></VALUE></CELL></ROW>";
 		                    else
                                 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " (" + strName2 + ") " + "]]></VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 
-		                    Resultxml = loadXMLString(pparsingXML2);
+		                    Resultxml = loadXMLString(pparsingXML2); */
 
+	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                        Resultxml = loadXMLString(pparsingXML2);
+		                    
+		                    
 		                    var listview = new ListView();
 		                    listview.LoadFromID(listid);
 
