@@ -458,7 +458,8 @@
 					        tr.cells[8].appendChild(span);  				        
 					        
 					        setNodeText(tr.cells[9], startdate);
-					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
+					        //tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
+					        tr.cells[10].innerHTML =  enddate;
 					        list_body.children[1].appendChild(tr);
 					        
 					        if (type == "2" && flagType == 1) {
@@ -491,7 +492,7 @@
 				    		column_prg.style.width = "0px";
 				    		progress_th.innerHTML = "";				        			        				        	
 					        setNodeText(tr.cells[9], startdate);
-					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
+					        tr.cells[10].innerHTML = enddate;
 					        list_body.children[1].appendChild(tr);
 				        }
 				        
@@ -959,13 +960,13 @@
 							<col style ="width:50px;">
 							<col style ="width:30px;">
 						</c:if>
-		                <col style ="width:90px;">
+		                <col style ="width:80px;">
 						<col style ="width:110px;" id="col_progress">
 						<col style ="width:80px;">
 						<col style ="width:97px;">
 						<tr>
 							<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-							<th ><spring:message code='ezTask.t156' /></th>
+							<th  style="text-align:center;"><spring:message code='ezTask.t156'/></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
@@ -976,10 +977,10 @@
 							<c:if test="${useTodoMemo == 'NO'}">
 								<th ></th>
 							</c:if>
-		                    <th ><spring:message code='ezTask.t2003' /></th>		                    
-							<th id="_thprogress"><spring:message code='ezTask.t120' /></th>							
-							<th ><spring:message code='ezTask.t121' /></th>
-							<th ><spring:message code='ezTask.t122' /></th>
+		                    <th  style="text-align:center;"><spring:message code='ezTask.t2003'/></th>		                    
+							<th id="_thprogress"  style="text-align:center;"><spring:message code='ezTask.t120' /></th>							
+							<th  style="text-align:center;"><spring:message code='ezTask.t121'/></th>
+							<th  style="text-align:center;"><spring:message code='ezTask.t122'/></th>
 						</tr>
 						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this)">
 							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>

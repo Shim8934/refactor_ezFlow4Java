@@ -30,7 +30,6 @@
 			   
 			   .css-class-to-highlight a{
 			   	color: #3498db !important;
-			   	font-weight: bold !important;	
 			   }
 		   
 		</style>
@@ -67,18 +66,14 @@
 		    var endDate = "${taskInfoVO.endDate}";
 		    var dateList = "${dateList}";
 		    var completeRateList = "${completeRateList}";
+		    var statusList = "${statusList}";
 		    var dateArray = null;
 		    var completeRateArray = null;
+		    var statusArray = null;
 		    var backupCount = "${repeatCount}";
 		    
 		    $(document).ready(function() {			    	    	
-		    	if (dateList !== "") {
-		    		dateArray = dateList.split(",");
-		    	}
-		    	
-		    	if (completeRateList !== "") {
-		    		completeRateArray = completeRateList.split(",");
-		    	}
+		    	preStepForRepeatTask();
 		    	
 				load_bodyhtml();
 				if (hasTaskAttach == 'Y') {
@@ -127,6 +122,28 @@
 		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
 	         }
+		    
+		    function preStepForRepeatTask() {
+		    	if (dateList !== "") {
+		    		dateArray = dateList.split(",");
+		    	}
+		    	
+		    	if (completeRateList !== "") {
+		    		completeRateArray = completeRateList.split(",");
+		    	}
+		    	
+		    	if (statusList !== "") {
+		    		statusArray = statusList.split(",");
+		    	}
+		    }
+		    
+		    function updateStatusOnce(newStatus) {
+		    	var date = new Date();
+		    	var year = date.getFullYear();
+		    	var month = date.getMonth() + 1;		    	
+		    	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";
+		    	updateData(firstDayOfMonth);
+		    }
 		    
 			function scrollTop() {
 				try {
@@ -732,7 +749,7 @@
 			        tr.cells[2].innerHTML = "<B>" + enddate + "</B>";	
 			        
 			        //Process complete rate
-			        var taskstatus = parseInt(taskstatus + "");
+			        var taskstatus = parseInt(statusArray[i] + "");			        
 			        var completerate = parseInt(completeRateArray[i] + "");
 			        var span = document.createElement("SPAN");
 			        span.className = "workProgressBar";
@@ -988,6 +1005,59 @@
 					}
 				})
 			}
+			
+			function updateData(firstDayOfMonth) {
+				//Get new data from server			            		
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezTask/getRepTaskDateList.do",
+					data : {
+							taskID 		: taskid,
+							currentDate : firstDayOfMonth
+					},
+					success: function(result) {
+						var list = result.dateList;
+						var rList = result.rateList;
+						var sList = result.statusList;
+						
+						if (list.length != 0) {
+    						dateArray = [];
+    						completeRateArray = [];
+    						statusArray= [];
+    						repeatCount = parseInt(result.orderNum, 10);
+    						backupCount = repeatCount;
+    						
+    						list.forEach(function(strDate, index) {
+    							dateArray.push(strDate);			    							
+    						});
+    						
+    						rList.forEach(function(strRate, index) {
+    							completeRateArray.push(strRate);			    							
+    						});		
+    						
+    						sList.forEach(function(strStatus, index) {
+    							statusArray.push(strStatus);			    							
+    						});	
+    						//showResult(dateText, repeatCount);
+    						renderTable();
+						}
+						else {
+							showEmptyTable();
+						}
+						
+					},
+					afterShow: function() {
+						console.log('afterShow');
+						$(".css-class-to-highlight").css("background-color","red");
+					}
+					,
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezTask.t200913' />");
+					}
+    			});		       
+			}
 
 			$(function () {
 		        $("#Sdatepicker").datepicker({
@@ -1018,53 +1088,8 @@
 		            	showResult(dateText);
 		            },
 		            onChangeMonthYear: function (year, month, inst) {		            	
-		            	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";
-						var theFirstDay = dateArray[0].substring(0, 7);		            	
-	
-	            		//Get new data from server			            		
-	    				$.ajax({
-	    					type : "POST",
-	    					dataType : "json",
-	    					async : false,
-	    					url : "/ezTask/getRepTaskDateList.do",
-	    					data : {
-	    							taskID 		: taskid,
-	    							currentDate : firstDayOfMonth
-	    					},
-	    					success: function(result) {
-	    						var list = result.dateList;
-	    						var rList = result.rateList;
-	    						
-	    						if (list.length != 0) {
-		    						dateArray = [];
-		    						completeRateArray = [];
-		    						repeatCount = parseInt(result.orderNum, 10);
-		    						backupCount = repeatCount;
-		    						
-		    						list.forEach(function(strDate, index) {
-		    							dateArray.push(strDate);			    							
-		    						});
-		    						
-		    						rList.forEach(function(strRate, index) {
-		    							completeRateArray.push(strRate);			    							
-		    						});		    						
-		    						//showResult(dateText, repeatCount);
-		    						renderTable();
-	    						}
-	    						else {
-	    							showEmptyTable();
-	    						}
-	    						
-	    					},
-	    					afterShow: function() {
-	    						console.log('afterShow');
-	    						$(".css-class-to-highlight").css("background-color","red");
-	    					}
-	    					,
-	    					error : function(jqXHR, textStatus, errorThrown) {
-	    						alert("<spring:message code='ezTask.t200913' />");
-	    					}
-		    			});		            	
+		            	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";							            	
+						updateData(firstDayOfMonth);	
 		            }
 		        });
 
@@ -1148,7 +1173,7 @@
 				contentpath = SelectSingleNodeValue(node, "CONTENTPATH");
 				personContentpath = SelectSingleNodeValue(node, "PERSONALCONTENTPATH");
 				completerate = SelectSingleNodeValue(node, "COMPLETERATE");
-				taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");				
+				taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");	
 				
 				/*****************************/
 /* 				if (dateList !== "") {
