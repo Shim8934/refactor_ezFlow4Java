@@ -104,7 +104,10 @@ public class CommonUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-		
+	
+	@Resource(name = "jspw")
+    private String jspw;
+	
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
@@ -293,7 +296,24 @@ public class CommonUtil {
 			return null;
 		}
 	}
+	
 	public List<String> getUserIdAndPassword(String loginCookie) {
+		try{
+			String decData = egovFileScrty.decryptAES(loginCookie);
+			List<String> returnObject = new ArrayList<String>();
+			
+			String userId = decData.split("///")[1];
+			String pass = jspw;
+			returnObject.add(userId);
+			returnObject.add(pass);
+	
+			return returnObject;
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public List<String> getUserIdAndRealPassword(String loginCookie) {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 			List<String> returnObject = new ArrayList<String>();
@@ -307,8 +327,8 @@ public class CommonUtil {
 		}catch(Exception e){
 			return null;
 		}
-	}	
-		
+	}
+	
 	public static String getEncodedFileNameForDownload(String userAgentValue, String filename) {
 		try {
 			// in case of IE & Edge
@@ -878,4 +898,21 @@ public class CommonUtil {
     	}
     }
 
+	//파일 경로로 xmlDocument 읽어오
+	public Document xmlLod(String pDocPath) throws Exception {
+		Document xmlDoc = null;
+		try {
+	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(false);
+			factory.setNamespaceAware(true);
+	
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			xmlDoc = builder.parse(new InputSource(pDocPath));
+	    	
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());
+		}
+		return xmlDoc;
+	}
 }

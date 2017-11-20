@@ -630,8 +630,9 @@ function CalMonthDataBind(oAppointment) {
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
         oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
 
-        var oText = document.createTextNode(pSubject);
-        oTd.innerHTML += pSubject;
+        var oText = document.createTextNode(pSubject);        
+        //oTd.innerHTML += pSubject;
+        oTd.appendChild(oText);
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
@@ -708,7 +709,8 @@ function CalWeekDataBind(oAppointment, order) {
         }
 
         var oText = document.createTextNode(pSubject);
-        oTd.innerHTML += pSubject;
+        //oTd.innerHTML += pSubject;
+        oTd.appendChild(oText);
         
         oTr.appendChild(oTd);
         oTable.appendChild(oTr);
@@ -843,7 +845,8 @@ function CalWeekAllDataBind(oAppointment, order) {
 
         var oText = document.createTextNode(pSubject);
         
-        oDiv.innerHTML += pSubject;
+        //oDiv.innerHTML += pSubject;
+        oDiv.appendChild(oText);
 
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
@@ -958,7 +961,8 @@ function CalDayDataBind(oAppointment, order) {
         }
 
         var oText = document.createTextNode(pSubject);
-        oTd.innerHTML += pSubject;
+        //oTd.innerHTML += pSubject;
+        oTd.appendChild(oText);
         
         oTr.appendChild(oTd);
         oTable.appendChild(oTr);
@@ -1092,7 +1096,8 @@ function CalDayAllDataBind(oAppointment, order) {
 
         var oText = document.createTextNode(pSubject);
         
-        oDiv.innerHTML += pSubject;
+        //oDiv.innerHTML += pSubject;
+        oDiv.appendChild(oText);
 
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
@@ -1468,7 +1473,9 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.innerHTML = pSubject;
+    var oText = document.createTextNode(pSubject);        
+    //tTh.innerHTML = pSubject;
+    tTh.appendChild(oText);
     tTr.appendChild(tTh);
     tTable.appendChild(tTr);
 
@@ -1500,9 +1507,12 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
         var sTr = document.createElement("TR");
         var sTd = document.createElement("TD");
         var sSpan = document.createElement("SPAN");
+        var oText2 = document.createTextNode(pLocation); 
         
         sTd.appendChild(sSpan);
-        sTd.innerHTML += "[" + strLang11 + "]<br/>" + pLocation;
+        //sTd.innerHTML += "[" + strLang11 + "]<br/>" + pLocation;
+        sTd.innerHTML += "[" + strLang11 + "]<br/>";
+        sTd.appendChild(oText2);
         sTr.appendChild(sTd);
         sTable.appendChild(sTr);
     }

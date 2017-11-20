@@ -1380,7 +1380,7 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align: top;">
-	                <h2 class="h2_dot"><spring:message code='ezApprovalG.t432'/></h2>
+	                <h2 class="h2_dot" style="padding-top:6px;padding-bottom:3px"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div class="listview">
 	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto;"></div>
 	                </div>

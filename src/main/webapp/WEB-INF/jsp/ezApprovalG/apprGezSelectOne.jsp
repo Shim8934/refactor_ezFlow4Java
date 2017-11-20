@@ -255,8 +255,7 @@
 		    	error : function(error){
 		    		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
 		    	}
-		    });	
-		   
+		    });			   
 		}
 		
 		function event_displayUserList(result) {

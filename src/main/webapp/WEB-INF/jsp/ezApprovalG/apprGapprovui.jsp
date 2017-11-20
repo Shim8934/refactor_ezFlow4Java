@@ -87,7 +87,7 @@
 		    var SignType = new Array();
 		    var SignName = new Array();
 		    var SignContent = new Array();
-		    var RootURL = document.location.protocol + "//" + document.location.hostname;  
+		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;
 		    var arr_userinfo = new Array();
 		    var onlydocinfiview;
 		    arr_userinfo[0]  = "user";
@@ -140,6 +140,12 @@
 			var pGongRamDocID = "";
 			var approvalType = "DRAFT";
 			var signImageType = "${signImageType}";
+			
+			//최종 결재 개인합의 추가
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var totalMemSN = "0";
+			var LastTotalKyulSN = "0";
+			var lastHabYuiSN;
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -237,8 +243,7 @@
 		            window.parent.close();
 		            btnClose_onclick();
 		        } else {
-		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht")
-		            {
+		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
 		                openOtherApprovUI();
 		                return;
 		            }
@@ -465,14 +470,15 @@
 		    {
 		        ChangeBtnState();
 		    }
+
 		    function process_AfterOpen()
 		    {
 		        getCurApproverAprLine("${isUsed}");
+		
 		        pGubun = "8";
 		        
 		        if (approvalFlag == "S") {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)  {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -494,8 +500,7 @@
 			            pGubun = "14";
 			        }
 		        } else {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -507,8 +512,7 @@
 			            setMenuBar("btnSetTaskCode", false);
 			            setMenuBar("btnAddSepAttach", false); 
 			            pGubun = "10";
-			        }
-			        else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			        } else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			            setMenuBar("btnModAprLine", false);
 			            pGubun = "5";
 			        }
@@ -523,27 +527,25 @@
 		                pGubun = "7";
 		            }
 		        }
-		        if(pDraftFlag == "SUSIN")
-		        {
+		        if(pDraftFlag == "SUSIN") {
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "susinbody");
-		            if(field)
+		            if(field) {
 		                setMenuBar("btnEdit", true);
-		            else
+		            } else {
 		                setMenuBar("btnEdit", false);
+		            }
 		
 		            setMenuBar("btnModAprDept", false);
 		            setMenuBar("btnFileAttach", false);
 		            setMenuBar("btnAprDocAttach", false);
 		            pGubun = "6";
 		        }
-		        else
-		        {
+		        else {
 		            pSuSinFlag = "N";		
 		            var fields = message.GetFieldsList(); 
 		            var RtnVal = message.GetListItem(fields, "recipient");
-		            if(RtnVal != null)
-		            { 
+		            if(RtnVal != null) { 
 		                pSuSinFlag = "Y";
 		                setMenuBar("btnModAprDept", true);
 		                
@@ -552,14 +554,17 @@
 		                setMenuBar("btnModAprDept", false);
 		                if (pGubun == "5") {
 		                    pGubun = "7";
-		                }
-		                else {
+		                } else {
 		                    pGubun = "6";
 		                }
 		            }		
 		        }
 		        //없이 테스트
 // 		        SignCheck();
+		        if (pDraftFlag == "HABYUI") {
+		            setMenuBar("btntotaldocinfo", false);
+		        }
+
 		    }
 		    function btnApprove_onclick()
 		    {
@@ -629,11 +634,28 @@
 		                }
 		            }
 		        }
+		        
+		        if (addLastKyulJeYN != "0") {
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+                		data : {
+                				docID     : pDocID,
+                				flag      : "approvUi"
+                				},
+                		success : function(result){
+                			totalMemSN = result;
+                		}
+                	});
+		        }
+		        
 		        // getDocNumber를 이용한 문서번호 채번
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
-			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
-			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0) || pAprLineType == strAprType4 || totalMemSN > 0) {
+			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
@@ -1235,7 +1257,7 @@
 		        }
 		        return getXmlString(rtnXml);
 		    }
-		    function btnhistory_onclick() {
+		    function btnhistory_onclick() {		    	
 		        getHistory();
 		    }
 		    var ezapprovalinfo_dialogArguments = new Array();

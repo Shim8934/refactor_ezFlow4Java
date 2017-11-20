@@ -137,7 +137,9 @@ public class LoginVO implements Serializable {
     private String userFileUrl;
     /** 리얼패스*/
     private String realPath;
-	
+    /** 사용자사번*/
+    private String sabun;
+
 	public String getId() {
 		return id;
 	}
@@ -465,5 +467,10 @@ public class LoginVO implements Serializable {
 	public void setRealPath(String realPath) {
 		this.realPath = realPath;
 	}
-	
+	public String getSabun() {
+		return sabun;
+	}
+	public void setSabun(String sabun) {
+		this.sabun = sabun;
+	}
 }

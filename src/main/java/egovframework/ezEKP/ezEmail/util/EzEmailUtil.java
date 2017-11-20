@@ -113,15 +113,15 @@ public class EzEmailUtil {
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
-	public String getSizeWithUnit(double size) {
+	public String getSizeWithUnit(double size) {		
 		String strSize;
-		
+
 		if (size > 1024 * 1024) {
-			size = size / 1024.0 / 1024.0;
+			/*size = size / 1024.0 / 1024.0;*/
 			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
 			/*strSize = String.format("%.1fMB", size);*/
 		} else if (size > 1024) {
-			size = size / 1024.0;
+			/*size = size / 1024.0;*/
 			strSize = (int)(size/1024) + "KB";
 			/*strSize = String.format("%dKB", (int)size);*/
 		} else {
@@ -543,9 +543,9 @@ public class EzEmailUtil {
                 logger.debug("Content-Transfer-Encoding=" + encodingName);
                 if (encodingName.equalsIgnoreCase("base64")) {
                     // decrease the size because base64 increases the size to 4/3 times.
-                    size = (int)(size*0.75); 
+                    size = size / 138 * 101;
                 }
-            }                                       
+            }
             
             String strSize = getSizeWithUnit(size);
 		    

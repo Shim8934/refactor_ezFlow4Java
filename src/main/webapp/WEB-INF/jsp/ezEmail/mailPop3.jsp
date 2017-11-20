@@ -387,30 +387,34 @@
 		
 		        }
 		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("POST", "/ezEmail/mailPop3Connect.do", false);
-		        xmlHTTP.send(popXML);
-		        if (xmlHTTP.status == 200) {
-		            if (!CrossYN()) {
-		                if (xmlHTTP.responseXML.text == "OK")
-		                	alert("<spring:message code='ezEmail.t234' />");
-		                else
-		                	alert("<spring:message code='ezEmail.t235' />\n\n<spring:message code='ezEmail.t236' />");
-		
-		            }
-		            else if (CrossYN()) {
-		                var result = xmlHTTP.responseText;
-		
-		                result = replaceAll(result, "<DATA>", "");
-		                result = replaceAll(result, "</DATA>", "");
-		
-		                if (result == "OK")
-		                	alert("<spring:message code='ezEmail.t234' />");
-		                else
-		                	alert("<spring:message code='ezEmail.t235' />\n\n<spring:message code='ezEmail.t236' />");
-		            }
+		        xmlHTTP.open("POST", "/ezEmail/mailPop3Connect.do", true);
+		        xmlHTTP.onreadystatechange = function() {
+		        	if ( xmlHTTP.readyState == 4 ) {
+				        if ( xmlHTTP.status == 200 ) {
+				            if (!CrossYN()) {
+				                if (xmlHTTP.responseXML.text == "OK")
+				                	alert("<spring:message code='ezEmail.t234' />");
+				                else
+				                	alert("<spring:message code='ezEmail.t235' />\n\n<spring:message code='ezEmail.t236' />");
+				
+				            }
+				            else if (CrossYN()) {
+				                var result = xmlHTTP.responseText;
+				
+				                result = replaceAll(result, "<DATA>", "");
+				                result = replaceAll(result, "</DATA>", "");
+				
+				                if (result == "OK")
+				                	alert("<spring:message code='ezEmail.t234' />");
+				                else
+				                	alert("<spring:message code='ezEmail.t235' />\n\n<spring:message code='ezEmail.t236' />");
+				            }
+				        }
+				        else
+				        	alert("<spring:message code='ezEmail.t237' />" + xmlHTTP.statusText);
+		        	}
 		        }
-		        else
-		        	alert("<spring:message code='ezEmail.t237' />" + xmlHTTP.statusText);
+		        xmlHTTP.send(popXML);
 		    }
 					
 		    function replaceAll(pStrContent, pStrOrg, pStrRep) {

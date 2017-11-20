@@ -2552,9 +2552,22 @@ function SaveDraftDocInfo()
         }
     }
 
-    function delOpinionInfo()
-    {
-        var xmlhttp = createXMLHttpRequest();
+    function delOpinionInfo() {
+    	$.ajax({
+    		type : "POST",
+    		dataType : "json",
+    		async : false,
+    		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
+    		data : {
+    			docID : pDocID,
+    			opinionType : "002",
+    		},
+    		success: function(result) {
+    			pHasOpinionYN = "";
+    		}
+    	});
+    	
+        /*var xmlhttp = createXMLHttpRequest();
         var xmlpara = createXmlDom();
 
         var objNode;
@@ -2564,7 +2577,7 @@ function SaveDraftDocInfo()
         xmlhttp.open("POST","../ezAPROPINION/aspx/BansongOpinionDel.aspx",false);
         xmlhttp.send(xmlpara);
 
-        return xmlhttp.responseText;
+        return xmlhttp.responseText;*/
     }
 
     function btnApprovalInfo_save(ret) {

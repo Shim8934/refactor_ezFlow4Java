@@ -86,15 +86,15 @@ public class EzConnController {
 		
 		boolean isUserExists = false;
 		
-		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+//		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
 		
-		logger.debug("encryptedPw=" + encryptedPw);
+//		logger.debug("encryptedPw=" + encryptedPw);
 		
 		LoginVO loginVO = new LoginVO();	
 		
 		loginVO.setId(id);
-		loginVO.setPassword(encryptedPw);
 		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");		
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		

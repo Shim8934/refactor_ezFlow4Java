@@ -324,9 +324,9 @@
 
 		    function btnMail_onclick() {
 		    	var imgUrl="";
-		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
+		    	html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
 		    	background:'#fff',onrendered: function(canvas) {
-		    		  $.ajax({
+					$.ajax({
 	                        type:"POST",
 	                        dataType:"text",
 	                        data : {
@@ -337,17 +337,17 @@
 	                        success: function (data) {
 	                        }
 	                    });
-		    		  }
-		    		});
-		    var pheight = window.screen.availHeight;
-	        var conHeight = pheight * 0.8;
-	        var pwidth = window.screen.availWidth;
-	        var pTop = (pheight - conHeight) / 2;
-	        var pLeft = (pwidth - 890) / 2;
-		        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref);
-// 	        var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
-	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	        newwin.focus();
+					}
+		    	});
+			    var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+			    var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref);
+	 	        //var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
+		        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        newwin.focus();
 		    }
 		    
 		    function btnhistory_onclick() {

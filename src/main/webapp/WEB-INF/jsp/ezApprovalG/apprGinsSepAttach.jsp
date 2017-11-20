@@ -140,6 +140,7 @@
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
 		            DivPopUpShow(500, 615, url);
+
 		        }
 		        else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
@@ -453,8 +454,9 @@
 		        DelListRow("pLvList");
 		        OrderList();
 		    }
+
 		    /**
-		    * [분리첨부] 리스트에서 순번 재정렬
+		    * [분리첨부] 에서 순번 재정렬
 		    */
 		    function OrderList() { 
 		        var pLvList = new ListView();

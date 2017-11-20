@@ -416,11 +416,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		if (duplicated == null) {
 			duplicated = "";
-		}
-		
-
-		
-		if (duplicated == null) {
 			logger.debug("insertContainer duplicated.");
 			
 			return "FALSE";
@@ -1413,7 +1408,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getSealList(String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getSealList(String realPath, String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getSealList started.");
 		StringBuilder sb = new StringBuilder();
 		

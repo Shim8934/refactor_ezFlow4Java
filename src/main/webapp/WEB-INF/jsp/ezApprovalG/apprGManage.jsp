@@ -81,6 +81,7 @@
 		    var OrderCell = "";
 		    var USE_OCS = "${useOcs}";
 		    var SendOutFlag = "O";
+		    var g_RelayG_Type = "${relayG_type}";
 		    var userLang = "1";
 		    var pSelMenu = "${selMenu}";
 		    var pOpenYaer = "${openYear}";
@@ -112,11 +113,12 @@
 		                setBujaeOff();
 		            	checkBujaeInfo_Complete_After();
 		                return true;
-		            }
-		            else if (tmpStartDate > "${nowDate}") {
+
+		            } else if (tmpStartDate > "${nowDate}") {
 		                return true;
 		            }
 		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
 		                checkBujaeInfo_Complete(true);
@@ -1688,7 +1690,7 @@
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <select id="sel_year" name="sel_year" style="width:70px;" onchange="onSelect_Year(this);">    
+		        <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
 		            <option value="ALL">ALL</option>
 		        </select>  
 			</ul>

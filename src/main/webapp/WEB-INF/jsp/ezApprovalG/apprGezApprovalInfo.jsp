@@ -185,6 +185,7 @@
 			var chamjoAfterYN = "${chamjoAfterYN}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -1347,7 +1348,7 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvRECEPTLIST");
 		        var CurSelRow = listview.GetSelectedRows();
-		        var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/AprDeptName_Cross.aspx";
+		        var windowName = "/ezApprovalG/aprDeptName.do";
 		        var parameter = "status:no;dialogWidth:340px;dialogHeight:195px;scroll:no;edge:sunken;help:no";
 		
 		        if (CurSelRow[0] == undefined) {

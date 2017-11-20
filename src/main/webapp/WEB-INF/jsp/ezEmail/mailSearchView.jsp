@@ -116,9 +116,18 @@
 			{	
 		        var curevent = (typeof event == 'undefined' ? evt : event)
 		        if (curevent.keyCode == "13") {
-		            start_search();
+					set_searchKey();
 		        }
 			}
+		    function set_searchKey() {
+		    	if (TrimText(prekeyword.value) == null || TrimText(prekeyword.value) == "") {
+		    		alert(strLang254);
+		            return;
+		        } else {
+		        	keyword.value = prekeyword.value;
+			    	start_search();	
+		        }
+		    }
 			function document_onselectstart()
 			{
 				event.cancelBubble = true;
@@ -638,7 +647,7 @@
 		<tr> 
 			<th nowrap><spring:message code="ezEmail.t642" /></th> 
 			<td width="100%">
-			    <select id="select2">
+			    <select id="select2" style="height: 23px">
 			    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
 			    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
 			    <option value="${folderName}">
@@ -653,14 +662,15 @@
 			    </option>
 			    </c:forEach>
 			    </select>
-			    <select name="select" class="text" id="select"> 
+			    <select name="select" class="text" id="select" style="height: 23px;">
 					<option selected value="<spring:message code="ezEmail.t98" />"><spring:message code="ezEmail.t98" /></option> 
 					<option value="<spring:message code="ezEmail.t649" />"><spring:message code="ezEmail.t649" /></option> 
 					<option value="<spring:message code="ezEmail.t161" />"><spring:message code="ezEmail.t161" /></option> 
 					<option value="<spring:message code="ezEmail.t650" />"><spring:message code="ezEmail.t651" /></option> 
 			    </select>
-		    	<input name="keyword" id = "keyword"  onkeyup="return search_keypress(event)" /> 
-		    	<a class="imgbtn"><span onClick="start_search()"><spring:message code="ezEmail.t37" /></span></a>
+			    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;"onkeyup="return search_keypress(event)" />
+		    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
+		    	<a class="imgbtn"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
 		    </td> 
 		</tr> 
 		<tr>
@@ -677,12 +687,12 @@
 			<table class="mainlist" style="width:100%;table-layout:fixed;">
 				<tr> 
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
-			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
+			        <th style="width: 24px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 			        <th style="width: 26px; padding: 0px; color: black;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="view" orderoption="ASC"><img src="/images/ImgIcon/view-document.gif" border="0"></th>
-			        <th style="width: 26px; padding: 0px; color: black;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="flag" orderoption="ASC"><img src="/images/ImgIcon/icon-flag.gif" border="0"></th>
-			        <th style="width: 26px; padding: 0px; color: black;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="attach" orderoption="ASC"><img src="/images/newAttach.gif" border="0"></th>
-					<th style="width:80px;cursor:pointer" align="left" valign="center" id="tofromname" onclick="event_HeaderClick(this)" porp="from" orderoption="ASC"><spring:message code="ezEmail.t656" /></th> 
-					<th style="width:100%;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="subject" orderoption="ASC"><spring:message code="ezEmail.t556" /></th> 
+			        <th style="width: 26px; padding: 0px; color: black;padding-left:1px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="flag" orderoption="ASC"><img src="/images/ImgIcon/icon-flag.gif" border="0"></th>
+			        <th style="width: 15px; padding: 0px; color: black;padding-left:4px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="attach" orderoption="ASC"><img src="/images/newAttach.gif" border="0"></th>
+					<th style="width:101px;cursor:pointer" align="left" valign="center" id="tofromname" onclick="event_HeaderClick(this)" porp="from" orderoption="ASC"><spring:message code="ezEmail.t656" /></th> 
+					<th style="width:100%;cursor:pointer;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"  align="left" onclick="event_HeaderClick(this)" porp="subject" orderoption="ASC"><spring:message code="ezEmail.t556" /></th> 
 					<th style="width:200px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)" porp="recevdate" orderoption="ASC"><spring:message code="ezEmail.t657" /></th> 
 					<th style="width:120px;" align="left"><spring:message code="ezEmail.t658" /></th> 
 					<th style="width:50px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC"><spring:message code="ezEmail.t617" /></th> 
