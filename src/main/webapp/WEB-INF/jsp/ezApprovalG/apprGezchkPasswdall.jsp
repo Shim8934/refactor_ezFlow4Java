@@ -27,29 +27,52 @@
 		    
 		    var flag = true;
 		    function btn_OpinionOK_onclick() {
+
 		    	if (flag) {
 		    		flag = false;
-			        var rtnVal = "cancel";
 					
-			        if (trim(document.getElementById("inpPassword").value).length == 0) {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
-			            alert(pAlertContent);
-			            document.getElementById("inpPassword").focus();
-			            flag = true;
-			            return;
-			        }
-			        else {
-			            rtnVal = chkPasswd();
-			        }
-			        
-			        if (rtnVal != "") {
-				        if (ReturnFunction != null)
-				            ReturnFunction(rtnVal);
-				        else
-				            window.returnValue = rtnVal;
-			        } 
-		    	} 
+		        var rtnVal = "cancel";
+		
+		        if (trim(document.getElementById("inpPassword").value).length == 0) {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
+		            alert(pAlertContent);
+		            document.getElementById("inpPassword").focus();
+		            return;
+		        }
+		        else {
+		            rtnVal = chkPasswd();
+		        }
+		        if (rtnVal != "FALSE") {
+			        if (ReturnFunction != null)
+			            ReturnFunction(rtnVal);
+			        else
+			            window.returnValue = rtnVal;
+		        } else {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+		            OpenAlertUI(pAlertContent);
+		            return;
+		        }
 		    }
+		    
+		    var ezapralert_cross_dialogArguments = new Array();
+		    function OpenAlertUI(pAlertContent) {
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = pAlertContent;
+		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
+		            try { ezAPRALERT_Cross.focus(); } catch (e) {
+		            }
+		        } else {
+		            var parameter = pAlertContent;
+		            var url = "/ezApprovalG/ezAprAlert.do";
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		        }
+		    }
+		    
+		    function OpenAlertUI_Complete() {
+		    }
+		    
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null)
 		            ReturnFunction("cancel");
