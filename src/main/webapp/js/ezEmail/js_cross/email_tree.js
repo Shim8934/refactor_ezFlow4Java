@@ -123,11 +123,11 @@ function get_childXML(url, broot, bcount)
 
 					childXML += "<node imgidx='1' caption=\"";
 					if (UnreadNodes.item(i).text != "0" && bcount)
-						childXML += (MakeRightField(DispName[j]) + "(" + UnreadNodes.item(i).text + ")");
+						childXML += (DispName[j] + "(" + UnreadNodes.item(i).text + ")");
 					else
-						childXML += (MakeRightField(DispName[j]) + "\" ");
+						childXML += (DispName[j] + "\" ");
 			
-					childXML += ("foldername=\"" + MakeRightField(DispName[j]) + "\" ");
+					childXML += ("foldername=\"" + DispName[j] + "\" ");
 					childXML += ("href='" + HrefNodes.item(i).text + "' ");
 					if (HasSubNodes.item(i).text == "1")
 						childXML += "hassub='1' ";
@@ -147,11 +147,11 @@ function get_childXML(url, broot, bcount)
 			{
 				childXML += "<node imgidx='1' caption=\"";
 				if (UnreadNodes.item(i).text != "0" && bcount)
-					childXML += (MakeRightField(NameNodes.item(i).text) + "(" + UnreadNodes.item(i).text + ")");
+					childXML += (NameNodes.item(i).text + "(" + UnreadNodes.item(i).text + ")");
 				else
-					childXML += (MakeRightField(NameNodes.item(i).text) + "\" ");
+					childXML += (NameNodes.item(i).text + "\" ");
 			
-				childXML += ("foldername=\"" + MakeRightField(NameNodes.item(i).text) + "\" ");
+				childXML += ("foldername=\"" + NameNodes.item(i).text + "\" ");
 				childXML += ("href='" + HrefNodes.item(i).text + "' ");
 				if (HasSubNodes.item(i).text == "1")
 					childXML += "hassub='1' ";
@@ -166,18 +166,6 @@ function get_childXML(url, broot, bcount)
 		xmlHTTP = null;
 		return "";
 	}
-}
-
-function MakeRightField(orgStr)
-{
-	return ReplaceText(ReplaceText(ReplaceText(ReplaceText(orgStr, "&", "&amp;"), "\"", "&quot;"), "<", "&lt;"), ">", "&gt;");
-}
-
-function ReplaceText( orgStr, findStr, replaceStr )
-{
-	var re = new RegExp( findStr, "gi" );
-	
-	return ( orgStr.replace( re, replaceStr ) );
 }
 
 function CreateFolder(url) {

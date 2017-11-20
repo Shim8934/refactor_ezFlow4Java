@@ -249,4 +249,20 @@ Proceed?</eng>
 		<jp>書式保護モードでは、タブを使用することができません。</jp>
 	</string>
 	
+	<string id="STRID_CANNOT_INSERT_MEDIA_LINK">
+		<kor>iframe, object, video 또는 embed 소스를 입력해주세요.</kor>
+		<eng>Enter iframe, object, video or embed source.</eng>
+		<ChineseS>支持iframe，object，video或embed请输入源。</ChineseS>
+		<ChineseT>請輸入iframe，object，video或者embed來源。</ChineseT>
+		<jp>iframe、object、videoまたはembedのソースを入力してください。</jp>
+	</string>
+	
+	<string id="STRID_BOOKMARK_NOT_SELECTED">
+		<kor>책갈피가 선택되지 않았습니다.</kor>
+		<eng>Bookmark not selected.</eng>
+		<ChineseS>未选中书签.</ChineseS>
+		<ChineseT>書簽沒被選擇。</ChineseT>
+		<jp>ブックマークが選択されていません.</jp>
+	</string>
+	
 </strings>

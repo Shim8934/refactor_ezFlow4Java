@@ -46,7 +46,7 @@
 					</a>
 					
 					<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
 							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')" href="#">
 						</c:when>
 						<c:otherwise>
@@ -139,14 +139,25 @@
     			<article class="writebanner">
         			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
         			<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
 							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />')"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
+						</c:when>
+						<c:when test="${host == 'gw.freet.co.kr'}">
+							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.jpg" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.jpg" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.jpg" width="56" height="85"></span></p>
 						</c:when>
 						<c:otherwise>
 							 <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
 						</c:otherwise>
 					</c:choose>
-        			<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="56" height="85"></span></p>
+					<c:choose>
+					<c:when test="${host == 'gw.freet.co.kr'}">
+						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.jpg" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.jpg" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.jpg" width="56" height="85"></span></p>
+					</c:when>
+					<c:otherwise>
+						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="56" height="85"></span></p>
+					</c:otherwise>
+					</c:choose>
+        			
         			<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
     			</article>
     		</div>
@@ -164,6 +175,9 @@
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript">
+		 	var UserOffset = "${userOffset}";
+		</script>
 		<c:choose>
 			<c:when test="${checkBrowser == true}">
 				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
@@ -800,7 +814,7 @@
 		        update_clock()
 		        setInterval("update_clock()", 1000);
 		    }
-		    var UserOffset = "${userOffset}";
+		   
 		    function update_clock() {
 		        var hours = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[0];
 		        var minutes = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[1];
@@ -817,7 +831,7 @@
 		        var nd = new Date();
 		        var h, m;
 		        var s;
-		        var time = " ";
+		        var time = " ";		        
 		        time = getWorldTime(parseInt(UserOffset.split(':')[0]));
 		        document.getElementById("timeinput").innerHTML = time;
 		        gizmo = setTimeout("yourClock()", 1000);

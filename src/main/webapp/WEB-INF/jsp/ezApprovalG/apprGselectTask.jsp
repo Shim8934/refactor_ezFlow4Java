@@ -268,6 +268,9 @@
 		        }
 		    }
 		</script>
+		<style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1040'/></h1>
@@ -298,8 +301,8 @@
 		        </tr>
 		        <tr>
 		          <td >
-		          <div class="listview"  style="WIDTH:270px;HEIGHT:260px; OVERFLOW-Y:AUTO;" id="divTaskList2">
-		          <div id="TaskList" style="margin: 1px 1px 1px 1px;"></div>
+		          <div class="listview"  style="WIDTH:330px;HEIGHT:260px; OVERFLOW-Y:AUTO;" id="divTaskList2">
+		          <div id="TaskList"></div>
 		        </div> 
 		          </td>
 		        </tr>
@@ -311,7 +314,7 @@
 		    </td>
 		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1132'/></h2>
 		    <div class="listview"  style="WIDTH:210px;HEIGHT:288px; OVERFLOW-Y:AUTO;" id="divSelTaskList2">
-		          <div id="SelTaskList" style="margin: 1px 1px 1px 1px;"></div>
+		          <div id="SelTaskList"></div>
 		        </div> 
 		     </td>
 		  </tr>

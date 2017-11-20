@@ -141,15 +141,8 @@
 			</tr>
 			<tr>
 		    	<th><spring:message code = 'ezPersonal.t155' /></th>
-		    	<td style="width:auto">
-		        	<!--edit box-->
-		       		<table width="100%" height="100%"> 
-		       			<tr> 
-		            		<td valign="top">
-		                		<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:340px; width:100%; overflow:auto;"></iframe>
-		           			</td>
-		       			</tr> 
-		     		</table>
+		    	<td style="width:auto;padding:0;border:0;">
+		        	<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:340px; width:100%; overflow:auto;"></iframe>
 		    	</td>
 		  	</tr>
 		</table>

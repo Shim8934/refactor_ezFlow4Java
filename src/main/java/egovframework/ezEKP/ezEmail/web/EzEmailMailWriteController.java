@@ -476,7 +476,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -559,7 +559,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						subject = (subject != null) ? subject : "";
 		        		
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -745,7 +745,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -1007,11 +1007,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailConfirmDialog.do")
 	public String mailConfirmDialog(
+					@CookieValue("loginCookie") String loginCookie,
 					@RequestParam("CAPTION") String caption,
 					@RequestParam("MESSAGE") String message,
 					@RequestParam("BUTTONNAMES") String buttonNames,
 					HttpServletRequest request,
+					LoginVO userInfo,
 					Model model) throws Exception {
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		caption = caption != null ? caption : "";
 		message = message != null ? message : "";
 		buttonNames = buttonNames != null ? buttonNames : "";
@@ -1020,6 +1025,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String buttonName1 = "";
 		String buttonName2 = "";
 		String[] buttonNamesArray = buttonNames.split(",");
+		
+		if (userInfo.getLang().equals("3")) {
+			buttonNamesArray = buttonNames.split("、");
+		}
 		
 		for (int i = 0; i < buttonNamesArray.length; i++) {
 			switch (i) {
@@ -1938,7 +1947,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        if (Files.probeContentType(f.toPath()) != null) {
 				        	contentType = Files.probeContentType(f.toPath());
 				        } else {
-				        	if (path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+				        	if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
 				        		contentType = "message/rfc822";
 				        	}
 				        }
@@ -3725,7 +3734,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				pAddressFilter = tempNode.getTextContent();
 			}
 		}
-        
+
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);

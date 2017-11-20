@@ -54,7 +54,8 @@ function getAprOpinionXML(pOpContent) {
     		data : {
     			docID : pDocID,
     			userID : pUserID,
-    			formID : ""
+    			formID : "",
+    			isUsed   : ""
     		},
     		success: function(text){
     			result = text;
@@ -339,7 +340,7 @@ function AddOpinionContent(Opstate, OpContent) {
                     var tmpKyljeaJobtitle2 = arr_userinfo[14];
                     try {
                     	var result = "";
-                        
+
                         $.ajax({
                     		type : "POST",
                     		dataType : "text",
@@ -348,7 +349,8 @@ function AddOpinionContent(Opstate, OpContent) {
                     		data : {
                     			docID : pDocID,
                     			userID : pUserID,
-                    			formID  : ""
+                    			formID  : "",
+                    			isUsed  : ""
                     		},
                     		success: function(text){
                     			result = text;

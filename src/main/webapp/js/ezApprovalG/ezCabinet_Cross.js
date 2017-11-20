@@ -186,14 +186,23 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
+            
             if (g_bRecAdmin || AdminYN == "TRUE") {
+                if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
                 document.getElementById("tdVeiwRecHist").style.display = "";
+                }
                 document.getElementById("tdbtnViewRecReadHist").style.display = "";
                 CheckBtnSetRecRole();
             } else {
-                document.getElementById("tdVeiwRecHist").style.display = "none";
+                if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
+                	document.getElementById("tdVeiwRecHist").style.display = "none";
+                }
+                if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                }
+                if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
                 document.getElementById("tdbtnSetRecRole").style.display = "none";
+                }
             }
             
             if (typeof (tdNotify_Rec) != "undefined" && typeof (tdNotify_Rec) != "unknown") {
@@ -681,8 +690,10 @@ function InsertToCabListView(Resultxml) {
             xmlDoc = createXmlDom();
             xmlDoc.appendChild(ListViewData);
         }
-
-        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        
+        if (g_HeaderInfoXml != "") {
+        	xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        }
         
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
@@ -1448,7 +1459,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
 
     setrecuserrole_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(555, 425));
+    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(720, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
 
@@ -1705,7 +1716,7 @@ function goToPage(page) {
 
 function insertSortInfoToHeader(header, listData) {
     try {
-        if (getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
+    	if (header != "" && getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
             var oXml = header;
             var nodesCell = SelectNodes(oXml, "LISTINFO/CELL");
             var header = SelectNodes(listData, "LISTVIEWDATA/HEADERS/HEADER");

@@ -5,27 +5,34 @@ var tempType;
 function PrintClick(Type, DocID, Mode) {
     var rtnVal = "";
     tempType = Type;
-    if (Mode != "")
+    if (Mode != "") {
         rtnVal = getdetail(DocID, Mode);
+    }
 
     if ((CrossYN()) || rtnVal == "close")
         if (Mode != "")
             return;
 
     var bodycontent = "";
-    if (Type == "FormProc")
+    if (Type == "FormProc") {
         bodycontent = pzFormProc.Editor.DOM.body.innerHTML + rtnVal;
-    else if (Type == "Cross")
+    }
+    else if (Type == "Cross") {
         bodycontent = message.Get_EditorBodyHTML() + rtnVal;
-    else if (Type == "Enforce")
+    }
+    else if (Type == "Enforce") {
         bodycontent = message2.Get_EditorBodyHTML() + rtnVal;
+    }
 
     PrtBodyContent = bodycontent;
     var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
     feature = feature + GetOpenPosition(800, 500);
     window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
 }
-
+/**
+ * [인쇄]
+ * 작성된 '의견' 내용 불러오기
+ * */
 function addOpinion(DocID, pFlag) {
 	var rowidx, rtnString, colidx;
 	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
@@ -51,8 +58,9 @@ function addOpinion(DocID, pFlag) {
 
     xmlrtn = loadXMLString(result);
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
-    if (Rows.length == 0)
+    if (Rows.length == 0) {
         eopi = "false";
+    }
 
     rtnString = "";
     for (rowidx = 0; rowidx < Rows.length; rowidx++) {
@@ -74,11 +82,16 @@ function addOpinion(DocID, pFlag) {
         rtnString = rtnString + "</TR>";
     }
 
-    if (balsongopi != "")
+    if (balsongopi != "") {
         eopi = "true";
+    }
 
     return rtnString;
 }
+/**
+ * [인쇄]
+ * 첨부정보 추출
+ * */
 function addAttach(DocID, pFlag) {
     var rowidx, rtnString, colidx;
 	var result = "";
@@ -179,8 +192,8 @@ var temptextAttatch;
 var tempDocID;
 var temppFlag;
 function getdetail(DocID, pFlag) {
-    var textOpi = addOpinion(DocID, pFlag);
-    var textAttatch = addAttach(DocID, pFlag);
+    var textOpi = addOpinion(DocID, pFlag);     // 의견정보 추출
+    var textAttatch = addAttach(DocID, pFlag);  // 첨부정보 추출
     
     if (CrossYN()) {
         temptextOpi = textOpi;
@@ -219,6 +232,11 @@ function getdetail(DocID, pFlag) {
 }
 
 var ezprtquestion_cross_dialogArguments = new Array();
+/**
+ * [인쇄]
+ * 범위 옵션 화면 출력
+ * ex) 의견정보, 첨부정보, 결재선정보
+ * */
 function OpenQuestionUI() {
     var parameter = "";
     var url = "/ezApprovalG/ezprtQuestion.do?opinion=" + encodeURI(eopi) + "&attach=" + encodeURI(eattach);

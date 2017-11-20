@@ -4,24 +4,35 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
+import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.search.AndTerm;
+import javax.mail.search.DateTerm;
+import javax.mail.search.ReceivedDateTerm;
+import javax.mail.search.SearchTerm;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1086,7 +1097,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
 	    		}
 	    		
-	    		message.setFlag(Flags.Flag.SEEN, true);
     			sentFolder.open(Folder.READ_WRITE);
     			sentFolder.appendMessages(new Message[]{message});
     			sentFolder.close(true);
@@ -1102,6 +1112,109 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
         logger.debug("sendMail ended.");
+	}
+	
+	/**
+	 * 메일 보내기 서비스
+	 * @param recipients SMTP의 rcpt to에 지정될 수신자 목록
+	 * @param loginCookie 로그인 쿠키
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @param isSaved 보낸편지함에 저장 여부
+	 * @throws Exception
+	 */
+	@Override
+	public void sendMailWithExplicitRecipients(InternetAddress[] recipients, String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception {
+		logger.debug("sendMailWithExplicitRecipients started. recipients=" + recipients);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userId + "@" + domainName;
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		IMAPAccess ia = null;
+		
+		try {
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userAccount, password);
+			
+			MimeMessage message = sa.createMimeMessage();
+			
+			// set from
+			logger.debug("from=" + from.getAddress());
+			message.setFrom(from);
+			
+			// set to
+			for (InternetAddress to : toArr) {
+				logger.debug("to=" + to.getAddress());
+				message.addRecipient(RecipientType.TO, to);
+			}
+			
+			// set cc
+			if (ccArr != null) {
+				for (InternetAddress cc : ccArr) {
+					logger.debug("cc=" + cc.getAddress());
+					message.addRecipient(RecipientType.CC, cc);
+				}
+			}
+			
+			// set bcc
+			if (bccArr != null) {
+				for (InternetAddress bcc : bccArr) {
+					logger.debug("bcc=" + bcc.getAddress());
+					message.addRecipient(RecipientType.BCC, bcc);
+				}
+			}
+			
+			// set subject
+			logger.debug("subject=" + subject);
+			message.setSubject(subject, "UTF-8");
+			
+			// set content
+			message.setContent(content, "text/html; charset=utf-8");
+			
+			// set sentDate
+	        message.setSentDate(Calendar.getInstance().getTime());
+	        
+	        // set User-Agent header
+	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+	        
+	        Transport.send(message, recipients);
+	        logger.debug("Mail send success.");
+	        
+	        if (isSaved) {
+	        	//보낸편지함에 저장
+	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+	        			userAccount, password, egovMessageSource, userInfo.getLocale());
+	        	
+	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
+	    		
+	    		if (!sentFolder.exists()) {
+	    			sentFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
+	    		}
+	    		
+	    		message.setFlag(Flags.Flag.SEEN, true);
+    			sentFolder.open(Folder.READ_WRITE);
+    			sentFolder.appendMessages(new Message[]{message});
+    			sentFolder.close(true);
+    			logger.debug("Mail is successfully saved in sent folder.");
+	        }
+        
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+        logger.debug("sendMailWithExplicitRecipients ended.");
 	}
 	
 	@Override
@@ -1293,6 +1406,81 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getAliasAddress ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
 		return aliasAddressList;		
+	}
+
+	@Override
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count)
+			throws Exception {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000);
+		
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));		
+			folder.open(Folder.READ_ONLY);
+	        UIDFolder uidFolder = (UIDFolder)folder;
+	        
+	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false);
+	        
+	        // sort the messages
+ 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
+	        
+ 			// set mailCount
+ 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));
+ 			if (unreadCount < count) {
+ 				count = unreadCount;
+ 			}
+ 			
+ 			int messageCount = messages.length;
+ 			
+ 			if ( messageCount < 0 ) {
+ 				messageCount = 0;
+ 			}
+ 			
+ 			messages = Arrays.copyOfRange(messages, 0, messageCount);
+
+ 			// pre-fetch
+	        FetchProfile fp = new FetchProfile();
+	        fp.add(UIDFolder.FetchProfileItem.UID);
+	        fp.add(FetchProfile.Item.ENVELOPE);
+	        folder.fetch(messages, fp);
+	        
+	        for (int i=0; i<messages.length; i++) {
+	        	Message message = messages[i];
+	        	
+	        	Date receivedDate = message.getReceivedDate();
+	        	String receivedDateStr = sdf.format(receivedDate);
+//	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+	        	
+	        	String subject = ezEmailUtil.getSubject(message);
+				subject = (subject != null) ? subject : "";
+	        	
+	        	Map<String, String> map = new HashMap<String, String>();
+	        	map.put("subject", subject);
+	        	map.put("sender", ezEmailUtil.getFromNameOrAddressOfMessage(message));
+	        	map.put("receivedDate", receivedDateStr);
+	        	map.put("uid", String.valueOf(uidFolder.getUID(message)));
+	        	
+	        	list.add(map);
+	        }
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		return list;
 	}
 	
 	@Override

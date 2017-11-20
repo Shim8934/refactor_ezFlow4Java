@@ -240,15 +240,15 @@
 	        <tr>
 	            <td colspan="2" style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvSDoc" style="BORDER: 0; WIDTH: 690px; HEIGHT: 490px; overflow-x: hidden"></div>
+	                    <div id="lvSDoc" style="BORDER: 0; WIDTH: 690px; HEIGHT: 350px; overflow-x: hidden"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center; margin-top: 3px;">
 	                <img src="/images/arr_right.gif" style="cursor: pointer" width="16" height="16" id="arrow_right" onclick="return btnIns_onclick()"><img src="/images/arr_left.gif" style="cursor: pointer" width="16" height="16" id="arrow_left" onclick="return btndel_onclick()">
 	            </td>
 	            <td style="width: 310px; vertical-align: top;">
-	                <div class="listview" style="WIDTH: 310px; HEIGHT: 490px">
-	                    <div id="lvTDoc" style="BORDER: 0; WIDTH: 310px; HEIGHT: 490px; overflow: auto"></div>
+	                <div class="listview" style="WIDTH: 310px; HEIGHT: 350px">
+	                    <div id="lvTDoc" style="BORDER: 0; WIDTH: 310px; HEIGHT: 350px; overflow: auto"></div>
 	                </div>
 	            </td>
 	        </tr>

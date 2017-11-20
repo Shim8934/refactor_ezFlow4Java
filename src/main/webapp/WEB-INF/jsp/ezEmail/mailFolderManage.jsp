@@ -284,11 +284,11 @@
 
 			function checkBadFolderName(szName) 
 			{
-				var szBadChars = /[\<\>\~\#\%\&\*\+\|\\\.\/]/g;
+				var szBadChars = /[\<\>\~\#\%\&\*\"\+\|\\\.\/]/g;
 				var szChangedName = szName.replace(szBadChars, "");
 				if(szChangedName != szName)
 				{
-					alert("<spring:message code='ezEmail.t479' />< ~ # % & * + | \\ . / >)<spring:message code='ezEmail.t480' />");
+					alert('<spring:message code="ezEmail.t479" />< ~ # % & * " + | \\ . / >)<spring:message code="ezEmail.t480" />');
 					return true;
 				}
 				return false;

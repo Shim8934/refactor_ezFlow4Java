@@ -19,6 +19,9 @@
 	var strLang4 = "<spring:message code='ezSystem.x0034'/>";
 	var strLang5 = "<spring:message code='ezSystem.x0035'/>";
 	var strLang6 = "<spring:message code='ezSystem.x0036'/>";
+	var strLang7 = "<spring:message code='main.t252'/>";
+	var strLang8 = "<spring:message code='ezSystem.yjks2'/>";
+	
 	var CurPage = "";
 	var totalPage = "";
 	var totalCount = "";
@@ -139,6 +142,7 @@
         var strtext;
         var PagingHTML = "";
         document.getElementById("tblPageRayer").innerHTML = "";
+        document.getElementById("listInfo").innerHTML = " &nbsp;[" + strLang7 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang8 + "]";
         strtext = "<div class='pagenavi'>";
         PagingHTML += strtext;
         var pageNum = CurPage;
@@ -295,7 +299,6 @@
 			var searchKeyword = document.getElementById("searchKeyword").value;
 
 			if (pageNum == "-1") {
-				
 				var pageSize = "-1";
 				var params = 'startDate=' + searchStartTime +'&endDate=' + searchEndTime;
 				 	params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword ; 
@@ -303,10 +306,9 @@
 				var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
 
 				saveExcel.location.href = pURL;
-				
 			} else {
-	
 	    		var pURL = "/admin/ezSystem/systemLoginHistList.do";
+	    		
 	    		$.ajax({
 	    			 url: pURL
 	    			,type: "POST"
@@ -318,9 +320,12 @@
 	    				   }    
 	    			,success: function(res) {
 	    				var html = "";
+   						var j = ((pageNum - 1) * 20) + 1 ;
+   						
 	    				if (res.lang == 1) {
 	    					res.loginHistList.forEach(function(i,v){
 	    						html += "<tr>";
+	    						html += "   <td>" + j					+ "</td>";
 	    						html += "	<td>" + i.usernm 			+ "</td>";
 	    						html += "	<td>" + i.deptnm 			+ "</td>";
 	    						html += "	<td>" + i.connectip 		+ "</td>";
@@ -328,10 +333,12 @@
 	    	    				html += "	<td>" + i.connectbrowser 	+ "</td>";
 	    	    				html += "	<td>" + i.connectos 		+ "</td>";
 	    	    				html += "</tr>";
+	    						j++;
 	        				});
 						} else {
 							res.loginHistList.forEach(function(i,v){
 								html += "<tr>";
+								html += "   <td>" + j 					+ "</td>";
 								html += "	<td>" + i.usernm2 			+ "</td>";
 								html += "	<td>" + i.deptnm2 			+ "</td>";
 								html += "	<td>" + i.connectip 		+ "</td>";
@@ -339,6 +346,7 @@
 			    				html += "	<td>" + i.connectbrowser 	+ "</td>";
 			    				html += "	<td>" + i.connectos 		+ "</td>";
 			    				html += "</tr>";
+			    				j++;
 		    				});
 						}
 	    				
@@ -375,7 +383,7 @@
 </script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code="ezSystem.x0021"></spring:message></h1>
+	<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
 	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
@@ -419,6 +427,7 @@
 	<table class="mainlist" style="width:100%;">
 		<thead>
 			<tr>
+				<th width="80px;"><spring:message code="ezSystem.yjks1"></spring:message></th>
 				<th><spring:message code="ezSystem.x0022"></spring:message></th>
 				<th><spring:message code="ezSystem.x0023"></spring:message></th>
 				<th><spring:message code="ezSystem.x0024"></spring:message></th>

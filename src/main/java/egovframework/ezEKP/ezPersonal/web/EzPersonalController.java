@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.ByteArrayInputStream;
@@ -10,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -147,11 +150,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (buJaeInfo != null && !buJaeInfo.equals("")) {
 			if (buJaeInfo.split(":").length >= 5) {
-				buJaeInfo2 = buJaeInfo.split(":")[0] + ":" + buJaeInfo.split(":")[1] + ":" + buJaeInfo.split(":")[2] + ":" + buJaeInfo.split(":")[3] + ":" + buJaeInfo.split(":")[4];
+				buJaeInfo2 = buJaeInfo.split(":")[0] + ":" + buJaeInfo.split(":")[1] + ":" + buJaeInfo.split(":")[2] + ":" + buJaeInfo.split(":")[3] + ":" + buJaeInfo.split(":")[4] + ":" + buJaeInfo.split(":")[5] + ":"  + buJaeInfo.split(":")[6];
 			}
 			
-			if (buJaeInfo.split(":").length > 5) {
-				buJaeInfo2 += ":" + buJaeInfo.split(":")[5];
+			if (buJaeInfo.split(":").length > 7) {
+				buJaeInfo2 +=  ":" + buJaeInfo.split(":")[7];
 			}
 		}
 		
@@ -299,19 +302,29 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
-		
+		String cDate = "";
+		String cTime = "";
 		if (result != null && !result.equals("")) {
 			String[] info = result.split(":");
 			
 			userID = info[0];
 			textName = info[1];
 			deptID = info[2];
-			startDate = info[3];
-			endDate = info[4];
+			startDate = info[3] + ":" + info[4];
+			endDate = info[5] + ":" + info[6];
 			
-			if (info.length > 5) {
-				bReason = info[5];
+			if (info.length > 7) {
+				bReason = info[7];
 			}
+		} else {
+			cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
+			cTime = cDate.split(" ")[1].substring(0, 2);
+			
+			cDate = cDate.substring(0, 10);
+			startDate = cDate + " " + cTime + ":00:00";
+			
+			cDate = cDate.substring(0, 10);
+			endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
 		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
@@ -397,7 +410,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String callBack = "0";
 		String saveMailFlag = "0";
 		
-		String result = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getTenantId());
+		String result = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		
@@ -1155,12 +1168,23 @@ public class EzPersonalController extends EgovFileMngUtil {
 //			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
 //			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
 			
-			ImageIO.write(destImg, "png", new File(realPath + filePath));
+			File profileImageFile = new File(realPath + filePath);
+			ImageIO.write(destImg, "png", profileImageFile);
 			
 			File file1 = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName);
 			if (file1.exists()) {
 				FileUtils.deleteQuietly(file1);
 			}
+			
+			//썸네일 생성
+			String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
+			File thumbnailFolder = new File(thumbnailPath);
+			if (!thumbnailFolder.exists()) {
+				thumbnailFolder.mkdirs();
+			}
+			
+			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + profileImageFile.getName());
+			createThumbnail(profileImageFile, thumbnailFile);
 		}
 		
 		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName, "user", userInfo.getTenantId());
@@ -1292,8 +1316,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String userID = doc.getElementsByTagName("USERID").item(0).getTextContent().trim();
-		
-		String result = ezPersonalService.getApprovNotiConfig(userID, userInfo.getTenantId());
+
+		String result = ezPersonalService.getApprovNotiConfig(userID, userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("getApprovNoticeMail ended");
 		return result;
@@ -1390,5 +1414,37 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		logger.debug("noticeList ended");
 		return "/ezPersonal/persNoticeList";
+	}
+	
+	private boolean createThumbnail(File sourceFile, File targetFile) {
+		boolean result = false;
+		
+		try {
+			BufferedImage sourceImage = ImageIO.read(sourceFile);
+			int w = 100;
+		    int h = 100;
+		    
+		    BufferedImage targetImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+		    Graphics2D g2 = targetImage.createGraphics();
+		    g2.setClip(new Ellipse2D.Float(0, 0, w, h));
+		    g2.drawImage(sourceImage, 0, 0, w, h, null);
+		    g2.dispose();
+			
+			ImageIO.write(targetImage, "png", targetFile);
+			
+			result = true;
+		} catch (Exception e) {
+			logger.debug("fail to create thumbnail : " + sourceFile.getName());
+			
+			try {
+				Files.copy(sourceFile.toPath(), targetFile.toPath());
+				logger.debug("copy original File to thumbnail.");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 }

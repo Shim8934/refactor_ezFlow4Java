@@ -23,7 +23,7 @@ function HiddenMailProgress() {
     document.getElementById("MailProgress").style.display = "none";
 }
 function MailListRefresh() {
-	start_search();
+//	start_search();
 }
 function start_search() {
     listContentArry = new Array();
@@ -75,6 +75,7 @@ function start_search() {
     var sMailFolder = TrimText(select2.value);
     ShowMailProgress();
     searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate);
+    prekeyword.value = keyword.value;
 }
 function GetBoxPath(Url, boxinfo, sKeyword, sCategory, startDate, endDate) {
     var strXml = "<?xml version='1.0' encoding='utf-8'?>" +
@@ -185,6 +186,7 @@ function event_searchRecurMail() {
                 tr.height = 20;
                 td = tr.insertCell();
                 td.innerHTML = strLang155;
+                td.style.textAlign  = "center";
             }
             else
                 resultCount.innerHTML = " : " + strLang156 + "<b>" + recordCount + "</b> " + strLang157;

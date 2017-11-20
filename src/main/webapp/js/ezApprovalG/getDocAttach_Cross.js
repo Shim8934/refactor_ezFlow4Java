@@ -36,7 +36,9 @@ function DocFileAttach_Click(obj) {
 function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
-
+/**
+ * 첨부파일 정보 추출
+ * */
 function setAttachInfo(tempDocID, INGFlag, attachTag) {
     attachTag.innerHTML = "";
     

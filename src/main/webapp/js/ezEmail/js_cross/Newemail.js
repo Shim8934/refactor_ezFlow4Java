@@ -36,6 +36,7 @@ function PreviewW_onMouserDown(e) {
     document.getElementById("ResizeBarW").style.display = "";
     document.getElementById("mailPanel").style.display = "";
     PreviewW_Move = true;
+	SmallSizeList = false;
     
     // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
     document.onselectstart = function () { return false; };
@@ -196,6 +197,11 @@ function reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang43);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang44);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -228,6 +234,11 @@ function all_reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang45);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang46);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -253,6 +264,11 @@ function all_reply_mail_onclick() {
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);
+    }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang48);
+        return;
     }
     else {
         var pSelectItem;

@@ -208,6 +208,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_TENANTID", ezBoardVO.getTenantID());
@@ -1998,15 +1999,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         	result.append("<NODE>");
         	if (pRootBoardID.equals("top")) {
         		if (pStrLang.equals("")) {
-        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
+        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
         		} else {
-        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
+        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
         		}        	
         	} else {
         		if (pStrLang.equals("")) {
-        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
+        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
         		} else {
-        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
+        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
         		}        	
         	}
             result.append("<STYLE><![CDATA[]]></STYLE>");
@@ -2014,15 +2015,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
             
             if (pRootBoardID.equals("top")) {
             	if (pStrLang.equals("")) {
-            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
+            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
             	} else {
-            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
+            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
             	}            
             } else {
             	if (pStrLang.equals("")) {
-            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
+            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
             	} else {
-            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
+            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
             	}            
             }
             result.append("<DATA3>" + pRootBoardID + "</DATA3>");

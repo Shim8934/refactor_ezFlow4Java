@@ -9,7 +9,7 @@
 		<style>
 			P { margin-top: 0px;margin-bottom: 0px; } 
 			.viewbox {
-				border:1px solid #b6b6b6;
+				border:0;
 				padding:5px;
 				height:100%;
 				background-color:#fff;
@@ -144,10 +144,13 @@
 	                return true;
 	        }
 	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.childNodes.length; i++) {
-	                obj.childNodes.item(i).setAttribute("check", "1");
+	            for (var i = 0; i < obj.options.length; i++) {
+	            	if (i == obj.selectedIndex) {
+	            		obj.childNodes.item(i).setAttribute("selected", "selected");
+	            	} else {
+	            		obj.childNodes.item(i).removeAttribute("selected");
+	            	}
 	            }
-	            obj.childNodes.item(obj.selectedIndex).setAttribute("check", "2");
 	        }
 	        function CheckBoxOnclick(obj) {
 	            obj.removeAttribute("checked");
@@ -287,7 +290,7 @@
 	                        }
 	                        var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                        for (var i = 0; i < CheckRows.length; i++) {
-	                            if (CheckRows.item(i).type == "checkbox")
+	                            if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
 	                                CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                        }
 	                        if (document.getElementById("body") != null) {
@@ -310,7 +313,7 @@
 	                        if (document.getElementById("body") != null) {
 	                            if (BODYTag.getAttribute("editor") == null) {
 	                                isEditor = true;
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "&isused=${isused}' frameborder='0'></ifrmae>";
+	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "&isUsed=${isUsed}' frameborder='0'></ifrmae>";
 	                            }
 	                            else {
 	                                try {
@@ -352,7 +355,7 @@
 	                    }
 	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox")
+	                        if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
 	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                    }
 	                    if (document.getElementById("body") != null) {
