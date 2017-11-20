@@ -36,9 +36,7 @@
 	        
 	        $(document).ready(function() {
 	        	
-	        	initProgressBar(completerate)
-	        	
-	        	console.log("Completerate: " + completerate);	        	
+	        	initProgressBar(completerate);	        	        	
         	
 	        	if (taskstatus == '1') {
 // 	        		$("#taskStatus").attr("disabled", true);
@@ -158,6 +156,7 @@
 						try { window.opener.RefreshView() } catch (e) { }
 						close_onclick();
 						parent.initProgressBar(taskstatus, $("#completeRate").val());
+						parent.updateStatusOnce(taskstatus);
 						parent.RefreshView();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {

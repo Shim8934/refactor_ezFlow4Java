@@ -134,6 +134,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
 		String completeRateList = "";
+		String statusList = "";
 		String orderNumber = "";		
 
 		//업무정보 조회
@@ -206,10 +207,14 @@ public class EzTaskController extends EgovFileMngUtil {
 				String covertDate = commonUtil.getDateStringInUTC(test + " 00:00:00", userInfo.getOffset(), true);
 				int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
 				completeRateList += Integer.toString(comRate) + ",";
+				
+				int status = ezTaskService.getStatusOfRepTask(taskID, covertDate, tenantID);
+				statusList += Integer.toString(status) + ",";
 			}
 			
 			dateList = dateList.substring(0, dateList.length() - 1);
 			completeRateList = completeRateList.substring(0, completeRateList.length() - 1);
+			statusList = statusList.substring(0, statusList.length() - 1);
 			
 			String realStartDate = date + " 00:00:00";
 			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
@@ -243,6 +248,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
 		model.addAttribute("dateList", dateList);	
 		model.addAttribute("completeRateList", completeRateList);
+		model.addAttribute("statusList", statusList);
 		
 		return "/ezTask/taskRead";
 	}
@@ -276,6 +282,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
 		List<String> rateList = new ArrayList<String>();
+		List<String> statusList = new ArrayList<String>();
 		
 		String taskID = request.getParameter("taskID");
 		String date = request.getParameter("currentDate");		
@@ -301,8 +308,11 @@ public class EzTaskController extends EgovFileMngUtil {
 			String covertDate = commonUtil.getDateStringInUTC(test + " 00:00:00", userInfo.getOffset(), true);
 			int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
 			rateList.add(Integer.toString(comRate));
+			int status = ezTaskService.getStatusOfRepTask(taskID, covertDate, tenantID);			
+			statusList.add(Integer.toString(status));
 		}	
 		
+		model.addAttribute("statusList", statusList);
 		model.addAttribute("rateList", rateList);
 		model.addAttribute("dateList", result);
 		model.addAttribute("orderNum", orderNumber);
