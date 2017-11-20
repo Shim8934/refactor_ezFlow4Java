@@ -37,7 +37,7 @@
 			var creatorid = "${taskInfoVO.creatorID }";
 			var hasattach = "${taskInfoVO.hasAttach }";
 			var hasshare = "${taskInfoVO.hasShare}";
-			var contentPath = "${taskInfoVO.contentPath }";
+			var contentPath = "<c:out value='${taskInfoVO.contentPath}'/>";
 			var sharelist = "";
 			var g_person = null;
 			var g_share = null;
@@ -426,7 +426,7 @@
 			        }
 			        catch (e) { }
 			    } else {
-			    	message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P>");
+			    	message.SetEditorContent("<P " + defaultFontAndSize + "></P>");
 			    }
 			}
 
