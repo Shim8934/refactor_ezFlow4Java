@@ -32,7 +32,7 @@
 	        window.onload = function () {
 	        	if (hasattach == "Y") {
 		            setAttachFileInfo("${taskWorkAttachList}");
-		        }
+		        } 	        	
 	        }
 	        
 	        window.onresize = function () {
@@ -109,10 +109,11 @@
 			<table id="normalScreen" class="layout">
 				<tr>
 					<td height="20" id="menuTable">
-						<div id="menu">
+						<div class="new_popup_title_txt" id="taskChangeMode"><spring:message code='ezTask.t1512' /></div>
+						<div id="menu" style="float: right; padding-right: 42px;">
 							<ul>
 								<li><span onClick="save_taskWork()"><spring:message code='ezTask.t96' /></span></li>
-								<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
+								<%-- <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li> --%>
 							</ul>
 						</div>
 						
@@ -121,11 +122,6 @@
 								<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 							</ul>
 						</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="popup_title_txt" style="padding:0px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
-						<spring:message code='ezTask.lhj06' />
 					</td>
 				</tr>
 				<tr>
@@ -156,7 +152,7 @@
 			</table>
 		</div>
 		<script>
-			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
+			document.getElementById("EdtorSize").style.height = "530px";
 		</script>
 	</body>
 </html>

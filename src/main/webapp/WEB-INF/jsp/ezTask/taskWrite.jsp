@@ -276,7 +276,7 @@
 						
 						document.getElementById("menuTaskInf").style.display = "";
 						if (document.getElementById("menuTaskMemo")) {
-							document.getElementById("menuTaskMemo").style.display = "none";
+							document.getElementById("menuTaskMemo").style.display = "none";							
 							var table = document.getElementById("tableInformation");
 							var memoTr = document.createElement("tr");
 							var memoTh = document.createElement("th");
@@ -285,6 +285,7 @@
 							memoTd.setAttribute("colspan", "3");
 							memoTd.setAttribute("style", "height: 40px;");
 							var memoInput = document.createElement("input");
+							memoInput.setAttribute("id", "TextMemo");
 							memoInput.setAttribute("type", "text");
 							memoInput.setAttribute("style", "width:100%;height: 80%;");
 							memoInput.setAttribute("value", "<c:out value = '${taskInfoVO.memo }' />");							
