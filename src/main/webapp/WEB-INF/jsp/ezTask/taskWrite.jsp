@@ -276,9 +276,22 @@
 						
 						document.getElementById("menuTaskInf").style.display = "";
 						if (document.getElementById("menuTaskMemo")) {
-							document.getElementById("menuTaskMemo").style.display = "";
-							document.getElementById("memoTd").style.height = "40px";
-							document.getElementById("menuTaskMemo").style.paddingTop = "5px";
+							document.getElementById("menuTaskMemo").style.display = "none";
+							var table = document.getElementById("tableInformation");
+							var memoTr = document.createElement("tr");
+							var memoTh = document.createElement("th");
+							memoTh.innerHTML = "<spring:message code='ezTask.t1701' />";
+							var memoTd = document.createElement("td");
+							memoTd.setAttribute("colspan", "3");
+							memoTd.setAttribute("style", "height: 40px;");
+							var memoInput = document.createElement("input");
+							memoInput.setAttribute("type", "text");
+							memoInput.setAttribute("style", "width:100%;height: 80%;");
+							memoInput.setAttribute("value", "<c:out value = '${taskInfoVO.memo }' />");							
+							memoTd.appendChild(memoInput);
+							memoTr.appendChild(memoTh);
+							memoTr.appendChild(memoTd);
+							table.appendChild(memoTr);
 						}	
 /* 						document.getElementById("EdtorSize").style.display = "none";
 						
@@ -700,7 +713,7 @@
 
 				<tr>
 					<td height="20" id="menuTaskInf" style="display: none;">
-						<table class="content">
+						<table class="content" id="tableInformation">
 							<tr>
 								<th><spring:message code='ezTask.t118' /></th>
 								<td colspan="3"><input type="text" id="TextTitle" style="width:100%;" value = "${taskInfoVO.title }"></td>
