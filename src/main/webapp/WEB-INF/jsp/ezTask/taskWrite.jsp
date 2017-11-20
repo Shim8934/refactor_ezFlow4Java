@@ -823,7 +823,7 @@
 				</tr>
 				<tr>
 					<td id="EdtorSize" style="display: none;">
-						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
+						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 97%; width: 100%; overflow: auto; border: none;"></iframe>
 					</td>
 				</tr>
 				<!-- 메모  -->
