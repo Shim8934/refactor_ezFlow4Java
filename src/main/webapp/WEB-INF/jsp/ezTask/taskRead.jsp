@@ -1369,8 +1369,8 @@
 						</tr>
 						<tr>
 							<th><spring:message code='ezTask.t157' /></th>
-							<td colspan="3" style="width:100%">
-								<div id="taskShareList" style="overflow-Y: auto; height: 40px; line-height: 1.5em;">
+							<td colspan="3" style="width:100%; height: 40px;">
+								<div id="taskShareList" style="overflow-Y: auto; line-height: 1.5em;">
 									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
 											<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
@@ -1384,8 +1384,8 @@
 						<c:if test="${useTodoMemo == 'YES'}">
 							<tr>
 				            	<th><spring:message code='ezTask.t170' /></th>
-				            	<td id="TextMemo" colspan="3">
-				            		<div style="overflow-y:auto;padding-top:2px; height: 40px;">
+				            	<td id="TextMemo" colspan="3" style="height: 40px;">
+				            		<div style="overflow-y:auto;padding-top:2px;">
 				            			<c:out value = '${taskInfoVO.memo }' />
 				            		</div>
 				            	</td>
