@@ -62,3 +62,6 @@ var strLang63	=	"ノードが存在しません。";
 var strLang64	=	"メモ";
 var strLang65   =   "업무을 저장하였습니다.";
 var strLang66	=	"업무명을 입력해주세요.";
+var strLang67	=	"업무정보를 저장하였습니다.";
+var strLang68	=	"업무내용을 저장하였습니다.";
+var strLang69	=	"지시사항을 저장하였습니다.";
