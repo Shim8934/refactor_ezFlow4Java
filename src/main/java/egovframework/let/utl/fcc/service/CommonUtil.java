@@ -59,7 +59,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
@@ -898,4 +897,21 @@ public class CommonUtil {
     	}
     }
 
+	//파일 경로로 xmlDocument 읽어오
+	public Document xmlLod(String pDocPath) throws Exception {
+		Document xmlDoc = null;
+		try {
+	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(false);
+			factory.setNamespaceAware(true);
+	
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			xmlDoc = builder.parse(new InputSource(pDocPath));
+	    	
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());
+		}
+		return xmlDoc;
+	}
 }

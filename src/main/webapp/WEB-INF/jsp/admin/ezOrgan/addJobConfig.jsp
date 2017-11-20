@@ -919,7 +919,7 @@
 		                
 					},
 					error : function(error){
-						alert("<spring:message code='ezOrgan.t9' />" + error);
+						alert("<spring:message code='ezOrgan.t9' />");
 					}
 		        });				
 				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경

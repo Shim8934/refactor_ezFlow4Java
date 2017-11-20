@@ -913,12 +913,12 @@ function btnSearchDept_onClick() {
             searchorganglist_dialogArguments[0] = g_progresswin;
             searchorganglist_dialogArguments[1] = btnSearchDept_onClick_Complete;
 
-            DivPopUpShow(600, 600, "/myoffice/ezApprovalG/ezOrganG/SearchOrganGList.aspx?keyword=" + escape(tmpDeptName));
+            DivPopUpShow(600, 600, "/ezApprovalG/searchOrganGList.do?keyword=" + encodeURIComponent(tmpDeptName));
         }
         else {
             var feature = "status:no;dialogWidth:600px;dialogHeight:600px;scroll:no;edge:sunken;help:no;";
             feature = feature + GetShowModalPosition(600, 600);
-            reParam = window.showModalDialog("/myoffice/ezApprovalG/ezOrganG/SearchOrganGList.aspx?keyword=" + escape(tmpDeptName), g_progresswin, feature);
+            reParam = window.showModalDialog("/ezApprovalG/searchOrganGList.do?keyword=" + encodeURIComponent(tmpDeptName), g_progresswin, feature);
             document.getElementById("txtOuterDeptName").focus();
 
             if (reParam["ret"] == "OK") {
@@ -1272,7 +1272,6 @@ function btnSearchDept_onClick_Complete(reParam) {
 
         var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
         if (DuplicateFlag) {
-            Resultxml.async = false;
             if(approvalFlag == "G") {
             	Resultxml = loadXMLFile(strLangEtcFile1);
             } else {
@@ -1651,7 +1650,7 @@ function RequestDataG(pNodeID, pTreeID) {
         createNodeInsert(xmlpara, objNode, "PARA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", treeNode.GetNodeData("DATA2"));
         xmlhttp2 = createXMLHttpRequest();
-        xmlhttp2.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrganSubTreeInfo.aspx", false);
+        xmlhttp2.open("POST", "/ezOrgan/getOrganSubTreeInfo.do", false);
         xmlhttp2.send(xmlpara);
 
         var xmlRtn = createXmlDom();
@@ -1728,7 +1727,6 @@ function DuplicateAprDeptCheckG(APRDEPT, arrUserInfo) {
 
 function AprLineAddDeptG(nodeIdx, tr) {
     var isCurretnCompany = "Y";
-    Resultxml.async = false;
 
     if(approvalFlag == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
@@ -1772,63 +1770,29 @@ function AprLineAddDeptG(nodeIdx, tr) {
             OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
     }
     else {
-
-        var tempRtnNodes = getExtLdapInfo(getNodeText(GetChildNodes(rtnNodes)[4]));
-        if (tempRtnNodes == null) return false;
-
-        // 최상위 기관이 없을때 
-        if (tempRtnNodes.childNodes.length <= 0) {
+        
+        if (getNodeText(GetChildNodes(rtnNodes)[3]) == "") {
             if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
                 OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
             else
                 OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
         }
-            // 최상위 기관이 있을때
+            
         else {
-            // FullName이 Null 인 경우 
-            if (getNodeText(GetChildNodes(rtnNodes)[3]) == "") {
-                if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
+            if (getNodeText(GetChildNodes(rtnNodes)[8]) == "") {
+                var namelength = getNodeText(GetChildNodes(rtnNodes)[3]).length - 1;
+                var location = getNodeText(GetChildNodes(rtnNodes)[3]).indexOf(strLang93);
+                if (namelength == location)
+                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]);
                 else
-                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
+                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]) + strLang93;
             }
-                // FullName이 Null이 아닌 경우
             else {
-                if (getNodeText(GetChildNodes(rtnNodes)[8]) == "") {
-                    var namelength = getNodeText(GetChildNodes(rtnNodes)[3]).length - 1;
-                    var location = getNodeText(GetChildNodes(rtnNodes)[3]).indexOf(strLang93);
-                    if (namelength == location)
-                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]);
-                    else
-                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]) + strLang93;
-                }
-                else {
-                    if (getNodeText(GetChildNodes(rtnNodes)[0]) == getNodeText(GetChildNodes(rtnNodes)[4]))
-                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                    else
-                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]).replace(getNodeText(GetChildNodes(rtnNodes)[2]), '') + "(" + getNodeText(GetChildNodes(rtnNodes)[8]) + ")";
-                }
+                if (getNodeText(GetChildNodes(rtnNodes)[0]) == getNodeText(GetChildNodes(rtnNodes)[4]))
+                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
+                else
+                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]).replace(getNodeText(GetChildNodes(rtnNodes)[2]), '') + "(" + getNodeText(GetChildNodes(rtnNodes)[8]) + ")";
             }
-
-            //var tempRtnNodes = getExtLdapInfo(getNodeText(GetChildNodes(rtnNodes)[4]));
-            //if (tempRtnNodes == null) return false;
-            //if (tempRtnNodes.childNodes.length <= 0) {
-            //    if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-            //        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
-            //    else
-            //        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-            //}
-            //else {
-            //    if (getNodeText(GetChildNodes(tempRtnNodes)[8]) == "")
-            //        OutDeptList = getNodeText(GetChildNodes(tempRtnNodes)[2]) + strLang93;
-            //    else
-            //        OutDeptList = getNodeText(GetChildNodes(tempRtnNodes)[8]);
-
-            //    if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-            //        OutDeptList = OutDeptList + "(" + getNodeText(GetChildNodes(rtnNodes)[2]) + strLang246;
-            //    else
-            //        OutDeptList = OutDeptList + "(" + getNodeText(GetChildNodes(rtnNodes)[8]) + ")";
-            //}
         }
     }
 
@@ -1926,16 +1890,20 @@ function isExistDept(ExtFlag) {
 }
 function getExtLdapInfo(OrganCode) {
     try {
-        var xmlpara = createXmlDom();
-        var xmlRtn = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARA");
-        createNodeAndInsertText(xmlpara, objNode, "ORGID", OrganCode);
-        xmlhttp2 = createXMLHttpRequest();
-        xmlhttp2.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrgInfo.aspx", false);
-        xmlhttp2.send(xmlpara);
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/getOrgInfo.do",
+    		data : {
+    			orgID 	: OrganCode
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
 
-        return xmlhttp2.responseXML.documentElement;
+        return loadXMLString(result).documentElement;
     } catch (e) {
         return "";
     }

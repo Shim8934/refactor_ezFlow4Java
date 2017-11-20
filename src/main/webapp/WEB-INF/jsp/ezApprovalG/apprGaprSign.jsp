@@ -70,44 +70,41 @@
 		    function btn_ImageSave_onclick() {
 		    	if (flag) {
 					flag = false;
-			    	var listview = new ListView();
-			        listview.LoadFromID("listSIGNLIST");
-			        var AprSign = listview.GetSelectedRows();
-			        if (AprSign.length != 0) {
-			            if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
-			                if (ReturnFunction != null) {
-			                    ReturnFunction(AprSign[0].getAttribute("DATA1"));
-			                }
-			                else {
-			                    parent.window.returnValue = AprSign[0].getAttribute("DATA1");
-			                }
-			            } else {
-			                var AprSignName = AprSign[0].cells[0].innerText;
-			                var AprSignURL = AprSign[0].getAttribute("DATA1");
-			                var AprSignInfo = BaseURL + AprSignURL;
-			                
-			                if (ReturnFunction != null) {
-			                    ReturnFunction(AprSignInfo);
-			                } else {
-			                    window.returnValue = AprSignInfo;
-			                    parent.window.close();
-			                }
-			            }
-			        } else if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
-			            if (ReturnFunction != null) {
-			                ReturnFunction(AprSign[0].getAttribute("DATA1"));
-			            } else {
-			                window.returnValue = AprSign[0].getAttribute("DATA1");
-			                parent.window.close();
-			            }
-			        }
-			        else {
-			            alert("<spring:message code='ezApprovalG.t437'/>");
-			        }
-		    	} else {
-		    		return;
-		    	}
+		        var listview = new ListView();
+		        listview.LoadFromID("listSIGNLIST");
+		        var AprSign = listview.GetSelectedRows();
+		        if (AprSign.length != 0) {
+		            if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
+		                if (ReturnFunction != null) {
+		                    ReturnFunction(AprSign[0].getAttribute("DATA1"));
+		                }
+		                else {
+		                    parent.window.returnValue = AprSign[0].getAttribute("DATA1");
+		                }
+		            } else {
+		                var AprSignName = AprSign[0].cells[0].innerText;
+		                var AprSignURL = AprSign[0].getAttribute("DATA1");
+		                var AprSignInfo = BaseURL + AprSignURL;
+		
+		                if (ReturnFunction != null) {
+		                    ReturnFunction(AprSignInfo);
+		                } else {
+		                    window.returnValue = AprSignInfo;
+		                    parent.window.close();
+		                }
+		            }
+		        } else if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
+		            if (ReturnFunction != null) {
+		                ReturnFunction(AprSign[0].getAttribute("DATA1"));
+		            } else {
+		                window.returnValue = AprSign[0].getAttribute("DATA1");
+		                parent.window.close();
+		            }
+		        } else {
+		            alert("<spring:message code='ezApprovalG.t437'/>");
+		        }
 		    }
+		    
 		    function btn_ImageCancel_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction("cancel");

@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
@@ -324,13 +325,13 @@ public interface EzApprovalGService {
 
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception;
 
-	public String GetRecordInfo(Document xmlDom, String lang, int tenantID)throws Exception;
+	public String GetRecordInfo(Document xmlDom, String lang, int tenantID, String offSet)throws Exception;
 
 	public String getRecViewer(Document xmlDom,String lang, int tenantID)throws Exception;
 
 	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale)throws Exception;
 
-	public String getRecReadHistory(Document xmlDom, int tenantID) throws Exception;
+	public String getRecReadHistory(Document xmlDom, String offset, int tenantID) throws Exception;
 
 	public String getRecordClassInfo(Document xmlDom, int tenantID) throws Exception;
 	
@@ -462,4 +463,43 @@ public interface EzApprovalGService {
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
 	public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception;
+
+	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
+
+	public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception;
+
+	public String checkPubDocXML(String mapPath) throws Exception;
+
+	public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception;
+
+	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception;
+
+	public boolean insertRelayDB(String strDocID, String strXDocID, String strRecDate, String strFrom, String strTo, String strSubject, String strXMailType, String strXFromCode, String strXToCode,
+			String strXGW, String strXDocType, String strXDTDVersion, String strXXSLVersion, String strContentType, String strSealURL, String strXmlURL, String strLastDate, String strCompanyID, int tenantID) throws Exception;
+
+	public void fieldUpdate(String strFieldName, String strValue, String strXDocID, String strDeptID, String strCompanyID, int tenantID) throws Exception;
+
+	public void addAttachInfo(String strCont_Name, String strRealFileName, String strDocID, String strSN, String strType, String strCompanyID,	int tenantID) throws Exception;
+
+	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean createRelayDocInfo(String realPath, String strXDocID, String strReceiveID, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean insFailMessage(String strXDocID, String strSendID, String strSendName, String message, String strCompanyID, int tenantID) throws Exception;
+
+	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception;
+
+	public String setHref(String docID, String fileType, String mode, LoginVO userInfo) throws Exception;
+
+	public String setRecvDocInfo(String docID, String publicFlag, String docNo, String docNumCode, String orgDocNumCode, String mode, String fileType, LoginVO userInfo) throws Exception;
+
+	public String updateRecvDocInfo(String docID, String docNo, String docNumCode, String orgDocNumCode, String cabinetID, String taskCode, String userID, String userName, String userName2, String deptID, String userTitle, String userTitle2, String deptName, String deptName2, String tempCompanyID, LoginVO userInfo, String realPath) throws Exception;
+
+	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception;
+
+	public List<OrganUserVO> getTenantID() throws Exception;
 }

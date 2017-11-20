@@ -342,6 +342,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String subQuery = request.getParameter("SubQuery");
 		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId());
 		
+		String relayG_type = ezCommonService.getTenantConfig("UserInfo_RelayG_Type", userInfo.getTenantId()); 
+		
 		nowDate = nowDate.substring(0, 16);
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -368,6 +370,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("listType", listType);
 		model.addAttribute("proxyInfo", proxyInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("relayG_type", relayG_type);
+		
 		logger.debug("aprManage ended.");
 		
 		return "ezApprovalG/apprGManage";
@@ -4329,9 +4333,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
+
 		String dirYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
@@ -4388,7 +4393,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
-		
+		model.addAttribute("approvalROOT", approvalRoot);
 		logger.debug("recevG ended.");
 		
 		return "ezApprovalG/apprGrecevG";
