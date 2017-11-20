@@ -2,6 +2,7 @@
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "전결";
 var strLang7 = "대결";
 var strLang8 = "代 ";
@@ -984,9 +985,11 @@ var strLangS825 = "회람자를 지정하시기 바랍니다.";
 var strLangS826 = "회람을 발송하지 못하였습니다.";
 var strLangpjj27 = "편집하려는 즐겨찾기를 공람자 리스트에 적용 해야 편집 할 수 있습니다.";
 var strLangHYJ28 = "회람자 리스트가 존재하지 않습니다.";
-var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
+
+var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\\n추가 할 수 없습니다.";
 
 //2017-11-09 장진혁 추가
 var strLangjjh01 = "첨부파일은 총 ";
 var strLangjjh02 = "MB까지 업로드 가능합니다.";
 var strLangjjh03 = "첨부파일을 추가하는중입니다.";
+

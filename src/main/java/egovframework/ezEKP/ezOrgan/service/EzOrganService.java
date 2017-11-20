@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
 	
@@ -33,7 +34,7 @@ public interface EzOrganService {
 
 	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception;	
 	
-	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
+	public String getOrganTreeInfo(String strFilter, int intScope, String strBaseDN) throws Exception;
 	
 	public String getEncPassword(String dUserID, int tenantID) throws Exception;
 	
@@ -59,5 +60,11 @@ public interface EzOrganService {
 
 	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
 
- 
+	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope) throws Exception;
+
+	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception;
+
+	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception;
+
+	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID) throws Exception;
 }
