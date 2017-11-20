@@ -1,20 +1,15 @@
-﻿/*###########################################################################################
 
 
 
-###########################################################################################*/
 
 
-//###########################################################################################
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
 
-//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
-//모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
-//따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
-//document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "rgb(233, 241, 244)";
+
+
+
+var m_strColorSelect = "#DBE1E7";
 var m_strColorDefault = "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -31,7 +26,7 @@ function add_key_event() {
         document.addEventListener("keydown", keydown_handler, false);
         document.addEventListener("keyup", keyup_handler, false);
     }
-    //disable_browser_selection();
+    
 }
 
 function keydown_handler(evt) {
@@ -59,27 +54,26 @@ function remove_key_event() {
     }
 }
 
-// 컨트롤, 쉬프트 키를 이용하여 다중 선택을 하는 경우
-// 브라우저 기본 셀렉트 이벤트를 막기위한 방편
+
+
 function disable_browser_selection() {
-    if (typeof (document.body.onselectstart) != "undefined") //IE route
+    if (typeof (document.body.onselectstart) != "undefined") 
         document.body.onselectstart = function() { return false; }
-    else if (typeof (document.body.style.MozUserSelect) != "undefined") //Firefox route
+    else if (typeof (document.body.style.MozUserSelect) != "undefined") 
         document.body.style.MozUserSelect = "none";
-    else //All other route (ie: Opera)
+    else 
         document.body.onmousedown = function() { return false; }
 
     document.body.style.cursor = "default";
 }
 
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 끝
-//###########################################################################################
 
 
-//###########################################################################################
-// ListView 클래스 시작
+
+
+
+
 function ListView() {
-    /* Public Member 선언 시작 */
     this.DataSource = DataSource;
     this.DataBind = DataBind;
     this.SetID = SetID;
@@ -110,16 +104,16 @@ function ListView() {
     this.SetSelectFlag = SetSelectFlag;
     this.AddDataRow = AddDataRow;
     this.SetAlignLeft = SetAlignLeft;
-    this.SetUrgentFlag = SetUrgentFlag;     //긴급결재  DATA14
-    this.SetSecurityFlag = SetSecurityFlag; //보안결재  DATA10 날짜비교
+    this.SetUrgentFlag = SetUrgentFlag;     
+    this.SetSecurityFlag = SetSecurityFlag; 
     this.SetAlignArr = SetAlignArr;
     this.GetTableWidth = GetTableWidth;
     this.SetTableWidth = SetTableWidth;
     this.SetListType = SetListType;
-    this.SetOrderbyCol = SetOrderbyCol; // Header order by 노드명 셋팅
+    this.SetOrderbyCol = SetOrderbyCol; 
     this.SetUnSelected = SetUnSelected;
     
-    //사용자 정의 이벤트 지정
+    
     this.SetHeaderOnClick = SetHeaderOnClick;
     this.SetHeaderOnDblClick = SetHeaderOnDblClick;
     this.SetRowOnClick = SetRowOnClick;
@@ -129,9 +123,6 @@ function ListView() {
     this.SetDebugMode = SetDebugMode;
     this.toString = ListView_ToString;
     this.SetHeightFree = SetHeightFree;
-    /* Public Member 선언 끝 */
-
-    /* Private Member 선언 시작 */
     var _dataSource = null;
     var _thisID = "";
     var _isMultiSelectable = false;
@@ -155,13 +146,12 @@ function ListView() {
     var _AlignLeft = null;
     var _UrgentFlag = false;
     var _SecurityFlag = false;
-    var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0);
+    var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     var _ListType = 0;
     var _SetHeightFree = false;
     var _HeaderNode = "NAME";
-    /* Private Member 선언 끝 */
 
-    //ID 지정
+    
     function SetID(pObjID) {
         if (pObjID != "")
             _thisID = pObjID;
@@ -169,34 +159,34 @@ function ListView() {
     function GetID() {
         return _thisID;
     }
-    //TitleIdx 
+    
     function SetTitleIdx(idx) {
         if (idx != "")
             _titleIdx = idx;
     }
-    //보안등급Idx 
+    
     function SetSecIdx(idx) {
         if (idx != "")
             _SecIdx = idx;
     }
-    //Width 1024 여부
+    
     function SetWidthFlag(flag) {
         _WidthFlag = flag;
     }
-    //첫번째값 선택여부 
+    
     function SetSelectFlag(flag) {
         _SelectFlag = flag;
     }
-    //리스트뷰의 DataSource 지정 (XML)
+    
     function DataSource(pDataSource) {
         _dataSource = pDataSource;
     }
 
-    //왼쪽정렬이 필요한 필드
+    
     function SetAlignLeft(pAlign) {
         _AlignLeft = pAlign;
     }
-    // 긴급결재 표시처리
+    
     function SetUrgentFlag(flag) {
         _UrgentFlag = flag;
     }
@@ -205,12 +195,12 @@ function ListView() {
         _SecurityFlag = flag;
     }
 
-    // 리스트헤더 정렬 배열
+    
     function SetAlignArr(arry) {
         _Align = arry;
     }
     
-    // 리스트 타입 추가  // 9 : 수신문서의 경우 읽지않은 문서 볼드처리를 위해 추가함.
+    
     function SetListType(pListType) {
         _ListType = pListType;
     }
@@ -220,32 +210,32 @@ function ListView() {
         _HeaderNode = pOrderName;
     }
 
-    //헤더 클릭 이벤트 핸들러 지정
+    
     function SetHeaderOnClick(pHeaderOnClick) {
         _headeronclick = pHeaderOnClick;
     }
 
-    //헤더 더블클릭 이벤트 핸들러 지정
+    
     function SetHeaderOnDblClick(pHeaderOnDblClick) {
         _headerondblclick = pHeaderOnDblClick;
     }
 
-    //로우 클릭 이벤트 핸들러 지정
+    
     function SetRowOnClick(pRowOnClick) {
         _rowonclick = pRowOnClick;
     }
 
-    //로우 더블 클릭 이벤트 핸들러 지정
+    
     function SetRowOnDblClick(pRowOnDblClick) {
         _rowondblclick = pRowOnDblClick;
     }
 
-    //로우 컨텍스트 메뉴 핸들러 지정
+    
     function SetContextHandler(pContextHandler) {
         _contextHandler = pContextHandler;
     }
 
-    //멀티 선택 기능 지정 (true : 멀티선택 가능, false : 멀티선택 불가)
+    
     function SetMulSelectable(pSelectable) {
         _isMultiSelectable = pSelectable;
 
@@ -253,13 +243,13 @@ function ListView() {
             add_key_event();
     }
 
-    //OCS 사용여부 지정
+    
     function SetUseOCS(pUseOcs) {
         _useOcs = pUseOcs;
         SetUserBrower();
     }
 
-    //풍선 도움말 지정
+    
     function SetTitle(pTitle) {
         _title = pTitle;
     }
@@ -268,14 +258,13 @@ function ListView() {
         return _TableWidth;
     }
     
-    //List View 크기 지정
+    
     function SetTableWidth(pTableWidth) {
         _TableWidth = pTableWidth;
     }
 
-    //디버그 모드
-    //리스트뷰의 HTML을 document.body에 출력
-    function SetDebugMode(pDebugMode) {
+    
+        function SetDebugMode(pDebugMode) {
         _debugMode = pDebugMode;
     }
     
@@ -285,15 +274,15 @@ function ListView() {
     }
     
 
-    //이미 만들어진 리스트뷰 ID를 이용하여 리스트뷰 객체 생성	
+    
     function LoadFromID(pTableID) {
         var oList = document.getElementById(pTableID);
         if (!oList)
             return;
 
-        if (typeof (document.body.onselectstart) != "undefined") //IE route
+        if (typeof (document.body.onselectstart) != "undefined") 
             oList.onselectstart = function() { return false; }
-        else if (typeof (document.body.style.MozUserSelect) != "undefined") //Firefox route
+        else if (typeof (document.body.style.MozUserSelect) != "undefined") 
             oList.style.MozUserSelect = "none";
 
         _isMultiSelectable = false;
@@ -329,10 +318,10 @@ function ListView() {
         arrRow = null;
     }
 
-    //리스트뷰 DataSource를 이용하여 DataBind 하기
+    
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert(strLang1130);
+            alert("리스트의 ID가 지정되지 않았습니다.");
             return;
         }
 
@@ -359,9 +348,9 @@ function ListView() {
             if (_contextHandler != null)
                 oTable.setAttribute("contextHandler", _contextHandler);
 
-            if (typeof (document.body.onselectstart) != "undefined") //IE route
+            if (typeof (document.body.onselectstart) != "undefined") 
                 oTable.onselectstart = function() { return false; }
-            else if (typeof (document.body.style.MozUserSelect) != "undefined") //Firefox route
+            else if (typeof (document.body.style.MozUserSelect) != "undefined") 
                 oTable.style.MozUserSelect = "none";
 
             var oTHeader = GetTableHeaderObj();
@@ -389,11 +378,11 @@ function ListView() {
                     oTable.setAttribute("class", "mainlist");
                 }
                 
-                //비 IE 브라우저에서 table-layout:fixed;를 지정하기 위해서는 
-                //테이블의 width가 반드시 지정되어 있어야 한다.
-                //비 IE 브라우저에서 헤더가 고정된 테이블을 사용하기 위해서는
-                //tBody에 높이가 지정되어 있어야 한다.
-                //oTBody.style.height = objElm.style.height.replace("px", "") - 35;
+                
+                
+                
+                
+                
             }
             else {
                 oTable.border = 0;
@@ -419,10 +408,10 @@ function ListView() {
         }
     }
 
-    //헤더없이 Row만 존재하는 DataSource를 위한 메소드
+    
     function RowDataBind() {
         if (_thisID == "") {
-            alert(strLang1130);
+            alert("리스트의 ID가 지정되지 않았습니다.");
             return;
         }
 
@@ -445,31 +434,26 @@ function ListView() {
         oList = null;
     }
 
-    //리스트뷰 헤더 생성
+    
     function GetTableHeaderObj() {
         var objTr = document.createElement("TR");
         objTr.id = _thisID + "_TH";
 
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
+        
         for (var i = 0; i < oHeaders.length; i++) {
-    		var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
+            var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
             
-            if(strWidth != "0"){ //2011.07.05 Header의 width가 0이면 td를 만들지 않는다.
+            if(strWidth != "0"){ 
                 var strName = SelectSingleNodeValue(oHeaders[i], "NAME");
                 
                 var strStyle = SelectSingleNodeValue(oHeaders[i], "STYLE");
-                var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
+                var strClass = "h5_center";  
                 
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
                 if(strColName == "DocTitle")
                     _titleIdx = i;
-               
-                if (strColName == "ProcessDate") {
-                	if (CrossYN() && navigator.userAgent.search('rv:11.0') == -1) {
-                		strWidth = parseInt(strWidth) + parseInt("20");		
-                	}
-                }
-                
+                                
                 var objTd = document.createElement("TH");
 
                 objTd.id = _thisID + "_TH_" + i;
@@ -504,7 +488,7 @@ function ListView() {
                     objTd.style.textAlign = "center";
 
                 if (strClass != "") {
-                    if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
+                    if (i == 0) {       
                         objTd.className = "h4_center";
                         objTd.setAttribute("bgcolor", "#CCCCCC");
                     }
@@ -512,7 +496,7 @@ function ListView() {
                         objTd.className = strClass;
                 }        
 
-                // 리스트 제목부분 width 제거
+                
                 if (strWidth != "") {
                     if (i != _titleIdx) {
                         if (OrderCell == strName) {
@@ -543,29 +527,16 @@ function ListView() {
                 }
 
                 try{
-            	   if (_HeaderNode == "COLNAME") {
-            		   if(strColName != "") {
-                           if (OrderCell == strColName) {
-                               if (OrderOption.lastIndexOf("DESC") > -1)
-                                   strName += "<img src='/images/view-sortdown.gif'>";
-                               else
-                                   strName += "<img src='/images/view-sortup.gif'>";
-                           }
-            		   }
-                    } else {
-                    	if (strName != "") {
-                           if (OrderCell == strName) {
-                               if (OrderOption.lastIndexOf("DESC") > -1)
-                                   strName += "<img src='/images/view-sortdown.gif'>";
-                               else
-                                   strName += "<img src='/images/view-sortup.gif'>";
-                           }
-                    	}
-                     }
+                    if (OrderCell == strName) {
+                        if (OrderOption.lastIndexOf("DESC") > -1)
+                            strName += "<img src='/images/view-sortdown.gif'>";
+                        else
+                            strName += "<img src='/images/view-sortup.gif'>";
+                    }
                 }catch(e){}
 
                 var oText = document.createTextNode(strName);
-                //objTd.appendChild(oText);
+                
                 objTd.innerHTML = strName;
                 objTr.appendChild(objTd);
 
@@ -586,7 +557,7 @@ function ListView() {
         return objTheader;
     }
 
-    //리스트뷰 바디 생성
+    
     function GetTableBodyObj() {
         var oTbody = document.createElement("TBODY");
         oTbody.style.backgroundColor = m_strColorDefault;
@@ -604,12 +575,6 @@ function ListView() {
             var oText = document.createTextNode(strLang944);
             var objTd = document.createElement("TD");
             objTd.align = "center";
-            
-            try {
-                if (colCount == 0)
-                    colCount = document.getElementById(_thisID).getElementsByTagName("th").length;
-            } catch (e) {}
-            
             objTd.setAttribute("colSpan", colCount);
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
@@ -637,7 +602,7 @@ function ListView() {
 
             var oCells = GetElementsByTagName(oRows[i], "CELL");
 
-            if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
+            if (_SelectFlag && i == 0) {   
                 objTr.setAttribute("selected", "true");
                 objTr.style.backgroundColor = m_strColorSelect;
 
@@ -649,7 +614,7 @@ function ListView() {
                 objTr.style.backgroundColor = m_strColorDefault;
             }
 
-            //DATA1, DATA2, DATA3... 등의 값 세팅
+            
             var oDatas = GetDataElements(oCells[0]);
             for (var j = 0; j < oDatas.length; j++) {
                 var strData = oDatas[j].tagName;
@@ -667,7 +632,7 @@ function ListView() {
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
                 var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
 
-                var oText = document.createTextNode(strValue.replace("&amp;", "&").replace("&lt","<").replace("&gt;", ">"));
+                var oText = document.createTextNode(strValue);
                 var objTd = document.createElement("TD");
 
                 if (strStyle != "") {
@@ -687,11 +652,10 @@ function ListView() {
                 }
                 else {
 
-                    //if(!_SetHeightFree)
-                    //    objTd.height = "24px";                    
+                    
+                    
                         
-                    if (_titleIdx == null) { //하단정보탭일경우
-                    	//fomace
+                    if (_titleIdx == null) { 
                         if (_Align[j] == 0)
                             objTd.align = "left";
                         else
@@ -701,28 +665,30 @@ function ListView() {
                         objTd.style.textOverflow = "ellipsis";
                         objTd.style.whiteSpace = "nowrap";
 
-                        if (CrossYN()) {
-                            if (_SecurityFlag && oDatas[13].textContent.trim() != "" && oDatas[13].textContent >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
+                        
+                        if (_SecurityFlag && getNodeText(oDatas[13]).trim() != "" && getNodeText(oDatas[13]) >= strToday) {
+                            objTd.style.color = m_SecurityColor;
                         }
-                        else {
-                            if (_SecurityFlag && oDatas[13].text.trim() != "" && oDatas[13].text >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
+
+                        
+                        if (getNodeText(oDatas[6]) != "YES") {
+                            objTd.style.textDecoration = "line-through";
+                            objTd.style.color = "Gray";
                         }
+
+                        
                     }
-                    else {  //상단 리스트일경우
+                    else {  
                             objTd.title = strValue;
                             objTd.style.overflow = "hidden";
                             objTd.style.textOverflow = "ellipsis";
                             objTd.style.whiteSpace = "nowrap";                           
 
                         if (_titleIdx == j) {
-                            //20120823 기록물배부대장은 oDatas length가 7까지 들어오므로 추가
+                            
                             if(oDatas.length > 13)
                             {
-                                if(_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
+                                if(_UrgentFlag && getNodeText(oDatas[13]) == "Y") {   
                                     objTd.style.color = m_UrgentColor;
                                 }                            
                              }
@@ -734,18 +700,21 @@ function ListView() {
                             }
 
                         }
-                        if(oDatas[9]!=null){
-                        	if (CrossYN()) {
-                        		if (_SecurityFlag && oDatas[9].textContent != "" && oDatas[9].textContent >= strToday) {   //DATA10값
-                        			objTd.style.color = m_SecurityColor;
-                        		}
-                        	}
-                        	else {
-                        		if (_SecurityFlag && oDatas[9].text != "" && oDatas[9].text >= strToday) {   //DATA10값
-                        			objTd.style.color = m_SecurityColor;
-                        		}
-                        	}
+
+
+                        
+                        if (CrossYN()) {
+                            if (_SecurityFlag && getNodeText(oDatas[9]) != "" && getNodeText(oDatas[9]) >= strToday) {   
+                                objTd.style.color = m_SecurityColor;
+                            }
                         }
+                        else {
+                            if (_SecurityFlag && oDatas[9].text != "" && oDatas[9].text >= strToday) {   
+                                objTd.style.color = m_SecurityColor;
+                            }
+                        }
+
+                    
                         if (_Align[j] == 0)
                             objTd.align = "left";
                         else
@@ -756,7 +725,7 @@ function ListView() {
 
                 if (_rowCount < 100) {
                     if (_SecIdx != j) {
-                        if (_UrgentFlag && _titleIdx == j) {       //2010.05.04 제목 긴급일 경우 붉은색 처리로 추가함.
+                        if (_UrgentFlag && _titleIdx == j) {       
                             objTd.onmouseover = new Function("td_mouseover(this, " + _titleIdx + ")");
                             objTd.onmouseout = new Function("td_mouseout(this, " + _titleIdx + ")");
                         }
@@ -817,7 +786,7 @@ function ListView() {
         return oTbody;
     }
 
-    //리스트뷰에 Row 추가
+    
     function AddDataRow(objTr, addXml) {
 
         objTr.style.cursor = "pointer";
@@ -893,7 +862,7 @@ function ListView() {
         oDatas = null;
     }
 
-    //리스트뷰 DataSource에서 DATA1, DATA2, DATA3 ... 등의 데이터 가져오기
+    
     function GetDataElements(pObjElm) {
         var elements = new Array();
 
@@ -906,7 +875,7 @@ function ListView() {
         return elements;
     }
 
-    //리스트뷰 바디 전부 삭제
+    
     function RemoveDataBody() {
         var oList = document.getElementById(_thisID);
         if (!oList)
@@ -915,7 +884,7 @@ function ListView() {
          if (oList.childNodes.length <=1)
             return;
         
-        //firefox에서 리스트구분선이 보이지 않는 오류로 중첩된 tbody제거 2011.07.25
+        
         for(var i=oList.childNodes.length -1 ; i >= 0 ; i--)
         {
             if(oList.childNodes[i].nodeName =="TBODY")
@@ -931,8 +900,8 @@ function ListView() {
         
     }
 
-    //Row 개수 가져오기
-    //Row Count는 헤더를 포함하지 않는다.
+    
+    
     function GetRowCount() {
         var arrRow = GetDataRows();
         if (arrRow != null)
@@ -945,8 +914,8 @@ function ListView() {
         return _rowCount;
     }
 
-    //리스트뷰 바디의 모든 ROW 가져오기
-    //헤더는 제외한다.
+    
+    
     function GetDataRows() {
         var oList = document.getElementById(_thisID);
         if (!oList)
@@ -958,7 +927,7 @@ function ListView() {
             elements = new Array();
             var idx = 0;
             for (var i = 0; i < oList.rows.length; i++) {
-                //헤더를 제거하기 위해 ID를 검사한다.
+                
                 if (oList.rows[i].id.indexOf("TR") >= 0)
                     elements[idx++] = oList.rows[i];
             }
@@ -968,7 +937,7 @@ function ListView() {
         return elements;
     }
 
-    //Attribute를 이용하여 이미 존재하는 Row인지 체크하기
+    
     function ExistRow(pAttribute, pValue) {
         var bFlag = false;
         var oList = document.getElementById(_thisID);
@@ -988,7 +957,7 @@ function ListView() {
         return bFlag;
     }
 
-    //리스트뷰에 Row 추가
+    
     function AddRow(pIdx) {
         var oList = document.getElementById(_thisID);
         if (!oList)
@@ -1003,7 +972,7 @@ function ListView() {
 
         var objTr = null;
         if (new RegExp(/MSIE/).test(navigator.userAgent)) {
-            //테이블 객체의 인덱스는 헤더를 포함하기 때문에 1을 더해서 인서트 한다.
+            
             objTr = oList.insertRow((pIdx + 1));
             objTr.setAttribute("id", _thisID + "_TR_" + pIdx);
         }
@@ -1035,7 +1004,7 @@ function ListView() {
         return objTr;
     }
     
-    //리스트뷰에 Row 추가
+    
     function NewAddRow(pIdx, id) {
         var oList = document.getElementById(_thisID);
         if (!oList)
@@ -1046,7 +1015,7 @@ function ListView() {
 
         var objTr = null;
         if (new RegExp(/MSIE/).test(navigator.userAgent)) {
-            //테이블 객체의 인덱스는 헤더를 포함하기 때문에 1을 더해서 인서트 한다.
+            
             objTr = oList.insertRow((pIdx + 1));
             objTr.setAttribute("id",  id);
         }
@@ -1078,7 +1047,7 @@ function ListView() {
         return objTr;
     }
     
-    //리스트 뷰 Row 삭제
+    
     function DeleteRow(pIds) {
         var oList = document.getElementById(_thisID);
         if (!oList)
@@ -1090,8 +1059,8 @@ function ListView() {
 
             for (var j = 0; j < arrRow.length; j++) {
                 if (arrRow[j].id == arrIds[i]) {
-                    //리스트뷰와 테이블 개체의 인덱스가 다르기 때문에 1을 더해준다.
-                    //리스트뷰 인덱스는 헤더를 제외하지만 테이블 개체의 인텍스는 헤더를 포함한다.
+                    
+                    
                     var tmpIdx = j + 1;
                     oList.deleteRow(tmpIdx);
                     break;
@@ -1100,7 +1069,7 @@ function ListView() {
         }
     }    
     
-    //선택한 Row에 대한 ID값을 반환
+    
     function GetSelectedRowID(pIdx) {
         var oList = document.getElementById(_thisID);
         if (!oList)
@@ -1108,7 +1077,7 @@ function ListView() {
         return oList.childNodes[1].childNodes[pIdx].id;
     }
 
-    //리스트뷰 셀 만들기
+    
     function CreateTabelCell(pText) {
         var oText = document.createTextNode(pText);
         var objTd = document.createElement("TD");
@@ -1118,7 +1087,7 @@ function ListView() {
         return objTd;
     }
 
-    //선택된 ROW 가져오기
+    
     function GetSelectedRows() {
         var elements = new Array();
         var arrRow = GetDataRows();
@@ -1136,7 +1105,7 @@ function ListView() {
         return elements;
     }
 
-    //선택된 ROW의 Index 가져오기 (헤더 제외)
+    
     function GetSelectedIndexes() {
         var strIdx = "";
 
@@ -1171,7 +1140,7 @@ function ListView() {
         return strIdx;
     }
 
-    //지정한 Index에 해당하는 Row 선택
+    
     function SetSelectedIndex(pIdx) {
         tr_unselectedAll(_thisID);
 
@@ -1182,13 +1151,13 @@ function ListView() {
             objTr.setAttribute("selected", "true");
             objTr.style.backgroundColor=m_strColorSelect;
 
-            //마지막 선택 ID 지정
+            
             var oList = document.getElementById(_thisID);
             oList.setAttribute("lastSelectedRowID", strRowID);
         }
     }
     
-    //지정한 ID에 해당하는 Row 선택
+    
     function SetSelectedID(pID) {
         tr_unselectedAll(_thisID);
         
@@ -1198,13 +1167,13 @@ function ListView() {
             objTr.setAttribute("selected", "true");
             objTr.style.backgroundColor=m_strColorSelect;
 
-            //마지막 선택 ID 지정
+            
             var oList = document.getElementById(_thisID);
             oList.setAttribute("lastSelectedRowID", pID);
         }
     }
 
-    //선택된 ROW를 위로 한 단계 이동
+    
     function RowMoveUp() {
         var stridx = this.GetSelectedIndexes();
 
@@ -1221,7 +1190,7 @@ function ListView() {
         tBody.insertBefore(selectNode, targetNode);
     }
 
-    //선택된 ROW를 아래로 한 단계 이동
+    
     function RowMoveDown() {
         var stridx = this.GetSelectedIndexes();
 
@@ -1238,8 +1207,8 @@ function ListView() {
         tBody.insertBefore(selectNode, targetNode.nextSibling);
     }
 
-    //사용자 브라우저 확인
-    //IE가 아닌경우 OCS Presence 무조건 사용안함
+    
+    
     function SetUserBrower() {
         if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
             _IE = false;
@@ -1250,14 +1219,13 @@ function ListView() {
     function ListView_ToString() {
         return "KAONI ListView";
     }    
-} // ListView 클래스 끝
+} 
 
-// 리스트 클래스 끝
-//###########################################################################################
 
-//ROW 선택 함수
+
+
+
 function tr_select(pRowID, pTableID, callbackFunc) {
-
     var oList = document.getElementById(pTableID);
     if (!oList)
         return;
@@ -1272,44 +1240,48 @@ function tr_select(pRowID, pTableID, callbackFunc) {
         bMultiSelectable = true;
     }
 
-    //멀티선택이 가능한 리스트이고 쉬프트키가 눌려져 있으면
-    //구간을 모두 선택한다.
+    
+    
     if (bMultiSelectable && PressShiftKey) {
         tr_selectBlock(pRowID, pTableID);
         return;
     }
 
-    //멀티선택이 불가능한 리스트이거나 컨트롤키가 눌려있지 않으면 
-    //모든 선택된 Row를 Unselect 한다.
+    
+    
     if (bMultiSelectable == false || PressCtrlKey == false)
         tr_unselectedAll(pTableID);       
 
-    //현재 클릭한 Row를 Select 한다.
+    
     strAttribute = GetAttribute(oSourceTr, "selected");
 
+    
+    if (GetAttribute(oSourceTr, "DATA7") == "GRAY") {
+        alert(aMsg1);
+        return;
+    }
     if (strAttribute == "true") {
         oSourceTr.setAttribute("selected", "false");
         oSourceTr.style.backgroundColor = m_strColorDefault;
-    }
-    else {
+    } else {
         oSourceTr.setAttribute("selected", "true");
-        oSourceTr.style.backgroundColor =  m_strColorSelect;
+        oSourceTr.style.backgroundColor = m_strColorSelect;
     }
 
-    //각 리스트마다 마지막으로 선택한 ID를 보관한다.
+    
     oList.setAttribute("lastSelectedRowID", pRowID);
 
     oList = null;
     oSourceTr = null;
 
-    //리스트에 onclick 이벤트를 지정한 경우 해당 함수를 호출한다.
+    
     if (PressCtrlKey == false && PressShiftKey == false) {
         if (callbackFunc && typeof (callbackFunc) == "function")
             callbackFunc(pRowID);
     }
 }
 
-//모든 ROW를 선택 해제하는 함수
+
 function tr_unselectedAll(pTableID) {
     var oList = document.getElementById(pTableID);
     if (!oList)
@@ -1330,7 +1302,7 @@ function tr_unselectedAll(pTableID) {
     }
 }
 
-//컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
+
 function tr_selectBlock(pRowID, pTableID) {
     var oList = document.getElementById(pTableID);
     if (!oList)
@@ -1362,6 +1334,11 @@ function tr_selectBlock(pRowID, pTableID) {
         var strID = pTableID + "_TR_" + i;
         var objTr = document.getElementById(strID);
 
+        
+        if (GetAttribute(objTr,"DATA7") == "GRAY") {
+            continue;
+        }
+
         if (objTr) {
             objTr.setAttribute("selected", true);
             objTr.style.backgroundColor = m_strColorSelect;
@@ -1371,7 +1348,7 @@ function tr_selectBlock(pRowID, pTableID) {
     }
 }
 
-//마우스 오버
+
 function tr_mouseover(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
     if (strAttribute != "true") {
@@ -1382,7 +1359,7 @@ function tr_mouseover(pRow) {
     pRow = null;
 }
 
-//마우스 아웃
+
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
     if (strAttribute != "true")
@@ -1393,11 +1370,11 @@ function tr_mouseout(pRow) {
     pRow = null;
 }
 
-//마우스 오버
+
 function td_mouseover(td) {
 }
 
-//마우스 아웃
+
 function td_mouseout(td, titIdx) {
 }
 
@@ -1420,20 +1397,20 @@ function yjTest(pArea, pStr) {
 }
 
 try {
-    // 비 IE 브라우저에서 사용 가능하도록 innerText 구현
-    // IE에서는 HTMLElement 타입이 존재하지 않아 오류가 발생함.
+    
+    
     HTMLElement.prototype.__defineGetter__
 	(
 		"innerText", function()
-		//define a getter method to get the value of innerText, 
-		//so you can read it now! 
+		
+		
 		{
 		    var textRange = this.ownerDocument.createRange();
-		    //Using range to retrieve the content of the object
+		    
 		    textRange.selectNodeContents(this);
-		    //only get the content of the object node
+		    
 		    return textRange.toString().trim();
-		    // give innerText the value of the node content
+		    
 		}
 	);
 }
@@ -1449,15 +1426,15 @@ function getOriginXML(pTagetID)
         
     var objHeader = objElm.getElementsByTagName("TH");
     var objBody = objElm.getElementsByTagName("TBODY");
-    var objBodyData = objElm.getElementsByTagName("TR"); //0번은 헤더, 1번부터 body
+    var objBodyData = objElm.getElementsByTagName("TR"); 
     var xmlHeader="";
     var xmlBody="";
     
     for(var i=0; i<objHeader.length; i++)
     {
         xmlHeader += "<HEADER>";
-        xmlHeader += "<NAME>" + objHeader[i].innerText + "</NAME>";                
-        var width = objHeader[i].getAttribute("width");
+        xmlHeader += "<NAME>" + getNodeText(objHeader[i]) + "</NAME>";                
+        var width = GetAttribute(objHeader[i],"width");
         
         if(width.indexOf("px") > -1)
         {
@@ -1470,7 +1447,7 @@ function getOriginXML(pTagetID)
     for(var i=1; i<objBodyData.length; i++)
     {
         xmlBody += "<ROW><CELL>";
-        xmlBody += "<VALUE>" + objBodyData[i].innerText + "</VALUE>";
+        xmlBody += "<VALUE>" + getNodeText(objBodyData[i]) + "</VALUE>";
         for(var x=0; x<1; x++)
         {
         }
