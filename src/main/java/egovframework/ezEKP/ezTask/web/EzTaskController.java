@@ -273,6 +273,147 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "json";
 	}
 	
+	/**
+	 * 업무상세화면 조회 Json
+	 */
+	@RequestMapping(value = "/ezTask/taskReadJson.do")
+	public String taskReadJson(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskRead started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();	
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
+		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
+		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
+		
+		String taskID = request.getParameter("taskID");		
+		String date = request.getParameter("date");
+		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
+		String dateList = "";
+		String completeRateList = "";
+		String statusList = "";
+		String orderNumber = "";		
+
+		//업무정보 조회
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+
+		//의견목록 조회
+		List<TaskCommentVO> taskCommentList = null;
+		if (taskInfoVO.getHasComment().equals("Y")) {			
+			taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
+		}
+		
+		//업무공유자목록조회
+		List<TaskShareVO> taskShareList = null;
+		if (taskInfoVO.getHasShare().equals("Y")) {
+			taskShareList = ezTaskService.getShareList(taskID, primary, tenantID);
+		}
+		
+		//task첨부파일목록조회
+		String taskAttachList = null;
+		if (taskInfoVO.getHasAttach().equals("Y")) {
+			taskAttachList = ezTaskService.getAttachListStr(taskID, folderPath, "1", tenantID);
+		}
+		
+		//taskWork첨부파일목록조회
+		String taskWorkAttachList = null;
+		if (taskInfoVO.getPersonAttach().equals("Y")) {
+			taskWorkAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
+		}
+		
+		//baonk added
+		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {			
+			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate = nsdf.parse(date); 
+	        Calendar calendar = Calendar.getInstance();  
+	        calendar.setTime(startDate); 
+	        
+	        calendar.add(Calendar.MONTH, 1);  
+	        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+	        calendar.add(Calendar.DATE, -1); 
+	        String lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 
+	        
+	        calendar.set(Calendar.DAY_OF_MONTH, 1);
+	        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+			
+			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
+			orderNumber = result.get(result.size() - 1);
+			result.remove(result.size() - 1);
+			
+			while (result.size() == 0) {
+				//Move to next month
+				calendar.add(Calendar.MONTH, 1);
+				date = nsdf.format(calendar.getTime());
+				firstDayOfMonth = date + " 00:00:00"; 				
+				calendar.add(Calendar.MONTH, 1); 
+		        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+		        calendar.add(Calendar.DATE, -1); 
+		        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
+		        result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
+				orderNumber = result.get(result.size() - 1);
+				result.remove(result.size() - 1);
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+			}			
+			
+			if (!result.contains(date)) {			
+				date = result.get(0);
+			}			
+			
+			for (String test : result) {				
+				dateList += test + ",";
+				String covertDate = commonUtil.getDateStringInUTC(test + " 00:00:00", userInfo.getOffset(), true);
+				int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
+				completeRateList += Integer.toString(comRate) + ",";
+				
+				int status = ezTaskService.getStatusOfRepTask(taskID, covertDate, tenantID);
+				statusList += Integer.toString(status) + ",";
+			}
+			
+			dateList = dateList.substring(0, dateList.length() - 1);
+			completeRateList = completeRateList.substring(0, completeRateList.length() - 1);
+			statusList = statusList.substring(0, statusList.length() - 1);
+			
+			String realStartDate = date + " 00:00:00";
+			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
+			int status = ezTaskService.getStatusOfRepTask(taskID, realDate, tenantID);
+			taskInfoVO.setTaskStatus(status);
+			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
+			taskInfoVO.setCompleteRate(completionPercentage);			
+			taskInfoVO.setRepeatCount(Integer.parseInt(orderNumber));
+
+			
+		}	
+		//end
+
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("taskID", taskID);
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("taskShareList", taskShareList);
+		model.addAttribute("taskAttachList", taskAttachList);
+		model.addAttribute("taskWorkAttachList", taskWorkAttachList);
+		model.addAttribute("taskCommentList", taskCommentList);
+		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
+		model.addAttribute("type", type);
+		model.addAttribute("delayColor", configVO.getDelayColor());
+		model.addAttribute("completeColor", configVO.getCompleteColor());
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useTodoMemo", useTodoMemo);
+		model.addAttribute("repeatCount", taskInfoVO.getRepeatCount());
+		model.addAttribute("date", date);
+		model.addAttribute("repetition", taskInfoVO.getRepetition());
+		model.addAttribute("dateList", dateList);	
+		model.addAttribute("completeRateList", completeRateList);
+		model.addAttribute("statusList", statusList);
+		
+		return "json";
+	}
+	
 	@RequestMapping(value = "/ezTask/getRepTaskDateList.do")
 	public String getRepTaskDateList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getRepTaskDateList started.");
