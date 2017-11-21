@@ -39,7 +39,7 @@
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
 	         }
 	        
-			function Editor_Complete() {
+			function Editor_Complete() {				
 	            if (taskid != "" && personContentpath != "") {
 	                $.ajax({
 		                type : "POST",
@@ -130,7 +130,7 @@
 				</tr>
 				<tr>
 					<td id="EdtorSize" style="height:100%;">
-						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
+						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto; border: none;"></iframe>
 					</td>
 				</tr>
 				<tr>
@@ -155,8 +155,8 @@
 				</tr>
 			</table>
 		</div>
-		<script>
-			document.getElementById("EdtorSize").style.height = "530px";
+		<script>			
+			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 220 + "PX";
 		</script>
 	</body>
 </html>

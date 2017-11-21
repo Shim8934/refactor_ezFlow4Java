@@ -1341,7 +1341,7 @@
 				</c:if>
 				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
 				<div style="float: right; margin-top: 3px;">
-					<a id="editTaskInfo" class="imgbtn" style="display:none; "><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></span></a>
+					<a id="editTaskInfo" class="imgbtn" style="display:none; "><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
 					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>
 					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
@@ -1709,9 +1709,10 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
+		<script type="text/javascript">
+    		Tab1_NewTabIni("tab1");
+		</script>
 	</body>
-	
-	<script type="text/javascript">
-    	Tab1_NewTabIni("tab1");
-	</script>
+
 </html>
