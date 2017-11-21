@@ -668,5 +668,19 @@ function UpdateLineHistory(_DOCID) {
 			result = xml;
 		}        			
 	});
-    
+}
+/**
+ * 결재->회람(공람)-> 부서추가
+ * */
+function btn_addDepartment() {
+	var listView = new ListView();
+	listView.LoadFromID("DivUserList");
+
+	var listObj = listView.GetDataRows();
+	
+	for (var i = listObj.length-1; i >= 0; i --) {
+		var test = listObj[i];
+		APRLINEATTENDADDFunction(listObj[i], "PERSON");
+		
+	}
 }
