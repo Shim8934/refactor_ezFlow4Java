@@ -332,6 +332,8 @@ function config_repeat() {
     task_repetition_cross_dialogArguments[0] = prameter;
     task_repetition_cross_dialogArguments[1] = config_repeat_Complete;
 
+    //parent.document.getElementById("iFramePanel").style.display = "none";
+    
     DivPopUpShow(450, 420, "/ezTask/taskRepetition.do");
 }
 
@@ -628,12 +630,24 @@ function save_task() {
 		dataType : "json",
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
-		success : function(result) {
-			try {
+		success : function(result) {				
+			if (mode != "") {
+				if (mode == "1") {
+					alert(strLang67);
+				}
+				else {
+					if (tasktype == "1" || tasktype == "4") {
+						alert(strLang68);
+					} 
+					else {
+						alert(strLang69);
+					}
+				}
+			}
+			else {
 				alert(strLang65);
-				window.opener.RefreshView();
-			} catch (e) { }
-			
+			}				
+						
 	        parent.DivPopUpHidden();
 	        parent.location.reload();
 	        window.close();
@@ -806,6 +820,7 @@ function save_taskWork() {
 			contentPath : personContentpath
 		},
 		success : function(result) {
+			alert(strLang68);
 			parent.load_bodyhtml2(result.personContentPath);
 			parent.getTaskWorkAttachList();
 			parent.DivPopUpHidden();
