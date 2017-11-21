@@ -29,9 +29,16 @@
 			   .ui-datepicker { font-size:9.5pt !important}
 			   
 			   .css-class-to-highlight a{
-			   	color: #3498db !important;
+			   		color: #3498db !important;
 			   }
-		   
+			   
+			   u {
+				 	text-decoration: underline;
+			   }
+			   u:hover {
+			   		color: blue;
+			   		cursor: pointer;
+			   }	   		   
 		</style>
 		
 		<script type="text/javascript">
@@ -745,7 +752,9 @@
 			        tr.cells[0].appendChild(span);
 
 			        tr.setAttribute("startdate", startdate);
-			        setNodeText(tr.cells[1], startdate);
+			        //setNodeText(tr.cells[1], startdate);
+			        tr.cells[1].innerHTML = "<u>" + startdate + "</u>";
+			        (function(sd) { tr.cells[1].onclick = function () {dayOnMouseClick(sd);}})(startdate);		        			        
 			        tr.cells[2].innerHTML = enddate;	
 			        
 			        //Process complete rate
@@ -1213,12 +1222,12 @@
 		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
 		        }		        
 		        
-		        renderTable();		        
+		        //renderTable();		        
 
 				/* 의견카운트 */
 				getCommentList();
 
-				setTimeout(onloadchangtab, 100);
+				//setTimeout(onloadchangtab, 100);
 				
 				initProgressBar(taskstatus, completerate);
 				
