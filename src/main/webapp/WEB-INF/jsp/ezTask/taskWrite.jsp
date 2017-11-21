@@ -173,7 +173,10 @@
 					//baonk added
 					var radioTasks = document.getElementsByName("tasktypesel");
 					if (tasktype == "1" || tasktype == "4") {
-						document.getElementById("P").click();
+						if (mode != "2") {
+							document.getElementById("P").click();
+						}
+						
 						for (var i = 0; i < radioTasks.length; i++) {
 							if (radioTasks[i].getAttribute("id") != "P") {
 								radioTasks[i].disabled = true;						
@@ -187,11 +190,13 @@
 								break;
 							}
 						}
-						if (tasktype == "2" || tasktype == "5") {
-							document.getElementById("I").click();
-						}
-						else {
-							document.getElementById("C").click();
+						if (mode != "2") {
+							if (tasktype == "2" || tasktype == "5") {
+								document.getElementById("I").click();
+							}
+							else {
+								document.getElementById("C").click();
+							}
 						}
 					}					
 					
@@ -1097,10 +1102,8 @@
 					<td colspan="2"><div id="printDocument" style="padding-right: 5px; padding-left: 5px; padding-bottom: 5px; width: 100%; padding-top: 5px"></div></td>
 				</tr>
 			</table>
- 			<script>
-				console.log("Mode: " + mode);
-				if (mode == "") {
-					console.log("HERE!");
+ 			<script>				
+				if (mode == "") {					
 					if (useTodoMemo == 'YES') { 
 						if (tasktype == "1") { 
 							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
