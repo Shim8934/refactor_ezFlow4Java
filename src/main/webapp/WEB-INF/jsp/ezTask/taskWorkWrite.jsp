@@ -65,7 +65,7 @@
 	                }
 	                catch (e) { }
 				} else {
-					message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P>");
+					message.SetEditorContent("<P " + defaultFontAndSize + "></P>");
 				}
 			}
 			
@@ -122,6 +122,10 @@
 								<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 							</ul>
 						</div>
+						<script type="text/javascript">
+							selToggleList(document.getElementById("menu"), "ul", "li", "0");
+							selToggleList(document.getElementById("close"), "ul", "li", "0");
+						</script>
 					</td>
 				</tr>
 				<tr>
