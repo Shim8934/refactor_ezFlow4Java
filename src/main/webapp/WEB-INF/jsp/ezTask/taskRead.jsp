@@ -79,6 +79,28 @@
 		    var statusArray = null;
 		    var backupCount = "${repeatCount}";
 		    
+			function taskReadJson() {
+				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezTask/taskReadJson.do",
+					data : {							
+							taskID : taskid,
+							repeatCount: backupCount,
+							date : date
+					},
+					success: function(result){
+						
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				});
+				
+			}
+		    
 		    $(document).ready(function() {			    	    	
 		    	preStepForRepeatTask();
 		    	
@@ -1257,6 +1279,7 @@
 				}
 				
 			}
+						
 		</script>
 	</head>
 	
@@ -1310,7 +1333,7 @@
 		 
 		<div id="tabpart" class="portlet_tabpart03" style="margin-bottom: 3px; border-top: 0px; padding:0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
-				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0"><spring:message code='ezTask.lhj02' /></span></p>
+				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0" class="tabon"><spring:message code='ezTask.lhj02' /></span></p>
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
 				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
@@ -1483,7 +1506,7 @@
 			</tr>
 		</table>
 		
-		<table id="taskRep" class="layout">
+		<table id="taskRep" class="layout" style="display:none;">
 		 	<tr>
 				<td>
 					<div id="new_div_body" style="height: 450px; overflow-y: auto;">
