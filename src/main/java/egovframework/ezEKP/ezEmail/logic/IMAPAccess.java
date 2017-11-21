@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -156,31 +157,37 @@ public class IMAPAccess {
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
 			
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				sent.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
 			}
 			
 			if (!draft.exists()) {
 				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				draft.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
 			}
 			
 			if (!trash.exists()) {
 				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				trash.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
 			}
 			
 			if (!personal.exists()) {
 				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				personal.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
 			
 			if (!junk.exists()) {
 				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				junk.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
 			}			
 		} catch(MessagingException e) {
@@ -190,11 +197,15 @@ public class IMAPAccess {
 		logger.debug("makeTopLevelFolders ended.");
 	}
 	
-	public List<Folder> getTopLevelFolders() {
+	public List<Folder> getTopLevelFolders(boolean isSubscribe) {
 		ArrayList<Folder> topLevelFolders = new ArrayList<Folder>();
 		
 		try{
 			Folder rootFolder = getStore().getDefaultFolder();
+			
+			if (rootFolder.listSubscribed().length == 0) {
+				setReculsiveSubscribe(rootFolder, true);
+			}
 			
 			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
 			Folder sent = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t645", locale));
@@ -206,55 +217,115 @@ public class IMAPAccess {
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
 			
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				sent.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
 			}
 			
 			if (!draft.exists()) {
 				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				draft.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
 			}
 			
 			if (!trash.exists()) {
 				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				trash.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
 			}
 			
 			if (!personal.exists()) {
 				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				personal.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
 			
 			if (!junk.exists()) {
 				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				junk.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
 			}						
 			
-			//add default folders into top-level folder list
-			topLevelFolders.add(inbox);
-			topLevelFolders.add(sent);
-			topLevelFolders.add(draft);
-			topLevelFolders.add(trash);
-			topLevelFolders.add(personal);
-			topLevelFolders.add(junk);
-			
-			Folder[] folderList = rootFolder.list();
-			
-			//add the other folders into top-level folder list
-			for (Folder folder : folderList) {
-				String folderName = folder.getName();
-				if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
-						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
-						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
-						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
-						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
-						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
-						) {
-					topLevelFolders.add(folder);
+			Folder[] folderList = null;
+			if (isSubscribe) {
+				//add subscribe folders and inbox folder into top-level folder list
+				topLevelFolders.add(inbox);
+				
+				if (sent.isSubscribed() || sent.listSubscribed().length > 0) {
+					topLevelFolders.add(sent);
+				}
+				
+				if (draft.isSubscribed() || draft.listSubscribed().length > 0) {
+					topLevelFolders.add(draft);
+				}
+				
+				if (trash.isSubscribed() || trash.listSubscribed().length > 0) {
+					topLevelFolders.add(trash);
+				}
+				
+				if (personal.isSubscribed() || personal.listSubscribed().length > 0) {
+					topLevelFolders.add(personal);
+				}
+				
+				if (junk.isSubscribed() || junk.listSubscribed().length > 0) {
+					topLevelFolders.add(junk);
+				}
+				
+				folderList = rootFolder.listSubscribed();
+				
+				Arrays.sort(folderList, new Comparator<Folder>(){
+					@Override
+					public int compare(Folder f1, Folder f2) {
+						return f1.getFullName().compareTo(f2.getFullName());
+					}
+				});
+				
+				//add the other folders into top-level folder list
+				for (Folder folder : folderList) {
+					if (folder.exists()) {
+						String folderName = folder.getName();
+						if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
+								) {
+							topLevelFolders.add(folder);
+						}
+					} else {
+						folder.setSubscribed(false);
+					}
+				}
+				
+			} else {
+				//add default folders into top-level folder list
+				topLevelFolders.add(inbox);
+				topLevelFolders.add(sent);
+				topLevelFolders.add(draft);
+				topLevelFolders.add(trash);
+				topLevelFolders.add(personal);
+				topLevelFolders.add(junk);
+				
+				folderList = rootFolder.list();
+				
+				//add the other folders into top-level folder list
+				for (Folder folder : folderList) {
+					String folderName = folder.getName();
+					if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
+							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
+							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
+							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
+							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
+							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
+							) {
+						topLevelFolders.add(folder);
+					}
 				}
 			}
 			
@@ -264,13 +335,36 @@ public class IMAPAccess {
 		return topLevelFolders;
 	}
 	
-	public List<Folder> getSubFolders(String parent) {
+	public List<Folder> getSubFolders(String parent, boolean isSubscribe) {
 		ArrayList<Folder> subFolders = new ArrayList<Folder>();
 		try {
-			Folder[] f = getStore().getFolder(parent).list();
-			for (Folder fd : f) {
-				subFolders.add(fd);
+			Folder[] folders = null;
+			
+			if (isSubscribe) {
+				folders = getStore().getFolder(parent).listSubscribed();
+				
+				Arrays.sort(folders, new Comparator<Folder>(){
+					@Override
+					public int compare(Folder f1, Folder f2) {
+						return f1.getFullName().compareTo(f2.getFullName());
+					}
+				});
+				
+				for (Folder f : folders) {
+					if (f.exists()) {
+						subFolders.add(f);
+					} else {
+						f.setSubscribed(false);
+					}
+				}
+			} else {
+				folders = getStore().getFolder(parent).list();
+				
+				for (Folder f : folders) {
+					subFolders.add(f);
+				}
 			}
+			
 		} catch (MessagingException e) {
 			logger.error("Error get sub folder: " + e.getMessage());
 		}
@@ -687,4 +781,12 @@ public class IMAPAccess {
 		
 	}		
 	
+	private void setReculsiveSubscribe(Folder folder, boolean isSubscribe) throws MessagingException {
+		Folder[] folderArr = folder.list();
+		
+		for (Folder f : folderArr) {
+			f.setSubscribed(isSubscribe);
+			setReculsiveSubscribe(f, isSubscribe);
+		}
+	}
 }

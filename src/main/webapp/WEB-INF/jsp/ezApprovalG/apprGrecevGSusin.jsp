@@ -276,7 +276,8 @@
 		            g_SepAttachLVXml = "";
 		        message.DocumentBodySetAttribute("SepAttachLVXml", SetSepAttParamXmlNull(g_SepAttachLVXml));
 		
-		        SignCheck();
+		        //없이 테스트
+// 		        SignCheck();
 		    }
 		    function DocumentComplete() {
 		        if (pFormHref == "PC") {

@@ -113,6 +113,7 @@
 		                setBujaeOff();
 		            	checkBujaeInfo_Complete_After();
 		                return true;
+
 		            } else if (tmpStartDate > "${nowDate}") {
 		                return true;
 		            }

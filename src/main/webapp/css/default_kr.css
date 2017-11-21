@@ -260,6 +260,7 @@ form{display:inline;margin:0}
 .left_search{background:url(/images/left/left_search.jpg) repeat #184c8b;height: 40px;}
 .left_diary{background:url(/images/left/left_diary.jpg) left top repeat ;width:170px; height: 40px;}
 .left_tasktime{background:url(/images/left/left_tasktime.jpg) left top repeat ;width:170px; height: 40px;}
+.left_circular{background:url(/images/kr/left/left_circular.gif) repeat ;height: 51px;}
 
 .tasktime { background: url(/images/main/time_bg.gif) no-repeat left top; 
 	width:232px; height:58px; margin:0; border-top:2px solid #efefef}

@@ -264,6 +264,7 @@ public class CommonUtil {
 			
 			return user;
 		}catch(Exception e){
+			e.printStackTrace();
 			return null;
 		}
 	}

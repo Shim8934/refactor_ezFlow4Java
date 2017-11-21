@@ -1963,6 +1963,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("v_copNo", clubNo.trim());
 			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", userInfo.getTenantId());
+			map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
 			
 			logger.debug("v_copNo : " + clubNo.trim());
 			

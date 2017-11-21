@@ -558,6 +558,7 @@
 		        }
 		    }
 
+
 		    var getformcont_cross_dialogArguments = new Array();
 		    function MoveForm() {
 		        var para = new Array();
@@ -576,6 +577,7 @@
 		            para[1] = GetAttribute(selRow[0], "DATA1");
 		            para[2] = companyID;
 		            var url = "/admin/ezApprovalG/formSelect.do";
+
 		            
 					if(CrossYN()){
 						getformcont_cross_dialogArguments[0] = para;

@@ -3018,6 +3018,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + "TMP" + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + ".mht");
 		}
 		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
 		String result = ezApprovalGService.doProcess(aprState, xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getElementsByTagName("PUSERNAME2").item(0).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo); 
 		
@@ -3480,7 +3482,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("allFlag", allFlag);
 		model.addAttribute("oldYear", oldYear);
-		model.addAttribute("tempUserID", tempUserID);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -3681,6 +3682,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
 		String result = ezApprovalGService.doProcess("003", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent(), userInfo.getCompanyID(), userInfo.getLang(),userInfo);
@@ -3703,6 +3707,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
 		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
@@ -3725,6 +3732,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
 		String result = ezApprovalGService.doProcess("005", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
@@ -5119,7 +5129,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 							cnt++;
 							
 						    sbStr.append("<tr>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(17).getTextContent() + "|" + mhtOrHwp + "\")'></td>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "\")'></td>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent() +"</TD>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent() + "</TD>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent() + "</TD>");
@@ -6204,7 +6214,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("<<<xmlDom : " + commonUtil.convertDocumentToString(xmlDom));
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
-		String pw = xmlDom.getElementsByTagName("PASSWD").item(0).getTextContent().trim();
 		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
 		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		String orgUID = "";
@@ -6218,12 +6227,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
 					if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("MHT")) {
 						logger.debug("type = MHT");
-						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo);
 					} else {
-						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo);
 					}
 				} else {
-					rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+					rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo);
 				}
 				
 				if (rtnVal.equals("ERROR")) {

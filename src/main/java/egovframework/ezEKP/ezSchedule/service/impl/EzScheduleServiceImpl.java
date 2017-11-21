@@ -149,7 +149,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, int tenantId) throws Exception {						
+	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId) throws Exception {						
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PIDLIST", pidList);		
 		map.put("v_PFILTER", filter);
@@ -158,6 +158,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_PKEYWORD", keyword);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_SEARCHTITLE", searchTitle);
 		
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();

@@ -559,10 +559,12 @@
 		                }
 		            }		
 		        }
+		        //없이 테스트
+// 		        SignCheck();
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);
 		        }
-		        SignCheck();
+
 		    }
 		    function btnApprove_onclick()
 		    {
