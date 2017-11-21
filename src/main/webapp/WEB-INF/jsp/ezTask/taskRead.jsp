@@ -1091,48 +1091,47 @@
 			}
 
 			$(function () {
-		        $("#Sdatepicker").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-/*		            showOn: "both",
- 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true, */
-		            format: 'yyyy-mm-dd',
-		            beforeShowDay: function(date) {	
-		            	if (dateArray != null) {
-			                var m = date.getMonth() + 1;
-			                var d = date.getDate();
-			                var y = date.getFullYear();		                
-			                
-			                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
-			                
-			                for (i = 0; i < dateArray.length; i++) {		                	
-			                    if($.inArray(test, dateArray) != -1) {		                        
-			                        return [true, 'css-class-to-highlight', 'tooltipText'];
-			                    }
-			                }
-			                return [true];
-		            	}	            	
-		            },
-		            onSelect: function(dateText, inst) {
-		            	showResult(dateText);
-		            },
-		            onChangeMonthYear: function (year, month, inst) {		            	
-		            	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";							            	
-						updateData(firstDayOfMonth);	
-		            }
-		        });
+				if (tasktype == "4" || tasktype == "5" || tasktype == "6" ) {
+					$("#Sdatepicker").datepicker({
+			            changeMonth: true,
+			            changeYear: true,
+			            autoSize: true,
+			            format: 'yyyy-mm-dd',
+			            beforeShowDay: function(date) {	
+			            	if (dateArray != null) {
+				                var m = date.getMonth() + 1;
+				                var d = date.getDate();
+				                var y = date.getFullYear();		                
+				                
+				                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
+				                
+				                for (i = 0; i < dateArray.length; i++) {		                	
+				                    if($.inArray(test, dateArray) != -1) {		                        
+				                        return [true, 'css-class-to-highlight', 'tooltipText'];
+				                    }
+				                }
+				                return [true];
+			            	}	            	
+			            },
+			            onSelect: function(dateText, inst) {
+			            	showResult(dateText);
+			            },
+			            onChangeMonthYear: function (year, month, inst) {		            	
+			            	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";							            	
+							updateData(firstDayOfMonth);	
+			            }
+			        });
 
-		        var SDate;
+			        var SDate;
 
-		        if (date != "") {
-		            SDate = new Date(date);
-		        } else {
-		            SDate = new Date();
-		        }
-		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker").datepicker('setDate', SDate);
+			        if (date != "") {
+			            SDate = new Date(date);
+			        } else {
+			            SDate = new Date();
+			        }
+			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#Sdatepicker").datepicker('setDate', SDate);
+				}		        
 		    });
 			
 			$(function () {
@@ -1342,7 +1341,7 @@
 				</c:if>
 				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
 				<div style="float: right; margin-top: 3px;">
-					<a id="editTaskInfo" class="imgbtn" style="display:none; "><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></span></a>
+					<a id="editTaskInfo" class="imgbtn" style="display:none; "><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
 					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>
 					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
@@ -1710,9 +1709,10 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
+		<script type="text/javascript">
+    		Tab1_NewTabIni("tab1");
+		</script>
 	</body>
-	
-	<script type="text/javascript">
-    	Tab1_NewTabIni("tab1");
-	</script>
+
 </html>
