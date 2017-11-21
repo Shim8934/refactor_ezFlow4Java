@@ -663,7 +663,7 @@
 									 
 									 <c:otherwise>
 										<c:choose>
-											<c:when test="${tasktype == '1' || tasktype == '4'}">
+											<c:when test="${taskInfoVO.taskType == '1' || taskInfoVO.taskType == '4'}">
 												<div class="new_popup_title_txt" id="taskChangeMode"><spring:message code='ezTask.t1511' /></div>
 											</c:when>
 											<c:otherwise>
@@ -712,8 +712,9 @@
 						</script>
 					</td>
 				</tr>
-
-				<c:if test="${mode == '' || mode == '1'}">
+				
+				<c:choose>
+					<c:when test="${mode == '' || mode == '1'}">
 					<tr>					
 						<td height="20" id="menuTaskInf">
 							<table class="content" id="tableInformation">
@@ -834,8 +835,131 @@
 							</table>
 						</td>
 					</tr>
-				</c:if>
-								
+					</c:when>
+					<c:otherwise>
+						<tr>					
+							<td height="20" id="menuTaskInf" style="display: none;">
+								<table class="content" id="tableInformation">
+									<tr>
+										<th><spring:message code='ezTask.t118' /></th>
+										<td colspan="3"><input type="text" id="TextTitle" style="width:100%;" value = "${taskInfoVO.title }"></td>
+									</tr>
+									<tr>
+										<th><spring:message code='ezTask.t2003' /></th>
+										<td style="width:300px">
+											<c:choose>
+												<c:when test="${taskInfoVO.taskType == '2' || taskInfoVO.taskType == '5'}">
+													<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="P"><spring:message code='ezTask.t2000' /></label>
+													<input type ="radio" id="I" name="tasktypesel" value ="2" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="I"><spring:message code='ezTask.t2001' /></label>
+													<input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="C"><spring:message code='ezTask.t2002' /></label>
+												</c:when>
+												<c:when test="${taskInfoVO.taskType == '3' || taskInfoVO.taskType == '6'}">
+													<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="P"><spring:message code='ezTask.t2000' /></label>
+													<input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="I"><spring:message code='ezTask.t2001' /></label>
+													<input type ="radio" id="C" name="tasktypesel" value ="3" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="C"><spring:message code='ezTask.t2002' /></label>
+												</c:when>
+												<c:otherwise>
+													<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="P"><spring:message code='ezTask.t2000' /></label>
+													<input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="I"><spring:message code='ezTask.t2001' /></label>
+													<input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
+													<label for ="C"><spring:message code='ezTask.t2002' /></label>
+												</c:otherwise>
+											</c:choose>
+										</td>
+										<th><spring:message code='ezTask.t2004' /></th>
+										<td style="width:300px">
+											<c:choose>
+												<c:when test="${taskInfoVO.importance == '1' }">
+													<input type ="radio" id="important1" name="important" value ="1" checked="checked" style="margin:0px 0px 0px 3px" />
+													<label for ="important1"><spring:message code='ezTask.t171' /></label>
+													<input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
+													<label for ="important2"><spring:message code='ezTask.t172' /></label>
+													<input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
+													<label for ="important3"><spring:message code='ezTask.t173' /></label>
+												</c:when>
+												<c:when test="${taskInfoVO.importance == '3' }">
+													<input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
+													<label for ="important1"><spring:message code='ezTask.t171' /></label>
+													<input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
+													<label for ="important2"><spring:message code='ezTask.t172' /></label>
+													<input type ="radio" id="important3" name="important" value ="3" checked="checked" style="margin:0px 0px 0px 3px" />
+													<label for ="important3"><spring:message code='ezTask.t173' /></label>
+												</c:when>
+												<c:otherwise>
+													<input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
+													<label for ="important1"><spring:message code='ezTask.t171' /></label>
+													<input type ="radio" id="important2" name="important" value ="2" checked="checked" style="margin:0px 0px 0px 3px" />
+													<label for ="important2"><spring:message code='ezTask.t172' /></label>
+													<input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
+													<label for ="important3"><spring:message code='ezTask.t173' /></label>
+												</c:otherwise>
+											</c:choose>
+										</td>
+									</tr>
+									<tr id="personinputtr" style="display:none">
+										<th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
+										<td colspan ="3">
+											<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+											<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+											<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+											<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+											<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+										</td>
+									</tr>
+									<tr id="shareinputtr">
+										<th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
+										<td colspan ="3">
+											<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px">
+												<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
+													<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
+													<c:if test="${not status.last }">,&nbsp;</c:if>
+												</c:forEach>
+											</div>
+											<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+											<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+											<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+											<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+										</td>
+									</tr>
+									<tr id="trrepeatinfo">
+										<th><a class="imgbtn"><span onClick="config_repeat()"><spring:message code='ezTask.t213' /></span></a></th>
+										<td class="pos1" colspan="3"><div id="repeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; width:100%; HEIGHT: 19px"></div></td>
+									</tr>
+									<tr>
+				                        <th><spring:message code='ezTask.t158' /></th>
+				                        <td colspan="3"><span id="periodblock">
+					                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+					                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+				                        	</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span>
+										</td>
+									</tr>
+									<c:if test="${mode == '' }">
+										<tr>
+											<th id="editorTitle" colspan="4" style="text-align: center;"><spring:message code = 'ezTask.t2011' /></th>
+										</tr>
+									</c:if>
+									<c:if test="${mode == '1' }">
+										<tr>
+											<th><spring:message code='ezTask.t1701' /></th>
+											<td colspan="3" style="height: 40px;">
+												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+											</td>
+										</tr>
+									</c:if>
+								</table>
+							</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+				
 				<c:choose>
 					<c:when test="${mode == ''}">
 						<tr>
@@ -845,30 +969,57 @@
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:if test="${mode == '2'}">
-							<tr>
-								<td id="EdtorSize" style="height: 340px;">
-									<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 97%; width: 100%; overflow: auto; border: none;"></iframe>
-								</td>
-							</tr>
-						</c:if>
-					</c:otherwise>
-				</c:choose>				
-				
-				<!-- 메모  -->
-				<c:if test="${useTodoMemo == 'YES' && mode == ''}">					
-					<tr>
-						<td id="menuTaskMemo">
-							<table class="content">
+						<c:choose>
+							<c:when test="${ mode == '2'}">
 								<tr>
-									<th><spring:message code='ezTask.t170' /></th>
-									<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
-										<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+									<td id="EdtorSize" style="height: 340px;">
+										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 97%; width: 100%; overflow: auto; border: none;"></iframe>
 									</td>
 								</tr>
-							</table>
-						</td>
-					</tr>
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td id="EdtorSize" style="display:none;">
+										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 97%; width: 100%; overflow: auto; border: none;"></iframe>
+									</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+					</c:otherwise>
+				</c:choose>			
+				
+				<!-- 메모  -->
+				<c:if test="${useTodoMemo == 'YES' }">
+					<c:choose>
+						<c:when test="${mode == ''}">				
+							<tr>
+								<td id="menuTaskMemo">
+									<table class="content">
+										<tr>
+											<th><spring:message code='ezTask.t170' /></th>
+											<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</c:when>
+						<c:otherwise>
+							<tr>
+								<td id="menuTaskMemo" style="display: none;">
+									<table class="content">
+										<tr>
+											<th><spring:message code='ezTask.t170' /></th>
+											<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</c:otherwise>
+					</c:choose>
 				</c:if>
 				
 				<c:choose>
@@ -881,18 +1032,26 @@
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:if test="${ mode == '2'}">
-							<tr>
-								<td>
-									<br/> 
-									<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 160px; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
-								</td>
-							</tr>
-						</c:if>
+						<c:choose>
+							<c:when test="${ mode == '2'}">
+								<tr>
+									<td>
+										<br/> 
+										<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 160px; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
+									</td>
+								</tr>
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td>
+										<br/> 
+										<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 160px; border: 0px; display: none;" src="/ezTask/dragAndDrop.do"></iframe>
+									</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
 					</c:otherwise>
-				</c:choose>	
-				
-				
+				</c:choose>								
 				
 			</table>
 		</div>
@@ -938,31 +1097,33 @@
 					<td colspan="2"><div id="printDocument" style="padding-right: 5px; padding-left: 5px; padding-bottom: 5px; width: 100%; padding-top: 5px"></div></td>
 				</tr>
 			</table>
-		</div>
-		<script type="text/javascript">
-			if (mode == "") {
-				if (useTodoMemo == 'YES') { 
-					if (tasktype == "1") { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
-					} else if (tasktype == "2") { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
-					} else if (tasktype == "3") { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+ 			<script>
+				console.log("Mode: " + mode);
+				if (mode == "") {
+					console.log("HERE!");
+					if (useTodoMemo == 'YES') { 
+						if (tasktype == "1") { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+						} else if (tasktype == "2") { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+						} else if (tasktype == "3") { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+						} else { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+						} 
 					} else { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
-					} 
-				} else { 
-					if (tasktype == "1") { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
-					} else if (tasktype == "2") { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
-					} else if (tasktype == "3") { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
-					} else { 
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
-					} 
+						if (tasktype == "1") { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+						} else if (tasktype == "2") { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+						} else if (tasktype == "3") { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+						} else { 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+						} 
+					}
 				}
-			}
-		</script>
+			</script>
+		</div>
 	</body>
 </html>

@@ -109,7 +109,7 @@
 			<table id="normalScreen" class="layout">
 				<tr>
 					<td height="20" id="menuTable">
-						<div class="new_popup_title_txt" id="taskChangeMode"><spring:message code='ezTask.t1512' /></div>
+						<div class="new_popup_title_txt" id="taskChangeMode"><spring:message code='ezTask.t1511' /></div>
 						<div id="menu" style="float: right; padding-right: 42px;">
 							<ul>
 								<li><span onClick="save_taskWork()"><spring:message code='ezTask.t96' /></span></li>
