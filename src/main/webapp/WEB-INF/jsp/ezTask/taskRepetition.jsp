@@ -450,8 +450,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="height:50px; padding:2px">
-					<div id='divRecurPatterns0' style="display:none;">
+				<td style="height:58px;">
+					<div id='divRecurPatterns0' style="display:none;padding-left:5px;">
 						<input id="id0D1" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
 						<label for="txt_De" accesskey="V" style="vertical-align:middle;"><spring:message code='ezTask.t38' /><u>V</u>)&nbsp;
 						<input name="text" type="text" id="txt_De" style="Width:40px;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
@@ -486,7 +486,7 @@
 							</tr>
 						</table>
 					</div>
-					<div  id='divRecurPatterns2' style="display:none">
+					<div  id='divRecurPatterns2' style="display:none;padding-left:5px;">
 						<input type="radio" name='optMonthly' id="idOM1" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
 						<label for="idOM1" accesskey="A" style="vertical-align:middle"><spring:message code='ezTask.t50' /><u>A</u>)&nbsp;</label>
 						<input name="Input" id="list_MonthInterval" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">
@@ -515,7 +515,7 @@
 						</select>
 						&nbsp;<spring:message code='ezTask.t60' />
 					</div>
-					<div id='divRecurPatterns3' style="display:none"><input id="optY1" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
+					<div id='divRecurPatterns3' style="display:none;padding-left:5px;"><input id="optY1" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
 						<label for="optY1" accesskey="A" style="vertical-align:middle"><spring:message code='ezTask.t50' /><u>A</u>)&nbsp;</label>
 						<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
 							<option value="1"><spring:message code='ezTask.t225' /></option>

@@ -462,12 +462,12 @@
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 330, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 335, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
 			                "height = 220px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
 					var feature = GetOpenPosition(760, 645);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 330, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 335, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
 			                "height = 220px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 			}
