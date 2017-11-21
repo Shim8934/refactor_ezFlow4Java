@@ -30,32 +30,31 @@
 		    	if (flag) {
 					flag = false;		    		
 			        var rtnVal = "cancel";
-			        
-		        var rtnVal = "cancel";
-		        if (trim(document.getElementById("inpPassword").value).length == 0) {
-		            alert("<spring:message code='ezApprovalG.t1746'/>");
-		            document.getElementById("inpPassword").focus();
-		            return;
-		        }
-		        else {
-		            rtnVal = chkPasswd();
-		        }
-		        
-				if (rtnVal != "FALSE") {
-			        if (ReturnFunction != null) {
-			            ReturnFunction(rtnVal);
-			            window.close();
+
+			        if (trim(document.getElementById("inpPassword").value).length == 0) {
+			            alert("<spring:message code='ezApprovalG.t1746'/>");
+			            document.getElementById("inpPassword").focus();
+			            return;
 			        }
 			        else {
-			            window.returnValue = rtnVal;
-			            window.close();
+			            rtnVal = chkPasswd();
 			        }
-				} else {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-			            OpenAlertUI(pAlertContent);
-			            return;
-				}
-		    }
+			        
+					if (rtnVal != "FALSE") {
+				        if (ReturnFunction != null) {
+				            ReturnFunction(rtnVal);
+				            window.close();
+				        }
+				        else {
+				            window.returnValue = rtnVal;
+				            window.close();
+				        }
+					} else {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+				            OpenAlertUI(pAlertContent);
+				            return;
+					}
+			    }
 		    }
 		    
 		    var ezapralert_cross_dialogArguments = new Array();
