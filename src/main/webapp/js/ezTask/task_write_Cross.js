@@ -332,6 +332,8 @@ function config_repeat() {
     task_repetition_cross_dialogArguments[0] = prameter;
     task_repetition_cross_dialogArguments[1] = config_repeat_Complete;
 
+    //parent.document.getElementById("iFramePanel").style.display = "none";
+    
     DivPopUpShow(450, 420, "/ezTask/taskRepetition.do");
 }
 
