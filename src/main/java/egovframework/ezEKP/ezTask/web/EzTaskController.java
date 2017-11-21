@@ -411,6 +411,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeRateList", completeRateList);
 		model.addAttribute("statusList", statusList);
 		
+logger.debug("model in taskReadJson: " + model);		
+		
 		return "json";
 	}
 	

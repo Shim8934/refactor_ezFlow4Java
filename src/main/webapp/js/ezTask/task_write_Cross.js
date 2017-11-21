@@ -647,6 +647,7 @@ function save_task() {
 			}				
 						
 	        parent.DivPopUpHidden();
+	        //parent.taskReadJson();
 	        parent.location.reload();
 	        window.close();
 		},
