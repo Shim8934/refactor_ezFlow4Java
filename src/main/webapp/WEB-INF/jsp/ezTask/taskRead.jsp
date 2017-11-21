@@ -1091,48 +1091,47 @@
 			}
 
 			$(function () {
-		        $("#Sdatepicker").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-/*		            showOn: "both",
- 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true, */
-		            format: 'yyyy-mm-dd',
-		            beforeShowDay: function(date) {	
-		            	if (dateArray != null) {
-			                var m = date.getMonth() + 1;
-			                var d = date.getDate();
-			                var y = date.getFullYear();		                
-			                
-			                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
-			                
-			                for (i = 0; i < dateArray.length; i++) {		                	
-			                    if($.inArray(test, dateArray) != -1) {		                        
-			                        return [true, 'css-class-to-highlight', 'tooltipText'];
-			                    }
-			                }
-			                return [true];
-		            	}	            	
-		            },
-		            onSelect: function(dateText, inst) {
-		            	showResult(dateText);
-		            },
-		            onChangeMonthYear: function (year, month, inst) {		            	
-		            	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";							            	
-						updateData(firstDayOfMonth);	
-		            }
-		        });
+				if (tasktype == "4" || tasktype == "5" || tasktype == "6" ) {
+					$("#Sdatepicker").datepicker({
+			            changeMonth: true,
+			            changeYear: true,
+			            autoSize: true,
+			            format: 'yyyy-mm-dd',
+			            beforeShowDay: function(date) {	
+			            	if (dateArray != null) {
+				                var m = date.getMonth() + 1;
+				                var d = date.getDate();
+				                var y = date.getFullYear();		                
+				                
+				                var test = y + "-" + ("0" + m).slice(-2) + "-" + ("0" + d).slice(-2);		                
+				                
+				                for (i = 0; i < dateArray.length; i++) {		                	
+				                    if($.inArray(test, dateArray) != -1) {		                        
+				                        return [true, 'css-class-to-highlight', 'tooltipText'];
+				                    }
+				                }
+				                return [true];
+			            	}	            	
+			            },
+			            onSelect: function(dateText, inst) {
+			            	showResult(dateText);
+			            },
+			            onChangeMonthYear: function (year, month, inst) {		            	
+			            	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";							            	
+							updateData(firstDayOfMonth);	
+			            }
+			        });
 
-		        var SDate;
+			        var SDate;
 
-		        if (date != "") {
-		            SDate = new Date(date);
-		        } else {
-		            SDate = new Date();
-		        }
-		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker").datepicker('setDate', SDate);
+			        if (date != "") {
+			            SDate = new Date(date);
+			        } else {
+			            SDate = new Date();
+			        }
+			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#Sdatepicker").datepicker('setDate', SDate);
+				}		        
 		    });
 			
 			$(function () {
