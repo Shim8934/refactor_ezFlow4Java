@@ -816,14 +816,39 @@
 									<th><a class="imgbtn"><span onClick="config_repeat()"><spring:message code='ezTask.t213' /></span></a></th>
 									<td class="pos1" colspan="3"><div id="repeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; width:100%; HEIGHT: 19px"></div></td>
 								</tr>
-								<tr>
-			                        <th><spring:message code='ezTask.t158' /></th>
-			                        <td colspan="3"><span id="periodblock">
-				                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
-				                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-			                        	</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span>
-									</td>
-								</tr>
+								
+								<c:if test="${mode == '' }">
+									<tr>
+				                        <th><spring:message code='ezTask.t158' /></th>
+				                        <td colspan="3"><span id="periodblock">
+					                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+					                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+				                        	</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span>
+										</td>
+									</tr>
+								</c:if>
+								<c:if test="${mode == '1' }">
+									<tr>
+				                        <th><spring:message code='ezTask.t158' /></th>
+				                        <td colspan="3">
+				                        	<c:if test="${taskInfoVO.taskType == '4' || taskInfoVO.taskType == '5' || taskInfoVO.taskType == '6' }">
+					                        	<span id="periodblock" style="display: none;">				                        	
+							                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+							                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+					                        	</span> 				                        	
+					                        	<span id="repeatblock"><spring:message code='ezTask.t214' /></span>
+					                        </c:if>
+				                     		<c:if test="${taskInfoVO.taskType == '1' || taskInfoVO.taskType == '2' || taskInfoVO.taskType == '3' }">
+				                     			<span id="periodblock">				                        	
+							                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+							                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+					                        	</span> 
+				                        		<span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span>
+					                        </c:if>
+										</td>
+									</tr>
+								</c:if>
+								
 								<c:if test="${mode == '' }">
 									<tr>
 										<th id="editorTitle" colspan="4" style="text-align: center;"><spring:message code = 'ezTask.t2011' /></th>

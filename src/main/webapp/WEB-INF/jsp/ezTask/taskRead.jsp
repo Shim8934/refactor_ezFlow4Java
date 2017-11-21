@@ -122,10 +122,10 @@
 		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
 
 		        if (tasktype == "1" || tasktype == "4") {
-		            document.getElementById("MailEnv_sub2").style.display = "none";
-		            document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
-		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
-		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
+		            //document.getElementById("MailEnv_sub2").style.display = "none";
+		            //document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+		            //setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
+		            //setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
 		        } else if (tasktype == "2") {
 		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
@@ -671,8 +671,16 @@
 			        case "MailEnv_div2":
 			            selecttab = "2";
 			            document.getElementById("taskInfo").style.display = "none";
-			            document.getElementById("normalScreen").style.display = "none";
-			            document.getElementById("tablework").style.display = "";
+			            
+			            if (tasktype == "1" || tasktype == "4") {
+			            	document.getElementById("normalScreen").style.display = "";
+			            	document.getElementById("tablework").style.display = "none";
+			            }
+			            else {
+			            	document.getElementById("normalScreen").style.display = "none";
+			            	document.getElementById("tablework").style.display = "";
+			            }	            
+			            		            
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "none";
@@ -681,11 +689,25 @@
 			            document.getElementById("editTaskChisi").style.display = "none";
 			            
 			            if (personid == userid) {			            	
-				        	document.getElementById("editTaskWork").style.display = "";
+			            	if (tasktype == "1" || tasktype == "4") {	
+		            			document.getElementById("editTaskWork").style.display = "none";
+		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+		            			document.getElementById("editTaskChisi").style.display = "";			            					            			
+		            		}
+		            		else {
+		            			document.getElementById("editTaskWork").style.display = "";
+		            		}		
 				        } 
 			            else {
 			            	if(creatorid != userid) {
-			            		document.getElementById("editTaskWork").style.display = "";
+			            		if (tasktype == "1" || tasktype == "4") {	
+			            			document.getElementById("editTaskWork").style.display = "none";
+			            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+			            			document.getElementById("editTaskChisi").style.display = "";			            					            			
+			            		}
+			            		else {
+			            			document.getElementById("editTaskWork").style.display = "";
+			            		}			            		
 			            	}
 			            	else {
 			            		document.getElementById("editTaskWork").style.display = "none";
@@ -1233,9 +1255,9 @@
 		    	
 
 		        if (tasktype == "1" || tasktype == "4") {
-		            document.getElementById("MailEnv_sub2").style.display = "none";
+/* 		            document.getElementById("MailEnv_sub2").style.display = "none";
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
-		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
+		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />"); */
 		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
 		        } else if (tasktype == "2") {
 		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
@@ -1333,8 +1355,10 @@
 		<div id="tabpart" class="portlet_tabpart03" style="margin-bottom: 3px; border-top: 0px; padding:0px;">
 			<div class="portlet_tabpart03_top" id="tab1">
 				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0" class="tabon"><spring:message code='ezTask.lhj02' /></span></p>
-				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
-				<p id = "MailEnv_sub2" style="display:none;"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
+				<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}">
+					<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
+				</c:if>				
+				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
 				<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 				<p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezTask.t200904' /></span></p>
