@@ -1346,8 +1346,7 @@
 					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
 			</div>
-		</div> 
-		
+		</div> 		
 		<table id="taskInfo" class="layout">
 		 	<tr>
 				<td style="height:20px">
