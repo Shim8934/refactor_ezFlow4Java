@@ -450,7 +450,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="height:90px; padding:10px">
+				<td style="height:50px; padding:2px">
 					<div id='divRecurPatterns0' style="display:none;">
 						<input id="id0D1" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
 						<label for="txt_De" accesskey="V" style="vertical-align:middle;"><spring:message code='ezTask.t38' /><u>V</u>)&nbsp;
