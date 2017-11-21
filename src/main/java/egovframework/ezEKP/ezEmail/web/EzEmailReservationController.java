@@ -593,6 +593,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("securePassword", securePassword);
 		model.addAttribute("secureMaxReadCount", secureReadCount);
 		model.addAttribute("secureMaxReadDate", secureReadDate);
+		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		
         logger.debug("mailEdit ended.");
         
