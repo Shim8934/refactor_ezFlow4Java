@@ -283,9 +283,9 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			List<Folder> subMailFolder = null;
 			
 			if (folderId != null && !folderId.equals("")) {
-				subMailFolder = ia.getSubFolders(folderId);
+				subMailFolder = ia.getSubFolders(folderId, true);
 			} else {
-				subMailFolder = ia.getTopLevelFolders();
+				subMailFolder = ia.getTopLevelFolders(true);
 			}
 			
 //			MEmailFolderVO folder = null;

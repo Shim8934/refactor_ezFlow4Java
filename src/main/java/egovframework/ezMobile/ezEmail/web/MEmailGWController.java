@@ -198,10 +198,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			JSONObject folder = null;
 			
 			if (folderId != null && !folderId.equals("")) {
-				subMailFolder = ia.getSubFolders(folderId);
+				subMailFolder = ia.getSubFolders(folderId, true);
 			} else {
 				LOGGER.debug("getTopLevelFolders");
-				subMailFolder = ia.getTopLevelFolders();
+				subMailFolder = ia.getTopLevelFolders(true);
 			}
 			
 			JSONObject folder = null;
@@ -807,7 +807,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -888,7 +888,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						subject = (subject != null) ? subject : "";
 		        		
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -1072,7 +1072,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -4446,8 +4446,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						flagged = "1";
 					}
 					mail.put("flag",flagged);
+
 					mail.put("folderName",f.getName());
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale);
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale, null, null);
+
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
 					pAttachListHtmlSub = bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + " (" + strSize + ")";

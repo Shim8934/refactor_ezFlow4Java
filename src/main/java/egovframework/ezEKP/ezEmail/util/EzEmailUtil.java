@@ -54,6 +54,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
+import javax.mail.search.ComparisonTerm;
 import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -112,17 +113,20 @@ public class EzEmailUtil {
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
-	public String getSizeWithUnit(double size) {
+	public String getSizeWithUnit(double size) {		
 		String strSize;
-		
+
 		if (size > 1024 * 1024) {
-			size = size / 1024.0 / 1024.0;
-			strSize = String.format("%.1fMB", size);
+			/*size = size / 1024.0 / 1024.0;*/
+			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
+			/*strSize = String.format("%.1fMB", size);*/
 		} else if (size > 1024) {
-			size = size / 1024.0;
-			strSize = String.format("%dKB", (int)size);
+			/*size = size / 1024.0;*/
+			strSize = (int)(size/1024) + "KB";
+			/*strSize = String.format("%dKB", (int)size);*/
 		} else {
-			strSize = size + "B";
+			/*strSize = size + "B";*/
+			strSize = (int)size + "B";
 		}
 
 		return strSize;
@@ -540,9 +544,9 @@ public class EzEmailUtil {
                 logger.debug("Content-Transfer-Encoding=" + encodingName);
                 if (encodingName.equalsIgnoreCase("base64")) {
                     // decrease the size because base64 increases the size to 4/3 times.
-                    size = (int)(size*0.75); 
+                    size = size / 138 * 101;
                 }
-            }                                       
+            }
             
             String strSize = getSizeWithUnit(size);
 		    
@@ -641,15 +645,15 @@ public class EzEmailUtil {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
 				pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
+			} else if (secureKey != null) {
+				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span></li>";
 			} else if (mobile) {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
 				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
-			} else if (secureKey != null) {
-				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span></li>";
 			} else {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
@@ -943,6 +947,7 @@ public class EzEmailUtil {
 			String filename = getSubject(nestedMessage);;
 			filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
 			
+			
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
@@ -951,6 +956,11 @@ public class EzEmailUtil {
 				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span></li>";
+			} else if (mobile) {
+				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
+				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
+				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " </p>";
 			} else {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
@@ -962,7 +972,8 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";				
 		}
-		
+//to-do	
+		logger.debug("################# " + pAttachListHtml + " #################");
 		resultList.add(htmlBody);
 		resultList.add(pAttachListHtml);
 		resultList.add(filesize);
@@ -1141,7 +1152,7 @@ public class EzEmailUtil {
 			) throws Exception {
 		Message[] messages = folder.getMessages();
 		
-		logger.debug("searchField=" + searchField);
+		logger.debug("searchField=" + searchField + ", endDate=" + endDate + ", isImportantOnly=" + isImportantOnly );
 		
 		SearchTerm sTerm = existingSearchTerm; 
 		
@@ -1289,6 +1300,52 @@ public class EzEmailUtil {
                     }
                 };                  			    
 			}
+			
+			if (searchField.equalsIgnoreCase("SUBJECT&FROM")) {
+				logger.debug("if SUBJECT&FROM start");
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				        try {
+				        	String subject = getSubject(message);				        	
+				        	String from = getFullFromAddressOfMessage(message);
+				        	
+				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
+				        	boolean fromFlag = from != null & from.toLowerCase().contains(searchValue.toLowerCase());
+				        	
+				            if (subjectFlag || fromFlag) {
+				                return true;
+				            }
+				        } 
+				        catch (Exception e) {
+				        }
+				        
+				        return false;
+				    }
+				};					
+			}
+			
+			if (searchField.equalsIgnoreCase("SUBJECT&TO")) {
+				logger.debug("if SUBJECT&TO start");
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				        try {
+				        	String subject = getSubject(message);				        	
+				        	String from = getFullFromAddressOfMessage(message);
+				        	
+				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
+				        	boolean toFlag = toSearch(message, searchValue);
+				        	
+				            if (subjectFlag || toFlag) {
+				                return true;
+				            }
+				        } 
+				        catch (Exception e) {
+				        }
+				        
+				        return false;
+				    }
+				};					
+			}
 		}
 		
 		if (sTerm != null) {
@@ -1301,7 +1358,7 @@ public class EzEmailUtil {
 			}
 			
 			if (startDate != null) {
-				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.GE, startDate));
+				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.GT, startDate));
 			}
 
 			if (endDate != null) {
@@ -1342,14 +1399,99 @@ public class EzEmailUtil {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
 			
 			messages = folder.search(sTerm);
+			logger.debug("UnRead Message Count : " + messages.length);
 		}
+		
 		else if (isImportantOnly) {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
 			
 			messages = folder.search(sTerm);
-		}
+			logger.debug("Important Message Count : " + messages.length);
+		} 
+		
 		else {
-			return null;
+//			messages = null;
+		}
+		
+		if (endDate != null) {
+			if(sTerm == null) {// filter search 없을 때
+
+				ArrayList<Message> arrayList = new ArrayList<>();
+
+				Date from = endDate;       
+				Folder f = folder;
+
+				int end = f.getMessageCount();       
+				long lFrom = from.getTime(); //endDate
+
+				Date rDate;//message Date       
+				long lrDate;//message Date long for  comparing endDate
+
+				Message orgMsg[] = f.getMessages();
+				if ( orgMsg.length > 0 ) {
+					this.sortMessages(folder, orgMsg, "receivedDate", true);
+					
+					int j = 0;
+					do {                
+						Message testMsg = orgMsg[end-1];         
+						rDate = testMsg.getReceivedDate();         
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							arrayList.add(testMsg);
+							j++;
+						}
+					} 
+					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				}
+				
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+
+				return msg;
+			} else { //filter 있을 때
+				
+				ArrayList<Message> arrayList = new ArrayList<>();
+				
+				Date from = endDate;       
+				Folder f = folder;
+				
+				int end = f.search(sTerm).length;       
+				long lFrom = from.getTime(); //endDate
+				
+				Date rDate;//message Date       
+				long lrDate;//message Date long for  comparing endDate       
+				int j = 0;
+				
+				Message orgMsg[] = f.search(sTerm);
+				if ( orgMsg.length > 0 ) {
+					this.sortMessages(folder, orgMsg, "receivedDate", true);
+					
+					do {                
+						Message testMsg = orgMsg[end-1];         
+						rDate = testMsg.getReceivedDate();         
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							if (isUnreadOnly || isImportantOnly) {
+								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
+									arrayList.add(testMsg);
+									j++;
+								} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
+									arrayList.add(testMsg);
+									j++;
+								}
+							} else {
+								arrayList.add(testMsg);
+								j++;
+							}
+						}
+					} 
+					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				}
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+				
+				messages = msg;
+			}
 		}
 		
 		return messages;
@@ -2046,6 +2188,78 @@ public class EzEmailUtil {
     	return encryptedValue;
     }
     
+    public String bizmekaAddSubtitle(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
+    					String deptId, String title1, String title2) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=SUBTITLEADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_USER";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");    	
+    	sb.append("<TITLE1>" + commonUtil.cleanValue(title1) + "</TITLE1>");
+    	sb.append("<TITLE2>" + commonUtil.cleanValue(title2) + "</TITLE2>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteSubtitle(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
+						String deptId) throws Exception {
+		String result = "ERROR";
+		
+		String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=SUBTITLEDEL" + "&CID=" + companyId
+			+ "&PFLAG=ORGAN_USER";
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<DATA>");
+		sb.append("<ROWS>");
+		sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+		sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");    	
+		sb.append("</ROWS>");
+		sb.append("</DATA>");
+		
+		String inputParams = sb.toString();
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		result = getWebServiceResult(urlString, inputParams);
+		
+		logger.debug("result=" + result);
+		
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+		
+		return result;
+    }
+    
     public String bizmekaAddUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
     		String userPw, String userName, String deptId) throws Exception {
     	String result = "ERROR";
@@ -2577,6 +2791,60 @@ public class EzEmailUtil {
 		return result.toString();		
 	}	
 	
+	public boolean toSearch (Message message, String searchValue) {
+		if (",<>@".contains(searchValue)) {
+			return false;
+		}
+			
+		try {
+			StringBuilder sb = new StringBuilder();
+			
+			// retrieve the TO addresses from the message.
+			Address[] addresses = message.getRecipients(Message.RecipientType.TO);
+			String[] rawHeaders = message.getHeader("To");
+			String rawHeader = rawHeaders != null ? rawHeaders[0] : "";							
+			String to = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
+			
+			if (!to.equals("")) {
+				sb.append(to);
+			}
+			
+			// retrieve the CC addresses from the message.
+			addresses = message.getRecipients(Message.RecipientType.CC);
+			rawHeaders = message.getHeader("Cc");
+			rawHeader = rawHeaders != null ? rawHeaders[0] : "";														
+			String cc = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
+			
+			if (!cc.equals("")) {
+				if (!to.equals("")) {
+					sb.append(",");
+				}
+				
+				sb.append(cc);
+			}
+			
+			// retrieve the BCC addresses from the message.
+			addresses = message.getRecipients(Message.RecipientType.BCC);
+			String bcc = getStringListOfAddresses(addresses, true);
+
+			if (!bcc.equals("")) {
+				if (!to.equals("") || !cc.equals("")) {
+					sb.append(",");
+				}
+				
+				sb.append(bcc);
+			}							
+			
+			if (sb.toString().toLowerCase().contains(searchValue.toLowerCase())) {
+				return true;
+			}
+		}
+
+		catch (MessagingException e) {					    		
+		}
+			
+		return false;
+		}
 }
 
 
