@@ -639,12 +639,13 @@
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "";			            
 			            
+			            
 			            if (creatorid == userid) {
 			            	document.getElementById("editTaskInfo").style.display = "";
 			            }
-			            else{
+/* 			            else{
 			            	document.getElementById("editTaskInfo").style.display = "none";
-			            }
+			            } */
 			        	
 			        	document.getElementById("editTaskWork").style.display = "none";
 			        	document.getElementById("editTaskChisi").style.display = "none";
@@ -657,12 +658,12 @@
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "none";
-			            document.getElementById("taskDescription").style.display = "none";
-			            document.getElementById("editTaskInfo").style.display = "none";
+			            document.getElementById("taskDescription").style.display = "none";			            
 			            document.getElementById("editTaskWork").style.display = "none";
 			            
 			            if (creatorid == userid) {				        	
-				        	document.getElementById("editTaskChisi").style.display = "";				        	
+				        	document.getElementById("editTaskChisi").style.display = "";	
+				        	document.getElementById("editTaskInfo").style.display = "none";
 				        } else {
 				        	document.getElementById("editTaskChisi").style.display = "none";				        	
 				        }
@@ -683,13 +684,12 @@
 			            		            
 			            document.getElementById("tablecomment").style.display = "none";
 			            document.getElementById("taskRep").style.display = "none";
-			            document.getElementById("taskDescription").style.display = "none";
-			            
-			            document.getElementById("editTaskInfo").style.display = "none";
+			            document.getElementById("taskDescription").style.display = "none";		            		            
 			            document.getElementById("editTaskChisi").style.display = "none";
 			            
 			            if (personid == userid) {			            	
 			            	if (tasktype == "1" || tasktype == "4") {	
+			            		document.getElementById("editTaskInfo").style.display = "none";
 		            			document.getElementById("editTaskWork").style.display = "none";
 		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
 		            			document.getElementById("editTaskChisi").style.display = "";			            					            			
@@ -711,6 +711,7 @@
 			            	}
 			            	else {
 			            		document.getElementById("editTaskWork").style.display = "none";
+			            		document.getElementById("editTaskInfo").style.display = "none";
 			            	}				        	
 				        }
 			            
@@ -723,8 +724,10 @@
 			            document.getElementById("tablecomment").style.display = "";
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "none";
-			            
-			        	document.getElementById("editTaskInfo").style.display = "none";
+			            if (creatorid == userid) {
+			            	document.getElementById("editTaskInfo").style.display = "none";
+			            }
+			        	//document.getElementById("editTaskInfo").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";
 			        	document.getElementById("editTaskChisi").style.display = "none";
 			            
@@ -755,7 +758,10 @@
 			            document.getElementById("taskRep").style.display = "";
 			            document.getElementById("taskDescription").style.display = "none";
 			            
-			        	document.getElementById("editTaskInfo").style.display = "none";
+			            if (creatorid == userid) {
+			            	document.getElementById("editTaskInfo").style.display = "none";
+			            }
+			        	//document.getElementById("editTaskInfo").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";	
 			        	document.getElementById("editTaskChisi").style.display = "none";
 			            
@@ -1365,7 +1371,9 @@
 				</c:if>
 				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
 				<div style="float: right; margin-top: 3px;">
-					<a id="editTaskInfo" class="imgbtn" style="display:none; "><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
+					<c:if test="${taskInfoVO.creatorID == userInfo.id}">
+						<a id="editTaskInfo" class="imgbtn"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
+					</c:if>					
 					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>
 					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
