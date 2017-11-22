@@ -578,7 +578,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
 		if (pBoardID == null || pBoardID.equals("")) {
-			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229", userInfo.getLocale()));	
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229", userInfo.getLocale()));
+			boardInfo.setDelete_FG("true");
 			return boardInfo;
 		}
 		
