@@ -151,12 +151,16 @@
 						realDate : realDate
 					},
 					success : function(result) {
-						//alert("<spring:message code='ezTask.t150' />");
+						alert("<spring:message code='ezTask.t150' />");
 						
 						try { window.opener.RefreshView() } catch (e) { }
 						close_onclick();
 						parent.initProgressBar(taskstatus, $("#completeRate").val());
-						parent.updateStatusOnce(taskstatus);
+						
+						if(tasktype == "4" || tasktype == "5" || tasktype == "6") {
+							parent.updateStatusOnce(taskstatus);
+						}
+						
 						parent.RefreshView();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
