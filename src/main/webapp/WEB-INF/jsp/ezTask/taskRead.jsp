@@ -38,7 +38,11 @@
 			   u:hover {
 			   		color: blue;
 			   		cursor: pointer;
-			   }	   		   
+			   }	   		
+			   .percentCount {
+			   		width: 40px;
+    				padding-right: 5px;
+			   }   
 		</style>
 		
 		<script type="text/javascript">
@@ -78,6 +82,7 @@
 		    var completeRateArray = null;
 		    var statusArray = null;
 		    var backupCount = "${repeatCount}";
+		    var selecttab = "${tab}";
 		    
 			function taskReadJson() {
 				
@@ -101,7 +106,7 @@
 				
 			}
 		    
-		    $(document).ready(function() {			    	    	
+		    $(document).ready(function() {	
 		    	preStepForRepeatTask();
 		    	
 				load_bodyhtml();
@@ -138,9 +143,9 @@
 		        }
 
 				/* 의견카운트 */
-				getCommentList();
-
-				setTimeout(onloadchangtab, 100);
+				getCommentList();			
+				
+				//setTimeout(onloadchangtab, 100);					
 				
 				initProgressBar(taskstatus, completerate);
 		    });
@@ -217,7 +222,34 @@
 			
 			/* 초기 탭선택스크립트 */
 			function onloadchangtab() {
-				Tab1_MouseClick(document.getElementById("1tab0"));
+		    	if (selecttab) {
+		    		var testBaonk = null;
+		    		switch(selecttab) {
+		    			case "0":
+		    				testBaonk = document.getElementById("1tab0");
+		    				Tab1_MouseClick(testBaonk);
+		    				break;
+		    			case "1":
+		    				testBaonk = document.getElementById("1tab1");
+		    				Tab1_MouseClick(testBaonk);
+		    				break;
+		    			case "2":
+		    				testBaonk = document.getElementById("1tab2");
+		    				Tab1_MouseClick(testBaonk);
+		    				break;
+		    			case "3":
+		    				testBaonk = document.getElementById("1tab3");
+		    				Tab1_MouseClick(testBaonk);
+		    				break;
+		    			case "4":
+		    				testBaonk = document.getElementById("1tab4");
+		    				Tab1_MouseClick(testBaonk);
+		    				break;
+		    		}
+		    	}
+		    	else {
+		    		Tab1_MouseClick(document.getElementById("1tab0"));
+		    	}			
 			}
 
 			/* 지시사항 본문 */
@@ -587,6 +619,29 @@
 			}
 			
 			function Tab1_NewTabIni(pTabNodeID) {
+				if (selecttab) {		    		
+		    		switch(selecttab) {
+		    			case "0":
+		    				Tab1_SelectID = "1tab0";		    				
+		    				break;
+		    			case "1":
+		    				Tab1_SelectID = "1tab1";
+		    				break;
+		    			case "2":
+		    				Tab1_SelectID = "1tab2";	
+		    				break;
+		    			case "3":
+		    				Tab1_SelectID = "1tab3";	
+		    				break;
+		    			case "4":
+		    				Tab1_SelectID = "1tab4";	
+		    				break;
+		    		}
+		    	}
+		    	else {
+		    		Tab1_SelectID = "1tab0";		    	
+		    	}				
+				
 			    for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 			        if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
 			            if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
@@ -594,14 +649,16 @@
 			                document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };;
 			                document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };;
 			
-			                if (i == 0) {
+/* 			                if (i == 0) {
 			                    document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).className = "tabon";
 			                    Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).id;
-			                }
+			                } */
 			
 			            }
 			        }
 			    }
+			    console.log("Tabl_SelectID: " + Tab1_SelectID);
+			    Tab1_MouseClick(document.getElementById(Tab1_SelectID));
 			}
 			
 			var Tab1_SelectID = "";
@@ -614,8 +671,8 @@
 			        obj.className = "";
 			}
 			
-			function Tab1_MouseClick(obj) {
-			    obj.className = "tabon";
+			function Tab1_MouseClick(obj) {				
+			    obj.className = "tabon";			   
 			    if (obj.id != Tab1_SelectID) {
 			        if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
 			            document.getElementById(Tab1_SelectID).className = "";
@@ -624,11 +681,14 @@
 			        Tab1_SelectID = obj.id;
 			        ChangeTab(obj);
 			    }
-			}
+			    else {
+			    	ChangeTab(obj);
+			    }
+			}			
 			
-			var selecttab = "1";
 			function ChangeTab(obj) {
-			    var pSelectTab = GetAttribute(obj,"divname");
+			    var pSelectTab = GetAttribute(obj,"divname");			    
+			    
 			    switch (pSelectTab) {
 				    case "MailEnv_div0":
 			            selecttab = "0";
@@ -826,6 +886,7 @@
 				}
 				
 				$(".progressbar").css("display", "inline-table");
+				$(".progressbar").css("margin-left", "15px");
 				
 			}
 			
@@ -1359,12 +1420,29 @@
 		
 		 
 		<div id="tabpart" class="portlet_tabpart03" style="margin-bottom: 3px; border-top: 0px; padding:0px;">
-			<div class="portlet_tabpart03_top" id="tab1">
-				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0" class="tabon"><spring:message code='ezTask.lhj02' /></span></p>
+			<div class="portlet_tabpart03_top" id="tab1">				
+				<c:choose>
+					<c:when test="${tab == '' || tab == '0'}">
+						<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0" class="tabon"><spring:message code='ezTask.lhj02' /></span></p>
+					</c:when>
+					<c:otherwise>
+						<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0"><spring:message code='ezTask.lhj02' /></span></p>
+					</c:otherwise>
+				</c:choose>
+					
 				<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}">
 					<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
-				</c:if>				
-				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
+				</c:if>			
+				
+				<c:choose>
+					<c:when test="${tab == '2'}">
+						<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2" class="tabon"><spring:message code='ezTask.t2011' /></span></p>
+					</c:when>
+					<c:otherwise>
+						<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
+					</c:otherwise>
+				</c:choose>			
+								
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
 				<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 				<p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezTask.t200904' /></span></p>
