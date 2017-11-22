@@ -402,10 +402,14 @@ public class EzSystemAdminController {
 		int n = 1;
 		ArrayList<String> serverList = new ArrayList<String>();
 		ArrayList<String> getServerList = new ArrayList<String>();
+		logger.debug("server name : " + config.getProperty("config.SysServer1") );
+		logger.debug("server name : " + config.getProperty("config.SysServer2") );
+		logger.debug("server name : " + config.getProperty("config.SysServer3") );
 		while (true) {
 			// 1. 첫 번째 서버 정보의 갯수가 1, 정보가 존재하지 않는 경우
 			// 2. 정보가 더이상 존재하지 않는 경우
 			// 3. 그 외는 serverList에 저장
+			logger.debug("server name : " + config.getProperty("config.SysServer" + n) );
 			if (n == 1 && config.getProperty("config.SysServer" + n) == null) {
 				logger.debug("Empty serverlist in configProperties.");
 				getServerList.add("EMPTY");
