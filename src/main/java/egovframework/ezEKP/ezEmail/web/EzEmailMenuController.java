@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
@@ -34,6 +38,13 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -60,7 +71,6 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
-
 /** 
  * @Description [Controller] 메일 메뉴
  * @author 오픈솔루션팀 이효민
@@ -70,6 +80,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  *    ----------    ------    -------------------
  *    2016.04.14    이효민              신규작성
  *    2017.08.25    김유진              웹 소켓 적용
+ *    2017.11.20    김유진              코린도 관련 개발 추가
  *
  * @see
  */
@@ -732,6 +743,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			tempFile = new File(tempFileUploadPath);
+			
 			if (!tempFile.exists()) {
 				tempFile.mkdirs();
 			}
@@ -843,48 +855,110 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("mailboxImportZip started.");
 
 		String returnValue = "OK";
+		
 		ZipInputStream zis = null;
+		ZipInputStream zis1 = null;
 		IMAPAccess ia = null;
+		Session session = null;
+		File dir = null;
+
 		int messageCount = 0;
 		int currCount = 1;
-		
 		String userkey = request.getParameter("userkey");
 		String sessionKeyName = "percent";
-		Session session = null;
+		String encryptPw = request.getParameter("encryptPw");  
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useEncryptZipForEMail = ezCommonService.getTenantConfig("UseEncryptZipForEMail", userInfo.getTenantId());
+		String tmpFile_makeFolder = "";
+
 		try {
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 			String password  = userIdAndPassword.get(1);
 			
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 			String userAccount = userInfo.getId() + "@" + domainName;
 			
 			String folderPath = request.getParameter("folderPath");
 			logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath);
 			
+			String realPath = commonUtil.getRealPath(request);
+			String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+			pDirPath = realPath + pDirPath;
+			String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator;
+			
 			List<MultipartFile> multiFile = request.getFiles("file1");
 			if (multiFile == null || multiFile.get(0) == null) {
-				logger.error("Cannot find file.");
-				throw new Exception("Cannot find file.");
+				logger.error("Cannot find file."); throw new Exception("Cannot find file.");
 			}
 			
-			logger.debug("file name=" + multiFile.get(0));
+			File tmpFile = null;
+			
+			// 2017.11.21 코린도 - 암호화된 ZIP 파일 가져오기
+			if (useEncryptZipForEMail.equals("YES") && !encryptPw.equals("")) {
 
-			zis = new ZipInputStream(multiFile.get(0).getInputStream());	
+				String guid = UUID.randomUUID().toString();
+				tmpFile = new File(pDirTempPath + commonUtil.separator + multiFile.get(0).getOriginalFilename()); // 암호화된 zip파일 생성
+				tmpFile_makeFolder = pDirTempPath + guid + "_secure";
+				multiFile.get(0).transferTo(tmpFile);
+				
+				ZipFile zipFile = new ZipFile(tmpFile);
+				zipFile.setPassword(encryptPw);
+				zipFile.extractAll(tmpFile_makeFolder);
+				
+				dir = new File(tmpFile_makeFolder);
+				
+				ArrayList<String> arrList = new ArrayList<>();
+				File[] fileList = dir.listFiles();
+				
+				for (int i = 0; i < fileList.length; i++) {
+					File file = fileList[i];
+					if (file.isFile()) {
+						arrList.add(file.getAbsolutePath());
+					}
+					logger.debug("arrList size=" + arrList.size());
+				}
+				
+				if (tmpFile.delete()) {
+					logger.debug(tmpFile.getAbsolutePath() + ".zip file is deleted.");
+				}
+				
+				zip(dir, new File(pDirTempPath), "UTF-8", true);
+
+				File uuFile = new File(tmpFile_makeFolder);
+				File[] files = uuFile.listFiles();
+				for (File file : files) {
+					file.delete();
+				}
+
+				if (uuFile.delete()) {
+					logger.debug(uuFile.getAbsolutePath() + " file is deleted.");
+				} 
+				
+				zis = new ZipInputStream(new FileInputStream(dir + ".zip"), Charset.forName("UTF-8"));
+			} else {
+				zis = new ZipInputStream(multiFile.get(0).getInputStream());	
+			}
 
 			ZipEntry ze = zis.getNextEntry();
 			
 			// 유저정보를 키로 가지고있는 세션맵에서 메세지 보낼 세션정보를 확인하고, 메일의 갯수를 확인한다.
 			if (userkey != null) {
-				ZipInputStream zis1 = new ZipInputStream(multiFile.get(0).getInputStream());	
+				
+				if (!encryptPw.equals("")) {
+					zis1 = new ZipInputStream(new FileInputStream(dir + ".zip"), Charset.forName("UTF-8"));	
+				} else {
+					zis1 = new ZipInputStream(multiFile.get(0).getInputStream());	
+				}
 				
 				while (zis1.getNextEntry() != null) {
 					messageCount++;
 				}
 				
+				zis1.closeEntry();
+				
 				session = sessionMap.get(userkey);
-				logger.debug("[WebSocket] mailBoxImportZip Started. SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
+				logger.info("[WebSocket] mailBoxImportZip Started. SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
 			}
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
@@ -954,9 +1028,24 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			zis.closeEntry();
- 			
+			
 		} catch (Exception e) {
-			returnValue = "ERROR";
+			String[] err = e.getMessage().split(": ");
+			
+			if (err.length >= 2) {
+				
+				if (err[2].equals("empty or null password provided for AES Decryptor")) {
+					returnValue = "NULL";
+				} else if (err[2].equals("Wrong Password for file")) {
+					returnValue = "DIFF";
+				}
+				
+			} else if (e.getMessage().equals("encrypted ZIP entry not supported")) {
+				returnValue = "NOT";
+			} else {
+				returnValue = "ERROR";
+			}
+			
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -965,11 +1054,22 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (zis != null) {
 				zis.close();
 			}
+			if (zis1 != null) {
+				zis1.close();
+			}
+		}
+		
+		File f1 = new File(dir + ".zip");
+		
+		if (f1.exists()) {
+			f1.delete();
+			logger.debug("f1.zip file is deleted.");
 		}
 
 		model.addAttribute("result", returnValue);
 		model.addAttribute("userkey", userkey);
-
+		model.addAttribute("useEncryptZipForEMail", useEncryptZipForEMail);
+		
 		logger.debug("mailboxImportZip ended.");
 		return "ezEmail/mailboxImportZip";
 	}
@@ -986,15 +1086,31 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String userAccount = userInfo.getId() + "@" + domainName;
 		logger.debug("userAccount=" + userAccount);
 		
+		String encryptPw = request.getParameter("encryptPw");
 		String tempZipName = request.getParameter("temp");
 		logger.debug("tempZipName=" + tempZipName);
 		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String filePath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempZipName + ".zip";
+		String folderPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempZipName;
 		logger.debug("filePath=" + filePath);
 		
-		downFile(request, response, filePath, userAccount + ".zip");
+		// 2017.11.21 코린도 - 암호화된 ZIP 파일 내보내기
+		if (!encryptPw.equals("")) {
+			
+			String zipFileName = encryptZipFile(filePath, folderPath, encryptPw);
+			
+			downFile(request, response, zipFileName, userAccount + ".zip");
+			
+			File secureFile = new File(zipFileName);
+			if (secureFile.delete()) {
+				logger.debug(zipFileName + ".zip file is deleted.");
+			}
+			
+		} else {
+			downFile(request, response, filePath, userAccount + ".zip");
+		}
 		
 		File zipFile = new File(filePath);
 		if (zipFile.delete()) {
@@ -1063,7 +1179,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
-			
 			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"));
 			
 			Folder folder = ia.getFolder(folderPath);
@@ -1122,7 +1237,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					
 					ZipEntry zipEntry = new ZipEntry("/" + fileName);
 					zos.putNextEntry(zipEntry);
-					
+	
 					isRead = message.isSet(Flags.Flag.SEEN);
 					
 					message.writeTo(zos);
@@ -1182,12 +1297,23 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				
 				folder.close(true);
 			}
-
+			/* 추후 암호화 내보내기 방식 변경
+			AESEncrypterBC encrypter = new AESEncrypterBC();
+			encrypter.init("1", 0);
+			String tempZipFileName = new File(pDirTempPath).getAbsoluteFile().getParent() 
+					+ File.separator + "tempencrypted.zip";
+			AesZipFileEncrypter enc = new AesZipFileEncrypter(tempZipFileName, encrypter);
+			enc.add(new File(pDirTempPath + ".zip"), "1");
+			
+			new File(pDirTempPath + ".zip").delete();
+			new File(tempZipFileName).renameTo(new File(pDirTempPath + ".zip"));
+			*/
 			if (sessionFlag == true) {
 				returnValue = guid;
 			} 
-			
+	
 		} catch (Exception e) {
+			
 			if (zos != null) {
 				zos.flush();
 				zos.close();
@@ -1202,9 +1328,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			
 			e.printStackTrace();
 		} finally {
+			
 			if (ia != null) {
 				ia.close();
 			}
+			
 			if (zos != null) {
 				zos.flush();
 				zos.close();
@@ -1230,18 +1358,34 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		String folderName = request.getParameter("folderName");
 		String tempZipName = request.getParameter("temp");
-		logger.debug("folderName=" + folderName + ",tempZipName=" + tempZipName);
+		String encryptPw = request.getParameter("encryptPw");
+		logger.debug("folderName=" + folderName + ",tempZipName=" + tempZipName + ", encryptPw=" + encryptPw);
 		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String filePath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempZipName + ".zip";
+		String folderPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempZipName;
 		logger.debug("filePath=" + filePath);
-		
-		downFile(request, response, filePath, userAccount + "_" + folderName + ".zip");
+    	
+		// 2017.11.21 코린도 - 암호화된 ZIP 파일 내보내기
+		if (!encryptPw.equals("")) {
+			
+			String zipFileName = encryptZipFile(filePath, folderPath, encryptPw);
+			downFile(request, response, zipFileName, userAccount + "_" + folderName + ".zip");
+			File secureFile = new File(zipFileName);
+			
+			if (secureFile.delete()) {
+				logger.debug(secureFile.getAbsolutePath() + ".zip file is deleted.");
+			}
+			
+		} else {
+			downFile(request, response, filePath, userAccount + "_" + folderName + ".zip");
+		}
 		
 		File zipFile = new File(filePath);
+		
 		if (zipFile.delete()) {
-			logger.debug(tempZipName + ".zip file is deleted.");
+			logger.debug(zipFile.getAbsolutePath() + ".zip file is deleted.");
 		}
 		
 		logger.debug("downloadMailboxZip ended.");
@@ -1363,5 +1507,213 @@ public class EzEmailMenuController extends EgovFileMngUtil {
     public void handleError(Throwable e){
         e.printStackTrace();
     }
+    
+    /**
+	 * 편지함 내보내기 옵션(암호화확인) 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailExportOption.do")
+	public String mailExportOption(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
+		String exportType = request.getParameter("exportType");
+		
+		logger.debug(" mailExportOption exportType=" + exportType);
 
+		model.addAttribute("exportType", exportType);
+		
+		return "ezEmail/mailExportOption";
+	}
+	
+	/**
+	 * 편지함 가져오기 옵션(암호화확인) 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailImportOption.do")
+	public String mailImportOption(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
+		return "ezEmail/mailImportOption";
+	}
+
+
+	// 2017.11.21 코린도 개발하면서 ZIP관련 메서드 생성(임시)
+	// 압축파일 풀기 메서드
+	public void unzip( InputStream is, File destDir, String encoding)
+			throws IOException {
+				ZipArchiveInputStream zis ;
+				ZipArchiveEntry entry ;
+				String name ;
+				File target ;
+				int nWritten = 0;
+				BufferedOutputStream bos ;
+				byte [] buf = new byte[1024 * 8];
+
+				ensureDestDir(destDir);
+				
+				zis = new ZipArchiveInputStream(is, encoding, false);
+				while ( (entry = zis.getNextZipEntry()) != null ){
+					name = entry.getName();
+					target = new File (destDir, name);
+					if ( entry.isDirectory() ){
+						ensureDestDir(target);
+					} else {
+						target.createNewFile();
+						bos = new BufferedOutputStream(new FileOutputStream(target));
+						while ((nWritten = zis.read(buf)) >= 0 ){
+							bos.write(buf, 0, nWritten);
+						}
+						bos.close();
+//						logger.debug ("file : " + name);
+					}
+				}
+				zis.close();
+	}
+	
+	// 디렉토리확인
+	private void ensureDestDir(File dir) throws IOException {
+		if ( ! dir.exists() ) {
+			dir.mkdirs(); 
+			logger.debug ("dir  : " + dir);
+		}
+	}
+	
+	// 암호화된 zip파일에 파일들을 넣는 메서드
+	public String encryptZipFile(String filePath, String filePath2, String pwd) throws IOException {
+		
+		unzip(new FileInputStream(filePath), new File(filePath2), "UTF-8");
+		
+		File zipFile = new File(filePath);
+		if (zipFile.delete()) {
+			logger.debug(filePath + ".zip file is deleted.");
+		}
+		
+		String zipFileName = filePath + "_secure.zip";
+		try {
+		
+			File dir = new File(filePath2);
+			ArrayList<String> arrList = new ArrayList<>();
+			File[] fileList = dir.listFiles();
+			
+			for (int i=0; i<fileList.length; i++) {
+				File file = fileList[i];
+				if (file.isFile()) {
+					arrList.add(file.getAbsolutePath());
+				}
+				logger.debug("arrList size=" + arrList.size());
+			}
+		
+			ZipFile zipFiles = new ZipFile(zipFileName);
+			
+			ZipParameters params = new ZipParameters();
+			params.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+			params.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+			params.setEncryptFiles(true);
+			params.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+			params.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+			params.setPassword(pwd);
+			
+			for (int i=0; i<arrList.size(); i++) {
+				zipFiles.addFile(new File(arrList.get(i)), params);
+			}
+			if (dir.isDirectory()) {
+				logger.debug("directory" + dir.getName());			
+
+				File[] files = dir.listFiles();
+				for (File file : files) {
+					file.delete();
+				}
+				dir.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return zipFileName;
+	}
+	
+	// zip파일 생성메서드
+	public void zip(File src, File destDir, String charSetName, boolean includeSrc) throws IOException {
+		String fileName = src.getName();
+		if ( !src.isDirectory() ){
+			int pos = fileName.lastIndexOf(".");
+			if ( pos >  0){
+				fileName = fileName.substring(0, pos);
+			}
+		}
+		fileName += ".zip";
+		ensureDestDir(destDir);
+		
+		File zippedFile = new File ( destDir, fileName);
+		if ( !zippedFile.exists() ) zippedFile.createNewFile();
+		zip(src, new FileOutputStream(zippedFile), charSetName, includeSrc);
+	}
+	
+	// zip파일 생성메서드
+	public void zip(File src, OutputStream os, String charsetName, boolean includeSrc)	throws IOException {
+		ZipArchiveOutputStream zos = new ZipArchiveOutputStream(os);
+		zos.setEncoding(charsetName);
+		FileInputStream fis ;
+		
+		int length ;
+		ZipArchiveEntry ze ;
+		byte [] buf = new byte[8 * 1024];
+		String name ;
+		
+		Stack<File> stack = new Stack<File>();
+		File root ;
+		if ( src.isDirectory() ) {
+			if( includeSrc ){
+				stack.push(src);
+				root = src.getParentFile();
+			}
+			else {
+				File [] fs = src.listFiles();
+				for (int i = 0; i < fs.length; i++) {
+					stack.push(fs[i]);
+				}
+				root = src;
+			}
+		} else {
+			stack.push(src);
+			root = src.getParentFile();
+		}
+		
+		while ( !stack.isEmpty() ){
+			File f = stack.pop();
+			name = toPath(root, f);
+			if ( f.isDirectory()){
+				logger.debug("dir  : " + name);
+				File [] fs = f.listFiles();
+				for (int i = 0; i < fs.length; i++) {
+					if ( fs[i].isDirectory() ) stack.push(fs[i]);
+					else stack.add(0, fs[i]);
+				}
+			} else {
+				logger.debug("file : " + name);
+				ze = new ZipArchiveEntry(name);
+				zos.putArchiveEntry(ze);
+				fis = new FileInputStream(f);
+				while ( (length = fis.read(buf, 0, buf.length)) >= 0 ){
+					zos.write(buf, 0, length);
+				}
+				fis.close();
+				zos.closeArchiveEntry();
+			}
+		}
+		zos.close();
+	}
+	
+	// 패스관련
+	private String toPath(File root, File dir){
+		String path = dir.getAbsolutePath();
+		path = path.substring(root.getAbsolutePath().length()).replace(File.separatorChar, '/');
+		if ( path.startsWith("/")) path = path.substring(1);
+		if ( dir.isDirectory() && !path.endsWith("/")) path += "/" ;
+		return path ;
+	}
+	
 }

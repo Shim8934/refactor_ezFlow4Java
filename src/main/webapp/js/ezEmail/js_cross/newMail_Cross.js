@@ -3419,3 +3419,33 @@ function deleteMailUser(email, iWhich) {
             break;
     }
 }
+
+
+var exportOption_cross_dialogArguments = new Array();
+function mailExportOption_onClick(type) {
+    if (!CrossYN()) {
+        EzHTTPTrans.style.display = "none";
+    }    
+    
+    g_bDirty = true;
+    exportOption_cross_dialogArguments[1] = mailExportOption_onClick_Complete;
+    exportOption_cross_dialogArguments[2] = DivPopUpHidden;
+    
+    DivPopUpShow(450, 230, "/ezEmail/mailExportOption.do?exportType=" + type);
+}
+function mailExportOption_onClick_Complete(m_rgParams4PostOption) { }
+
+var importOption_cross_dialogArguments = new Array();
+function mailImportOption_onClick() {
+    if (!CrossYN()) {
+        EzHTTPTrans.style.display = "none";
+    }    
+    
+    g_bDirty = true;
+    importOption_cross_dialogArguments[1] = mailImportOption_onClick_Complete;
+    importOption_cross_dialogArguments[2] = DivPopUpHidden;
+    
+    DivPopUpShow(450, 190, "/ezEmail/mailImportOption.do");
+}
+function mailImportOption_onClick_Complete(m_rgParams4PostOption) { }
+

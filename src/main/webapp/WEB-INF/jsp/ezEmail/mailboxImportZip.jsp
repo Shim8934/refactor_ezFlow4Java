@@ -10,6 +10,12 @@
 			window.onload = function() {
 				var result = "${result}";
 				var userkey = "${userkey}";
+				var useEncryptZipForEMail = "${useEncryptZipForEMail}";
+			
+				if (result == "NOT" && useEncryptZipForEMail == "NO") {
+					result = "NOTSUPPORT";
+				} 
+
 				parent.mailboxImportComplete(result, userkey);
 				return;
 			};

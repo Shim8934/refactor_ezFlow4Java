@@ -52,7 +52,6 @@ import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -114,7 +113,11 @@ public class EzEmailMailListController {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
+		String useEncryptZipForEMail = ezCommonService.getTenantConfig("UseEncryptZipForEMail", userInfo.getTenantId());
 		
+		if (useEncryptZipForEMail.equals("")) {
+			useEncryptZipForEMail = "NO";
+		}
 		if (dispname != null) {
 			folderName = dispname;
 		}
@@ -153,10 +156,11 @@ public class EzEmailMailListController {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("importanceColor", importanceColor);
+		model.addAttribute("useEncryptZipForEMail", useEncryptZipForEMail);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
-				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor);
+				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEMail=" + useEncryptZipForEMail);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
