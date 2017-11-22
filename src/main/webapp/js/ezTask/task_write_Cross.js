@@ -647,6 +647,8 @@ function save_task() {
 			}				
 						
 	        parent.DivPopUpHidden();
+	        
+	        parent.RefreshView();
 	        //parent.taskReadJson();
 	        parent.location.reload();
 	        window.close();

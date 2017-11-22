@@ -812,7 +812,7 @@
 			        tr.setAttribute("startdate", startdate);
 			        //setNodeText(tr.cells[1], startdate);
 			        tr.cells[1].innerHTML = "<u>" + startdate + "</u>";
-			        (function(sd) { tr.cells[1].onclick = function () {dayOnMouseClick(sd);}})(startdate);		        			        
+			        (function(sd) { tr.cells[1].onclick = function () {showResult(sd);}})(startdate);		        			        
 			        tr.cells[2].innerHTML = enddate;	
 			        
 			        //Process complete rate
@@ -1171,7 +1171,7 @@
 				}		        
 		    });
 			
-			$(function () {
+/* 			$(function () {
 		    	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 					closeText: "<spring:message code='main.t3' />",
 					prevText: "<spring:message code='main.t0604' />",
@@ -1204,7 +1204,7 @@
 				};
 				
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
+		    }); */
 			
 			function dayOnMouseClick(changeDate) {								
 				//var feature = GetOpenPosition(750, 740);
@@ -1294,6 +1294,18 @@
 			}
 			
 			function showResult(dateText) {
+		        var SDate;
+
+		        if (dateText != "") {
+		            SDate = new Date(dateText);
+		        } else {
+		            SDate = new Date();
+		        }
+		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Sdatepicker").datepicker('setDate', SDate);
+				
+				
+				
         		var test = 0;
         		
 				for (var i = 0; i < dateArray.length; i++) {					
