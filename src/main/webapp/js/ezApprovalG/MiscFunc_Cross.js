@@ -1,4 +1,7 @@
-﻿function InitCodeSelectBox(nodeXml, objSel) {
+﻿/**
+ * XML데이터를 Array에 저장
+ * */
+function InitCodeSelectBox(nodeXml, objSel) {
     objSel.innerHTML = "";
     var strText, strValue, i;
     var selOption = new Array();
@@ -142,7 +145,7 @@ function InsValueIntoTD(objTD, szValue) {
 }
 
 function InsYNIntoTD(objTD, szValue) {
-    if (szValue == "0") {
+    if (szValue.indexOf("0") > 0) {
         objTD.innerHTML = "N";
     }
     else if (szValue == "1") {

@@ -15,7 +15,6 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
-		
 		<script type="text/javascript">
 			var pBoardID = "${boardID}";
 		    var SSUserID = "${userInfo.id}";    
@@ -598,7 +597,7 @@
 		</c:if>
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<script type="text/javascript">
-			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
+			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "<spring:message code='ezBoard.t10031'/>" + " - " + "${boardName}" + "<span id='mailBoxInfo'></span>";
 			</script>
 			<br />
 			<div id="mainmenu">
@@ -616,7 +615,7 @@
 		</c:if>	
 		<c:if test="${boardInfo.buttonHidden != N}">
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "<spring:message code='ezBoard.t10031'/>" + " - " + "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		</c:if>
 		    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
@@ -688,8 +687,8 @@
 		                        </dl>
 		                    </div>
 		                </span>
-		                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
-		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+		                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
+		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 		            </span>
 		        </span>
 		    </span>
@@ -715,8 +714,8 @@
 		                        </dl>
 		                    </div>
 		                </span>
-		                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+		                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
+		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 		            </span>
 		        </span>
 		    </span>

@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezStatistics.service;
 
+
+import java.util.Map;
+
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 
 
@@ -24,5 +27,8 @@ public interface EzStatisticsAdminService {
 	public void dailyDocCountLog(StatApprVO statApprVO) throws Exception;
 
 	public void dailyFormCountLog(StatApprVO statApprVO) throws Exception;
+	
+	public Map<String, Object> getMailLogList(String tenantId, String pageNo, String pageSize, String mailLogType, String searchStartTime,
+				String searchEndTime, String searchField, String searchValue, String isPrimaryLang) throws Exception;
 
 }

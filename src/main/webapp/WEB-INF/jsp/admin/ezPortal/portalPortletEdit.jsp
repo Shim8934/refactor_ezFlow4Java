@@ -978,14 +978,14 @@
   			</tr>
 		</table>
 		<!-- html 포틀릿 -->
-		<table id="selectType_2" class="content"  style="display:none"> 
+		<table id="selectType_2" class="content"  style="display:none;margin:0;padding:0;width:100%;"> 
 			<tr>
 				<th>HTML<spring:message code='ezPortal.t163'/></th> 
 			</tr>
 			<tr> 
-				<td>
+				<td style="margin:0;padding:0;">
 					<%--<SCRIPT language='JavaScript'>FormProc_ActiveX();</SCRIPT>--%>
-                    <iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:450px; width:495px; overflow:auto;"></iframe>
+                    <iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:450px; width:100%; overflow:auto;"></iframe>
 				</td>
 			</tr> 
 		</table>
@@ -1210,7 +1210,7 @@
 				</div>
 				<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 				<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-					<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+					<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 				</div>
 	</body>
 </html>

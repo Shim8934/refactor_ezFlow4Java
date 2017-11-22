@@ -759,6 +759,16 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		String rtnValue = "";
 		
 		try {
+			String copyList = doc.getElementsByTagName("COPYLIST").item(0).getTextContent();
+			String[] copyListArray = copyList.split(",");
+			String tempCopyList = "";
+			
+			for (String k : copyListArray) {
+				tempCopyList += "'" + k + "',";
+			}
+			
+			tempCopyList = tempCopyList.substring(0, tempCopyList.length() - 1);
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_TENANTID", tenantID);
 			
@@ -766,10 +776,15 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				String boardID = doc.getElementsByTagName("BOARDID").item(i).getTextContent();
 				String defaultBoardID = doc.getElementsByTagName("DEFAULTBOARDID").item(0).getTextContent();
 				String parentBoardID = doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent();
+
+				if (boardID.equals(defaultBoardID)) {
+					continue;
+				}
 				
 				map.put("v_pBoardID", boardID);
 				map.put("v_PDEFAULTBOARDID", defaultBoardID);
 				map.put("v_PPARENTBOARDID", parentBoardID);
+				map.put("tempCopyList", tempCopyList);
 				
 				ezBoardAdminDAO.deleteBoardManage(map);
 				ezBoardAdminDAO.copyBoardAcl(map);
@@ -777,6 +792,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			
 			rtnValue = "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = "ERROR";
 		}

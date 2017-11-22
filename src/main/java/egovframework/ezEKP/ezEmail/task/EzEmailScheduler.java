@@ -2,23 +2,36 @@ package egovframework.ezEKP.ezEmail.task;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.annotation.Resource;
+import javax.crypto.Cipher;
 import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.Message.RecipientType;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
 import javax.mail.search.ComparisonTerm;
 import javax.mail.search.FlagTerm;
@@ -34,7 +47,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.sun.mail.imap.AppendUID;
+import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -44,13 +61,15 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Component
-public class EzEmailScheduler {
+public class EzEmailScheduler extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailScheduler.class);
 
@@ -78,8 +97,14 @@ public class EzEmailScheduler {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+	
 	@Resource(name = "jspw")
     private String jspw;
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
 	
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
@@ -182,13 +207,16 @@ public class EzEmailScheduler {
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
-				logger.debug("locale=" + locale);
+				String offset = ezCommonService.selectUserGetTimeZone(userId, tenantId);
+				logger.debug("locale=" + locale + ",offset=" + offset);
 				
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + commonUtil.separator + pDirPath;
 	
 				File f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
 				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				
+				File encryptedFile = null; // 보안메일 관련 파일 변수
 				
 				if (f.exists()) {
 					fis = new FileInputStream(f);
@@ -209,17 +237,202 @@ public class EzEmailScheduler {
 						message.removeHeader("X-JMocha-Each-Mail");
 					}
 					
-					//보낸편지함에 저장
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userAccount, password, egovMessageSource, locale);
-					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+					String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId);
+			        logger.debug("useSecureMail=" + useSecureMail);
 					
-					if (folder.exists()) {
+					String[] secureMailHeaders = message.getHeader("X-JMocha-Secure-Mail");
+					String secureMailHeader = secureMailHeaders != null ? secureMailHeaders[0] : null;		
+					
+					// 보안메일 처리
+					if (useSecureMail.equals("YES") && secureMailHeader != null && secureMailHeader.equals("true")) {
+						
+						// get Info from secureMail header
+						secureMailHeader = MimeUtility.decodeText(secureMailHeader);
+						String securePassword = message.getHeader("X-JMocha-Secure-Mail-Password")[0];
+						String secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
+						String secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
+						String serverName = message.getHeader("X-JMocha-Secure-Mail-ServerName")[0];
+						
+						// 암호화되어있는 securePassword 복호화
+		    			String prm = egovFileScrty.getPrm();
+		            	String pre = egovFileScrty.getPre();
+		            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
+						
+						logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount
+								+ ",secureReadDate=" + secureReadDate + ",serverName=" + serverName);
+						
+						// remove header
+						message.removeHeader("X-JMocha-Secure-Mail-Password");
+						message.removeHeader("X-JMocha-Secure-Mail-ReadCount");
+						message.removeHeader("X-JMocha-Secure-Mail-ReadDate");
+						message.removeHeader("X-JMocha-Secure-Mail-ServerName");
+						message.removeHeader("X-JMocha-Secure-Mail");
+						
+						// timezone 처리 확인
+						if (!secureReadDate.equals("")) {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							secureReadDate = sdf.format(new Date(Long.parseLong(secureReadDate)));
+							secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, offset, true);
+						}
+						
+						// securePassword 암호화
+	            		securePassword = egovFileScrty.encryptAES(securePassword);
+						
+						// save secure mail info and get secureId
+	            		int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+    		        	
+	            		if (secureId == 0) {
+    		        		throw new Exception("INSERTSECUREMAILFAIL");
+    		        	}
+						
+	            		MimeMessage secureMessage = sa.createMimeMessage();
+	            		
+	            		// copy message's headers
+	            		@SuppressWarnings("unchecked")
+						Enumeration<Header> headerEnum = message.getAllHeaders();
+	            		
+	            		while (headerEnum.hasMoreElements()) {
+	            			Header header = headerEnum.nextElement();
+	            			secureMessage.setHeader(header.getName(), header.getValue());
+	            		}
+						
+	            		MimeMultipart secureMixedPart = new MimeMultipart();
+    		        	
+    		        	// make secureBodyPart and add to secureMixedPart
+    		        	MimeBodyPart secureBodyPart = new MimeBodyPart();
+    		        	MimeMultipart secureBodyRelatedPart = new MimeMultipart("related");
+    		        	MimeBodyPart secureBodyHtmlPart = new MimeBodyPart();
+    		        	MimeBodyPart secureBodyImagePart = new MimeBodyPart();
+    		        	
+    		        	String tempFileName = UUID.randomUUID().toString();
+    		        	
+    		        	secureBodyHtmlPart.setContent(ezEmailUtil.getSecureBodyHtml(tempFileName, locale), "text/html; charset=utf-8");
+    		        	
+    		        	secureBodyImagePart.setHeader("Content-Disposition", "inline;\r\n\tfilename=\"" + tempFileName + ".gif\"");
+    		        	secureBodyImagePart.setHeader("Content-ID", "<" + tempFileName + ".gif@12345678.87654321>");
+    		        	secureBodyImagePart.setHeader("Content-Type", "image/gif");
+    		        	FileDataSource source = new FileDataSource(new File(realPath + "/images/email/secureMail/security_img.gif"));
+    		        	secureBodyImagePart.setDataHandler(new DataHandler(source));
+    		        	
+    		        	secureBodyRelatedPart.addBodyPart(secureBodyHtmlPart);
+    		        	secureBodyRelatedPart.addBodyPart(secureBodyImagePart);
+    		        	
+    		        	secureBodyPart.setContent(secureBodyRelatedPart);
+    		        	secureMixedPart.addBodyPart(secureBodyPart);
+    		        	// make secureBodyPart and add to secureMixedPart - end
+	            		
+    		        	// make secureAttachPart and add to secureMixedPart
+    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
+    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
+    		        	secureAttachPart.setHeader("Content-Type", "text/html");
+    		        	
+    		        	String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", tenantId);
+    		        	logger.debug("useHttps=" + useHttps);
+    		        	
+    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
+    		        	
+    		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
+    		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
+    		        	
+    		        	secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
+    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
+    		        	secureMixedPart.addBodyPart(secureAttachPart);
+    		        	// make secureAttachPart and add to secureMixedPart - end
+    		        	
+    		        	// make encryptedOriginalPart and add to secureMixedPart
+    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
+    		        	
+    		        	String tempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload";
+    		        	
+    		        	File file = new File(tempPath);
+    		        	if (!file.exists()) {
+    		        		file.mkdirs();
+    		        	}
+    			        
+    		        	File originalFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
+    		        	FileOutputStream fos = null;
+    		        	
+    		        	try {
+    		        		fos = new FileOutputStream(originalFile);
+    		        		message.writeTo(fos);
+    		        	} catch (Exception e) {
+    		        		e.printStackTrace();
+    		        	} finally {
+    						if (fos != null) {
+    							try { fos.close(); } catch (IOException e) {}
+    						}
+    					}
+    		        	
+    		        	encryptedFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
+    		        	egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+    		        	
+    		        	if (originalFile.delete()) {
+    		        		logger.debug("originalFile is deleted. fileName=" + originalFile.getName());
+    		        	}
+    		        	
+    		        	encryptedOriginalPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"originalMail.eml\"");
+    		        	encryptedOriginalPart.setHeader("Content-Type", "message/rfc822");
+    		        	source = new FileDataSource(encryptedFile);
+    		        	encryptedOriginalPart.setDataHandler(new DataHandler(source));
+    		        	secureMixedPart.addBodyPart(encryptedOriginalPart);
+    		        	// make encryptedOriginalPart and add to secureMixedPart - end
+    		        	
+    		        	secureMessage.setContent(secureMixedPart);
+    		        	
+    		        	ezEmailUtil.setSecureMailFlag(secureMessage, true);
+    		        	secureMessage.setFlag(Flags.Flag.SEEN, true);
+	                    
+    		        	//보낸편지함에 저장
+						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+								userAccount, password, egovMessageSource, locale);
+						Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+						
 						message.setFlag(Flags.Flag.SEEN, true);
 						folder.open(Folder.READ_WRITE);
-						folder.appendMessages(new Message[]{message});
+						
+						AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{secureMessage});
+	                    long sentFolderMessageUID = 0;
+	                    if (uids != null && uids[0] != null) {
+	                        sentFolderMessageUID = uids[0].uid;
+	                    }
+	                    
 						folder.close(true);
 						logger.debug("Succeed in saving a message in sent folder.");
+	                    
+	            		// 보낸편지함에 저장한 메일의 uid를 저장한다.
+		            	String result = ezEmailService.updateMailSecure(tenantId, userId, secureId, folder.getFullName() + "/" + sentFolderMessageUID);
+			        	
+			        	if (!result.equals("OK")) {
+			        		throw new Exception("UPDATESECUREMAILFAIL");
+			        	}
+			            
+			        	// 메일을 발송할 때에는 보낸사람의 secureMailKey를 다시 ${X-JMocha-Secure-Mail-Key}로 되돌려놓는다.
+			        	secureMixedPart.removeBodyPart(secureAttachPart);
+			        	secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
+			        	secureMixedPart.addBodyPart(secureAttachPart);
+			        	
+			        	// 메일을 발송할 때에는 원본메일을 삭제한다.
+			            secureMixedPart.removeBodyPart(encryptedOriginalPart);
+			            
+			            // 서버에서 보안메일을 처리할 수 있도록 헤더를 추가한다.
+			            secureMessage.setHeader("X-JMocha-Secure-Mail-ID", String.valueOf(secureId));
+			            
+			            message = secureMessage;
+	            		
+					} else {
+						//보낸편지함에 저장
+						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+								userAccount, password, egovMessageSource, locale);
+						Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+						
+						if (folder.exists()) {
+							message.setFlag(Flags.Flag.SEEN, true);
+							folder.open(Folder.READ_WRITE);
+							folder.appendMessages(new Message[]{message});
+							folder.close(true);
+							logger.debug("Succeed in saving a message in sent folder.");
+						}
 					}
 					
 					// 개별발신
@@ -250,6 +463,13 @@ public class EzEmailScheduler {
 					logger.debug("Succeed in deleting EML file.");
 				} else {
 					logger.error("Cannot find EML file.");
+				}
+				
+				// 보안메일 관련 임시파일 삭제
+				if (encryptedFile != null) {
+					if (encryptedFile.delete()) {
+		        		logger.debug("encryptedFile is deleted. fileName=" + encryptedFile.getName());
+		        	}
 				}
 				
 				//DB에서 메일 예약발송 정보 삭제.
@@ -295,11 +515,32 @@ public class EzEmailScheduler {
         for (TenantVO tenant : tenantList) {
             logger.debug("tenantId=" + tenant.getTenantId() + ",tenantName=" + tenant.getTenantName());
         
+            String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", tenant.getTenantId());
+            
+            int keepLogPeriodNum = 3; // Default 3개월
+            
+            if (!LoginMailLogKeepPeriod.equals("")) {
+	            try {
+	            	keepLogPeriodNum = Integer.parseInt(LoginMailLogKeepPeriod);
+	            } catch (Exception e) {            	
+	            	e.printStackTrace();
+	            }
+            }
+            
+            try {
+	            // 보존 기간이 지난 로그인 히스토리 로그를 삭제한다.
+	            ezSystemAdminService.deleteLoginHist(keepLogPeriodNum, tenant.getTenantId());
+            } catch (Exception e) {           
+            	e.printStackTrace();
+            }
+            
             // 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
+            // 보존 기간이 지난 메일 수발신 로그를 삭제하는 기능도 수행한다.
             String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";
             
             String param1 = "tenantId=" + tenant.getTenantId();        
-            String inputParams = param1;
+            String param2 = "keepLogPeriod=" + LoginMailLogKeepPeriod;
+            String inputParams = param1 + "&" + param2;
     
             logger.debug("inputParams=" + inputParams);
             
@@ -312,65 +553,60 @@ public class EzEmailScheduler {
             
             logger.debug("dayOfMonth=" + dayOfMonth);
             
-            // 매월 초 1일 처리를 매일 처리로 변경함
-            // 메일박스 사용량 통계는 매월 초 1일에 한 번 처리한다.
-//            if (dayOfMonth == 1) {  
-            	// 모든 사용자의 목록을 가져온다.
-                List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenant.getTenantId());
+        	// 모든 사용자의 목록을 가져온다.
+            List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenant.getTenantId());
+            
+            IMAPAccess ia = null;
+            Locale locale = Locale.getDefault();
+            String password = jspw;
+            String userId = null;
+            String email = null;
+            
+            String yearMonth = String.format("%04d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+            
+            // 각 사용자별로 처리한다.
+            for (OrganUserVO organUser : userCnList) {
+                userId = organUser.getCn();
+                logger.debug("userId=" + userId);
                 
-                IMAPAccess ia = null;
-                Locale locale = Locale.getDefault();
-                String password = jspw;
-                String userId = null;
-                String email = null;
-                
-//                calendar.add(Calendar.DAY_OF_MONTH, -1);
-                String yearMonth = String.format("%04d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
-                
-                // 각 사용자별로 처리한다.
-                for (OrganUserVO organUser : userCnList) {
-                    userId = organUser.getCn();
-                    logger.debug("userId=" + userId);
+                try {
+                    email = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenant.getTenantId());
+                    ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+                                        email, password, egovMessageSource, locale);
+                            
+                    long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
                     
-                    try {
-                        email = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenant.getTenantId());
-                        ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                                            email, password, egovMessageSource, locale);
-                                
-                        long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-                        
-                        // 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-                        long mailboxUsage = storageUsageAndLimit[0]; // in KBs
-                        long mailboxQuota = storageUsageAndLimit[1]; // in KBs
-                        
-                        logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);     
-                        
-                        // 메일박스 쿼터와 사용량을 통계 테이블에 저장하는 Web Service API를 호출한다.
-                        requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/setMailboxUsageLog";
-                        
-                        String tenantIdParam = "tenantId=" + tenant.getTenantId();
-                        String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
-                        String usageParam = "usage=" + mailboxUsage*1024;
-                        String quotaParam = "quota=" + mailboxQuota*1024;
-                        String yearMonthParam = "yearMonth=" + yearMonth;
-                        
-                        inputParams = tenantIdParam + "&" + userIdParam + "&" + usageParam + "&" + quotaParam + "&" + yearMonthParam;
-    
-                        logger.debug("inputParams=" + inputParams);
-                        
-                        response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-                        
-                        logger.debug("response=" + response);                           
-                    } catch (Exception e) {
-                        logger.debug(e.getMessage());
-                        e.printStackTrace();
-                    } finally {
-                        if (ia != null) {
-                            ia.close();
-                        }
+                    // 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
+                    long mailboxUsage = storageUsageAndLimit[0]; // in KBs
+                    long mailboxQuota = storageUsageAndLimit[1]; // in KBs
+                    
+                    logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);     
+                    
+                    // 메일박스 쿼터와 사용량을 통계 테이블에 저장하는 Web Service API를 호출한다.
+                    requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/setMailboxUsageLog";
+                    
+                    String tenantIdParam = "tenantId=" + tenant.getTenantId();
+                    String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+                    String usageParam = "usage=" + mailboxUsage*1024;
+                    String quotaParam = "quota=" + mailboxQuota*1024;
+                    String yearMonthParam = "yearMonth=" + yearMonth;
+                    
+                    inputParams = tenantIdParam + "&" + userIdParam + "&" + usageParam + "&" + quotaParam + "&" + yearMonthParam;
+
+                    logger.debug("inputParams=" + inputParams);
+                    
+                    response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+                    
+                    logger.debug("response=" + response);                           
+                } catch (Exception e) {
+                    logger.debug(e.getMessage());
+                    e.printStackTrace();
+                } finally {
+                    if (ia != null) {
+                        ia.close();
                     }
                 }
-//            }
+            }
         }
         
         logger.debug("processMailStatLogs scheduler ended.");
@@ -452,7 +688,7 @@ public class EzEmailScheduler {
 			int bigSizeMailAttachDelDay = Integer.parseInt(bigSizeMailAttachDelDayStr);
 			
 			if (file.exists()) {
-				File[] files = file.listFiles(new deleteExpireAttachFilter(bigSizeMailAttachDelDay));
+				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
 				for (File expiredFile : files) {
 					logger.debug("expired directory name=" + expiredFile.getName());
@@ -464,26 +700,6 @@ public class EzEmailScheduler {
 		}
 		
 		logger.debug("deleteExpireAttach ended.");
-	}
-	
-	/**
-	 * recursive하게 파일/폴더 삭제하는 함수
-	 */
-	private boolean deleteDirectory(File path) {
-		if (path.isDirectory()) {
-			File[] files = path.listFiles();
-			
-			for (int i=0; i<files.length; i++) {
-				if (files[i].isDirectory()) {
-					deleteDirectory(files[i]);
-				}
-				else {
-					files[i].delete();
-				}
-			}
-		}
-		
-		return path.delete();
 	}
 	
 	public boolean preScheduler(String scheduler) {
@@ -549,11 +765,11 @@ public class EzEmailScheduler {
 		return isSchedulerServer;
 	}
 	
-	class deleteExpireAttachFilter implements FilenameFilter {
+	class DeleteExpireAttachFilter implements FilenameFilter {
 		private int bigSizeMailAttachDelDay;
 		private String today;
 		
-		public deleteExpireAttachFilter(int bigSizeMailAttachDelDay) {
+		public DeleteExpireAttachFilter(int bigSizeMailAttachDelDay) {
 			super();
 			
 			this.bigSizeMailAttachDelDay = bigSizeMailAttachDelDay;

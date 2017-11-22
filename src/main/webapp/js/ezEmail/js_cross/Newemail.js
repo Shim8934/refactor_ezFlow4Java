@@ -36,6 +36,7 @@ function PreviewW_onMouserDown(e) {
     document.getElementById("ResizeBarW").style.display = "";
     document.getElementById("mailPanel").style.display = "";
     PreviewW_Move = true;
+	SmallSizeList = false;
     
     // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
     document.onselectstart = function () { return false; };
@@ -196,6 +197,11 @@ function reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang43);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang44);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -228,6 +234,11 @@ function all_reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang45);
     }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang46);
+        return;
+    }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
@@ -253,6 +264,11 @@ function all_reply_mail_onclick() {
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);
+    }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang48);
+        return;
     }
     else {
         var pSelectItem;
@@ -311,6 +327,7 @@ function move_mail_onclick() {
         alert(strLang51);
         return;
     }
+    
     mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
     mail_movecopy_cross_dialogArguments[2] = "CLOSE";
     var OpenWin = window.open("/ezEmail/mailMoveCopy.do", "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
@@ -321,6 +338,20 @@ function move_mail_onclick_Complete(moveUrl) {
         return;
 
     if (moveUrl["cmd"] == "MOVE") {
+    	var includeSecureMail = false;
+    	for (var i = 0; i < listContentArry.length; i++) {
+    		if (document.getElementById(listContentArry[i]).getAttribute("securemail") == "1") {
+    			includeSecureMail = true;
+    	    	break;
+    	    }
+    	}
+    	
+    	if (includeSecureMail) {
+    		if (!confirm(strLangLHM20)) {
+	    		return;
+	    	}
+    	}
+    	
         var szItemID = "";
         for (var i = 0; i < listContentArry.length; i++) {
             szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
@@ -430,19 +461,43 @@ function deleteWork(bDel) {
         alert(strLang57);
         return;
     }
+    
+    var includeSecureMail = false;
+	for (var i = 0; i < listContentArry.length; i++) {
+		if (document.getElementById(listContentArry[i]).getAttribute("securemail") == "1") {
+			includeSecureMail = true;
+	    	break;
+	    }
+	}
+	
     var cmd = "";
     if (bDel == true || g_szRootFolderName.replace(' ', '') == strLang4) {
         cmd = "BDELETE";
-        if (!confirm(strLang58))
-            return;
+        if (includeSecureMail) {
+        	if (!confirm(strLangLHM19)) {
+        		return;
+        	}
+        } else {
+        	if (!confirm(strLang58)) {
+            	return;
+            }
+        }
+        
     }
     else {
         if (g_foldertype == "delete")
             cmd = "SOFTDEL";
         else
             cmd = "BMOVE";
-        if (!confirm(strLang59))
-            return;
+        if (includeSecureMail) {
+        	if (!confirm(strLangLHM19)) {
+        		return;
+        	}
+        } else {
+        	if (!confirm(strLang59)) {
+            	return;
+            }
+        }
     }
     var szItemID = "";
     for (var i = 0; i < listContentArry.length; i++) {
@@ -821,11 +876,11 @@ function MailList_ChangeStatus(obj) {
 function prevShow_Clear() {
     if (pPreviewShow_HOW == "W") {
         document.getElementById("Preview_HeaderW").style.display = "none";
-        document.getElementById("ifrmPreViewW").src = "/blank.htm";
+        document.getElementById("ifrmPreViewW").src = strLangLHM18;
     }
     else {
         document.getElementById("Preview_HeaderH").style.display = "none";
-        document.getElementById("ifrmPreViewH").src = "/blank.htm";
+        document.getElementById("ifrmPreViewH").src = strLangLHM18;
     }
 }
 function ReceiverDetail_view(obj) {
@@ -929,7 +984,7 @@ function PreviewRayerChange(pGubun) {
                 if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
                     if (g_foldertype != "sent") {
                         if (p_HeaderViewXML.indexOf("viewXMLFile1_1.xml") > 0) {
-                            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+                            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
@@ -982,7 +1037,7 @@ function PreviewRayerChange(pGubun) {
                 if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
                     if (g_foldertype != "sent") {
                         if (p_HeaderViewXML.indexOf("viewXMLFile1.xml") > 0) {
-                            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+                            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
@@ -1156,8 +1211,9 @@ function callMsgDlg(szContentClass, Href) {
 }
 
 var PcSaveArrayList = new Array();
+
 function mail_export() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang42);
         return;
     }
@@ -1170,34 +1226,49 @@ function mail_export() {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listSubContentArry[i]);
         }
     }
-    if(PcSaveArrayList.length > 0)
-        PCMultiDownload();
-}
-var suffix = 0;
-function PCMultiDownload() {
-    if (suffix < PcSaveArrayList.length)
-        setTimeout(function () { PC_Eml_FileDownload();}, 1000);
-    else {
-        suffix = 0;
-        return;
-    }
-}
-function PC_Eml_FileDownload() {
-    if (PcSaveArrayList[suffix].getAttribute("_href") != null) {
-        var pItemID = PcSaveArrayList[suffix].getAttribute("_href");
-        var pItemSubject = ConvertEntityReferenceToChar(GetAttribute(PcSaveArrayList[suffix], "_subject"));// + ".eml";
-        pItemSubject = ReplaceText(pItemSubject, "\\.", "_") + ".eml";
-        var fullpath = "/ezEmail/mailExport.do?url=" + encodeURIComponent(pItemID) + "&filename=" + encodeURIComponent(pItemSubject);
-        AttachDownFrame.location.href = fullpath;
+	
+    if (PcSaveArrayList.length == 1) { //하나의 메일을 다운로드 할 경우
+    	var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
+    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
+    	AttachDownFrame.location.href = fullpath;
         AttachDownFrame.target = "_blank";
-        suffix++;
-        PCMultiDownload();
-    }
-    else {
-        suffix = 0;
-        return;
+        
+    } else { // 여러개의 메일을 다운로드 할 경우
+    	var folderIdAndMessageIdList = new Object();
+    	for (var i = 0; i < PcSaveArrayList.length; i++) {
+    		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
+    		
+    		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
+    			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
+    		} else {
+    			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
+    		}
+    	}
+    	
+    	ShowMailProgress();
+    	
+        $.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezEmail/mailExportZip.do",
+			data : folderIdAndMessageIdList,
+			complete: function(){
+				HiddenMailProgress();
+			},
+			success: function(result){
+				if (result != "") {
+			    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result;
+			    	AttachDownFrame.location.href = fullpath;
+			        AttachDownFrame.target = "_blank";
+				} else {
+					alert(strLang104);
+				}
+			}
+		});
     }
 }
+
 function HiddenContextMenu() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("ContextMenuDiv").style.display = "none";

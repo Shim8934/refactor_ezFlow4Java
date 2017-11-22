@@ -15,6 +15,7 @@
 		<script type="text/javascript" language="javascript">
 			var CurPage = "<c:out value='${pPage}'/>";
 			var totalPage = "<c:out value='${totalPage}'/>";
+			var useBizmekaSpambox = "${useBizmekaSpambox}";
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 	    	
@@ -49,6 +50,20 @@
 				}
 			}
 	       
+			function showProgress() {
+			    document.getElementById("progressPanel").style.display = "";
+			    document.getElementById("loadingLayer").style.display = "";
+			    
+			    parent.document.getElementById("lef").contentWindow.showProgress();
+			}
+
+			function hideProgress() {
+			    document.getElementById("progressPanel").style.display = "none";
+			    document.getElementById("loadingLayer").style.display = "none";
+			    
+			    parent.document.getElementById("lef").contentWindow.hideProgress();
+			}
+			
 			function Delete_onclick() {
 			    funCheckBox('get');
 			    
@@ -68,21 +83,43 @@
 		            	}		                
 		            }
 
+		            if (useBizmekaSpambox == "YES") {
+		            	showProgress();
+		            }	            
+			        
 			        $.ajax({
 		            	type : "POST",
 		            	dataType : "html",
 		            	url : "/admin/ezOrgan/delUser.do",
-		            	async : false,
+		            	async : true,
 		            	data : {cn : data},
-		            	success : function(result){
-		            		alert(CheckBoxArr.length + "<spring:message code='ezOrgan.t31' />");
+		            	success : function(result) {
+		            	    if (useBizmekaSpambox == "YES") {
+		            	    	hideProgress();
+		            	    }
+		            	    
+		            	    setTimeout(function() {		   
+		            	        if (result == "OK") {
+		            				alert(CheckBoxArr.length + "<spring:message code='ezOrgan.t31' />");
+		            	        } else {
+		            	            alert("<spring:message code='ezOrgan.t30' />")
+		            	        }
+		            			
+		    				    refresh_onclick();		            			
+		            	    }, 100);
 		            	},
-		            	error : function(){
-		            		alert("<spring:message code='ezOrgan.t30' />");
+		            	error : function() {
+		            	    if (useBizmekaSpambox == "YES") {
+		            	    	hideProgress();
+		            	    }
+		            	    
+		            	    setTimeout(function() {
+		            			alert("<spring:message code='ezOrgan.t30' />");
+		            			
+		    				    refresh_onclick();		            			
+		            	    }, 100);
 		            	}
-		            });
-					
-				    refresh_onclick();
+		            });					
 			    }
 			}
 			
@@ -141,12 +178,16 @@
 
 			        $.ajax({
 			        	type : "POST",
-			        	dataType : "xml",
+			        	dataType : "html",
 			        	url : "/admin/ezOrgan/restoreRetireUser.do",
 			        	async : false,
 			        	data : {deptID : rtnValue, cn : data},
-			        	success : function(result){
-			        		alert(strLang9);
+			        	success : function(result) {			        	    
+			        	    if (result == "OK") {
+			        			alert(strLang9);
+			        	    } else {
+			        	        alert(strLang10);
+			        	    }
 			        	},
 			        	error : function(){
 			        		alert(strLang10);	
@@ -264,5 +305,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
+     <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+     <span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
 	</body>
 </html>

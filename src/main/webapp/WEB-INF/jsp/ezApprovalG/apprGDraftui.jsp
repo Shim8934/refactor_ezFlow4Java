@@ -145,7 +145,12 @@
 			//회람
 			var type = "ING";
 			var pGongRamDocID = "";
-		    	
+			var singImageType = "${signImageType}";
+			var isUsed = "${isUsed}";
+			var beforeDocID = "${beforeDocID}";
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var totalMemSN = "0";
+			
 		    window.onload = function ()
 		    {
 		        try {
@@ -185,6 +190,7 @@
 		    }
 		    var noFieldsAvailable = false;
 		    function FieldsAvailable() {
+	    	
 		        if (noFieldsAvailable) {
 		            noFieldsAvailable = false;
 		        }
@@ -207,7 +213,7 @@
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
 		            		//임시보관함일경우 사인 초기화
-		            		setFirstDrafter();
+		            		setFirstDrafter(isUsed, "");
 		            	}
 		            	
 		                getFormRecv();
@@ -215,7 +221,7 @@
 		            }
 		
 		            if (pDraftFlag != "REDRAFT")
-		                setFirstDrafter();
+		                setFirstDrafter(isUsed, beforeDocID);
 		            
 		            if (approvalFlag == "S") {
 			            SetAutoDocnumItem();
@@ -302,6 +308,7 @@
 		        }
 		    }
 		    function process_AfterOpen() {
+	    	
 		        try {
 		            if (pFormHref == "") {
 		                SetBtnStateFalse();
@@ -385,6 +392,10 @@
 		                            setClearSusinCellInfo();
 		                        }
 		                        pDocID = createNewDoc();
+		                        
+		                     	if (isUsed == "reuse") {
+			                		getDocInfo();
+			                	}
 		                    }
 		                }
 		            }
@@ -537,17 +548,22 @@
 						OpenInformationUI(pAlertContent, check_btnSendDraft2);
 		                return;
 		            }
-		            if (!checkLines())
+		            if (!checkLines()) {
 		                return;
+		            }
+		            
 		            if (pDocType == "003" && pSuSinFlag == "Y" && !btnReceivLineEnable) {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
 		                OpenInformationUI(pAlertContent, check_btnSendDraft3);
 		                return;
 		            }
-		            if (!SummaryFlag) {
-		                btnApprovalInfo(4);
-		                return;
+		            
+		            if (isUsed ==  "reuse") {
+		            	var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+		            	OpenInformationUI(pAlertContent, check_ReUsed);	
+		            	return;
 		            }
+		            
 		            setDrafterAddress();
 		            if (pDraftFlag == "REDRAFT")
 		                delOpinionInfo();
@@ -562,6 +578,13 @@
 		        }
 		    }
 		
+		    function check_ReUsed(ans) {
+		    	DivPopUpHidden();
+		    	if (ans) {
+		    		btnApprovalInfo(1);
+		    	} 
+		    }
+		    
 		    function CheckPassWord() {
 		    	var result = "";
 		    	$.ajax({
@@ -778,8 +801,25 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
+		        
+		        if (addLastKyulJeYN != "0") {
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+                		data : {
+                				docID     : pDocID,
+                				flag      : "draft"
+                				},
+                		success : function(result){
+                			totalMemSN = result;
+                		}
+                	});
+		        }
+		        
 		        pOrgHtml = message.Get_EditorBodyHTML();
-		        if (LastSignSN == 1 || DraftLastFlag) {
+		        if ((LastSignSN == 1 && totalMemSN == 0) || DraftLastFlag) {
 		            var rtnVal;
 		            rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
 		            if (!rtnVal) {
@@ -790,7 +830,7 @@
 		        }
 		        
 		        var rtnval;
-		        if (LastSignSN == 1 || DraftLastFlag)
+		        if ((LastSignSN == 1 && totalMemSN == 0)|| DraftLastFlag)
 		            rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
 		        else
 		            rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
@@ -1214,10 +1254,13 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
-		        if (ListType == "21")
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun ;
+		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;
-		
+				}
+		        if (isUsed == "reuse") {
+		        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
+		        }
 		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1322,6 +1365,7 @@
 		                }
 		                
 		                SummaryFlag = true;
+		                isUsed = ""; // 재사용 여부 초기화
 		
 		            }
 		            catch (e) {
@@ -1459,7 +1503,7 @@
 		                <li id="btnPrint"><span  onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 		                <li id="btnhistory"><span  onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		                <li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
-		                <li id="btnSaveServer"><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
+		                <li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
 		            </ul>
 		        </div>        
 		      <div id="close">
@@ -1470,7 +1514,7 @@
 		  </tr>
 		  <tr>
 		    <td  style="padding-bottom:10px;height:90%;" >
-		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isUsed=${isUsed}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>
 		  <tr>
@@ -1491,7 +1535,7 @@
 		<input type="file" id="pFile" style="display:none;" />
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

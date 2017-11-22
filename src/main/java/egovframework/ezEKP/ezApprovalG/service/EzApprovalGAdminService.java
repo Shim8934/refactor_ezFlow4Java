@@ -13,7 +13,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGAdminService {
 
-	public String getContainerInfoManage(String deptID, String type, String companyID, String primary, int tenantID) throws Exception;
+	public String getContainerInfoManage(String deptID, String type, String companyID, String lang, int tenantID) throws Exception;
 
 	public String getContTypeInfo(String type, String companyID, String primary, int tenantID) throws Exception;
 	
@@ -75,7 +75,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception;
 	
-	public String getSealList(String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getSealList(String realPath, String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
 	public String sealDelete(String realPath, String dirPath, String fileName) throws Exception;
 	

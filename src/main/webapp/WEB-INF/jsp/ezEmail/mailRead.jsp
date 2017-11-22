@@ -50,7 +50,9 @@
 		    var pContentClass = "${pContentClass}";
 		    var pNoneActiveX = "${NoneActiveX}";
 		    var jMochaStandAlone = "${jMochaStandAlone}";
+		    var isSecureMail = "${isSecureMail}";
 		    window.onresize = window_onresize;
+		    
 			function window_onload()
 			{
 			    window_onresize();
@@ -312,14 +314,14 @@
 		                }
 		                else {
 		                    if (CrossYN() || pNoneActiveX == "YES") {
-		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                    }
 		                    else {
 		                        if (p_Use_IE11Browser == "CK") {
-		                            window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                            window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                        }
 		                        else {
-		                            window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                            window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                        }
 		                    }
 		                }
@@ -345,12 +347,12 @@
 		            }
 		            else {
 		                if (CrossYN() || pNoneActiveX == "YES")
-		                    window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                    window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                else {
 		                    if (pUse_Editor == "")
-		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                    else
-		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                }
 		
 		            }
@@ -368,6 +370,10 @@
 		        form1.submit();
 		        window.opener.MailListRefresh();
 		        window.opener.reloadReadContent(url);
+		    }
+		    
+		    function secureInfo_onClick() {
+		    	DivPopUpShow(550, 500, "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL));
 		    }
 		</script>
 	</head>
@@ -390,6 +396,9 @@
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
+		                    <c:if test="${isSecureMail == true}">
+		                    	<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
+		                    </c:if>
 		                    <c:if test="${pnFlag=='Y'}">
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
@@ -405,7 +414,7 @@
 		                <tr>
 		                    <th><spring:message code="ezEmail.t161" /></th>
 		                    <td class="pos1" style="vertical-align:middle;">
-		                        <DIV id="MsgToPut" onMouseOver="this.style.color='#006BB6'" title="<spring:message code='ezEmail.t553' />${fromEmail}" style="CURSOR: pointer; padding-left: 5px; vertical-align: middle;" onMouseOut="this.style.color='#393939'">	
+		                        <DIV id="MsgToPut" onMouseOver="this.style.color='#006BB6'" title="${fromEmail}" style="CURSOR: pointer; padding-left: 5px; vertical-align: middle;" onMouseOut="this.style.color='#393939'">	
 			                        <a onClick="show_senderprofile()">					
 			                            <span id="LabelFromName">${fromStr}</span>
 			                            <span id="LabelSenderInfo"></span>	
@@ -495,7 +504,7 @@
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

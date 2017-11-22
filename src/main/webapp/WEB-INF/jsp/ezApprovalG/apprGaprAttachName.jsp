@@ -130,29 +130,27 @@
 		<body class="popup">		
 		<h1><spring:message code='ezApprovalG.t25004'/></h1>		
 		<span>▒ <spring:message code='ezApprovalG.t292'/></span>		
-		<table class="content" style="margin-top: 15px">
-		  <c:if test="${approvalFlag == 'G'}">
-			  <tr> 
-			    <th> <spring:message code='ezApprovalG.t293'/></th>
-			    <td style="width:100%"> 
-			      <input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtPageNum">    </td>
-			  </tr>
-		  </c:if>
-		  <tr> 
-		    <th><spring:message code='ezApprovalG.t294'/></th>
-		    <td> 
-		      <input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtDisplayName">    </td>
-		  </tr>
-		</table>
-		
+		<table class="content" style="margin-top: 15px">		  
+			<tr ${approvalFlag != 'G' ? "style='display:none'" : ""}>
+		    	<th> <spring:message code='ezApprovalG.t293'/></th>
+		    	<td style="width:100%"> 
+		      		<input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtPageNum" />
+		      	</td>
+		  	</tr>
+		  	<tr> 
+		    	<th><spring:message code='ezApprovalG.t294'/></th>
+		    	<td> 
+		      		<input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtDisplayName" />    
+		      	</td>
+		  	</tr>
+		</table>		
 		<div class="btnposition" style="margin-top:25px"> 
-		<a class="imgbtn" id="btn_SaveAprDeptTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-		<a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
-		</div>
-		
+			<a class="imgbtn" id="btn_SaveAprDeptTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
+			<a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
+		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

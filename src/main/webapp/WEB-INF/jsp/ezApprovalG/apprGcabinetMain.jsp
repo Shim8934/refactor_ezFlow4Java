@@ -627,7 +627,7 @@
 		        var OpenWin;
 		
 		        if (UserLang == "1")
-		            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(855, 445));
+		            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(900, 445));
 		        else
 		            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(905, 435));
 		
@@ -705,7 +705,7 @@
 		
 		            settaskchrger_cross_dialogArguments[0] = para;
 		
-		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(520, 415));
+		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(600, 415));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -911,19 +911,16 @@
 		                var left = "";
 		                var top = "";
 		
-		                if ("${userInfo.lang}" == "1")
-		              { 
-		                wWeight = 855;
-		                wHeight = 625;
-		                left = (width - wWeight) / 2;
-		                top = (heigth - wHeight) / 2;
-		                }
-		              else
-		              { 
-		                wWeight = 855;
-		                wHeight = 625;
-		                left = (width - wWeight) / 2;
-		                top = (heigth - wHeight) / 2;
+		                if ("${userInfo.lang}" == "1") { 
+			                wWeight = 855;
+			                wHeight = 625;
+			                left = (width - wWeight) / 2;
+			                top = (heigth - wHeight) / 2;
+		                } else { 
+			                wWeight = 855;
+			                wHeight = 625;
+			                left = (width - wWeight) / 2;
+			                top = (heigth - wHeight) / 2;
 		                } 
 		                if (url != "")
 		                    var ret = window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
@@ -988,7 +985,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(850, 460));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(900, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1019,7 +1016,7 @@
 		            selectcabinet_cross_dialogArguments[0] = para;
 		            selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(850, 480));
+		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(900, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		           
@@ -1237,7 +1234,7 @@
 		            aprgongramline_cross_dialogArguments[0] = para;
 		            aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1000, 740));
+		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 740));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -1323,7 +1320,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnBaeBu_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(1000, 740));
+		        var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(1000, 760));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1559,7 +1556,7 @@
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li ><span id="btnCabDel" onclick="return DeleteCab();"><spring:message code='ezApprovalG.t266'/></span> </li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="cab_year" name="cab_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  
 	        </ul>
@@ -1589,7 +1586,7 @@
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="rec_year" name="rec_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>    
 	        </ul>
@@ -1599,7 +1596,7 @@
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="del_year" name="del_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>    
 	        </ul>
@@ -1632,7 +1629,7 @@
 	    <div id="tdDebug"></div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

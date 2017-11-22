@@ -1,4 +1,4 @@
-﻿function get_childXML_2010(url, broot, bcount) {
+﻿function get_childXML_2010(url, broot, bcount, isFolderManager) {
     if (navigator.userAgent.indexOf('Trident') == -1) {
         var xmlDOM = createXmlDom();
 
@@ -17,9 +17,14 @@
         objRoot.appendChild(objNode);
 
         var xmlHTTP = new XMLHttpRequest();
-        xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
+        
+        if (isFolderManager) {
+        	xmlHTTP.open("POST", "/ezEmail/getFolderList.do?fm=1", false);
+        } else {
+        	xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
+        }
+        
 	    xmlHTTP.send(xmlDOM);
-    	
     	
 	    if( xmlHTTP.status != 207 && xmlHTTP.status != 200 )
 	    {
@@ -43,8 +48,13 @@
         var objNode = xmlDOM.createNode(1, "BCOUNT", "");
         objNode.text = bcount;
         objRoot.appendChild(objNode);
-
-        xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
+        
+        if (isFolderManager) {
+        	xmlHTTP.open("POST", "/ezEmail/getFolderList.do?fm=1", false);
+        } else {
+        	xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
+        }
+        
 	    xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	    xmlHTTP.send(xmlDOM.xml);
     	
@@ -59,9 +69,9 @@
     }
 }
 
-function get_childXML(url, broot, bcount)
+function get_childXML(url, broot, bcount, isFolderManager)
 {
-    return get_childXML_2010(url, broot, bcount);
+    return get_childXML_2010(url, broot, bcount, isFolderManager);
     
 	var strXML = "<?xml version='1.0'?>" + 
 					"<d:searchrequest xmlns:d='DAV:'>" +
@@ -123,11 +133,11 @@ function get_childXML(url, broot, bcount)
 
 					childXML += "<node imgidx='1' caption=\"";
 					if (UnreadNodes.item(i).text != "0" && bcount)
-						childXML += (MakeRightField(DispName[j]) + "(" + UnreadNodes.item(i).text + ")");
+						childXML += (DispName[j] + "(" + UnreadNodes.item(i).text + ")");
 					else
-						childXML += (MakeRightField(DispName[j]) + "\" ");
+						childXML += (DispName[j] + "\" ");
 			
-					childXML += ("foldername=\"" + MakeRightField(DispName[j]) + "\" ");
+					childXML += ("foldername=\"" + DispName[j] + "\" ");
 					childXML += ("href='" + HrefNodes.item(i).text + "' ");
 					if (HasSubNodes.item(i).text == "1")
 						childXML += "hassub='1' ";
@@ -147,11 +157,11 @@ function get_childXML(url, broot, bcount)
 			{
 				childXML += "<node imgidx='1' caption=\"";
 				if (UnreadNodes.item(i).text != "0" && bcount)
-					childXML += (MakeRightField(NameNodes.item(i).text) + "(" + UnreadNodes.item(i).text + ")");
+					childXML += (NameNodes.item(i).text + "(" + UnreadNodes.item(i).text + ")");
 				else
-					childXML += (MakeRightField(NameNodes.item(i).text) + "\" ");
+					childXML += (NameNodes.item(i).text + "\" ");
 			
-				childXML += ("foldername=\"" + MakeRightField(NameNodes.item(i).text) + "\" ");
+				childXML += ("foldername=\"" + NameNodes.item(i).text + "\" ");
 				childXML += ("href='" + HrefNodes.item(i).text + "' ");
 				if (HasSubNodes.item(i).text == "1")
 					childXML += "hassub='1' ";
@@ -166,18 +176,6 @@ function get_childXML(url, broot, bcount)
 		xmlHTTP = null;
 		return "";
 	}
-}
-
-function MakeRightField(orgStr)
-{
-	return ReplaceText(ReplaceText(ReplaceText(ReplaceText(orgStr, "&", "&amp;"), "\"", "&quot;"), "<", "&lt;"), ">", "&gt;");
-}
-
-function ReplaceText( orgStr, findStr, replaceStr )
-{
-	var re = new RegExp( findStr, "gi" );
-	
-	return ( orgStr.replace( re, replaceStr ) );
 }
 
 function CreateFolder(url) {

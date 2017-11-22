@@ -1008,7 +1008,8 @@
 		</script>
 		<style>
 			.mainlist_free tr th {text-align:center}
-			.mainlist_free tr td {text-align:center}	    	
+			.mainlist_free tr td {text-align:center}	   
+			.mainlist tr th {border-top:0px} 	
 		</style>
 	</head>
 	<body class="popup" style="overflow-y: hidden;">
@@ -1054,7 +1055,8 @@
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-	                                <input id="textUser" style="width: 188px;" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="imgbtn" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+	                                <input id="textUser" style="width: 188px;" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+	                            	<a class="imgbtn" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                            </td>
 	                        </tr>
 	                    </table>
@@ -1122,7 +1124,12 @@
 	                	</div>
 	                </h2>
 	                <div class="listview" style="margin-top: 4px; margin-left: 1px">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 710px; height: 550px; background-color: #ffffff; margin: 1px 1px 1px 1px;"></div>
+	                <c:if test="${approvalFlag == 'S'}">
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 710px; height: 550px; background-color: #ffffff;"></div>
+	                </c:if>
+	                <c:if test="${approvalFlag == 'G'}">
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 750px; height: 550px; background-color: #ffffff;"></div>
+	                </c:if>
 	                </div>
 	                <div style="text-align: right;">
 	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;">
@@ -1140,7 +1147,7 @@
 	        </tr>
 	    </table>
 	    <div style="text-align: center;" id="orgbtnArea">
-	        <table style="width: 976px">
+	        <table style="width: 100%">
 	            <tr>
 	                <td style="text-align: center;">
 	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="SaveAprline_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
@@ -1151,7 +1158,7 @@
 	    </div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 	<script type="text/javascript">

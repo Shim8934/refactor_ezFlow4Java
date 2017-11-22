@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Untitled Document</title>
+		<title><spring:message code='ezApprovalG.hyj02'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
@@ -81,6 +81,7 @@
 		    var OrderCell = "";
 		    var USE_OCS = "${useOcs}";
 		    var SendOutFlag = "O";
+		    var g_RelayG_Type = "${relayG_type}";
 		    var userLang = "1";
 		    var pSelMenu = "${selMenu}";
 		    var pOpenYaer = "${openYear}";
@@ -102,19 +103,22 @@
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
-		            var tmpStartDate = BDim[3].substring(0, 16);
-		            var tmpEndDate = BDim[4].substring(0, 16);
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
 		
-		            tmpStartDate=tmpStartDate.replace("/", ":");
-		            tmpEndDate=tmpEndDate.replace("/", ":");
+		            tmpStartDate = tmpStartDate.replace("/", ":");
+		            tmpEndDate = tmpEndDate.replace("/", ":");
+		            
 		            if (tmpEndDate < "${nowDate}") {
 		                setBujaeOff();
+		            	checkBujaeInfo_Complete_After();
+		                return true;
+
+		            } else if (tmpStartDate > "${nowDate}") {
 		                return true;
 		            }
-		            else if (tmpStartDate > "${nowDate}") {
-		                return true;
-		            }
-		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "<spring:message code='ezApprovalG.t1722'/>" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
 		                checkBujaeInfo_Complete(true);
@@ -135,7 +139,7 @@
 		            else if (tmpStartDate > "${nowDate}") {
 		                return true;
 		            }
-		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "<spring:message code='ezApprovalG.t1722'/>" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
 		                checkBujaeInfo_Complete(true);
@@ -155,8 +159,11 @@
 		            setbuttonenable();
 		            return;
 		        }
-		
-		        if (beforeJob != pListTypeValue) {
+		     	checkBujaeInfo_Complete_After();
+		    }
+		    
+		    function checkBujaeInfo_Complete_After() {
+		    	if (beforeJob != pListTypeValue) {
 		            beforeJob = pListTypeValue;
 		            pageNum = 1;
 		        }
@@ -221,7 +228,7 @@
 		            parent.frames["left"].setPresentValue("");
 		        } catch (e) { }
 		    }
-		
+		        
 		    function setBujaeOff() {
 		    	var result = "";
 		    	
@@ -499,11 +506,15 @@
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
                             var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
-                            
+                          
                             if (AttachfilenameN1 < 0) {
                                 Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                                Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+                            	if (AttachUrlA2 == ".mht") {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
+	                        	} else {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+	                        	}
                             }
 
                             if (AttachUrl != "null") {
@@ -534,7 +545,7 @@
 		        openForm();
 		    }
 		    var selectedDocIDS = "";
-		    function btnApprove_onclick(tempFlag) {
+		    function btnApprove_onclick(tempFlag) { // tempFlag -> 0:결재, 1:모두결재, 2:일괄결재
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
@@ -1281,7 +1292,7 @@
 		        var top = 0;
 		        left = (parseInt(width) - parseInt(wWeigth)) / 2;
 		        top = (parseInt(heigth) - parseInt(wHeigth)) / 2;
-		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=300,width=400,top=" + top + ",left =" + left);
+		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=310,width=410,top=" + top + ",left =" + left);
 		    }
 		    function TextReplace(pStr, pStr1, pStr2) {
 		        TextReplace = pStr.replace(pStr1, pStr2);
@@ -1317,11 +1328,12 @@
 		    }
 		
 		    var SearchCond = new Array();
+
 		    var SQLPARADATA;
 		    function SearchCondi_onclick_Complete(returnvalue) {
 		        condition = returnvalue;
 		        if (condition) {
-		        	for (var i = 0; i < 11; i++) {
+		        	for (var i = 0; i < condition.length; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
 		                SearchCond[i] = condition[i];
@@ -1403,18 +1415,21 @@
 			            TYPE += "APRENDDATE;";
 			            DATA += "<APRENDDATE>" + SearchCond[6] + "-" + SearchCond[7] + "-" + SearchCond[8] + "</APRENDDATE>";
 			        }
-			        
-			        if (SearchCond[21] != "")		// FormID
+
+			        if (SearchCond[21] != "" && SearchCond[21] !== undefined )		// FormID
 			        {
 			            TYPE += "FORMID;";
 			            DATA += "<FORMID>" + SearchCond[21] + "</FORMID>";
 			        }
 			
-			        if (SearchCond[23] != "")		// draftDeptName
+			        if (SearchCond[23] != "" && SearchCond[23] !== undefined )		// draftDeptName
 			        {
 			            TYPE += "WRITERDEPTNAME;";
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
+			        
+			        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+			        
 				} else {
 					 if (condition[0] != "") {
 					        TYPE += "DOCNO;"
@@ -1473,9 +1488,8 @@
 					        TYPE += condition[16];
 					        DATA += condition[17];
 					    }
-
-					    SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 					}
+				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		
 		    window.onresize = function () {
@@ -1655,7 +1669,7 @@
 					<li id="tbtnApprove2"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				</c:if>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
-				<li id="tbtnReturn"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
+				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
@@ -1676,7 +1690,7 @@
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <select id="sel_year" name="sel_year" style="width:70px;" onchange="onSelect_Year(this);">    
+		        <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
 		            <option value="ALL">ALL</option>
 		        </select>  
 			</ul>
@@ -1714,7 +1728,7 @@
 		</script>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<form id="formAPP">
 	        <input type="hidden"  id="APPXML" name="APPXML" />

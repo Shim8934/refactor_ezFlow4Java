@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
@@ -35,7 +36,7 @@ public interface EzApprovalGService {
 
 	public String getProxyUser(String id, String lang, int tenantID, String offset) throws Exception;
 
-	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID) throws Exception;
+	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID) throws Exception;
 	
 	public String getListHeader(String listCode, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -49,7 +50,7 @@ public interface EzApprovalGService {
 	
 	public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
+	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag, String isUsed) throws Exception;
 	
 	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -71,7 +72,7 @@ public interface EzApprovalGService {
 	
 	public String getAprType(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag) throws Exception;
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID) throws Exception;
 	
 	public String getTempList(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -158,7 +159,7 @@ public interface EzApprovalGService {
 	
 	public String deleteAttachDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
+	public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID, String isUsed, String beforeDocID) throws Exception;
 	
 	public void saveRecReadHist(String readRecXML, int tenantID) throws Exception;
 	
@@ -202,7 +203,7 @@ public interface EzApprovalGService {
 	
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getSignInfo(String docID, String offset, Locale locale, String companyID, int tenantID) throws Exception;
+	public String getSignInfo(String docID, String offset, Locale locale, String primary, String companyID, int tenantID) throws Exception;
 	
 	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID, String offSet) throws Exception;
 	
@@ -259,7 +260,7 @@ public interface EzApprovalGService {
 	public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
-			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag) throws Exception;
+			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception;
 	
 	public String updateSignCheck(String docID, String signCheck, String companyID, int tenantID) throws Exception;
 	
@@ -292,7 +293,7 @@ public interface EzApprovalGService {
 	
 	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
-	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request, LoginVO userInfo) throws Exception;
+	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception;
 	
 	public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 	
@@ -324,13 +325,13 @@ public interface EzApprovalGService {
 
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception;
 
-	public String GetRecordInfo(Document xmlDom, String lang, int tenantID)throws Exception;
+	public String GetRecordInfo(Document xmlDom, String lang, int tenantID, String offSet)throws Exception;
 
 	public String getRecViewer(Document xmlDom,String lang, int tenantID)throws Exception;
 
 	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale)throws Exception;
 
-	public String getRecReadHistory(Document xmlDom, int tenantID) throws Exception;
+	public String getRecReadHistory(Document xmlDom, String offset, int tenantID) throws Exception;
 
 	public String getRecordClassInfo(Document xmlDom, int tenantID) throws Exception;
 	
@@ -390,7 +391,7 @@ public interface EzApprovalGService {
 
 	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo)  throws Exception;
 
-	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID, String langType, String companyID, String pw, HttpServletRequest request, LoginVO userInfo) throws Exception;
+	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception;
 
 	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
@@ -429,7 +430,7 @@ public interface EzApprovalGService {
 	public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
 	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
-			String draftDeptName, String docState, String string,	String pageSize, String pageNum, String orderCell,	String orderOption, String companyID, String lang, String string2,	int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
+			String draftDeptName, String docState, String string, String pageSize, String pageNum, String orderCell,	String orderOption, String companyID, String lang, String string2,	int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
 
@@ -451,6 +452,8 @@ public interface EzApprovalGService {
 
 	public String getDocInfoS(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 
+	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception;
+	
 	public String gongRamSaveIng(Document xmlDom, String dirPath, String companyID, String lang, int tenantId, String offset) throws Exception;
 
 	public void delCirculation(String docID, String companyID, int tenantID) throws Exception;
@@ -459,4 +462,52 @@ public interface EzApprovalGService {
 
 	public String setCabinetHesong(String docID, String deptID,	String deptName, String deptName2, String userName,	String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
+	public String doBansong(String docID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo) throws Exception;
+
+	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
+
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
+
+	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
+
+	public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception;
+
+	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
+
+	public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception;
+
+	public String checkPubDocXML(String mapPath) throws Exception;
+
+	public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception;
+
+	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception;
+
+	public boolean insertRelayDB(String strDocID, String strXDocID, String strRecDate, String strFrom, String strTo, String strSubject, String strXMailType, String strXFromCode, String strXToCode,
+			String strXGW, String strXDocType, String strXDTDVersion, String strXXSLVersion, String strContentType, String strSealURL, String strXmlURL, String strLastDate, String strCompanyID, int tenantID) throws Exception;
+
+	public void fieldUpdate(String strFieldName, String strValue, String strXDocID, String strDeptID, String strCompanyID, int tenantID) throws Exception;
+
+	public void addAttachInfo(String strCont_Name, String strRealFileName, String strDocID, String strSN, String strType, String strCompanyID,	int tenantID) throws Exception;
+
+	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean createRelayDocInfo(String realPath, String strXDocID, String strReceiveID, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception;
+
+	public boolean insFailMessage(String strXDocID, String strSendID, String strSendName, String message, String strCompanyID, int tenantID) throws Exception;
+
+	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception;
+
+	public String setHref(String docID, String fileType, String mode, LoginVO userInfo) throws Exception;
+
+	public String setRecvDocInfo(String docID, String publicFlag, String docNo, String docNumCode, String orgDocNumCode, String mode, String fileType, LoginVO userInfo) throws Exception;
+
+	public String updateRecvDocInfo(String docID, String docNo, String docNumCode, String orgDocNumCode, String cabinetID, String taskCode, String userID, String userName, String userName2, String deptID, String userTitle, String userTitle2, String deptName, String deptName2, String tempCompanyID, LoginVO userInfo, String realPath) throws Exception;
+
+	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception;
+
+	public List<OrganUserVO> getTenantID() throws Exception;
 }

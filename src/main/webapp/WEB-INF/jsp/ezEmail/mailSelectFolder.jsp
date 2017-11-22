@@ -61,7 +61,7 @@
 	                treeconfig = loadXMLString(xmlHTTP.responseText);
 	
 	            PostTreeView.config(treeconfig);
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	
 	            if (PostTreeView.selectedIndex() == -1) {
@@ -75,7 +75,7 @@
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
-	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true)
+	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false)
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
 	        function btn_Select_onclick() {
@@ -123,13 +123,13 @@
 		            return;
 		        }
 	            
-	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
+	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, false);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
 	        }
 	        
 	        function LoadAddressTree(SelectIndex) {
 	            PostTreeView.config(treeconfig);
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	            PostTreeView.toggle(SelectIndex);
 	        }
@@ -198,7 +198,7 @@
 	    </table>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel_sub">
-	        <iframe src="/blank.htm" style="border: none;" id="iFrameLayer_sub"></iframe>
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>
 	    </div>
 	</body>
 </html>

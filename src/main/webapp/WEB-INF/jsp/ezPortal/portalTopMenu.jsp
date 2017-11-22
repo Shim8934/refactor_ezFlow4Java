@@ -783,17 +783,19 @@
 				selectedSubCell = "";
 			}
 	
-			function removecell()
-			{
+			function removecell(type) {
 				if (bInherit)
 				{
 					alert("<spring:message code='ezPortal.t350' />");
 					return;
 				}
 	
-				if (selectedCell == "")
-				{	
-					alert("<spring:message code='ezPortal.t297' />");
+				if (selectedCell == "") {
+					if (type == 'field') {
+						alert("<spring:message code='ezPortal.jjs12' />");	
+					} else {
+						alert("<spring:message code='ezPortal.t297' />");	
+					}
 					return;
 				}
 				
@@ -1570,7 +1572,7 @@
 							<li><span onClick="editingmode()"><spring:message code='ezPortal.t323' /></span></li>					
 							<li><span onClick="preview()"><spring:message code='ezPortal.t63' /></span></li>				
 							<li><span onClick="insertpage()"><spring:message code='ezPortal.t325' /></span></li>
-							<li><span onClick="removecell()"><spring:message code='ezPortal.t326' /></span></li>
+							<li><span onClick="removecell('field')"><spring:message code='ezPortal.t326' /></span></li>
 							<li><span onClick="insertcell()"><spring:message code='ezPortal.t327' /></span></li>
 							<li><span onClick="removecell()"><spring:message code='ezPortal.t328' /></span></li>
 							<li><span onClick="insertrow()"><spring:message code='ezPortal.t329' /></span></li>

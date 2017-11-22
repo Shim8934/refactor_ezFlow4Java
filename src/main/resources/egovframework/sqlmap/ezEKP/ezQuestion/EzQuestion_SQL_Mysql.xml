@@ -1853,6 +1853,10 @@
      				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID#)
 			]]>
 		</isEqual>
+    
+        <isNotEqual property="v_temp" compareValue="1">
+            SELECT 1
+        </isNotEqual>
 	</insert>
 	
 	<!-- <procedure id="EzQuestionDAO.callGetItemSeq" parameterClass="Map" resultClass="Integer" >

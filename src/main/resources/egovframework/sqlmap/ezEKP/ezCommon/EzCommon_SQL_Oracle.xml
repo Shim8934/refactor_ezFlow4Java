@@ -105,6 +105,21 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.getUserConfig" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT	
+					PROPERTY_VALUE 
+			FROM	
+					TBL_USER_CONFIG
+			WHERE 	
+					TENANT_ID = #tenant_id#
+			AND 	
+					USER_ID = #user_id#
+			AND		
+					UPPER(PROPERTY_NAME) = #property_name#
+		]]>
+	</select>
+
 	<insert id="EzCommonDAO.insertTblUserLocalInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_USERLOCALINFO (
@@ -115,6 +130,32 @@
 			)
 		]]>
 	</insert>
+
+	<insert id="EzCommonDAO.insertUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_USER_CONFIG (
+				TENANT_ID, USER_ID, PROPERTY_NAME, PROPERTY_VALUE
+			)
+			VALUES (
+				#tenant_id#, #user_id#, #property_name#, #property_value#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzCommonDAO.updateUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE  
+					TBL_USER_CONFIG
+			SET		
+					PROPERTY_VALUE = #property_value#
+			WHERE 	
+					TENANT_ID = #tenant_id#
+			AND		
+					USER_ID = #user_id#
+			AND 	
+					PROPERTY_NAME = #property_name#
+		]]>	
+	</update>
 	
 	<delete id="EzCommonDAO.deleteUserLLocalInfo" parameterClass="Map">
 		<![CDATA[

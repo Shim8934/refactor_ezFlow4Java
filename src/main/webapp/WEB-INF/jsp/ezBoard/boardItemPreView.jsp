@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -108,7 +109,7 @@
 		        }
 		
 		        for (var i = 0; i < 5; i++) {
-		            if (document.getElementById("extensionAttribute" + i) != null) {
+		            if (document.getElementById("extensionAttribute" + (i + 6)) != null) {
 		                var paremtElement = opener.document.getElementsByName("extensionAttribute" + (i + 6));
 		                var WriterValue = "";
 		                if (paremtElement.length > 1) {
@@ -122,7 +123,7 @@
 		                    WriterValue = paremtElement[0].value;
 		                }
 		
-		                document.getElementById("extensionAttribute" + i).innerHTML = WriterValue;
+		                document.getElementById("extensionAttribute" + (i + 6)).innerHTML = WriterValue;
 		            }
 		        }
 		    };
@@ -196,6 +197,34 @@
 		          <th><spring:message code='ezBoard.t291'/></th>
 		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 15px; vertical-align: middle"></div></td>
 		        </tr>
+		        <!-- 추가 항목이 있을 경우 -->
+       			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
+       				<tr>
+       					<c:choose>
+       						<c:when test="${extenLang == 1}">
+         						<th>${boardAttributeVO.colName1}</th>
+       						</c:when>
+       						<c:otherwise>
+       							<th>${boardAttributeVO.colName2}</th>
+       						</c:otherwise>
+       					</c:choose>
+       					<c:choose>
+       						<c:when test="${boardAttributeVO.colType == 'radio'}">
+				                <td colspan="5" id="${boardAttributeVO.tableCol}">
+				                </td>
+      						</c:when>
+      						<c:when test="${boardAttributeVO.colType == 'text'}">
+				                <td colspan="5" id="${boardAttributeVO.tableCol}">
+				                </td>
+       						</c:when>
+       						<c:when test="${boardAttributeVO.colType == 'check'}">
+				                <td colspan="5" id="${boardAttributeVO.tableCol}">
+				                </td>
+       						</c:when>
+       					</c:choose>
+       				</tr>
+       			</c:forEach>
+	          <!-- 추가 항목이 있을 경우 끝-->
 		      </table>
 		      </td>
 		  </tr>

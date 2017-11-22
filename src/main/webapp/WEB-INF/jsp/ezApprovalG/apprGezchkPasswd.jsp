@@ -25,26 +25,57 @@
 		        };
 		    }
 		    
+		    var flag = true;
 		    function btn_OpinionOK_onclick() {
-		        var rtnVal = "cancel";
-		        if (trim(document.getElementById("inpPassword").value).length == 0) {
-		            alert("<spring:message code='ezApprovalG.t1746'/>");
-		            document.getElementById("inpPassword").focus();
-		            return;
-		        }
-		        else {
-		            rtnVal = chkPasswd();
-		        }
-		
-		        if (ReturnFunction != null) {
-		            ReturnFunction(rtnVal);
-		            window.close();
-		        }
-		        else {
-		            window.returnValue = rtnVal;
-		            window.close();
+		    	if (flag) {
+					flag = false;		    		
+			        var rtnVal = "cancel";
+
+			        if (trim(document.getElementById("inpPassword").value).length == 0) {
+			            alert("<spring:message code='ezApprovalG.t1746'/>");
+			            document.getElementById("inpPassword").focus();
+			            return;
+			        }
+			        else {
+			            rtnVal = chkPasswd();
+			        }
+			        
+					if (rtnVal != "FALSE") {
+				        if (ReturnFunction != null) {
+				            ReturnFunction(rtnVal);
+				            window.close();
+				        }
+				        else {
+				            window.returnValue = rtnVal;
+				            window.close();
+				        }
+					} else {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+				            OpenAlertUI(pAlertContent);
+				            return;
+					}
+			    }
+		    }
+		    
+		    var ezapralert_cross_dialogArguments = new Array();
+		    function OpenAlertUI(pAlertContent) {
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = pAlertContent;
+		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
+		            try { ezAPRALERT_Cross.focus(); } catch (e) {
+		            }
+		        } else {
+		            var parameter = pAlertContent;
+		            var url = "/ezApprovalG/ezAprAlert.do";
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
 		    }
+		    
+		    function OpenAlertUI_Complete() {
+		    }
+		    
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
 		            window.close();
@@ -121,7 +152,9 @@
 		        	
 		            return result;
 		        } catch (e) {
+					flag = true;		        	
 		            alert(e.description);
+		            return "";
 		        }
 		    }
 		    function trim(parm_str) {
@@ -164,8 +197,8 @@
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition">
-		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
+		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick();"><span><spring:message code='ezApprovalG.t20'/></span></a>
+		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>

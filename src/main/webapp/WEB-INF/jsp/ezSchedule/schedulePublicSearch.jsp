@@ -228,8 +228,8 @@
 			  	<tr>
 			    	<th style="white-space:nowrap"> <spring:message code='ezSchedule.t292' /></th>
 			    	<td colspan="2">
-			       		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" /> ~ 
-			       		<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
+			       		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~ 
+			       		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 						<a href="#" class="imgbtn">
 							<span onClick="search()"><spring:message code='ezSchedule.t24' /></span>
 						</a>
@@ -251,8 +251,8 @@
 			    	<th style="width:140px"><spring:message code='ezSchedule.t274' /></th>
 			    	<th style="width:140px"><spring:message code='ezSchedule.t275' /></th>
 			  	</tr>
-			  	<c:forEach var="item" items="${scheduleList}">
-		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','REPEATCOUNT','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff>
+			  	<c:forEach var="item" items="${scheduleList}">			  	
+		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','${item.repeatCount}','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff>
 		    		<td colspan=2 style="padding:0 2px;width:30px;text-align:center;">
 		    			<c:if test="${item.importance == '1'}"><img src='/images/calendar/i_l.png' width='13' height='13'/></c:if>
 		    			<c:if test="${item.importance == '2'}">&nbsp;</c:if>

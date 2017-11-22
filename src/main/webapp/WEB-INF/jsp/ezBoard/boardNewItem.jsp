@@ -118,7 +118,6 @@
 		    var pUseBackGround = "${useBackGround}";
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
-		    var strTitle = "${fn:replace(strTitle, '\"', '\\\"' )}";
 		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
@@ -211,7 +210,7 @@
 			    	document.getElementById('Makedate').style.display = "none";
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
-			        document.getElementById("txtTitle").value = strTitle;
+			        document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
 				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
@@ -221,7 +220,7 @@
 			        }
 			    }
 			    if (pMode == "reply") {
-			    	document.getElementById("txtTitle").value = strTitle;
+			    	document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
 				}
 			    if (pReservedItem != "true") {
 			        //var nowDate = new Date();
@@ -382,7 +381,7 @@
 					data : { itemID : strItemID, 
 							 mode   : pMode,
 							 conLocation : strContentLocation,
-							 title : strTitle
+							 title : ConvMakeXMLString("<c:out value='${boardListVO.title}'/>")
 						   },
 					success: function(result){
 						resText = result;
@@ -927,14 +926,14 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            else {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
@@ -1261,6 +1260,8 @@
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&quot;", "\"");
 		        str = ReplaceText(str, "&#39;", "'");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\'");
 		        return str;
 		    }
 		    function GetSmallUrl() {
@@ -1996,7 +1997,7 @@
 								</c:if>	
 		                        </td>
 	                    </tr>
-             <!-- 추가 항목이 있을 경우 -->
+             			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>
              					<c:choose>
@@ -2030,17 +2031,18 @@
              					</c:choose>
              				</tr>
              			</c:forEach>
-	          <!-- 추가 항목이 있을 경우 끝--> 
+	         			<!-- 추가 항목이 있을 경우 끝-->
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">
-	                            <input type="text" id="txtTitle" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)"></td>
+	                            <input type="text" id="txtTitle" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)" ></td>
 	                    </tr>
 	                    <c:if test="${boardInfo.guBun == '2'}">
 		                    <tr>
 		                        <th><spring:message code='ezBoard.t438' /></th>
 		                        <td colspan="3">
-		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15">&nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
+		                        	<input type="password" id="txtPassWord_fake" style="WIDTH: 150px; display: none;" maxlength="15" autocomplete="new-password">
+		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15" autocomplete="new-password">&nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
 		                    </tr>
 	                    </c:if>
 	                </table>
@@ -2207,7 +2209,8 @@
 		                    <tr style="display: none">
 		                        <th><spring:message code='ezBoard.t438' /></th>
 		                        <td style="vertical-align: middle" colspan="2">
-		                            <input type="password" id="txtPassWord" style="WIDTH: 100px" maxlength="15">
+		                            <input type="password" id="txtPassWord_fake" style="WIDTH: 100px; display: none;" maxlength="15" autocomplete="new-password">
+		                            <input type="password" id="txtPassWord" style="WIDTH: 100px" maxlength="15" autocomplete="new-password">
 		                            &nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
 		                    </tr>
 	                    </c:if>
@@ -2221,28 +2224,11 @@
 	            </c:otherwise>
         	</c:choose>
 	        </tr>
-	        <c:choose>
-	        	<c:when test="${boardInfo.guBun != '3'}">
-			        <tr>
-			            <td style="vertical-align: top; height: 100%" class="pad2" id="EdtorSize">
-			                <table style="width: 100%; height: 100%">
-			                    <tr>
-			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0px; width: 99.7%; height: 100%; overflow: auto; border-top-width: 0px;"></iframe>
-			                        </td>
-			                    </tr>
-			                </table>
-			            </td>
-			        </tr>
-	        	</c:when>
-	        	<c:otherwise>
-			        <tr>
-			            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-			                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
-			            </td>
-			        </tr>
-	        	</c:otherwise>
-	        </c:choose>
+	        <tr>
+	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
+	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	            </td>
+	        </tr>
 	        <tr id="docTR" style="display: none">
 	            <td>
 	                <div id="docContentBorder" style="border: #B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top: 5px;">
@@ -2293,7 +2279,7 @@
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 	<script type="text/javascript">

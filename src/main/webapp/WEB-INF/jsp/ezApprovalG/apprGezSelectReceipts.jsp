@@ -470,17 +470,20 @@
     }
     function getExtLdapInfo(OrganCode) {
         try {
-            var xmlhttp = createXMLHttpRequest();
-            var xmlpara = createXmlDom();
+        	$.ajax({
+        		type : "POST",
+        		dataType : "text",
+        		async : false,
+        		url : "/ezOrgan/getOrgInfo.do",
+        		data : {
+        			orgID 	: OrganCode
+        		},
+        		success: function(text){
+        			result = text;
+        		}        			
+        	});
 
-            var objNode;
-            createNodeInsert(xmlpara, objNode, "PARA");
-            createNodeAndInsertText(xmlpara, objNode, "ORGID", OrganCode);
-
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrgInfo.aspx", false);
-            xmlhttp.send(xmlpara);
-
-            return xmlhttp.responseXML;
+            return loadXMLString(result).documentElement;
         }
         catch (e) {
             return "";
@@ -540,12 +543,12 @@
             searchorganglist_dialogArguments[0] = g_progresswin;
             searchorganglist_dialogArguments[1] = btnSearchDept_onClick_Complete;
 
-            DivPopUpShow(600, 600, "/myoffice/ezApprovalG/ezOrganG/SearchOrganGList.aspx?keyword=" + escape(tmpDeptName));
+            DivPopUpShow(600, 600, "/ezApprovalG/searchOrganGList.do?keyword=" + encodeURIComponent(tmpDeptName));
         }
         else {
             var feature = "status:no;dialogWidth:600px;dialogHeight:600px;scroll:no;edge:sunken;help:no;";
             feature = feature + GetShowModalPosition(600, 600);
-            reParam = window.showModalDialog("/myoffice/ezApprovalG/ezOrganG/SearchOrganGList.aspx?keyword=" + escape(tmpDeptName), g_progresswin, feature);
+            reParam = window.showModalDialog("/ezApprovalG/searchOrganGList.do?keyword=" + encodeURIComponent(tmpDeptName), g_progresswin, feature);
             document.getElementById("txtOuterDeptName").focus();
 
 
@@ -808,7 +811,7 @@
 </div>
 <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 <script type="text/javascript" >
 	selToggleList(document.getElementById("tabnav"), "ul", "li", "1");

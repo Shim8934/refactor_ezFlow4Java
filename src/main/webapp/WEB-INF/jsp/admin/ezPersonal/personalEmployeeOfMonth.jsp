@@ -24,7 +24,14 @@
 		    function btn_Select() {
 		        if (CrossYN()) {
 		            select_best_dialogArguments[1] = btn_Select_Complete;
-		            var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(400, 200));
+		            //크롬일때 alert창 크기때문에 크롬일때 구별
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(448, 200));	
+		            } else {
+		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(400, 200));
+		            }
+		            
 		            try { Select_Best.focus(); } catch (e) {
 		            }
 		        }  else {

@@ -24,7 +24,12 @@
 		            window.focus();
 		        };
 		    }
+		    
+		    var flag = true;
 		    function btn_OpinionOK_onclick() {
+		    	if (flag) {
+		    		flag = false;
+					
 		        var rtnVal = "cancel";
 		
 		        if (trim(document.getElementById("inpPassword").value).length == 0) {
@@ -36,26 +41,50 @@
 		        else {
 		            rtnVal = chkPasswd();
 		        }
-		        if (ReturnFunction != null)
-		            ReturnFunction(rtnVal);
-		        else
-		            window.returnValue = rtnVal;
+		        if (rtnVal != "FALSE") {
+			        if (ReturnFunction != null)
+			            ReturnFunction(rtnVal);
+			        else
+			            window.returnValue = rtnVal;
+		        } else {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+		            OpenAlertUI(pAlertContent);
+		            return;
+		        }
 		    }
+		    }
+		    var ezapralert_cross_dialogArguments = new Array();
+		    function OpenAlertUI(pAlertContent) {
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = pAlertContent;
+		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
+		            try { ezAPRALERT_Cross.focus(); } catch (e) {
+		            }
+		        } else {
+		            var parameter = pAlertContent;
+		            var url = "/ezApprovalG/ezAprAlert.do";
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		        }
+		    }
+		    
+		    function OpenAlertUI_Complete() {
+		    }
+		    
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null)
 		            ReturnFunction("cancel");
 		        else
 		            window.returnValue = "cancel";
+		        
+		        window.close();
 		    }
 		    var RetValue;
 		    var ReturnFunction;
 		    window.onload = function () {
 // 		        initKey();
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
-		        var ua = navigator.userAgent;
-		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		           KeEventControl(document.getElementById("inpPassword"));
-		        }
 		        try {
 		            RetValue = parent.ezchkpasswd_all_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezchkpasswd_all_cross_dialogArguments[1];
@@ -107,7 +136,9 @@
 		
 		            return result;
 		        } catch (e) {
+		        	 flag = true;
 		            alert(e.description);
+		            return "";
 		        }
 		    }
 		    var ezapralert_cross_dialogArguments = new Array();
@@ -175,7 +206,7 @@
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

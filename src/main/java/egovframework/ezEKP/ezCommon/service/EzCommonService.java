@@ -16,11 +16,11 @@ public interface EzCommonService {
 
 	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
-	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale) throws Exception;
+	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale, String scheme) throws Exception;
 	
 	public String loadMHTFile(String path) throws Exception;
 	
-	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale, String domain) throws Exception;
+	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale, String domain, String scheme) throws Exception;
 	
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	
@@ -43,4 +43,11 @@ public interface EzCommonService {
 	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception;
 
 	public int getTenantIdByDomainName(String domainName) throws Exception;
+	
+	public String getUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception;
+	
+	public int updateUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
+	
+	public void insertUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
+	
 }

@@ -154,13 +154,13 @@
 		</tr>
 	</table>
 </div>
-<div ID="divTabDis3" style="DISPLAY: none; HEIGHT: 215px;"> 
-	<table class="content">
+<div id="divTabDis3" style="DISPLAY: none;width:100%;"> 
+	<table class="content" style="width:100%;">
 		<tr> 
-			<td id=tdSCInfo>
-			<div class="listview" style="width:605px;overflow-x : auto">
-                <div id="SCList"  style="border:0;Width:950px;Height:189px; OVERFLOW-Y:AUTO;" ></div>
-            </div></td>
+			<td id="tdSCInfo">
+			<div class="listview" style="width:610px;overflow-x : auto">
+            <div id="SCList" style="BEHAVIOR:url('#behave1#ListView');border:0; width:950px; height:230px;" onclick ="" OnSelChanged="" onRowDblClick=""></div></div></td>
+
 		</tr>
 	</table>
 </div>

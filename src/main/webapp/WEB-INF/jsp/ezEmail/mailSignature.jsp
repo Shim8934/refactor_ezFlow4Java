@@ -272,10 +272,10 @@
 	                <p id = "MailEnv_sub8"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t828' /></span></p>
 		    </div>
 	    </div>
-		<table id="signtable1" class="content" style="width:780px;height:510px"> 
+		<table id="signtable1" class="content" style="width:780px;height:510px;border:0;"> 
 		  <TR> 
-		    <TD style="height:510px;">
-				<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILSIGNATURE" name="tbContentElement" style="padding:0; height:200px; width:100%; overflow:auto;border:none;height:100%"></iframe>
+		    <TD style="height:510px;padding:0;border:0;">
+				<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILSIGNATURE" name="tbContentElement" style="padding:0; height:200px; width:100%; overflow:auto; height:100%"></iframe>
 		    </TD> 
 		  </TR> 
 		</table>
@@ -294,7 +294,7 @@
 	</script>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="top: 10px; z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="/blank.htm" style="border:1px solid #b6b6b6;" id="iFrameLayer"></iframe>
+		<iframe src="<spring:message code='main.kms4' />" style="border:1px solid #b6b6b6;" id="iFrameLayer"></iframe>
 	</div>
 </html>
 

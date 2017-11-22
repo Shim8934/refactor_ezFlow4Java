@@ -3,9 +3,8 @@ var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 
 //결재선정보 Mapping하는 함수
-function GetDraftAprLineInfo(ret)
-{
-  try{
+function GetDraftAprLineInfo(ret) { 
+	try{
     DraftLastFlag = false;
     
 	var xmlKuljea;
@@ -38,17 +37,15 @@ function GetDraftAprLineInfo(ret)
 	if (ret[5] == undefined) {
 	    xmlKuljea = ret[0];
 	    xmlReDraft = ret[2];
-	}
-	else {
+	} else {
 	    xmlKuljea = ret[1];
 	    xmlReDraft = ret[5];
 	}
 
 	xmlReDraft = "R";
-	if(xmlReDraft == "C")
-	{
+	if (xmlReDraft == "C") {
 		ApplyDocCellInfo();
-	}else if(xmlReDraft == "R"){
+	} else if (xmlReDraft == "R") {
 		ClearDocCellInfo();
 	}
 
@@ -58,14 +55,11 @@ function GetDraftAprLineInfo(ret)
 	fields = message.GetFieldsList();
 	count = objNodes.length;
 
-	for(i=1;i<200;i++)
-	{
+	for(i=1; i<200; i++) {
 		name = "habyuidate" + i;
 		field = message.GetListItem(fields,name);
-		if(field)
-	  	{
-	  		if(!trim(field.textContent))
-	  		{
+		if(field) {
+	  		if(!trim(field.textContent)) {
 	  			name = "habyui" + i;
 	  			field = message.GetListItem(fields,name);
 	  			if(field)
@@ -82,21 +76,19 @@ function GetDraftAprLineInfo(ret)
 	  		    if(field)
 	  				field.textContent = "";
 	  		}
-		}else{
+		} else {
 	  		break;
 	  	}
 	}
 	
 	//공람(참석)
-	for(i=1;i < fields.Count;i++)
-	{
+	for(i=1; i < fields.Count; i++) { 
 		field = message.GetListItem(fields, "gongram" + i);
 		if(field) field.textContent = "";
 	}
 	
     //순서를 정리한다.	
-	for(i=0;i < count;i++)
-	{
+	for(i=0; i < count; i++) {
 	    var KyljeaOrder     = getNodeText(GetChildNodes(objNodes[i])[0]);
 	    var KyljeaName      = getNodeText(GetChildNodes(objNodes[i])[1]);
 	    var KyljeaDeptName  = getNodeText(GetChildNodes(objNodes[i])[3]);
@@ -124,18 +116,15 @@ function GetDraftAprLineInfo(ret)
      
     //마지막사인Index
     LastSignSN = OrderType.length;
-    for(i=1;i<OrderType.length;i++)
-    {
+    for(i=1;i<OrderType.length;i++) {
 		 
-    	if(OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40)    	
-    	{
+    	if(OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
     		LastSignSN = i;
         }	
     }
 
 	 
-    if (OrderType[1] == strAprType4)
-    {
+    if (OrderType[1] == strAprType4) {
 		DraftLastFlag = true;
     }
      
@@ -156,15 +145,11 @@ function GetDraftAprLineInfo(ret)
 	
 	refer = "";
 
-	for(i=0;i < OrderType.length;i ++)
-	{
-		switch (OrderType[i])
-		{
+	for(i=0;i < OrderType.length;i ++) {
+		switch (OrderType[i]) {
 			
-	  	   	 
 	  		case strAprType1:
 	  			break;
-	  			
 	  		 
 	  		case strAprType2:
 	  			//기안자확인
@@ -175,8 +160,7 @@ function GetDraftAprLineInfo(ret)
 	  			//재기안결재선변경
 	  			//R : 다시시작 
 	  			//C:계속진행
-	  			if(xmlReDraft == "R")
-	  			{
+	  			if(xmlReDraft == "R") {
 		  		    fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -194,9 +178,7 @@ function GetDraftAprLineInfo(ret)
 	  				
 	  				if(field)
 	  				field.textContent = OrderJobtitle[i];
-	  			}
-	  			else if(xmlReDraft == "C")
-	  			{
+	  			} else if(xmlReDraft == "C") {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -215,9 +197,7 @@ function GetDraftAprLineInfo(ret)
 	  				if(field && OrderStat[i] != strLang26)
 	  					field.Value = OrderJobtitle[i];
 	  				IsSkipDrafter = "TRUE";
-	  			}
-	  			else
-	  			{
+	  			} else {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -242,27 +222,21 @@ function GetDraftAprLineInfo(ret)
 	  		 
 	  		case strAprType8:
 	  			//재기안결재선변경   	  			//R : 다시시작 	//C:계속진행
-	  			if(xmlReDraft == "R")
-	  			{
+	  			if(xmlReDraft == "R") {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
 	  				if(field)
 	  					field.textContent = OrderDept[i];
 	  				IsSkipDrafter = "FALSE";
-	  			}
-	  			else if(xmlReDraft == "C")
-	  			{
+	  			} else if(xmlReDraft == "C") {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
-	  				if (field && OrderStat[i] != "" + strLang57 + "")
-	  				{
+	  				if (field && OrderStat[i] != "" + strLang57 + "") {
 	  				}
 	  				IsSkipDrafter = "TRUE"; 
-	  			}
-	  			else
-	  			{
+	  			} else {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -272,14 +246,12 @@ function GetDraftAprLineInfo(ret)
 	  			hapyuiCnt = hapyuiCnt + 1;
 	  			break;
 	  		
-	  		  	
 	  		case strAprType7:
-	  			if (referCnt == 1)
-	  			{
+	  			if (referCnt == 1) {
 	  				refer = "";			
 	  				refer = refer + OrderName[i];
 	  				referCnt = referCnt + 1;
-	  			}else{
+	  			} else {
 	  				refer = refer + ", "  + OrderName[i];
 	  			}
 	  			break;
@@ -966,9 +938,8 @@ function putJunkyulSign(signID)
 }
 
 //사인 Mapping 처리 Spec 적용 
-function SendDraftMappingSign(ret)
-{
-  try{
+function SendDraftMappingSign(ret) {
+  try {
 	var fields = message.GetFieldsList();//CKEDITOR-원본 : var fields = FormProc.Fields;
 	var field;
 	var psigncell;
@@ -1007,16 +978,14 @@ function SendDraftMappingSign(ret)
     } else {
     	if ( LastSignSN == "1") 
     		signposition = 1;
-    	else if (DraftLastFlag)		
-    	{
+    	else if (DraftLastFlag) {
     		putJunkyulSign("sign" + signposition);
-    		for(i=1;i<20;i++)
-    		{
+    		for(i=1; i<20; i++) {
     			if(pDraftFlag == "SUSIN") signID = "sign" + i;
     			else signID = "sign" + i;
     			
     			field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
-    			if(field){
+    			if(field) {
     				LastSignNo = i;
     			}
     		}
@@ -1024,14 +993,11 @@ function SendDraftMappingSign(ret)
     	}
     }
 	
-	if(pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU")  
-	{ 
+	if (pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU") { 
 		psigncell = pSusinSN + "sign" + signposition;
 		pseumyungcell = pSusinSN + "jikwe" + signposition;
 		pseumyungdatecell = pSusinSN + "seumyungdate" + signposition;
-	}
-	else
-	{
+	} else {
 	    psigncell = "sign" + signposition;
 	    pseumyungcell = "jikwe" + signposition;
 	    pseumyungdatecell = "seumyungdate" + signposition;
@@ -1054,11 +1020,15 @@ function SendDraftMappingSign(ret)
 	var strimg;
 	var SingFlag = true;
 	 
-	if(ret != "NAME")
-	{
+	if(ret != "NAME") {
 	    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
 	    strimg = strimg + " width=" + signWidth;
-	    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
+	    
+	    if (signImageType = "NAME") {
+	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> " + "<br>" + arr_userinfo[2];
+	    } else {
+	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
+	    }
 	  	field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg;
 	
 	  	//사인정보를 저장한다.(Undo용)
@@ -1068,11 +1038,8 @@ function SendDraftMappingSign(ret)
 		SignContent[signCnt] = strimg;
 	  	signCnt = signCnt + 1;
 	  	SingFlag = true;
-	}
-	else
-	{
-	  	if(field)
-	  	{
+	} else {
+	  	if(field) {
 	  	    strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
 	  		field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg
 		  
@@ -1087,10 +1054,8 @@ function SendDraftMappingSign(ret)
 	}
     //서명정보를 display해주는 function
 	field = message.GetListItem(fields, pseumyungcell);//CKEDITOR-원본 : field = fields.item(pseumyungcell);
-	if(SingFlag)
-	{
-	  	if(field)
-	  	{
+	if(SingFlag) {
+	  	if(field) {
 	  		setNodeText(field , arr_userinfo[3]);
 	  		//사인정보를 저장한다.(Undo용)
 	  		signInfo[signCnt] = pseumyungcell;
@@ -1099,11 +1064,8 @@ function SendDraftMappingSign(ret)
 			SignContent[signCnt] = arr_userinfo[3];
 	  		signCnt = signCnt + 1;
 	  	}
-	}
-	else
-	{
-	  	if(field)
-	  	{
+	} else {
+	  	if(field) {
 	  		setNodeText(field , arr_userinfo[3]);
 	  		//사인정보를 저장한다.(Undo용)
 	  		signInfo[signCnt] = pseumyungcell;
@@ -1116,8 +1078,7 @@ function SendDraftMappingSign(ret)
   
 	//서명일자
 	field = message.GetListItem(fields, pseumyungdatecell);//CKEDITOR-원본 : field = fields.item(pseumyungdatecell)
-	if(field)
-	{
+	if(field) {
 		setNodeText(field , s);
 		//사인정보를 저장한다.(Undo용)
 		signInfo[signCnt] = pseumyungdatecell;
@@ -1265,9 +1226,8 @@ function getDeptSymbol(DeptID, DeptName)
 }
 
 //자동입력Field에 값을 입력하는 함수
-function SetAutoPropertyValue()
-{
-  try{
+function SetAutoPropertyValue() {
+  try {
     //var fields = FormProc.Fields;
     var fields = message.GetFieldsList();
     if(!fields) return;
@@ -1285,15 +1245,12 @@ function SetAutoPropertyValue()
     hapyuiCount = 0;
     SignCount = 0;
   
-	for (i = 0 ; i < fields.length ; i ++)
-	{
+	for (i = 0 ; i < fields.length ; i ++) {
 		var field = fields[i];
 		if(!fields) return;
 		
-		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL")
-		{
-	  		switch (field.id)
-	  		{
+		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL") {
+	  		switch (field.id) {
 	  			case "bedocnumber" :
 	  				setDocNumFormat("be");
 	  				break;
@@ -1370,11 +1327,8 @@ function SetAutoPropertyValue()
 		  			field.textContent = arr_userinfo[2];//CKEDITOR-원본 : field.Value = arr_userinfo[2];
 		  			break;	
  			}	  	
-	  	}
-	  	else
-	  	{
-	  	    switch (field.id)
-	  	    {
+	  	} else {
+	  	    switch (field.id) {
 	  	     	case pSusinSN + "receiptdate" :	 
 	  				field.textContent = CurrentDate;//CKEDITOR-원본 : field.Value = CurrentDate;
 	  				break;
@@ -1382,49 +1336,37 @@ function SetAutoPropertyValue()
 	  	}
 	  	
 	  	//일반결재
-	  	if(pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU")
-	  	{
+	  	if(pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU") {
 	  		var pSignSusin = pSusinSN + "sign";
 	  		if (field.id.substr(0, pSignSusin.length) == pSignSusin)
 	  	  		SignCount = SignCount + 1;
-	  	}
-	  	else
-	  	{
+	  	} else {
 	  		if (field.id.substr(0, 4) == "sign")
 	  	  		SignCount = SignCount + 1;
 	  	} 
       
 		//합의
-	    if (field.id.substr(0, 10) == "habyuidate")
-	    {
+	    if (field.id.substr(0, 10) == "habyuidate") {
 	    	hapyuiCount = hapyuiCount + 1;
 	    }
 	    
 	    //공람칸
-	    if (field.id.substr(0, 7) == "gongram")
-	    {
+	    if (field.id.substr(0, 7) == "gongram") {
 	    	gongramCount = gongramCount + 1;
 	    }
 	  	
 	    //직위정보
-	    if(pDraftFlag == "SUSIN" || pSusinSN != "0" || pDraftFlag == "GAMSABU")
-	    {
+	    if(pDraftFlag == "SUSIN" || pSusinSN != "0" || pDraftFlag == "GAMSABU") {
 			var pSignInfoSusin = pSusinSN + "jikwe";
-			if(field.id.substr(0,pSignInfoSusin.length) == pSignInfoSusin)
-			{
-				if(SignInfoFlag)
-				{
+			if(field.id.substr(0,pSignInfoSusin.length) == pSignInfoSusin) {
+				if(SignInfoFlag) {
 					SignInfo = field.textContent;//CKEDITOR-원본 : SignInfo = field.value;
 					SignInfoFlag = false;
-				}
-				else
-				{
+				} else {
 					SignInfo = field.textContent + ";" + SignInfo ;//CKEDITOR-원본 : SignInfo = field.value + ";" + SignInfo ;
 				}
 			}
-	    }
-	    else
-	    {
+	    } else {
 			if(field.id.substr(0,5) == "jikwe")
 			{
 				if(SignInfoFlag)
@@ -1572,7 +1514,13 @@ function SaveDraftDocInfo()
 
             createNodeInsert(xmlpara, objNode, "PARAMETER");
             createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-            createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
+            //합의문 formid로 수정해야
+            if (pDraftFlag == "HAPYUI") {
+            	createNodeAndInsertText(xmlpara, objNode, "FORMID", "2003000007");
+            } else {
+            	createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
+            }
+            	
             if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
                 createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
             else
@@ -2367,86 +2315,128 @@ function SaveDraftDocInfo()
 		
 //        var fieldValue = getfieldValue(field);//pzFormProc.editor.DOM.body.getAttribute("orgdocnum");
         var fieldValue = message2.DocumentBodyGetAttribute("orgdocnum", 0);
-        Arr_Header = fieldValue.split("@");
-	   
-        for(i=1;i<Arr_Header.length;i++)
-        {
-            Header = Arr_Header[i].substr(0,2);
-            Tail   = Arr_Header[i].substr(2);
-				
-            switch(Header)
-            {
-                case "DP":
-                    numHeader = numHeader + DeptSymbol + Tail;
-                    break;			
-
-                case "dp":
-                    numHeader = numHeader + DeptSymbol + Tail;
-                    break;
-
-                case "YY":
-                    numHeader = numHeader + szYear + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    break;
-
-                case "yy":
-                    var yyear = szYear;//20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    numHeader = numHeader + yyear.toString().substr(2) + Tail; 
-                    break;
-
-                case "MM":
-                    numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    break;
-
-                case "mm":			    
-                    if(szMonth.substr(0,1) == "0")
-                    {
-                        numHeader = numHeader + szMonth.substr(1) + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    }
-                    else
-                    {
-                        numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    }
-                    break;
-
-                case "NN":
-                    break;
-
-                case "nn":
-                    break;
-
-                case "cs":
-                    if (tempItemCode != "")
-                        numHeader = numHeader + tempItemCode + Tail;
-                    else
-                        numHeader = numHeader + tempdocnumcode + Tail;
-                    break;
-
-                case "FT":
-                	numHeader += "FT" + Tail;
-                	break;
-                	
-                case "MV":
-                	numHeader += "MV" + Tail;
-                	break;
-                	
-                case "YM":
-                	numHeader = numHeader + szYear.toString().substr(2);
-                	numHeader = numHeader + szMonth;
-                	numHeader = numHeader + szDay + Tail;
-                	
-                	break;
-                	
-                default:
-                    numHeader = numHeader + fieldValue;
-                    break;
-            }
+      
+        if (fieldValue != null) {
+	        if (fieldValue.indexOf("@")) {
+	        	Arr_Header = fieldValue.split("@");
+	        
+		        for (i=1; i<Arr_Header.length; i++) {
+		            Header = Arr_Header[i].substr(0,2);
+		            Tail   = Arr_Header[i].substr(2);
+						
+		            switch(Header) {
+		                case "DP":
+		                    numHeader = numHeader + DeptSymbol + Tail;
+		                    break;			
+		
+		                case "dp":
+		                    numHeader = numHeader + DeptSymbol + Tail;
+		                    break;
+		
+		                case "YY":
+		                    numHeader = numHeader + szYear + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    break;
+		
+		                case "yy":
+		                    var yyear = szYear;//20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    numHeader = numHeader + yyear.toString().substr(2) + Tail; 
+		                    break;
+		
+		                case "MM":
+		                    numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    break;
+		
+		                case "mm":			    
+		                    if(szMonth.substr(0,1) == "0") {
+		                        numHeader = numHeader + szMonth.substr(1) + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    } else {
+		                        numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    }
+		                    break;
+		
+		                case "NN":
+		                    break;
+		
+		                case "nn":
+		                    break;
+		
+		                case "cs":
+		                    if (tempItemCode != "") {
+		                        numHeader = numHeader + tempItemCode + Tail;
+		                    } else {
+		                        numHeader = numHeader + tempdocnumcode + Tail;
+		                    }
+		                    break;
+		
+		                case "FT":
+		                	numHeader += "FT" + Tail;
+		                	break;
+		                	
+		                case "MV":
+		                	numHeader += "MV" + Tail;
+		                	break;
+		                	
+		                case "YM":
+		                	numHeader = numHeader + szYear.toString().substr(2);
+		                	numHeader = numHeader + szMonth;
+		                	numHeader = numHeader + szDay + Tail;
+		                	
+		                	break;
+		                	
+	                	/* 단암 양식*/
+		                case "D1":
+		                	numHeader += "계약" + Tail;
+		            		break;
+		                case "D2":
+		                	numHeader += "교육기안" + Tail;
+		            		break;
+		                case "D3":
+		                	numHeader += "교육" + Tail;
+		            		break;
+		                case "D4":
+		                	numHeader += "구매" + Tail;
+		            		break;
+		                case "D5":
+		                	numHeader += "제" + Tail;
+		            		break;
+		                case "D6":
+		                	numHeader += "기구" + Tail;
+		            		break;
+		                case "D7":
+		                	numHeader += "기안" + Tail;
+		            		break;
+		                case "D8":
+		                	numHeader += "제 문서 신청" + Tail;
+		            		break;
+		                case "D9":
+		                	numHeader += "보고" + Tail;
+		            		break;
+		                case "DA":
+		                	numHeader += "제조-보고" + Tail;
+		            		break;
+		                case "DB":
+		                	numHeader += "연장근무보고서" + Tail;
+		            		break;
+		                case "DC":
+		                	numHeader += "출장" + Tail;
+		            		break;
+		                case "DD":
+		                	numHeader += "해외출장" + Tail;
+		            		break;
+		                case "DE":
+		                	numHeader += "품질검사" + Tail;
+		            		break;
+		                case "DF":
+		                	numHeader += "휴가" + Tail;
+		                	break;
+		            }
+		        }
+	        }
         }
-        
         message.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
         message2.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
 //        field.textContent = numHeader;
     }
-
 
     //파일정보를 저장한다. 
     function SaveFile()
@@ -2562,9 +2552,22 @@ function SaveDraftDocInfo()
         }
     }
 
-    function delOpinionInfo()
-    {
-        var xmlhttp = createXMLHttpRequest();
+    function delOpinionInfo() {
+    	$.ajax({
+    		type : "POST",
+    		dataType : "json",
+    		async : false,
+    		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
+    		data : {
+    			docID : pDocID,
+    			opinionType : "002",
+    		},
+    		success: function(result) {
+    			pHasOpinionYN = "";
+    		}
+    	});
+    	
+        /*var xmlhttp = createXMLHttpRequest();
         var xmlpara = createXmlDom();
 
         var objNode;
@@ -2574,7 +2577,7 @@ function SaveDraftDocInfo()
         xmlhttp.open("POST","../ezAPROPINION/aspx/BansongOpinionDel.aspx",false);
         xmlhttp.send(xmlpara);
 
-        return xmlhttp.responseText;
+        return xmlhttp.responseText;*/
     }
 
     function btnApprovalInfo_save(ret) {

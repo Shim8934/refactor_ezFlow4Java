@@ -7,7 +7,7 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <style>
 	    	.viewbox {
-				border:1px solid #b6b6b6;
+				border:0;
 				padding:5px;
 				height:100%;
 				background-color:#fff;
@@ -242,7 +242,7 @@
 	                        CONNINFO.innerHTML = ConXmlDiv.getElementsByTagName("XML").item(0).outerHTML;
 	                        _DocContentHtml = ConXmlDiv.innerHTML;
 	                    }
-	                    document.getElementById('div_Content').innerHTML = _DocContentHtml.replace(/(<p)/igm, '<div style=\"font-size:10pt;\"').replace(/<\/p>/igm, '</div>');
+	                    document.getElementById('div_Content').innerHTML = _DocContentHtml;
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
 	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
 	                    for (var i = 0; i < TDRows.length; i++) {
@@ -253,6 +253,9 @@
 	                                }
 	                            }
 	                        }
+	                    }
+	                    for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
+	                        SetAttribute(document.getElementsByTagName("body")[0], getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
 	                    }
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
 	                    parent.FieldsAvailable();

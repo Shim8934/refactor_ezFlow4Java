@@ -1307,6 +1307,9 @@
 	        }
 	    }
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApprovalG.t427'/></h1>
@@ -1377,9 +1380,9 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align: top;">
-	                <h2 class="h2_dot"><spring:message code='ezApprovalG.t432'/></h2>
+	                <h2 class="h2_dot" style="padding-top:6px;padding-bottom:3px"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div class="listview">
-	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto;"></div>
 	                </div>
 	                <div style="text-align: right;">
 	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
@@ -1393,7 +1396,7 @@
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 	<script type="text/javascript">

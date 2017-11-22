@@ -704,7 +704,7 @@
 				
 				<c:otherwise>
 				    <td class="pad1">
-				    	<div class="viewbox"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' onclick=window.open(this.src,"_blank","","false") >
+				    	<div class="viewbox" style="border:1px solid #b6b6b6;"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' onclick=window.open(this.src,"_blank","","false") >
 				        	<iframe id="message" class='margin' name="message" style="padding: 0;width:100%;height:100%;border:0px"></iframe>      
 				    	</div>
 				    </td>

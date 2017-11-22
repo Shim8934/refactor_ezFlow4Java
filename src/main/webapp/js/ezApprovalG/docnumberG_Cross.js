@@ -1,4 +1,5 @@
 ﻿var fractionsymbol;
+//문서 번호 작성 함수 ex) A부서-11111
 function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
     try {
         var fields = message.GetFieldsList();

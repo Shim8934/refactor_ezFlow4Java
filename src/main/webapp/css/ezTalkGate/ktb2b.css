@@ -1,0 +1,75 @@
+
+body {  font-family: "Dotum"; font-size: 9pt; color: #444444}
+th {  font-family: "Dotum"; font-size: 9pt; color: #000000; font-weight: bold}
+td {  font-family: "Dotum"; font-size: 9pt; color: #444444}
+
+ol
+{
+    list-style-type: decimal;
+    line-height:18px;
+}
+ul
+{
+    list-style-type: disc;
+    line-height:18px;
+}
+
+li.a {list-style-image: url(../images/dot_01.gif);}
+li.b {list-style-image: url(../images/dot_03.gif);}
+li.c {list-style-image: url(../images/dot_04.gif);line-height:18px }
+li.d {list-style-image: url(../images/dot_05.gif);line-height:18px }
+li.e {list-style-image: url(../images/dot_06.gif);}
+li.f {list-style-image: url(../images/speaker.gif);}
+li.g{list-style-image: url(../images/dot_07.gif);color:#000000 ;line-height:18px }
+
+
+a:link {color: #444444;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:Dotum
+}
+
+a:visited {
+	color: #444444;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:Dotum
+}
+a:active { color:#678000; text-decoration: none; font-size:9pt; font-family:Dotum}
+
+a:hover {
+	color: #CD3301;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:Dotum
+}
+
+a.i:link {color: #333399;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:Dotum
+}
+
+a.i:visited {
+	color: #333399;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:Dotum
+}
+a.i:active { color:#333399; text-decoration: none; font-size:9pt; font-family:Dotum}
+
+a.i:hover {
+	color: #BC5E00;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:Dotum
+}
+input {  font-family: "Dotum"; font-size: 9pt;}
+text {  font-family: "Dotum"; font-size: 9pt;}
+select {  font-family: "Dotum"; font-size: 9pt;}
+
+
+.txt {  font-family: "Dotum"; font-size: 9pt;line-height:16px}
+.tit {font-family: "돋움"; font-size: 9pt; color: #001053; font-weight:bold; padding-top:5px; padding-left:10px}
+.table {font-family: "돋움"; font-size: 9pt; color: #3A72BA; padding-left:10px}
+.table01 {font-family: "돋움"; font-size: 9pt; color: #666666; padding-left:10px}

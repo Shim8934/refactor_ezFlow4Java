@@ -105,10 +105,14 @@
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 		    var defaultFont = "<spring:message code='main.t246' />";
+		    var useSecureMail = "${useSecureMail}";
 		    var isCrossBrowser = "${isCrossBrowser}";
+		    var isSecureMail = "${isSecureMail}";
+		    var securePassword = "${securePassword}";
+		    var secureReadCount = "${secureMaxReadCount}";
+		    var secureReadDate = "${secureMaxReadDate}";
 		    
-			function window_onload()
-			{
+			function window_onload() {
 	            if (!CrossYN()) {
 	                document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
 	                EzHTTPTrans.UseDbCl = true;
@@ -192,6 +196,10 @@
 					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
 				}
+		        
+		        if (isSecureMail == "true") {
+		        	document.getElementById("chkSecureMail").checked = true;
+		        }
 		        
 		        <c:if test="${useFromAddress == 'YES'}">
 		            var selectTarget = $('.selectbox select'); 
@@ -751,7 +759,6 @@
                         	<option value="1">Plain Text</option>
                         </select>
                     </li>
-                    
 		            <li style="display:none;">
 		                <select id="SelMailSign" onchange="MailSignSel()">
 		                    <option value='0' selected><spring:message code='ezEmail.t825' /></option>
@@ -760,7 +767,13 @@
 		                    <option value='3'><spring:message code='ezEmail.t828' /></option>
 		                </select>
 	                </li>
-					 
+				 	<li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
+                        <img src="/images/pbar.gif">
+                    </li>
+                    <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
+                    	<input type="checkbox" id="chkSecureMail" />
+                    	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
+                    </li>
 		          </ul>
 		        </div>
 		        <div id="close">
@@ -786,7 +799,7 @@
                	  </c:if>
 		          <tr id="MsgTo_TR">
 		            <th rowspan="2">
-		            	<a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('To')"><spring:message code='ezEmail.t66' /></span></a>
+		            	<a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('To')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t66' /></span></a>
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
@@ -801,7 +814,7 @@
 		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
 		          </tr>
 		          <tr id="MsgCC_TR">
-		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')"><spring:message code='ezEmail.t594' /></span></a>
+		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
 		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer"><img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span></div>
 		            </th>
 		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
@@ -846,7 +859,7 @@
 				  <table width="100%" height="100%"> 
 			          <tr> 
 			            <td style="height:100%;">
-							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 			            	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; border-top-width:0; display:none;"></textarea>
 	                  	</td> 
 			          </tr> 
@@ -932,6 +945,14 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
+			
+			if (useSecureMail == "YES") {
+	        	$('.securemail').css('display', '');
+	        	
+	        	if (isSecureMail == "true") {
+	        		document.getElementById("chkSecureMail").checked = true;
+	        	}
+	        }
 		</script>
 		    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		     <form method="post" id="form" name="form" enctype="multipart/form-data" action="../ezEmail/remote/mail_interuploadX_CK.aspx?timestamp=${stateName}" target="ifrm" style="display:none;" >
@@ -948,7 +969,7 @@
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
 		<span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right" style="display: inline-block;"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t679' /><spring:message code='ezEmail.t680' /></span></span>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 			<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
 			<form id="Form1" name="form1" runat="server" style="display:none;"></form>
 		</div>

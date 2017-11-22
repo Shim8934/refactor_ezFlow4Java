@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Community <spring:message code='ezCommunity.t714' /></title>
+		<title><spring:message code='ezCommunity.t714' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -61,7 +61,7 @@
 		</script>
 	</head>
 	<body class="popup">
-		<h1>Community <spring:message code='ezCommunity.t714'/></h1>
+		<h1><spring:message code='ezCommunity.t714'/></h1>
 		
 		<table class="content" style="margin-bottom:10px" >
 			<tr>

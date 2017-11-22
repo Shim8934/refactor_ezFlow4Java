@@ -309,10 +309,10 @@
 			</tr>
 			<tr>
 				<td>
-					<table style="width:100%;height:100%;">
+					<table style="width:100%;height:100%;margin-top:-1px;">
 		                <tr> 
 							<td style="vertical-align:top;height:100%" id="EdtorSize">
-					        	<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:99.7%; overflow:auto;border-top:0px"></iframe>
+					        	<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;border-top:0px"></iframe>
 							</td>
 		                </tr> 
 		            </table>
@@ -337,7 +337,7 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>   
 	</body>
 </html>

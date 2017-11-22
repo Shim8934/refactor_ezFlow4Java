@@ -139,7 +139,8 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
-		            DivPopUpShow(500, 350, url);
+		            DivPopUpShow(500, 615, url);
+
 		        }
 		        else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
@@ -160,6 +161,10 @@
 		            InsertRowToLV(rtn[1]);
 		        }
 		    }
+		    /**
+		    * [분리첨부] -> [추가]
+		    * 추가된 '분리첨부' 내용을 리스트에 출력
+		    */
 		    function InsertRowToLV(szInfoXml) {
 		        var pSN;
 		        var pLvList = new ListView();
@@ -304,7 +309,7 @@
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
-		                DivPopUpShow(500, 610, url);
+		                DivPopUpShow(500, 615, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
@@ -351,7 +356,7 @@
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
-		                 DivPopUpShow(480, 430, url);
+		                 DivPopUpShow(475, 375, url);
 		            }
 		            else {
 		            if (url != "")
@@ -449,17 +454,25 @@
 		        DelListRow("pLvList");
 		        OrderList();
 		    }
-		    function OrderList() {
+
+		    /**
+		    * [분리첨부] 에서 순번 재정렬
+		    */
+		    function OrderList() { 
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
 		
 		        var totalRows = pLvList.GetDataRows();
-		
+		        var pAttachCurSel = pLvList.GetSelectedRows();
+			    if (pAttachCurSel.length > 0)
+			    	{
 		        var i;
 		        for (i = 0; i < totalRows.length; i++) {
 		            totalRows[i].cells[0].innerHTML = i + 1;
 		        }
+			    	} 
 		    }
+		    
 		    function btnOK_onclick() {
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
@@ -493,6 +506,9 @@
 		            window.returnValue = rtnVal;
 		    }
 		</script>
+		<style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">
 		<div id="menu">
@@ -508,7 +524,7 @@
 		
 		<h2><spring:message code='ezApprovalG.t1034'/></h2>
 		<div id="listviewdiv" class="listview" style="Width:700px; Height:225px;">
-		    <div id= "lvList" style="overflow:auto;border:0;Width:698px; Height:225px; font-size:9pt;margin:1px 1px 1px 1px;"></div>
+		    <div id= "lvList" style="overflow:auto;border:0;Width:698px; Height:225px; font-size:9pt;"></div>
 		</div>
 		
 		<div class="btnposition" >
@@ -517,7 +533,7 @@
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

@@ -274,6 +274,9 @@
 		            else if (pValue.charCodeAt(iCnt) == 46) {
 		                // .
 		            }
+                    else if (pValue.charCodeAt(iCnt) == 95) {
+                        // _
+                    }		            
 		            else {
 		                return false;
 		            }
@@ -321,6 +324,11 @@
 		            alert("<spring:message code='ezOrgan.t257' />");
 		            return;
 		        }
+				if (RetValue[2] == "" && !CheckPassword(document.getElementById('Password').value)) {
+					alert("<spring:message code='main.jjh04'/>");
+					document.getElementById('Password').focus();
+					return;
+				}	        
 		        if (UserName.value.indexOf("(") != -1 || UserName.value.indexOf(")") != -1) {
 		            alert("<spring:message code='ezOrgan.t258' />");
 		            return;
@@ -697,7 +705,7 @@
 	    </table>   
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	    <script type="text/javascript">
 		    Tab1_NewTabIni("tab1");

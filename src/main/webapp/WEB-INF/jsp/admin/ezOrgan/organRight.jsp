@@ -21,6 +21,7 @@
 		    var g_xmlHTTP = null;
 		    var useBizmekaSpambox = "${useBizmekaSpambox}";
 		    var userinfo_dialogArguments = new Array();
+		    var useDisablePopImap = "";
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -995,7 +996,13 @@
 		        }
 		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
 		        //if (CrossYN()){
-		            window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		        	 //크롬일때 alert창 크기때문에 크롬일때 구별
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=315px,width=449px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(449, 315));	
+		            } else {
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		            }
 		        /* }else{
 		            window.open("ConfigSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=297px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 297));
 		        } */
@@ -1013,7 +1020,15 @@
 				}
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
+		        
+		      //크롬일때 alert창 크기때문에 크롬일때 구별
+	            var agent = navigator.userAgent.toLowerCase();
+	            if (agent.indexOf("chrome") != -1) {
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(450, 185));	
+	            } else {
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
+	            }
+	            
 		        try { OpenWin.focus(); } catch (e) { }
 			}
 			
@@ -1083,12 +1098,16 @@
 
 	            $.ajax({
 	            	type : "POST",
-	            	dataType : "xml",
+	            	dataType : "html",
 	            	url : "/admin/ezOrgan/retireUser.do",
 	            	async : false,
 	            	data : {cn : data},
-	            	success : function(result){
-	            		alert(strLang3);
+	            	success : function(result) {
+	            	    if (result == "OK") {
+	            			alert(strLang3);
+	            	    } else {
+	            	        alert(strLang4);
+	            	    }
 	            	},
 	            	error : function(){
 	            		alert(strLang4);            		
@@ -1251,7 +1270,11 @@
 	            	    }
 	            	    
 	            	    setTimeout(function() {
-  	            			alert(length + "<spring:message code='ezOrgan.t31' />");
+	            	        if (result == "OK") {	            	        
+  	            				alert(length + "<spring:message code='ezOrgan.t31' />");
+	            	        } else {
+	            	            alert("<spring:message code='ezOrgan.t30' />");
+	            	        }
   	            		
   	    					if (TreeView.selectedIndex != -1){
   	    						displayUserList(treeNode.GetNodeData("CN"));
@@ -1273,11 +1296,108 @@
 	            	}
 	            });				
 			}
+		    
+		    function syncWithBizmekaTalkAccounts() {
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezOrgan/syncWithBizmekaTalkAccounts.do",
+	            	async : true,
+	            	success : function(result) {
+	            	    if (result == "OK") {
+	            	        alert("<spring:message code='ezTalkGate.ldh004' />");
+	            	    } else {
+	            	        alert("<spring:message code='ezQuestion.t263' />");
+	            	    }
+	            	},
+	            	error : function(error) {
+	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
+	            	}
+	            });		        
+		    }
+		    
+		    // POP3/IMAP 설정 함수
+		    var serUseDisablePopImap_dialogArguments = new Array();
+		    
+		    function mod_pop3Imap() {
+		    	var listview = new ListView();
+		    	listview.LoadFromID("lvUserList");
+		    	
+		    	var length = listview.GetSelectedRows().length;
+		    	
+		    	if (length == 0) {
+		    		alert("<spring:message code='ezOrgan.yjks5' />");
+		    		return;
+		    	} 
+		    	
+		    	if (length > 1) {
+	    			alert("<spring:message code='ezOrgan.yjks6' />");
+		    		return;
+	    		}
+
+		    	var data = "";
+
+		    	for (var i = 0; i < length; i++) {
+		    		data += listview.GetSelectedRows()[0].getAttribute("DATA2");
+		    	}
+		    	
+		    	serUseDisablePopImap_dialogArguments[1] = mod_pop3Imap_Complete;
+		    	
+		    	document.getElementById("userSend").value = data;
+		    	
+		    	var agent = navigator.userAgent.toLowerCase();
+		    
+		    	if (agent.indexOf("chrome") != -1) {
+		    		var OpenWin = window.open("/admin/ezOrgan/configPopImap.do?userId=" + data, "setUsePop3Imap", GetOpenWindowfeature(450, 185));
+		    	} else {
+			    	var OpenWin = window.open("/admin/ezOrgan/configPopImap.do?userId=" + data, "setUsePop3Imap", GetOpenWindowfeature(330, 185));
+		    	}
+		    	
+		    	try { OpenWin.focus(); } catch (e) { }
+				
+		    }
+		    
+		    
+		    function mod_pop3Imap_Complete(rtnValue) {
+		    	var propertyName = "disablePopImap";
+		    	
+		    	if (typeof (rtnValue) != "undefined") {
+		    		
+		    		var listview = new ListView();
+		    		listview.LoadFromID("lvUserList");
+		    		
+		    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
+		    		
+		    		$.ajax({
+		    			url: "/admin/ezOrgan/setUseDisablePop3Imap.do",
+		    			type: "POST",
+		    			dataType: "text",
+		    			data: {userId : data, propertyValue : rtnValue,
+		    					propertyName : propertyName},
+		    			success: function(res) {
+		    				
+		    				if (res == "SUCCESS") {
+			    				alert("<spring:message code='ezOrgan.yjks3' />");
+		    				} else {
+		    					alert("<spring:message code='ezOrgan.yjks4' />");
+		    				}
+		    			},
+		    			error: function(){
+		    				alert("<spring:message code='ezOrgan.yjks4' />");
+		    			}
+		 
+		    		});
+		    	}
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
 		<input type="hidden" name="selectedCN" id="selectedCN" />
 		<input type="hidden" name="selectedValue" id="selectedValue" />
+		<form name="sendForm">
+			<input type="hidden" name="userSend" id="userSend" />
+		</form>
 		
 		<xml id="listviewheader1" style="display:none">
 			<LISTVIEWDATA>
@@ -1392,16 +1512,16 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='ezOrgan.t92' /></span></a></td>
 						</tr>		                
-		                <c:if test="${useOCS == 'YES'}">
+						<c:if test="${useBizmekaTalk == 'YES'}">			
 						<tr>
-							<td><a class="imgbtn" id="usermenusipuri"><span onClick="ocssip_manage()">Lync <spring:message code='ezOrgan.t1012' /></span></a></td>
-						</tr>
-						</c:if>			
-						<!--			
-						<tr>
-		                	<td><a class="imgbtn" id="usermenu21"><span onClick="SettingMsn()"><spring:message code='ezOrgan.t1002' /></span></a></td>
+		                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 		                </tr>
-		                -->
+		                </c:if>
+		                <c:if test="${useDisablePopImap == 'YES'}">
+							<tr>
+			                	<td><a class="imgbtn" id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></a></td>
+			                </tr>
+		                </c:if>
 					</table>
 				</th>
 			</tr>

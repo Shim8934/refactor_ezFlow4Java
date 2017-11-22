@@ -13,6 +13,11 @@
 	    <script src="/js/ezPersonal/controls/TreeView.js" type="text/javascript"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <style>
+	    	.mainlist thead tr {
+	    		height: 0px;
+	    	}
+	    </style>
 	    <script>
 	        var cn = "${cn}";
 	        var companyid = "";

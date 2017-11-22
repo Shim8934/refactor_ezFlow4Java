@@ -9,11 +9,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
+
 
 
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -415,7 +419,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 //	    	    response.setBufferSize(fSize);
 	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");				
 //				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
 				response.setContentLength(fSize);
 //				response.setHeader("Content-Transfer-Encoding","binary");
@@ -490,4 +494,116 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	    	fin.close();
 		//*/
     }
+    
+    /**
+     * 서버 파일/폴더를 재귀적으로 삭제한다.
+     *
+     * @param path
+     * @throws Exception
+     */
+	public boolean deleteDirectory(File path) throws Exception {
+		if (path.isDirectory()) {
+			File[] files = path.listFiles();
+			
+			for (int i=0; i<files.length; i++) {
+				if (files[i].isDirectory()) {
+					deleteDirectory(files[i]);
+				}
+				else {
+					files[i].delete();
+				}
+			}
+		}
+		
+		return path.delete();
+	}
+	
+	/**
+	 * 폴더를 압축하여 zip파일을 생성한다.
+	 * 
+	 * @param path folder path (not file)
+	 * @param fileName new zip file name. If null then folder name is default.
+	 * @param isDelete whether to delete the original folder
+	 * @return zip file's full path
+	 * @throws Exception
+	 */
+	public String zipFolder(String path, String fileName, boolean isDelete) throws Exception {
+		LOGGER.debug("zipFolder started. path=" + path + ",fileName=" + fileName + ",isDelete=" + isDelete);
+		File dir = new File(path);
+
+		List<File> fileList = new ArrayList<File>();
+		getAllFiles(dir, fileList);
+		
+		ZipOutputStream zos = null;
+		FileInputStream fis = null;
+		
+		try {
+			if (fileName != null) {
+				path = dir.getPath().substring(0, dir.getName().length()) + fileName;
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(path + ".zip"));
+			
+			for (File file : fileList) {
+				if (!file.isDirectory()) {
+					fis = new FileInputStream(file);
+					String zipFilePath = file.getPath().substring(dir.getPath().length() + 1, file.getPath().length());
+					
+					LOGGER.debug("zipFilePath=" + zipFilePath);
+					
+					ZipEntry zipEntry = new ZipEntry(zipFilePath);
+					zos.putNextEntry(zipEntry);
+
+					byte[] bytes = new byte[BUFF_SIZE];
+					int length;
+					
+					while ((length = fis.read(bytes)) >= 0) {
+						zos.write(bytes, 0, length);
+					}
+
+					zos.closeEntry();
+					fis.close();
+				}
+			}
+			
+			fis = null;
+			
+		} catch (Exception e) {
+			throw e;
+			
+		} finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
+			
+			if (zos != null) {
+				try { zos.close(); } catch (Exception e) {}
+			}
+			
+		}
+		
+		File zipFile = new File(path + ".zip");
+		LOGGER.debug(zipFile.getName() + " is created. size=" + zipFile.length() + "byte");
+		
+		if (isDelete) {
+			if (deleteDirectory(dir)) {
+				LOGGER.debug(dir.getName() + " folder is deleted.");
+			}
+		}
+		
+		LOGGER.debug("zipFolder ended. returnValue=" + zipFile.getPath());
+		return zipFile.getPath();
+	}
+	
+	private void getAllFiles(File dir, List<File> fileList) {
+		File[] files = dir.listFiles();
+		
+		for (File file : files) {
+			fileList.add(file);
+			if (file.isDirectory()) {
+				getAllFiles(file, fileList);
+			}
+		}
+	}
+	
 }

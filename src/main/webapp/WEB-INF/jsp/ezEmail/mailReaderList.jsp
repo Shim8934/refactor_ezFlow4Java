@@ -14,6 +14,10 @@
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <script>
 	        var _url = decodeURIComponent('${url}');
+	        var isReadDelete = "${isReadDelete}";
+	        var docWidth = window.outerWidth;
+	        var docHeight = window.outerHeight;
+	        
 	        document.onselectstart = function () { return false; };
 	        function ReSend(pEmail) {
 	            var pEmail = pEmail.getAttribute("EMAIL");
@@ -160,7 +164,8 @@
 	
 	                TR.setAttribute("_mailaddress", EmailAddress);
 	                TD1.style.width = "14px";
-	                if (ReadDate == "UNREAD" && CancelStatus == "") {
+
+	                if ((ReadDate == "UNREAD" || isReadDelete == "YES") && CancelStatus == "") {
 	                    var TD1_Sub = document.createElement("INPUT");
 	                    TD1_Sub.type = "checkbox";
 	                    TD1_Sub.style.margin = "0px";
@@ -251,11 +256,11 @@
 	            }
 	        }
 	        function Window_Print() {
-	            document.getElementById("close").style.display = 'none';
-	            document.getElementById("menu").style.display = 'none';
 	            window.print();
-	            document.getElementById("menu").style.display = '';
-	            document.getElementById("close").style.display = '';
+	        }
+	        
+	        window.onresize = function(){
+	        	resizeTo(docWidth, docHeight);
 	        }
 	    </script>
 	</head>
@@ -289,10 +294,10 @@
 	                    <tr>
 	                        <th style="width: 14px;">
 	                            <input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onclick="event_listCheckboxclick(this);"></th>
-	                        <th style="width: 92px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t31' /></th>
-	                        <th style="width: 212px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t1019' /></th>
-	                        <th style="width: 142px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t99000074' /></th>
-	                        <th style="width: 82px; text-align: left; cursor: pointer;"><spring:message code='ezEmail.t99000075' /></th>
+	                        <th style="width: 92px; text-align: left;"><spring:message code='ezEmail.t31' /></th>
+	                        <th style="width: 212px; text-align: left;"><spring:message code='ezEmail.t1019' /></th>
+	                        <th style="width: 142px; text-align: left;"><spring:message code='ezEmail.t99000074' /></th>
+	                        <th style="width: 82px; text-align: left;"><spring:message code='ezEmail.t99000075' /></th>
 	                    </tr>
 	                </table>
 	            </table>

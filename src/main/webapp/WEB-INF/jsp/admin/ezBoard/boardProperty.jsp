@@ -524,6 +524,11 @@
 		    	}
 			}
 	    </script>
+	    <style type="text/css">
+	    	.mainlist tr {
+	    		height : 0px;
+	    	} 
+	    </style>
 	</head>	
 	<c:if test="${adminType != 'y'}">
 		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>

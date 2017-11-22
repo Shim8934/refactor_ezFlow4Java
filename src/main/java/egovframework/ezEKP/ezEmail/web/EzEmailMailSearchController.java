@@ -110,7 +110,7 @@ public class EzEmailMailSearchController {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 			
-			List<Folder> topLevelFolders = ia.getTopLevelFolders();		
+			List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
 			
 			topLevelFolderNames = new ArrayList<String>();
 			int maxFolderCount = Math.min(5, topLevelFolders.size());
@@ -198,7 +198,7 @@ public class EzEmailMailSearchController {
 			Message[] messages = null;
 			
 			if (mailFolder.equals("ALL")) {
-				List<Folder> topLevelFolders = ia.getTopLevelFolders();		
+				List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
 				
 				List<String> topLevelFolderNames = new ArrayList<String>();
 				int maxFolderCount = Math.min(5, topLevelFolders.size());
@@ -220,7 +220,7 @@ public class EzEmailMailSearchController {
 					
 					tmpFolder.open(Folder.READ_ONLY);			
 					
-					Message[] subMessages = ezEmailUtil.searchFolder(tmpFolder, category, keyword, startDateObj, endDateObj, true, null, false);
+					Message[] subMessages = ezEmailUtil.searchFolder(tmpFolder, category, keyword, startDateObj, endDateObj, true, null, false, false);
 					
 					if (messages == null) {
 						messages = subMessages;
@@ -251,7 +251,7 @@ public class EzEmailMailSearchController {
 			else {
 				folder = ia.getFolder(mailFolder);
 				folder.open(Folder.READ_ONLY);			
-				messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null, false);					
+				messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null, false, false);					
 			}
 					
 			if (messages.length > 0) {
@@ -365,6 +365,13 @@ public class EzEmailMailSearchController {
 									
 					subject = (subject != null) ? subject : "";
 					sb.append(String.format("<SUBJECT><![CDATA[%s]]></SUBJECT>", subject));
+					
+					// secureMail
+					if (ezEmailUtil.hasSecureMailFlag(message)) {
+						sb.append(String.format("<SECUREMAIL>1</SECUREMAIL>"));
+					} else {
+						sb.append(String.format("<SECUREMAIL>0</SECUREMAIL>"));
+					}
 					
 					String[] headers = message.getHeader("X-Priority");
 					String header = headers != null ? headers[0] : "normal";

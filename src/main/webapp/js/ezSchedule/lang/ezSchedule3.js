@@ -91,7 +91,7 @@ var strLang91 = "代理者を選択してください。"
 var strLang92 = "代理者は一人だけ選択してください。"
 var strLang93 = "ユーザーを選択してください。"
 var strLang94 = "部署を選択してください。"
-var strLang95 = "ユーザの属している部署です。\r\n 他の部署を選択してください。"
+var strLang95 = "ユーザの属している部署です。\r\n他の部署を選択してください。"
 
 // ### 2011-06 GoogleCalendar
 var strLang96 = "Googleのメールアドレスを入力してください。"
@@ -153,8 +153,8 @@ var strLang264 = "グループ説明 : ";
 var strLang265 = "グループメンバー : ";
 var strLang266 = "グループを選択してください。";
 var strLang267 = "アップロードを制限する拡張子ファイルがあります。";
-var strLang268 = "以前";
-var strLang269 = "次";
+var strLang268 = "前へ";
+var strLang269 = "次へ";
 var strLang270 = "日程時間";
 var strLang271 = "削除する添付ファイルを選択してください。";
 var strLang272 = "過去の日付または時間では予約できません。\n設定し直してください。";
@@ -166,3 +166,5 @@ var strLang1000 = "会社日程は、会社管理者のみ登録できます。"
 var strLang1001 = "部署日程は、部署管理者と会社管理者のみ登録できます。";
 /* 2017-07-11 */
 var strLang1002 = "うるう年 ";
+/* 2017-11-17 */
+var strLang1003 = "이미 등록된 일정공유정보가 있습니다.";

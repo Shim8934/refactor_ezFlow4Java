@@ -1182,7 +1182,7 @@
                         		</td>
                         		<td style="vertical-align: top;">
                             		<h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
-                                	<span style="min-width: 45px;" id="ToTitleStr"><spring:message code="ezResource.t111" /></span>
+                                	<span style="min-width: 45px;" id="ToTitleStr"><spring:message code="ezResource.jjs01" /></span>
                             		</h2>
                             		<div class="receiver_borderbox">
                                 		<div id="ListViewMsgTo" ondragover="onDragEnter(event)" ondrop="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>

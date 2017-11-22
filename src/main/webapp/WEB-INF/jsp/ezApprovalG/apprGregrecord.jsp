@@ -56,27 +56,6 @@
     var pDocID =""; 
     var pDocSN = "0";
     window.onload = function () {
-        var ua = navigator.userAgent;
-        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-            KeEventControl(document.getElementById("txtTitle"));
-            KeEventControl(document.getElementById("txtRegY"));
-            KeEventControl(document.getElementById("txtRegM"));
-            KeEventControl(document.getElementById("txtRegD"));
-            KeEventControl(document.getElementById("txtRegH"));
-            KeEventControl(document.getElementById("txtRegMi"));
-            KeEventControl(document.getElementById("txtTotalPage"));
-            KeEventControl(document.getElementById("txtAprMemberTitle"));
-            KeEventControl(document.getElementById("txtDrafter"));
-            KeEventControl(document.getElementById("txtExeY"));
-            KeEventControl(document.getElementById("txtExeM"));
-            KeEventControl(document.getElementById("txtExeD"));
-            KeEventControl(document.getElementById("txtReceiptMember"));
-            KeEventControl(document.getElementById("txtDeliveryNo"));
-            KeEventControl(document.getElementById("txtOriginSN"));
-            KeEventControl(document.getElementById("txtLimitRange"));
-            KeEventControl(document.getElementById("txtSummary"));
-        }
-
         if (window.dialogArguments != null) {
             var objWinDlgArgs = window.dialogArguments;
         }
@@ -676,7 +655,7 @@
 </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 </body>
 </html>

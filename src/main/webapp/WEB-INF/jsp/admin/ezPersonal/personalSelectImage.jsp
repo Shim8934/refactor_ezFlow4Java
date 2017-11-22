@@ -199,15 +199,7 @@
 	
 		            }
 		        }
-		        
-		        try {
-		            var ua = navigator.userAgent;
-		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                KeEventControl(document.getElementById("txtDisplayName"));
-		                KeEventControl(document.getElementById("txtDisplayName2"));
-		            }
-		        } catch (e) { }
-		        
+		        		        
 		        if (sliderid != "") {
 		            $.ajax({
 			        	type : "POST",
@@ -267,7 +259,7 @@
 	    <table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
-					<spring:message code = 'ezPersonal.t304' />
+					<spring:message code = 'ezPersonal.jjs03' />
 				</th>
 				<td>
 				    <table>

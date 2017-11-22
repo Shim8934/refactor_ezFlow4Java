@@ -61,6 +61,7 @@
 		        var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
 		        if (parseInt(cnt) > 1) {
 		            for (var i = 0; i < parseInt(cnt) ; i++) {
+		            	// 체크된 값의 정보만 xmlpara에 생성
 		                if (eval(document.frm.chk[i]).checked) {
 		                    doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", document.frm.chk[i].value.split("|")[0]);
@@ -71,6 +72,7 @@
 		            }
 		        }
 		        else {
+		        	// 리스트의 값이 하나인 경우
 		            if (eval(document.frm.chk).checked) {
 		                doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", document.frm.chk.value.split("|")[0]);
@@ -84,23 +86,22 @@
 		        xmlhttp.send(xmlpara);
 		        var RtnVal = xmlhttp.responseText;
 		        var arrRtnVal = new Array();
-		        arrRtnVal[0] = RtnVal.split("/")[0];
-		        arrRtnVal[1] = RtnVal.split("/")[1];
-		        arrRtnVal[2] = RtnVal.split("/")[2];
-		        arrRtnVal[3] = RtnVal.split("/")[3];
+		        arrRtnVal[0] = RtnVal.split("/")[0]; // OK or ERR
+		        arrRtnVal[1] = RtnVal.split("/")[1]; // totalCount
+		        arrRtnVal[2] = RtnVal.split("/")[2]; // trueCount
+		        arrRtnVal[3] = RtnVal.split("/")[3]; // falseCount
 		        if (arrRtnVal[0] == "OK") {
 		            hideProgress();
 		            pAlertContent = strLang933 + arrRtnVal[1] + strLang934;
 		            pAlertContent += strLang935 + arrRtnVal[2] + strLang934;
-		            if (arrRtnVal[3] != 0)
+		            if (arrRtnVal[3] != 0) {
 		                pAlertContent += strLang936 + arrRtnVal[3] + strLang934;
+		            }
 		            pAlertContent += strLang931;
 		            OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-		        }
-		        else {
+		        } else {
 		            hideProgress();
 		            pAlertContent = strLang932;
-		            pAlertContent += arrRtnVal[1];
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
@@ -154,18 +155,21 @@
 		
 		    }
 		    function btnApprove_onclick() {
+		    	// '일괄결재 대상 리스트'가 없는 경우
 		        if (parseInt(cnt) == 0) {
 		            var pAlertContent = strLang937;
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
+		    	// '일괄결재 대상 리스트'가 있는 경우
 		        else if (parseInt(cnt) > 1) {
 		            var j = 0;
 		            for (var i = 0; i < parseInt(cnt) ; i++) {
-		                if (eval(document.frm.chk[i]).checked)
+		                if (eval(document.frm.chk[i]).checked) {
 		                    j++;
+		                }
 		            }
-		            if (j == 0) {
+		            if (j == 0) { // 리스트에서 체크된 값이 없는 경우
 		                var pAlertContent = strLang930;
 		                OpenAlertUI(pAlertContent);
 		                return;
@@ -254,7 +258,7 @@
 		    </table>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-				<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+				<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
 		     <script type="text/javascript">
 		         selToggleList(document.getElementById("close"), "ul", "li", "0");

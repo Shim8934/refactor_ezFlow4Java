@@ -152,10 +152,10 @@
   <tr > 
     <td bgcolor="f7f7f7" height="23" ><spring:message code='ezApprovalG.t846'/></td>
     <td  id="tdCataTransFlag" width=170 bgcolor="ffffff">&nbsp;
-		 <c:if test="${cataTransFlag == '0'}">
+		 <c:if test="${cataTransFlag.indexOf('0') > 0}">
 			N
 		</c:if>
-		<c:if test="${cataTransFlag != '0'}">
+		<c:if test="${cataTransFlag.indexOf('0') < 0}">
 			Y
 		 </c:if>
 	</td>
@@ -165,10 +165,10 @@
   <tr  > 
     <td bgcolor="f7f7f7" height="23" ><spring:message code='ezApprovalG.t848'/></td>
     <td  id="tdFileTransFlag" width=170 bgcolor="ffffff">&nbsp;
-		 <c:if test="${docTransFlag == '0'}">
+		 <c:if test="${docTransFlag.indexOf('0') > 0}">
 			N
 		  </c:if>
-		  <c:if test="${docTransFlag != '0'}">
+		  <c:if test="${docTransFlag.indexOf('0') < 0}">
 			Y
 		  </c:if>
 	</td>

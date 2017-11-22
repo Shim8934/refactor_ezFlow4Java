@@ -86,7 +86,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  * @see
  */
-@Controller
+@Controller("EzBoardController")
 public class EzBoardController extends EgovFileMngUtil{
 	
 	@Autowired
@@ -250,6 +250,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);
         modelMap.addAttribute("applyFlag",applyFlag);
         modelMap.addAttribute("questionAdmin", questionAdmin);
+        modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
         
 		return "ezBoard/boardLeft";
 	}
@@ -276,6 +277,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
         String mode = request.getParameter("mode");
         String userID = userInfo.getId();
+        String result = "";
 
         List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getTenantId());
         String parentName = parentBoardName(resultList, userInfo);
@@ -288,7 +290,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		sb.append("</DATA>");
 		
-		return "<ROOT>" + sb.toString() + parentName + "</ROOT>";
+		result = "<ROOT>" + sb.toString() + parentName + "</ROOT>";
+		
+		return result;
 	}
 	
 	/**
@@ -366,7 +370,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(), BoardIdListCount, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getLocale());
         
-        return "<DATA><TOPBOARDLIST>" + rtv + "</TOPBOARDLIST></DATA>";
+        return "<DATA><TOPBOARDLIST>" + commonUtil.cleanValue(rtv) + "</TOPBOARDLIST></DATA>";
     }
 	
 	/**
@@ -1453,11 +1457,11 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
     					if (primaryData.equals("1")) {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
     					} else {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME2") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME2")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME>");
     					}
     					resultXML.append("<WRITEDATE>" + noticeList.get(k).get("WRITEDATE") + "</WRITEDATE>");
     					resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
@@ -1542,8 +1546,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
-					resultXML.append("<WRITERDEPTNAME>" + boardListItem.get(j).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
-					resultXML.append("<WRITERDEPTNAME2>" + boardListItem.get(j).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME2>");
+					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
+					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + boardListItem.get(j).get("WRITEDATE") + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
                 }
@@ -2154,7 +2158,7 @@ public class EzBoardController extends EgovFileMngUtil{
         			resultXML.append("<DATA3>" + boardSearchList.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardSearchList.get(j).get("IMPORTANCE") + "</DATA4>");
 					resultXML.append("<DATA5>" + boardSearchList.get(j).get("READFLAG") + "</DATA5>");
-					resultXML.append("<DATA6>" + boardSearchList.get(j).get("ABSTRACT") + "</DATA6>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("ABSTRACT"))) + "</DATA6>");
 					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
@@ -2449,11 +2453,11 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
     					if (primaryData.equals("1")) {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
     					} else {
-    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME2") + "</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERNAME2")) + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)noticeList.get(k).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME>");
     					}
     					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)noticeList.get(k).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
     					resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
@@ -2550,8 +2554,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
-					resultXML.append("<WRITERDEPTNAME>" + boardListItem.get(j).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
-					resultXML.append("<WRITERDEPTNAME2>" + boardListItem.get(j).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME2>");
+					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
+					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
 					resultXML.append("<GUBUN>" + boardListItem.get(j).get("GUBUN") + "</GUBUN>");
@@ -2982,9 +2986,6 @@ public class EzBoardController extends EgovFileMngUtil{
         			boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));
         			boardListVO.setABSTRACT("");
         		}
-        		strTitle = boardListVO.getTitle();
-        		boardListVO.setTitle(boardListVO.getTitle());
-        		boardListVO.setABSTRACT(boardListVO.getABSTRACT());
         		
         		if (Integer.parseInt(boardListVO.getAttachments()) > 0) {
         			hasAttach = "YES";
@@ -3503,7 +3504,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<NODES>");
 		
 		if (pMode.equals("boardAttach")) {
-            File file = new File(filePath + commonUtil.separator + pConLocation);
+            File file = new File(filePath + pConLocation);
             String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
             String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
             File fileMove = new File(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + newFilePath);
@@ -3962,7 +3963,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String result = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezBoard.t208", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS><ROWS>";
 		
         for (int i = nList.getLength() - 1; i >= 0; i--) {
-            result += "<ROW><CELL><VALUE><![CDATA[" + commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(i).getTextContent()) + "]]></VALUE>";
+            result += "<ROW><CELL><VALUE>" + commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(i).getTextContent()) + "</VALUE>";
             result += "<DATA1><![CDATA[" + doc.getElementsByTagName("ITEMID").item(i).getTextContent() + "]]></DATA1></CELL></ROW>";
         }
         result += "</ROWS></LISTVIEWDATA>";
@@ -4010,6 +4011,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			List<BoardAttributeVO> attributeList = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
 			
@@ -4019,12 +4021,23 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("attributeList", attributeList);
 		}
 		
+        //추가 항목 가져오는 소스 
+        List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
+        
+        if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+        	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
+        	if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+        		extenLang = "2";
+        	}
+        }
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("guBun", guBun);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("extenLang", extenLang);
 		model.addAttribute("strNow", strNow);
+		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
 		
 		return "ezBoard/boardItemPreView";
 	}
@@ -5793,7 +5806,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String result = "";
 		
 		if (boardItemVO.getMode() != null && (boardItemVO.getMode().equals("boardContent") || boardItemVO.getMode().equals("boardAttach"))) {
-			boardItemVO.setTitle(commonUtil.cleanValue(boardItemVO.getTitle()));
+			boardItemVO.setTitle(boardItemVO.getTitle());
 			result = ezBoardService.getItemAttachmentXMLRetrans(boardItemVO);
 		} else {
 			result = ezBoardService.getItemAttachmentXML(boardItemVO);

@@ -64,7 +64,6 @@
 		    var strItemLevel = "${boardListVO.itemLevel}";
 		    var strWriterTitle = "${boardListVO.title}";
 		    var strWriterFakeName = "${strWriterFakeName}";
-	        var strTitle = "${strTitle}";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
 		    var ExpireDays = "${expireDays}";
 		    var ExpireItem = "${expireItem}";
@@ -100,7 +99,7 @@
 	            catch (e) {
 	            }
 	            window.resizeTo(780, 750);
-	            document.getElementById("txtTitle").value = strTitle;
+// 	            document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
 	            imageViewInit();
 	            saveItemBoardId = pBoardID;
 	        };
@@ -966,7 +965,7 @@
 	        </tr>
 	        <tr>
 	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
-	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #b6b6b6; margin:0px; padding:2px 0px 2px 0px;" value="" maxlength="100" /></td>
+	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #b6b6b6; margin:0px; padding:2px 0px 2px 0px;" value="<c:out value='${boardListVO.title}'/>" maxlength="100" /></td>
 	        </tr>
 	        <tr style="display:none;">
 	          <th><spring:message code='ezBoard.t1001'/></th>

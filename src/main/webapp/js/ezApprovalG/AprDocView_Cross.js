@@ -31,7 +31,11 @@ function LoadpzFormDocInfo() {
 
     if (pDocHref != "") {
         message.Set_EditorContentURL(pDocHref);
-        setAttachInfo(pDocID, "APR", lstAttachLink);
+        if (pMode == "TMP") {
+          	setAttachInfo(DocID, "TMP", lstAttachLink); // 임시 저장 첨부파일 리스트 출력
+        } else {
+        	setAttachInfo(pDocID, "APR", lstAttachLink);
+        }               
         GetExchInfo();
 
         if (pHasOpinion == "Y") {

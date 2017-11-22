@@ -63,7 +63,9 @@
 		    var pHasOpinion = "${hasOpinionYN}";
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
-		
+		    var signImageType = "${signImageType}";
+		    var pMode = "${mode}";
+		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
@@ -89,9 +91,10 @@
 		                document.getElementById("btnGongRam").style.display = "";
 		                pOpinionType = "";
 		            }
-		            LoadpzFormDocInfo();
-		            SignCheck();
-		            cancelYN();
+		            LoadpzFormDocInfo(); // setAttachInfo(DocID, "APR", lstAttachLink);
+		            //없이 테스트
+// 		            SignCheck();
+		            cancelYN();			      	
 		        }
 		    }
 		    
@@ -143,6 +146,7 @@
 		                    var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
 		                    var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
 		                    var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
+		                    var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
 		                    
 		                    var field = message.GetListItem(fields, SignName);
 
@@ -160,8 +164,18 @@
 		                            signWidth = 50;
 		                            
 		                            if (seumyung) {
-		                            	if (img[1].indexOf(strLang7) > -1) {
-		                            		signHeight = 28;
+		                            	if (img[1] != null) {
+			                            	if (img[1].indexOf(strLang7) > -1) {
+			                            		signHeight = 28;
+			                            	} else {
+			                            		signHeight = 50;
+			                            		
+			                            		if (SignName.indexOf("habyuisign") > -1) {
+			                            			if (!habyuiDate) {
+					                            		signHeight = 28;
+				                            		}
+			                            		}
+			                            	}
 		                            	} else {
 		                            		signHeight = 50;
 		                            		
@@ -179,7 +193,11 @@
 		                            if (img.length >= 1) {
 		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
-		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+		                                if (signImageType == "NAME") {
+		                                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
+		                                } else {
+		                                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+		                                }
 		                            }
 		                            
 		                            if (seumyung) {
@@ -306,9 +324,9 @@
 
 		    function btnMail_onclick() {
 		    	var imgUrl="";
-		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
+		    	html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
 		    	background:'#fff',onrendered: function(canvas) {
-		    		  $.ajax({
+					$.ajax({
 	                        type:"POST",
 	                        dataType:"text",
 	                        data : {
@@ -319,17 +337,17 @@
 	                        success: function (data) {
 	                        }
 	                    });
-		    		  }
-		    		});
-		    var pheight = window.screen.availHeight;
-	        var conHeight = pheight * 0.8;
-	        var pwidth = window.screen.availWidth;
-	        var pTop = (pheight - conHeight) / 2;
-	        var pLeft = (pwidth - 890) / 2;
-		        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref);
-// 	        var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
-	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	        newwin.focus();
+					}
+		    	});
+			    var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+			    var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref);
+	 	        //var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
+		        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        newwin.focus();
 		    }
 		    
 		    function btnhistory_onclick() {
@@ -576,7 +594,7 @@
 		</table>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");

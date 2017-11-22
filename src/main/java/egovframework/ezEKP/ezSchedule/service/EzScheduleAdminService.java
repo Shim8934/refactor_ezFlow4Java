@@ -23,5 +23,7 @@ public interface EzScheduleAdminService {
 	public void scheduleInsertRegi(String companyID, String regi, int tenantId) throws Exception;
 
 	public void scheduleUpdateRegi(String companyID, String regi, int tenantId) throws Exception;
+
+	public int scheduleShareCheck(String userID, String deptID, int tenantId) throws Exception;
 	
 }

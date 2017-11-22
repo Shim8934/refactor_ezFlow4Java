@@ -3,12 +3,24 @@
 body {
 	padding:8px;
 	margin:0px;
+	
 }
 
 .xfe_zb {
-	border : #d3d3d3 1px dotted;	 
+	border-left : #d3d3d3 1px dotted;	 
+	border-top : #d3d3d3 1px dotted;
+	border-right : #d3d3d3 1px dotted;
+	border-bottom : #d3d3d3 1px dotted;
+	
 	line-height : 1;
 	*line-height : ;	/* IE 7 이하의 브라우저에 작용. */
+}
+
+.xfe_zb_nolh {
+	border-left : #d3d3d3 1px dotted;	 
+	border-top : #d3d3d3 1px dotted;
+	border-right : #d3d3d3 1px dotted;
+	border-bottom : #d3d3d3 1px dotted;	
 }
 
 input.xfe_hidden_style {
@@ -26,4 +38,23 @@ input.xfe_hidden_style {
 .xfe_wa {
 	/*border : 1px dotted #FF0000;*/
 	cursor : text;	
+}
+
+.xfe_pagebreak {
+	height: 5px !important;
+	width : 98% !important;
+	border : 1px dotted #FF5E00 !important;
+	*font-size : 0px;
+}
+
+.xfe_pagebreak.hidden {
+	height: 5px !important;
+	width : 98% !important;
+	border : 0px dotted #FF5E00 !important;
+	*font-size : 0px;
+}
+
+.xfe_bookmark {
+	background : url(../images/common/bookmark-1.png) no-repeat;
+	margin : 0px 3px;
 }

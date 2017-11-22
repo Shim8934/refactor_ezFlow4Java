@@ -758,6 +758,7 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+		                    window.close();
 		                }
 		                else {
 		                    swidth = 510;
@@ -1218,12 +1219,12 @@
 		            </tr>
 		            <tr>
 		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t291'/></th>
-		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666">${boardItem.title}</div></td>
+		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666"><c:out value="${boardItem.title}"/></div></td>
 		            </tr>
 		            <tr>
 		                <th ><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="7">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;" >${boardItem.mainContent}</div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>
@@ -1383,7 +1384,7 @@
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>
 </html>

@@ -912,10 +912,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		int tenantID = userInfo.getTenantId();
 		
-		ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
-
-		logger.debug("setEmployeeMonth ended");
-		return "OK";
+		try {
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
+			logger.debug("setEmployeeMonth ended");
+			return "OK";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	/**
@@ -1171,10 +1175,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
 		saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		
-		File newFile = new File(dirPath + serverPath + pSaveName);
+		File newFile = new File(realPath + serverPath + pSaveName);
 		
 		ImageIO.write(outputImage, "png" , newFile);
-		deleteFile(dirPath + serverPath + fileName);
+		//deleteFile(dirPath + serverPath + fileName);
 		
 		String fileLocation = serverPath  + pSaveName;
 	

@@ -116,6 +116,10 @@ function AddToAprDeptFromAprDeptTempletCC(p_CheckAprDeptTempletSN) {
         alert("AprGongRamLine_Cross_AddToAprDeptFromAprDeptTemplet::" + e.description);
     }
 }
+/**
+ * 사용하는 곳 전부 적어두기.
+ * 1. 전자결재 일반 / 회람 즐겨찾기 -> 적용 -> '회람자 리스트' 출력
+ * */
 function SetGongRamList(pstrXML) {
     try {
         var listnodes = SelectNodes(pstrXML, "LISTVIEWDATA/ROWS/ROW");
@@ -133,7 +137,8 @@ function SetGongRamList(pstrXML) {
             AprLineAddIndex = 1;
         }
 
-        for (var cnt = 0; cnt < listnodes.length; cnt++) {
+        //for (var cnt = 0; cnt < listnodes.length; cnt++) {
+        for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
 
             var DuplicateFlag = false;
             for (i = 0; i < objRows.length; i++) {
@@ -483,4 +488,20 @@ function APRDeptXMLParsingCC(APRDEPT, pDocID) {
     } catch (e) {
         alert("AprGongRamLine_Cross_APRDeptXMLParsingCC::" + e.description);
     }
+}
+
+
+/**
+ * 회람 정보 -> 부서추가 기능
+ */
+function btn_addDepartment() {
+	var listView = new ListView();
+	listView.LoadFromID("DivUserList");
+
+	var listObj = listView.GetDataRows();
+	
+	for (var i = listObj.length-1; i >= 0; i --) {
+		var test = listObj[i];
+		APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
+	}
 }

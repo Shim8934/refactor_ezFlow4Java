@@ -8,7 +8,7 @@
 	    <style>
 	        P { margin-top: 0px;margin-bottom: 0px; }
 	        .viewbox {
-				border:1px solid #b6b6b6;
+				border:0;
 				padding:5px;
 				height:100%;
 				background-color:#fff;
@@ -59,7 +59,7 @@
 	            {}
 	            
 	            try {
-		        	$('#div_Content #body').css('overflow', 'auto');
+// 		        	$('#div_Content #body').css('overflow', 'auto');
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        } catch (e)
 		        { }

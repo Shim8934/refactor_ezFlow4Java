@@ -156,10 +156,11 @@
 		    function btnOK_onclick() {
 		        var URL;
 		        var listview = new ListView();
-		        if (pSelectTab == "favoritelist")
+		        if (pSelectTab == "favoritelist") {
 		            listview.LoadFromID("lvtFavForm");
-		        else
+		        } else {
 		            listview.LoadFromID("lvtForm");
+		        }
 		        var oArrRows = listview.GetSelectedRows();
 		        var selRow = oArrRows[0];
 		        if (selRow) {
@@ -169,7 +170,7 @@
 		                Rtnval[1] = selRow.getAttribute("DATA3");
 		                Rtnval[2] = selRow.getAttribute("DATA1");
 		                Rtnval[3] = selRow.childNodes[0].innerText;
-		
+		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
 		                }
@@ -551,7 +552,7 @@
 		</div>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-				<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+				<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
 		    <script type="text/javascript">
 		        Tab1_NewTabIni("tab1");

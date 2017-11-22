@@ -213,6 +213,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Read = SelectSingleNodeValue(XmlRows[Cnt], "read");
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
+                var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
                 var _TR = document.createElement("TR");
                 _TR.setAttribute("id", "Maillist_" + Cnt);
                 _TR.style.cursor = "pointer";
@@ -224,6 +225,7 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("read", p_Read);
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
+                _TR.setAttribute("securemail", p_SecureMail);
                 _TR.setAttribute("draggable", true);
                 _TR.ondragstart = function () { drag(event) };
             
@@ -293,11 +295,13 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
-                            _TDColum.innerHTML = p_Subject;
-                            p_Subject = p_Subject.trim();
-                            if(p_Subject == ""){
-                            	_TDColum.innerHTML = strLang97;
+                            if (p_Subject.trim() == "") {
+                            	p_Subject = strLang97;
                             }
+                            if (p_SecureMail == 1) {
+                            	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + p_Subject;
+                            }
+                            _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function () { event_listclick(this); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
@@ -799,7 +803,7 @@ function MailListRefresh() {
         if (listSubContentArry.length > 0) {
             var pGroupProp = pGroupListClickObject.getAttribute("prop");
             var pGroupMode = pGroupListClickObject.getAttribute("mode");
-            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
             if (pGroupMode == "SENT") {
                 p_ListorderType = " WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false " +
                                   " AND \"http://schemas.microsoft.com/mapi/sent_representing_name\" = '" + pGroupProp + "' ";
@@ -900,7 +904,7 @@ function makePageSelPage() {
     PagingHTML += strtext;
     var totalPage = parseInt(document.getElementById("MailList").getAttribute("MaxPage"));
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
-    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
     if (totalPage > 1 && pageNum != 1) {
         PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
     }
@@ -929,11 +933,14 @@ function makePageSelPage() {
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
-            PagingHTML += "<span class=\"on\">" + i + "</span>";
+        	PagingHTML += "<span class=\"on\">" + i + "</span>";
         }
         else {
             PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
         }
+    }
+    if (MaxNum == 0) {
+    	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
@@ -973,7 +980,9 @@ function event_listContextMenu(event) {
         var Div_ = EventDivSize - listsizewidth;
         EventMouseX = EventMouseX - Div_;
     }
-
+    if (g_foldertype == "draft") {
+    	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
+    }
     document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
@@ -1111,6 +1120,11 @@ function event_HeaderCheckBoxClick(obj) {
 var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
+	
+	if (event.target.className == "Mail_Input") {
+		return;
+	}
+	
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (!event) event = window.event;
     }
@@ -1152,6 +1166,10 @@ var listSubContentArry = new Array();
 var listEventCheckbox = false;
 var listSubEventCheckbox = false;
 function event_listclick(obj) {
+	if (!event) {
+		var event = obj;
+	}
+	
 	if (obj.tagName == "TD") {
         obj = obj.parentElement;
     }

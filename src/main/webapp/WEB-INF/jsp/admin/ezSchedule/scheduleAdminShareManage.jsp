@@ -112,10 +112,10 @@
 	        {
 	            if (CrossYN()) {
 	                schedule_admin_popup_sharedept_dialogArguments[1] = share_new_Complete;
-	                var OpenWin = window.open("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "scheduleAdminPopupShareDept", GetOpenWindowfeature(360, 180));
+	                var OpenWin = window.open("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "scheduleAdminPopupShareDept", GetOpenWindowfeature(500, 180));
 	                try { OpenWin.focus(); } catch (e) { }
 	            } else {
-	                var feature = GetShowModalPosition(360, 180);
+	                var feature = GetShowModalPosition(500, 180);
 	                var rtnValue = window.showModalDialog("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "","dialogHeight:180px;dialogwidth:360px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                
 	                if (typeof (rtnValue) != "unlimited" && rtnValue == "OK") {

@@ -5,6 +5,7 @@
 	<typeAlias  alias="StatDailyDocCountLogVO" 	type="egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO"/>
 	<typeAlias  alias="StatApprVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatApprVO"/>
 	<typeAlias  alias="StatConnVO"				type="egovframework.ezEKP.ezStatistics.vo.StatConnVO"/>
+	<typeAlias  alias="StatMailLogVO" 			type="egovframework.ezEKP.ezStatistics.vo.StatMailLogVO"/>
 	
 	<select id="EzStatisticsAdminDAO.getTimeList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
@@ -1184,4 +1185,5 @@
 				regdate = #today#
 		]]>
 	</delete>
+	
 </sqlMap>

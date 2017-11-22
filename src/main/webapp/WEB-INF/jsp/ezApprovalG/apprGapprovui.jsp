@@ -87,7 +87,7 @@
 		    var SignType = new Array();
 		    var SignName = new Array();
 		    var SignContent = new Array();
-		    var RootURL = document.location.protocol + "//" + document.location.hostname;  
+		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;
 		    var arr_userinfo = new Array();
 		    var onlydocinfiview;
 		    arr_userinfo[0]  = "user";
@@ -139,6 +139,13 @@
 			var type = "ING";
 			var pGongRamDocID = "";
 			var approvalType = "DRAFT";
+			var signImageType = "${signImageType}";
+			
+			//최종 결재 개인합의 추가
+			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var totalMemSN = "0";
+			var LastTotalKyulSN = "0";
+			var lastHabYuiSN;
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -190,6 +197,9 @@
 		
 		        DivPopUpShow(326, 205, "/ezApprovalG/ezAprAllAlert.do");
 		    }
+		    /**
+		    * RtnVal -> 0 : 결재, 1 : 다음문서, 2 : 문서보기, 3 : 취소
+		    */
 		    function OpenAllApproveFlag_Complete(RtnVal) {
 		        DivPopUpHidden();
 		        AllApprove.style.display = "";
@@ -214,17 +224,16 @@
 		    }
 		    function LoadNextDocument(tempString)
 		    {
-		        if (allFlag == "1")
+		        if (allFlag == "1") {
 		            getNextDocInfo();
-		        else if (allFlag == "2")
+		        } else if (allFlag == "2") {
 		            getNextDocList();
+		        }
 		
-		        if (NextDocID == "")
-		        {
-		            if (tempString == "")
+		        if (NextDocID == "") {
+		            if (tempString == "") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t3'/>";
-		            else
-		            {
+		            } else {
 		                tempString = tempString.replace("\n" + "<spring:message code='ezApprovalG.t2'/>", "");
 		                tempString = tempString.replace("\n\n" + "<spring:message code='ezApprovalG.t4'/>", "");
 		                tempString = tempString.replace("\n", "");
@@ -233,11 +242,8 @@
 		            OpenAlertUI(pAlertContent);
 		            window.parent.close();
 		            btnClose_onclick();
-		        }
-		        else
-		        {
-		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht")
-		            {
+		        } else {
+		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
 		                openOtherApprovUI();
 		                return;
 		            }
@@ -399,7 +405,10 @@
 		            OpenAllApproveFlag();
 		        }
 		    }
-		
+			/**
+			* 각 결재타입마다 나타나는 경고창 출력 함수
+			* 결재, 반송, 보류, 참조 등
+			*/
 		    function process_AfterApprove(mode)
 		    {
 		        if (FirstHtml != "")
@@ -461,14 +470,15 @@
 		    {
 		        ChangeBtnState();
 		    }
+
 		    function process_AfterOpen()
 		    {
-		        getCurApproverAprLine();
+		        getCurApproverAprLine("${isUsed}");
+		
 		        pGubun = "8";
 		        
 		        if (approvalFlag == "S") {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)  {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -490,8 +500,7 @@
 			            pGubun = "14";
 			        }
 		        } else {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -503,8 +512,7 @@
 			            setMenuBar("btnSetTaskCode", false);
 			            setMenuBar("btnAddSepAttach", false); 
 			            pGubun = "10";
-			        }
-			        else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			        } else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			            setMenuBar("btnModAprLine", false);
 			            pGubun = "5";
 			        }
@@ -519,27 +527,25 @@
 		                pGubun = "7";
 		            }
 		        }
-		        if(pDraftFlag == "SUSIN")
-		        {
+		        if(pDraftFlag == "SUSIN") {
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "susinbody");
-		            if(field)
+		            if(field) {
 		                setMenuBar("btnEdit", true);
-		            else
+		            } else {
 		                setMenuBar("btnEdit", false);
+		            }
 		
 		            setMenuBar("btnModAprDept", false);
 		            setMenuBar("btnFileAttach", false);
 		            setMenuBar("btnAprDocAttach", false);
 		            pGubun = "6";
 		        }
-		        else
-		        {
+		        else {
 		            pSuSinFlag = "N";		
 		            var fields = message.GetFieldsList(); 
 		            var RtnVal = message.GetListItem(fields, "recipient");
-		            if(RtnVal != null)
-		            { 
+		            if(RtnVal != null) { 
 		                pSuSinFlag = "Y";
 		                setMenuBar("btnModAprDept", true);
 		                
@@ -548,13 +554,17 @@
 		                setMenuBar("btnModAprDept", false);
 		                if (pGubun == "5") {
 		                    pGubun = "7";
-		                }
-		                else {
+		                } else {
 		                    pGubun = "6";
 		                }
 		            }		
 		        }
-		        SignCheck();
+		        //없이 테스트
+// 		        SignCheck();
+		        if (pDraftFlag == "HABYUI") {
+		            setMenuBar("btntotaldocinfo", false);
+		        }
+
 		    }
 		    function btnApprove_onclick()
 		    {
@@ -570,14 +580,13 @@
 		        }
 		        setMenuDisable("btnApprove", true);
 		        var signInfo;
-		        if((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16)
-		        {
-		            if(pDraftFlag == "HABYUI" || pDraftFlag == "B_GAMSA" || pDraftFlag == "A_GAMSA")
+		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+		            if (pDraftFlag == "HABYUI" || pDraftFlag == "B_GAMSA" || pDraftFlag == "A_GAMSA") {
 		                getLastOpinon();
+		            }
 		            var fields = message.GetFieldsList(); 	
 		            var field = message.GetListItem(fields, "lastdraftdate");
-		            if(field)
-		            {
+		            if (field) {
 		                var CurrentDate = getGyulJeDate();
 		                setNodeText(field, CurrentDate);
 		            }
@@ -605,7 +614,12 @@
 		            Approv_Complete(ret);
 		        }
 		    }
-		
+		    /**
+		    * ExcuteInfo()를 통한 연동관리
+		    * getDocNumber()를 통한 문서번호 채번
+		    * AprrovMappingSign()를 통한 결재정보 내용 출력
+		    * SaveApproveInfo()를 통한 xml 생성 및 Contoller 호출
+		    */
 		    function Approv_Complete(signtype) {
 		        DivPopUpHidden();
 		        UpdateLineHistory();
@@ -620,10 +634,28 @@
 		                }
 		            }
 		        }
+		        
+		        if (addLastKyulJeYN != "0") {
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+                		data : {
+                				docID     : pDocID,
+                				flag      : "approvUi"
+                				},
+                		success : function(result){
+                			totalMemSN = result;
+                		}
+                	});
+		        }
+		        
+		        // getDocNumber를 이용한 문서번호 채번
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
-			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
-			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0) || pAprLineType == strAprType4 || totalMemSN > 0) {
+			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
@@ -635,7 +667,9 @@
 			                }
 			            }
 		        	} else {
+		        		// 1 : 결재, 4 : 전결, 16 : 대결
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
 			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
@@ -681,7 +715,7 @@
 		            }
 		        }
 		        
-		        signInfo = AprrovMappingSign(signtype);
+		        signInfo = AprrovMappingSign(signtype); // 현재 양식에 결재 관련 정보 출력( ex. 서명 서명 날짜 등등)
 
 		        var rtnVal = true;
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
@@ -865,11 +899,14 @@
 		        }
 		        openOpinionUI("BanSong", btnReject_option_Complete);
 		    }
+		    /**
+		    * '반송'
+		    */
 		    function btnReject_option_Complete(ret) {
 		        DivPopUpHidden();
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
-		            UpdateLineHistory();
+		            UpdateLineHistory(); // '변경내역' 업데이트
 		            var rtnVal = ExcuteInfo("BANSONG_BEFORE", "");
 		            if (!rtnVal) {
 		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
@@ -877,7 +914,7 @@
 		                return;
 		            }
 		            
-		            signInfo = putBansongSign();
+		            signInfo = putBansongSign(); // '서명' 관련 정보 출력
 
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
@@ -891,8 +928,7 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t37'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
-		            }
-		            else {
+		            } else {
 		                var rtnVal = ExcuteInfo("BANSONG_AFTER", "");
 		                if (!rtnVal) {
 		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
@@ -975,7 +1011,7 @@
 		        var rtnVal = upDateAprLine();
 		        if(rtnVal == "TRUE")
 		        {
-		            getCurApproverAprLine();
+		            getCurApproverAprLine("${isUsed}");
 		            btnApprove_onclick();
 		        }
 		        else
@@ -995,7 +1031,7 @@
 			            ReAprLineSingMapping(ret);
 		        	}
 		            SaveFile();
-		            getCurApproverAprLine();
+		            getCurApproverAprLine("${isUsed}");
 		        }
 		    }
 		    function btnModAprDept_onclick() {
@@ -1221,7 +1257,7 @@
 		        }
 		        return getXmlString(rtnXml);
 		    }
-		    function btnhistory_onclick() {
+		    function btnhistory_onclick() {		    	
 		        getHistory();
 		    }
 		    var ezapprovalinfo_dialogArguments = new Array();
@@ -1281,7 +1317,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1310,7 +1346,7 @@
 			                        SReAprLineSingMapping(ret);
 			                        IsSkipDrafter = "FALSE";
 			                        SaveFile();
-			                        getCurApproverAprLine();
+			                        getCurApproverAprLine("${isUsed}");
 			                    }
 			                    savexmlhttp = null;
 			                    savexmlhttp = createXMLHttpRequest();
@@ -1335,7 +1371,7 @@
 			                        btnSendDraftEnable = "true";
 			                        ReAprLineSingMapping(ret);
 			                        SaveFile();
-			                        getCurApproverAprLine();
+			                        getCurApproverAprLine("${isUsed}");
 			                    }
 			                    savexmlhttp = null;
 			                    savexmlhttp = createXMLHttpRequest();
@@ -1379,11 +1415,11 @@
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
 		                
-		                tempSecurity = ret[7];
-		                tempUrgent = ret[8];
-		                pSummery = ret[9];
-		                tempSecurityDate = ret[14];
-		                pPublicityCode = ret[11];
+		                tempSecurity = ret[7];                // 보안등급 관련
+		                tempUrgent = ret[8];                  // 긴급 결재 여부
+		                pSummery = ret[9];                    // 요약 내용 관련
+		                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+		                pPublicityCode = ret[11];             // 공개여부 및 공개등급 관련 
 		                
 		                //tempPublic 추가
 		                if (ret[11].substring(0,1) == '1') {
@@ -1396,7 +1432,7 @@
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
-			                
+			                //문서 공개 범위 설정
 			                setPublicFlag();
 		                } else {
 		                	//회람
@@ -1563,7 +1599,7 @@
 		<iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

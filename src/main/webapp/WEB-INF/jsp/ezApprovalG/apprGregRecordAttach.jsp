@@ -161,11 +161,17 @@
     var g_progresswin;
     function btn_AttachAdd_onclick() {
         if (document.form.file1.value != "") {
-            document.getElementById("btn_AttachDel").disabled = false;
-            document.getElementById("attachsn").value = pAttachSN;
-            document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024;
-            var frm = document.getElementById('form');
-            frm.submit();
+        	if (document.form.file1.files[0].name.length > 54) {
+				alert("<spring:message code='main.jjh08' />");
+				document.form.file1.value = "";
+				return;
+			} else {
+	            document.getElementById("btn_AttachDel").disabled = false;
+	            document.getElementById("attachsn").value = pAttachSN;
+	            document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024;
+	            var frm = document.getElementById('form');
+	            frm.submit();
+			}
         }
         else {
             alert("<spring:message code='ezApprovalG.pjj01'/>");
@@ -517,7 +523,7 @@
 </form>
 <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 </div>
 </body>
 </HTML>

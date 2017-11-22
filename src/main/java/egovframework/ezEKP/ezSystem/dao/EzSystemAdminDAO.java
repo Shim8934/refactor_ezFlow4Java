@@ -32,4 +32,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzSystemAdminDAO.getLoginHistCount", map); 
 	}
 	
+	public void deleteLoginHist(Map<String, Object> map) throws Exception {
+        delete("EzSystemAdminDAO.deleteLoginHist", map);
+    }
+	
 }

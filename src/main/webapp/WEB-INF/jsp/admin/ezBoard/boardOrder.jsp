@@ -59,10 +59,6 @@
                 	data :	{ upperBoardID : UpperBoardID },
                 	success : function(result){
                 		xmldom = loadXMLString(result);
-                        var boardList = new ListView();
-                        boardList.SetID("lvBoardList2");
-                        boardList.DataSource(listviewheader);
-                        boardList.DataBind("BoardList");
                         DisplayBoardList();	
                 	}                	
                 });                
@@ -77,7 +73,7 @@
             }	    	
 	    	function DisplayBoardList() {
                 var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
-                var strXML = "<LISTVIEWDATA><ROWS>";
+                var strXML = "<LISTVIEWDATA>" + $(listviewheader).html().toUpperCase() + "<ROWS>";
                 for (i = 0; i < xmldomNode.length; i++) {
                     var boardName = SelectSingleNodeValue(xmldomNode.item(i), "DATA2");
                     var boardId = SelectSingleNodeValue(xmldomNode.item(i), "DATA1");
@@ -85,15 +81,14 @@
                     strXML += listAdd(MakeXMLString(boardName), boardId);
                 }
                 strXML += "</ROWS></LISTVIEWDATA>";
-                var xmlRtn = loadXMLString(strXML);
 
+                var xmlRtn = loadXMLString(strXML);
 
                 pboardList = new ListView();
                 pboardList.SetID("lvBoardList");
                 pboardList.SetMulSelectable(false);
                 pboardList.DataSource(xmlRtn);
                 pboardList.DataBind("BoardList");
-
 
                 NewBoardID = GetGUID();
                 ezUtil = null;
@@ -126,23 +121,27 @@
                 pboardList.RowMoveDown();
             }
 	    </script>
+	    <style type="text/css">
+	    /*모양이 안이뻐서 추가시킴*/
+	    	.mainlist tr th {
+	    		border-top:0px;
+	    	}
+	    </style>
 	</head>
 	<body class="mainbody">
 		<xml id="listviewheader" style="display: none">
-		    <LISTVIEWDATA>
-			    <HEADERS>
-				    <HEADER>
-					    <TYPE>NONE</TYPE>
-					    <NAME><spring:message code="ezBoard.t142"/></NAME>
-					    <WIDTH>70</WIDTH>
-					    <SORTABLE>TRUE</SORTABLE>
-					    <RESIZIBLE>FALSE</RESIZIBLE>
-					    <MINSIZE>10</MINSIZE>
-					    <MAXSIZE>200</MAXSIZE>
-					    <NOWRAP>TRUE</NOWRAP>
-					</HEADER>
-			    </HEADERS>
-		    </LISTVIEWDATA>
+		    <HEADERS>
+			    <HEADER>
+				    <TYPE>NONE</TYPE>
+				    <NAME><spring:message code="ezBoard.t142"/></NAME>
+				    <WIDTH>70</WIDTH>
+				    <SORTABLE>TRUE</SORTABLE>
+				    <RESIZIBLE>FALSE</RESIZIBLE>
+				    <MINSIZE>10</MINSIZE>
+				    <MAXSIZE>200</MAXSIZE>
+				    <NOWRAP>TRUE</NOWRAP>
+				</HEADER>
+		    </HEADERS>
 		</xml>
 		
 		<h1><spring:message code="ezBoard.t64"/></h1>

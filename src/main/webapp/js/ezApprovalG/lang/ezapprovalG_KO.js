@@ -2,6 +2,7 @@
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "전결";
 var strLang7 = "대결";
 var strLang8 = "代 ";
@@ -492,6 +493,7 @@ var strLang701 = "제3 특수목록"
 // ezCabinet\ViewCabInfo.js
 var strLang702 = "부가정보를 성공적으로 가져왔을 경우 첫째팁을클릭"
 var strLang703 = "기록물정보를 가져오는데 실패하였습니다!"
+var strLang704 = "해당없음"
 var strLang705 = "인수&nbsp;&nbsp;&nbsp;"
 var strLang706 = "정보보기"
 var strLang707 = "인계"
@@ -654,7 +656,7 @@ var strLang945 = "기안자는 삭제가 될 수 없습니다."
 var strLang1001 = "선택하신 항목이 없습니다. 문서만 인쇄하시겠습니까?";
 var strLang1002 = "외부 수신자는 저장할 수 없습니다.";
 var strLang1003 = "즐겨찾기에 등록되었습니다.";
-var strLang1004 = "즐겨찾기에서 제거되었습니다.";
+var strLang1004 = "즐겨찾기에서 삭제되었습니다.";
 var strLang1005 = "등록할 수 없는 기록물철입니다.";
 var strLang1006 = "회계연도가 지난 기록물철입니다.";
 var strLang1007 = "해당부서의 기록물철이 아닙니다.";
@@ -723,7 +725,7 @@ var strLangDocState24 = "배부";
 var strLangDocState31 = "반송";
 var strLangDocState32 = "회송";
 
-// AprType, FunctionType : 결재 형태A03
+// AprType, FunctionType : 결재 형태 A03
 var strAprType1 = "001";
 var strAprType2 = "002";
 var strAprType3 = "003";
@@ -945,7 +947,7 @@ var strLangS599 = "분류 코드가 지정되어 있지 않습니다.";
 var strLangS600 = "분류 코드를 선택하세요.";
 var strLangS601 = "이미 등록된 분류 코드입니다.";
 var strLangS602 = "즐겨찾기에 등록되었습니다.";
-var strLangS603 = "즐겨찾기에서 제거되었습니다.";
+var strLangS603 = "즐겨찾기에서 삭제되었습니다.";
 var strLangS604 = "분류코드 등록 오류입니다.";
 var strLangS605 = "분류코드 삭제 오류입니다.";
 var strLangS957 = "수신자 리스트에 데이터가 없습니다.<br/>수신자를 지정해 주십시요.";
@@ -983,3 +985,11 @@ var strLangS825 = "회람자를 지정하시기 바랍니다.";
 var strLangS826 = "회람을 발송하지 못하였습니다.";
 var strLangpjj27 = "편집하려는 즐겨찾기를 공람자 리스트에 적용 해야 편집 할 수 있습니다.";
 var strLangHYJ28 = "회람자 리스트가 존재하지 않습니다.";
+
+var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\\n추가 할 수 없습니다.";
+
+//2017-11-09 장진혁 추가
+var strLangjjh01 = "첨부파일은 총 ";
+var strLangjjh02 = "MB까지 업로드 가능합니다.";
+var strLangjjh03 = "첨부파일을 추가하는중입니다.";
+

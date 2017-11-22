@@ -70,7 +70,7 @@
 		    var TaskCode = "";
 		    var pDocNumCode, pOrgDocNumCode, pDocNo;
 		    var maxwidth = 659;
-		    var RootURL = document.location.protocol + "//" + document.location.hostname;  
+		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
@@ -101,7 +101,8 @@
 		    var SignContent = new Array();
 		    var arrDelFiles = new Array();
 		    var junGyulFlag = "${junGyulFlag}";
-		
+			var dirPath = "${approvalROOT}";
+			
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -366,7 +367,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
-		        DivPopUpShow(1000, 740, "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI_Cross.aspx");
+		        DivPopUpShow(1000, 740, "/ezApprovalG/ezReceiveDistributeUI.do");
 		    }
 		    function btnDistribute_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -388,7 +389,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(460, 365, "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveAssignUI_Cross.aspx");
+		        DivPopUpShow(510, 380, "/ezApprovalG/ezReceiveAssignUI.do");
 		    }
 		    function btnAssign_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -408,12 +409,12 @@
 		    function btnCabinet_onclick() {
 		        var para = new Array();
 		        para[0] = cabinetID;
-		        var url = "../ezCabinet/SelectCabinet_Cross.aspx?initFlag=1";
+		        var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
 		
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = btnCabinet_onclick_Complete;
 		
-		        DivPopUpShow(850, 455, "/myoffice/ezApprovalG/ezCabinet/SelectCabinet_Cross.aspx?initFlag=1");
+		        DivPopUpShow(880, 465, "/ezApprovalG/selectCabinet.do?initFlag=1");
 		    }
 		
 		    function btnCabinet_onclick_Complete(rtn) {
@@ -422,7 +423,7 @@
 		            var g_SelCabXml = rtn[1];
 		            var xmlCab = createXmlDom();
 		            xmlCab = loadXMLString(g_SelCabXml);
-		
+
 		            cabinetID = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/CABINETID"));
 		            TaskCode = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/TASKCODE"));
 		        }
@@ -430,39 +431,45 @@
 		        if (cabinetID != "") {
 		            getRecvDocNumber(arr_userinfo[4]);
 		
-		            var xmlpara = createXmlDom();
-		            var xmlhttp = createXMLHttpRequest();
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "tempDocID", pDocID);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDocNo", pDocNo);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDocNumCode", pDocNumCode);
-		            createNodeAndInsertText(xmlpara, objNode, "tempOrgDocNumCode", pOrgDocNumCode);
-		            createNodeAndInsertText(xmlpara, objNode, "tempCabinetID", cabinetID);
-		            createNodeAndInsertText(xmlpara, objNode, "tempTaskCode", TaskCode);
-		            createNodeAndInsertText(xmlpara, objNode, "tempUserID", pUserID);
-		            createNodeAndInsertText(xmlpara, objNode, "tempUserName", arr_userinfo[11]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDeptID", arr_userinfo[4]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempTitle", arr_userinfo[3]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempDeptName", arr_userinfo[5]);
-		            createNodeAndInsertText(xmlpara, objNode, "tempCompanyID", arr_userinfo[9]);
-		            createNodeAndInsertText(xmlpara, objNode, "TEMPUSERNAME2", arr_userinfo[12]);
-		            createNodeAndInsertText(xmlpara, objNode, "TEMPTITLE2", arr_userinfo[14]);
-		            createNodeAndInsertText(xmlpara, objNode, "TEMPDEPTNAME2", arr_userinfo[16]);
-		
-		            xmlhttp.open("Post", "aspx/setRecvComplete.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            if (xmlhttp.responseText.indexOf("TRUE") > -1) {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1693'/>";
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-		            }
-		            else {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
-		                OpenAlertUI(pAlertContent);
-		            }
+		         	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/setRecvComplete.do",
+                		data : {
+        		            tempDocID : pDocID,
+        		            tempDocNo : pDocNo,
+        		            tempDocNumCode : pDocNumCode,
+        		            tempOrgDocNumCode : pOrgDocNumCode,
+        		            tempCabinetID : cabinetID,
+        		            tempTaskCode : TaskCode,
+        		            tempUserID : pUserID,
+        		            tempUserName : arr_userinfo[11],
+        		            tempDeptID : arr_userinfo[4],
+        		            tempTitle : arr_userinfo[3],
+        		            tempDeptName : arr_userinfo[5],
+        		            tempCompanyID : arr_userinfo[9],
+        		            tempUserName2 : arr_userinfo[12],
+        		            tempTitle2 : arr_userinfo[14],
+        		            tempDeptName2 : arr_userinfo[16]
+                		},
+                		success : function(result){
+	               			 if (result == "TRUE") {
+	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1693'/>";
+	       		                OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	        		         } else {
+	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
+	       		                OpenAlertUI(pAlertContent);
+	        		         }
+                		}, 
+                		error : function () {
+                			var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
+       		                OpenAlertUI(pAlertContent);
+                		}
+                	});
 		        }
 		    }
+		    
 		    function btnReAssign_onclick() {
 		        var ret = openOpinionUI("BanSong");
 		        if (ret != "cancel") {
@@ -515,7 +522,7 @@
 		        SaveFile();
 		
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -536,7 +543,7 @@
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mod=new&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
 		            }
 		        }
 		    }
@@ -1181,7 +1188,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/myoffice/ezApprovalG/TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=APR");
+		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -1259,7 +1266,7 @@
 		<div id="AprMemberSN" style="display:none"></div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

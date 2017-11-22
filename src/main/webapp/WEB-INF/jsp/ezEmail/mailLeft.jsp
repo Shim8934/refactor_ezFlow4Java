@@ -9,6 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
@@ -112,7 +113,7 @@
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
-	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true);
+	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
 	        function selectnode() {
@@ -190,15 +191,17 @@
 	                if (get_unreadend_2010.href == PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")) {
 	                    if (unreadcount == "0") {
 	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption);
+	                        PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : ''");
 	                    }
 	                    else {
 	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + "(" + unreadcount + ")");
+	                        PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : bold");
 	                    }
 	                    
 	                    var pageTitle = parent.frames["right"].document.title;
 
 	                    if (pageTitle == "mail_list") {
-                        	try { parent.frames["right"].mailBoxInfo.childNodes.item(1).innerText = " " + unreadcount + " "; } catch (e) { }
+                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
 	                    
 	                    xmlDom = null;
@@ -231,7 +234,7 @@
 	            if (RtnVal) {
 	                var href = PostTreeView.getvalue(1, "href");
 	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
-	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
+	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	                PostTreeView.update();
 	                if (PostTreeView.selectedIndex() == -1) {
 	                    PostTreeView.select(1);
@@ -354,7 +357,7 @@
 	        function mail_import_Complete() {
 	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
 	                window.parent.frames["right"].MailListRefresh();
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	            if (PostTreeView.selectedIndex() == -1) {
 	                PostTreeView.select(1);

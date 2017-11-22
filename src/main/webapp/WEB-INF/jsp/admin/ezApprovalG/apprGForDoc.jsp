@@ -27,8 +27,8 @@
 			var NodeList, curpage, nowblock, totalPage, totalPages, block, p_page, p_nowblock, NodeListLen;
 			var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
 			var SearchCond = new Array();
-			var pUse_Editor = "<c:out value = '${useEditor}' />";
 			var approvalFlag = "<c:out value = '${approvalFlag}' />";
+			var type = "<c:out value = '${type}' />";
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -49,7 +49,10 @@
 				var height = parseInt(divList.style.height.replace('px', '')) + 200;
 				var reheight = document.documentElement.clientHeight - parseInt(height);
 				document.getElementById('div_AprLine').style.height = reheight + "px";
-				document.getElementById("SCompID").value = pCompanyID;
+				
+				if (type == 'admin') {
+					document.getElementById("SCompID").value = pCompanyID;
+				}
 				
 				GetDocList();
 			});
@@ -459,15 +462,7 @@
 			        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글기안
 			            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";
 			        } else {
-			            if (CrossYN()) {
-			                openLocation = "/ezApprovalG/contDocView.do";
-			            } else {
-			                if(pUse_Editor == "") {
-			                    openLocation = "/myoffice/ezApprovalG/formContainer/contDocView.aspx";
-			                } else {
-			                    openLocation = "/myoffice/ezApprovalG/formContainer/contDocView_IE.aspx";
-			                }
-			            }
+		                openLocation = "/ezApprovalG/contDocView.do";
 			        }
 			        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(FormID) + "&orgDocID=" + encodeURI(OrgDocid.trim()) + "&admin=Y";
 			        openwindow(openLocation, "", 880, 570);
@@ -487,16 +482,27 @@
 			        var top = 0;
 			
 			        if (window.screen.width > 800) {
-			            var pleftpos;
-			
-			            pleftpos = parseInt(width) - 967;
-			            heigth = parseInt(heigth) - 30;
-			            width = parseInt(width) - pleftpos;
-			            left = pleftpos / 2;
-			        } else {
-			            heigth = parseInt(heigth) - 30;
-			            width = parseInt(width) - 10;
-			        }
+		                var pleftpos;
+
+		                pleftpos = parseInt(width) - 967;
+		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+		                width = parseInt(width) - pleftpos;
+		                left = pleftpos / 2;
+		            }
+		            else {
+		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+		                width = parseInt(width) - 10;
+		            }
 			        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 			    } catch (e) {
 			        alert("openwindow :: " + e.description);
@@ -599,8 +605,8 @@
 				    ezStatisticsSearch_Cross_dialogArguments[0] = para;
 				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 				
-				    var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(500, 340));
-				    
+				    var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+
 				    try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 				    }
 				} else {
@@ -763,12 +769,14 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
+	        	<c:if test="${type == 'admin' }">
 	            <b><spring:message code = 'ezApprovalG.t1276' /></b>
 	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 		        </select><br /><br />
+		        </c:if>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>
 	            <img src="/images/i_bar.gif" align="absmiddle">

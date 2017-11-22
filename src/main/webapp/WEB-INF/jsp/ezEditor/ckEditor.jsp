@@ -39,10 +39,12 @@
 			
 			function SetEditorContent(Data) {
 				try {
-	                CKEDITOR.instances.editor1.editable().setHtml(Data);
-	                if (type == "APPROVAL" || type == "APPROVALG") {
-	                    Set_CellLocked();
-	                }
+	              	  CKEDITOR.instances.editor1.editable().setHtml(Data);
+	                	if (type == "APPROVAL" || type == "APPROVALG") {
+	                		if ("${isUsed}" != "reuse") {
+	                    		Set_CellLocked();
+	                		}
+	                	}
 	            } catch (e) { }
 			}
 
@@ -220,8 +222,6 @@
 		<script type="text/javascript">
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
-	            CKEDITOR.resize = false;
-// 	            CKEDITOR.config.height = parseInt(height) - 120 + "px";
 	            
 	        } else if (type == "MAILOUTOFOFFICE") {
 	            CKEDITOR.config.removePlugins = '_Insert_Image';

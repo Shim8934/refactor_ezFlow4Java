@@ -201,7 +201,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezPortal.t262'/></h1>
+		<h1><spring:message code='ezPortal.t409'/></h1>
 		<div id="mainmenu">
 			<ul>
   				<c:if test="${result == '1'}">

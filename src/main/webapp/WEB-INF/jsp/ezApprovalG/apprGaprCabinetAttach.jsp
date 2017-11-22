@@ -48,7 +48,8 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        var pDraftFlag = "${draftFlag}";
-	        
+	        var approvalFlag = "${approvalFlag}";
+
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -199,6 +200,9 @@
 			    btnSearchRec_onclick("1");
 			}
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">
 	    <xml id='FORMLIST' style="display: none;">
@@ -234,14 +238,14 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 240px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow: auto;"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
 	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" width="16" height="16" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" width="16" height="16" style="cursor: pointer"></td>
 	            <td>
 	                <div class="listview">
-	                    <div id="lvTDoc" style="border: 0; width: 300px; height: 240px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto; "></div>
 	                </div>
 	            </td>
 	        </tr>
@@ -256,7 +260,7 @@
 	    </script>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

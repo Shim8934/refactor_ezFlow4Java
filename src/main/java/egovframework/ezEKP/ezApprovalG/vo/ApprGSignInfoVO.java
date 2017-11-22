@@ -9,6 +9,8 @@ public class ApprGSignInfoVO {
 	private String content;
 	/** */
 	private String aprSN;
+	/** 사인자 이름*/
+	private String aprMemberName;
 	
 	public String getSignType() {
 		return signType;
@@ -33,6 +35,12 @@ public class ApprGSignInfoVO {
 	}
 	public void setAprSN(String aprSN) {
 		this.aprSN = aprSN;
+	}
+	public String getAprMemberName() {
+		return aprMemberName;
+	}
+	public void setAprMemberName(String aprMemberName) {
+		this.aprMemberName = aprMemberName;
 	}
 
 }

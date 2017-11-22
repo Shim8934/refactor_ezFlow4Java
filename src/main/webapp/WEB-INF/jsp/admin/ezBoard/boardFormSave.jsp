@@ -54,9 +54,9 @@
 	    </script>
 	</head>
 	<body>
-		<table class="content" style="width:790px;height:600px;margin-top:10px;">
+		<table class="content" style="width:790px;height:600px;margin-top:10px;border:0;">
 			<tr>
-				<td style="height:600px">                   
+				<td style="height:600px;border:0;">                   
 				    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; border:0px;"></iframe>
 				</td>
 			</tr>
@@ -72,7 +72,7 @@
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>	
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
-	        <iframe src="/blank.htm" style="border: none;" id="iFrameLayer"></iframe>
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>	
 </html>

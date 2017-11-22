@@ -186,14 +186,23 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
+            
             if (g_bRecAdmin || AdminYN == "TRUE") {
+                if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
                 document.getElementById("tdVeiwRecHist").style.display = "";
+                }
                 document.getElementById("tdbtnViewRecReadHist").style.display = "";
                 CheckBtnSetRecRole();
             } else {
-                document.getElementById("tdVeiwRecHist").style.display = "none";
+                if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
+                	document.getElementById("tdVeiwRecHist").style.display = "none";
+                }
+                if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                }
+                if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
                 document.getElementById("tdbtnSetRecRole").style.display = "none";
+                }
             }
             
             if (typeof (tdNotify_Rec) != "undefined" && typeof (tdNotify_Rec) != "unknown") {
@@ -681,8 +690,10 @@ function InsertToCabListView(Resultxml) {
             xmlDoc = createXmlDom();
             xmlDoc.appendChild(ListViewData);
         }
-
-        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        
+        if (g_HeaderInfoXml != "") {
+        	xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        }
         
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
@@ -718,7 +729,10 @@ function GetRecordListXml() {
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "ORDERBY", g_OrderBy);
-
+    /**
+     *  g_RecSearchParamXml 사용자가 입력한 검색조건
+     *  입력한 검색 조건을 XML에 추가
+     */
     if (g_RecSearchParamXml != "")
     {
         var oSParam = loadXMLString(g_RecSearchParamXml);
@@ -1387,7 +1401,11 @@ function btnSearchRec_onclick(opnOption,opentype) {
         }
     }
 }
-
+/**
+ * [문서첨부]->[검색]
+ * rtnVal[0] : TRUE OR FALSE
+ * rtnVal[1] : 검색 조건(XML)
+ * */
 function btnSearchRec_onclick_Complete(rtnVal) {
     DivPopUpHidden();
     if (rtnVal[0] == "TRUE") {
@@ -1441,7 +1459,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
 
     setrecuserrole_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(555, 425));
+    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(720, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
 
@@ -1698,7 +1716,7 @@ function goToPage(page) {
 
 function insertSortInfoToHeader(header, listData) {
     try {
-        if (getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
+    	if (header != "" && getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
             var oXml = header;
             var nodesCell = SelectNodes(oXml, "LISTINFO/CELL");
             var header = SelectNodes(listData, "LISTVIEWDATA/HEADERS/HEADER");

@@ -59,7 +59,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
@@ -105,7 +104,10 @@ public class CommonUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-		
+	
+	@Resource(name = "jspw")
+    private String jspw;
+	
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
@@ -262,6 +264,7 @@ public class CommonUtil {
 			
 			return user;
 		}catch(Exception e){
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -293,7 +296,24 @@ public class CommonUtil {
 			return null;
 		}
 	}
+	
 	public List<String> getUserIdAndPassword(String loginCookie) {
+		try{
+			String decData = egovFileScrty.decryptAES(loginCookie);
+			List<String> returnObject = new ArrayList<String>();
+			
+			String userId = decData.split("///")[1];
+			String pass = jspw;
+			returnObject.add(userId);
+			returnObject.add(pass);
+	
+			return returnObject;
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public List<String> getUserIdAndRealPassword(String loginCookie) {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 			List<String> returnObject = new ArrayList<String>();
@@ -307,8 +327,8 @@ public class CommonUtil {
 		}catch(Exception e){
 			return null;
 		}
-	}	
-		
+	}
+	
 	public static String getEncodedFileNameForDownload(String userAgentValue, String filename) {
 		try {
 			// in case of IE & Edge
@@ -857,5 +877,42 @@ public class CommonUtil {
 		
 		return packageType;
 	}
+	
+    public void resetLoginFailAttempts(String userID, int tenantID) {
+    	try {
+	    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userID, "LoginFailCount"); 
+	    	
+			if (userLoginFailedAttempt.equals("")) {
+				//User hasn't logged in fail yet
+				return;
+			} else {
+				// LoginFailCount 가 0이 아닌 경우 0으로 초기화한다.
+				if (!userLoginFailedAttempt.equals("0")) {
+					//Reset the number to 0
+					ezCommonService.updateUserConfigInfo(tenantID, userID, "LoginFailCount", "0");
+				}
+			}
+		// Exception이 발생하는 경우엔 로그를 출력한다.
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
 
+	//파일 경로로 xmlDocument 읽어오
+	public Document xmlLod(String pDocPath) throws Exception {
+		Document xmlDoc = null;
+		try {
+	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(false);
+			factory.setNamespaceAware(true);
+	
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			xmlDoc = builder.parse(new InputSource(pDocPath));
+	    	
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());
+		}
+		return xmlDoc;
+	}
 }

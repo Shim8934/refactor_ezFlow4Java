@@ -137,11 +137,19 @@ function move_onclick_Complete(moveUrl) {
 
     var szOrgURL = g_paramURL;
 
-    if (moveUrl["cmd"] == "MOVE")
-        CopyOrMoveMail(moveUrl["cmd"], g_paramURL, moveUrl["url"]);
-    else if (moveUrl["cmd"] == "COPY")
-        CopyOrMoveMail(moveUrl["cmd"], g_paramURL, moveUrl["url"]);
-
+    if (moveUrl["cmd"] == "MOVE") {
+    	if (isSecureMail == "true") {
+    		if (!confirm(strLangLHM20)) {
+    			return;
+    		}
+    	}
+    	
+    	CopyOrMoveMail(moveUrl["cmd"], g_paramURL, moveUrl["url"]);
+    }
+    else if (moveUrl["cmd"] == "COPY") {
+    	CopyOrMoveMail(moveUrl["cmd"], g_paramURL, moveUrl["url"]);
+    }
+    
     usedMoveDel = "1";
 }
 var g_deleteHttp = null;
@@ -175,8 +183,15 @@ function delete_mail_2010(cmd, copyFolderID) {
 
 }
 function delete_mail() {
-    if (!confirm(strLang59))
-        return;
+	if (isSecureMail == "true") {
+		if (!confirm(strLangLHM19)) {
+			return;
+		}
+	} else {
+		if (!confirm(strLang59)) {
+			return;
+		}
+	}
 
     if (g_deleteHttp != null)
         return;

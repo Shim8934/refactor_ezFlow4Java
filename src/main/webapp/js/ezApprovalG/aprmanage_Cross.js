@@ -42,7 +42,7 @@ function getDocList() {
 				listType : pListTypeValue, 
 				docType  : pDocTypeValue,
 				userID 		 : pUserID,
-				userDeptID   : arr_userinfo[4],
+				deptID   : arr_userinfo[4],
 				pageSize 	 : pageSize,
 				pageNum 	 : pageNum,
 				companyID    : companyID,
@@ -571,8 +571,12 @@ function getAprLine(tr) {
 //      닷넷에서는 2가지 값만 보내서 controller 에서 노드(0),노드(1) 로 빼서 사용해서  mode로 통일
     	pMode = "TMP";
     } else if (pListTypeValue == "10" || pListTypeValue == "99") {
-    	pDocID = GetAttribute(tr, "DATA2");
-    	pMode = "END";
+    	if (approvalFlag == "S") {
+    		pDocID = GetAttribute(tr, "DATA2");
+    		pMode = "END";
+    	} else {
+    		pMode = "APR";
+    	}
     } else {
     	pMode = "APR";
     }
@@ -719,7 +723,6 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
-
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
@@ -867,14 +870,12 @@ function openForm() {
     var parameter = new Array();
     parameter[0] = arr_userinfo[4];
     parameter[1] = "000";
-
     var url = "/ezApprovalG/getFormCont.do";
     var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(713, 570);
 
     getformcont_cross_dialogArguments[0] = parameter;
     getformcont_cross_dialogArguments[1] = openForm_Complete;
-
     getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
     
     try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
@@ -885,7 +886,6 @@ function openForm_Complete(ret) {
     formURL = ret[0];
     formDocType = ret[1];
     formExt = ret[2];
-
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -1066,7 +1066,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
 
 function OpenReceiveDistributeUI(pCurSelRow) {
     var parameter = pCurSelRow;
-    var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI_Cross.aspx";
+    var url = "/ezApprovalG/ezReceiveDistributeUI.do";
     var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(453, 410);
     var ret = window.showModalDialog(url, parameter, feature);
@@ -1398,8 +1398,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction, type) {
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -1469,8 +1468,12 @@ function openergetDocInfo() {
         else
             getDocList();
 
-
-        parent.frames["left"].getAprCount();
+        try {
+        	parent.frames["left"].getAprCount();
+		} catch (e) {
+			// LEFT메뉴 없는 연동일시 넘어가기
+			// TODO: handle exception
+		}
     } catch (e) {
         alert("openergetDocInfo :: " + e.description);
     }
@@ -1498,37 +1501,42 @@ function makePageSelPage() {
     else {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
     }
-
+    //document.getElementById("presentcell").innerHTML = " - " + localValue;
     document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 
-    if (ViewLeftCount == "YES") {
-        switch (pListTypeValue) {
-            case "1":
-                parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "2":
-                parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "3":
-                parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "4":
-                parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "6":
-                parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "7":
-                parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "21":
-                parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "99":
-                parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-        }
-    }
+    try {
+    	if (ViewLeftCount == "YES") {
+    		switch (pListTypeValue) {
+    		case "1":
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "2":
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "3":
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "4":
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "6":
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "7":
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "21":
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "99":
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		}
+    	}
+	} catch (e) {
+		// LEFT메뉴 없는 연동일시 넘어가기
+		// TODO: handle exception
+	}
 
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
@@ -1536,8 +1544,7 @@ function makePageSelPage() {
         strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
-    }
-    else {
+    } else {
         strtext = "<span class='btnimg'><a >";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
@@ -1567,6 +1574,10 @@ function makePageSelPage() {
     }
     else {
         MaxNum = totalPage;
+    }
+    
+    if(totalPage == "0") {
+    	MaxNum = 1;
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {

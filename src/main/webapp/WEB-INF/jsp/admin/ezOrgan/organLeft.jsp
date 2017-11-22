@@ -128,7 +128,7 @@
 			<h2>
 				<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
 			    <ul></ul>
-			</h2>
+			</h2>			
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");

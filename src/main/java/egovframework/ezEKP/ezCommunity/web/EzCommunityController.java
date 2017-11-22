@@ -3769,6 +3769,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String adminMemPermit(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
+		
+		logger.debug("code = " + code);
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		

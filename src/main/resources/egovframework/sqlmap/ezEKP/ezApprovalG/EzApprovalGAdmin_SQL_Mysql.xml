@@ -169,8 +169,7 @@
 		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage"
-		parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="G">
 			<![CDATA[
 				SELECT
@@ -742,6 +741,8 @@
 				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
 			WHERE
 				(functiontype IS NOT NULL)
+			AND
+				 functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
 		]]>
@@ -2179,6 +2180,8 @@
 				TBL_APRDOCINFO.companyid = #companyID#
 			AND
 				(functiontype IS NOT NULL)
+			AND
+				 functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
 		]]>
@@ -4036,7 +4039,7 @@
 		]]>
 	</update>
 	
-	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map">
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				count(*)
