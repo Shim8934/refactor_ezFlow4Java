@@ -38,11 +38,11 @@
 			<div style="height:359px; overflow: auto;">
 				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey">
 					<tr> 
-						<th> <a id="seenUser_"><spring:message code='ezPoll.t136'/> <c:out value='${numberOfSeenUsers}'/></a></th> 
+						<th style="background:#004896; height:40px; color:#FFF;"> <a id="seenUser_" style="color:#FFF;"><spring:message code='ezPoll.t136'/> <c:out value='${numberOfSeenUsers}'/></a></th> 
 					</tr>
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
-						<tr id="${list1.id}" class="white" style="border: 1px solid #b6b6b6;">
-							<td >
+						<tr id="${list1.id}" class="white" style="border: 1px solid #DDD;">
+							<td>
 								<img src="${list1.userFileUrl}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
 								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
 									<c:choose>
@@ -60,11 +60,11 @@
 				</table>
 				<table border=1px style="float: left;clear: none;width : 50%;">
 					<tr> 
-						<th> <a id="unseenUser_"><spring:message code='ezPoll.t137'/> <c:out value='${numberOfUnseenUsers}'/></a></th> 
+						<th style="background:#eaeaea; height:40px; color:#000;"> <a id="unseenUser_" style="color:#000;"><spring:message code='ezPoll.t137'/> <c:out value='${numberOfUnseenUsers}'/></a></th> 
 					</tr>
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
-						<tr id="${list2.id}" class="white" style="border: 1px solid #b6b6b6;">
-						   <td >
+						<tr id="${list2.id}" class="white" style="border: 1px solid #DDD;">
+						   <td>
 							<img src="${list2.userFileUrl}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list2.id}')">
 								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
 									<c:choose>

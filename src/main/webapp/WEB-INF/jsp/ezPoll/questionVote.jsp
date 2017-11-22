@@ -2038,7 +2038,7 @@
 				  </div>
 				  <c:if test="${curentUser == question.creator || adminPrivilege == 1}">
 					  <div style="float: right; display: block;" id="_editVote">
-					  		<img src="/images/edit1600.png" style="display:inline-block;float:left; height:25px;width:25px;padding-top: 12px; cursor: pointer;" onclick="voteEdit()">
+					  		<img src="/images/poll/edit1600_vote.png" style="display:inline-block;float:left; width:60px; height:60px; cursor: pointer;" onclick="voteEdit()">
 					  </div>
 				  </c:if>
 			</div>
@@ -2050,7 +2050,7 @@
 						<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
 					</c:choose>
 				</div>
-				<div id="votedUsers"style="display:inline-block; float:right; padding-right:25px; padding-bottom:10px;">					
+				<div id="votedUsers" style="display:none; float:right; padding-right:25px; padding-bottom:10px;">					
 					<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>
 				</div>
 				 <c:if test="${question.status == 1}">
@@ -2094,16 +2094,16 @@
 			<table class="content" style="width:100%; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
 				<c:forEach var="_option" items="${listOptions}" varStatus="loop">
 		        	<tr>
-		               <td class="vote_listTd" style="width:30px; border:1px solid #DDD; border-right:none;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
-		               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/unchecked.png" style="height:20px; width:20px; display:inline-block;padding-left: 5px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
+		               <td class="vote_listTd" style="width:54px; border:1px solid #DDD; background:#f9f9f9;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
+		               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 5px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
 		               </td>
-		               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
+		               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
 		               		<div id="optionContent" class="title01" style="display:block;">${_option.content}</div> 
 		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; <!--display:none;--> width:100%; height:20px;">
-		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left;display:block; heigth:25px;">
+		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left;display:block; heigth:20px; margin:3px 0px 10px 0px;">
 		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20" style="border:1px solid #000000;"></canvas>			               					               					
 		               				</div>	
-		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left;display:block;padding-left: 5px;padding-top: 4px;">0</div>		               				
+		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left;display:block; font-size:16px; margin:-4px 10px 0px 10px; color:#e04343;">0</div>		               				
 		               				<script type="text/javascript">
 		               					var loopIdx = ${loop.index};
 		               					userNameArr[loopIdx] = [];
@@ -2122,13 +2122,13 @@
 		               				</script>      					               			
 		               		</div>
 		               		<div id="voterNumber2<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
-		               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="float:left; display:none;padding-top: 6px;padding-bottom: 6px;">	              
-		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="float:left; display:none;width:80px; border:1px solid black;margin-left: 1px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="float:left; display:none;width:80px; margin-left: 1px;" align="center" id="_tax${loop.index}">
+		               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">	              
+		               			<div style="display:none; clear:both; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+		               			<div style="display:none; clear:both; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+		               			<div style="display:none; clear:both; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+		               			<div style="display:none; clear:both; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+		               			<div style="display:none; clear:both; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+		               			<div style="display:none; clear:both; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
 		               				<div style="float:left; display:block; padding-left: 5px; padding-top: 1.5px"><spring:message code = 'ezPoll.t122'/></div>
 		               				<img src="/images/arrow_right.png" height="10px" width="10px" style="cursor: pointer; float:left; display:block; padding-top: 2.5px; padding-left: 10px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 		               			</div>
@@ -2146,15 +2146,21 @@
 							<div id="_unVotedNumber" style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div>
 							<!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 						</div>
+                        <c:if test="${curentUser == question.creator || adminPrivilege == 1}">
+                            <div id="_finish" style="width:85px; height:45px; position:absolute; top:10px; left:50%; margin:0px 0px 0px -20px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 13px; text-align:center; cursor: pointer;" onclick="finishVote();">
+                                <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
+                                <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
+                            </div> 
+                        </c:if>
 					</td>					
 				</tr>
 			</table>		
-			<c:if test="${curentUser == question.creator || adminPrivilege == 1}">
+			<!--<c:if test="${curentUser == question.creator || adminPrivilege == 1}">
 				<div id="_finish" style="border:1px solid #b6b6b6; margin-right: auto; margin-left: auto; width:120px; height:40px; margin-top: 15px; cursor: pointer;" onclick="finishVote();">
 					<img src="/images/verified.png" style="height:15px; width:15px; float:left; display:block; padding-top: 14px;padding-left: 5px; cursor: pointer;">				
 					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 				</div> 
-			</c:if>
+			</c:if>-->
 			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; height:70px;">
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${listComments}">
