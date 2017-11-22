@@ -1,0 +1,21 @@
+package egovframework.ezMobile.ezSchedule.dao;
+
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
+import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+
+@Repository("MScheduleDAO")
+public class MScheduleDAO extends EgovAbstractDAO {
+
+	public String scheduleContentPath(Map<String, Object> map) throws Exception{		
+		return (String) select("MScheduleDAO.scheduleContentPath", map);
+	}
+
+	public MScheduleInfoVO scheduleInfo(Map<String, Object> map) throws Exception{
+		return (MScheduleInfoVO) select("MScheduleDAO.scheduleInfo", map);
+	}
+}
+

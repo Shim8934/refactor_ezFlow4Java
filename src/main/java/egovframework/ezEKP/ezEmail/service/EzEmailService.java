@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
@@ -13,6 +14,8 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
+import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
+import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -54,6 +57,16 @@ public interface EzEmailService {
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 	public int getMaxMessageSize(int tenantId) throws Exception;
 	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception;
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount, String maxReadDate) throws Exception;
+	public String updateMailSecure(int tenantId, String userId, int secureId, String url) throws Exception;
+	public int checkSecureMailPassword(String secureId, String reader, String password) throws Exception;
+	public MailSecureVO getSecureMailInfo(String secureId, String reader) throws Exception;
+	public String updateSecureMailReaderInfo(String secureId, String reader) throws Exception;
+	public MailSecureVO getSecureMailInfoWithPassword(String secureId) throws Exception;
+	public MailSecureVO getSecureMailInfoWithPassword(String userId, int tenantId, String url) throws Exception;
+	public List<MailSecureReaderVO> getSecureMailReaderInfo(String secureId) throws Exception;
+	
 }

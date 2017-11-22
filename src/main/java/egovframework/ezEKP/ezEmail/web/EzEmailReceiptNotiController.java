@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,6 +42,8 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -76,6 +79,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
@@ -84,7 +90,21 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailReaderList.do")
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		List<SysParamVO> configList = ezSystemAdminService.getSysParam(loginInfo.getTenantId());
+		Map<String, String> configMap = new HashMap<String, String>();
+
+		for (SysParamVO param : configList) {
+			configMap.put(param.getName(), param.getValue());
+			
+			if (param.getName().equals("IS_READ_DELETE")) {
+				String isReadDelete = param.getValue();
+				model.addAttribute("isReadDelete", isReadDelete);
+			}
+		}
+		
 		model.addAttribute("url", url);
 		return "ezEmail/mailReaderList";
 	}

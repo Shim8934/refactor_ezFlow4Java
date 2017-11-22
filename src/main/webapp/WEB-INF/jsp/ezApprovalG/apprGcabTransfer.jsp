@@ -300,6 +300,16 @@
 	        }
 	        var SelListView = new ListView();
 	        SelListView.LoadFromID("DivSelCabinetList");
+	        
+	        var Listlen = SelListView.GetDataRows();
+	        var count = Listlen.length;
+	        
+	        if(count > 0) {
+				if (Listlen[0].textContent == strLang944) {
+					count = 0;
+				}
+	        }
+	        
 	        var row = "<ROW>";
 	        row += "<CELL>";
 	        row += "<VALUE><![CDATA[";
@@ -327,8 +337,8 @@
 	        row += "</CELL>";
 	        row += "</ROW>";
 	        var rowXml = loadXMLString(row);
-	        var tr = SelListView.AddRow(0);
-	        SelListView.AddDataRow(tr, rowXml);
+	        var tr = SelListView.AddRow(count);
+	        	SelListView.AddDataRow(tr, rowXml);
 	    }
 	
 	    function GetUncompleteDocCount(pCabinetID) {

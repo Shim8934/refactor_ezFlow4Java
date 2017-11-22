@@ -222,7 +222,7 @@ public interface EzPortalService {
 	public int daysInMonth (int month, int year) throws Exception;
 	
 	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
-	
+		
 	public void deleteCacheValue (String uID, String accessListID, int tenantID) throws Exception;
 	
 	public void getUserInfo3 (String parentUID, String userFlag, String userID, String gubunFlag, String newPageID, String userName, String accessID, String accessName, int viewRight, int editRight, int depth, String companyID, int tenantID) throws Exception;

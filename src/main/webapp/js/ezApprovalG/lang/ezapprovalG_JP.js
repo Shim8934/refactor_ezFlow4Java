@@ -2,6 +2,7 @@
 var strLang2 = "合議"
 var strLang3 = "協議"
 var strLang4 = "差し戻し"
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "専決"
 var strLang7 = "代決"
 var strLang8 = "代 "
@@ -985,7 +986,7 @@ var strLangS826 = "循環を送信しませんでした。";
 var strLangpjj27 = "編集するお気に入りを供覧者リストに適用する必要が編集することができます。";
 var strLangHYJ28 = "循環者リストが存在しません。";
 
-var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
+var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\\n추가 할 수 없습니다.";
 
 //2017-11-09 장진혁 추가
 var strLangjjh01 = "첨부파일은 총 ";

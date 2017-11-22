@@ -118,15 +118,19 @@
 	        			userID : userid,
 	        			deptID : deptid
 	        		},
-	        		success : function(){
-	        			alert("<spring:message code='ezSchedule.t30' />");
-	        			
-		                if (ReturnFunction != null) {
-		                    ReturnFunction("OK");
-		                } else {
-		                    window.returnValue = "OK";
-		                }	                
-		                window.close();
+	        		success : function(text){
+	        			if (text == "SUCCESS") {
+		        			alert("<spring:message code='ezSchedule.t30' />");
+		        			
+			                if (ReturnFunction != null) {
+			                    ReturnFunction("OK");
+			                } else {
+			                    window.returnValue = "OK";
+			                }
+			                window.close();
+	        			} else {
+	        				alert(strLang1003);
+	        			}		                
 	        		},
 	        		error : function(err){
 	        			alert("<spring:message code='ezSchedule.t31' />");

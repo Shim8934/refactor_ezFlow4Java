@@ -403,7 +403,7 @@
     		</div>    		
     		<h2><spring:message code='ezPersonal.t185'/></h2>
     		<div>▒ <spring:message code='ezPersonal.t186'/></div>    		
-			<div style="margin-top:3px">▒ <spring:message code='main.jjh04'/></div>
+			<div style="margin-top:3px">▒ <spring:message code='main.jjh04'/></div>  
     		<table class="content" style="margin-top:5px">
         		<!-- 표준모듈 (2007.02.21) 수정 -->
         		<tr>

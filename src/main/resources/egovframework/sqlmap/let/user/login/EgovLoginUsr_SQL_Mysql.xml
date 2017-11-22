@@ -30,6 +30,7 @@
         <result property="primary"              column="primaryLang"                columnIndex="20"/>
         <result property="loginCnt"             column="loginCnt"                	columnIndex="21"/>
         <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
         <result property="sabun"              	column="sabun"                		columnIndex="23"/>
     </resultMap>    
     
@@ -65,6 +66,7 @@
                 (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
                 loginCnt,
                 extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun
             FROM 
                 TBL_USERMASTER a

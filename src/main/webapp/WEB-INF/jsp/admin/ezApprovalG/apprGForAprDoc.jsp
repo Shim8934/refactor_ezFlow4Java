@@ -587,16 +587,27 @@
 			        var top = 0;
 			
 			        if (window.screen.width > 800) {
-			            var pleftpos;
-			
-			            pleftpos = parseInt(width) - 967;
-			            heigth = parseInt(heigth) - 30;
-			            width = parseInt(width) - pleftpos;
-			            left = pleftpos / 2;
-			        } else {
-			            heigth = parseInt(heigth) - 30;
-			            width = parseInt(width) - 10;
-			        }
+		                var pleftpos;
+
+		                pleftpos = parseInt(width) - 967;
+		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+		                width = parseInt(width) - pleftpos;
+		                left = pleftpos / 2;
+		            }
+		            else {
+		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+		                width = parseInt(width) - 10;
+		            }
 			
 			        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 			    } catch (e) {
@@ -701,6 +712,7 @@
 			        ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 			
 			        var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+
 			        try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 			        }
 			    } else {
