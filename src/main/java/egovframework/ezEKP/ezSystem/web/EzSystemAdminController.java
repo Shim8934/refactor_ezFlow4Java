@@ -82,6 +82,7 @@ public class EzSystemAdminController {
 		}
 		return "/ezSystem/systemMain";
 	}
+
 	
 	@RequestMapping(value="/admin/ezSystem/systemLeftMenu.do")
 	public String systemLeftMenu(Model model) throws Exception {
