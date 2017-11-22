@@ -786,13 +786,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
+		//초기화면 메일만 사용하고 싶을 때 YES
+		String firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		
+		System.out.println("firstScreen_Mail:"+firstScreen_Mail);
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
-
+		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
+		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         
         model.addAttribute("packageType", packageType);
