@@ -1927,4 +1927,13 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .content_poll .pollTd01{ border:none;}
 .content_poll tbody{border:0px;}
 .content td .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px;}
-.content_poll .pollButton02, .content_poll .pollButton03{background:none;}
+
+
+
+/* 20171117 vote */
+
+.vote_attachedFile{position:relative;}
+/*.vote_attachedFile img{position:absolute; top:13px; left:7px;}*/
+.vote_attachedFile txt{float:left;}
+.vote_attachedFile .all_save{position:absolute; top:13px; left:220px;}
+.vote_attachedFile .vote_fileList{}

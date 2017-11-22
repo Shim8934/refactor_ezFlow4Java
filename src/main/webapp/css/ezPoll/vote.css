@@ -27,3 +27,17 @@
 /* 20171115 */
 .voteInfo{width:203px; height:60px; background:#f4f9ff; border:1px solid #e1ebf7;}
 .voteTextTest{line-height:27px; margin:3px 8px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+
+.vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.vote_listTd .graph01{background:#efa1a1; border:none;}
+
+.voteTdBg{background:#f9f9f9; margin:0px; padding:0px; height:68px; position:relative;}
+.voteTdBg .VoteBtn{width:158px; height:45px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 34px; position:absolute; top:10px; left:50%; margin:0px 0px 0px -80px;}
+
+.voteComment{width:100%; height:50px; border:1px solid #d0d0d0; margin:20px 0px 0px 0px; padding:0px;}
+
+.questionTitle{width:100%; height:40px; line-height:40px; padding:0px 12px; background:#004896; color:#FFF; font-size:16px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+
+.vote_attachedFile .txt{height:50px; line-height:50px; padding:0px 10px 0px 30px; backgorund:#f4f9ff;}
+.vote_attachedFile .attach_img{position:absolute; top:13px; left:7px; hegith:20px; width:20px;}
+.vote_attachedFile .all_save{position:absolute; top:12px; left:215px; float: left;}

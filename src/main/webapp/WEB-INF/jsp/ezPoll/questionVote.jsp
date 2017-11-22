@@ -2029,7 +2029,7 @@
 				  <div style="float: left; display: block;" class="voteInfo">
 				  		<img src="${question.creatorImage}" style="display:inline-block;float:left; height:60px;width:60px; padding-bottom: 1px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
 						<div id="textTest" style="display:inline-block;" class="voteTextTest">
-							<span style="display:block; font-size:18px; color:#000;"><c:out value='${question.creatorName}'/></span>
+							<span style="display:block; font-size:18px; color:#000; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;"><c:out value='${question.creatorName}'/></span>
 							<span style="display:block; font-size:12px; color:#969595;"><c:out value='${question.startDate}'/></span>
 						</div>
 				  </div>
@@ -2043,7 +2043,7 @@
 				  </c:if>
 			</div>
 			<div id="titleAndContent" style="border: 1px solid #b6b6b6; background: #FFF; overflow: hidden;">				
-				<div id="title" style="display:inline-block;float:left; width:100%; padding:8px;"><!--<font size="5"><c:out value='${question.title}'/></font>-->질문 01)</div>
+				<div id="title" class="questionTitle" style="display:inline-block;float:left; width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->질문 01)</div>
 				<div id="status" style="display:inline-block;padding-left: 1330px;">
 					<c:choose>
 						<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
@@ -2063,21 +2063,21 @@
 	             <iframe onload="resizeFrame()" id="message_test" style="border: #b6b6b6 0px solid; overflow: auto;width: 100%; padding-top: 6px; background-color: white;"></iframe>   	                                 
 	        </div>
 	        <c:if test="${numOfFile != 0}">
-	        	<div id="attachedFile" style="overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7;">
-	        		<img src="/images/attach_file.png" style="hegith:20px; width:20px;float: left;display:block;" >
-	        		<div style="float: left;display:block; width:100%; height:50px; line-height:48px; padding:0px 10px 0px 30px; backgorund:#f4f9ff;">
+	        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7;">
+	        		<img src="/images/attach_file.png" class="attach_img" style="float: left;display:block;" >
+	        		<div class="txt" style="float: left;display:block; width:100%;">
 	        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> 개(<c:out value='${totalFilesSize}'/>)
 	        		</div>
-	        		<div style="float: left;display:block;">
+	        		<div class="all_save" style="display:block;">
 	        			<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);" style="display:inline-block;"></span> 
 	        			<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='padding-top: 5px;cursor: pointer;display:inline-block;' onclick="AttachAllDownload();"><spring:message
 									code='ezEmail.t99000004' /></span>
 	        		</div>
-	        		<div id="fileList" style="width: 100%;">	        		
+	        		<div id="fileList" class="vote_fileList" style="width: 100%;">	        		
 	  					<c:forEach var="list" items="${fileNames}" varStatus="status">
-							<table class="content" style="width: 100%; height:32px; line-height:30px; border-bottom:1px solid #e1ebf7;">
+							<table class="content" style="width: 100%; height:32px; line-height:30px; border:none; border-bottom:1px solid #e1ebf7;">
 								<tr>
-									<td>
+									<td class="vote_listTd" style="border:none;">
 										<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">
 											<img src="/images/icon_adddownload.gif" width="16" height="16" style="padding-left: 5px;">											
 										</span>
@@ -2091,17 +2091,17 @@
 					</div>  
 			</div>
 	        </c:if>	
-			<table class="content" style="width:100%; table-layout: fixed; height:32px; line-height:30px; border-bottom:1px solid #e1ebf7; border-bottom:1px solid #e1ebf7;" id="_content1">
+			<table class="content" style="width:100%; table-layout: fixed; height:32px; line-height:30px; border-bottom:1px solid #e1ebf7;" id="_content1">
 				<c:forEach var="_option" items="${listOptions}" varStatus="loop">
 		        	<tr>
-		               <td style="width:30px; border-right: none;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
+		               <td class="vote_listTd" style="width:30px; border-right: none;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
 		               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/unchecked.png" style="height:20px; width:20px; display:inline-block;padding-left: 5px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
 		               </td>
-		               <td style="border-right: none;border-left: none;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
-		               		<div id="optionContent" style="display:block;padding-top: 6px;padding-bottom: 6px;">${_option.content}</div> 
-		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%">
+		               <td class="vote_listTd" style="border-right: none;border-left: none;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
+		               		<div id="optionContent" class="title01" style="display:block;">${_option.content}</div> 
+		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; <!--display:none;--> width:100%; height:20px;">
 		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left;display:block; heigth:25px;">
-		               					<canvas id="myCanvas<c:out value ="${_option.ansId}" />"  height="20" style="border:1px solid #000000;"></canvas>			               					               					
+		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20" style="border:1px solid #000000;"></canvas>			               					               					
 		               				</div>	
 		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left;display:block;padding-left: 5px;padding-top: 4px;">0</div>		               				
 		               				<script type="text/javascript">
@@ -2140,11 +2140,11 @@
 		            </tr>
 				</c:forEach>
 				<tr>
-					<td style="border-right: none;width:100%; " colspan="3" >
-						<div style="overflow: hidden;display:inline-block;">
-							<div style="float:left; display:block; padding-top: 8px; padding-left: 35px;"><spring:message code = 'ezPoll.t123'/></div>
-							<div id="_unVotedNumber" style="float:left; display:block; padding-top: 8px; padding-left: 20px;"><c:out value='${numberOfUnvotedUsers}'/></div>
-							<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">
+					<td class="voteTdBg" style="border-right: none;width:100%; " colspan="3" >
+						<div class="voteBtn" style="overflow: hidden;display:inline-block;">
+							<div style="float:left; display:block; line-height:43px;"><spring:message code = 'ezPoll.t123'/></div>
+							<div id="_unVotedNumber" style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div>
+							<!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 						</div>
 					</td>					
 				</tr>
@@ -2203,11 +2203,11 @@
 					</c:forEach>					
 				</table>
 			</div>
-			<div id="sendComment" style="padding-top: 20px;">
-				<div style="float:left; display:block;">
-					<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; padding-left: 60px; cursor: pointer;" onclick="addFileComment();">
+			<div id="sendComment" class="voteComment" style="width:100%; height:50px; border:1px solid #d0d0d0;">
+				<div style="float:left; display:block; padding:10px 3px 10px 10px;">
+					<img id="_addFile" src="/images/add.png" style="float:left; display:block; height:25px; width:25px; cursor: pointer;" onclick="addFileComment();">
 				</div>
-				<div id ="_stickerArea" style="float:left; display:block;">					
+				<div id ="_stickerArea" style="float:left; display:block; padding:10px 10px 10px 0px;">					
 					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-right: -400px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
 						<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
 							<div style="float:left; display:block;">
@@ -2460,15 +2460,15 @@
 					</div>					
 					<img id="_addEmoticon" src="/images/add_emo.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
-				<div style="float:left; display:block; width:80%;">
-					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height: 32px;  outline: none; border: none; resize:none; padding-left: 15px;"  onkeyup="auto_grow(this)"></textarea>
+				<div style="float:left; display:block; width:80%; height:30px; border:1px solid #d0d0d0; margin:8px;">
+					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height:30px; line-height:30px; padding:0px; outline: none; border:1px solid #d0d0d0; resize:none;"  onkeyup="auto_grow(this)"></textarea>
 				</div>
-				<div style="float:left; display:block; width: 60px;">
+				<div style="float:left; display:block; width: 60px; height:30px; margin:8px 0px;">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
 						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer;  z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
 					</div>	
-					<button id="sendBttn" style="display:inline-block; width: 60px; padding-bottom: 2px; text-align: center; margin-left: 15px; margin-right: 15px; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
+					<button id="sendBttn" style="display:inline-block; width: 60px; height:30px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
 				</div>
 				
 			</div>
