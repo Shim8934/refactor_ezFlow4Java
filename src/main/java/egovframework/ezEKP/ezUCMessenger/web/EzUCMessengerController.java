@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezUCMessenger.util.EzUCMessengerUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -35,6 +36,9 @@ public class EzUCMessengerController {
 	
 	@Resource(name = "loginService")
     private LoginService loginService;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@Autowired
 	private LoginController loginController;
@@ -61,7 +65,7 @@ public class EzUCMessengerController {
 	        int tenantId = loginService.getTenantId(serverName);
 	        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 			
-			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			boolean isUserExists = checkIfUserExistsWithPassword(orgId, orgPw, tenantId);
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
@@ -105,7 +109,7 @@ public class EzUCMessengerController {
         int tenantId = loginService.getTenantId(serverName);
         logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 		
-		boolean isUserExists = checkIfUserExists(orgId, null, tenantId);
+		boolean isUserExists = checkIfUserExists(orgId, tenantId);
 		logger.debug("isUserExists=" + isUserExists);
 		
 		String redirectUrl = "redirect:/user/login/login.do";
@@ -127,22 +131,16 @@ public class EzUCMessengerController {
 		return redirectUrl;
 	}
 	
-	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {
+	private boolean checkIfUserExists(String id, int tenantId) throws Exception {
 		logger.debug("checkIfUserExists started. id=" + id + ",tenantId=" + tenantId);
 		
 		boolean isUserExists = false;
-		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
 		
-		LoginVO loginVO = new LoginVO();	
+    	LoginVO loginVO = new LoginVO();	
 		
 		loginVO.setId(id);
 		loginVO.setTenantId(tenantId);
-		
-		if (pw == null) {
-			loginVO.setDn("NOPASSWORD");
-		} else {
-			loginVO.setPassword(encryptedPw);
-		}
+		loginVO.setDn("NOPASSWORD");
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		logger.debug("resultVO=" + resultVO);
@@ -153,6 +151,37 @@ public class EzUCMessengerController {
 		
 		logger.debug("checkIfUserExists ended.");
 		return isUserExists;
-	}	
+	}
     
+	private boolean checkIfUserExistsWithPassword(String id, String pw, int tenantId) throws Exception {
+		logger.debug("checkIfUserExistsWithPassword started. id=" + id + ",tenantId=" + tenantId);
+		
+		boolean isUserExists = false;
+		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+		
+        if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+    		String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
+        	
+        	if (chkADpass.equalsIgnoreCase("TRUE")) {
+        		isUserExists = true;
+        	}
+        } else {
+        	LoginVO loginVO = new LoginVO();	
+    		
+    		loginVO.setId(id);
+    		loginVO.setTenantId(tenantId);
+    		loginVO.setPassword(encryptedPw);
+    		
+    		LoginVO resultVO = loginService.selectUser(loginVO);
+    		logger.debug("resultVO=" + resultVO);
+    		
+    		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+    			isUserExists = true;
+    		}
+        }
+		
+		logger.debug("checkIfUserExistsWithPassword ended.");
+		return isUserExists;
+	}
+	
 }

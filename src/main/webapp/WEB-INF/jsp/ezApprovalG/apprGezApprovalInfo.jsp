@@ -2224,8 +2224,8 @@
 	                                    <td style="background-color: transparent; height: 28px;">
 	                                        <input id="textUserCC" style="width: 150px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
 	                                        <a class="imgbtn"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
-<!-- 	                                        부서추가 -->
-<%-- 	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a> --%>
+											<!-- 부서추가 -->
+											<a class="imgbtn" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                                    </td>
 	                                </tr>
 			                    </table>

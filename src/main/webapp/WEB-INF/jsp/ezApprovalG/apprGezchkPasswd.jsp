@@ -30,31 +30,31 @@
 		    	if (flag) {
 					flag = false;		    		
 			        var rtnVal = "cancel";
-			        
-		        var rtnVal = "cancel";
-		        if (trim(document.getElementById("inpPassword").value).length == 0) {
-		            alert("<spring:message code='ezApprovalG.t1746'/>");
-		            document.getElementById("inpPassword").focus();
-		            return;
-		        }
-		        else {
-		            rtnVal = chkPasswd();
-		        }
-		        
-				if (rtnVal != "FALSE") {
-			        if (ReturnFunction != null) {
-			            ReturnFunction(rtnVal);
-			            window.close();
+
+			        if (trim(document.getElementById("inpPassword").value).length == 0) {
+			            alert("<spring:message code='ezApprovalG.t1746'/>");
+			            document.getElementById("inpPassword").focus();
+			            return;
 			        }
 			        else {
-			            window.returnValue = rtnVal;
-			            window.close();
+			            rtnVal = chkPasswd();
 			        }
-				} else {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-			            OpenAlertUI(pAlertContent);
-			            return;
-				}
+			        
+					if (rtnVal != "FALSE") {
+				        if (ReturnFunction != null) {
+				            ReturnFunction(rtnVal);
+				            window.close();
+				        }
+				        else {
+				            window.returnValue = rtnVal;
+				            window.close();
+				        }
+					} else {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+				            OpenAlertUI(pAlertContent);
+				            return;
+					}
+			    }
 		    }
 		    
 		    var ezapralert_cross_dialogArguments = new Array();
@@ -197,8 +197,8 @@
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition">
-		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
+		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick();"><span><spring:message code='ezApprovalG.t20'/></span></a>
+		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>

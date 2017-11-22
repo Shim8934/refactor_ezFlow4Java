@@ -140,6 +140,9 @@
 					case "MailEnv_sub100":
 						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_InboxRule_Cross.aspx";
 						break;
+					case "CircularEnv":
+				        window.parent.frames.right.document.location.href = "/ezCircular/circularConfig.do";
+				        break;
 					default: 
 						break;
 				}
@@ -158,12 +161,15 @@
 	<body  class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
 			<div class="left_env"></div>
-			<c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
-				<h2><span  id="Portal" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
-				<ul>
-					<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>
-					<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
-				</ul>
+			<script type="text/javascript">alert("${firstScreen_Mail}");</script>
+			<c:if test="${packageType != 'basic'}">
+				<c:if test="${firstScreen_Mail != 'YES'}">
+					<h2><span  id="Portal" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
+					<ul>
+						<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>
+						<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
+					</ul>	
+				</c:if>
             </c:if>
 			
 			<h2><span id="UserInfo" name="UserInfo" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t172' /></span><ul></ul></h2>
@@ -174,6 +180,7 @@
 			<h2><span id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900008' /></span></h2><ul></ul>
             </c:if>
     		<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
+    		<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
             </c:if>
 			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900010' /></span><ul></ul></h2>
 		</div>

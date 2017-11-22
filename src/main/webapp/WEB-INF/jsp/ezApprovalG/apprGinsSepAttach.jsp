@@ -456,7 +456,7 @@
 		    }
 
 		    /**
-		    * [분리첨부] 리스트에서 순번 재정렬
+		    * [분리첨부] 에서 순번 재정렬
 		    */
 		    function OrderList() { 
 		        var pLvList = new ListView();

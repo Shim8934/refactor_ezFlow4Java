@@ -86,7 +86,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  * @see
  */
-@Controller
+@Controller("EzBoardController")
 public class EzBoardController extends EgovFileMngUtil{
 	
 	@Autowired

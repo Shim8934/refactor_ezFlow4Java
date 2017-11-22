@@ -275,7 +275,8 @@
 			    			streetAddress : document.getElementById("txtAddress").value,
 			    			birth : document.getElementById("txtBirth").value,
 			    			birthType : birthType,
-			    			info : document.getElementById("txtInfo").value
+			    			info : document.getElementById("txtInfo").value,
+			    			displayName : "${labelDisplayName }"
 			    		},
 			    		success : function(result) {   			
 			    			 if (result == "OK") {

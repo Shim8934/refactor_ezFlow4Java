@@ -324,7 +324,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			startDate = cDate + " " + cTime + ":00:00";
 			
 			cDate = cDate.substring(0, 10);
-			endDate = cDate + " " + cTime + ":30:00";
+			endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
 		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
@@ -786,13 +786,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
+		//초기화면 메일만 사용하고 싶을 때 YES
+		String firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		
+		System.out.println("firstScreen_Mail:"+firstScreen_Mail);
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
-
+		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
+		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         
         model.addAttribute("packageType", packageType);
@@ -934,6 +939,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		vo.setTenantId(userInfo.getTenantId());
+		
+		logger.debug("<<<1. : " + vo.getCn());
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
