@@ -145,7 +145,7 @@
 				/* 의견카운트 */
 				getCommentList();			
 				
-				//setTimeout(onloadchangtab, 100);					
+				setTimeout(onloadchangtab, 100);					
 				
 				initProgressBar(taskstatus, completerate);
 		    });
@@ -222,34 +222,7 @@
 			
 			/* 초기 탭선택스크립트 */
 			function onloadchangtab() {
-		    	if (selecttab) {
-		    		var testBaonk = null;
-		    		switch(selecttab) {
-		    			case "0":
-		    				testBaonk = document.getElementById("1tab0");
-		    				Tab1_MouseClick(testBaonk);
-		    				break;
-		    			case "1":
-		    				testBaonk = document.getElementById("1tab1");
-		    				Tab1_MouseClick(testBaonk);
-		    				break;
-		    			case "2":
-		    				testBaonk = document.getElementById("1tab2");
-		    				Tab1_MouseClick(testBaonk);
-		    				break;
-		    			case "3":
-		    				testBaonk = document.getElementById("1tab3");
-		    				Tab1_MouseClick(testBaonk);
-		    				break;
-		    			case "4":
-		    				testBaonk = document.getElementById("1tab4");
-		    				Tab1_MouseClick(testBaonk);
-		    				break;
-		    		}
-		    	}
-		    	else {
-		    		Tab1_MouseClick(document.getElementById("1tab0"));
-		    	}			
+		    	Tab1_MouseClick(document.getElementById("1tab0"));		
 			}
 
 			/* 지시사항 본문 */
@@ -618,30 +591,7 @@
 				}
 			}
 			
-			function Tab1_NewTabIni(pTabNodeID) {
-				if (selecttab) {		    		
-		    		switch(selecttab) {
-		    			case "0":
-		    				Tab1_SelectID = "1tab0";		    				
-		    				break;
-		    			case "1":
-		    				Tab1_SelectID = "1tab1";
-		    				break;
-		    			case "2":
-		    				Tab1_SelectID = "1tab2";	
-		    				break;
-		    			case "3":
-		    				Tab1_SelectID = "1tab3";	
-		    				break;
-		    			case "4":
-		    				Tab1_SelectID = "1tab4";	
-		    				break;
-		    		}
-		    	}
-		    	else {
-		    		Tab1_SelectID = "1tab0";		    	
-		    	}				
-				
+			function Tab1_NewTabIni(pTabNodeID) {						
 			    for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 			        if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
 			            if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
@@ -649,16 +599,14 @@
 			                document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };;
 			                document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };;
 			
-/* 			                if (i == 0) {
+			                if (i == 0) {
 			                    document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).className = "tabon";
 			                    Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).id;
-			                } */
+			                } 
 			
 			            }
 			        }
 			    }
-			    console.log("Tabl_SelectID: " + Tab1_SelectID);
-			    Tab1_MouseClick(document.getElementById(Tab1_SelectID));
 			}
 			
 			var Tab1_SelectID = "";

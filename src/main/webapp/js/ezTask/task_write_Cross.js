@@ -648,33 +648,14 @@ function save_task() {
 						
 	        parent.DivPopUpHidden();
 	        //parent.taskReadJson();
-	        
-	        if (mode == "2") {
-	        	var selecttab = parent.selecttab;
-	        	replace_search("tab", selecttab);
-	        	console.log("HERE : " + parent.location.href);
-	        }
-	        //parent.location.reload();
-	        //window.close();
+	        parent.location.reload();
+	        window.close();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert(strLang13);
 		}
     });
 }
-
-function replace_search(name, value) {
-	var location = parent.location;
-    var str = location.search;
-    if (new RegExp("[&?]"+name+"([=&].+)?$").test(str)) {
-        str = str.replace(new RegExp("(?:[&?])"+name+"[^&]*", "g"), "")
-    }
-    str += "&";
-    str += name + "=" + value;
-    str = "?" + str.slice(1);
-    // there is an official order for the query and the hash if you didn't know.
-    location.assign(location.origin + location.pathname + str + location.hash)
-};
 
 function EmbedContentIntoXML(bodyhtml) {
     var tempDiv = document.createElement("DIV");

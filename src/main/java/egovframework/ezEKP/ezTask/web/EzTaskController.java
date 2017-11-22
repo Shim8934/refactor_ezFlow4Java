@@ -135,12 +135,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String dateList = "";
 		String completeRateList = "";
 		String statusList = "";
-		String orderNumber = "";	
-		String tab = "";
-		
-		if (request.getParameter("tab") != null) {
-			tab = request.getParameter("tab");
-		}
+		String orderNumber = "";
 
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
@@ -253,8 +248,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
 		model.addAttribute("dateList", dateList);	
 		model.addAttribute("completeRateList", completeRateList);
-		model.addAttribute("statusList", statusList);
-		model.addAttribute("tab", tab);	
+		model.addAttribute("statusList", statusList);		
 		
 		return "/ezTask/taskRead";
 	}
