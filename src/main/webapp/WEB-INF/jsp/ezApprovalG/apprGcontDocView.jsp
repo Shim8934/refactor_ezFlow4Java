@@ -59,18 +59,24 @@
 		    var admin = "${admin}";
 		    var formDocType = "${formDocType}";
 		    var formUrl = "${formUrl}";
+		    var docState = "${docState}";
+		    
 		    $(function () {
-			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
+			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
 		    		QuitWindow();
 			    }
 			    
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
-	        	} else{
+	        	} else {
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
 	        	}
+		      	
+		      	if (docState == "012" || docState == "013") {
+		      		document.getElementById("btnReuse").style.display = "none";
+		      	}
 		    });
 	
 		    var aprendopinion_dialogArgument = new Array();
@@ -137,8 +143,9 @@
 		    }
 		    function FieldsAvailable() {
 		        CheckSignImg();
-		        if (SignCheckFlag == "N")
-		            SignCheck();
+		        //없이 테스트
+// 		        if (SignCheckFlag == "N")
+// 		            SignCheck();
 		
 		        var fields = message.GetFieldsList();
 		        if (pListSusin == 1 || pListSusin == "") {

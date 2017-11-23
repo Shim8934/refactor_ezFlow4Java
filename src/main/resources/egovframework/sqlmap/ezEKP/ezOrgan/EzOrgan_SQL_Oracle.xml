@@ -14,6 +14,14 @@
 		<result property="type" 								column="type" 						    columnIndex="4"/>		
 	</resultMap>
 	
+	<resultMap id="deptMemberInfo" class="OrganDeptVO">
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="mail" 								column="mail" 							columnIndex="2"/>		
+		<result property="displayName" 					        column="displayName" 			        columnIndex="3"/>
+		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="4"/>
+		<result property="type" 								column="type" 						    columnIndex="5"/>		
+	</resultMap>
+	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
@@ -259,18 +267,15 @@
         		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select> 
-	
-	 <!-- <procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
-		{CALL EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> --> 
-	
-	 <select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+		
+	 <select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptMemberInfo" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="userWithMasterAdmin">
 			<![CDATA[
 				SELECT
 					* 
                 FROM ( 	SELECT
                 				CN ,
+                				MAIL ,                				
                        			CASE
                        				#v_LANGDATA#
                        			WHEN
@@ -294,6 +299,7 @@
                        	UNION ALL 
                        		SELECT
                        			A.CN ,
+                       			A.MAIL ,                       			
                        			CASE
                        				#v_LANGDATA#
                        			WHEN
@@ -325,6 +331,7 @@
 					* 
                 FROM ( 	SELECT
                 				CN ,
+                				MAIL ,                				
                        			CASE
                        				#v_LANGDATA#
                        			WHEN
@@ -350,6 +357,7 @@
                        	UNION ALL 
                        		SELECT
                        			A.CN ,
+                       			A.MAIL ,                       			
                        			CASE
                        				#v_LANGDATA#
                        			WHEN
@@ -379,6 +387,7 @@
 			<![CDATA[
 				SELECT
 					CN ,
+					MAIL ,					
                      	CASE
                      		#v_LANGDATA#
                      	WHEN
@@ -401,90 +410,8 @@
                    	EXTENSIONATTRIBUTE15, DISPLAYNAME
 			]]>
 		</isEqual>
-		<isEqual property="v_CLASS" compareValue="all">
-			<![CDATA[
-				SELECT
-					* 
-                   FROM ( 	SELECT
-                   				CN ,
-                         			CASE
-                         				#v_LANGDATA#
-                         			WHEN
-                         				'1'
-                         			THEN
-                         				DISPLAYNAME
-                         			ELSE
-                         				DISPLAYNAME2
-                         			END
-                         				DISPLAYNAME  ,
-                         			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                          			'user' TYPE  
-                         		FROM
-                         			TBL_USERMASTER 
-                         		WHERE
-                         			DEPARTMENT = #v_CN#
-                                AND
-                                    CN <> 'masteradmin'         
-                                AND 
-                                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                       
-                         		AND
-                         			TENANT_ID = #v_TENANT_ID#	
-                         	UNION ALL 
-                         		SELECT
-                         			A.CN ,
-                         			CASE
-                         				#v_LANGDATA#
-                         			WHEN
-                         				'1'
-                         			THEN
-                         				DISPLAYNAME
-                         			ELSE
-                         				DISPLAYNAME2
-                         			END
-                         				DISPLAYNAME  ,
-                         			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                         			'user' TYPE  
-                         		FROM
-                         			TBL_ADDJOBMASTER B
-                         		JOIN
-                         			TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
-                         		WHERE
-                         			B.DEPTID = #v_CN#
-                         		AND
-                         			B.TENANT_ID = #v_TENANT_ID#	
-                         	UNION ALL 
-                         		SELECT
-                         			CN ,
-                         			CASE
-                         				#v_LANGDATA#
-                         			WHEN
-                         				'1'
-                         			THEN
-                         				DISPLAYNAME
-                         			ELSE
-                         				DISPLAYNAME2
-                         			END
-                         				DISPLAYNAME  ,
-                         			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                          			'dept' TYPE  
-                         		FROM
-                         			TBL_DEPTMASTER 
-                         		WHERE
-                         			EXTENSIONATTRIBUTE1 = #v_CN#
-                         		AND
-                         			TENANT_ID = #v_TENANT_ID#	 ) AA
-                         		ORDER BY
-                         			TYPE DESC,
-                         			EXTENSIONATTRIBUTE15,
-                         			DISPLAYNAME ASC
-			]]>
-		</isEqual>
 	</select> 
-	
-	<!-- <procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
-		{CALL EZSP_GETDEPTMEMBERLISTPAGE(#v_CLASS#, #v_CN#, #v_LANGDATA#, #v_PAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="user">
 			<![CDATA[
@@ -577,93 +504,9 @@
 				ORDER BY
 					EXTENSIONATTRIBUTE15, DISPLAYNAME
 			]]>
-		</isEqual>
-		
-		<isEqual property="v_CLASS" compareValue="all">
-			<![CDATA[
-				SELECT
-					* 
-				FROM ( 	SELECT
-								CN ,
-                                CASE
-                                	#v_LANGDATA#
-                                WHEN
-                                	'1'
-                                THEN
-                                	DISPLAYNAME
-                                ELSE
-                                	DISPLAYNAME2
-                                END
-                                	DISPLAYNAME  ,
-                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                                    'USER' TYPE  
-                           FROM
-                           		TBL_USERMASTER 
-                           WHERE
-	                           	DEPARTMENT = #v_CN#
-                           AND
-                                CN <> 'masteradmin'         
-                           AND 
-                                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                    
-	                       AND
-	                       		TENANT_ID = #v_TENANT_ID#    	
-						UNION ALL 
-                        	SELECT
-                        		A.CN ,
-                                CASE
-                                	#v_LANGDATA#
-                                WHEN
-                                	'1'
-                                THEN
-                                	DISPLAYNAME
-                                ELSE
-                                	DISPLAYNAME2
-                                END
-                                	DISPLAYNAME  ,
-                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                                    'USER' TYPE  
-                             FROM
-                             	TBL_ADDJOBMASTER B
-                             JOIN
-                             	TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
-                             WHERE
-                             	B.DEPTID = #v_CN#
-                             AND
-                             	B.TENANT_ID = #v_TENANT_ID#	
-                         UNION ALL 
-                           	SELECT
-                           		CN ,
-                                CASE
-                                	#v_LANGDATA#
-                                WHEN
-                                	'1'
-                                THEN
-                                	DISPLAYNAME
-                                ELSE
-                                	DISPLAYNAME2
-                                END
-                                	DISPLAYNAME  ,
-                                SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                                'DEPT' TYPE  
-                            FROM
-                            	TBL_DEPTMASTER 
-                            WHERE
-                            	EXTENSIONATTRIBUTE1 = #v_CN#
-                            AND
-                            	TENANT_ID = #v_TENANT_ID#	 ) AA
-                  ORDER BY
-                  	TYPE DESC,
-                    EXTENSIONATTRIBUTE15,
-                    DISPLAYNAME ASC
-			]]>
-		</isEqual>	
-	
+		</isEqual>			
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
-		{CALL EZSP_GETDEPTMEMBERLISTCOUNT(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT

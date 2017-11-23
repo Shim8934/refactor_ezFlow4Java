@@ -56,6 +56,8 @@
 			var AttachDelFlag = false;
 			var pDraftFlag = "${draftFlag}";
 			var approvalFlag = "${approvalFlag}";
+			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
+			var totalSize = 0;
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -152,12 +154,20 @@
 				pBoardFileSize  =	parseInt(maxSize);
 			    document.getElementById("docid").value =pDocID;
 			    document.getElementById("compid").value =  "${userInfo.companyID}";
-				Resultxml = InitAttach(pDocID);                     
+				Resultxml = InitAttach(pDocID);
+				
+				totalSize = 0;
 			
-				var filezisearr = new Array();
+				var filezisearr = new Array();				
 				for (var i = 0; i < SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+					
+					var realFileSize = SelectSingleNodeValue(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i],2)[0], "DATA8");
+					totalSize += parseInt(realFileSize.split(".")[0]);
+					
 				    var fileSize = ReplacText(getNodeText(GetChildNodes(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[2])[0]));
 				    filezisearr[i] = fileSize;
+
+				    
 /* 				    if (fileSize > 1024 * 1024) {
 				        fileSize = fileSize / 1024 / 1024;
 				        strSize = parseInt(fileSize) + "MB";
@@ -173,7 +183,7 @@
 			
 				    setNodeText(GetChildNodes(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[2])[0], strSize);
 				}
-			
+	
 			    var listview = new ListView();
 			    listview.SetID("attachList");
 			    listview.SetSelectFlag(false);
@@ -208,14 +218,20 @@
 			var g_progresswin;
 			function btn_AttachAdd_onclick() 
 			{
-			    if (document.form.file1.value != "") {        
-			        document.getElementById("btn_AttachDel").disabled = false;
-			        document.getElementById("attachsn").value = pAttachSN;            
-			        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
-			        var frm = document.getElementById('form');
-			        frm.submit();
-			        
-			        document.form.file1.value = "";
+			    if (document.form.file1.value != "") {
+					if (document.form.file1.files[0].name.length > 54) {
+						alert("<spring:message code='main.jjh08' />");
+						document.form.file1.value = "";
+						return;
+					} else {
+				        document.getElementById("btn_AttachDel").disabled = false;
+				        document.getElementById("attachsn").value = pAttachSN;            
+				        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
+				        var frm = document.getElementById('form');
+				        frm.submit();
+				        
+				        document.form.file1.value = "";
+					}
 			    } else {
 			    	return;
 // 			        alert("<spring:message code='ezApprovalG.pjj01'/>");
@@ -277,12 +293,15 @@
 							var pAttachRow = listview.GetSelectedRows();
 							var delfileSize = GetChildNodes(pAttachRow[0])[2].innerHTML;
 							var Rtnval = DeleteFileAtServer(pAttachCurSel[0]);
-			
+
 							if(Rtnval == "TRUE")
 							{
 								DelAttachFileAtList(pAttachCurSel);
 								DelfileSize(delfileSize);
-			
+								
+								if (totalSize > 0) {
+					            	totalSize -= parseInt(GetAttribute(pAttachRow[0], "DATA8"));
+					            }			
 							}
 							else
 							{
@@ -308,11 +327,14 @@
 			        var pAttachRow = listview.GetSelectedRows();
 			        var delfileSize = GetChildNodes(pAttachRow[0])[2].innerHTML;
 			        var Rtnval = DeleteFileAtServer(pAttachCurSel[0]);
-			
+
 			        if (Rtnval == "TRUE") {
 			            DelAttachFileAtList(pAttachCurSel);
 			            DelfileSize(delfileSize);
-			
+			            
+			            if (totalSize > 0) {
+			            	totalSize -= parseInt(GetAttribute(pAttachRow[0], "DATA8"));
+			            }
 			        }
 			        else {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
@@ -638,6 +660,126 @@
 			        alert(filename + "<spring:message code='ezApprovalG.pjj07'/>" + "\n\n" + result);
 			    }
 			}
+			function onDragEnter(evt) {
+		        evt.dataTransfer.dropEffect = "copy";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
+		    function onDragOver(evt) {
+		        evt.dataTransfer.dropEffect = "copy";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
+		    var filesize = 0;
+		    var file = new Array;
+		    var xhr = new XMLHttpRequest();
+		    var lstAttachLink = document.getElementById("ATTACH");
+		    var isfileup = false;
+		    function onDrop(evt) {
+		        file = new Array;
+		        if (evt != undefined) {
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		        }
+		        if (isfileup) {
+		            alert(strLangjjh03);
+		            return;
+		        }
+		        var filelist;
+		        if (evt == undefined) {
+		            filelist = document.getElementById("file1").files;
+		        }
+		        else {
+		            filelist = evt.dataTransfer.files;
+		        }
+	
+		        var tempfilesize = 0;
+		        var filecnt = file.length;
+		        for (var i = 0; i < filelist.length; i++) {
+		            /* if (filelist[i].size / 1024 / 1024 > 5) {
+		                alert(strLang25);
+		                return;
+		            }
+		            else { */
+		                file[filecnt + i] = filelist[i];
+		                tempfilesize += filelist[i].size;
+		            //}
+		        }
+		        filesize += tempfilesize;
+	
+/* 		        if (CrossYN()) {
+		            document.getElementById("file").value = "";
+		        }
+		        else {
+		            document.getElementById("file").type = "text";
+		            document.getElementById("file").type = "file";
+		        } */
+
+		        fileupload();
+		    }
+		    
+		    function fileupload() {
+		        var fd = new FormData();
+		        var calTotalSize = 0;
+
+		        for (var i = 0; i < file.length; i++) {
+		        	calTotalSize += parseInt(file[i].size);		        	
+		        }
+
+		        if (apprTotalAttachLimit != "") {
+			        if (apprTotalAttachLimit > 0) {
+			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
+	
+			        	if (totalSize + calTotalSize > totMaxSize) {
+				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
+				        	isfileup = false;
+				        	
+				        	return;
+				        } else {
+				        	totalSize += calTotalSize;
+				        }
+			        }
+		        }
+
+		        for (var i = 0; i < file.length; i++) {
+					var fnl = file[i].name.length;
+		        	
+		        	if (fnl > 54) {
+		        		alert("<spring:message code='main.jjh08' />");
+		        		isfileup = false;
+		        		
+		        		return;
+		        	} else {
+		        		fd.append("file1", file[i]);
+		        	}		            
+		        }
+        
+		        isfileup = true;
+		        fd.append("boardid", window.parent.pBoardID);
+		        fd.append("maxsize", pBoardFileSize * 1024 * 1024);
+		        fd.append("compid", document.getElementById("compid").value);
+		        fd.append("docid", document.getElementById("docid").value);
+		        fd.append("attachsn", pAttachSN);
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/multiUpload.do",
+		    		data : fd,
+		    		processData: false, 
+		    		contentType: false,
+		    		success: function(text){
+		    			var uFileCnt = text.resultUpload.length
+
+		    			for (var i = 0; i < uFileCnt; i++) {
+		    				returnvalue(text.resultUpload[i], text.fileName[i], text.fileLocation[i], text.fileSize[i]);
+		    			}
+		    			
+		    			isfileup = false;
+		    		}
+		    	});
+		    }		    
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -647,9 +789,11 @@
 		<h1><spring:message code='ezApprovalG.t264'/></h1>
 		<table>
 		  <tr>
-		    <td style="text-align:center;"><div class="listview" style="width:515px;">
-		        <div id="ATTACH" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
-		      </div></td>
+		    <td style="text-align:center;">
+		    	<div class="listview" style="width:515px;">
+		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:260px;margin:1px 1px 1px 1px;"></div>					
+		      	</div>
+		    </td>
 		    <th style="display:none;width:75px;text-align:center;">
 		      <input id="btn_AttachEdit" type="button" name="btn_AttachEdit" onClick="return btn_AttachEdit_onclick()" value="<spring:message code='ezApprovalG.t269'/>" class="imginput" style="margin-top:3px;display:none;" /><br />
 		      <span id="BtnBodyAttach" style="display:none">
@@ -660,7 +804,7 @@
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition">       
-		        <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="margin-left:100px; display: none;">
+		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>

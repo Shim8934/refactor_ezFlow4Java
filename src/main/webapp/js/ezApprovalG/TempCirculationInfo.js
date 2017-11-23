@@ -489,3 +489,19 @@ function APRDeptXMLParsingCC(APRDEPT, pDocID) {
         alert("AprGongRamLine_Cross_APRDeptXMLParsingCC::" + e.description);
     }
 }
+
+
+/**
+ * 회람 정보 -> 부서추가 기능
+ */
+function btn_addDepartment() {
+	var listView = new ListView();
+	listView.LoadFromID("DivUserList");
+
+	var listObj = listView.GetDataRows();
+	
+	for (var i = listObj.length-1; i >= 0; i --) {
+		var test = listObj[i];
+		APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
+	}
+}

@@ -226,7 +226,7 @@
 	                document.getElementById("ListMsgBCC").style.display = "none";
 	                document.getElementById("ListViewMsgTo").style.height = "508px";
 	                SelectReceiverWindow(ToTitle, ListViewMsgTo);
-	
+					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
 	                window.resizeTo(707, 730);
@@ -1338,6 +1338,9 @@
 		    var PressShiftKey = false;
 		    var PressCtrlKey = false;
 		    function event_listOnkeyUp(event) {
+		    	if (type == "auto") {
+		    		return;
+		    	}
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            if (!event) event = window.event;
 		        }
@@ -1349,6 +1352,9 @@
 		
 		    }
 		    function event_listOnkeyDown(event) {
+		    	if (type == "auto") {
+		    		return;
+		    	}
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            if (!event) event = window.event;
 		        }
@@ -1756,7 +1762,7 @@
 	        }
 	        var issearch = false;
 	        function search_click(type) {
-	            if (keyword.value == "") {
+	            if ($.trim(keyword.value) == "") {
 	                alert("<spring:message code='ezEmail.t10' />");
 	                keyword.focus();
 	                return;

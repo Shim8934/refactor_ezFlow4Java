@@ -220,6 +220,8 @@
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">CKEDITOR.replace( 'editor1', {fullPage : false} );</script>
 		<script type="text/javascript">
+			var useHTMLMode = "${useHTMLMode}";
+			
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 	            
@@ -235,11 +237,15 @@
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        }
 			
+			if (useHTMLMode == "NO") {
+				CKEDITOR.config.removePlugins = "sourcearea";
+			}
+			
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
+			
 		    CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
-			CKEDITOR.config.tabSpaces = 4;
 		</script>
 	</body>
 </html>

@@ -116,6 +116,11 @@
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
 	    var isCrossBrowser = "${isCrossBrowser}";
+	    var useSecureMail = "${useSecureMail}";
+	    var isSecureMail = "${isSecureMail}";
+	    var securePassword = "";
+	    var secureReadCount = "0";
+	    var secureReadDate = "";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -131,6 +136,7 @@
 	                window.opener.document.Script.refreshUnreadCount()
 	            } catch (e) { }
 	        }
+	        
 	        if (pSecurity == "Security") {
 	            pSecurity = "3";
 	        }
@@ -800,9 +806,8 @@
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
-	        		message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
+	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
                     document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-		        	
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -816,8 +821,11 @@
 	            textData = "";
 	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 	            for (var i=0; i<texts.length; i++) {
-	            	if (texts[i] != "") {
+	            	if (texts[i] != "" && texts[i] != " ") {
+	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;");
 	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+	            	} else {
+	            		textData += "<p " + defaultFontAndSize + ">" + " " + "</p>";
 	            	}
 	            }
 	            
@@ -931,8 +939,13 @@
 	                            ${mailSendObject}
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background: none; border: 0; padding-left: 10px; padding-right: 0; cursor: default; display: none;" nowrap="nowrap">
-	                                <input type="checkbox" style="display: inline;" id="chkeachmail" onclick="setEachMail()" /><spring:message code='ezEmail.t748' /></li>
+	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
+	                            <img src="/images/pbar.gif">
+	                        </li>
+	                        <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
+	                        	<input type="checkbox" id="chkSecureMail" />
+	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
+	                        </li>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -945,6 +958,14 @@
 	                <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		      			
+		      			if (useSecureMail == "YES") {
+		    	        	$('.securemail').css('display', '');
+		    	        	
+		    	        	if (isSecureMail == "true") {
+		    	        		document.getElementById("chkSecureMail").checked = true;
+		    	        	}
+		    	        }
 		  			</script>
 	            </td>
 	        </tr>
@@ -971,11 +992,11 @@
 	                            <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgTo" id="MsgTo" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 99%;
+	                            <input type="text" name="MsgTo" id="MsgTo" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
 	                                ime-mode: active;">
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
-	                            <select id="SelectToAddress" style="width: 100px" onchange="simple_select('TO',this)">
+	                            <select id="SelectToAddress" style="width: 106px" onchange="simple_select('TO',this)">
 	                            </select>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
@@ -997,10 +1018,10 @@
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgCC" id="MsgCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 99%">
+	                            <input type="text" name="MsgCC" id="MsgCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
-	                            <select id="SelectCcAddress" style="width: 100px" onchange="simple_select('CC',this)">
+	                            <select id="SelectCcAddress" style="width: 106px" onchange="simple_select('CC',this)">
 	                            </select>
 	                        </td>
 	                        <td style="width: 200px; border-left: #ffffff 1px solid;">
@@ -1019,10 +1040,10 @@
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
-	                            <input type="text" name="MsgBCC" id="MsgBCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 99%">
+	                            <input type="text" name="MsgBCC" id="MsgBCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
-	                            <select id="SelectBCCAddress" style="width: 100px" onchange="simple_select('BCC',this)">
+	                            <select id="SelectBCCAddress" style="width: 106px" onchange="simple_select('BCC',this)">
 	                            </select>
 	                        </td>
 	                        <td style="width: 200px; border-left: #ffffff 1px solid;">
@@ -1041,7 +1062,7 @@
 	                        </th>
 	                        <td colspan="3" style="border-bottom:0px;">
 	                            <input id="eSubject" name="eSubject" onkeyup="Subject_ReApply()" type="text" value="${encodedSubject}"
-	                                tabindex="4" style="width: 99%">
+	                                tabindex="4" style="width: 100%">
 	                        </td>
 	                    </tr>
 	                </table>

@@ -53,6 +53,13 @@
 		    };
 			
 		    $(document).ready(function(){
+				if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua)) && pEditor == "FORM") {
+					$('#btnInsForm1').hide();
+					$('#btnInsForm2').hide();
+					$('#btnUpForm').hide();
+					$('#btnFormListView').hide();
+				}
+		    	
 				companyID = document.getElementById("ListCompany").value;
 				Tree_setconfig();
 				InitFormCont();
@@ -309,7 +316,9 @@
 									url = "/admin/ezApprovalG/formMain.do";
 								}
 							} else {
-								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+// 								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
 									url = "/admin/ezApprovalG/formMain.do";
@@ -371,7 +380,9 @@
 								url = "/admin/ezApprovalG/formMain.do";
 							}
 						} else {
-							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+// 							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";
@@ -380,10 +391,8 @@
 		            }
 		            
 		            GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
-		           // window.showModalDialog(url, window, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 
 		            Tree_setconfig();
-// 		            InitFormCont();
 		        } else {
 		        	OpenAlertUI("<spring:message code = 'ezApprovalG.t1532' />");
 		        }
@@ -434,7 +443,11 @@
 		    }
 	
 		    function lvtForm_Row_Dbclick() {
-		        UpdateForm();
+		        if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua)) && pEditor == "FORM") {
+		        	return;
+		        } else {
+		        	UpdateForm();
+		        }
 		    }
 	
 		    function MoveUp_onclick() {
@@ -545,7 +558,8 @@
 		        }
 		    }
 
-		    var formContMain_dialogArguments = new Array(); 
+
+		    var getformcont_cross_dialogArguments = new Array();
 		    function MoveForm() {
 		        var para = new Array();
 		        var treeView = new TreeView();
@@ -562,27 +576,32 @@
 		        if (selRow) {
 		            para[1] = GetAttribute(selRow[0], "DATA1");
 		            para[2] = companyID;
-
 		            var url = "/admin/ezApprovalG/formSelect.do";
-		            formContMain_dialogArguments[0] = para;
-		            formContMain_dialogArguments[1] = moveForm_complete;
-		            
-		            window.open(url, "apprGFormAdmin", GetOpenWindowfeature(430, 580));
-// 		            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
 
-// 		            if (retVal[0] == "OK") {
-// 		                Tree_setconfig();
-// 		                InitFormCont();
-// 		            }
+		            
+					if(CrossYN()){
+						getformcont_cross_dialogArguments[0] = para;
+						getformcont_cross_dialogArguments[1] = moveForm_onclick_Complete;
+		
+			            var moveForm_Cross = window.open(url, "SelectTaskCategory", GetOpenWindowfeature(430, 590));
+			            try { SelectTaskCategory_Cross.focus(); } catch (e) { }
+					} else {
+			            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
+			            if (retVal[0] == "OK") {
+			                Tree_setconfig();
+			                InitFormCont();
+			            }
+					}
 		        }
 		    }
 		    
-		    function moveForm_complete(retVal) {
-		    	if (retVal[0] == "OK") {
+		    function  moveForm_onclick_Complete(retVal) {
+		        if (retVal[0] == "OK") {
 	                Tree_setconfig();
 	                InitFormCont();
 	            }
-		    }
+			}
+
 		</script>
 	
 	</head>

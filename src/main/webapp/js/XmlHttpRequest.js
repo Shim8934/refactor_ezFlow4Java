@@ -1769,3 +1769,22 @@ function javaURLEncode(str) {
 	    .replace(/~/g, "%7E");
 }
 
+function BroswerAndNonActiveXCheck() {
+    if (typeof(pNoneActiveX) == "undefined") {        
+        if (window.ActiveXObject || "ActiveXObject" in window) {
+            return "IE";
+        } else if (window.DOMParser) {
+            return "CROSS";
+        }
+    } else { 
+        if (pNoneActiveX == "YES") {
+            return "CROSS";
+        } else {
+            if (window.ActiveXObject || "ActiveXObject" in window) {
+                return "IE";
+            } else if (window.DOMParser) {
+                return "CROSS";
+            }
+        }
+    }    
+}

@@ -97,7 +97,7 @@
 				<tr> 
 				<th style="width:450px;" width="450px"><spring:message code='ezEmail.t125' /></th> 
 				<th style="width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t121' /></th> 
-				<th style="width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t126' /></th> 
+				<th style="width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t123' /></th> 
 				<th style="width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t95' /></th>  
 				</tr> 
 				

@@ -14,6 +14,10 @@
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <script>
 	        var _url = decodeURIComponent('${url}');
+	        var isReadDelete = "${isReadDelete}";
+	        var docWidth = window.outerWidth;
+	        var docHeight = window.outerHeight;
+	        
 	        document.onselectstart = function () { return false; };
 	        function ReSend(pEmail) {
 	            var pEmail = pEmail.getAttribute("EMAIL");
@@ -160,7 +164,8 @@
 	
 	                TR.setAttribute("_mailaddress", EmailAddress);
 	                TD1.style.width = "14px";
-	                if (ReadDate == "UNREAD" && CancelStatus == "") {
+
+	                if ((ReadDate == "UNREAD" || isReadDelete == "YES") && CancelStatus == "") {
 	                    var TD1_Sub = document.createElement("INPUT");
 	                    TD1_Sub.type = "checkbox";
 	                    TD1_Sub.style.margin = "0px";
@@ -252,6 +257,10 @@
 	        }
 	        function Window_Print() {
 	            window.print();
+	        }
+	        
+	        window.onresize = function(){
+	        	resizeTo(docWidth, docHeight);
 	        }
 	    </script>
 	</head>
