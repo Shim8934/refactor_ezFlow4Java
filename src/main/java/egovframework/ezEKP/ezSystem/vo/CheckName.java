@@ -13,5 +13,6 @@ public enum CheckName {
 	ExpirePassPeriod,
 	LicenseKey,
 	Use_FromAddress,
-	MaxAllowedCountOfLoginFail
+	MaxAllowedCountOfLoginFail,
+	USE_HTMLMODE
 }

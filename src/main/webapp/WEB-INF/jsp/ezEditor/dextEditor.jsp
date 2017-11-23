@@ -328,6 +328,7 @@
 	</head>
 	<body id="dextbody" style="margin: 0px; padding: 0px;">
 	    <script type="text/javascript">
+	    	var useHTMLMode = "${useHTMLMode}";
 	        DEXT5.config.DialogWindow = parent.window;
 	        DEXT5.config.RemoveItem = "about";
 	        if (type == "ADMIN") {
@@ -341,7 +342,11 @@
 	            DEXT5.config.Height = (document.documentElement.clientHeight - 10) + "px";
 	        else
 	            DEXT5.config.Height = (document.documentElement.clientHeight - 10) + "px";
-	
+	        
+	        if (useHTMLMode == "NO") {
+	        	DEXT5.config.StatusBarItem = "design";
+	        }
+	        
 	        DEXT5.config.Lang = "<spring:message code='main.t0619' />";
             DEXT5.config.userFontFamily = "<spring:message code='main.t246' />";
 	        DEXT5.config.userFontSize = parseInt("13px");
