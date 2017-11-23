@@ -76,7 +76,8 @@
 				document.getElementById("seenPeople").innerHTML = s_Users + seenText;				
 				document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
 				document.getElementById("seenPeople").style.color = "red";
-				document.getElementById("status").style.color = "#2828e2";	
+				//document.getElementById("status").style.color = "#2828e2";	
+				document.getElementById("status").style.color = "white";	
 				
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
@@ -213,10 +214,7 @@
 			   					document.getElementById(voteInfo).style.display = "block";
 		   					}
 		   					
-		   					var max_width = document.getElementById(graphId).offsetWidth;
-		   					
-		   					console.log("Max_Width: " + max_width);
-		   					
+		   					var max_width = document.getElementById(graphId).offsetWidth;		   					
 		   					var maxWidth_for_canvas = max_width - 40;	   					   					
 							var best_width = Math.round(maxWidth_for_canvas * percent);	
 							
@@ -2046,21 +2044,23 @@
 				  </c:if>
 			</div>
 			<div id="titleAndContent" style="border: 1px solid #b6b6b6; background: #FFF; overflow: hidden;">				
-				<div id="title" class="questionTitle" style="display:inline-block;float:left; width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>--><c:out value='${question.title}'/></div>
-				<div id="status" style="display:inline-block;padding-left: 1330px;">
-					<c:choose>
-						<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
-						<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
-					</c:choose>
+				<div id="title" class="questionTitle" style="display:inline-block;float:left; width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
+					<c:out value='${question.title}'/>
+					<span id="status">
+						<c:choose>
+							<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
+							<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
+						</c:choose>
+					</span>
+					<span id="votedUsers">					
+						<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>
+					</span>
+					 <c:if test="${question.status == 1}">
+						<span id="daysRemain">
+							<c:out value='${timeRemain}'/>
+						</span> 			
+					</c:if>
 				</div>
-				<div id="votedUsers" style="float:right; padding-right:25px; padding-bottom:10px;">					
-					<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>
-				</div>
-				 <c:if test="${question.status == 1}">
-					<div id="daysRemain" style="display:block;padding-left: 1450px;padding-top: 5px; color: green;">
-						<c:out value='${timeRemain}'/>
-					</div> 			
-				</c:if>
 			</div>			
 			<div class="pad1" style="vertical-align: top; width: 100%;border-right-width: 0px;display:inline-block;" id="messagetd">
 	             <iframe onload="resizeFrame()" id="message_test" style="border: #b6b6b6 0px solid; overflow: auto;width: 100%; padding-top: 6px; background-color: white;"></iframe>   	                                 
