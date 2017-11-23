@@ -415,13 +415,7 @@ public class EzEmailMailListController {
 						for (Address address : addresses) {
 							addressStr = ((InternetAddress)address).getPersonal(); // name part
 							if (addressStr == null) {
-								//아주저축은행 보낸 편지함 받는 사람 관련 추가. 
 								addressStr = ((InternetAddress)address).getAddress(); // email address part
-								if (addressStr != null && !addressStr.contains("@") && addressStr.startsWith("=?")) {									
-									logger.debug("fromHeader=" + toHeader);
-									
-									addressStr = MimeUtility.decodeText(toHeader);
-								}
 							}
 							else {
 								if (!isAscii) {
