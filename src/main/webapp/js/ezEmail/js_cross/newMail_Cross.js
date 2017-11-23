@@ -3068,17 +3068,21 @@ function getEmailAddressList(ReceiverList) {
             if (pEmail == g_myemail)
                 continue;
         }
-
-        retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
         
         if (receiverPart[1].indexOf('@') > 0) {
+        	retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
             retVal["type"][count3] = "email";
             retVal["email"][count3] = pEmail;
             retVal["href"][count3] = "";
         } else {
-            retVal["type"][count3] = "mailgroup";
-            retVal["email"][count3] = strLang126;
-            retVal["href"][count3] = pEmail;
+        	if (receiverPart[1].indexOf("|!|") > -1) {
+        		retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
+        		retVal["type"][count3] = "mailgroup";
+                retVal["email"][count3] = strLang126;
+                retVal["href"][count3] = pEmail;
+        	} else {
+        		continue;
+        	}
         }
         
         count3++;
