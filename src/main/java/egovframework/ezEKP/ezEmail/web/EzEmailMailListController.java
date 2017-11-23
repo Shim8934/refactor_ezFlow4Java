@@ -408,24 +408,6 @@ public class EzEmailMailListController {
 				else {
 					addresses = message.getRecipients(Message.RecipientType.TO);
 					if (addresses != null) {
-						boolean splitFlag = false;
-						for(int j=0; j<addresses.length; j++){
-							if(((InternetAddress)addresses[j]).getAddress().contains(";") && addresses.length == 1){
-								splitFlag = true;
-								break;
-							}
-						}
-						if (splitFlag == true) {
-							String mailStrArry[] = ((InternetAddress)addresses[0]).getAddress().split(";");
-							addresses = new InternetAddress[mailStrArry.length];
-							for (int j = 0; j < mailStrArry.length; j++) {
-								InternetAddress address = new InternetAddress();
-								address.setAddress(mailStrArry[j]);
-								address.setPersonal(mailStrArry[j]);
-								addresses[j] = address;
-							}
-						}
-						
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
 						
@@ -436,6 +418,8 @@ public class EzEmailMailListController {
 								//아주저축은행 보낸 편지함 받는 사람 관련 추가. 
 								addressStr = ((InternetAddress)address).getAddress(); // email address part
 								if (addressStr != null && !addressStr.contains("@") && addressStr.startsWith("=?")) {									
+									logger.debug("fromHeader=" + toHeader);
+									
 									addressStr = MimeUtility.decodeText(toHeader);
 								}
 							}
@@ -455,9 +439,6 @@ public class EzEmailMailListController {
 						}
 						addressStr = addressBuilder.toString();
 						addressStr = addressStr.substring(0, addressStr.length() - 2);
-						if (addressStr.endsWith(":")) {
-							addressStr = addressStr.substring(0, addressStr.length() - 1);
-						}
 					}								
 				}			
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));

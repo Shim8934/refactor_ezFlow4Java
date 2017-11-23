@@ -262,7 +262,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							 * 4. 구분자가 있어도 배열의 길이는 1이다.
 							 */
 							if(((InternetAddress)arrRecipientsTo[i]).getAddress().contains(";") && arrRecipientsTo.length == 1){
-								splitFlag = true;								
+								splitFlag = true;
 								break;
 							}
 						}
@@ -304,9 +304,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 							
 							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
-							if (name.endsWith(":")) {
-								name = name.substring(0, name.length() - 1);
-							}
+							
 							if(toListme){
 								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
 									if(arrRecipientsTo.length > 1){
@@ -393,9 +391,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 							
 							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
-							if (name.endsWith(":")) {
-								name = name.substring(0, name.length() - 1);
-							}
+							
 							if (ccListme) {
 								if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)) {
 									if (arrRecipientsCC.length > 1) {
@@ -433,6 +429,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						boolean splitFlag = false;
 						for(int i=0; i<arrRecipientsBCC.length; i++){
 							if(((InternetAddress)arrRecipientsBCC[i]).getAddress().contains(";") && arrRecipientsBCC.length == 1){
+								logger.debug("arrRecipientsBCC[i] getAddress : " + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+								logger.debug("arrRecipientsBCC[i] getPersonal : " + ((InternetAddress)arrRecipientsBCC[i]).getPersonal());
 								splitFlag = true;
 								break;
 							}
@@ -456,6 +454,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						String name = null;
 						for (int i=0; i<arrRecipientsBCC.length; i++){
 							name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
+							logger.debug("11111111111 name : " + name);
 							if (name == null) {
 								name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
 								if (name.startsWith("=?")) {
@@ -467,9 +466,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 							
 							logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
-							if (name.endsWith(":")) {
-								name = name.substring(0, name.length() - 1);
-							}
+							
 							if (i != 0) {
 								bccStr += ", ";
 							}
@@ -1511,11 +1508,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						}
 					}
 					logger.debug("From=" + pSender);
-					if (pSender.endsWith(":")) {
-						pSender = pSender.substring(0, pSender.length() - 1);
-					} else if (pSender.endsWith(":;")) {
-						pSender = pSender.substring(0, pSender.length() - 2);
-					}
 					
 					Address[] toAddresses = message.getRecipients(RecipientType.TO);
 					Address[] ccAddresses = message.getRecipients(RecipientType.CC);
@@ -1580,11 +1572,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						}
 					}
 					logger.debug("TO=" + pReciverTo);
-					if (pReciverTo.endsWith(":")) {
-						pReciverTo = pReciverTo.substring(0, pReciverTo.length() - 1);
-					} else if (pReciverTo.endsWith(":;")) {
-						pReciverTo = pReciverTo.substring(0, pReciverTo.length() - 2);
-					}
+					
 					if (ccAddresses != null) {
 						String ccHeader = message.getHeader("Cc")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);
@@ -1616,11 +1604,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						}
 					}
 					logger.debug("CC=" + pReciverCc);
-					if (pReciverCc.endsWith(":")) {
-						pReciverCc = pReciverCc.substring(0, pReciverCc.length() - 1);
-					} else if (pReciverCc.endsWith(":;")) {
-						pReciverCc = pReciverCc.substring(0, pReciverCc.length() - 2);
-					}
+					
 					// received date
 					if (message.getReceivedDate() != null) {
 						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
