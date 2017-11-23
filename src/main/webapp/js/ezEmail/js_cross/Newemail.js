@@ -694,28 +694,27 @@ function event_xmlhttp_mailPreview_Complete() {
             var pReceiverCnt = 0;
             for (var Cnt = 0; Cnt < pReceiverArray.length; Cnt++) {
                 var pReceiver_ = pReceiverArray[Cnt].replace(/"/g, "");
-//                if (pReceiver_.length > 10) {
-                var Pos1 = pReceiver_.indexOf("<");
-                var Pos2 = pReceiver_.indexOf(">");
-                var pReceiver_Name = TrimText(pReceiver_.substring(0, Pos1));
-                var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
+                if (pReceiver_.length > 10) {
+                    var Pos1 = pReceiver_.indexOf("<");
+                    var Pos2 = pReceiver_.indexOf(">");
+                    var pReceiver_Name = TrimText(pReceiver_.substring(0, Pos1));
+                    var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
 
-                if (Cnt == 0) {
-                    pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + ConvertStringForHTML(pReceiver_Name) + "\"</span>";
-                    
+                    if (Cnt == 0) {
+                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + ConvertStringForHTML(pReceiver_Name) + "\"</span>";
+                        
+                    }
+
+                    if (pReceiverDetailHtml != "")
+                        pReceiverDetailHtml += "&nbsp;,&nbsp;";
+                    pReceiverDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + ConvertStringForHTML(pReceiver_Name) + "\"</span>";
+                    if (g_useremail == pReceiver_Address) {
+                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + ConvertStringForHTML(pReceiver_Name) + "\"</span>";
+                    }
+
+                    pReceiverCnt++;
                 }
-
-                if (pReceiverDetailHtml != "")
-                    pReceiverDetailHtml += "&nbsp;,&nbsp;";
-                pReceiverDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + ConvertStringForHTML(pReceiver_Name) + "\"</span>";
-                if (g_useremail == pReceiver_Address) {
-                    pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + ConvertStringForHTML(pReceiver_Name) + "\"</span>";
-                }
-
-                pReceiverCnt++;
-//                }
             }
-
             if (pReceiverCnt >= 2) {
                 document.getElementById("PreH_ReceiverDetail").style.display = ""; 
                 document.getElementById("PreH_ReceiverDetail").className = "icon_graydown";

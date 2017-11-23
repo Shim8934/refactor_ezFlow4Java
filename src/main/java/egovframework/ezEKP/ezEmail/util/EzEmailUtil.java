@@ -193,12 +193,6 @@ public class EzEmailUtil {
 			e.printStackTrace();
 		} 
 		
-		if (addressStr.trim().startsWith("CN=")){
-			int idx = addressStr.indexOf("=");
-			int idx2 = addressStr.indexOf("/");
-			addressStr = addressStr.substring(idx+1, idx2);
-		}
-		
 		return addressStr;
 	}
 	

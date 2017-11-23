@@ -437,11 +437,6 @@ public class EzEmailMailListController {
 								addressStr = ((InternetAddress)address).getAddress(); // email address part
 								if (addressStr != null && !addressStr.contains("@") && addressStr.startsWith("=?")) {									
 									addressStr = MimeUtility.decodeText(toHeader);
-									if (addressStr.startsWith("CN=")){
-										int idx = addressStr.indexOf("=");
-										int idx2 = addressStr.indexOf("/");
-										addressStr = addressStr.substring(idx+1, idx2);
-									}
 								}
 							}
 							else {
@@ -453,14 +448,6 @@ public class EzEmailMailListController {
 								else {
 									// decoding is needed for the name part
 									addressStr = MimeUtility.decodeText(addressStr);
-									/**
-									 * 아주 저축은행 CN=이름~ 으로 표시되는 것 이름만 나오도록 수정.
-									 * */
-									if (addressStr.trim().startsWith("CN=")){
-										int idx = addressStr.indexOf("=");
-										int idx2 = addressStr.indexOf("/");
-										addressStr = addressStr.substring(idx+1, idx2);
-									}
 								}
 							}						
 							addressBuilder.append(addressStr);

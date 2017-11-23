@@ -222,15 +222,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						fromStr = commonUtil.trimDoubleQuotes(fromStr);
 								
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-						
-						if (fromEmail.startsWith("=?")) {
-							fromEmail = MimeUtility.decodeText(fromEmail);
-							if (fromEmail.startsWith("CN=")){
-								int idx = fromEmail.indexOf("=");
-								int idx2 = fromEmail.indexOf("/");
-								fromEmail = fromEmail.substring(idx+1, idx2);
-							}
-						}
 					} else {
 						String[] fromHeaders = message.getHeader("From");
 						if (fromHeaders != null) {
@@ -280,14 +271,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							arrRecipientsTo = new InternetAddress[mailStrArry.length];
 							for (int i = 0; i < mailStrArry.length; i++) {
 								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
 								address.setAddress(mailStrArry[i]);
 								address.setPersonal(mailStrArry[i]);
 								arrRecipientsTo[i] = address;
@@ -315,11 +298,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								}
 								else {
 									name = MimeUtility.decodeText(name);
-									if (name.startsWith("CN=")){
-										int idx = name.indexOf("=");
-										int idx2 = name.indexOf("/");
-										name = name.substring(idx+1, idx2);
-									}
 								}
 								
 								name = commonUtil.trimDoubleQuotes(name);
@@ -383,14 +361,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							arrRecipientsCC = new InternetAddress[mailStrArry.length];
 							for (int i = 0; i < mailStrArry.length; i++) {
 								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
 								address.setAddress(mailStrArry[i]);
 								address.setPersonal(mailStrArry[i]);
 								arrRecipientsCC[i] = address;
@@ -473,14 +443,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							arrRecipientsBCC = new InternetAddress[mailStrArry.length];
 							for (int i = 0; i < mailStrArry.length; i++) {
 								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
 								address.setAddress(mailStrArry[i]);
 								if (name == null) {
 									address.setPersonal(mailStrArry[i]);	
@@ -1159,14 +1121,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							arrRecipientsTo = new InternetAddress[mailStrArry.length];
 							for (int i = 0; i < mailStrArry.length; i++) {
 								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
 								address.setAddress(mailStrArry[i]);
 								address.setPersonal(mailStrArry[i]);
 								arrRecipientsTo[i] = address;
@@ -1198,14 +1152,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							if (i != 0) {
 								toStr += ";";
-	                        }
-							logger.debug("name" + name);
-//							if (!iAddress.getAddress().contains("@")) {
-//								toStr += "\""+name+"\"";		
-//							} else {
-								toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
-//							}
-							
+	                        }												
+							toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
 						}
 					}
 					logger.debug("TO=" + toStr);
@@ -1224,14 +1172,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							arrRecipientsCC = new InternetAddress[mailStrArry.length];
 							for (int i = 0; i < mailStrArry.length; i++) {
 								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
 								address.setAddress(mailStrArry[i]);
 								address.setPersonal(mailStrArry[i]);
 								arrRecipientsCC[i] = address;
@@ -1272,32 +1212,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					if(arrRecipientsBCC != null){
 						InternetAddress iAddress = null;
 						String name = null;
-						boolean splitFlag = false;
-						for(int i=0; i<arrRecipientsBCC.length; i++){
-							if(((InternetAddress)arrRecipientsBCC[i]).getAddress().contains(";") && arrRecipientsBCC.length == 1){
-								splitFlag = true;
-								break;
-							}
-						}
-						if (splitFlag == true) {
-							String mailStrArry[] = ((InternetAddress)arrRecipientsBCC[0]).getAddress().split(";");
-							arrRecipientsBCC = new InternetAddress[mailStrArry.length];
-							for (int i = 0; i < mailStrArry.length; i++) {
-								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
-								address.setAddress(mailStrArry[i]);
-								address.setPersonal(mailStrArry[i]);
-								arrRecipientsBCC[i] = address;
-							}
-						}
-						
 						for(int i=0; i<arrRecipientsBCC.length; i++){
 							iAddress = ((InternetAddress)arrRecipientsBCC[i]);
 							name = iAddress.getPersonal();
@@ -1602,11 +1516,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					} else if (pSender.endsWith(":;")) {
 						pSender = pSender.substring(0, pSender.length() - 2);
 					}
-					if (pSender.startsWith("CN=")){
-						int idx = pSender.indexOf("=");
-						int idx2 = pSender.indexOf("/");
-						pSender = pSender.substring(idx+1, idx2);
-					}
+					
 					Address[] toAddresses = message.getRecipients(RecipientType.TO);
 					Address[] ccAddresses = message.getRecipients(RecipientType.CC);
 					
@@ -1623,14 +1533,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							toAddresses = new InternetAddress[mailStrArry.length];
 							for (int i = 0; i < mailStrArry.length; i++) {
 								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
 								address.setAddress(mailStrArry[i]);
 								address.setPersonal(mailStrArry[i]);
 								toAddresses[i] = address;
@@ -1652,12 +1554,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								personName = MimeUtility.decodeText(personName);
 							}
 							
-							if (personName.startsWith("CN=")){
-								int idx = personName.indexOf("=");
-								int idx2 = personName.indexOf("/");
-								personName =personName.substring(idx+1, idx2);
-							}
-							
 							pReciverTo += personName;
 //							if (!((InternetAddress)address).getAddress().contains("@")) {
 //								logger.debug("(InternetAddress)address).getAddress() : " + ((InternetAddress)address).getAddress());
@@ -1676,7 +1572,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								}
 							} else {
 								if (!((InternetAddress)address).getAddress().contains("@")) {
-									pReciverTo += ", ";		
+										
 								} else {
 									pReciverTo += ((InternetAddress)address).getAddress() == null ? "" : "(" + ((InternetAddress)address).getAddress() + ")";
 								}
@@ -1689,38 +1585,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					} else if (pReciverTo.endsWith(":;")) {
 						pReciverTo = pReciverTo.substring(0, pReciverTo.length() - 2);
 					}
-					if (pReciverTo.endsWith(", ")) {
-						pReciverTo = pReciverTo.substring(0, pReciverTo.length() - 2);
-					}
 					if (ccAddresses != null) {
 						String ccHeader = message.getHeader("Cc")[0];
-						
-						boolean splitFlag = false;
-						for(int i=0; i<ccAddresses.length; i++){
-							if(((InternetAddress)ccAddresses[i]).getAddress().contains(";") && ccAddresses.length == 1){
-								splitFlag = true;
-								break;
-							}
-						}
-						if (splitFlag == true) {
-							String mailStrArry[] = ((InternetAddress)ccAddresses[0]).getAddress().split(";");
-							ccAddresses = new InternetAddress[mailStrArry.length];
-							for (int i = 0; i < mailStrArry.length; i++) {
-								InternetAddress address = new InternetAddress();
-								if (mailStrArry[i].startsWith("=?")) {
-									mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-									if (mailStrArry[i].startsWith("CN=")){
-										int idx = mailStrArry[i].indexOf("=");
-										int idx2 = mailStrArry[i].indexOf("/");
-										mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-									}
-								}
-								address.setAddress(mailStrArry[i]);
-								address.setPersonal(mailStrArry[i]);
-								ccAddresses[i] = address;
-							}
-						}
-						
 						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);
 						
 						for (Address address : ccAddresses) {
