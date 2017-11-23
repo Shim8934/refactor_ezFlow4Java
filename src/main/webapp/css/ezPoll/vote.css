@@ -32,11 +32,13 @@
 .vote_listTd .graph01{background:#efa1a1; border:none;}
 
 .content .voteTdBg{background:#f9f9f9; margin:0px; padding:0px; height:68px; position:relative;}
-.content .voteTdBg .voteBtn{width:85px; height:45px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 15px; position:absolute; top:10px; left:50%; margin:0px 0px 0px -150px;}
+.content .voteTdBg .voteBtn{height:45px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 20px; position:absolute; top:10px; left:50%; margin:0px 0px 0px -150px; line-height:45px;}
 
 .voteComment{width:100%; height:65px; border:1px solid #DDD; border-top:0px; margin:0px 0px 0px 0px; padding:0px;}
 
-.questionTitle{width:100%; height:40px; line-height:40px; padding:0px 12px; background:#004896; color:#FFF; font-size:16px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.questionTitle{display:inline-block;float:left; width:100%; height:40px; line-height:40px; padding:0px 12px; background:#004896; color:#FFF; font-size:14px;}
+.questionFont{font-family: "굴림", "맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif;}
+.baonkTest{ font-size: 18px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
 .vote_attachedFile .txt{height:50px; line-height:50px; padding:0px 10px 0px 46px; background:#f4f9ff; border-bottom:1px solid #e1ebf7;}
 .vote_attachedFile .attach_img{position:absolute; top:13px; left:15px; hegith:20px; width:20px;}

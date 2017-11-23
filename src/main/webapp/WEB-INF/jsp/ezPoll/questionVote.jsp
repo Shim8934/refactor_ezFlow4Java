@@ -31,7 +31,6 @@
 			var numberOfUnvotedUsers 	= ${numberOfUnvotedUsers};
 			var numberOfSelected 		= 0;
 			var maxLoop 				= 0;			
-			var seenText 				= "<spring:message code = 'ezPoll.t112'/>";
 			var _status 				= "<c:out value='${question.status}'/>";
 			var sessionId 				= "<c:out value='${question.creator}'/>";			
 			var commentIndex 			= ${numberOfCmt};
@@ -51,17 +50,16 @@
 			var colors 					= ["#49A0D8", "#D353A0", "#FFC527", "#DF4C27", "#34CB34", "#7127DF", "#90C3D4", "#C390D4", "#A1D490", "#D4A190",
 			             				   "#581845", "#581825", "#582B18", "#584B18", "#455818", "#255818", "#C15AA3", "#C15A6F", "#C1785A", "#C1AC5A",
 			              				   "#A3C15A", "#70C15A", "#4EC479", "#4EC4B4", "#4E99C4", "#4E5EC4", "#794EC4", "#B44EC4", "#AFC44E", "#74C44E"];
-            var iframeStyle 			= "<style>";
-            
-            iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
-            iframeStyle += "TABLE TD { text-indent: 0px }";
-            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
+            var iframeStyle 			= "<style>";            
+            iframeStyle += "P    	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+            iframeStyle += "DIV  	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+            iframeStyle += "TD   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+            iframeStyle += "UL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+            iframeStyle += "OL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+            iframeStyle += "LI   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+            iframeStyle += "BODY 	    { MARGIN: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+            iframeStyle += "TABLE TD    { text-indent: 0px }";
+            iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
             
     		window.onunload = function() {
@@ -73,9 +71,9 @@
 			window.onload = function() {				
 				commentCheck();				
  				getConnect(); 				
-				document.getElementById("seenPeople").innerHTML = s_Users + seenText;				
-				document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
-				document.getElementById("seenPeople").style.color = "red";
+				document.getElementById("seenPeople").innerHTML = "(" + s_Users + ")";				
+				document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")" ;
+				//document.getElementById("seenPeople").style.color = "red";
 				//document.getElementById("status").style.color = "#2828e2";	
 				document.getElementById("status").style.color = "white";	
 				
@@ -193,10 +191,12 @@
 					var _optId = votesArr[i][0];					
 					var graphId = "graph" + _optId;
 					var voteInfo = "voteInfo" + _optId;
-					var percentTdId = "_resultPercentage" + _optId; 				
+					var percentTdId = "_resultPercentage" + _optId; 
+					var optionID = "optionContent" + _optId;					
+ 					document.getElementById(optionID).style.color = colors[i % 30];
 					
 					if (totalVotes > 0) {				
- 						var percent = votesArr[i][1]/totalVotes; 											
+ 						var percent = votesArr[i][1]/totalVotes; 
  						
  						if (seeResultBeforVote == 1 || _status == 0 || hasVoted == 1) { 								
 							document.getElementById(percentTdId).innerHTML = "[" + (percent * 100).toFixed(1) + "%]";
@@ -207,7 +207,7 @@
 							var showVotes = "voterNumber" + _optId;							   					
 		   					var canv = document.getElementById(id);
 		   					
-		   					document.getElementById(showVotes).innerHTML = votesArr[i][1];	
+		   					document.getElementById(showVotes).innerHTML = votesArr[i][1];		   					
 		   					
 		   					if (seeResultBeforVote == 1 || _status == 0 || hasVoted == 1) {
 			   					document.getElementById(graphId).style.display = "block";	
@@ -294,8 +294,8 @@
 		        	
 			            if (ret != -1 && ret != s_Users) {
 					    	s_Users = ret;
-					    	document.getElementById("seenPeople").innerHTML = ret + seenText;	
-					    	document.getElementById("seenPeople").style.color="red";
+					    	document.getElementById("seenPeople").innerHTML = "(" + ret + ")";	
+					    	//document.getElementById("seenPeople").style.color="red";
 					    	
 				    		if (window_open1 != null && !window_open1.closed) {	
 				    			window_open1.location.reload();
@@ -321,7 +321,7 @@
 			            	
 			            	if (user != curentUser) {
 				            	votedUsers = votedUsers + 1;
-				            	document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
+				            	document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
 			            	}
 					    }
 			            else {
@@ -330,7 +330,7 @@
 			            	
 			            	if (user != curentUser) {
 			            		votedUsers = votedUsers - 1;
-			            		document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
+			            		document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
 			            	}			            	
 			            }
 			            
@@ -576,7 +576,7 @@
 	 	    		if (hasVoted == 0) {
 	 	    			votedUsers = votedUsers + 1;
 	 	    			hasVoted = 1;	 	    			
-	 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
+	 	    			document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
 	 	    		}
 	 	    		
 	 	    		seeResultBeforVote = 1;
@@ -668,7 +668,7 @@
 		    	if (flag == 0) {		    		
 		    		votedUsers = votedUsers - 1;
  	    			hasVoted = 0; 	    			
- 	    			document.getElementById("votedUsers").innerHTML = votedUsers + "<spring:message code = 'ezPoll.t110'/>";
+ 	    			document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
 		    	}
 		    }
 		    
@@ -1186,7 +1186,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUser;
-                div1ForTd2.setAttribute("style", "display: block; padding-left: 8px; padding-top: 10px; color: blue");       
+                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (currentText.length > 0) {
@@ -1723,7 +1723,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userId;
-                div1ForTd2.setAttribute("style", "display: block; padding-left: 8px; padding-top: 10px; color: blue");       
+                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (txtContent.length > 0) {
@@ -2035,7 +2035,7 @@
 						</div>
 				  </div>
 				  <div style="float: left; display: block; width:137px; height:60px; line-height:60px; background:#eaeaea; border:1px solid #d0d0d0; color:##004896; border-radius:5px; margin:0px 0px 0px 10px; text-align:center; color:#000; font-xize:18px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;">
-				  	<a style="display:inline-block;cursor: pointer;" id="seenPeople" onClick="menuDetailSeenUserInfo('${question.qstId}')"><!--<spring:message code = 'ezPoll.t112'/>-->투표 확인 <span style="color:#004896;">(4)</span></a>
+				  	<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/> <span style="color:#004896;" id="seenPeople">/span></a>
 				  </div>
 				  <c:if test="${curentUser == question.creator || adminPrivilege == 1}">
 					  <div style="float: right; display: block;" id="_editVote">
@@ -2043,28 +2043,32 @@
 					  </div>
 				  </c:if>
 			</div>
-			<div id="titleAndContent" style="border: 1px solid #b6b6b6; background: #FFF; overflow: hidden;">				
-				<div id="title" class="questionTitle" style="display:inline-block;float:left; width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
-					<c:out value='${question.title}'/>
-					<span id="status">
+			<div id="titleAndContent" style="border: 1px solid #004896; background: #FFF; overflow: hidden;">				
+				<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
+					<div style="height: 40px; max-width:10em; font-size: 18px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; float:left; padding:0px 30px 0px 0px;" class="baonkTest"><c:out value='${question.title}'/></div>
+					<div style="height: 40px; float:left;">
+						<span id="status" style="font-weight: bold;">
 						<c:choose>
 							<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
 							<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
 						</c:choose>
-					</span>
-					<span id="votedUsers">					
-						<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>
-					</span>
-					 <c:if test="${question.status == 1}">
-						<span id="daysRemain">
-							<c:out value='${timeRemain}'/>
-						</span> 			
-					</c:if>
+						</span>
+						<span id="votedUsers" style="font-weight: bold;">					
+							&#40;<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>&#41;
+						</span>
+						 <c:if test="${question.status == 1}">
+							<span id="daysRemain" style="font-weight: bold;">
+								- <c:out value='${timeRemain}'/>
+							</span> 			
+						</c:if>
+					</div>			
 				</div>
+				
+				<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block;" id="messagetd">
+	               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: auto;width: 100%; background-color: #FFF;"></iframe>   	                                 
+	       	 	</div>				
 			</div>			
-			<div class="pad1" style="vertical-align: top; width: 100%;border-right-width: 0px;display:inline-block;" id="messagetd">
-	             <iframe onload="resizeFrame()" id="message_test" style="border: #b6b6b6 0px solid; overflow: auto;width: 100%; padding-top: 6px; background-color: white;"></iframe>   	                                 
-	        </div>
+
 	        <c:if test="${numOfFile != 0}">
 	        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7; margin:0px 0px 20px 0px;">
 	        		<img src="/images/poll/attach_file_vote.png" class="attach_img" style="float: left;display:block;" >
@@ -2101,7 +2105,7 @@
 		               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 5px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
 		               </td>
 		               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
-		               		<div id="optionContent" class="title01" style="display:block;">${_option.content}</div> 
+		               		<div id="optionContent<c:out value ="${_option.ansId}"/>" class="title01" style="display:block;">${_option.content}</div> 
 		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:20px;">
 		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:3px 0px 10px 0px;">
 		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20" style="border:1px solid #000000;"></canvas>			               					               					
@@ -2145,12 +2149,12 @@
 				<tr>
 					<td class="voteTdBg" style="width:100%; border:1px solid #DDD;" colspan="3" >
 						<div class="voteBtn" style="overflow: hidden;display:inline-block;">
-							<div style="float:left; display:block; line-height:43px;"><spring:message code = 'ezPoll.t123'/></div>
-							<div id="_unVotedNumber" style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div>
+							<div onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber"><c:out value='${numberOfUnvotedUsers}'/></span></div>
+							<%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
 							<!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 						</div>
                         <c:if test="${curentUser == question.creator || adminPrivilege == 1}">
-                            <div id="_finish" style="width:85px; height:45px; position:absolute; top:10px; left:50%; margin:0px 0px 0px -20px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 13px; text-align:center; cursor: pointer;" onclick="finishVote();">
+                            <div id="_finish" style="width:85px; height:45px; position:absolute; top:10px; left:50%; margin:0px 0px 0px 0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 13px; text-align:center; cursor: pointer;" onclick="finishVote();">
                                 <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
                                 <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
                             </div> 
@@ -2164,7 +2168,7 @@
 					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 				</div> 
 			</c:if>-->
-			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; height:70px;">
+			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%;">
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${listComments}">
 						<tr>
@@ -2212,7 +2216,7 @@
 					</c:forEach>					
 				</table>
 			</div>
-			<div id="sendComment" class="voteComment" style="width:100%;">
+			<div id="sendComment" class="voteComment" style="width:100%; position:relative;">
 				<div style="float:left; display:block; padding:18px 3px 10px 10px;">
 					<img id="_addFile" src="/images/poll/add_vote.png" style="float:left; display:block; height:25px; width:25px; cursor: pointer;" onclick="addFileComment();">
 				</div>
@@ -2472,7 +2476,7 @@
 				<div style="float:left; display:block; width:74%; height:45px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height:45px; line-height:45px; padding:0px; outline: none; border:none; resize:none;"  onkeyup="auto_grow(this)"></textarea>
 				</div>
-				<div style="float:left; display:block; width: 96px; height:45px; border:none; margin:8px 0px;">
+				<div style="position:absolute; top:9px; right:10px; display:block; width: 96px; height:45px; border:none; margin:0px">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
 						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer;  z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>

@@ -180,9 +180,9 @@
 #mainmenu1 li{
 	display:block;
 	float:left;
-	padding-left:5px;
 	cursor:pointer;
-	line-height:27px;
+	line-height:35px;
+	padding:0px 5px 0px 0px;
 }
 
 #bnkbtn {
