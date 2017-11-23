@@ -648,7 +648,10 @@ function save_task() {
 						
 	        parent.DivPopUpHidden();
 	        
-	        parent.RefreshView();
+	        if (mode != "") {
+	        	parent.RefreshView();
+	        }
+	        
 	        //parent.taskReadJson();
 	        parent.location.reload();
 	        window.close();
