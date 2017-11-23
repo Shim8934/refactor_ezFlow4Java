@@ -786,6 +786,8 @@
 	    		var divSticker = document.getElementById("_stickerArea");
 	    		var cloneOfDivFile = divFile.cloneNode(true);
 	    		var cloneOfDivSticker = divSticker.cloneNode(true);
+	    		cloneOfDivFile.setAttribute("style", "float:left; display:block; height:25px; width:25px; cursor: pointer;padding-left: 10px;");
+	    		cloneOfDivSticker.setAttribute("style", "float:left; display:block; padding: 0px;");
 	    		innInnerDiv2.appendChild(cloneOfDivFile);
 	    		innInnerDiv2.appendChild(cloneOfDivSticker);
 	    		innerDiv1.appendChild(innInnerDiv2);
@@ -1163,7 +1165,7 @@
 		    	
 		    	//create the tr element
 		    	objTr = document.createElement("tr");
-		    	objTr.setAttribute("style", "border-bottom: 1px solid #b6b6b6");
+		    	objTr.setAttribute("style", "border-bottom: 1px dotted #b6b6b6");
 		    	
 		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
@@ -1358,7 +1360,7 @@
 		    
 		    function uploadFileCmt() {		    	
 	    	    var fd = new FormData();		    	
-		    	var _file = document.getElementById("fileInput").files[0];
+		    	var _file = document.getElementById("fileInput").files[0];    	
 		    	var ext = _file.name.split('.').pop().toLowerCase();
 		    	
 	            if (_file.size / 1024 / 1024 > 5) {
@@ -1381,7 +1383,8 @@
     
 		    function uploadComplete(evt) {		    	
 		    	xhr1.removeEventListener("load", uploadComplete);
-		    	document.getElementById("fileInput").value = "";
+		    	//document.getElementById("fileInput").value = null;	
+		    	clearFileInput(document.getElementById("fileInput"));
 		        showAttachedCmtFile(xhr1.responseText);		       
 		    }
 		    
@@ -1700,7 +1703,7 @@
 		    	
 		    	//Create the tr element
 		    	objTr = document.createElement("tr");
-		    	objTr.setAttribute("style", "border-bottom: 1px solid #b6b6b6");
+		    	objTr.setAttribute("style", "border-bottom: 1px dotted #b6b6b6");
 		    	
 		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
@@ -2010,6 +2013,17 @@
 		    	DownloadAttach(filePath, fileName);
 		    }
 		    
+		    function clearFileInput(ctrl) {
+		    	  try {
+		    	    ctrl.value = null;
+		    	  } 
+		    	  catch(ex) { }
+		    	  
+		    	  if (ctrl.value) {
+		    	    ctrl.parentNode.replaceChild(ctrl.cloneNode(true), ctrl);
+		    	  }
+		    }
+		    
 		    function randString(x) {
 		        var s = "";
 		        
@@ -2149,7 +2163,7 @@
 				<tr>
 					<td class="voteTdBg" style="width:100%; border:1px solid #DDD;" colspan="3" >
 						<div class="voteBtn" style="overflow: hidden;display:inline-block;">
-							<div onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber"><c:out value='${numberOfUnvotedUsers}'/></span></div>
+							<div onclick="javascript:displayDetail('${question.qstId}')" style="float:left; display:block; line-height:43px; cursor:pointer;"><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber"><c:out value='${numberOfUnvotedUsers}'/></span></div>
 							<%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
 							<!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 						</div>
@@ -2171,7 +2185,7 @@
 			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%;">
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${listComments}">
-						<tr>
+						<tr style="border-bottom: 1px dotted #b6b6b6;">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
 								<img src="${_comt.userImage}" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>
@@ -2205,7 +2219,7 @@
 							<td style="width: 145px; position:relative;">
 								<div style="position: absolute; top:10px; right:18px; color:#a3a3a3;"><c:out value ="${_comt.cmtTime}" /></div>
 								<c:if test="${_comt.userId == curentUser}">								
-									<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display:none; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+									<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
 									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;" tabindex=0>							
 										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
 										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
@@ -2485,7 +2499,7 @@
 				</div>
 				
 			</div>
-			<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 1px; height: 1px" /> 
+			<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 0px; height: 0px" /> 
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
 	</body>

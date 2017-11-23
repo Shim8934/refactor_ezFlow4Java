@@ -193,8 +193,8 @@
 #columnsbnk li input{
 	width:85%;
 	display:inline-block;
-	border: 0px;	
-    height: 30px;
+	border: none;	
+    height: 29px;
 	line-height:30px; margin:-2px 0px 0px 0px; padding:0px 7px 0px 7px;
 }
 

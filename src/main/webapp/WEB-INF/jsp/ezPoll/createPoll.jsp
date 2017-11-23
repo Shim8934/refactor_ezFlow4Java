@@ -23,7 +23,10 @@
 	<script type="text/javascript" src="/js/ezPoll/dropzone.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   	<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	  
-	<script type="text/javascript">		
+	<script type="text/javascript">	
+		var messageCode1	  = '<spring:message code="ezPoll.t164"/>';
+		var messageCode2	  = '<spring:message code="ezPoll.t165"/>';
+		var messageCode3	  = '<spring:message code="ezPoll.t208"/>';
 	    var filesize 		  = 0;
 	    var file 			  = new Array;
 	    var xhr 			  = new XMLHttpRequest();
@@ -34,7 +37,8 @@
 		var L_EndDate 		  = "";
 		var L_StartTime 	  = "";
 		var L_EndTime 		  = "";
-		var g_windowReference = null;		
+		var g_windowReference = null;	
+		
 		
 		window.onunload = function() {
 			if (mode == "modify") {

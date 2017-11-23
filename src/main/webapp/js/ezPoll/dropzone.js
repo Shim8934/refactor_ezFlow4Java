@@ -37,7 +37,7 @@ function onDrop(evt) {
     
     for (var i = 0; i < filelist.length; i++) {
         if (filelist[i].size / 1024 / 1024 > 5) {
-            alert("<spring:message code = 'ezPoll.t208' />");
+            alert(messageCode3);
             return;
         }
         else {
@@ -83,15 +83,15 @@ function uploadComplete(evt) {
     document.getElementById('prog_num').innerHTML = "0";
     document.getElementById('progdiv').style.display = "none";   
     setAttachFileInfo1(xhr.responseText);
-    isfileup = false;
+    isfileup = false;    
 }
 
 function uploadFailed(evt) {
-    alert('<spring:message code="ezPoll.t164"/>');
+    alert(messageCode1);
 }
 
 function uploadCanceled(evt) {
-    alert('<spring:message code="ezPoll.t165"/>');
+    alert(messageCode2);
 }
 
 function filedelete(r) {
