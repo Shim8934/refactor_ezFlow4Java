@@ -219,7 +219,6 @@ public class EzEmailUtil {
 	}
 	
 	public String getFullFromAddressOfMessage(Message message) {
-		logger.debug("getFullFromAddressOfMessage");
 		String fullFromAddressStr = "";
 		
 		try {
@@ -241,42 +240,14 @@ public class EzEmailUtil {
 						
 						name = decodeNonAsciiBytes(rawBytes);
 					}
-					else {
+					else {					
 						name = MimeUtility.decodeText(name);
 					}
 					
-					if (name.startsWith("CN=")) {
-						int idx = name.indexOf("=");
-						int idx2 = name.indexOf("/");
-						name = name.substring(idx+1, idx2);
-					}
-					
-					if (addressStr.contains("@")) {
-						addressBuilder.append(name + " <" + addressStr + ">");
-					} else {
-						addressBuilder.append(name);
-					}
+					addressBuilder.append(name + " <" + addressStr + ">");					
 				}
 				else {
-					if (!isPureAscii(addressStr)) {
-						byte[] rawBytes = addressStr.getBytes("iso-8859-1");
-						
-						addressStr = decodeNonAsciiBytes(rawBytes);
-					} else {
-						addressStr = MimeUtility.decodeText(addressStr);
-					}
-					
-					if (addressStr.startsWith("CN=")) {
-						int idx = addressStr.indexOf("=");
-						int idx2 = addressStr.indexOf("/");
-						addressStr = addressStr.substring(idx+1, idx2);
-					}
-					
-					if (addressStr.contains("@")) {
-						addressBuilder.append(addressStr + " <" + addressStr + ">");
-					} else {
-						addressBuilder.append(addressStr);
-					}
+					addressBuilder.append(addressStr + " <" + addressStr + ">");
 				}				
 				
 				fullFromAddressStr = addressBuilder.toString();
@@ -332,33 +303,6 @@ public class EzEmailUtil {
 		String stringList = "";
 		
 		if (addresses != null) {
-			boolean splitFlag = false;
-			for(int i=0; i<addresses.length; i++){
-				if(((InternetAddress)addresses[i]).getAddress().contains(";") && addresses.length == 1){
-					splitFlag = true;
-					break;
-				}
-			}
-			try {
-				if (splitFlag == true) {
-					String mailStrArry[] = ((InternetAddress)addresses[0]).getAddress().split(";");
-					addresses = new InternetAddress[mailStrArry.length];
-					for (int i = 0; i < mailStrArry.length; i++) {
-						InternetAddress address = new InternetAddress();
-						if (mailStrArry[i].startsWith("=?")) {
-							mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-							if (mailStrArry[i].startsWith("CN=")){
-								int idx = mailStrArry[i].indexOf("=");
-								int idx2 = mailStrArry[i].indexOf("/");
-								mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
-							}
-						}
-						address.setAddress(mailStrArry[i]);
-						address.setPersonal(mailStrArry[i]);
-						addresses[i] = address;
-					}
-				}
-			} catch (Exception e) {}
 			StringBuilder addressBuilder = new StringBuilder();
 			for (Address address : addresses) {
 				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
@@ -378,19 +322,11 @@ public class EzEmailUtil {
 						}
 					} catch (UnsupportedEncodingException e) {
 					}
-					if (addressStr.contains("@")) {
-						addressBuilder.append(name + " <" + addressStr + ">");
-					} else {
-						addressBuilder.append(name);
-					}
+					
+					addressBuilder.append(name + " <" + addressStr + ">");					
 				}
 				else {
-					if (addressStr.contains("@")) {
-						addressBuilder.append(addressStr + " <" + addressStr + ">");
-					} else {
-						addressBuilder.append(addressStr);
-					}
-					
+					addressBuilder.append(addressStr + " <" + addressStr + ">");
 				}
 				
 				addressBuilder.append(",");
@@ -1042,7 +978,8 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";				
 		}
-
+//to-do	
+		logger.debug("################# " + pAttachListHtml + " #################");
 		resultList.add(htmlBody);
 		resultList.add(pAttachListHtml);
 		resultList.add(filesize);

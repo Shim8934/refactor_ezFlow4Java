@@ -325,6 +325,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
 							if (name.endsWith(":")) {
 								name = name.substring(0, name.length() - 1);
 							}
@@ -421,6 +422,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							if (name.endsWith(":")) {
 								name = name.substring(0, name.length() - 1);
 							}
@@ -502,6 +504,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
 							if (name.endsWith(":")) {
 								name = name.substring(0, name.length() - 1);
 							}
