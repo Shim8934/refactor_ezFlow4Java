@@ -1499,13 +1499,13 @@
 		
 		<table id="normalScreen" class="layout" style="height:100%; display:none;">
 			<tr>
-				<td style="padding-bottom:3px;height: 340px;">
+				<td style="height: 399px;">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:101%; width:99.7%; overflow:auto;"></iframe>
 				</td>
 			</tr>
 			
 			<tr>
-				<td style="padding-top:0px;">
+				<td style="padding-top:4px;">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
@@ -1525,7 +1525,7 @@
 		
 		<table id="tablework" class="layout" style="height:100%; display:none;">
 			<tr style="vertical-align:top">
-				<td colspan="3" style="padding-bottom:3px; height:440px;">
+				<td colspan="3" style="padding-bottom:4px; height:440px;">
 					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:101%; width:99.7%; overflow:auto;"></iframe>
 				</td>
 			</tr>
@@ -1560,12 +1560,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-top:6px">
+				<td style="padding-top:8px">
 					<table class="content">
 						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
 							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
-							<td class="pos1" style="padding-left:5px;padding-right:5px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;padding:7px;height: 29px;'></textarea></td>
+							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:1px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>
 							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()"><spring:message code='ezTask.t96' /></span></a></td>
 							
 						</tr>
