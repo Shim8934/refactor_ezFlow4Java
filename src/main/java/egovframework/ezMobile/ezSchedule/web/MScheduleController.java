@@ -108,10 +108,7 @@ public class MScheduleController extends EgovFileMngUtil {
 			
 			modelMap.addAttribute("scheduleListCnt", scheduleList.size());
 			modelMap.addAttribute("scheduleList", scheduleList);
-			
-System.out.println("scheduleList :" + scheduleList);
 		}
-System.out.println("status :" + status);
 
 		LOGGER.debug("mScheduleList ended.");
 		
@@ -149,8 +146,6 @@ System.out.println("status :" + status);
 				
 		String status = resultBody.get("status").toString();
 		
-System.out.println("status :" + status);
-		
 		if (status.equals("ok")) {
 			JSONObject dataObject = (JSONObject) resultBody.get("data");
 			
@@ -170,12 +165,7 @@ System.out.println("status :" + status);
 			if(dataObject.get("attachList") != null) {
 				attachList = dataObject.get("attachList").toString();
 			}
-						
-System.out.println(scheduleInfo);			
-System.out.println(resourceCnt);			
-System.out.println(attendantList);			
-System.out.println(attachList);
-			
+
 			modelMap.addAttribute("scheduleInfo", scheduleInfo);
 			modelMap.addAttribute("resourceCnt", resourceCnt);
 			modelMap.addAttribute("attendantList", attendantList);
@@ -217,9 +207,6 @@ System.out.println(attachList);
 		
 		String status = resultBody.get("status").toString();
 		
-System.out.println(status);		
-System.out.println(gson.toJson(resultBody.get("data")));
-		
 		LOGGER.debug("mScheduleInsert ended.");
 	}
 	
@@ -253,9 +240,6 @@ System.out.println(gson.toJson(resultBody.get("data")));
 		
 		String status = resultBody.get("status").toString();
 		
-System.out.println(status);		
-System.out.println(gson.toJson(resultBody.get("data")));
-		
 		LOGGER.debug("mScheduleUpdate ended.");
 	}
 	
@@ -287,8 +271,6 @@ System.out.println(gson.toJson(resultBody.get("data")));
 		JSONObject resultBody = result.getBody();
 		
 		String status = resultBody.get("status").toString();
-		
-System.out.println(status);
 		
 		LOGGER.debug("mScheduleDelete ended.");
 	}
@@ -322,9 +304,6 @@ System.out.println(status);
 		String status = resultBody.get("status").toString();
 		
 		//Gson gson = new Gson();
-		
-System.out.println(status);
-System.out.println(resultBody.get("data").toString());
 
 		modelMap.addAttribute("scheduleType", resultBody.get("data").toString());
 		

@@ -78,8 +78,6 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
 			contentPath += schedulePath;
 
-System.out.println("contentPath: " + contentPath);
-
 			String content = jsonParam.get("content").toString();
 			
 			//html -> mht변환
