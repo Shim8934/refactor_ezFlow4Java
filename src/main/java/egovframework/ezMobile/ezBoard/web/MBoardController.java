@@ -341,7 +341,7 @@ public class MBoardController {
 			
 			model.addAttribute("mBoardItem", mBoardItem);
 		}
-System.out.println("mBoardItem:"+mBoardItem);
+
 		LOGGER.debug("getBoardItem ended.");
 		
 		return "/mobile/ezBoard/mBoardItem";
@@ -504,7 +504,6 @@ System.out.println("mBoardItem:"+mBoardItem);
 		Object mBoardItem = "";
 		if (status.equals("ok")) {
 			mBoardItem = resultBody.get("data");
-System.out.println("mBoardItem:"+mBoardItem);
 			model.addAttribute("mBoardItem", mBoardItem);
 		}
 		
@@ -545,7 +544,6 @@ System.out.println("mBoardItem:"+mBoardItem);
 		JSONArray list = new JSONArray();
 		Object boardInfo = "";
 		if (status.equals("ok")) {
-System.out.println("newList:"+resultBody.get("data"));
 			//Gson gson = new Gson();
 			//list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			
