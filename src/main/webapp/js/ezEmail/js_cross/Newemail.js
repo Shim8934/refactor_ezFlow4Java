@@ -752,26 +752,26 @@ function event_xmlhttp_mailPreview_Complete() {
                 var pCcCnt = 0;
                 for (var Cnt = 0; Cnt < pCcArray.length; Cnt++) {
                     var pCc_ = pCcArray[Cnt].replace(/"/g, "");
-                    if (pCc_.length > 10) {
-                        var Pos1 = pCc_.indexOf("<");
-                        var Pos2 = pCc_.indexOf(">");
-                        var pCc_Name = TrimText(pCc_.substring(0, Pos1));
-                        var pCc_Address = TrimText(pCc_.substring(Pos1 + 1, Pos2));
+//                    if (pCc_.length > 10) {
+                    var Pos1 = pCc_.indexOf("<");
+                    var Pos2 = pCc_.indexOf(">");
+                    var pCc_Name = TrimText(pCc_.substring(0, Pos1));
+                    var pCc_Address = TrimText(pCc_.substring(Pos1 + 1, Pos2));
 
-                        if (Cnt == 0) {
-                            pCcHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + ConvertStringForHTML(pCc_Name) + "\"</span>";
+                    if (Cnt == 0) {
+                        pCcHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + ConvertStringForHTML(pCc_Name) + "\"</span>";
 
-                        }
-
-                        if (pCcDetailHtml != "")
-                            pCcDetailHtml += "&nbsp;,&nbsp;";
-                        pCcDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + ConvertStringForHTML(pCc_Name) + "\"</span>";
-                        if (g_useremail == pCc_Address) {
-                            pCcHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + ConvertStringForHTML(pCc_Name) + "\"</span>";
-                        }
-
-                        pCcCnt++;
                     }
+
+                    if (pCcDetailHtml != "")
+                        pCcDetailHtml += "&nbsp;,&nbsp;";
+                    pCcDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + ConvertStringForHTML(pCc_Name) + "\"</span>";
+                    if (g_useremail == pCc_Address) {
+                        pCcHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + ConvertStringForHTML(pCc_Name) + "\"</span>";
+                    }
+
+                    pCcCnt++;
+//                    }
                 }
                 if (pCcCnt >= 2) {
                     document.getElementById("PreH_CCDetail").style.display = "";

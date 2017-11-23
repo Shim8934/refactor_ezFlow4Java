@@ -245,7 +245,7 @@ public class EzEmailUtil {
 						name = MimeUtility.decodeText(name);
 					}
 					
-					if (name.startsWith("CN=")) {
+					if (name.trim().startsWith("CN=")) {
 						int idx = name.indexOf("=");
 						int idx2 = name.indexOf("/");
 						name = name.substring(idx+1, idx2);
@@ -266,7 +266,7 @@ public class EzEmailUtil {
 						addressStr = MimeUtility.decodeText(addressStr);
 					}
 					
-					if (addressStr.startsWith("CN=")) {
+					if (addressStr.trim().startsWith("CN=")) {
 						int idx = addressStr.indexOf("=");
 						int idx2 = addressStr.indexOf("/");
 						addressStr = addressStr.substring(idx+1, idx2);
@@ -345,9 +345,9 @@ public class EzEmailUtil {
 					addresses = new InternetAddress[mailStrArry.length];
 					for (int i = 0; i < mailStrArry.length; i++) {
 						InternetAddress address = new InternetAddress();
-						if (mailStrArry[i].startsWith("=?")) {
+						if (mailStrArry[i].trim().startsWith("=?")) {
 							mailStrArry[i] = MimeUtility.decodeText(mailStrArry[i]);
-							if (mailStrArry[i].startsWith("CN=")){
+							if (mailStrArry[i].trim().startsWith("CN=")){
 								int idx = mailStrArry[i].indexOf("=");
 								int idx2 = mailStrArry[i].indexOf("/");
 								mailStrArry[i] = mailStrArry[i].substring(idx+1, idx2);
@@ -378,18 +378,18 @@ public class EzEmailUtil {
 						}
 					} catch (UnsupportedEncodingException e) {
 					}
-					if (addressStr.contains("@")) {
+//					if (addressStr.contains("@")) {
 						addressBuilder.append(name + " <" + addressStr + ">");
-					} else {
-						addressBuilder.append(name);
-					}
+//					} else {
+//						addressBuilder.append(name);
+//					}
 				}
 				else {
-					if (addressStr.contains("@")) {
+//					if (addressStr.contains("@")) {
 						addressBuilder.append(addressStr + " <" + addressStr + ">");
-					} else {
-						addressBuilder.append(addressStr);
-					}
+//					} else {
+//						addressBuilder.append(addressStr);
+//					}
 					
 				}
 				
