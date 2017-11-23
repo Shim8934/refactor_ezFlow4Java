@@ -969,7 +969,7 @@
 						status = "<spring:message code='ezTask.t98' />";
 						break;
 					case "3":
-						status = "<spring:message code='ezTask.t99' />";
+						status = "<spring:message code='ezTask.t9001' />";
 						break;
 					case "4":
 						status = "<spring:message code='ezTask.t100' />";
@@ -1380,12 +1380,12 @@
 							<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
 							<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' /> (${repeatCount}회차)</span></li>
 							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
-							<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t9002' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
 							
 						</c:if>
 						<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
 							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
-							<li><span class="txt_title"><spring:message code='ezTask.t122' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t9002' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
 						</c:if>
 					</ul>
 					<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
@@ -1582,7 +1582,7 @@
 							<tr >
 								<th style="width:  50px; text-align: center;"><spring:message code='ezTask.t1221' /></th>
 								<th style="width: 225px; text-align: center;"><spring:message code='ezTask.t121' /></th>
-								<th style="width: 225px; text-align: center;"><spring:message code='ezTask.t122' /></th>
+								<th style="width: 225px; text-align: center;"><spring:message code='ezTask.t9002' /></th>
 								<th style="width: 230px; text-align: center;"><spring:message code='ezTask.t120' /></th>
 							</tr>	
 							<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" >

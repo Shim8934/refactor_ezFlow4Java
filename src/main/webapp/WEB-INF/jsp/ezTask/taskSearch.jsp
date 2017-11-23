@@ -521,7 +521,7 @@
 						<option  value="" selected ><spring:message code='ezTask.t240' /></option>
 						<option  value="1" ><spring:message code='ezTask.t97' /></option>
 						<option  value="2"><spring:message code='ezTask.t98' /></option>
-						<option  value="3"><spring:message code='ezTask.t99' /></option>
+						<option  value="3"><spring:message code='ezTask.t9001' /></option>
 						<option  value="4"><spring:message code='ezTask.t100' /></option>
 					</select>
 					<input name="text" type="text" id="keyword" onKeyPress="return search_keypress(event)" size="21" style="vertical-align:middle">
@@ -580,7 +580,7 @@
                 <th ><spring:message code='ezTask.t2003' /></th>
 				<th ><spring:message code='ezTask.t120' /></th>
 				<th ><spring:message code='ezTask.t121' /></th>
-				<th ><spring:message code='ezTask.t122' /></th>
+				<th ><spring:message code='ezTask.t9002' /></th>
 			</tr>
 			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>

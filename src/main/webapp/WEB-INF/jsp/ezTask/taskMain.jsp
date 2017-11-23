@@ -712,7 +712,7 @@
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + cnt + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
 		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + currentCount + ")";
-		            $(".sort_radio").hide();
+		            $(".sort_radio").show();
 	            }
 
 	            show_page();
@@ -918,7 +918,7 @@
 				<!-- 완료 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
 					<input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
-					<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t99' /></label>
+					<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t9001' /></label>
 				</li>
 
 				<!-- 진행중 -->
@@ -979,7 +979,7 @@
 		                    <th  style="text-align:center;"><spring:message code='ezTask.t2003'/></th>		                    
 							<th id="_thprogress"  style="text-align:center;"><spring:message code='ezTask.t120' /></th>							
 							<th  style="text-align:center;"><spring:message code='ezTask.t121'/></th>
-							<th  style="text-align:center;"><spring:message code='ezTask.t122'/></th>
+							<th  style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
 						</tr>
 						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this)">
 							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
