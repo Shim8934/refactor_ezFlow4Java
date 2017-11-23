@@ -5086,9 +5086,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception {
 		logger.debug("mobileSrvConn started.");
-		logger.debug("<<<docID : " + docID);
-		logger.debug("<<<result : " + result); // 2017.09.01 기준 "A" 만 들어옴
-		logger.debug("<<<keyVal : " + keyVal);
+		logger.debug("docID : " + docID);
+		logger.debug("result : " + result); // 2017.09.01 기준 "A" 만 들어옴
+		logger.debug("keyVal : " + keyVal);
 		if (userID.equals("") || result.equals("") || formID.equals("") || docID.equals("") || orgUID.equals("") || companyID.equals("")) {
 			return "ERROR";
 		}
@@ -5359,8 +5359,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
-		
-		logger.debug("aprStateSign = " + aprStateSign);
 		
 		Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
 		aprStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
