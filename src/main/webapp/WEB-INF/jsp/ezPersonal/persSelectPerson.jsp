@@ -23,7 +23,9 @@
 		<script type="text/javascript">
 		    var type = "${type}";
 		    var ReturnFunction;
+		    var userID = "${userInfo.id}";
 		    window.onload = function () {
+		    	console.log(userID);
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments[1];
 		        } catch (e) {
@@ -342,6 +344,10 @@
 		            return;
 		        }
 		        var selRow = tr[0];
+		        if ("${userInfo.id}" == selRow.getAttribute("DATA2")) {
+		        	alert("<spring:message code='ezPersonal.t16'/>");
+		        	return;
+		        }		        
 		        if (type == "Proxy") {
 		            if ("${userInfo.deptID}" != selRow.getAttribute("DATA3")) {
 		                alert("<spring:message code='ezPersonal.t400'/>");
