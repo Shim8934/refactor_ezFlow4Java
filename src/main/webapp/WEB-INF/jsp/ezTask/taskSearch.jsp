@@ -310,7 +310,7 @@
 
 		            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;&nbsp[" + commentCount + "]</font></span>";
+			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
 			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
 			        } else {
 						tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
@@ -560,10 +560,10 @@
 				<col style ="width:50px;">
 				<col style ="width:30px;">
 			</c:if>
-            <col style ="width:90px;">
-			<col style ="width:110px;">
-			<col style ="width:80px;">
-			<col style ="width:97px;">
+            <col style ="width:100px;">
+			<col style ="width:130px;">
+			<col style ="width:100px;">
+			<col style ="width:100px;">
 			<tr>
 				<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 				<th ><spring:message code='ezTask.t156' /></th>
@@ -577,23 +577,23 @@
 				<c:if test="${useTodoMemo == 'NO'}">
 					<th ></th>
 				</c:if>
-                <th ><spring:message code='ezTask.t2003' /></th>
-				<th ><spring:message code='ezTask.t120' /></th>
-				<th ><spring:message code='ezTask.t121' /></th>
-				<th ><spring:message code='ezTask.t9002' /></th>
+                <th style="text-align:center;"><spring:message code='ezTask.t2003' /></th>
+				<th style="text-align:center;"><spring:message code='ezTask.t120' /></th>
+				<th style="text-align:center;"><spring:message code='ezTask.t121' /></th>
+				<th style="text-align:center;"><spring:message code='ezTask.t9002' /></th>
 			</tr>
 			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
                 <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;padding-left: 15px;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 			</tr>
 			<tr id="tr_ing" style="text-align:center">
 				<td colspan="11" style="height:25px;background-color:white;text-align:center"><spring:message code='ezTask.t192' /></td>
