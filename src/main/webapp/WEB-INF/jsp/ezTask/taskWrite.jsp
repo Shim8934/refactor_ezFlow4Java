@@ -827,6 +827,27 @@
 										</td>
 									</tr>
 								</c:if>
+								<!-- 메모  -->
+								<c:if test="${useTodoMemo == 'YES' }">
+									<c:choose>
+										<c:when test="${mode == ''}">				
+											<tr id="menuTaskMemo">
+												<th><spring:message code='ezTask.t170' /></th>
+												<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+													<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+												</td>
+											</tr>
+										</c:when>
+										<c:otherwise>
+											<tr id="menuTaskMemo" style="display: none;">
+												<th><spring:message code='ezTask.t170' /></th>
+												<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+													<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+												</td>
+											</tr>
+										</c:otherwise>
+									</c:choose>
+								</c:if>
 								<c:if test="${mode == '1' }">
 									<tr>
 				                        <th><spring:message code='ezTask.t158' /></th>
@@ -971,6 +992,7 @@
 				                        	</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span>
 										</td>
 									</tr>
+
 									<c:if test="${mode == '' }">
 										<tr>
 											<th id="editorTitle" colspan="4" style="text-align: center;"><spring:message code = 'ezTask.t2011' /></th>
@@ -1017,41 +1039,7 @@
 						</c:choose>
 					</c:otherwise>
 				</c:choose>			
-				
-				<!-- 메모  -->
-				<c:if test="${useTodoMemo == 'YES' }">
-					<c:choose>
-						<c:when test="${mode == ''}">				
-							<tr>
-								<td id="menuTaskMemo">
-									<table class="content">
-										<tr>
-											<th><spring:message code='ezTask.t170' /></th>
-											<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
-												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</c:when>
-						<c:otherwise>
-							<tr>
-								<td id="menuTaskMemo" style="display: none;">
-									<table class="content">
-										<tr>
-											<th><spring:message code='ezTask.t170' /></th>
-											<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
-												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</c:otherwise>
-					</c:choose>
-				</c:if>
-				
+								
 				<c:choose>
 					<c:when test="${mode == ''}">
 						<tr>
