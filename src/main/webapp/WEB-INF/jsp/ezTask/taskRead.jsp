@@ -607,6 +607,7 @@
 				}
 			}
 			
+			
 			function Tab1_NewTabIni(pTabNodeID) {						
 			    for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 			        if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
