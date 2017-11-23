@@ -462,7 +462,7 @@
 					        list_body.children[1].appendChild(tr);
 					        
 					        if (type == "2" && flagType == 1) {
-					        	span.innerHTML= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;반복";
+					        	span.innerHTML= "<spring:message code='ezTask.t999' />";
 					        }
 					        else {
 					        	initProgressBar("taskProgressBar" + i, taskstatus, completerate);
