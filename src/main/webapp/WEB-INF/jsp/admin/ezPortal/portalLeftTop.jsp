@@ -10,6 +10,12 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
+			window.onload = function () {
+				<c:if test="${firstScreen_Mail == 'YES'}">
+					document.getElementById("logo").onclick();
+			    </c:if>
+			}
+			
 			document.onselectstart = function () {
 	        	if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	            	return false;
@@ -91,18 +97,26 @@
 	</head>
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 		<div id="left">
+			
 			<div class="left_admin" title="<spring:message code='ezPortal.t228'/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezPortal.t228'/></div>
-        	<h2><span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t990010'/></span><ul></ul></h2>	
-			<h2><span onClick="goPage(7)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t409'/></span><ul></ul></h2>	
-			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t410'/></span><ul></ul></h2>	
-			<h2><span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t411'/></span><ul></ul></h2>	
-			<!--h2><span onClick="goPage(1)"><spring:message code='ezPortal.t232'/></span><ul></ul></h2-->	
-			<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t61'/></span><ul></ul></h2>	
-			<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t224'/></span><ul></ul></h2>	
-			<h2><span onClick="goPage(4)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t107'/></span><ul></ul></h2>	
-			<%--<h2><span onClick="goPage(5)" style="display:inline-block;width:100%;"><%=RM.GetString("t216")%></span><ul></ul></h2>	--%>
-			<%--<h2><span onClick="goPage(6)" style="display:inline-block;width:100%;"><%=RM.GetString("t198")%></span><ul></ul></h2>	--%>
-			<div onClick="DeleteCache()"><h2><span id="Del_Cache" onClick=""><spring:message code='ezPortal.t230'/></span><ul></ul></h2></div>
+			
+			<c:choose>
+				<c:when test="${firstScreen_Mail == 'YES'}">
+					<h2><span id="logo" onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t61'/></span><ul></ul></h2>	
+					<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t224'/></span><ul></ul></h2>	
+					<div onClick="DeleteCache()"><h2><span id="Del_Cache" onClick=""><spring:message code='ezPortal.t230'/></span><ul></ul></h2></div>
+				</c:when>
+				<c:otherwise>
+					<h2><span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t990010'/></span><ul></ul></h2>	
+					<h2><span onClick="goPage(7)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t409'/></span><ul></ul></h2>	
+					<h2><span onClick="goPage(8)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t410'/></span><ul></ul></h2>	
+					<h2><span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t411'/></span><ul></ul></h2>	
+					<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t61'/></span><ul></ul></h2>	
+					<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t224'/></span><ul></ul></h2>	
+					<h2><span onClick="goPage(4)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t107'/></span><ul></ul></h2>	
+					<div onClick="DeleteCache()"><h2><span id="Del_Cache" onClick=""><spring:message code='ezPortal.t230'/></span><ul></ul></h2></div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");

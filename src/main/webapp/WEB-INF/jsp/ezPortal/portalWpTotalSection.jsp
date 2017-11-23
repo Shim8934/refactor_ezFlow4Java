@@ -14,7 +14,7 @@
 						<span id="ModInfo" onClick="btnSumming_click(this)"><spring:message code="main.t00015" />
 						</span>
 					</span>
-				 	<strong style="position:absolute;">${displayName} ${mailAddress } </strong>
+				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
 				 </p>
 				<div class="info">
     				<p class="pic">${userPhoto }</p>
