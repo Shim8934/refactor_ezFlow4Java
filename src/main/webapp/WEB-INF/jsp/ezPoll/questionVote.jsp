@@ -179,7 +179,7 @@
 							var imageCheckBoxId = "_imageCheckBox" + test[i];
 							var imageCheckBox = document.getElementById(imageCheckBoxId);
 							
-							if (imageCheckBox.src.indexOf("/images/unchecked.png") !== -1) {
+							if (imageCheckBox.src.indexOf("/images/poll/unchecked_vote.png") !== -1) {
 								imageCheckBox.src = "/images/checked.png";
 							}
 						}
@@ -187,7 +187,7 @@
 				}				
 			}
 			
-			function updateGraph() {				
+			function updateGraph() {					
 				for (var i = 0; i < numberOptions; i++) {
 					var _optId = votesArr[i][0];					
 					var graphId = "graph" + _optId;
@@ -195,7 +195,7 @@
 					var percentTdId = "_resultPercentage" + _optId; 				
 					
 					if (totalVotes > 0) {				
- 						var percent = votesArr[i][1]/totalVotes;
+ 						var percent = votesArr[i][1]/totalVotes; 											
  						
  						if (seeResultBeforVote == 1 || _status == 0 || hasVoted == 1) { 								
 							document.getElementById(percentTdId).innerHTML = "[" + (percent * 100).toFixed(1) + "%]";
@@ -214,6 +214,9 @@
 		   					}
 		   					
 		   					var max_width = document.getElementById(graphId).offsetWidth;
+		   					
+		   					console.log("Max_Width: " + max_width);
+		   					
 		   					var maxWidth_for_canvas = max_width - 40;	   					   					
 							var best_width = Math.round(maxWidth_for_canvas * percent);	
 							
@@ -561,7 +564,7 @@
 		    }
 		    
 		    function change(obj) {
-	 	    	if (obj.src.indexOf("/images/unchecked.png") !== -1) {	 	    		   		
+	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) {	 	    		   		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
@@ -613,7 +616,7 @@
 		    	    xhr.send(fd);		    		
 		    	}
 	 	    	else {
-	 	    		obj.src = "/images/unchecked.png";
+	 	    		obj.src = "/images/poll/unchecked_vote.png";
 	 	    		var voteId = obj.name;
 	 	    		var optId = votesArr[voteId][0];
 	 	    		checkVoted();
@@ -2043,14 +2046,14 @@
 				  </c:if>
 			</div>
 			<div id="titleAndContent" style="border: 1px solid #b6b6b6; background: #FFF; overflow: hidden;">				
-				<div id="title" class="questionTitle" style="display:inline-block;float:left; width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->질문 01)</div>
+				<div id="title" class="questionTitle" style="display:inline-block;float:left; width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>--><c:out value='${question.title}'/></div>
 				<div id="status" style="display:inline-block;padding-left: 1330px;">
 					<c:choose>
 						<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
 						<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
 					</c:choose>
 				</div>
-				<div id="votedUsers" style="display:none; float:right; padding-right:25px; padding-bottom:10px;">					
+				<div id="votedUsers" style="float:right; padding-right:25px; padding-bottom:10px;">					
 					<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>
 				</div>
 				 <c:if test="${question.status == 1}">
@@ -2099,11 +2102,11 @@
 		               </td>
 		               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
 		               		<div id="optionContent" class="title01" style="display:block;">${_option.content}</div> 
-		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; <!--display:none;--> width:100%; height:20px;">
-		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left;display:block; heigth:20px; margin:3px 0px 10px 0px;">
+		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:20px;">
+		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:3px 0px 10px 0px;">
 		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20" style="border:1px solid #000000;"></canvas>			               					               					
 		               				</div>	
-		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left;display:block; font-size:16px; margin:-4px 10px 0px 10px; color:#e04343;">0</div>		               				
+		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px; color:#e04343;">0</div>		               				
 		               				<script type="text/javascript">
 		               					var loopIdx = ${loop.index};
 		               					userNameArr[loopIdx] = [];
