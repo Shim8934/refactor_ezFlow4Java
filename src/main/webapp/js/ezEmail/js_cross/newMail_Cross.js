@@ -3431,12 +3431,12 @@ function mailExportOption_onClick(type) {
     exportOption_cross_dialogArguments[1] = mailExportOption_onClick_Complete;
     exportOption_cross_dialogArguments[2] = DivPopUpHidden;
     
-    DivPopUpShow(450, 230, "/ezEmail/mailExportOption.do?exportType=" + type);
+    DivPopUpShow(460, 230, "/ezEmail/mailExportOption.do?exportType=" + type);
 }
 function mailExportOption_onClick_Complete(m_rgParams4PostOption) { }
 
 var importOption_cross_dialogArguments = new Array();
-function mailImportOption_onClick() {
+function mailImportOption_onClick(tempId, userkey) {
     if (!CrossYN()) {
         EzHTTPTrans.style.display = "none";
     }    
@@ -3445,7 +3445,8 @@ function mailImportOption_onClick() {
     importOption_cross_dialogArguments[1] = mailImportOption_onClick_Complete;
     importOption_cross_dialogArguments[2] = DivPopUpHidden;
     
-    DivPopUpShow(450, 190, "/ezEmail/mailImportOption.do");
+    DivPopUpShow(460, 190, "/ezEmail/mailImportOption.do?tempId=" + tempId
+    							 						+ "&userkey=" + userkey);
 }
 function mailImportOption_onClick_Complete(m_rgParams4PostOption) { }
 

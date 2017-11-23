@@ -182,22 +182,27 @@ function showTobLiftDim(){
 </head>
 <body style="overflow:hidden;" class="popup">
 <form name="optionForm">
-	<h1><spring:message code="ezEmail04"/><spring:message code="ezEmail06"/></h1>
-	<span>▒ <spring:message code='ezEmail.kyj02' /></span><br>
-	<span>▒ <spring:message code='ezEmail.kyj03' /></span><br>
+	<h1><spring:message code="ezEmail.kyj04"/></h1>
+	<c:if test="${exportType eq 'MAILBOX' }">
+		<span>▒ <spring:message code='ezEmail.kyj02' /></span><br>
+	</c:if>
+	<c:if test="${exportType eq 'MAIL' }">
+		<span>▒ <spring:message code='ezEmail.kyj09' /></span><br>
+	</c:if>
+		<span>▒ <spring:message code='ezEmail.kyj03' /></span><br>
 	<br>
 	
 	<table style="width:100%;" class="content">
 	  <tr>
 	    <th>암호</th> <!-- 보안메일 메세지 사용예정 -->
-	    <td><input type="password" id="securePassword" maxlength="20" />
+	    <td><input type="password" id="securePassword" maxlength="50" />
     		<input type="checkbox" name="usePassword" value="checkbox" onClick="checkUsePassword(this);" id="useEncrytZipFileChk">
-    		<span style="vertical-align:middle;"><spring:message code="ezEmail.kyj07"/></span>
+    		<span style="vertical-align:middle;"><spring:message code="ezEmail.kyj06"/></span>
 	    </td>
 	  </tr>
 	  <tr>
 	    <th>암호 확인</th> <!-- 보안메일 메세지 사용예정 -->
-	    <td><input type="password" id="securePasswordCheck" maxlength="20" onkeypress="keycheck(event)"/></td>
+	    <td><input type="password" id="securePasswordCheck" maxlength="50" onkeypress="keycheck(event)"/></td>
 	  </tr>
 	</table>
 	

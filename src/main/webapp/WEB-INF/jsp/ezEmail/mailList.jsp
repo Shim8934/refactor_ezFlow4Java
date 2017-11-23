@@ -84,6 +84,7 @@
 		    var protocol = window.location.protocol;
 		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
 		    var useEncryptZipForEMail = "${useEncryptZipForEMail}";
+		    var enc = "encrypt";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -405,6 +406,7 @@
 		    	// 웹소켓 연결
 	            webSocket= new WebSocket(host);
 		    	var encryptPw = "";
+	        	var stt = "";
 	            
 		    	if (typeof pwd != "undefined") {
 		    		encryptPw = pwd;
@@ -413,7 +415,6 @@
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
 		        	var obj = JSON.parse(message.data);
-		        	
 		        	if (obj.status == "transferStart") {
 		            	userkey = obj.userkey;
 			            ShowMailProgressNew();
@@ -426,25 +427,31 @@
 							url : "/ezEmail/mailboxExportZip.do",
 							data : { folderPath : '${url}', userkey : userkey},
 							success : function(result) {
+								
 								if (result == "") {
 									alert("<spring:message code='ezEmail.lhm33' />");
 								} else if (result == "CANCEL") {
 									console.log('User Cancel');
 								} else {
+									ShowPercent(enc);
+									
 									var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
 											+ encodeURIComponent('${folderName}')
-											+ "&temp=" + result + "&encryptPw=" + encryptPw;
+											+ "&temp=" + result + "&encryptPw=" + encryptPw
+											+ "&userkey=" + userkey;
 									AttachDownFrame.location.href = fullpath;
 									AttachDownFrame.target = "_blank";
+					            	
 								}
-				        		HiddenMailProgressNew();
-				        		webSocket.close();
 							}
 						});
 						
 		            } else if (obj.status == 'progress') {
 		            	ShowPercent(obj.percent);
-		            } 
+		            } else if (obj.status == 'end') {
+		            	HiddenMailProgressNew();
+		            	webSocket.close();
+		            }
 		        };
 		        
 		        // 웹소켓 연결 해제시 실행 되는 함수
@@ -453,20 +460,26 @@
 		        };
 		        
 		        window.onbeforeunload = function(){
-		        	webSocket.close();
+			        webSocket = null;
 		        };
 		    }
 			
 			// 메일박스 가져오기
-			function mailbox_attach_import(pwd) {
+			function mailbox_attach_import(pwd, tempId, userkey) {
 	        
 				console.log('mailbox_attach_import started.');
 				
 				var encryptPw = "";
-		    	if (typeof pwd != "undefined") {
+		    	var path = "";
+		    	var tempname = "";
+		    	
+				if (typeof pwd != "undefined") {
 		    		encryptPw = pwd;
 		    	}
-		    	
+				if (typeof tempId != "undefined") {
+					path = tempId;
+				}
+				
 				// mailbox_attach_import() function이 2번 호출됨으로 인해 websocket 객체 존재유무를 판단하여 진입을 막는다.
 				if (webSocket != null) {
 					console.log('websocket is not null');
@@ -474,25 +487,33 @@
 				}
 				
 		        webSocket = new WebSocket(host);
-				var tempname = document.importMailboxform.file1.value;
-				
-				if (tempname == "") {
-					return;
-				}
-
-				var last = tempname.split(".").length;
-				var extension = tempname.split(".")[last - 1];
-
-				if (extension.toUpperCase() != "ZIP") {
-					alert("<spring:message code='ezEmail.lhm34' />");
-					return;
+		        
+				if (encryptPw == "") {
+	        		tempname =	document.importMailboxform.file1.value;
+					
+	        		if (tempname == "") {
+						return;
+					}
+	        		
+					var last = tempname.split(".").length;
+					var extension = tempname.split(".")[last - 1];
+	
+					if (extension.toUpperCase() != "ZIP") {
+						alert("<spring:message code='ezEmail.lhm34' />");
+						return;
+					}
 				}
 			
 		        webSocket.onmessage = function(message){
 		        	
 		        	var obj = JSON.parse(message.data);
 		            ShowMailProgressNew();
-		            ShowPercent(0);
+		            
+		            if (path != ""){
+		            	ShowPercent("done");
+		            } else {
+			            ShowPercent("ing");
+		            }
 		            
 		        	if (obj.status == "transferStart") {
 		            	userkey = obj.userkey;
@@ -500,12 +521,14 @@
 						frm.action = "/ezEmail/mailboxImportZip.do?folderPath="
 								+ encodeURIComponent('${url}') 
 								+ "&userkey=" + encodeURIComponent(userkey)
-								+ "&encryptPw=" + encryptPw;
+								+ "&encryptPw=" + encryptPw
+								+ "&tempId=" + path;
 						frm.submit();
 						
 		            } else if (obj.status == 'progress') {
 		            	ShowPercent(obj.percent);
-		            }            
+		            } 
+       
 		        };
 		        
 		        webSocket.onclose = function(event){
@@ -530,24 +553,30 @@
 	        }
 			
 	        // 유진-리소스확인
-	        function mailboxImportComplete(result, userkey) {
+	        function mailboxImportComplete(result, tempId, userkey) {
 
 	        	webSocket.close();
 				HiddenMailProgressNew();
 				
 				if (result == "NOTSUPPORT"){ // 암호화된 파일 지원하지 않음
-					alert("<spring:message code='ezEmail.kyj09' />");
+					alert("<spring:message code='ezEmail.kyj08' />");
 					document.importMailboxform.file1.value = "";
  					MailListRefresh(); 
 				}
 				
-				if (result == "NOT") { // 암호화된 파일이므로 옵션창 활성화
+				if (result == "NOT" && tempId == "NONE") {
 					mailImportOption_onClick();
+				}
+				
+				if (result == "NOT" && tempId != "NONE") { // 암호화된 파일이므로 옵션창 활성화
+					mailImportOption_onClick(tempId, userkey);
+					document.importMailboxform.file1.value = "";
 				}
 
 				if (result == "DIFF") { // 암호가 다름
 					alert('암호가 맞지 않습니다.'); // 보안메일 메세지 사용예정
-					mailImportOption_onClick();
+					mailImportOption_onClick(tempId, userkey);
+					document.importMailboxform.file1.value = "";
 				}
 				
 				if (result == "ERROR") { // 에러발생
@@ -579,7 +608,16 @@
 			
 			function ShowPercent(data) {
 				$('#progressNum').text('');
-				$('#progressNum').text("<spring:message code='ezEmail.kyj01' /> : " + data + " %");
+				
+				if (data == "ing"){
+					$('#progressNum').text("파일 업로드 중...");
+				} else if (data == "done") {
+					$('#progressNum').text("암호화 된 파일 복호화 중...");
+				} else if (data == enc) {
+					$('#progressNum').text("내보내기 마무리 작업중...");
+				} else {
+					$('#progressNum').text("<spring:message code='ezEmail.kyj01' /> : " + data + " %");
+				} 
 			}
 			
 			function HiddenMailProgressNew() {

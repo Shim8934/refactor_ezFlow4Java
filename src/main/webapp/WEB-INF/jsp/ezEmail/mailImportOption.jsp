@@ -22,6 +22,8 @@ var RetValue;
 var ReturnFunction;
 var CancelFunction; 
 var isDivPopUp = false;
+var tempId = "${tempId}"; 
+var userkey = "${userkey}";
 
 window.onload = function(){
 	showTobLiftDim();
@@ -41,6 +43,7 @@ window.onload = function(){
 }
 
 function confirm(){
+	
 	if (document.getElementById("securePassword").value.trim() == "") {
 		alert('암호가 입력되지 않았습니다. 암호를 입력해주세요.'); // 보안메일 메세지 사용예정
 		return;
@@ -49,8 +52,9 @@ function confirm(){
 		CancelFunction();
 		hideTopLeftDim();
 		hideMailProgressNew();
-		window.parent.mailbox_attach_import(pwd);
+		window.parent.mailbox_attach_import(pwd, tempId, userkey);
 	}
+	
 }
 function cancel() {
 	parent.document.importMailboxform.file1.value = "";
@@ -83,15 +87,14 @@ function showTobLiftDim(){
 </head>
 <body style="overflow: hidden;" class="popup">
 	<form name="optionForm">
-		<h1><spring:message code="ezEmail.kyj05"/><spring:message code="ezEmail.kyj06"/></h1>
-		<span>▒ <spring:message code="ezEmail.kyj08"/> </span><br>
-		<span>▒ 암호를 입력해 주세요.</span><br> <!-- 보안메일 메세지 사용예정 -->
+		<h1><spring:message code="ezEmail.kyj05"/></h1>
+		<span>▒ <spring:message code="ezEmail.kyj07"/> 암호를 입력해 주세요. </span><br> <!-- 보안메일 메세지 사용예정 -->
 		<br>
 		
 		<table style="width:100%;" class="content">
 		  <tr>
 		    <th>암호</th> <!-- 보안메일 메세지 사용예정 -->
-		    <td><input type="password" id="securePassword" maxlength="20" />
+		    <td><input type="password" id="securePassword" maxlength="50" />
 		    </td>
 		  </tr>
 		</table>
