@@ -575,10 +575,26 @@
 			function update_status() {
 				if (personid == userid || creatorid == userid) {
 					//Baonk added				
-					var selctDate = new Date(date + " 00:00:00");
-					var curDate = new Date();
+					//var selctDate = new Date(date + " 00:00:00");
+					//var curDate = new Date();
+
+					var newDate = new Date();
 					
-					if (selctDate.getTime() <= curDate.getTime()) {
+					var year = newDate.getFullYear();
+					var month = newDate.getMonth() + 1;
+					var day = newDate.getDate();
+					
+					if(month < 10) {
+						month = "0" + month;
+					}
+					
+					if(day < 10) {
+						day = "0" + day;
+					}
+					
+					var curDate = year + '-' + month + '-' + day; 
+
+					if (date <= curDate) {
 						DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&startDate=" + startdate);
 					}
 					else {
@@ -1548,7 +1564,7 @@
 						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
 							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
-							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:2px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;margin-top:1px;padding:7px;height: 29px;'></textarea></td>
+							<td class="pos1" style="padding-left:5px;padding-right:5px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;padding:7px;height: 29px;'></textarea></td>
 							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()"><spring:message code='ezTask.t96' /></span></a></td>
 							
 						</tr>
