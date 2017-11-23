@@ -1539,9 +1539,9 @@
 				}
 				else {
 			    	document.getElementById("sendBttn").disabled = false;
-			        element.style.height = "5px";
-			        element.style.height = (element.scrollHeight)+"px";
-			        window.scrollTo(0,document.body.scrollHeight);
+/* 			        element.style.height = "5px";
+			        element.style.height = (element.scrollHeight) + "px"; */
+			        window.scrollTo(0, document.body.scrollHeight);
 				}
 		    }
 		    
@@ -2488,11 +2488,11 @@
 					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
 				<div style="float:left; display:block; width:74%; height:45px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
-					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height:45px; line-height:45px; padding:0px; outline: none; border:none; resize:none;"  onkeyup="auto_grow(this)"></textarea>
+					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:45px; line-height: 15px; padding:0px; outline: none; border:none; resize:none;"  onkeyup="auto_grow(this)"></textarea>
 				</div>
 				<div style="position:absolute; top:9px; right:10px; display:block; width: 96px; height:45px; border:none; margin:0px">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
-						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer;  z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
+						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
 					</div>	
 					<button id="sendBttn" style="display:inline-block; width: 96px; height:45px; border:none; border-radius:5px; background:#004896; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
