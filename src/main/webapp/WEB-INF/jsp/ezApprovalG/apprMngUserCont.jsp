@@ -131,14 +131,15 @@
             treeNode.LoadFromID(nodeIdx);
 
             var ContID = treeNode.GetNodeData("DATA1");
+            var valData = repEscapePattern(treeNode.GetNodeData("VALUE"));
             if (CrossYN())
-                getContName(treeNode.GetNodeData("VALUE"), "MOD");
+                getContName(valData, "MOD");
             else {
                 var treeNode = new TreeNode();
                 treeNode.LoadFromID(nodeIdx);
 
                 var ContID = treeNode.GetNodeData("DATA1");
-                var ContName = getContName(treeNode.GetNodeData("VALUE"));
+                var ContName = valData;
                 if (ContName != "cancel") {
                     getContName_Complete(ContName, "MOD");
                 }
@@ -196,7 +197,8 @@
                     OpenInformationUI(OpinionContent, Del_Complete_MUST);
                 }
             } else {
-            	self.close();
+            	//self.close();
+            	DivPopUpHidden();
             }
         }
 
