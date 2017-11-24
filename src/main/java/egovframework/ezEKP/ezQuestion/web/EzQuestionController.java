@@ -4033,15 +4033,29 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstAttachVO.setQuestionNo(Integer.parseInt(arrLine[0]));
 					qstAttachVO.setAnswerNo(0);
 					
-					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
+//					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
+//					
+//					Document xmlTemp = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+//					
+//					if(qstAttach.size() > 0) {
+//						for(int k=0; k<qstAttach.size(); k++) {
+//							String rtv = commonUtil.getQueryResult(qstAttach.get(k));
+//							xmlTemp = commonUtil.convertStringToDocument(rtv);
+//						}
+//					}
+					
+					List<QstAttachVO> qstAttachList =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
 					
 					Document xmlTemp = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+					StringBuilder xmlBuilder = new StringBuilder("<DATA>");
 					
-					if(qstAttach.size() > 0) {
-						for(int k=0; k<qstAttach.size(); k++) {
-							String rtv = commonUtil.getQueryResult(qstAttach.get(k));
-							xmlTemp = commonUtil.convertStringToDocument(rtv);
+					if(!qstAttachList.isEmpty()) {
+						for(QstAttachVO qstAttach : qstAttachList) {
+							xmlBuilder.append(commonUtil.getQueryResult(qstAttach));
 						}
+						xmlBuilder.append("</DATA>");
+						
+						xmlTemp = commonUtil.convertStringToDocument(xmlBuilder.toString());
 					}
 					
 					if(xmlTemp.getElementsByTagName("ATTACHNO").getLength() > 0) {

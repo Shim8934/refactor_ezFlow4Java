@@ -100,6 +100,8 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'approvalForDoc','N','결재조회관리자 권한 사용여부(Y/N)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseAnyoneEdit','NO','YES일 경우 부서/회사 주소록, 일정을 아무나 수정 가능.');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ApprTotalAttachLimit','50','전자결재 첨부파일 총용량 제한크기. 단위는 MB. 0일 경우 무제한.');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseEncryptZipForEmail','NO','메일 내보내기/가져오기 압축파일 암호화 사용유무 (YES인경우 사용)');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseMailBoxBackUp','NO','편지함 내보내기/가져오기 사용여부 (YES : 사용)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseTodoMemo','YES','Todo메모 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UserInfo_RelayG_Type','MHT','유통 중계문서 변환 양식 정의 : 사용하지 않는 경우는 빈 값("")으로 세팅함. 이 값이 MHT이면 MHT 접수기 사용. 이 값이 HWP이면 한글 접수기 사용');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_RECEIVEERR_FILE_MOVE_RECEIVETEMP','YES','문서유통 xml 파일들 접수처 할 여부');

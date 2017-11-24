@@ -42,6 +42,8 @@
 	            			TypeDetermination(parseInt(pAnswerType) + 1);
 	        		}
 	    		}
+	    		
+	    		td_Question.innerHTML = decodeURIComponent("${questionAddVO.pQstAttach}");
 			}
 
 			function AttachSetting() {
