@@ -1006,6 +1006,14 @@
 											</td>
 										</tr>
 									</c:if>
+									<c:if test="${mode == '2' }">
+										<tr>
+											<th><spring:message code='ezTask.t1701' /></th>
+											<td colspan="3" style="height: 40px;">
+												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+											</td>
+										</tr>
+									</c:if>
 								</table>
 							</td>
 						</tr>

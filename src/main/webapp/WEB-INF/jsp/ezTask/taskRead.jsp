@@ -1073,6 +1073,28 @@
 			function RefreshView() {
 				window.opener.RefreshView();
 			}
+			
+			function getTaskAttachList() {
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/getTaskAttachList.do",
+					dataType : "json",
+					data : {
+							taskID : taskid,
+					},
+					success : function(result) {
+						hasTaskAttach = result.hasTaskAttach;
+						taskAttachList = result.taskAttachList;
+						
+						if (hasTaskAttach == 'Y') {
+							document.getElementById('attachedfileDIV').innerHTML = taskAttachList
+				    	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				})
+			}
 
 			function getTaskWorkAttachList() {
 				$.ajax({

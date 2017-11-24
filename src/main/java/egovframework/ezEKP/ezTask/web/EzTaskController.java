@@ -778,11 +778,44 @@ logger.debug("model in taskReadJson: " + model);
 	}
 	
 	/**
-	 * 첨부파일 목록조회
+	 * taskWork 첨부파일 목록조회
+	 */
+	@RequestMapping(value = "/ezTask/getTaskAttachList.do")
+	public String getTaskAttachList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getTaskAttachList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
+		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
+		
+		String taskID = request.getParameter("taskID");
+		
+		//업무정보 조회
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		
+		//taskWork첨부파일목록조회
+		String taskAttachList = null;
+		if (taskInfoVO.getPersonAttach().equals("Y")) {
+			taskAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "1", tenantID);
+		}
+		
+		model.addAttribute("hasTaskAttach", taskInfoVO.getHasAttach());
+		model.addAttribute("taskAttachList", taskAttachList);
+		
+		logger.debug("getTaskAttachList ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * taskWork 첨부파일 목록조회
 	 */
 	@RequestMapping(value = "/ezTask/getTaskWorkAttachList.do")
-	public String getAttachList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getAttachList started.");
+	public String getTaskWorkAttachList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getTaskWorkAttachList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset = userInfo.getOffset();
@@ -805,7 +838,7 @@ logger.debug("model in taskReadJson: " + model);
 		model.addAttribute("hasTaskWorkAttach", taskInfoVO.getPersonAttach());
 		model.addAttribute("taskWorkAttachList", taskWorkAttachList);
 		
-		logger.debug("getAttachList ended.");
+		logger.debug("getTaskWorkAttachList ended.");
 		
 		return "json";
 	}
