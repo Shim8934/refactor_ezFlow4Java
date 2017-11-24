@@ -26,14 +26,15 @@ var tempId = "${tempId}";
 var userkey = "${userkey}";
 
 window.onload = function(){
-	showTobLiftDim();
-	showMailProgressNew();
+	 showMailProgressNew();
+	 showTobLeftDim();
+	
 	 var rgParams;
-     try {
+     
+	 try {
          CancelFunction = parent.importOption_cross_dialogArguments[2];
          isDivPopUp = true;
          rgParams = RetValue;
-         
      } catch (e) {
          try {
              CancelFunction = opener.importOption_cross_dialogArguments[2];
@@ -79,7 +80,7 @@ function hideTopLeftDim(){
 	parent.parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 }
 
-function showTobLiftDim(){
+function showTobLeftDim(){
 	parent.parent.document.getElementById("left").contentWindow.showProgress();
 	parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 }

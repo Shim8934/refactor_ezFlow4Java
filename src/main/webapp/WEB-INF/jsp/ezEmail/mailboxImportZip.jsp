@@ -11,9 +11,9 @@
 				var result = "${result}";
 				var userkey = "${userkey}";
 				var tempId = "${tempId}";
-				var useEncryptZipForEMail = "${useEncryptZipForEMail}";
+				var useEncryptZipForEmail = "${useEncryptZipForEmail}";
 				
-				if (result == "NOT" && useEncryptZipForEMail == "NO") {
+				if (result == "NOT" && useEncryptZipForEmail == "NO") {
 					result = "NOTSUPPORT";
 				}
 				

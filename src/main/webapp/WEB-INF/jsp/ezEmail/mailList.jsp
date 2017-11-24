@@ -83,8 +83,11 @@
 		    var pclose = "close";
 		    var protocol = window.location.protocol;
 		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
-		    var useEncryptZipForEMail = "${useEncryptZipForEMail}";
+		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
+			var useMailBoxBackUp = "${useMailBoxBackUp}";
+			var uploading = "uploading";
 		    var enc = "encrypt";
+		    var dec = "decrypt";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -392,7 +395,7 @@
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
 		    	var exportType = "MAILBOX";
-		    	if (useEncryptZipForEMail == "YES") {
+		    	if (useEncryptZipForEmail == "YES") {
 		    			mailExportOption_onClick(exportType);
 		    	} else {
 			    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
@@ -433,7 +436,10 @@
 								} else if (result == "CANCEL") {
 									console.log('User Cancel');
 								} else {
-									ShowPercent(enc);
+									
+									if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
+										ShowPercent(enc);
+									}
 									
 									var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
 											+ encodeURIComponent('${folderName}')
@@ -449,8 +455,8 @@
 		            } else if (obj.status == 'progress') {
 		            	ShowPercent(obj.percent);
 		            } else if (obj.status == 'end') {
-		            	HiddenMailProgressNew();
 		            	webSocket.close();
+		            	HiddenMailProgressNew();
 		            }
 		        };
 		        
@@ -506,13 +512,14 @@
 			
 		        webSocket.onmessage = function(message){
 		        	
+		            var curr = "";
 		        	var obj = JSON.parse(message.data);
 		            ShowMailProgressNew();
 		            
 		            if (path != ""){
-		            	ShowPercent("done");
+		            	ShowPercent(dec);
 		            } else {
-			            ShowPercent("ing");
+			            ShowPercent(uploading);
 		            }
 		            
 		        	if (obj.status == "transferStart") {
@@ -526,7 +533,7 @@
 						frm.submit();
 						
 		            } else if (obj.status == 'progress') {
-		            	ShowPercent(obj.percent);
+			            ShowPercent(obj.percent);
 		            } 
        
 		        };
@@ -547,8 +554,6 @@
 	            sendObj.userkey = encodeURIComponent(userkey);
 	            
 	            var json = JSON.stringify(sendObj);
-	            console.log(json);
-	            
 	            webSocket.send(json);
 	        }
 			
@@ -564,7 +569,7 @@
  					MailListRefresh(); 
 				}
 				
-				if (result == "NOT" && tempId == "NONE") {
+				if (result == "NOT" && tempId == "NONE") { // 암호화된 파일이므로 옵션창 활성화
 					mailImportOption_onClick();
 				}
 				
@@ -609,12 +614,12 @@
 			function ShowPercent(data) {
 				$('#progressNum').text('');
 				
-				if (data == "ing"){
-					$('#progressNum').text("파일 업로드 중...");
-				} else if (data == "done") {
-					$('#progressNum').text("암호화 된 파일 복호화 중...");
+				if (data == uploading){ // 리소스 정리예정
+					$('#progressNum').text("<spring:message code='ezEmail.kyj10' />");
+				} else if (data == dec) {
+					$('#progressNum').text("<spring:message code='ezEmail.kyj11' />");
 				} else if (data == enc) {
-					$('#progressNum').text("내보내기 마무리 작업중...");
+					$('#progressNum').text("<spring:message code='ezEmail.kyj12' />");
 				} else {
 					$('#progressNum').text("<spring:message code='ezEmail.kyj01' /> : " + data + " %");
 				} 
@@ -686,9 +691,11 @@
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
 		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-		  <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-		  <li id="mailbox_export"><span onClick="mailbox_export()"><spring:message code="ezEmail.lhm31" /></span></li>
-		  <li id="mailbox_import"><span><label for="file1" style="cursor: pointer;"><spring:message code="ezEmail.lhm32" /></label></span></li>
+		  <c:if test="${ useMailBoxBackUp eq 'YES' }">
+		 	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+		  	<li id="mailbox_export"><span onClick="mailbox_export()"><spring:message code="ezEmail.lhm31" /></span></li>
+		  	<li id="mailbox_import"><span><label for="file1" style="cursor: pointer;"><spring:message code="ezEmail.lhm32" /></label></span></li>
+		  </c:if>
 		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
           </ul>
         </div>

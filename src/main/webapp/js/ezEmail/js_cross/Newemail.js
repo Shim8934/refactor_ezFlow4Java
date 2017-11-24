@@ -1197,7 +1197,7 @@ function mail_export(pwd) {
     } else { // 여러개의 메일을 다운로드 할 경우
     	var type = "MAIL";
     	
-    	if (useEncryptZipForEMail == "YES") { // 암호화 config 인 경우
+    	if (useEncryptZipForEmail == "YES") { // 암호화 config 인 경우
     		mailExportOption_onClick(type);
     	} else { // 암호 적용 안할 경우
     		mailExport_start();

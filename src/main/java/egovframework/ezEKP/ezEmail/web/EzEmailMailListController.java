@@ -113,11 +113,17 @@ public class EzEmailMailListController {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
-		String useEncryptZipForEMail = ezCommonService.getTenantConfig("UseEncryptZipForEMail", userInfo.getTenantId());
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
 		
-		if (useEncryptZipForEMail.equals("")) {
-			useEncryptZipForEMail = "NO";
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
 		}
+		
+		if (useMailBoxBackUp.equals("")) {
+			useMailBoxBackUp = "NO";
+		}
+		
 		if (dispname != null) {
 			folderName = dispname;
 		}
@@ -156,11 +162,13 @@ public class EzEmailMailListController {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("importanceColor", importanceColor);
-		model.addAttribute("useEncryptZipForEMail", useEncryptZipForEMail);
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
-				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEMail=" + useEncryptZipForEMail);
+				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		

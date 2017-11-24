@@ -884,7 +884,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String retryPathId = request.getParameter("tempId");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useEncryptZipForEMail = ezCommonService.getTenantConfig("UseEncryptZipForEMail", userInfo.getTenantId());
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
 		String tmpFile_makeFolder = "";
 		List<MultipartFile> multiFile = request.getFiles("file1");
 		File tmpFile = null;
@@ -912,7 +912,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			// 2017.11.21 코린도 - 암호화된 ZIP 파일 가져오기
-			if (useEncryptZipForEMail.equals("YES") && !encryptPw.equals("") && !retryPathId.equals("NONE")) {
+			if (useEncryptZipForEmail.equals("YES") && !encryptPw.equals("") && !retryPathId.equals("NONE")) {
 
 				File getFile = new File(pDirTempPath + retryPathId + ".zip");
 				
@@ -1059,7 +1059,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			} else if (e.getMessage().equals("encrypted ZIP entry not supported")) {
 				returnValue = "NOT";
 				
-				if (useEncryptZipForEMail.equals("YES")) { // 암호화를 사용하면
+				if (useEncryptZipForEmail.equals("YES")) { // 암호화를 사용하면
 					String guid = UUID.randomUUID().toString(); // 새 id를 만들어서
 					File file = new File(pDirTempPath + guid + ".zip"); // 파일을 생성하고
 					multiFile.get(0).transferTo(file); // 멀티파일을 파일로 만들어준다. 
@@ -1094,7 +1094,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("result", returnValue);
 		model.addAttribute("userkey", userkey);
 		model.addAttribute("tempId", returnTempId);
-		model.addAttribute("useEncryptZipForEMail", useEncryptZipForEMail);
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
 		
 		logger.debug("mailboxImportZip ended.");
 		return "ezEmail/mailboxImportZip";
@@ -1191,7 +1191,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		boolean sessionFlag = true;
 		String userkey = request.getParameter("userkey");
 		String sessionKeyName = "percent";
-		JSONObject jsonObj = new JSONObject();
+		
 		
 		// 유저정보를 키로 가지고있는 세션맵에서 메세지 보낼 세션정보를 가지고온다.
 		if (userkey != null) {
@@ -1282,20 +1282,19 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						
 						long currTime = System.currentTimeMillis();
 						int interval = (int) (currTime - lastTime);
-						int percent = (int)((double) currCount / (double) (messageCount -1) * 100.0 );
+						int percent = (int)((double) currCount / (double) (messageCount - 1) * 100.0 );
 						
-						jsonObj.clear();
+						JSONObject jsonObj = new JSONObject();
 						jsonObj.put("status", "progress"); // 현재 퍼센트
 						jsonObj.put("userkey", userkey);
 						
 						if (interval >= 2000) {
 							
 							jsonObj.put(sessionKeyName, percent); // 현재 퍼센트
-							String json1 = jsonObj.toJSONString();
-
+							String jsonStr = jsonObj.toJSONString();
 							try {
 								
-								handleMessage(json1, session);
+								handleMessage(jsonStr, session);
 							
 							} catch (IllegalStateException e) {
 								
@@ -1401,11 +1400,17 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		Session session = sessionMap.get(userkey);
 		JSONObject jsonObj = new JSONObject();
 		
+		jsonObj.put("status", "end");
+		jsonObj.put("userkey", userkey);
+		String jsonStr = jsonObj.toJSONString();
+		
 		// 2017.11.21 코린도 - 암호화된 ZIP 파일 내보내기
 		if (!encryptPw.equals("")) {
 			
 			String zipFileName = encryptZipFile(filePath, folderPath, encryptPw);
+			handleMessage(jsonStr, session);
 			downFile(request, response, zipFileName, userAccount + "_" + folderName + ".zip");
+			
 			File secureFile = new File(zipFileName);
 			
 			if (secureFile.delete()) {
@@ -1413,13 +1418,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 		} else {
+			handleMessage(jsonStr, session);
 			downFile(request, response, filePath, userAccount + "_" + folderName + ".zip");
 		}
-		
-		jsonObj.put("status", "end");
-		jsonObj.put("userkey", userkey);
-		String jsonStr = jsonObj.toJSONString();
-		handleMessage(jsonStr, session);
 		
 		File zipFile = new File(filePath);
 		
@@ -1510,9 +1511,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			sendObj.put("status", "transferStart");
 			sendObj.put("userkey", userkey);
 			jsonStr = sendObj.toJSONString();
-		} 
+			session.getBasicRemote().sendText(jsonStr);
+		} else if (recObj.get("status").equals("progress") || recObj.get("status").equals("end")) {
+			session.getBasicRemote().sendText(jsonStr);
+		}
 		
-		session.getBasicRemote().sendText(jsonStr);
     }
 
     /**
@@ -1671,6 +1674,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				for (File file : files) {
 					file.delete();
 				}
+				
+				dir.delete();
 				
 				File dirFile = new File(folderPath + "_secure");
 				dirFile.delete();

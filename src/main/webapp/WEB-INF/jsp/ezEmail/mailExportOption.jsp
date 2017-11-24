@@ -38,7 +38,7 @@ window.onload = function(){
      var useEncrytZipFileChk = document.getElementById("useEncrytZipFileChk").checked = true;
      
      try {
-    	 showTobLiftDim();
+    	 showTobLeftDim();
     	 showMailProgressNew();
 		 checkUsePassword(useEncrytZipFileChk); 
          CancelFunction = parent.exportOption_cross_dialogArguments[2];
@@ -174,7 +174,7 @@ function hideTopLeftDim(){
 	parent.parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 }
 
-function showTobLiftDim(){
+function showTobLeftDim(){
 	parent.parent.document.getElementById("left").contentWindow.showProgress();
 	parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 }

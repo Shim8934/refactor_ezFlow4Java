@@ -3422,6 +3422,7 @@ function deleteMailUser(email, iWhich) {
 
 
 var exportOption_cross_dialogArguments = new Array();
+
 function mailExportOption_onClick(type) {
     if (!CrossYN()) {
         EzHTTPTrans.style.display = "none";
@@ -3436,6 +3437,7 @@ function mailExportOption_onClick(type) {
 function mailExportOption_onClick_Complete(m_rgParams4PostOption) { }
 
 var importOption_cross_dialogArguments = new Array();
+
 function mailImportOption_onClick(tempId, userkey) {
     if (!CrossYN()) {
         EzHTTPTrans.style.display = "none";
@@ -3445,8 +3447,7 @@ function mailImportOption_onClick(tempId, userkey) {
     importOption_cross_dialogArguments[1] = mailImportOption_onClick_Complete;
     importOption_cross_dialogArguments[2] = DivPopUpHidden;
     
-    DivPopUpShow(460, 190, "/ezEmail/mailImportOption.do?tempId=" + tempId
-    							 						+ "&userkey=" + userkey);
+    DivPopUpShow(460, 190, "/ezEmail/mailImportOption.do?tempId=" + tempId + "&userkey=" + userkey);
 }
 function mailImportOption_onClick_Complete(m_rgParams4PostOption) { }
 
