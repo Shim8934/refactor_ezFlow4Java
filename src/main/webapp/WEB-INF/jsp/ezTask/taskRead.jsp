@@ -829,7 +829,7 @@
 			        tr.setAttribute("startdate", startdate);
 			        //setNodeText(tr.cells[1], startdate);
 			        tr.cells[1].innerHTML = "<u>" + startdate + "</u>";
-			        (function(sd) { tr.cells[1].onclick = function () {showResult(sd);}})(startdate);		        			        
+			        (function(sd) { tr.cells[1].onclick = function () {rowClicked(sd);}})(startdate);		        			        
 			        tr.cells[2].innerHTML = enddate;	
 			        
 			        //Process complete rate
@@ -853,6 +853,11 @@
 				$(".progressbar").css("display", "inline-table");
 				$(".progressbar").css("margin-left", "15px");
 				
+			}
+			
+			function rowClicked(day) {
+				showResult(day);
+				update_status();
 			}
 			
 			/* progressBar 조회 */
