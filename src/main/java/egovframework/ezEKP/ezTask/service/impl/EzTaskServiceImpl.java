@@ -1944,10 +1944,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		while (flag == 0) {
 			if (result.size() > 0) {
 				for (String d: result.keySet()) {
+			        Calendar calendar2 = Calendar.getInstance();  
+			        calendar2.setTime(startDate);
+					
 					Date tskD = nsdf.parse(d); 
 			        Calendar calendar1 = Calendar.getInstance();  
 			        calendar1.setTime(tskD); 			        
-			        if (calendar1.compareTo(calendar) >= 0){
+			        if (calendar1.compareTo(calendar2) >= 0){
 			        	flag = 1;
 			        	break;
 			        }			        
