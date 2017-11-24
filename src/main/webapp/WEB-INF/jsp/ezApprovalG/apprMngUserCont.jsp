@@ -131,9 +131,8 @@
             treeNode.LoadFromID(nodeIdx);
 
             var ContID = treeNode.GetNodeData("DATA1");
-            var valData = repEscapePattern(treeNode.GetNodeData("VALUE"));
             if (CrossYN())
-                getContName(valData, "MOD");
+                getContName(treeNode.GetNodeData("VALUE"), "MOD");
             else {
                 var treeNode = new TreeNode();
                 treeNode.LoadFromID(nodeIdx);
