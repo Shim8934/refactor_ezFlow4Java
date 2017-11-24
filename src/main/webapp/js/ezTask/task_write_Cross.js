@@ -650,6 +650,7 @@ function save_task() {
 	        
 	        if (mode == "1") {
 	        	parent.RefreshView();
+	        	parent.location.reload();
 	        } else if (mode == "2") {
 	        	parent.load_bodyhtml();
 				parent.getTaskAttachList();
