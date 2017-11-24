@@ -1954,6 +1954,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				}
 			}
 			
+			if (flag == 1) {
+				break;
+			}
+			
 			//Move to next month
 			calendar.add(Calendar.MONTH, 1);
 			date = nsdf.format(calendar.getTime());
