@@ -519,7 +519,7 @@
 					</select>
 					<select name="search_class" id="search_class" style="WIDTH: 80px;vertical-align:middle">
 						<option  value="" selected ><spring:message code='ezTask.t240' /></option>
-						<option  value="1" ><spring:message code='ezTask.t97' /></option>
+						<%-- <option  value="1" ><spring:message code='ezTask.t97' /></option> --%>
 						<option  value="2"><spring:message code='ezTask.t98' /></option>
 						<option  value="3"><spring:message code='ezTask.t9001' /></option>
 						<option  value="4"><spring:message code='ezTask.t100' /></option>

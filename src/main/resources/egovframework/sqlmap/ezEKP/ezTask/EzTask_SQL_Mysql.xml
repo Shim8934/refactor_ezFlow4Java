@@ -259,7 +259,7 @@
        	
        	<isEqual property="searchClass" compareValue="2" prepend="AND">
         	<![CDATA[
-        			taskstatus = 2
+        			(taskstatus = 1 OR taskstatus = 2)
         	]]>
        	</isEqual>
        	
