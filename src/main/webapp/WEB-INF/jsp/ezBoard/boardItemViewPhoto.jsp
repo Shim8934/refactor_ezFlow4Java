@@ -1209,7 +1209,7 @@
 		         <table class="content" style="border:0px">
 		            <tr>
 		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-		              <td style="width:100px; text-overflow:ellipsis; white-space:nowrap" id="WriteUserNM"><c:out value="${boardItem.writerName}"/></td>
+		              <td style="width:100px; text-overflow:ellipsis; white-space:nowrap; cursor:pointer;" id="WriteUserNM" onclick='OpenUserInfo("${boardItem.writerID}")'><c:out value="${boardItem.writerName}"/></td>
 		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t289'/></th>
 		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM"><c:out value="${boardItem.writerDeptName}"/></td>
 		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t290'/></th>
