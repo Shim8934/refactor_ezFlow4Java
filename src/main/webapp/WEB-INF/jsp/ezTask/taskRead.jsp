@@ -1649,7 +1649,7 @@
 							<th><spring:message code='ezTask.t2012' /></th>
 							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
 							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>
-							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()"><spring:message code='ezTask.t96' /></span></a></td>
+							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a></td>
 							
 						</tr>
 					</table>
