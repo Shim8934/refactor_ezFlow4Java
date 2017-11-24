@@ -15,6 +15,13 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		
+		<style>
+			select {
+				height : 20px;
+			}
+		</style>
+		
 		<script type="text/javascript">
 		
 		    var ReturnFunction;
