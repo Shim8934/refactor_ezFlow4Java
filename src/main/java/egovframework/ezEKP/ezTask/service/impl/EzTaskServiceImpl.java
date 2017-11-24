@@ -1529,8 +1529,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 			int count = 0;
 			boolean isFirst = true;
+			String newEndDate = "";
 			
-			if (info[0].equals("0")) {						
+			if (info[0].equals("0")) {				
 				String endD = vo.getEndDate();
 				String startD = vo.getStartDate();
 				
@@ -1560,6 +1561,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							}
 	
 							if (generated) {
+								newEndDate = nsdf.format(date_cal.getTime()) + " 23:59:59";
 								count++;							
 							}
 							
@@ -1583,6 +1585,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							}
 							
 							if (generated) {
+								newEndDate = nsdf.format(date_cal.getTime()) + " 23:59:59";
 								count++;
 							}
 							
@@ -1640,6 +1643,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							isFirst = false;
 	
 							if (generated) {
+								newEndDate = nsdf.format(newCal.getTime()) + " 23:59:59";
 								count++;
 							}
 							
@@ -1698,6 +1702,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							isFirst = false;
 							
 							if (generated) {
+								newEndDate = nsdf.format(newCal.getTime()) + " 23:59:59";
 								count++;
 							}
 							
@@ -1709,13 +1714,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				
 				/*----------------------*/									
 				vo.setTotalRep(count);	
-				
+				vo.setEndDate(newEndDate);
 			}
 			else {		        
 		        int maxCount = Integer.parseInt(info[0]);
 				Calendar date_cal = Calendar.getInstance();
-				date_cal.setTime(sdf.parse(vo.getStartDate()));	
-				String newEndDate = "";
+				date_cal.setTime(sdf.parse(vo.getStartDate()));			
 
 				switch (info[2]) {
 					case "0" : // 매일
