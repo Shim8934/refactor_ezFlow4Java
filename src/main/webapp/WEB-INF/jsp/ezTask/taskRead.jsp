@@ -78,10 +78,12 @@
 		    var dateList = "${dateList}";
 		    var completeRateList = "${completeRateList}";
 		    var statusList = "${statusList}";
+		    var repeatCntList = "${repeatCntList}";
 		    var dateArray = null;
 		    var completeRateArray = null;
 		    var statusArray = null;
-		    var backupCount = "${repeatCount}";
+		    var repeatCntArray = null;
+		    //var backupCount = "${repeatCount}";
 		    var selecttab = "${tab}";
 		    
 			function taskReadJson() {
@@ -169,13 +171,21 @@
 		    	if (statusList !== "") {
 		    		statusArray = statusList.split(",");
 		    	}
+		    	
+		    	if (repeatCntList !== "") {
+		    		repeatCntArray = repeatCntList.split(",");
+		    	}    			    	    	
 		    }
 		    
-		    function updateStatusOnce(newStatus) {
-		    	var date = new Date();
+		    function updateStatusOnce(newStatus, realDate) {
+/* 		    	var date = new Date();
 		    	var year = date.getFullYear();
 		    	var month = date.getMonth() + 1;		    	
-		    	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15";
+		    	var firstDayOfMonth = year + "-" + ("0" + month).slice(-2) + "-15"; */
+		    	
+		    	var year = realDate.split("-")[0];
+		    	var month = realDate.split("-")[1];
+		    	var firstDayOfMonth = year + "-" + month + "-15";
 		    	updateData(firstDayOfMonth);
 		    }
 		    
@@ -822,12 +832,11 @@
 			        var startdate = dateArray[i];
 			        var enddate = startdate;
 			        var span = document.createElement("SPAN");
-			        //span.innerHTML += completeRateArray[i] + "%";
-			        span.innerHTML += parseInt(backupCount + "") + i;
+			        
+			        span.innerHTML += parseInt(repeatCntArray[i] + "");
 			        tr.cells[0].appendChild(span);
 
-			        tr.setAttribute("startdate", startdate);
-			        //setNodeText(tr.cells[1], startdate);
+			        tr.setAttribute("startdate", startdate);			        
 			        tr.cells[1].innerHTML = "<u>" + startdate + "</u>";
 			        (function(sd) { tr.cells[1].onclick = function () {rowClicked(sd);}})(startdate);		        			        
 			        tr.cells[2].innerHTML = enddate;	
@@ -1111,13 +1120,13 @@
 						var list = result.dateList;
 						var rList = result.rateList;
 						var sList = result.statusList;
+						var repList = result.repeatCntList;
 						
-						if (list.length != 0) {
+						if (list.length != 0) {							
     						dateArray = [];
     						completeRateArray = [];
-    						statusArray= [];
-    						repeatCount = parseInt(result.orderNum, 10);
-    						backupCount = repeatCount;
+    						statusArray = [];
+    						repeatCntArray = []; 
     						
     						list.forEach(function(strDate, index) {
     							dateArray.push(strDate);			    							
@@ -1130,6 +1139,11 @@
     						sList.forEach(function(strStatus, index) {
     							statusArray.push(strStatus);			    							
     						});	
+    						
+    						repList.forEach(function(strRepeatCnt, index) {
+    							repeatCntArray.push(strRepeatCnt);			    							
+    						});	
+    						
     						//showResult(dateText, repeatCount);
     						renderTable();
 						}
@@ -1241,11 +1255,8 @@
 						taskID	    : taskid,
 						currentDate : changeDate												
 					},
-					success : function(xml) {					
-						document.getElementById("prog1").innerHTML = changeDate + "(" + repeatCount + "회차)";
-						document.getElementById("prog2").innerHTML = changeDate;
-						document.getElementById("prog3").innerHTML = changeDate;
-						repeatCount = backupCount;
+					success : function(xml) {				
+						//repeatCount = backupCount;
 						date = changeDate;
 						renderPage(xml);
 					},
@@ -1263,6 +1274,11 @@
 				personContentpath = SelectSingleNodeValue(node, "PERSONALCONTENTPATH");
 				completerate = SelectSingleNodeValue(node, "COMPLETERATE");
 				taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");	
+				repeatCount = SelectSingleNodeValue(node, "REPEATCOUNT");
+				
+				document.getElementById("prog1").innerHTML = date + "(" + repeatCount + "회차)";
+				document.getElementById("prog2").innerHTML = date;
+				document.getElementById("prog3").innerHTML = date;
 				
 				/*****************************/
 /* 				if (dateList !== "") {
@@ -1333,21 +1349,20 @@
 				for (var i = 0; i < dateArray.length; i++) {					
 					if (dateArray[i] ==  dateText) {
 						test = 1;
-						repeatCount = parseInt(repeatCount, 10) + i;						
+						//repeatCount = parseInt(repeatCount, 10) + i;						
 						break;
 					}
 				}						
 				
 				if (test == 0) {
 					dateArray = dateList.split(",");
-					repeatCount = backupCount;
+					//repeatCount = backupCount;
 					alert("<spring:message code='ezTask.t200912' />");
 					$("#Sdatepicker").datepicker("setDate", date);
 				}
 				else {
 					dayOnMouseClick(dateText);
-				}
-				
+				}				
 			}
 						
 		</script>

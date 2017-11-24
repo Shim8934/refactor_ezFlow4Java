@@ -158,7 +158,7 @@
 						parent.initProgressBar(taskstatus, $("#completeRate").val());
 						
 						if(tasktype == "4" || tasktype == "5" || tasktype == "6") {
-							parent.updateStatusOnce(taskstatus);
+							parent.updateStatusOnce(taskstatus, realDate);
 						}
 						
 						parent.RefreshView();

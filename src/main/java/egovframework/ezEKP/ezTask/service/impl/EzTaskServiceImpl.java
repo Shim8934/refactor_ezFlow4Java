@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -1189,10 +1190,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public List<String> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception {
+	public Map<String, Integer> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception {
 		logger.debug("getDatesOfRepTask started.");
-		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate);
-		String currentPos = "";
+		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate + " | Select Date: " + selectDate);
+		//String currentPos = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -1202,9 +1203,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 		
-		List<String> resultList = new ArrayList<String>();
+		//List<String> resultList = new ArrayList<String>();
 		List<String> rList = ezTaskDAO.getTaskRepeDelList(map);	
-		Map<String, Integer> mapDateAndRepeatCount = new HashMap<String, Integer>();
+		Map<String, Integer> mapDateAndRepeatCount = new LinkedHashMap<String, Integer>();
 		
 		String currentEndDate = vo.getEndDate();
 		String[] info = vo.getRepetition().split("\\|");
@@ -1264,7 +1265,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							//row 추가
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);								
-								resultList.add(calcuDate);								
+								//resultList.add(calcuDate);								
 								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
@@ -1302,7 +1303,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
 								//resultList.add(rVo.getStartDate().substring(0, 10));
-								resultList.add(calcuDate);								
+								//resultList.add(calcuDate);								
 								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
@@ -1372,7 +1373,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
 								//resultList.add(rVo.getStartDate().substring(0, 10));
-								resultList.add(calcuDate);								
+								//resultList.add(calcuDate);								
 								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
@@ -1444,7 +1445,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							if (!rList.contains(calcuDate)) {
 								//TaskInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
 								//resultList.add(rVo.getStartDate().substring(0, 10));
-								resultList.add(calcuDate);								
+								//resultList.add(calcuDate);								
 								mapDateAndRepeatCount.put(calcuDate, count);
 							}
 						}
@@ -1455,25 +1456,26 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				}						
 			break;	
 		}
-		
-		if (resultList.size() == 0) {
+/*		
+		if (resultList.size() == 0) {			
 			currentPos = Integer.toString(-1);					
 		}
-		else {
-			if (!selectDate.equals("") && resultList.contains(selectDate)) {
-				currentPos = Integer.toString(mapDateAndRepeatCount.get(selectDate));
+		else {			
+			if (!selectDate.equals("") && resultList.contains(selectDate)) {				
+				currentPos = Integer.toString(mapDateAndRepeatCount.get(selectDate));				
 			}
-			else {
+			else {				
 				currentPos = Integer.toString(mapDateAndRepeatCount.get(resultList.get(0)));	
 			}					
 		}
 		
 		resultList.add(currentPos);
-		return resultList;
+		return resultList;*/
+		return mapDateAndRepeatCount;
 	}
 
 	@Override
-	public void getRepTaskInfo(TaskInfoVO vo) throws Exception {		
+	public void setRepTaskInfo(TaskInfoVO vo) throws Exception {		
 		String[] info = vo.getRepetition().split("\\|");    				
 		if (info[0].equals("-1")) {						
 			vo.setTotalRep(-1);	
@@ -1871,4 +1873,40 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		int result = ezTaskDAO.getStatusOfRepTask(map);
 		return result;		
 	}
+
+	@Override
+	public Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO) throws Exception {		
+		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");		
+		
+		Date startDate = nsdf.parse(date); 
+        Calendar calendar = Calendar.getInstance();  
+        calendar.setTime(startDate); 
+        
+        calendar.add(Calendar.MONTH, 1);  
+        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+        calendar.add(Calendar.DATE, -1); 
+        String lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 
+        
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+		
+        Map<String, Integer> result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);	
+		
+		while (result.size() == 0) {
+			//Move to next month
+			calendar.add(Calendar.MONTH, 1);
+			date = nsdf.format(calendar.getTime());
+			firstDayOfMonth = date + " 00:00:00"; 				
+			calendar.add(Calendar.MONTH, 1); 
+	        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+	        calendar.add(Calendar.DATE, -1); 
+	        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
+	        result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);			
+			result.remove(result.size() - 1);
+			calendar.set(Calendar.DAY_OF_MONTH, 1);
+		}			
+		return result;
+	}
+	
+	
 }

@@ -1,12 +1,15 @@
 package egovframework.ezEKP.ezTask.web;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -25,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -134,8 +135,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
 		String completeRateList = "";
-		String statusList = "";
-		String orderNumber = "";
+		String statusList = "";	
+		String repeatCntList = "";
+		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
 
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
@@ -167,54 +169,76 @@ public class EzTaskController extends EgovFileMngUtil {
 		//baonk added
 		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {			
 			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date startDate = nsdf.parse(date); 
-	        Calendar calendar = Calendar.getInstance();  
-	        calendar.setTime(startDate); 
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String endDate = "";	
+			
+	        //Get user today time
+			String[] offsetArr = offset.split("\\|");				
+			nsdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+		    String utcTime = nsdf.format(new Date());	    		    
+			String todayText = utcTime + " 00:00:00";
+			Date today = sdf.parse(todayText); 
+	        Calendar calendar1 = Calendar.getInstance();  
+	        calendar1.setTime(today); 
 	        
-	        calendar.add(Calendar.MONTH, 1);  
-	        calendar.set(Calendar.DAY_OF_MONTH, 1);  
-	        calendar.add(Calendar.DATE, -1); 
-	        String lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 
-	        
-	        calendar.set(Calendar.DAY_OF_MONTH, 1);
-	        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
+			if (taskInfoVO.getTotalRep() != -1) {
+				endDate = taskInfoVO.getEndDate();
+				Date taskEndDate = sdf.parse(endDate); 
+		        Calendar calendar2 = Calendar.getInstance();  
+		        calendar2.setTime(taskEndDate);         
+		        
+		        if (calendar1.compareTo(calendar2) >= 0) {	        	
+		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
+		        	date = endDate.substring(0, 10);
+		        }
+		        else {
+		        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+		        	
+		        	for (String d: result.keySet()) {
+		        		Date dDate = sdf.parse(d + " 00:00:00"); 
+		    	        Calendar calendar3 = Calendar.getInstance();  
+		    	        calendar3.setTime(dDate); 
+		    	        
+		    	        if (calendar3.compareTo(calendar1) >= 0) {
+		    	        	date = d;
+		    	        	break;
+		    	        }
+		        	}
+		        }		        		        
+			}
+			else {				
+				result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+				
+	        	for (String d: result.keySet()) {
+	        		Date dDate = sdf.parse(d + " 00:00:00"); 
+	    	        Calendar calendar3 = Calendar.getInstance();  
+	    	        calendar3.setTime(dDate); 
+	    	        
+	    	        if (calendar3.compareTo(calendar1) >= 0) {
+	    	        	date = d;
+	    	        	break;
+	    	        }
+	        	}
+			}
 			
-			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
-			orderNumber = result.get(result.size() - 1);
-			result.remove(result.size() - 1);
-			
-			while (result.size() == 0) {
-				//Move to next month
-				calendar.add(Calendar.MONTH, 1);
-				date = nsdf.format(calendar.getTime());
-				firstDayOfMonth = date + " 00:00:00"; 				
-				calendar.add(Calendar.MONTH, 1); 
-		        calendar.set(Calendar.DAY_OF_MONTH, 1);  
-		        calendar.add(Calendar.DATE, -1); 
-		        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
-		        result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
-				orderNumber = result.get(result.size() - 1);
-				result.remove(result.size() - 1);
-				calendar.set(Calendar.DAY_OF_MONTH, 1);
-			}			
-			
-			if (!result.contains(date)) {			
-				date = result.get(0);
-			}			
-			
-			for (String test : result) {				
-				dateList += test + ",";
-				String covertDate = commonUtil.getDateStringInUTC(test + " 00:00:00", userInfo.getOffset(), true);
-				int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
+	        for (Map.Entry<String, Integer> entry : result.entrySet()) {
+	            String key = entry.getKey();
+	            Integer value = entry.getValue();	                    
+	            
+				dateList += key + ",";
+				String convertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);
+				int comRate = ezTaskService.selectCompletionOfRepTask(taskID, convertDate, tenantID);
 				completeRateList += Integer.toString(comRate) + ",";
 				
-				int status = ezTaskService.getStatusOfRepTask(taskID, covertDate, tenantID);
+				int status = ezTaskService.getStatusOfRepTask(taskID, convertDate, tenantID);
 				statusList += Integer.toString(status) + ",";
-			}
+				repeatCntList += value + ",";
+	        }
 			
 			dateList = dateList.substring(0, dateList.length() - 1);
 			completeRateList = completeRateList.substring(0, completeRateList.length() - 1);
 			statusList = statusList.substring(0, statusList.length() - 1);
+			repeatCntList = repeatCntList.substring(0, repeatCntList.length() - 1);
 			
 			String realStartDate = date + " 00:00:00";
 			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
@@ -222,9 +246,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			taskInfoVO.setTaskStatus(status);
 			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
 			taskInfoVO.setCompleteRate(completionPercentage);			
-			taskInfoVO.setRepeatCount(Integer.parseInt(orderNumber));
-
-			
+			taskInfoVO.setRepeatCount(result.get(date));			
 		}	
 		//end
 
@@ -248,7 +270,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
 		model.addAttribute("dateList", dateList);	
 		model.addAttribute("completeRateList", completeRateList);
-		model.addAttribute("statusList", statusList);		
+		model.addAttribute("statusList", statusList);	
+		model.addAttribute("repeatCntList", repeatCntList);
 		
 		return "/ezTask/taskRead";
 	}
@@ -276,7 +299,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무상세화면 조회 Json
 	 */
-	@RequestMapping(value = "/ezTask/taskReadJson.do")
+	/*@RequestMapping(value = "/ezTask/taskReadJson.do")
 	public String taskReadJson(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskRead started.");
 		
@@ -340,9 +363,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);
 	        String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
 			
-			List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
-			orderNumber = result.get(result.size() - 1);
-			result.remove(result.size() - 1);
+	        Map<String, Integer> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
 			
 			while (result.size() == 0) {
 				//Move to next month
@@ -354,8 +375,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		        calendar.add(Calendar.DATE, -1); 
 		        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
 		        result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);
-				orderNumber = result.get(result.size() - 1);
-				result.remove(result.size() - 1);
 				calendar.set(Calendar.DAY_OF_MONTH, 1);
 			}			
 			
@@ -411,10 +430,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeRateList", completeRateList);
 		model.addAttribute("statusList", statusList);
 		
-logger.debug("model in taskReadJson: " + model);		
+		logger.debug("model in taskReadJson: " + model);		
 		
 		return "json";
-	}
+	}*/
 	
 	@RequestMapping(value = "/ezTask/getRepTaskDateList.do")
 	public String getRepTaskDateList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -426,6 +445,8 @@ logger.debug("model in taskReadJson: " + model);
 		int tenantID = userInfo.getTenantId();
 		List<String> rateList = new ArrayList<String>();
 		List<String> statusList = new ArrayList<String>();
+		List<String> repeatCntList = new ArrayList<String>();
+		List<String> dateList = new ArrayList<String>();
 		
 		String taskID = request.getParameter("taskID");
 		String date = request.getParameter("currentDate");		
@@ -443,22 +464,25 @@ logger.debug("model in taskReadJson: " + model);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";  
 		
-		List<String> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, "", tenantID);
-		String orderNumber = result.get(result.size() - 1);
-		result.remove(result.size() - 1);
-		
-		for (String test: result) {
-			String covertDate = commonUtil.getDateStringInUTC(test + " 00:00:00", userInfo.getOffset(), true);
+        Map<String, Integer> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, "", tenantID);
+        
+        for (Map.Entry<String, Integer> entry : result.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+            
+			String covertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);
 			int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
 			rateList.add(Integer.toString(comRate));
 			int status = ezTaskService.getStatusOfRepTask(taskID, covertDate, tenantID);			
 			statusList.add(Integer.toString(status));
-		}	
+			repeatCntList.add(Integer.toString(value));
+			dateList.add(key);
+        }
 		
 		model.addAttribute("statusList", statusList);
 		model.addAttribute("rateList", rateList);
-		model.addAttribute("dateList", result);
-		model.addAttribute("orderNum", orderNumber);
+		model.addAttribute("dateList", dateList);		
+		model.addAttribute("repeatCntList", repeatCntList);
 		
 		logger.debug("getRepTaskDateList ended.");
 		
@@ -510,7 +534,7 @@ logger.debug("model in taskReadJson: " + model);
 		
 		//baonk added
 		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {
-			ezTaskService.getRepTaskInfo(taskInfoVO);
+			ezTaskService.setRepTaskInfo(taskInfoVO);
 		}		
 		//end		
 		
@@ -1276,7 +1300,10 @@ logger.debug("model in taskReadJson: " + model);
 		int status = ezTaskService.getStatusOfRepTask(taskID, realDate, tenantID);
 		taskInfoVO.setTaskStatus(status);
 		int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
-		taskInfoVO.setCompleteRate(completionPercentage);    	
+		taskInfoVO.setCompleteRate(completionPercentage);    
+		
+		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);
+		taskInfoVO.setRepeatCount(result.get(date));		
     	
     	StringBuffer resultXML = new StringBuffer();
     	

@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezTask.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
@@ -18,11 +19,13 @@ public interface EzTaskService {
 	
 	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception;
 	
-	List<String> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception;
+	Map<String, Integer> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception;
 	
 	List<TaskInfoVO> getRepTaskList(String taskID, String offset, String primary, String date, int tenantID) throws Exception;
 	
-	void getRepTaskInfo(TaskInfoVO vo) throws Exception;
+	void setRepTaskInfo(TaskInfoVO vo) throws Exception;
+	
+	Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO) throws Exception;
 
 	TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception;
 
