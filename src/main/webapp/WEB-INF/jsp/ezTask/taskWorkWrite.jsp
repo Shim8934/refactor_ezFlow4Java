@@ -130,7 +130,7 @@
 				</tr>
 				<tr>
 					<td id="EdtorSize" style="height:100%;">
-						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto; border: none;"></iframe>
+						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 					</td>
 				</tr>
 				<tr>

@@ -1024,7 +1024,7 @@
 					<c:when test="${mode == ''}">
 						<tr>
 							<td id="EdtorSize">
-								<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 97%; width: 100%; overflow: auto; border: none;"></iframe>
+								<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 							</td>
 						</tr>
 					</c:when>
@@ -1033,14 +1033,14 @@
 							<c:when test="${ mode == '2'}">
 								<tr>
 									<td id="EdtorSize" style="height: 340px;">
-										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 97%; width: 100%; overflow: auto; border: none;"></iframe>
+										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 									</td>
 								</tr>
 							</c:when>
 							<c:otherwise>
 								<tr>
 									<td id="EdtorSize" style="display:none;">
-										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 97%; width: 100%; overflow: auto; border: none;"></iframe>
+										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 									</td>
 								</tr>
 							</c:otherwise>
