@@ -805,21 +805,42 @@
 			}
 			
 			function showEmptyTable() {
-				var new_list_body = document.getElementById("new_list_body");
-				var length = new_list_body.rows.length;				
-				 
-				for (var i = 2; i < length; i++) {
-					new_list_body.removeChild(new_list_body.rows[2]);			    	
-				}	
+				
+				$("#new_list_body").empty();
+				
+				var noDataTag = "<tr >";
+				noDataTag += "<th style='width:  100px; text-align: center;'><spring:message code='ezTask.t1221' /></th>"
+				noDataTag += "<th style='width: 320px; text-align: center;'><spring:message code='ezTask.t200914' /></th>"
+				noDataTag += "<th style='width: 320px; text-align: center;'><spring:message code='ezTask.t120' /></th>"
+				noDataTag += "</tr>"	
+				noDataTag += "<tr class='new_row_body' id='new_row_body' style='display:none;' repeatcount='0' startdate='' >"
+				noDataTag += "<td class='tr_Read' style='white-space:nowrap; width: 100px;' ></td>"
+				noDataTag += "<td class='tr_Read' style='white-space:nowrap; width: 320px;' ></td>"
+				noDataTag += "<td class='tr_Read' style='white-space:nowrap; width: 320px;' ></td>"
+				noDataTag += "</tr>"
+				noDataTag += "<tr id='noDataTag'><td colspan='3' style='text-align: center;'><spring:message code='ezTask.t200912' /></td></tr>";
+				
+				$("#new_list_body").append(noDataTag);
 			}
 			
 			function renderTable() {
-				var new_list_body = document.getElementById("new_list_body");
-				var length = new_list_body.rows.length;				
-				 
-				for (var i = 2; i < length; i++) {
-					new_list_body.removeChild(new_list_body.rows[2]);			    	
-				}			
+								 
+				$("#new_list_body").empty();
+				
+				var defaultTag = "<tr >";
+				defaultTag += "<th style='width:  100px; text-align: center;'><spring:message code='ezTask.t1221' /></th>"
+				defaultTag += "<th style='width: 320px; text-align: center;'><spring:message code='ezTask.t200914' /></th>"
+				defaultTag += "<th style='width: 320px; text-align: center;'><spring:message code='ezTask.t120' /></th>"
+				defaultTag += "</tr>"	
+				defaultTag += "<tr class='new_row_body' id='new_row_body' style='display:none;' repeatcount='0' startdate='' >"
+				defaultTag += "<td class='tr_Read' style='white-space:nowrap; width: 100px;' ></td>"
+				defaultTag += "<td class='tr_Read' style='white-space:nowrap; width: 320px;' ></td>"
+				defaultTag += "<td class='tr_Read' style='white-space:nowrap; width: 320px;' ></td>"
+				defaultTag += "</tr>"
+				
+				$("#new_list_body").append(defaultTag);				
+				
+				var new_list_body = document.getElementById("new_list_body");						
 				
 				for (var i = 0; i < completeRateArray.length; i++) {					
 					tr = new_row_body.cloneNode(true);				    
@@ -838,8 +859,7 @@
 
 			        tr.setAttribute("startdate", startdate);			        
 			        tr.cells[1].innerHTML = "<u>" + startdate + "</u>";
-			        (function(sd) { tr.cells[1].onclick = function () {rowClicked(sd);}})(startdate);		        			        
-			        tr.cells[2].innerHTML = enddate;	
+			        (function(sd) { tr.cells[1].onclick = function () {rowClicked(sd);}})(startdate);		        			        			        	
 			        
 			        //Process complete rate
 			        var taskstatus = parseInt(statusArray[i] + "");			        
@@ -853,7 +873,7 @@
 
 			        span.appendChild(span2);
 
-			        tr.cells[3].appendChild(span);
+			        tr.cells[2].appendChild(span);
 			        new_list_body.appendChild(tr);
 			        
 			        initProgressBar2("taskProgressBar" + i, taskstatus, completerate);			        
@@ -1081,6 +1101,50 @@
 			
 			function RefreshView() {
 				window.opener.RefreshView();
+			}
+			
+			function getTaskAttachList() {
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/getTaskAttachList.do",
+					dataType : "json",
+					data : {
+							taskID : taskid,
+					},
+					success : function(result) {
+						hasTaskAttach = result.hasTaskAttach;
+						taskAttachList = result.taskAttachList;
+						
+						if (hasTaskAttach == 'Y') {
+							document.getElementById('attachedfileDIV').innerHTML = taskAttachList
+				    	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				})
+			}
+			
+			function getTaskAttachList() {
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/getTaskAttachList.do",
+					dataType : "json",
+					data : {
+							taskID : taskid,
+					},
+					success : function(result) {
+						hasTaskAttach = result.hasTaskAttach;
+						taskAttachList = result.taskAttachList;
+						
+						if (hasTaskAttach == 'Y') {
+							document.getElementById('attachedfileDIV').innerHTML = taskAttachList
+				    	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				})
 			}
 
 			function getTaskWorkAttachList() {
@@ -1398,10 +1462,9 @@
 					<ul>
 						<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 							<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
-							<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' /> (${repeatCount}회차)</span></li>
-							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
-							<li><span class="txt_title"><spring:message code='ezTask.t9002' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
-							
+							<li><span class="txt_title"><spring:message code='ezTask.t200914' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t1221' /></span><span class="txt_content" id="repCount"><c:out value = '${repeatCount}' /></span></li>
+						
 						</c:if>
 						<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
 							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
@@ -1600,17 +1663,16 @@
 					<div id="new_div_body" style="height: 450px; overflow-y: auto;">
 						<table class="content" id="new_list_body" style="text-align: center;">
 							<tr >
-								<th style="width:  50px; text-align: center;"><spring:message code='ezTask.t1221' /></th>
-								<th style="width: 225px; text-align: center;"><spring:message code='ezTask.t121' /></th>
-								<th style="width: 225px; text-align: center;"><spring:message code='ezTask.t9002' /></th>
-								<th style="width: 230px; text-align: center;"><spring:message code='ezTask.t120' /></th>
+								<th style="width:  100px; text-align: center;"><spring:message code='ezTask.t1221' /></th>
+								<th style="width: 320px; text-align: center;"><spring:message code='ezTask.t200914' /></th>
+								<th style="width: 320px; text-align: center;"><spring:message code='ezTask.t120' /></th>
 							</tr>	
 							<tr class="new_row_body" id="new_row_body" style="display:none;" repeatcount="0" startdate="" >
-								<td class="tr_Read" style="white-space:nowrap; width: 50px;" ></td>
-								<td class="tr_Read" style="white-space:nowrap; width: 225px;" ></td>
-								<td class="tr_Read" style="white-space:nowrap; width: 225px;" ></td>
-								<td class="tr_Read" style="white-space:nowrap; width: 230px;" ></td>
-							</tr>					
+								<td class="tr_Read" style="white-space:nowrap; width: 100px;" ></td>
+								<td class="tr_Read" style="white-space:nowrap; width: 320px;" ></td>
+								<td class="tr_Read" style="white-space:nowrap; width: 320px;" ></td>
+							</tr>
+							<tr id="noDataTag"><td colspan='3' style='text-align: center;'><spring:message code='ezTask.t200912' /></td></tr>					
 						</table>
 					</div>
 				</td>

@@ -500,7 +500,22 @@
 			    }
 			    
 			    if (onTaskCount == 0) {
-			        document.getElementById("tr_ing").style.display = "";
+			    	
+
+					var notRep = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t204' /></td>";
+
+					var rep = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t200912' /></td>";
+
+			    	$('#tr_ing').empty();
+					
+		            if ($(".tabon").attr("divname") == "taskrepetition") {
+		            	$('#tr_ing').append(rep);	
+		            } else {
+		            	$('#tr_ing').append(notRep);
+		            }
+		            
+		            document.getElementById("tr_ing").style.display = "";
+		            
 			    }
 
 			    $(".progressbar").css("display", "inline-table");	
@@ -994,8 +1009,11 @@
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 						</tr>
-						<tr id="tr_ing" style="text-align:center">
+						<tr id="tr_ing" style="text-align:center;">
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+						</tr>
+						<tr id="tr_rep" style="text-align:center;display:none;">
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t200912' /></td>
 						</tr>
 				    </table>
 

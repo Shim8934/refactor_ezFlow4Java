@@ -648,12 +648,18 @@ function save_task() {
 						
 	        parent.DivPopUpHidden();
 	        
-	        if (mode != "") {
+	        if (mode == "1") {
 	        	parent.RefreshView();
+	        	parent.location.reload();
+	        } else if (mode == "2") {
+	        	parent.load_bodyhtml();
+				parent.getTaskAttachList();
+	        } else {
+	        	parent.location.reload();
 	        }
 	        
 	        //parent.taskReadJson();
-	        parent.location.reload();
+	        
 	        window.close();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
