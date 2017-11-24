@@ -85,12 +85,12 @@ function confirm() {
 	if (useEncrytZipFileChk) {
 		
 		if (document.getElementById("securePassword").value.trim() == "") {
-			alert("<spring:message code='ezOrgan.t257'/>"); // 보안메일 메시지 사용예정 (암호를 입력해주세요)
+			alert("<spring:message code='ezEmail.lhm42' />");
 			return;
 		}
 		
 		if (document.getElementById("securePasswordCheck").value.trim() == "") {
-			alert('암호와 암호확인이 일치하지 않습니다.'); // 보안메일 메시지 사용예정
+			alert("<spring:message code='ezEmail.lhm62' />");
 			return;
 		}
 		
@@ -113,7 +113,7 @@ function confirm() {
 			}
 			
 		} else {
-			alert('암호와 암호확인이 일치하지 않습니다 [2]'); // 보안메일 메시지 사용예정
+			alert("<spring:message code='ezEmail.lhm62' />");
 			return;
 		}
 		
@@ -135,6 +135,7 @@ function confirm() {
 }
 
 function checkUsePassword(obj) {
+	
     if (obj.checked || obj == true) {
         document.getElementById("securePassword").disabled = false;
         document.getElementById("securePasswordCheck").disabled = false;
@@ -142,6 +143,7 @@ function checkUsePassword(obj) {
         document.getElementById("securePassword").disabled = true;
         document.getElementById("securePasswordCheck").disabled = true;
     }
+    
 }
 
 function cancel() {
@@ -178,6 +180,7 @@ function showTobLeftDim(){
 	parent.parent.document.getElementById("left").contentWindow.showProgress();
 	parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 }
+
 </script>
 </head>
 <body style="overflow:hidden;" class="popup">
@@ -194,14 +197,14 @@ function showTobLeftDim(){
 	
 	<table style="width:100%;" class="content">
 	  <tr>
-	    <th>암호</th> <!-- 보안메일 메세지 사용예정 -->
+	    <th><spring:message code="ezEmail.lhm64" /></th> 
 	    <td><input type="password" id="securePassword" maxlength="50" />
     		<input type="checkbox" name="usePassword" value="checkbox" onClick="checkUsePassword(this);" id="useEncrytZipFileChk">
     		<span style="vertical-align:middle;"><spring:message code="ezEmail.kyj06"/></span>
 	    </td>
 	  </tr>
 	  <tr>
-	    <th>암호 확인</th> <!-- 보안메일 메세지 사용예정 -->
+	    <th><spring:message code="ezEmail.lhm61" /></th> 
 	    <td><input type="password" id="securePasswordCheck" maxlength="50" onkeypress="keycheck(event)"/></td>
 	  </tr>
 	</table>

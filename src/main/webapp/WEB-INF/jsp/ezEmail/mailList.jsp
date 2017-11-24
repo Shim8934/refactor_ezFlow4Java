@@ -359,20 +359,24 @@
 		    function start_search() {
 		        searchMode = true;
 		        var inputkeyword = document.getElementsByName('keyword').item(0);
+		        
 		        if (inputkeyword.value.indexOf("%") != -1) {
 		            alert("'%'" + strLang148);
 		            return;
 		        }
+		        
 		        if (inputkeyword.value == "") {
 		            alert(strLang254);
 		            return;
 		        }
+		        
 		        SearchKeyword = MakeSQL(inputkeyword.value);
 		        goToPageByNum("1");
 		
 		    }
 		    function MakeSQL(key) {
 		        var radiosearch = document.getElementsByName('searchCheck');
+		        
 		        if (radiosearch.item(0).checked)
 		            return radiosearch.item(0).value + "=" + key;
 		        else if (radiosearch.item(1).checked)
@@ -381,6 +385,7 @@
 		    
 		    function reloadReadContent(url) {
 		    	g_moveUrl = url.split('/')[0];
+		    	
 		    	if (pPreviewShow_HOW == "H") {
 	                PrevViewFormH.iptURL.value = url;
 	                PrevViewFormH.submit();
@@ -389,12 +394,22 @@
 	                PrevViewFormW.iptURL.value = url;
 	                PrevViewFormW.submit();
 	            }
+		    	
 		        MailListRefresh();
 		    }
 
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
+		    	
+				var folderTotalCount = document.getElementById("folderTotalCount").innerText;
+				
+				if (folderTotalCount < 1) {
+			    	alert("<spring:message code='ezEmail.kyj13' />");
+					return;
+				}
+		    	
 		    	var exportType = "MAILBOX";
+		    	
 		    	if (useEncryptZipForEmail == "YES") {
 		    			mailExportOption_onClick(exportType);
 		    	} else {
@@ -402,10 +417,12 @@
 			    		mailbox_export_start();
 			    	}
 		    	}
+		    	
 			}
 		    
 		    // 메일박스 내보내기
 		    function mailbox_export_start(pwd){
+		    	
 		    	// 웹소켓 연결
 	            webSocket= new WebSocket(host);
 		    	var encryptPw = "";
@@ -443,17 +460,19 @@
 									
 									var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
 											+ encodeURIComponent('${folderName}')
-											+ "&temp=" + result + "&encryptPw=" + encryptPw
-											+ "&userkey=" + userkey;
+											+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
+											+ "&userkey=" + encodeURIComponent(userkey);
 									AttachDownFrame.location.href = fullpath;
 									AttachDownFrame.target = "_blank";
-					            	
+					          
 								}
 							}
 						});
 						
 		            } else if (obj.status == 'progress') {
-		            	ShowPercent(obj.percent);
+		            	if (obj.percent <= 100) {
+			            	ShowPercent(obj.percent);
+		            	}
 		            } else if (obj.status == 'end') {
 		            	webSocket.close();
 		            	HiddenMailProgressNew();
@@ -482,6 +501,7 @@
 				if (typeof pwd != "undefined") {
 		    		encryptPw = pwd;
 		    	}
+				
 				if (typeof tempId != "undefined") {
 					path = tempId;
 				}
@@ -528,12 +548,14 @@
 						frm.action = "/ezEmail/mailboxImportZip.do?folderPath="
 								+ encodeURIComponent('${url}') 
 								+ "&userkey=" + encodeURIComponent(userkey)
-								+ "&encryptPw=" + encryptPw
-								+ "&tempId=" + path;
+								+ "&encryptPw=" + encodeURIComponent(encryptPw)
+								+ "&tempId=" + encodeURIComponent(path);
 						frm.submit();
 						
 		            } else if (obj.status == 'progress') {
-			            ShowPercent(obj.percent);
+		            	if (obj.percent <= 100) {
+			            	ShowPercent(obj.percent);
+		            	}
 		            } 
        
 		        };
@@ -579,7 +601,7 @@
 				}
 
 				if (result == "DIFF") { // 암호가 다름
-					alert('암호가 맞지 않습니다.'); // 보안메일 메세지 사용예정
+					alert("<spring:message code='ezEmail.lhm51' />"); 
 					mailImportOption_onClick(tempId, userkey);
 					document.importMailboxform.file1.value = "";
 				}

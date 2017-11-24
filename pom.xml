@@ -309,8 +309,8 @@
             <artifactId>spring-messaging</artifactId>
             <version>${spring.maven.artifact.version}</version>
         </dependency>
+        <!-- 웹 소켓  - end -->
              
-        </dependency>        
         <!-- Azure Auth -->
         <dependency>
             <groupId>com.microsoft.azure</groupId>
@@ -329,6 +329,15 @@
             </exclusions>
         </dependency>        
         <!-- Azure Auth - end -->
+        
+        <!-- 코린도 zip 암호화 -->
+		<dependency>
+		    <groupId>net.lingala.zip4j</groupId>
+		    <artifactId>zip4j</artifactId>
+		    <version>1.3.2</version>
+		</dependency>
+		<!-- 코린도 zip 암호화 - end -->  
+		
 	</dependencies>
 
     <build>

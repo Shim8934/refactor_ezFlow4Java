@@ -1045,7 +1045,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					// 진행율 클라이언트에게 전송
 					if (userkey != null) {
 						
-						int percent = (int)((double) currCount / (double) (messageCount -1) * 100.0 );
+						int percent = (int)((double) currCount / (double) (messageCount - 1) * 100.0 );
 						long currTime = System.currentTimeMillis();
 						int interval = (int) (currTime - lastTime);
 						
@@ -1469,7 +1469,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * zip파일 삭제 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/deleteZipFile.do")
-	public void deleteZipFile(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String deleteZipFile(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("deleteZipFile started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1479,6 +1479,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + temp;
+		String tempId = request.getParameter("tempId");
+		String pDirEncZipTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempId;
 		
 		File file = new File(pDirTempPath + ".zip");
 		
@@ -1486,7 +1488,16 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			file.delete();
 		}
 		
+		File tempFile = new File(pDirEncZipTempPath + ".zip");
+		
+		if (tempFile.exists()) {
+			tempFile.delete();
+			logger.debug("cancle file delete=" + tempFile.getName());
+		}
+		
 		logger.debug("deleteZipFile ended.");
+		
+		return "json"; 
 	}
 
 	/**

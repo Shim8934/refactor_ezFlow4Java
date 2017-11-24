@@ -46,7 +46,7 @@ window.onload = function(){
 function confirm(){
 	
 	if (document.getElementById("securePassword").value.trim() == "") {
-		alert('암호가 입력되지 않았습니다. 암호를 입력해주세요.'); // 보안메일 메세지 사용예정
+		alert("<spring:message code='ezEmail.kyj14' />");
 		return;
 	} else {
 		var pwd = document.getElementById("securePassword").value;
@@ -57,11 +57,28 @@ function confirm(){
 	}
 	
 }
+
 function cancel() {
 	parent.document.importMailboxform.file1.value = "";
 	CancelFunction();
 	hideTopLeftDim();
 	hideMailProgressNew();
+	
+	if (tempId != "") {
+		$.ajax({
+			url: '/ezEmail/deleteZipFile.do',
+			dataType: 'json',
+			type: 'POST',
+			data: {tempId : tempId},
+			success: function() {
+				console.log('file Delete success');
+			},
+			error: function(request, status, error) {
+				console.log("code=" + request.status + ", message=" + request.responseText + ", error=" + error);
+			}
+		});
+	}
+	
 }
 
 function hideMailProgressNew() {
@@ -84,18 +101,27 @@ function showTobLeftDim(){
 	parent.parent.document.getElementById("left").contentWindow.showProgress();
 	parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 }
+
+function keycheck(event) {
+	var keycode = event.keyCode ? event.keyCode : event.which;
+	
+	if (keycode == 13) {
+		confirm();
+	}
+}
+
 </script>
 </head>
 <body style="overflow: hidden;" class="popup">
 	<form name="optionForm">
 		<h1><spring:message code="ezEmail.kyj05"/></h1>
-		<span>▒ <spring:message code="ezEmail.kyj07"/> 암호를 입력해 주세요. </span><br> <!-- 보안메일 메세지 사용예정 -->
+		<span>▒ <spring:message code="ezEmail.kyj07"/> <spring:message code="ezEmail.kyj14" /></span><br>
 		<br>
 		
 		<table style="width:100%;" class="content">
 		  <tr>
-		    <th>암호</th> <!-- 보안메일 메세지 사용예정 -->
-		    <td><input type="password" id="securePassword" maxlength="50" />
+		    <th><spring:message code="ezEmail.lhm64" /></th> 
+		    <td><input type="password" id="securePassword" maxlength="50" onkeypress="keycheck(event)"/>
 		    </td>
 		  </tr>
 		</table>
