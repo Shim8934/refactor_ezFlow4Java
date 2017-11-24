@@ -86,7 +86,7 @@
 		    //var backupCount = "${repeatCount}";
 		    var selecttab = "${tab}";
 		    
-			function taskReadJson() {
+/* 			function taskReadJson() {
 				
 				$.ajax({
 					type : "POST",
@@ -106,7 +106,7 @@
 					}
 				});
 				
-			}
+			} */
 		    
 		    $(document).ready(function() {	
 		    	preStepForRepeatTask();
