@@ -458,6 +458,13 @@ function save_task() {
 	if (repetition == "") {
 		startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		
+		if(startdate > enddate) {
+	    	doubleSubmitFlag = false;
+	    	alert(strLang70);
+	        return;
+		}
+		
 	} else {
 		var sdate, edate;
 
@@ -478,7 +485,7 @@ function save_task() {
 	
     if (sdate > edate) {
     	doubleSubmitFlag = false;
-    	alert(strLang45);
+    	alert(strLang70);
         return;
     }    
 
