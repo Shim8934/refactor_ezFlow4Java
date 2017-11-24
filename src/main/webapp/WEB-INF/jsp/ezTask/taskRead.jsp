@@ -1340,9 +1340,9 @@
 				taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");	
 				repeatCount = SelectSingleNodeValue(node, "REPEATCOUNT");
 				
-				document.getElementById("prog1").innerHTML = date + "(" + repeatCount + "회차)";
-				document.getElementById("prog2").innerHTML = date;
-				document.getElementById("prog3").innerHTML = date;
+				document.getElementById("prog1").innerHTML = date;
+				document.getElementById("repCount").innerHTML = repeatCount;
+				//document.getElementById("prog3").innerHTML = date;
 				
 				/*****************************/
 /* 				if (dateList !== "") {
