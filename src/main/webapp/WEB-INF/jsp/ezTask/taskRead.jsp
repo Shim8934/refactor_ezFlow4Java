@@ -1242,9 +1242,10 @@
 						currentDate : changeDate												
 					},
 					success : function(xml) {					
-						document.getElementById("prog1").innerHTML = changeDate + "(" + repeatCount + "회차)";
+						document.getElementById("prog1").innerHTML = changeDate;
 						document.getElementById("prog2").innerHTML = changeDate;
 						document.getElementById("prog3").innerHTML = changeDate;
+						document.getElementById("repCount").innerHTML = repeatCount;					
 						repeatCount = backupCount;
 						date = changeDate;
 						renderPage(xml);
@@ -1383,10 +1384,9 @@
 					<ul>
 						<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 							<!-- <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" > -->
-							<li><span class="txt_title"><spring:message code='ezTask.t200905' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' /> (${repeatCount}회차)</span></li>
-							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content" id="prog2"><c:out value = '${date}' /></span></li>
-							<li><span class="txt_title"><spring:message code='ezTask.t9002' /></span><span class="txt_content" id="prog3"><c:out value = '${date}' /></span></li>
-							
+							<li><span class="txt_title"><spring:message code='ezTask.t200914' /></span><span class="txt_content" id="prog1"><c:out value = '${date}' /></span></li>
+							<li><span class="txt_title"><spring:message code='ezTask.t1221' /></span><span class="txt_content" id="repCount"><c:out value = '${repeatCount}' /></span></li>
+						
 						</c:if>
 						<c:if test="${taskInfoVO.taskType == 1 || taskInfoVO.taskType == 2 || taskInfoVO.taskType == 3}">
 							<li><span class="txt_title"><spring:message code='ezTask.t121' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' /></span></li>
