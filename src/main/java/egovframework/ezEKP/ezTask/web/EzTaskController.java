@@ -1237,7 +1237,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("startDate: " +  startDate + "endDate: " +  endDate + "taskStatusCount: " +  taskStatusCount + "|| pSelectTab: " + pSelectTab + "|| Type: " + type);
 		
     	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);   	
-    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, tenantID);
+    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, taskStatusCount, pSelectTab, tenantID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 

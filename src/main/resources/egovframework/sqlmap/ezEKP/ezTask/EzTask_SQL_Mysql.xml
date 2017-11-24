@@ -193,12 +193,20 @@
 
 		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
 			<![CDATA[
-				taskstatus = 3
+					(
+						(taskstatus = 3 AND (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3))
+					OR
+						(A.TOTALREP != -1 AND ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND endDate <= #today#) )
+					)
 			]]>
 		</isEqual>
 		<isEqual property="taskStatusCount" compareValue="2" prepend="AND">
 			<![CDATA[
-				taskstatus != 3
+					(
+						(taskstatus != 3 AND (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3))
+					OR
+						(A.TOTALREP = -1 OR ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND endDate > #today#) )	
+					)			
 			]]>
 		</isEqual>
 
@@ -332,10 +340,20 @@
 					OR
 						(A.personid = #userID# and (A.tasktype = 2 OR A.tasktype = 3))
 					OR	
-						(B.sharerid = #userID# and A.TASKID = B.TASKID and (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3)))
-				AND
-					A.taskstatus != 3				
+						(B.sharerid = #userID# and A.TASKID = B.TASKID and (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3)))			
 		]]>
+		
+		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
+			<![CDATA[
+					taskstatus = 3
+
+			]]>
+		</isEqual>
+		<isEqual property="taskStatusCount" compareValue="2" prepend="AND">
+			<![CDATA[
+					taskstatus != 3 
+			]]>
+		</isEqual>
 
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
@@ -372,9 +390,27 @@
 				A.tenantid = #tenantID#
 			AND
 				(A.creatorid = #userID# and ((A.tasktype = 2 OR A.tasktype = 3) OR ((A.tasktype = 5 OR A.tasktype = 6) AND A.totalrep != 0)))
-			AND
-				A.taskstatus != 3
+
 		]]>
+		
+		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
+			<![CDATA[
+					(
+						(taskstatus = 3 AND (A.tasktype = 2 OR A.tasktype = 3))
+					OR
+						(A.TOTALREP != -1 AND ((A.tasktype = 5 OR A.tasktype = 6) AND A.enddate <= #today#) )
+					)
+			]]>
+		</isEqual>
+		<isEqual property="taskStatusCount" compareValue="2" prepend="AND">
+			<![CDATA[
+					(
+						(taskstatus != 3 AND (A.tasktype = 2 OR A.tasktype = 3))
+					OR
+						(A.TOTALREP = -1 OR ((A.tasktype = 5 OR A.tasktype = 6) AND A.enddate > #today#) )	
+					)			
+			]]>
+		</isEqual>
 
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
@@ -417,9 +453,26 @@
 					OR 
 						(A.personid = #userID# AND ((A.tasktype = 5 OR A.tasktype = 6) AND A.totalrep != 0) )
 				)
-			AND
-				A.taskstatus != 3
 		]]>
+		
+		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
+			<![CDATA[
+					(
+						(taskstatus = 3 AND (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3))
+					OR
+						(A.TOTALREP != -1 AND ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND A.enddate <= #today#) )
+					)
+			]]>
+		</isEqual>
+		<isEqual property="taskStatusCount" compareValue="2" prepend="AND">
+			<![CDATA[
+					(
+						(taskstatus != 3 AND (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3))
+					OR
+						(A.TOTALREP = -1 OR ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND A.enddate > #today#) )	
+					)			
+			]]>
+		</isEqual>
 
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">

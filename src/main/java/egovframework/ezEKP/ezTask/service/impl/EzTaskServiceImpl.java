@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -464,6 +465,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String[] offsetArr = offset.split("\\|");
+		
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+	    String utcTime = sdf.format(new Date());	
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -478,6 +485,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("taskStatusCount", taskStatusCount);
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
+		map.put("today", utcTime);
 
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map);
 		logger.debug("--------------------------------------------------------------");
@@ -578,7 +586,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 					Calendar eDate_cal = Calendar.getInstance();
 					Calendar date_cal = Calendar.getInstance();
 
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 
 					logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | currentEndDate : " + currentEndDate);
@@ -842,10 +850,17 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, int tenantID) throws Exception {
+	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, String taskStatusCount, String pSelectTab, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
 		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
 				
+		String cnt = ""; // 진행업무 중 진행중 count		
+		String cnt2 = ""; // 지시,협조 중 진행중 count
+		String cnt3 = ""; // 지시,협조 중 진행중 count	
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");			
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+	    String utcTime = sdf.format(new Date());
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("userID", userID);		
@@ -855,11 +870,40 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("chkValue", chkValue);
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
+		map.put("taskStatusCount", taskStatusCount);
+		map.put("today", utcTime);
+		
+		if (pSelectTab.equals("taskprog")) {			
+			cnt = ezTaskDAO.getTaskCount(map);
+			map.put("taskStatusCount", "2");
+			cnt2 = ezTaskDAO.getTaskCount2(map);
+			cnt3 = ezTaskDAO.getTaskCount3(map);
+		}
+		else if (pSelectTab.equals("taskdictate")) {
+			cnt2 = ezTaskDAO.getTaskCount2(map);
+			map.put("taskStatusCount", "2");
+			cnt = ezTaskDAO.getTaskCount(map);				
+			cnt3 = ezTaskDAO.getTaskCount3(map);
+		}
+		else if (pSelectTab.equals("taskrepetition")) {
+			cnt3 = ezTaskDAO.getTaskCount3(map);			
+			map.put("taskStatusCount", "2");
+			cnt = ezTaskDAO.getTaskCount(map);
+			cnt2 = ezTaskDAO.getTaskCount2(map);
+			
+		}
+		else {
+			map.put("taskStatusCount", "3");
+			cnt = ezTaskDAO.getTaskCount(map);
+			cnt2 = ezTaskDAO.getTaskCount2(map);
+			cnt3 = ezTaskDAO.getTaskCount3(map);
+		}
+		
 
 		String rtnCnt = "";
-		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count		
+/*		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 중 진행중 count		
 		String cnt2 = ezTaskDAO.getTaskCount2(map); // 지시,협조 중 진행중 count
-		String cnt3 = ezTaskDAO.getTaskCount3(map); // 지시,협조 중 진행중 count	
+		String cnt3 = ezTaskDAO.getTaskCount3(map); // 지시,협조 중 진행중 count	*/
 		String totalCnt = ezTaskDAO.getTaskAllCount(map); // 개인 + 지시,협조 count	
 
 		rtnCnt = cnt + "," + cnt2 + "," + cnt3 + "," + totalCnt;
