@@ -795,6 +795,7 @@
 			}
 			
 			function showEmptyTable() {
+				
 				$("#new_list_body").empty();
 				
 				var noDataTag = "<tr >";
