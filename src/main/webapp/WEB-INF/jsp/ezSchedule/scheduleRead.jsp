@@ -47,7 +47,7 @@
 			<%-- var s_DateForAttandant = "<%= s_DateForAttandant %>"; --%>
 			<%-- var e_DateForAttandant = "<%= e_DateForAttandant %>"; --%>
 	        
-	        window.onload = function () {	            
+	        window.onload = function () {	      
                 if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6")) {
                     managespan.style.display = "none";
                     manageli.style.display = "none";

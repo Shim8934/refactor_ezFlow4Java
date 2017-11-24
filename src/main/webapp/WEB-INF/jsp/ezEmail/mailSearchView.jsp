@@ -116,9 +116,18 @@
 			{	
 		        var curevent = (typeof event == 'undefined' ? evt : event)
 		        if (curevent.keyCode == "13") {
-		            start_search();
+					set_searchKey();
 		        }
 			}
+		    function set_searchKey() {
+		    	if (TrimText(prekeyword.value) == null || TrimText(prekeyword.value) == "") {
+		    		alert(strLang254);
+		            return;
+		        } else {
+		        	keyword.value = prekeyword.value;
+			    	start_search();	
+		        }
+		    }
 			function document_onselectstart()
 			{
 				event.cancelBubble = true;
@@ -659,8 +668,9 @@
 					<option value="<spring:message code="ezEmail.t161" />"><spring:message code="ezEmail.t161" /></option> 
 					<option value="<spring:message code="ezEmail.t650" />"><spring:message code="ezEmail.t651" /></option> 
 			    </select>
-		    	<input name="keyword" id = "keyword" style="vertical-align: top;" onkeyup="return search_keypress(event)" />
-		    	<a class="imgbtn"><span onClick="start_search()"><spring:message code="ezEmail.t37" /></span></a>
+			    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;"onkeyup="return search_keypress(event)" />
+		    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
+		    	<a class="imgbtn"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
 		    </td> 
 		</tr> 
 		<tr>

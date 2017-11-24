@@ -82,6 +82,9 @@
 	                alert("<spring:message code='ezBoard.t144'/>");
 	                return;
 	            }
+	            if ($.trim($("#txtBoardName2").val()) == "") {
+	            	$("#txtBoardName2").val($("#txtBoardName").val());
+	            }
 	            //승인게시판
 	            if (APPRFLAG == "Y") {
 	                if (ApprUserList == "") {

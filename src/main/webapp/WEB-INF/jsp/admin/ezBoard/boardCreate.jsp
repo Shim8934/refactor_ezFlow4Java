@@ -30,11 +30,16 @@
 	    	function Save(){
 	    		var name1 = $.trim($("#txtNewName").val());
 				var name2 = $.trim($("#txtNewName2").val());
-				
-				if (name1 == ""){
+
+				if (name1 == "") {
 					alert("<spring:message code='ezBoard.t107' />");
 					return;
 				}
+
+				if (name2 == "") {
+					name2 = name1;
+				}
+
 			    var newID = "{" + GetGUID() + "}";
 
 			    $.ajax({

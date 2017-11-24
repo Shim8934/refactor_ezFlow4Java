@@ -41,32 +41,32 @@
 				</ul>	
 			</c:when>
 			<c:otherwise>
-				<h1>コミュニティー</h1>
+				<h1>コミュニティ</h1>
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_01" target="right">メイン画面</a></span></h2>
 				<ul>
 				</ul>
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_02" target="right">お知らせ広場</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_03" target="right">コミュニティー作り</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_03" target="right">コミュニティ作り</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_04" target="right">Today Community</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_04" target="right">本日のコミュニティ</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_05" target="right">優秀／新規コミュニティー</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_05" target="right">優秀/新規コミュニティ</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_06" target="right">My コミュニティーの新着情報</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_06" target="right">マイコミュニティの新着情報</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_07" target="right">カテゴリー別のコミュニティー</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_07" target="right">カテゴリ別コミュニティ</a></span></h2>
 				<ul>
 				</ul>
-				 <h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_08" target="right">My コミュニティー</a></span></h2>
+				 <h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_08" target="right">マイコミュニティ</a></span></h2>
 				<ul>
 				</ul>
-				 <h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_09" target="right">コミュニティー管理</a></span></h2>
+				 <h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/community_jp_09" target="right">コミュニティの管理</a></span></h2>
 				<ul>
 				</ul>
 			</c:otherwise>

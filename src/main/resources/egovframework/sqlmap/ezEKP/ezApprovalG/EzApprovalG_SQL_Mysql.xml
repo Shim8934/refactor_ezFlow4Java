@@ -37,6 +37,8 @@
 	<typeAlias  alias="ApprUserContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO"/>
 	<typeAlias  alias="ApprGContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
 	<typeAlias  alias="ApprGDeleteCabinetInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeleteCabinetInfoVO"/>
+	<typeAlias  alias="ApprGRelayVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO"/>
+	
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -6186,6 +6188,18 @@
    			FUNCTIONTYPE IN ('002', '005')
    		AND 
    			APRMEMBERID IN ($v_USERIDS$)
+   		<isEqual property="v_FLAG" compareValue="1">
+		<![CDATA[
+   		AND
+   			DOCID < #v_DOCID#
+   		]]>
+   		</isEqual>
+   		<isEqual property="v_FLAG" compareValue="2">
+		<![CDATA[
+   		AND
+   			DOCID > #v_DOCID#
+   		]]>
+   		</isEqual>
    		ORDER BY 
    			STARTDATE $v_BASICORDER$, DOCID DESC
 	</select>
@@ -8616,7 +8630,11 @@
 	<select id="EzApprovalG.getDocInfoHref" parameterClass="Map" resultClass="String">
 		<isEqual property="v_FLAG" compareValue="APR">
 			SELECT 
-				HREF 
+				 CASE WHEN 
+				 	COUNT(href) = 0   THEN '' 
+				 ELSE 
+				 	HREF 
+				 END HREF 
             FROM 
             	TBL_APRDOCINFO 
             WHERE  
@@ -8628,7 +8646,11 @@
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
 		   SELECT 
-		 		HREF 
+		 		CASE WHEN 
+				 	COUNT(href) = 0   THEN '' 
+				 ELSE 
+				 	HREF 
+				 END HREF  
            FROM 
            		TBL_ENDAPRDOCINFO 
            WHERE  
@@ -14972,7 +14994,9 @@
                                 AND
                                 	TENANT_ID = #v_TENANTID#
                                 AND
-                                	COMPANYID = #companyID# )
+                                	COMPANYID = #companyID# 
+                                LIMIT
+                                	1)
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -15008,7 +15032,9 @@
                                 AND 
                                 	aprmemberid = #v_PUSERID#
                                 AND 
-                                	aprstate = #v_PAPRSTATE# )
+                                	aprstate = #v_PAPRSTATE# 
+                                LIMIT
+                                	1)
             AND 
             	docid = #v_PDOCID#
             AND
@@ -15044,7 +15070,9 @@
                                 AND 
                                 	aprmemberid = #v_PUSERID#
                                 AND 
-                                	aprstate = #v_PAPRSTATE# )
+                                	aprstate = #v_PAPRSTATE# 
+                                LIMIT
+                                	1)
             AND 
             	docid = #v_PDOCID#
             AND
@@ -16421,7 +16449,7 @@
              CABINETCLASSNO ,
              TITLE ,
              RECTYPECODE ,
-             STR_TO_DATE(MODIFYDATE, '%Y-%m-%d %H:%i:%s') MODIFYDATE ,
+             STR_TO_DATE(MODIFYDATE, '%Y%m%d') MODIFYDATE ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
@@ -17801,19 +17829,36 @@
    </insert>
    
    <insert id="EzApprovalG.insertDeptAssistAprDocInfo" parameterClass="Map">
-        INSERT INTO 
-        	TBL_APRDOCINFO 
-        (      DocID, FormID, OrgDocID,   DocType,    DocState,     FunctionType, Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
-        (SELECT 
-        	#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_STAASDOJAK#, #v_URL# , DocTitle, DocNo, HasAttachYN,     'N',         NULL,     NULL,   WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic , TENANT_ID, COMPANYID 
-         FROM 
-         	TBL_APRDOCINFO A 
-         WHERE 
-         	DocID = #v_DOCID# 
-         AND
-         	TENANT_ID = #v_TENANTID#
-         AND
-   		 	COMPANYID = #companyID#)
+   		<isEqual property="v_DOCSTATE" compareValue="012">
+	        INSERT INTO 
+	        	TBL_APRDOCINFO 
+	        (      DocID, FormID, OrgDocID,   DocType,    DocState,     FunctionType, Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+	        (SELECT 
+	        	#v_NEWID#, '2003000007', #v_DOCID#, DocType, #v_DOCSTATE#, #v_STAASDOJAK#, #v_URL# , DocTitle, DocNo, HasAttachYN,     'N',         NULL,     NULL,   WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic , TENANT_ID, COMPANYID 
+	         FROM 
+	         	TBL_APRDOCINFO A 
+	         WHERE 
+	         	DocID = #v_DOCID# 
+	         AND
+	         	TENANT_ID = #v_TENANTID#
+	         AND
+	   		 	COMPANYID = #companyID#)
+   		</isEqual>
+   		<isNotEqual property="v_DOCSTATE" compareValue="012">
+	        INSERT INTO 
+	        	TBL_APRDOCINFO 
+	        (      DocID, FormID, OrgDocID,   DocType,    DocState,     FunctionType, Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+	        (SELECT 
+	        	#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_STAASDOJAK#, #v_URL# , DocTitle, DocNo, HasAttachYN,     'N',         NULL,     NULL,   WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic , TENANT_ID, COMPANYID 
+	         FROM 
+	         	TBL_APRDOCINFO A 
+	         WHERE 
+	         	DocID = #v_DOCID# 
+	         AND
+	         	TENANT_ID = #v_TENANTID#
+	         AND
+	   		 	COMPANYID = #companyID#)
+   		</isNotEqual>
    </insert>
    
    <insert id="EzApprovalG.insertDeptAssistExAprDocInfo" parameterClass="Map">
@@ -18755,7 +18800,20 @@
    		AND 
    			TENANT_ID= #v_TENANTID#
    		AND
-	   		 COMPANYID = #companyID#
+	   		COMPANYID = #companyID#
+   </update>
+   
+   <update id="EzApprovalG.updateProAprDocInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			ORGDOCID = #v_ORGDOCID# 
+   		WHERE  
+   			TENANT_ID= #v_TENANTID#
+   		AND
+	   		COMPANYID = #companyID#
+	   	AND
+   			ORGDOCID = #v_DOCID#
    </update>
    
    <update id="EzApprovalG.updateReceiptPointInfo" parameterClass="Map">
@@ -22329,4 +22387,652 @@
 		AND
 			(APRTYPE = '008' OR APRTYPE = '001')
       </select>
- </sqlMap>
+
+      <select id="EzApprovalG.relayAprLineXmlForExt" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+      		SELECT 
+      			APRTYPE, 
+      			APRMEMBERSN, 
+      			CASE WHEN OPINIONGB IS NULL THEN '' ELSE OPINIONGB END AS OPINIONGB,
+				ISPROPOSERYN, 
+				ISBRIEFUSERYN, 
+				APRMEMBERJOBTITLE, 
+				APRMEMBERNAME, 
+				PROCESSDATE
+			FROM 
+				TBl_ENDAPRLINEINFO A 
+			LEFT OUTER JOIN 
+				TBl_ENDAPROPINIONINFO B 
+			ON 
+				A.APRMEMBERID = B.USERID 
+			AND 
+				A.DOCID = B.DOCID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE 
+				(A.DOCID = #docID#) 
+			AND
+				A.TENANT_ID = #v_TENANTID#
+			AND 
+				(B.OPINIONGB = '001' OR B.OPINIONGB IS NULL)
+			AND 
+				(A.APRTYPE IN ('001', '004', '016', '018', '008', '019'))
+			ORDER BY A.APRMEMBERSN
+      </select>
+		
+	  <select id="EzApprovalG.recRelayInfo" parameterClass="Map" resultClass="ApprGRelayVO" remapResults="true">
+		  SELECT 
+		  		XDOCID 
+		  FROM 
+		  		TBL_RECRELAYINFO 
+		  WHERE 
+		  		XDOCID = #xDocID#
+		  AND 
+		  		XTOCODE = #xToCode#
+		  AND
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+	  </select>      
+	  
+	  <delete id="EzApprovalG.deleteRecRelayInfo" parameterClass="Map" >
+		  DELETE FROM 
+		  		TBL_RECRELAYINFO
+		  WHERE 
+		  		DOCID IN (
+		  		 			SELECT
+		  		 			  * 
+		  		 			FROM
+			  					(SELECT 
+						  			A.DOCID
+								FROM 
+									TBL_RECRELAYINFO A 
+								INNER JOIN 
+									TBL_APRDOCINFO B
+								ON 
+									A.DOCID = B.DOCID
+								AND
+									A.TENANT_ID = B.TENANT_ID
+								AND
+									A.COMPANYID = B.COMPANYID
+								WHERE 
+									A.TENANT_ID = #v_TENANTID#
+								AND
+									A.COMPANYID = #companyID#
+								AND
+									A.XDOCID = #xDocID# 
+								AND 
+									XTOCODE = #xToCode#	
+								AND 
+									B.HREF IS NULL
+								OR 
+									B.HREF = '') A)
+	  </delete>
+	  
+	  <delete id="EzApprovalG.deleteRelayAprDocInfo" parameterClass="Map" >
+		   DELETE FROM 
+		  		TBL_APRDOCINFO
+		   WHERE 
+		  		DOCID IN (
+		  					SELECT 
+		  					* 
+		  					FROM
+			  					(SELECT 
+						  			A.DOCID
+								FROM 
+									TBL_RECRELAYINFO A 
+								INNER JOIN 
+									TBL_APRDOCINFO B
+								ON 
+									A.DOCID = B.DOCID
+								AND
+									A.TENANT_ID = B.TENANT_ID
+								AND
+									A.COMPANYID = B.COMPANYID
+								WHERE 
+									A.TENANT_ID = #v_TENANTID#
+								AND
+									A.COMPANYID = #companyID#
+								AND
+									A.XDOCID = #xDocID# 
+								AND 
+									XTOCODE = #xToCode#	
+								AND 
+									B.HREF IS NULL
+								OR 
+									B.HREF = '') A)
+	  </delete>
+	  
+	  <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
+	  	INSERT INTO 
+	  		TBL_RECRELAYINFO 
+	  	(DOCID, XDOCID, RECDATE, MFROM, MTO, SUBJECT, XMAILTYPE, XFROMCODE, XTOCODE, XGW, XDOCTYPE, XDTDVERSION, XXSLVERSION, CONTENTTYPE, SEALURL, XMLURL, RECEIVEDDATE, COMPANYID, TENANT_ID)
+		VALUES 
+		(#docID#, #xDocID#, #recDate#, #from#, #to#, #subject#, #xMailType#, #xFromCode#, #xToCode#, #xGw#, #xDocType#, #xDtdVersion#, #xxslVersion#, #contentType#, #sealUrl#, #xmlUrl#, #lastDate#, #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <update  id="EzApprovalG.updateRelayFiled" parameterClass="Map">
+	  	UPDATE 
+	  		TBL_RECRELAYINFO
+		SET 
+			$FIELDNAME$ = #VALUE#
+		WHERE 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			XDOCID = #XDOCID#
+		<isNotEmpty property="DEPTID">
+		AND
+			XTOCODE = #DEPTID#
+		</isNotEmpty>
+	  </update>
+	  
+	  <select id="EzApprovalG.recRelayExchInfo" parameterClass="Map" resultClass="ApprGRelayVO" remapResults="true">
+	  		SELECT 
+	  			PACKDOCID 
+	  		FROM 
+	  			TBL_RECEXCHINFO 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				PACKDOCID = #v_DOCID#
+	  </select>
+	  
+	  <update id="EzApprovalG.updateRelayExchInfo" parameterClass="Map">
+	  		UPDATE 
+	  			TBL_RECEXCHINFO
+			SET 
+				ATTACHXML = #REALFILENAME#
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#			
+			AND
+				PACKDOCID = #v_DOCID#
+	  </update>
+	  
+	  <insert id="EzApprovalG.insertRelayExchInfo" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_RECEXCHINFO 
+	  		(PACKDOCID, ATTACHXML, ATTACHXSL, MODIFLAG, NOTIFICATION, COMPANYID, TENANT_ID)
+			VALUES 
+			(#v_DOCID#, #REALFILENAME#, '', 'YES', '', #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <insert id="EzApprovalG.insertRelayExchInfo2" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_RECEXCHINFO 
+	  		(PACKDOCID, ATTACHXML, ATTACHXSL, MODIFLAG, NOTIFICATION, COMPANYID, TENANT_ID)
+			VALUES 
+			(#v_DOCID#, '', #REALFILENAME#, 'YES', '', #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <select id="EzApprovalG.recRelayAttachInfo" parameterClass="Map" resultClass="ApprGRelayVO" remapResults="true">
+	  		SELECT 
+	  			XDOCID 
+	  		FROM 
+	  			TBL_RECRELAYATTACHINFO 
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				XDOCID = #v_DOCID# 
+			AND 
+				ATTACHNAME = #FILENAME# 
+			AND 
+				ATTACHURL = #REALFILENAME#
+			AND 
+				ATTACHSN = #SN# 
+			AND 
+				ATTACHTYPE = #TYPE#
+	  </select>
+	  
+	  <insert id="EzApprovalG.insertRecRelayAttachInfo" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_RECRELAYATTACHINFO 
+	  		(XDOCID, ATTACHNAME, ATTACHURL, ATTACHSN, ATTACHTYPE, COMPANYID, TENANT_ID)
+			VALUES 
+			(#v_DOCID#, #FILENAME#, #REALFILENAME#, #SN#, #TYPE#, #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <select id="EzApprovalG.recRelaySignInfo" parameterClass="Map" resultClass="ApprGRelayVO">
+	  		SELECT 
+	  			XDOCID 
+	  		FROM 
+	  			TBL_RECRELAYSIGNINFO 
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				XDOCID = #v_DOCID# 
+			AND 
+				SIGNNAME = #FILENAME#
+			AND 
+				REALSIGNNAME = #REALFILENAME#
+	  </select>
+	  
+	  <insert id="EzApprovalG.insertRecRelaySignInfo" parameterClass="Map">
+	  		INSERT INTO TBL_RECRELAYSIGNINFO 
+	  		(XDOCID, SIGNNAME, REALSIGNNAME, COMPANYID, TENANT_ID)
+			VALUES 
+			(#v_DOCID#, #FILENAME#, #REALFILENAME#, #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <select id="EzApprovalG.relayGetByXDocIDInfo" parameterClass="Map" resultClass="ApprGRelayVO">
+	  		SELECT 
+	  			*
+			FROM 
+				TBL_RECRELAYINFO 
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				XDOCID = #XDOCID#
+			AND 
+				XTOCODE = #XTOCODE#
+			AND 
+				DOCID = ''
+			OR 
+				DOCID IS NULL
+	  </select>
+	  
+	  <select id="EzApprovalG.relayGetAttachInfo" parameterClass="Map" resultClass="ApprGRelayVO">
+	  		SELECT 
+	  			*
+			FROM 
+				TBL_RECRELAYATTACHINFO
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				XDOCID = #XDOCID#
+	  </select>
+	  
+	  <insert id="EzApprovalG.insertRelayAprDocInfo" parameterClass="Map">
+	  	INSERT INTO TBL_APRDOCINFO 
+	  		(DOCID,   FORMID, ORGDOCID, DOCTYPE, DOCSTATE, FUNCTIONTYPE, HREF, DOCTITLE, DOCNO, HASATTACHYN, HASOPINIONYN, STARTDATE, ENDDATE, WRITERID, WRITERNAME, WRITERNAME2, WRITERJOBTITLE, WRITERJOBTITLE2, WRITERDEPTID, WRITERDEPTNAME, WRITERDEPTNAME2, ISPUBLIC, COMPANYID, TENANT_ID)
+		VALUES 
+			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, '',   #ATTACHYN#,    'N',          NULL,     NULL,      '',        '',         '',            '',            '',               '',            '',             '',           'Y', #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <insert id="EzApprovalG.insertRelayExpAprDocInfo" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_EXPAPRDOCINFO 
+	  			(DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
+			VALUES 
+				(#NEWID#, '중계문서','RELAYDOC', #companyID#, 'N', 999, '', '', '', 0, '', '', '', '', '', '', #v_TENANTID#)
+	  </insert>
+	  
+	    <insert id="EzApprovalG.insertRelayAttchInfo" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_APRATTACHINFO 
+	  		(DOCID,  ATTACHFILESN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME,  ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2,	ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM,  DISPLAYNAME,     BODYATTACH,      COMPANYID, TENANT_ID)
+			VALUES 
+			(#NEWID#, #ATTACHSN#,   #ATTACHNAME#,   #ATTACHURL#,        '0',            '',            '',              '',              '',                 '',                 '',                '',                '',               '0',    #ATTACHDISPNAME#, #ATTACHTYPE#, #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <insert  id="EzApprovalG.insertRelayAprReceiptProessInfo" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_APRRECEIPTPROCESSINFO 
+	  		(RECEIVESN, DOCID, SENTDEPTID, SENTDEPTNAME, SENTDEPTNAME2, RECEIVEDDEPTID, RECEIVEDDEPTNAME, RECEIVEDDEPTNAME2, DOCSTATE, APRSTATE, PROCESSDATE, PROCESSYN, PROCESSDOCID, PROCESSORID, PROCESSORNAME, PROCESSORNAME2 , PROCESSORJOBTITLE, PROCESSORJOBTITLE2, PARENTSDOCID, COMPANYID, TENANT_ID)
+			VALUES 
+				(1, #NEWID#, #FROMDEPTID#, #FROMDEPTNAME#, #FROMDEPTNAME#, #TODEPTID#, #TODEPTNAME#, #TODEPTNAME#, '011', '011', #RECDATE#, 'N', '', '', '', '', '', '', #XDOCID#, #companyID#, #v_TENANTID#)
+	  </insert>
+	
+	  <update id="EzApprovalG.updateRecRelayInfo" parameterClass="Map">
+		  UPDATE 
+		  	TBL_RECRELAYINFO
+		  SET 
+		  	DOCID = #NEWID#
+		  WHERE 
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		  AND
+		  	XDOCID = #XDOCID# 
+		  AND 
+		  	XTOCODE = #XTOCODE#
+		  AND 
+			DOCID = ''
+		  OR 
+		  	DOCID IS NULL
+	  </update>
+	  
+	  <update id="EzApprovalG.updateRecExchInfo" parameterClass="Map">
+		  UPDATE 
+		  	TBL_RECEXCHINFO
+		  SET 
+		  	DOCID = #NEWID#
+		  WHERE
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID# 
+		  AND
+		  	PACKDOCID = #XDOCID#
+		  AND 
+		  	DOCID = ''
+		  OR 
+		  	DOCID IS NULL
+	  </update>
+	  
+	  <update  id="EzApprovalG.updateRecRelayInfoRollback" parameterClass="Map">
+		  UPDATE 
+		  		TBL_RECRELAYINFO
+		  SET 
+		  		DOCID = ''
+		  WHERE 
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		  AND
+		  	XDOCID = #XDOCID# 
+		  AND 
+		  	XTOCODE = #XTOCODE#
+	  </update>
+	  
+	  <update  id="EzApprovalG.updateRecExchInfoRollback" parameterClass="Map">
+		  UPDATE 
+		  		TBL_RECEXCHINFO
+		  SET 
+		  		DOCID = ''
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		PACKDOCID = #XDOCID#
+	  </update>
+	  
+	  <delete  id="EzApprovalG.deleteRelayReceiptProcessInfo" parameterClass="Map">
+		  DELETE FROM 
+		  		TBL_APRRECEIPTPROCESSINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		DOCID = #NEWID#
+	  </delete>
+	  <delete  id="EzApprovalG.deleteRelayAttachInfo" parameterClass="Map">
+		  DELETE 
+		  		FROM TBL_APRATTACHINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND
+		  		DOCID = #NEWID#
+	  </delete>
+	  
+	  <delete  id="EzApprovalG.deleteRelayExpAprDocInfo" parameterClass="Map">
+		  DELETE 
+		  		FROM TBL_EXPAPRDOCINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		DOCID = #NEWID#
+	  </delete>
+	  
+	  <delete id="EzApprovalG.deleteRelayAprDocInfo2" parameterClass="Map">
+		  DELETE 
+		  		FROM TBL_APRDOCINFO 
+		  WHERE
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
+		  AND 
+		  		DOCID = #NEWID#
+	  </delete>
+	  
+	  <update id="EzApprovalG.updateRelaySusinState" parameterClass="Map">
+	  		UPDATE 
+	  			TBL_ENDRECEIPTPOINTINFO
+			SET 
+				PROCESSDATE = #PROCESSDATE#,
+				PROCESSYN = #PROCESSYN#,	
+				ReceiptMemberName = #ACCEPTNAME#
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #DOCID# 
+			AND 
+				RECEIPTPOINTID = #RECEIPTPOINTID#
+	  </update>
+	  
+	  <insert id="EzApprovalG.insertRelayFailMessage" parameterClass="Map">
+	  	INSERT INTO TBL_RECRELAYFAILMESSAGE 
+	  		(DOCID, SENDID, SENDNAME, MESSAGE, COMPANYID, TENANT_ID)
+		VALUES 
+			(#PDOCID#, #PSENDID#, #PSENDNAME#, #PMESSAGE#, #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <select id="EzApprovalG.getRelayInfo" parameterClass="Map" resultClass="ApprGRelayVO">
+	  		SELECT 
+	  			XDOCID, 
+	  			RECDATE, 
+	  			MFROM, 
+	  			MTO, 
+	  			SUBJECT, 
+	  			XMAILTYPE, 
+	  			XFROMCODE,
+				XTOCODE, 
+				XGW, 
+				XDOCTYPE, 
+				XDTDVERSION, 
+				XXSLVERSION, 
+				CONTENTTYPE, 
+				SEALURL,
+				XMLURL, 
+				EMLURL, 
+				ISPKI, 
+				RECEIVEDDATE
+			FROM 
+				TBL_RECRELAYINFO 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+	  </select>
+	  
+	  <select id="EzApprovalG.getRelaySignInfo" parameterClass="Map" resultClass="ApprGRelayVO">
+	  		SELECT 
+	  			XDOCID, 
+	  			SIGNNAME, 
+	  			REALSIGNNAME
+			FROM 
+				TBL_RECRELAYSIGNINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				XDOCID = #docID#
+	  </select>
+	  
+	  <update id="EzApprovalG.upadateRelayDocInfo" parameterClass="Map">
+	  	<isEqual property="v_MODE" compareValue="E">
+	  		UPDATE 
+	  			TBL_ENDAPRDOCINFO
+			SET 
+				HREF = #v_HREF#
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_DOCID#
+	  	</isEqual>
+	  	<isNotEqual property="v_MODE" compareValue="E">
+	  		UPDATE 
+	  			TBL_APRDOCINFO
+			SET 
+				HREF = #v_HREF#
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID# 
+			AND	
+				DOCID = #v_DOCID#
+	  	</isNotEqual>
+	  </update>
+	  
+	  <update id="EzApprovalG.updateRecvDocInfo" parameterClass="Map">
+	  	<isEqual property="v-MODE" compareValue="E">
+	  		UPDATE 
+	  			TBL_ENDAPRDOCINFO 
+	  		SET 
+	  			HREF = #v_HREF#
+	  	</isEqual>
+	  	
+	  	<isNotEqual property="v-MODE" compareValue="E">
+	  		UPDATE 
+	  			TBL_APRDOCINFO 
+	  		SET 
+	  			HREF = #v_HREF#
+	  	</isNotEqual>
+	  	
+	  	<isNotEmpty property="v_DOCNO">
+	  		, DOCNO = #v_DOCNO#
+	  	</isNotEmpty>
+	  	
+		  	WHERE 
+		  		TENANT_ID = #v_TENANTID#
+		  	AND
+		  		COMPANYID = #companyID#
+		  	AND
+		  		DOCID = #v_DOCID#
+	  </update>
+	  
+	  <update id="EzApprovalG.updateRelayExpDocInfo" parameterClass="Map">
+	  		<isEqual property="v_MODE" compareValue="E">
+	  			UPDATE 
+	  				TBL_EXPENDAPRDOCINFO 
+	  			SET 
+	  				PUBLICITYCODE = #v_PUBLICITYCODE#
+	  		</isEqual>
+	  		
+	  		<isNotEqual property="v-MODE" compareValue="E">
+	  			UPDATE 
+	  				TBL_EXPAPRDOCINFO 
+	  			SET 
+	  				PUBLICITYCODE = #v_PUBLICITYCODE#
+	  		</isNotEqual>
+	  		
+	  		<isNotEmpty property="v_DOCNUMCODE">
+	  			, DOCNUMCODE = #v_DOCNUMCODE#
+	  		</isNotEmpty>
+	  		
+	  		<isNotEmpty property="v_ORGDOCNUMCODE">
+	  			, ORGDOCNUMCODE = #v_ORGDOCNUMCODE#
+	  		</isNotEmpty>
+		  		WHERE 
+			  		TENANT_ID = #v_TENANTID#
+			  	AND
+			  		COMPANYID = #companyID#
+			  	AND
+			  		DOCID = #v_DOCID#
+	  </update>
+	  
+	  <update id="EzApprovalG.updateRelayCabinetDocInfo" parameterClass="Map">
+			UPDATE 
+				TBL_APRDOCINFO
+			SET 
+				DOCNO = #v_DOCNO#
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_DOCID#
+	  </update>
+	  
+	  <update id="EzApprovalG.updateRelaycabinetExpDocInfo" parameterClass="Map">
+	  		UPDATE 
+	  			TBL_EXPAPRDOCINFO
+			SET 
+				DOCNUMCODE = #v_DOCNUMCODE#,
+				ORGDOCNUMCODE = #v_ORGDOCNUMCODE#,
+				CABINETID = #v_CABINETID#,
+				TASKCODE = #v_TASKCODE#
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND 
+				DOCID = #v_DOCID#
+	  </update>
+	  
+	  <delete id="EzApprovalG.deleteRelayAprLineInfo" parameterClass="Map">
+	  		DELETE FROM 
+	  			TBL_APRLINEINFO 
+	  		WHERE 
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
+	  		AND
+	  			DOCID = #v_DOCID# 
+	  		AND 
+	  			APRMEMBERSN = 1
+	  </delete>
+	  
+	  <delete id="EzApprovalG.deleteRelayExpAprLineInfo" parameterClass="Map">
+	  		DELETE FROM 
+	  			TBL_EXPAPRLINE
+	  		WHERE
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
+	  		AND 
+	  			DOCID = #v_DOCID# 
+	  		AND 
+	  			APRMEMBERSN = 1
+	  </delete>
+	  
+	  <insert id="EzApprovalG.insertRelayAprLineInfo" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_APRLINEINFO 
+	  		(DOCID, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, RECEIVEDDATE, PROCESSDATE, REASONDONOTAPPROV, ISPROPOSERYN, ISBRIEFUSERYN, COMPANYID, TENANT_ID)
+			 VALUES 
+			(#v_DOCID#, 1,           '014', '002',   #v_USERID#,      'N',           #v_USERNAME#,   #v_USERNAME2#,  #v_USERJOBTITLE#, #v_USERJOBTITLE2#,    #v_DEPTID#,        #v_DEPTNAME#,    #v_DEPTNAME2#,    #companyID#,         #v_SYSDATE#,    NULL,         '',            'N',         'N',          #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <insert id="EzApprovalG.insertRelayExpAprLineInfo" parameterClass="Map">
+	  		INSERT INTO 
+	  			TBL_EXPAPRLINE 
+	  		(DOCID, APRMEMBERSN, ORGUSERID, PROXYUSERID, PROXYUSERNAME, PROXYUSERNAME2, PROXYUSERJOBTITLE, PROXYUSERJOBTITLE2, PROXYUSERDEPTID, PROXYUSERDEPTNAME, PROXYUSERDEPTNAME2, COMPANYID, TENANT_ID)
+			VALUES 
+			(#v_DOCID#, 1,        #v_USERID#,     '',          '',            '',             '',                 '',              '',                '',                    '',         #companyID#, #v_TENANTID#)
+	  </insert>
+	  
+	  <select id="EzApprovalG.getSendAckDocInfo" parameterClass="Map" resultClass="ApprGRelayVO">
+	  		SELECT 
+	  			*
+			FROM 
+				TBL_RECRELAYINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID# 
+			AND	
+				DOCID = #v_DOCID#
+	  </select>
+	  
+	  <select id="EzApprovalG.getTenantID" resultClass="OrganUserVO">
+	  	SELECT 
+	  		TENANT_ID AS tenantId
+	  	FROM
+	  		TBL_TENANT
+	  </select>
+</sqlMap>

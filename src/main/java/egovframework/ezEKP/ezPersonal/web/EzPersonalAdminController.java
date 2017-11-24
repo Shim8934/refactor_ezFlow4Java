@@ -487,8 +487,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 				result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale()) + "</VALUE>");
 				progressPollFlag = "true";
 			} else {
-				System.out.println("endDate="+vo.getEndDate());
-				System.out.println("endDate="+commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10));
 				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
 			}
 			

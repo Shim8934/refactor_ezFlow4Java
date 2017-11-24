@@ -78,6 +78,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("serverUrl=" + serverUrl);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useHTMLMode = ezCommonService.getTenantConfig("USE_HTMLMODE", userInfo.getTenantId());
 		String returnPath = "";
 		
 		switch (useEditor) {
@@ -98,6 +99,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useHTMLMode", useHTMLMode);
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
 		model.addAttribute("isUsed", isUsed);

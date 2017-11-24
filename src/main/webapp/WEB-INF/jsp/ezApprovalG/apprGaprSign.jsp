@@ -108,6 +108,7 @@
 		    		return;
 		    	}
 		    }
+		    
 		    function btn_ImageCancel_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction("cancel");

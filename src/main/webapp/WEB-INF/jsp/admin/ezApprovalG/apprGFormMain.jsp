@@ -67,8 +67,9 @@
 		        if (formID != "") {
 		            get_FormInfo();
 		        }
-	
+
 		        getDeptFullTree("<c:out value = '${companyID}' />");
+
 		        getFormRecv();
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        
@@ -180,6 +181,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
+
 		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${companyID}' />");
 // 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
 					createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
@@ -259,9 +261,11 @@
 		        	url : "/admin/ezApprovalG/getFormRecvAdmin.do",
 		        	async : false,
 		        	data : {
+
 		    			formID 	  : formID,
 		    			companyID : companyID
 		    		},
+
 		        	success : function(result) {
 						xmlpara = loadXMLString(result);
 	        		}
@@ -953,6 +957,7 @@
             	<span style="min-width: 45px;" id="groupstr"><spring:message code = 'ezApprovalG.t1577' /></span>
             </h2>
 
+
             <table style="width:100%; height:565px; border : none;">
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border:none">
@@ -963,7 +968,6 @@
                         <div class="div_scroll" style="border:none; <c:if test="${approvalFlag != 'S'}">display:none;</c:if>">
                             <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
-                        
                     </td>
                     <td style="text-align:center; width:50px; border-left:none; border:none">
                         <img style="cursor:pointer" src="/images/arr_r.gif" width="24" height="24" onclick="return insertCont_onclick()"><br>

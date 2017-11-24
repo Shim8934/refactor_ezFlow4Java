@@ -140,6 +140,7 @@
 	    <script type="text/javascript">
 	    	var userLang = "${userInfo.lang}";
 	    	var lang = "";
+	    	var useHTMLMode = "${useHTMLMode}";
 	    	
 	    	switch (userLang) {
 		    	case "1": 
@@ -188,6 +189,10 @@
 	        
 	        if (type == "MAILOUTOFOFFICE") {
 	        	xfe.showToolbarItem(0, 10, false);
+	        }
+	        
+	        if (useHTMLMode == "NO") {
+	        	xfe.showTab(1, false);
 	        }
 	        
 	        window.onload = parent.Editor_Complete;
