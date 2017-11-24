@@ -191,15 +191,15 @@ public class EzTaskController extends EgovFileMngUtil {
 		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
 		        	date = endDate.substring(0, 10);
 		        }
-		        else {
+		        else {		        	
 		        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
 		        	
-		        	for (String d: result.keySet()) {
+		        	for (String d: result.keySet()) {	        			        		
 		        		Date dDate = sdf.parse(d + " 00:00:00"); 
 		    	        Calendar calendar3 = Calendar.getInstance();  
 		    	        calendar3.setTime(dDate); 
 		    	        
-		    	        if (calendar3.compareTo(calendar1) >= 0) {
+		    	        if (calendar3.compareTo(calendar1) >= 0) {		    	        	
 		    	        	date = d;
 		    	        	break;
 		    	        }
@@ -223,7 +223,9 @@ public class EzTaskController extends EgovFileMngUtil {
 			
 	        for (Map.Entry<String, Integer> entry : result.entrySet()) {
 	            String key = entry.getKey();
-	            Integer value = entry.getValue();	                    
+	            Integer value = entry.getValue();	
+	            
+	            //logger.debug("Value: " + value + " || Key: " + key);
 	            
 				dateList += key + ",";
 				String convertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);

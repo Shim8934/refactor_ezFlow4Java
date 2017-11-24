@@ -1924,7 +1924,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 	@Override
 	public Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO) throws Exception {		
-		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");		
+		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");	
+		int flag = 0;
 		
 		Date startDate = nsdf.parse(date); 
         Calendar calendar = Calendar.getInstance();  
@@ -1940,7 +1941,19 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
         Map<String, Integer> result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);	
 		
-		while (result.size() == 0) {
+		while (flag == 0) {
+			if (result.size() > 0) {
+				for (String d: result.keySet()) {
+					Date tskD = nsdf.parse(d); 
+			        Calendar calendar1 = Calendar.getInstance();  
+			        calendar1.setTime(tskD); 			        
+			        if (calendar1.compareTo(calendar) >= 0){
+			        	flag = 1;
+			        	break;
+			        }			        
+				}
+			}
+			
 			//Move to next month
 			calendar.add(Calendar.MONTH, 1);
 			date = nsdf.format(calendar.getTime());
