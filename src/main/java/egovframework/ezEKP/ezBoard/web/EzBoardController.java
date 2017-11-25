@@ -5178,6 +5178,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return "ezBoard/boardWriteSelectModal";
 	}
+
+	/**
+	 * 게시판 게시판트리모달 호출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/writeBoardSelectModalDotNet.do")
+	public String writeBoardSelectModalDotNet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
+		
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("dotNetUrl", dotNetUrl);
+		
+		return "ezBoard/boardWriteSelectModalDotNet";
+	}
 	
 	/**
 	 * 게시판 게시판트리 호출 Method
