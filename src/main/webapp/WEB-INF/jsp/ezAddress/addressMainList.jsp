@@ -348,6 +348,12 @@
 	            } catch (e) {}
 	        }
 	        function delete_address() {
+	        		
+	        		if ( pTotalCnt == 0) {
+	        			alert("<spring:message code='ezAddress.t212' />");
+	        			return;
+	        		}
+	        		
 	            if (listContentArry.length == 0) {
 	                alert("<spring:message code='ezAddress.t212' />");
 	            }
