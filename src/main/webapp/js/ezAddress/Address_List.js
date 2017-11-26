@@ -344,9 +344,9 @@ function MakeAddressList() {
             pContentSub.innerText = Sname;
             
             if (SType == "P"){
-            	SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
+            		SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
             } else {
-                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + Sname;
+                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + "<c:out value=\"" + Sname + "\" />";
             }
             SubPTag.appendChild(pContentSub);
 
@@ -943,7 +943,7 @@ function event_listDBClick(obj) {
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
-                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
 }
 function event_SearchlistDBClick(obj) {
