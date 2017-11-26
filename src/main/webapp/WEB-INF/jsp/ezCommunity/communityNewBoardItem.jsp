@@ -307,9 +307,9 @@
 			            pEndDateTime = "9999-12-30 23:59:59";
 			        } else {
 			            if ((pMode == "modify" || pMode == "temp") && $('#Edatepicker').val().substring(0, 4) != "9999") {
-			                pEndDateTime = $('#Edatepicker').val() + strEndDate.substring(10, 19);
+			                pEndDateTime = $('#Edatepicker').val() + " 23:59:59";
 			            } else {
-			                pEndDateTime = $('#Edatepicker').val() + strNow.substring(10, 19);
+			                pEndDateTime = $('#Edatepicker').val() + " 23:59:59";
 			            }
 			        }
 			        
