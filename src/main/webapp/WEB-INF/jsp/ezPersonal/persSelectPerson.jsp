@@ -25,7 +25,6 @@
 		    var ReturnFunction;
 		    var userID = "${userInfo.id}";
 		    window.onload = function () {
-		    	console.log(userID);
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments[1];
 		        } catch (e) {

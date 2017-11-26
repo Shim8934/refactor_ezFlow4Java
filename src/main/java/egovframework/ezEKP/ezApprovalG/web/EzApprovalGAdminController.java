@@ -232,6 +232,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		String secondary= ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String title = "", topID = "";
+		String parentID = request.getParameter("parentID");
+		String parentName = "";
 		
 		if (tCheck.equals("fContIns")) {
 			title = egovMessageSource.getMessage("ezApprovalG.t1623", userInfo.getLocale());
@@ -244,6 +246,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		} else {
 			topID = "Top";
 		}
+
+		if (parentID != null) {
+			if (!parentID.equalsIgnoreCase("ROOT")) {
+				parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+			} else {//ezApprovalG.t1539
+				parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
+			}						
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
@@ -253,6 +263,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("topID", topID);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("parentName", parentName);
 		
 		logger.debug("formContMain ended.");
 		
