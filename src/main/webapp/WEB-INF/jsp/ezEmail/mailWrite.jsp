@@ -762,6 +762,9 @@
 	            else if (Org_cmd == "docsend" || Org_cmd == "docsenddoc") {
 	                GetDocumentInfo(pDocID, docHref, "${docImagCnt}", "${docTarget}");
 	            }
+	            else if (Org_cmd == "docsendDotNet") {
+	                GetDocumentInfoDotNet(pDocID, docHref, "${docImagCnt}", "${docTarget}");
+	            }
 	            else if (Org_cmd == "boardDotNet") {
 	                GetBoardItemInfo_DotNet("${boardID}", "${itemID}", "${retransType}");
 	            }
@@ -876,6 +879,166 @@
 	    	g_from = val;
 	    }
 	    	    
+	    function GetDocumentInfoDotNet(DocID, DocHref, ImagCnt, Target) {
+	        AttachFlag = true;
+	        var docAttach = "";
+
+	        if (DocHref.toLowerCase().indexOf(".doc") == -1 && DocHref.toLowerCase().indexOf(".hwp") == -1) {
+	            if (DocHref == "IMAGE") {
+	                var HtmlBody = "<div style='position:relative;display:inline-block' class='margin' id='ezFormProc_div'><hr></hr><div align='center'>";
+	                if (ImagCnt == "") {
+	                    HtmlBody = HtmlBody + "<img src='" + "/Upload_Common" + "/" + GetDateFormatString() + "/" + DocID + ".png' embedding='1'/>";
+	                }
+	                else {
+	                    for (var i = 1; i <= parseInt(ImagCnt) ; i++) {
+
+	                        if (i != 1)
+	                            HtmlBody = HtmlBody + "<br><img style='margin-top:-6px;' src='" + uploadCommonPath + "/" + GetDateFormatString() + "/" + DocID + "_" + i + ".png' embedding='1'/>";
+	                        else
+	                            HtmlBody = HtmlBody + "<img src='" + "/Upload_Common" + "/" + GetDateFormatString() + "/" + DocID + "_" + i + ".png' embedding='1'/>";
+	                    }
+	                }
+	                HtmlBody = HtmlBody + "</div></div>";
+	                document.getElementById("bodyValue").innerHTML = document.getElementById("bodyValue").innerHTML + HtmlBody;
+	            }
+	            else {
+	                if (DocHref.toLowerCase().indexOf(".mht") > -1) {
+	                    var fullPath = encodeURIComponent(DocHref);
+	                    var tempXML = createXmlDom();
+	                    var XmlBodyATT = createXmlDom();
+	                    var XmlBodyDATA = createXmlDom();
+	                    var tempStr = "";
+	                    tempStr = ConvertMHTtoHTML(fullPath);
+	                    tempXML = loadXMLString(tempStr);
+	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+	                    var htmlData = getNodeText(XmlBodyDATA);
+	                    document.getElementById('docContent').innerHTML = htmlData;
+	                    document.getElementById('docContent').style.height = "220px";
+	                }
+	            }
+	        }
+	        var xmlHTTP = createXMLHttpRequest();
+	        var xmlpara = createXmlDom();
+	        var xmlstring = "<DocID>" + DocID + "</DocID>";
+	        xmlpara = loadXMLString(xmlstring);
+	        if (Target == "APPROVALG")
+	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	        else
+	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	        xmlHTTP.withCredentials = true;
+	        xmlHTTP.send(xmlpara);
+
+	        if (xmlHTTP.status == 200) {
+	            var ReturnXML = loadXMLString(xmlHTTP.responseText);
+	            if (DocHref.toLowerCase().indexOf(".doc") > 0 || DocHref.toLowerCase().indexOf(".hwp") > 0) {
+	                var FileExtention = DocHref.substring(DocHref.toLowerCase().lastIndexOf(".") + 1);
+	                var pstrXML = "";
+	                pstrXML += "<LISTVIEWDATA><HEADERS>";
+	                pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+	                pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	                pstrXML += "</HEADERS><ROWS>";
+	                pstrXML += "<ROW><CELL><VALUE>" + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]) + "." + FileExtention + "</VALUE>";
+	                pstrXML += "<DATA1>" + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]) + "." + FileExtention + "</DATA1>";
+	                pstrXML += "<DATA2>" + DocHref + "</DATA2>";
+	                pstrXML += "<DATA3></DATA3>";
+	                pstrXML += "<DATA4>APPROVALDOC</DATA4>";
+	                pstrXML += "<DATA5>N</DATA5>";
+	                pstrXML += "<DATA6>" + strLang116 + "</DATA6>";
+	                pstrXML += "</CELL><CELL>";
+	                pstrXML += "<VALUE>" + strLang116 + "</VALUE>";
+	                pstrXML += "</CELL></ROW>";
+	                pstrXML += "</ROWS></LISTVIEWDATA>";
+	                objXML = loadXMLString(pstrXML);
+	                if (pAttachListXml == "") {
+	                    pAttachListXml = objXML;
+	                }
+	                else {
+	                    if (typeof (pAttachListXml) == "string")
+	                        Rtnxml = loadXMLString(pAttachListXml);
+	                    else
+	                        Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+	                    GetChildNodes(SelectNodes(objXML, "<LISTVIEWDATA><ROWS>")).length
+	                    for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+	                        var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+	                        if (CrossYN()) 
+	                            var Node = Rtnxml.importNode(objNewAttachNodes, true);                    
+	                        else
+	                            GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+	                    }
+	                    pAttachListXml = Rtnxml;
+	                }
+	            }
+	            eSubject.value = strLang117 + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+	            var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
+	            var pstrXML = "";
+	            if (AttachRows.length > 0) {
+	                pstrXML += "<LISTVIEWDATA><HEADERS>";
+	                pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+	                pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	                pstrXML += "</HEADERS><ROWS>";
+	            }
+
+	            for (var i = 0; i < AttachRows.length; i++) {
+	                var filepath = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
+	                var filename = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
+	                var filesize = SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
+	                if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
+	                    filename = filename + ".hwp";
+	                    filesize = strLang116;
+	                }
+	                else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+	                    filename = filename + ".mht";
+	                    filesize = strLang116;
+	                }
+
+	                pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+	                pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+	                pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+	                pstrXML += "<DATA3></DATA3>";
+	                pstrXML += "<DATA4>APPROVAL</DATA4>";
+	                pstrXML += "<DATA5>N</DATA5>";
+	                pstrXML += "<DATA6>" + filesize + "</DATA6>";
+	                if (filesize > BigSizeAttachSize)
+	                    pstrXML += "<DATA7>Y</DATA7>";
+	                else
+	                    pstrXML += "<DATA7>N</DATA7>";
+
+	                pstrXML += "</CELL><CELL>";
+	                pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+	                pstrXML += "</CELL></ROW>";
+	            }
+	            if (pstrXML != "") {
+	                pstrXML += "</ROWS></LISTVIEWDATA>";
+	                objXML = loadXMLString(pstrXML);
+	                if (pAttachListXml == "") {
+	                    pAttachListXml = objXML;
+	                }
+	                else {
+	                    if (typeof (pAttachListXml) == "string")
+	                        Rtnxml = loadXMLString(pAttachListXml);
+	                    else
+	                        Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+	                    GetChildNodes(SelectNodes(objXML, "<LISTVIEWDATA><ROWS>")).length
+	                    for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+	                        var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+//	                      if (CrossYN())
+//	                         var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//	                      else
+	                            GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+	                    }
+	                    pAttachListXml = Rtnxml;
+	                }
+	                if (DragDropAttachObjetLoading) {
+//	                  AppendFileAttachInfo(pAttachListXml);
+	                    dadiframe.fileupload2(pAttachListXml);              
+	                }
+	            }
+	        }
+	    }
+	    
 	    function GetBoardItemInfo_DotNet(pBoardID, pItemID, pRetransType) {
 	    	AttachFlag = true;
 	        var xmlHTTP = createXMLHttpRequest();
