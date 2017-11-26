@@ -101,7 +101,7 @@
 		    		listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</td>";
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
-						listXML += "<td align=center><img src='/images/i_save01.gif'></td>";
+						listXML += "<td><img src='/images/i_save01.gif'></td>";
 					} else {
 						listXML += "<td></td>";
 					}
@@ -112,7 +112,7 @@
 						listXML += "<td align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</td>";
 					}
 					
-					listXML += "<tr>";
+					listXML += "</tr>";
 					
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim() + ";";
     			}
