@@ -142,11 +142,12 @@
 		            para[3] = companyID;
 		            para[4] = nodeIdx.GetNodeData("DATA7");
 		            para[5] = g_multiDataNum;
+		            para[6] = nodeIdx.GetNodeData("DATA4");
 		        } else {
 		            return;
 		        }
 				
-		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID);
+		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + para[6];
 		        formContMain_dialogArguments[0] = para;
 		        formContMain_dialogArguments[1] = btnInsFcont_onclick_complete;
 		        
@@ -196,7 +197,7 @@
 		            para[9] = g_multiDataNum;
 	
 		            
-		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID);
+		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID) + "&parentID=" + para[4];
 		            formContMain_dialogArguments[0] = para;
 			        formContMain_dialogArguments[1] = UpdateFCont_complete;
 			        
