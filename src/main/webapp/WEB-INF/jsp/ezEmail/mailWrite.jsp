@@ -763,11 +763,14 @@
 	                GetDocumentInfo(pDocID, docHref, "${docImagCnt}", "${docTarget}");
 	            }
 	            else if (Org_cmd == "docsendDotNet") {
-	                GetDocumentInfoDotNet(pDocID, docHref, "${docImagCnt}", "${docTarget}");
+	                GetDocumentInfo_DotNet(pDocID, docHref, "${docImagCnt}", "${docTarget}");
 	            }
 	            else if (Org_cmd == "boardDotNet") {
 	                GetBoardItemInfo_DotNet("${boardID}", "${itemID}", "${retransType}");
 	            }
+	            else if (Org_cmd == "CommunityDotNet") {
+	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
+	            }	            
 	            
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
@@ -879,7 +882,7 @@
 	    	g_from = val;
 	    }
 	    	    
-	    function GetDocumentInfoDotNet(DocID, DocHref, ImagCnt, Target) {
+	    function GetDocumentInfo_DotNet(DocID, DocHref, ImagCnt, Target) {
 	        AttachFlag = true;
 	        var docAttach = "";
 
@@ -1137,6 +1140,106 @@
 	                }
 	            }
 	            
+	            eSubject.value = strLang121 + eSubject.value;
+	            Subject_ReApply();
+	        }
+	    }
+	    
+	    function GetBoardItemInfo_New3_DotNet(pBoardID, pItemID) {
+	        AttachFlag = true;
+	        var xmlHTTP = createXMLHttpRequest();
+	        xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezCommunity/aspx/GetItemInfo.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID, false);
+	        xmlHTTP.withCredentials = true;
+	        xmlHTTP.send("");
+
+	        if (xmlHTTP.status == 200) {
+	            var ReturnXML = loadXMLString(xmlHTTP.responseText);
+	            var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
+	            var fullPath = Rurl;
+	            var tempXML = createXmlDom();
+	            var XmlBodyATT = createXmlDom();
+	            var XmlBodyDATA = createXmlDom();
+	            var tempStr = "";
+	            tempStr = ConvertMHTtoHTML(fullPath);
+	            tempXML = loadXMLString(tempStr);
+	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+	            var htmlData = getNodeText(XmlBodyDATA);
+	            
+	            eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
+	            var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/StartDate")[0]);
+	            var Sender = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterName")[0]) + " (" +
+	    	                 getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) + "," +
+	    			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterDeptName")[0]) + "," +
+	    			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterCompanyName")[0]) + ")";
+
+	            if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
+
+	            htmlData = ReplaceText(htmlData, "<P ", "<DIV ");
+	            htmlData = ReplaceText(htmlData, "/P>", "/DIV>");
+	            htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
+	            htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
+	            htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
+	            document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
+
+	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezCommunity/aspx/GetItemAttachments.aspx?ItemID=" + pItemID, false);
+	            xmlHTTP.send();
+	            var ReturnXML = loadXMLString(xmlHTTP.responseText);
+	            var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
+	            var pstrXML = "";
+	            if (AttachRows.length > 0) {
+	                pstrXML += "<LISTVIEWDATA><HEADERS>";
+	                pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+	                pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	                pstrXML += "</HEADERS><ROWS>";
+	            }
+	            for (var i = 0; i < AttachRows.length; i++) {
+	                var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");	                
+	                var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
+	                var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));	                
+	                var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
+	                
+	                pstrXML += "<ROW><CELL><VALUE>" + filename + "</VALUE>";
+	                pstrXML += "<DATA1>" + filename + "</DATA1>";
+	                pstrXML += "<DATA2>" + "/Upload_Community" + "/" + filepath + "</DATA2>";
+	                pstrXML += "<DATA3></DATA3>";
+	                pstrXML += "<DATA4>BOARD</DATA4>";
+	                pstrXML += "<DATA5>N</DATA5>";
+	                pstrXML += "<DATA6>" + filesize + "</DATA6>";
+	                if (filesize > BigSizeAttachSize)
+	                    pstrXML += "<DATA7>Y</DATA7>";
+	                else
+	                    pstrXML += "<DATA7>N</DATA7>";
+	                pstrXML += "</CELL><CELL>";
+	                pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+	                pstrXML += "</CELL></ROW>";
+	            }
+
+	            if (pstrXML != "") {
+	                pstrXML += "</ROWS></LISTVIEWDATA>";
+	                objXML = loadXMLString(pstrXML);
+	                if (pAttachListXml == "") {
+	                    pAttachListXml = objXML;
+	                }
+	                else {
+	                    if (typeof (pAttachListXml) == "string")
+	                        Rtnxml = loadXMLString(pAttachListXml);
+	                    else
+	                        Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+	                    GetChildNodes(SelectNodes(objXML, "<LISTVIEWDATA><ROWS>")).length
+	                    for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+	                        var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+	                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+	                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+	                    }
+	                    pAttachListXml = Rtnxml;
+	                }
+	                if (DragDropAttachObjetLoading) {
+//	                  AppendFileAttachInfo(pAttachListXml);
+	                	dadiframe.fileupload2(pAttachListXml);
+	                }
+	            }
 	            eSubject.value = strLang121 + eSubject.value;
 	            Subject_ReApply();
 	        }

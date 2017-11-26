@@ -220,6 +220,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
 				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET") || tempStr.equals("DOCSENDDOTNET")
+				|| tempStr.equals("COMMUNITYDOTNET")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -390,12 +391,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }
         // in case of board/Community
         else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community")
-        		|| _cmd.equals("boardDotNet"))) {
+        		|| _cmd.equals("boardDotNet") || _cmd.equals("CommunityDotNet"))) {
         	boardID = request.getParameter("boardID") == null ? "" : request.getParameter("boardID");
         	itemID = request.getParameter("itemID") == null ? "" : request.getParameter("itemID");
         	retransType = request.getParameter("retransType") == null ? "" : request.getParameter("retransType");
         	
-        	if (_cmd.equals("boardDotNet")) {
+        	if (_cmd.equals("boardDotNet") || _cmd.equals("CommunityDotNet")) {
         		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
         	}
         }

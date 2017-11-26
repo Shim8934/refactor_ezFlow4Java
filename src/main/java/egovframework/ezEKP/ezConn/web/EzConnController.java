@@ -83,6 +83,11 @@ public class EzConnController {
 					String strImgCount = "";
 					
 					resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+				} if (cmd != null && cmd.equals("CommunityDotNet")) {
+					String boardID = request.getParameter("boardID");
+					String itemID = request.getParameter("itemID");
+					
+					resultPage = "/ezEmail/mailWrite.do?boardID=" + boardID + "&itemID=" + itemID + "&cmd=CommunityDotNet";
 				} else {				
 					resultPage = "/ezEmail/mailMain.do";
 				}
