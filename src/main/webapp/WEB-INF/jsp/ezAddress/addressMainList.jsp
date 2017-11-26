@@ -432,14 +432,21 @@
 	            }
 	        }
 	        function quick_add() {
-	        	var pQname = document.getElementById("qname").value.trim();
-	            if (pQname == "") {
+	        		var pQname = document.getElementById("qname").value.trim();
+	            var pQemail = document.getElementById("qemail").value.trim();
+	        		var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	            
+                if (pQname == "") {
+                		document.getElementById("qname").focus();
 	                alert("<spring:message code='ezAddress.t220' />");
-	                document.getElementById("qname").focus();
+	                return;
+                } 
+                if (pQemail == "") {
+                		document.getElementById("qemail").focus();
+	                alert("<spring:message code='ezAddress.t350' />");
 	                return;
 	            }
-	
-	            var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	        		
 	            if (document.getElementById("qemail").value != "" && regex.test(document.getElementById("qemail").value) === false) {
 	                alert("<spring:message code='ezAddress.t1100' />");
 	                document.getElementById("qemail").focus();
