@@ -140,13 +140,13 @@
 			        	document.getElementById('Makedate').style.display = "none";
 			        }
 								
-			        if( pMode == "modify") {												
-			            document.getElementById("txtTitle").value  = "<c:out value = '${item.title}' />";
-			            document.getElementById("txtAbstract").value = "<c:out value = '${item.absTract}' />";
+			        if( pMode == "modify") {
+			            document.getElementById("txtTitle").value  = ConvMakeXMLString("<c:out value = '${item.title}' />");
+			            document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value = '${item.absTract}' />");
 			        }
 								
 			        if (pMode == "reply") {
-			            document.getElementById("txtTitle").value = "<c:out value = '${item.title}' />";
+			            document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value = '${item.title}' />");
 			        }
 			        
 			        ChkPermanent();
@@ -781,9 +781,9 @@
 		                            htmlData = "<body free>" + htmlData + "</body>";
 		                            
 		                            if (gubun != "2") {
-		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + "<c:out value = '${item.title}' />" + "<br><br>" + htmlData;
+		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
 		                            } else {
-		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "<br><B><spring:message code='ezCommunity.t885'/></B>" + "<c:out value = '${item.title}' />" + "<br><br>" + htmlData;
+		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
 		                            }
 		                            
 		                            message.SetEditorContent(htmlData);
