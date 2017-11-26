@@ -2772,7 +2772,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public void deleteItem(String itemList, int tenantID) throws Exception {
-		logger.debug("deleteItem started.");
+		logger.debug("deleteItem started. itemList = " + itemList);
 		
 		String boardID = "";
 		
@@ -2783,6 +2783,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("itemID", itemID);
 			map.put("tenantID", tenantID);
 			
+			logger.debug("deleteItemGet itemID = " + itemID + " || tenantID = " + tenantID);
 			boardID = ezCommunityDAO.deleteItemGet(map);
 			
 			logger.debug("itemID : " + itemID + ", boardID : " + boardID);
