@@ -270,9 +270,9 @@
 				
 		            for(i=0;i<xmldomNodes.length;i++) {
 		                str += "<ROW><CELL>";	
-		                str += "<VALUE>" + SelectSingleNodeValue(xmldomNodes[i], "FileName") + "</VALUE>";
-		                str += "<DATA1>" + SelectSingleNodeValue(xmldomNodes[i], "FileName") + "</DATA1>";
-		                str += "<DATA2>" + SelectSingleNodeValue(xmldomNodes[i], "FilePath") + "</DATA2>";
+		                str += "<VALUE>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</VALUE>";
+		                str += "<DATA1>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</DATA1>";
+		                str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath")) + "</DATA2>";
 		                str += "<DATA3></DATA3>";
 		                str += "<DATA4></DATA4>";
 		                str += "<DATA5>Y</DATA5>";
@@ -283,6 +283,7 @@
 		            }
 		            
 		            str += "</ROWS></LISTVIEWDATA>";
+		            
 		            return str;
 		        }
 	
@@ -835,9 +836,6 @@
 	                }
 	                
 	                AttachFileInfo(strXML);
-	
-	//                 document.getElementById("file1").type = "text";
-	//                 document.getElementById("file1").type = "file";
 	            }
 			</script>
 
