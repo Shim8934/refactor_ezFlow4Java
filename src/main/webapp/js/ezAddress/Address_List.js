@@ -135,6 +135,7 @@ function MakeAddressList() {
             var _TR = document.createElement("TR");
             _TR.style.verticalAlign = "middle";
             _TR.style.height = "25px";
+            _TR.style.width = "100%";
             _TR.setAttribute("id", "Maillist_" + Cnt);
             _TR.style.cursor = "pointer";
             _TR.setAttribute("_SType", SType);
@@ -164,7 +165,7 @@ function MakeAddressList() {
                 _TR.ondblclick = function () { event_listDBClick(this); };
 
             var _TD1 = document.createElement("TD");
-            _TD1.style.width = "12px";
+            _TD1.style.width = "1%";
             //_TD1.style.margin = "0px";
             //_TD1.style.padding = "0px";
             var _TDCheckBox_Sub = document.createElement("INPUT");
@@ -184,9 +185,10 @@ function MakeAddressList() {
             _TR.appendChild(_TD1);
 
             var _TD2 = document.createElement("TD");
-            _TD2.style.width = "16px";            
+            _TD2.style.width = "2%";            
             _TD2.style.margin = "0px";
             _TD2.style.padding = "0px";
+            _TD2.style.textAlign = "center";
             var _Img = document.createElement("IMG");
             if (SType == "P")
                 _Img.src = "/images/i_individual.gif";
@@ -212,6 +214,10 @@ function MakeAddressList() {
             _TD4.style.width = "20%";
             _TD4.style.margin = "0px";
             _TD4.style.padding = "0px";
+            _TD4.style.whiteSpace = "nowrap";
+            _TD4.style.overflow = "hidden";
+            _TD4.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD4.textContent = Scompany;
             else
@@ -226,6 +232,10 @@ function MakeAddressList() {
                 _TD5.style.width = "20%";
             _TD5.style.margin = "0px";
             _TD5.style.padding = "0px";
+            _TD5.style.whiteSpace = "nowrap";
+            _TD5.style.overflow = "hidden";
+            _TD5.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD5.textContent = ScompnayPhone;
             else
@@ -240,6 +250,10 @@ function MakeAddressList() {
             	_TD6.style.width = "20%";
             _TD6.style.margin = "0px";
             _TD6.style.padding = "0px";
+            _TD6.style.whiteSpace = "nowrap";
+            _TD6.style.overflow = "hidden";
+            _TD6.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD6.textContent = Smobile;
             else
@@ -250,6 +264,10 @@ function MakeAddressList() {
             _TD7.style.width = "20%";
             _TD7.style.margin = "0px";
             _TD7.style.padding = "0px";
+            _TD7.style.whiteSpace = "nowrap";
+            _TD7.style.overflow = "hidden";
+            _TD7.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD7.textContent = Semail;
             else
@@ -917,7 +935,7 @@ function event_listDBClick(obj) {
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         window.open("/ezAddress/addressRead.do?addressid=" + encodeURIComponent(pAddressID) + "&folderid=" + encodeURIComponent(pFolderID) + "&type=" + pFolderType, "",
-            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
     else {
         var conHeight = 470;
