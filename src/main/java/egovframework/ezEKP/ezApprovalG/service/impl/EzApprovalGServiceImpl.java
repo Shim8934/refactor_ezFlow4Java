@@ -5086,9 +5086,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception {
 		logger.debug("mobileSrvConn started.");
-		logger.debug("<<<docID : " + docID);
-		logger.debug("<<<result : " + result); // 2017.09.01 기준 "A" 만 들어옴
-		logger.debug("<<<keyVal : " + keyVal);
+		logger.debug("docID : " + docID);
+		logger.debug("result : " + result); // 2017.09.01 기준 "A" 만 들어옴
+		logger.debug("keyVal : " + keyVal);
 		if (userID.equals("") || result.equals("") || formID.equals("") || docID.equals("") || orgUID.equals("") || companyID.equals("")) {
 			return "ERROR";
 		}
@@ -5359,8 +5359,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
-		
-		logger.debug("aprStateSign = " + aprStateSign);
 		
 		Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
 		aprStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
@@ -16871,7 +16869,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String listString = "";
-		logger.debug("<<<listType : " + listType);
+		logger.debug("listType : " + listType);
 		if (listType.equals("1")) {
 			//결재할 문서
 			listString = getListHeader("001", companyID, userLang, tenantID);
@@ -16887,13 +16885,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			listString = getListHeader("001", companyID, userLang, tenantID);
 		}
-		logger.debug("<<<listString : " + listString);
+
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
 		
 		int totalCount = getAprDocListCount(listType, userID, userIDs, searchQuery, dueryData, companyID, tenantID);
-		logger.debug("<<<totalCount : " + totalCount);
 
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
         int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
@@ -16901,10 +16898,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         if (querySize2 >= Integer.parseInt(pageSize)) {
         	querySize2 = Integer.parseInt(pageSize);
         }
-        logger.debug("<<<querySize : " + querySize);
-        logger.debug("<<<querySize2 : " + querySize2);
-		
-		resultXML.append("<DOCLIST>");
+
+        resultXML.append("<DOCLIST>");
 		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
@@ -17011,7 +17006,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
-		logger.debug("<<<resultXml : " + resultXML);
+		
 		logger.debug("aprDocList ended.");
 
 		return resultXML.toString();
@@ -17960,7 +17955,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				pOrderByMain= "ORDER BY "+ pOrderBySub.trim() +", STARTDATE ";  
 			}
 		} else {
-			pOrderByMain= "ORDER BY STARTDATE";   
+			// pOrderByMain= "ORDER BY STARTDATE";
+			pOrderByMain= "ORDER BY STARTDATE DESC";   
 		}
 				
 		map.put("v_PLISTTYPE", pListType.trim());
@@ -17990,7 +17986,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("<ROW>");
 		int docCnt = 0, sixHgap = 0, oneDgap = 0, sevenDgap = 0, oneMgap = 0, other = 0;
-		for (int j=dLength-1; j>=0; j--) {
+		//for (int j=dLength-1; j>=0; j--) {
+		for (int j=0; j<dLength; j++) {
 			docCnt += 1;
 			if (docCnt <= 7) {
 				resultXML.append("<CELL>");

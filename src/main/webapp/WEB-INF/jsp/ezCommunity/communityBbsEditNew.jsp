@@ -58,7 +58,7 @@
 				}
                 
 				if (pMode == "edit" || pNo != "") {
-					document.getElementById("title").value = pTitle;
+					document.getElementById("title").value = ConvMakeXMLString(pTitle);
 				}
 			}
 			
@@ -209,13 +209,21 @@
 			        var htmlData = message.GetEditorContentURL(fullPath);
 			        
 			        if(pMode == "write" && pNo != "") {
-			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + pTitle + "<br><br>" + htmlData;
+			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + ConvMakeXMLString(pTitle) + "<br><br>" + htmlData;
 			            message.SetEditorContent(htmlData);
 			        } else {
 			            message.SetEditorContentURL(fullPath);
 			        }
 			    } 
 			}
+			
+			function ConvMakeXMLString(str) {
+                str = ReplaceText(str, "&amp;", "&");
+                str = ReplaceText(str, "&lt;", "<");
+                str = ReplaceText(str, "&gt;", ">");
+                str = ReplaceText(str, "&quot;", "\"");
+                return str;
+            }
 		</script>
 		
 <!-- 		사용안함 -->

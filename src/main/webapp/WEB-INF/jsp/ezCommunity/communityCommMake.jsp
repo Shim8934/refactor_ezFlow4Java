@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -21,7 +22,7 @@
 		        document.make.sNewID.value = newID;
 		        document.make.sNewSubID.value = new_subID;
 
-		        if (document.make.clubName.value == "") {
+		        if (document.make.clubName.value == "" || trim_Cross(document.make.clubName.value) == "") {
 		            alert("<spring:message code='ezCommunity.t2' />");
 
 	                document.make.clubname.focus();

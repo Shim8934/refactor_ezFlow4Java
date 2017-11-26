@@ -480,4 +480,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGFormConnInfoVO> getFormConnInfo() {
 		return (List<ApprGFormConnInfoVO>) list("EzApprovalGAdminDAO.getFormConnInfo");
 	}
+	
+	public String getParentContName(Map<String, Object> map) {
+		return (String) select("EzApprovalGAdminDAO.getParentContName", map);
+	}
 }

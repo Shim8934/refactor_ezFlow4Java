@@ -1122,14 +1122,14 @@
 				A.attachments,
 				A.importance,
 				B.boardid,
-				CASE WHEN #primary# = '1' THEN B.boardname ELSE B.boardname2 END AS boardname,
+				B.boardname,
 				A.abstract
 			FROM
 				TBL_COMM_ITEM A
 			INNER JOIN
 				(SELECT
 					boardid,
-					CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END,
+					CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END AS boardname,
 					tenant_id
 				FROM
 					TBL_COMM_BOARDINFO

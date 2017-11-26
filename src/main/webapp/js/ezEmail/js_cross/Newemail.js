@@ -1212,7 +1212,7 @@ function callMsgDlg(szContentClass, Href) {
 
 var PcSaveArrayList = new Array();
 
-function mail_export() {
+function mail_export(pwd) {
 	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang42);
         return;
@@ -1234,39 +1234,59 @@ function mail_export() {
         AttachDownFrame.target = "_blank";
         
     } else { // 여러개의 메일을 다운로드 할 경우
-    	var folderIdAndMessageIdList = new Object();
-    	for (var i = 0; i < PcSaveArrayList.length; i++) {
-    		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
-    		
-    		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
-    			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
-    		} else {
-    			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
-    		}
+    	var type = "MAIL";
+    	
+    	if (useEncryptZipForEmail == "YES") { // 암호화 config 인 경우
+    		mailExportOption_onClick(type);
+    	} else { // 암호 적용 안할 경우
+    		mailExport_start();
     	}
-    	
-    	ShowMailProgress();
-    	
-        $.ajax({
-			type : "POST",
-			dataType : "text",
-			async : true,
-			url : "/ezEmail/mailExportZip.do",
-			data : folderIdAndMessageIdList,
-			complete: function(){
-				HiddenMailProgress();
-			},
-			success: function(result){
-				if (result != "") {
-			    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result;
-			    	AttachDownFrame.location.href = fullpath;
-			        AttachDownFrame.target = "_blank";
-				} else {
-					alert(strLang104);
-				}
-			}
-		});
     }
+    
+}
+
+function mailExport_start(pwd){
+	
+	var encryptPw = "";
+	
+	if (typeof pwd != "undefined") {
+		encryptPw = pwd;
+	}
+	
+	var folderIdAndMessageIdList = new Object();
+	
+	for (var i = 0; i < PcSaveArrayList.length; i++) {
+		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
+		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
+			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
+		} else {
+			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
+		}
+	}
+	
+	ShowMailProgress();
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezEmail/mailExportZip.do",
+		data : folderIdAndMessageIdList,
+		complete: function(){
+			HiddenMailProgress();
+		},
+		success: function(result){
+			if (result != "") {
+		    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" 
+		    		+ result + "&encryptPw=" + encryptPw;
+		    	AttachDownFrame.location.href = fullpath;
+		        AttachDownFrame.target = "_blank";
+			} else {
+				alert(strLang104);
+			}
+		}
+	});
+	
 }
 
 function HiddenContextMenu() {

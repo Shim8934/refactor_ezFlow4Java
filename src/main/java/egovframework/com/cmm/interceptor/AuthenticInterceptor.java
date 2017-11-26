@@ -160,9 +160,18 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							
 							if (userId != null && !userId.isEmpty()) {	
 								int atSignPos = userId.indexOf("@");
+								String domainName = "";
 								
 								if (atSignPos != -1) {
+									domainName = userId.substring(atSignPos + 1);									
 									userId = userId.substring(0, atSignPos);
+									
+									logger.debug("split userId=" + userId + ",domainName=" + domainName);
+									
+									// Full 이메일 주소로 구성된 아이디로부터 추출한 도메인명으로 Tenant ID를 다시 구한다.
+									tenantId = loginService.getTenantId(domainName);
+									
+									logger.debug("new tenantId=" + tenantId);
 								}
 								
 								loginController.createLoginCookie(userId, " ", " ", tenantId, request, response);

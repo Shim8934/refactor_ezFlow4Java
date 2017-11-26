@@ -34,6 +34,7 @@
 			var pBoardID = "${boardInfo.boardID}";
 			var pSortBy = "${pSortBy}";
 			var totalCount = "${totalCount}";
+			var ListInfo = "";
 // 			var pUse_Editor = "${ Use_Editor }";
 			
 			$(function () {
@@ -67,7 +68,6 @@
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + ";";
     			}
     			
-//     			$('#tblList tbody:first').append(listXML);
     			$('#tblList').html($('#tblList').html()+listXML);
     			makePageSelPage();
     		});
@@ -310,9 +310,9 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table class="mainlist" id ="tblList" style="margin-top:3px;width:100%">
+		<table class="cmhomelist" id ="tblList" style="width:100%">
 			<tr>
-				<th align="center" style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+				<th style="padding:0;width:20px; text-align:center;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
 				<c:choose>
 					<c:when test="${pSortBy == 'BoardName'}">
 						<th style="cursor:pointer"  width="80" onClick="SortPage('BoardName desc')" ><spring:message code='ezCommunity.t418' /><img src="/images/view-sortup.gif" width="9" height="9"></th>

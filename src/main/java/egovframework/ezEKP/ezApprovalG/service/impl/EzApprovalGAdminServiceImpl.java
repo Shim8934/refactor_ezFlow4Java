@@ -3653,4 +3653,20 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return result;
 	}
+	
+	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception {
+		logger.debug("getParentContName started.");
+		
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_PARENTID", formID);
+		map.put("v_LANG", langType);
+		
+		result = ezApprovalGAdminDAO.getParentContName(map);
+		
+		logger.debug("getParentContName ended.");
+		return result;
+	};
 }
