@@ -251,7 +251,7 @@ public class EzStatisticsMailLogController {
 		
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> mailLogList = (List<Map<String, Object>>) resultMap.get("mailLogList");
-		int totalCount = (int) resultMap.get("totalCount");
+		int totalCount = mailLogList.size();
 		
 		// 엑셀 워크시트 생성 및 자동 다운로드 
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -357,42 +357,62 @@ public class EzStatisticsMailLogController {
 		cell = row.createCell(7); cell.setCellStyle(headerStyle);
 		cell = row.createCell(8); cell.setCellStyle(headerStyle);
 		
-		for (int i = 2; i < totalCount + 1; i++) {
-			row = sheet.createRow(i);
+		for (int i = 0; i < totalCount; i++) {
+			row = sheet.createRow(i+2);
 			row.setHeight((short)300);
 			
-			cell = row.createCell(0); cell.setCellValue((String) mailLogList.get(i-1).get("LogTime")); 
-			cell.setCellStyle(bodyStyle);
+			Map<String, Object> mailLog = mailLogList.get(i);
 			
+			cell = row.createCell(0);
+			cell.setCellValue((String) mailLog.get("LogTime"));
+			cell.setCellStyle(bodyStyle);
+
 			if (mailLogType.equals("sendAll")) {
-				cell = row.createCell(1); cell.setCellValue((String) mailLogList.get(i-1).get("senderName")); 
+				cell = row.createCell(1);
+				cell.setCellValue((String) mailLog.get("senderName"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(2); cell.setCellValue((String) mailLogList.get(i-1).get("senderEmail")); 
+				
+				cell = row.createCell(2);
+				cell.setCellValue((String) mailLog.get("senderEmail"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(3); cell.setCellValue((String) mailLogList.get(i-1).get("senderDeptName")); 
+				
+				cell = row.createCell(3);
+				cell.setCellValue((String) mailLog.get("senderDeptName"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(4); cell.setCellValue((String) mailLogList.get(i-1).get("recipientName")); 
+				
+				cell = row.createCell(4);
+				cell.setCellValue((String) mailLog.get("recipientName"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(5); cell.setCellValue((String) mailLogList.get(i-1).get("recipientEmail")); 
+				
+				cell = row.createCell(5);
+				cell.setCellValue((String) mailLog.get("recipientEmail"));
 				cell.setCellStyle(bodyStyle);
 			} else {
-				cell = row.createCell(1); cell.setCellValue((String) mailLogList.get(i-1).get("recipientName")); 
+				cell = row.createCell(1);
+				cell.setCellValue((String) mailLog.get("recipientName"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(2); cell.setCellValue((String) mailLogList.get(i-1).get("recipientEmail")); 
+				cell = row.createCell(2);
+				cell.setCellValue((String) mailLog.get("recipientEmail"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(3); cell.setCellValue((String) mailLogList.get(i-1).get("recipientDeptName")); 
+				cell = row.createCell(3);
+				cell.setCellValue((String) mailLog.get("recipientDeptName"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(4); cell.setCellValue((String) mailLogList.get(i-1).get("senderName")); 
+				cell = row.createCell(4);
+				cell.setCellValue((String) mailLog.get("senderName"));
 				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(5); cell.setCellValue((String) mailLogList.get(i-1).get("senderEmail")); 
+				cell = row.createCell(5);
+				cell.setCellValue((String) mailLog.get("senderEmail"));
 				cell.setCellStyle(bodyStyle);
 			}
-			
-			cell = row.createCell(6); cell.setCellValue((String) mailLogList.get(i-1).get("subject")); 
+
+			cell = row.createCell(6);
+			cell.setCellValue((String) mailLog.get("subject"));
 			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(7); cell.setCellValue((String) mailLogList.get(i-1).get("attachedFileName")); 
+			cell = row.createCell(7);
+			cell.setCellValue((String) mailLog.get("attachedFileName"));
 			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(8); cell.setCellValue((String) mailLogList.get(i-1).get("mailSize")); 
+			cell = row.createCell(8);
+			cell.setCellValue((String) mailLog.get("mailSize"));
 			cell.setCellStyle(bodyStyle);
 			
 			sheet.autoSizeColumn(i-1);
