@@ -147,9 +147,9 @@
 		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr>
 		            <th width="70px"><spring:message code='ezAddress.t124' /></th>
-		            <td style="width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName"> <c:out value='${addressInfo.sName}' /></span></td>
+		            <td style="width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName"> <c:out value='${addressInfo.sName}' /></span></td>
 		            <th width="70px"><spring:message code='ezAddress.t286' /></th>
-		            <td title="<spring:message code='ezAddress.t287' />" style="width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
+		            <td title="<spring:message code='ezAddress.t287' />" style="width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t51' /></th>
