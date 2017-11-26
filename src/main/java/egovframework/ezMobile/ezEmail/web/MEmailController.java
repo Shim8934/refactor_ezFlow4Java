@@ -157,9 +157,7 @@ public class MEmailController extends EgovFileMngUtil {
 			modelMap.addAttribute("folderListCnt", mailFolderList.size());
 			modelMap.addAttribute("folderList", mailFolderList);
 		}
-
 		
-		System.out.println(mailFolderList);			
 		logger.debug("getFolderList ended.");
 		
 		return "mobile/ezEmail/mMailFolderList";
@@ -377,8 +375,6 @@ public class MEmailController extends EgovFileMngUtil {
 	    ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.PUT, entity, String.class);
 		
 	    JSONParser jp = new JSONParser();
-	    
-		System.out.println(responseEntity.getBody());
 		
 		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 				

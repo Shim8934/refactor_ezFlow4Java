@@ -23,6 +23,7 @@
 			var gMultiDataNum = "";
 			var returnFunction
 			var approvalFlag = "<c:out value = '${approvalFlag}' />";
+			var parentContName = "${parentName}"
 			
 			if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 			    window.onblur = function () {
@@ -56,11 +57,12 @@
 			        InitValue(Para);
 			    }
 			    
-			    if (gMultiDataNum == "1") {
+/* 			    if (gMultiDataNum == "1") {
 			        document.getElementById("ParantName").innerHTML = " <font color='gray'> " + gParantName + " </font> ";
 			    } else {
 			        document.getElementById("ParantName").innerHTML = " <font color='gray'> " + gParantName2 + " </font> ";
-			    }
+			    } */
+			    document.getElementById("ParantName").innerHTML = " <font color='gray'> " + parentContName + " </font> ";
 
 			    initTreeInfo();
    

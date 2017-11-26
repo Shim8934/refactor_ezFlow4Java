@@ -1209,7 +1209,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
 	    	    
 	    int tenantID = userInfo.getTenantId();
-	    
+
 	    vo.setTenantId(tenantID);
 	    
 	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1297,11 +1297,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							vo.setMail(mailAddr);				
 							String userPrincipalName = cn + "@" + domain;
 							vo.setUpnName(userPrincipalName);
+							
+						    String oriPass = vo.getPassword();
 							String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
 							vo.setPassword(pass);
 							
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
-							ezOrganAdminService.insertDBData_user(vo);
+							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);

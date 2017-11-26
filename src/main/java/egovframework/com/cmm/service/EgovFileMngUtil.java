@@ -29,8 +29,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
-
-
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -405,14 +403,15 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		if (!file.isFile()) {
 		    throw new FileNotFoundException(downFileName);
 		}
-	
+		
 		//byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
 		int fSize = (int)file.length();
 		if (fSize > 0) {
 		    BufferedInputStream in = null;
 	
 		    try {
-		    	in = new BufferedInputStream(new FileInputStream(file));	
+		    	in = new BufferedInputStream(new FileInputStream(file));
+		    	
 	    	    String mimetype = "application/octet-stream"; //"application/x-msdownload"	
 	    	    
 	    	    // dhlee : 파일 크기가 큰 경우 메모리가 작은 시스템에서는 문제가 발생하여 BUFF_SIZE 만큼의 버퍼를 할당하도록 수정함.	    	    

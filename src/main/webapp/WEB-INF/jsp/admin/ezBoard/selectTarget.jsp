@@ -409,11 +409,11 @@
 		    var checkname2_cross_dialogArguments = new Array();
 		    var rgParams = new Array();
 		    function cnsearch_click(pMode){
-		        if (cnkeyword.value == ""){
+		        if (cnkeyword.value.replace(/\s/g, "") == ""){
 		            alert("<spring:message code='ezBoard.t23'/>");
 		            cnkeyword.focus();
 		            return;
-		        }		        
+		        }
 		        var adCount = 0;		        
 		        var xmlDOM = createXmlDom();
 
