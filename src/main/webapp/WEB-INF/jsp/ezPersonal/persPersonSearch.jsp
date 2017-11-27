@@ -308,10 +308,7 @@
 	    	            Sub_TD1.style.textAlign = "left";
 	        	        Sub_TD1.setAttribute("class", "name");
 	            	    var pDisplayName = "";
-	            	    
-		                if ("${useOCS}" == "YES") {
-	                    	pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
-	                	}
+		                
 	                	pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
 	                	pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
 	                	Sub_TD1.innerHTML = pDisplayName;
@@ -386,12 +383,8 @@
 	    	                M_TR_TD2.style.textOverflow = "ellipsis";
 	        	            M_TR_TD2.style.whiteSpace = "nowrap";
 	            	        M_TR_TD2.style.width = "90px";
-	            	        
-	                    	if ("${useOCS}" == "YES") {
-	                        	M_TR_TD2.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
-	                    	} else {
-	                        	M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
-	                    	}
+	                    	
+	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
 
 	                    	var M_TR_TD3 = document.createElement("TD");
 							M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
@@ -412,11 +405,7 @@
 	                    	M_TR_TD1.style.whiteSpace = "nowrap";
 	                    	M_TR_TD1.style.width = "150px";
 	                    	
-	                    	if ("${useOCS}" == "YES") {
-	                        	M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
-	                    	} else {
-		                        M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
-	                    	}
+		                    M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
 
 		                    var M_TR_TD2 = document.createElement("TD");
 	    	                M_TR_TD2.style.width = "80px";

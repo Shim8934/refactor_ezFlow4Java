@@ -432,14 +432,16 @@
 	            }
 	        }
 	        function quick_add() {
-	        	var pQname = document.getElementById("qname").value.trim();
-	            if (pQname == "") {
+	        		var pQname = document.getElementById("qname").value.trim();
+	            var pQemail = document.getElementById("qemail").value.trim();
+	        		var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	            
+                if (pQname == "") {
+                		document.getElementById("qname").focus();
 	                alert("<spring:message code='ezAddress.t220' />");
-	                document.getElementById("qname").focus();
 	                return;
-	            }
-	
-	            var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+                } 
+	        		
 	            if (document.getElementById("qemail").value != "" && regex.test(document.getElementById("qemail").value) === false) {
 	                alert("<spring:message code='ezAddress.t1100' />");
 	                document.getElementById("qemail").focus();
@@ -682,10 +684,8 @@
 				<li><span  onClick="new_group()"><spring:message code='ezAddress.t237' /></span></li>
 				<li id="importaddress"><span  onClick="address_inout(1)"><spring:message code='ezAddress.t210' /></span></li>
 				<li id="exportaddress"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
-				
 				<li id="importaddress_Cross"><span onclick="crossImport()"><spring:message code='ezAddress.t210' /></span></li>
-        		<li id="exportaddress_Cross"><span onclick="crossexport()"><spring:message code='ezAddress.t143' /></span></li>
-				
+        			<li id="exportaddress_Cross"><span onclick="crossexport()"><spring:message code='ezAddress.t143' /></span></li>
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
 				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
@@ -792,13 +792,13 @@
 			--%>
 		</ul>
 		<br />
-		<div style="vertical-align:top;border:0px solid red;" id="list_Layer">
-			<table class="mainlist" id="DetailList_header">
+		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
+			<table class="mainlist" id="DetailList_header" style="width:100%; table-layout: fixed;">
 			    <tr>
-					<th style="cursor:pointer;padding:0;width:12px">
+					<th style="cursor:pointer;padding:0;width:1%">
 				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
 					</th>
-					<th style="padding:0;text-align:center;width:16px"><img src="/images/i_individual.gif" border="0"></th>
+					<th style="padding:0;text-align:center;width:2%;"><img src="/images/i_individual.gif" border="0"></th>
 					<th id="CompanyName" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
 					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
 					<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
@@ -808,7 +808,7 @@
 				</tr>
 			</table>
 			<div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
-				<table class="mainlist" style="" id="MailList"></table>
+				<table class="mainlist" style="width: 100%; table-layout: fixed;" id="MailList" ></table>
 				<div style="height:100%;display:none;" id="MailListCard" ></div>
 			</div>
 			<div id="tblPageRayer"  style="width:600px; margin:6px auto;"></div>

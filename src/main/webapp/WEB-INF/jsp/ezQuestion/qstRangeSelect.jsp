@@ -335,7 +335,7 @@
     	}
 	    var checkname2_cross_dialogArguments = new Array();
     	function cnsearch_click() {
-        	if (cnkeyword.value == "") {
+        	if (cnkeyword.value.replace(/\s/g, "") == "") {
             	alert("<spring:message code='ezQuestion.t22' />");
             	cnkeyword.focus();
             	return;

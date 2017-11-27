@@ -1083,7 +1083,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		if(req.getParameter("DataXML") != null) {
 			pMode = "EDIT";
-			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
+			pDataXML = req.getParameter("DataXML").trim();
 			logger.debug("pDataXML="+pDataXML);
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
 			pQstTitle = commonUtil.cleanValue(doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent());

@@ -346,11 +346,6 @@
 		    return document.getElementById("RangeXMLStr").value;
 		}
 		</script>
-		<style type = "text/css">
-			html #mainmenu li span, #mainmenu li span.off{
-			padding-top:4px;
-		}
-		</style>
 	</head>
 	<body class="mainbody"> 
 	<form id="frmCreate" method="post" action="/ezQuestion/qstStep2ReUse.do" name="frmCreate"> 

@@ -11,6 +11,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Calendar_Action_cross.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
+		<script type="text/javascript" src="/js/ezResource/CalendarView_Cross.js"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
@@ -48,10 +50,59 @@
 	    	var pChildBrd = "${childBrd}";
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
-		    var pStartday = "${startDay}";
+		    var pStartday = "${startDay}";		    
+		    select_memorialDays("${lang}");
 		    
 	    	document.onselectstart = function () { return false; };
+	    	
+	    	//baonk added
+	    	var xmlhttp2 = createXMLHttpRequest();
+		    function schedule_get_holiday() {
+		        xmlhttp2 = createXMLHttpRequest();
+		        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
+		        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
+		        xmlhttp2.send();
+		    }
+	
+		    function event_schedule_get_holiday() {
+		        if (xmlhttp2 == null || xmlhttp2.readyState != 4)
+		            return;
+		        if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
+		            XmlNodeText = xmlhttp2.responseText;
+		            XmlNode = loadXMLString(XmlNodeText);
+		            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+		                if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1") {
+		                    var issolar;
+		                    var holiday;
+		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0]) == "1")
+		                        issolar = "1";
+		                    else
+		                        issolar = "2";
+		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0]) == "1")
+		                        holiday = true;
+		                    else
+		                        holiday = false;
+		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0]) == "1") {
+		                        memorialDays.push(new memorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
+		                    }
+		                    else {
+		                        yearmemorialDays.push(new yearmemorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(0, 4),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
+		                    }
+		                }
+		            }
+		            xmlhttp2 = null;		            
+		        }
+		    }
+	    	//end
+	
 	    	window.onload = function () {
+	    		schedule_get_holiday(); //baonk added
+	    		
 	    		if (pStartday == 1) {
 		            DefaultView = 1;
 	    		} else {
