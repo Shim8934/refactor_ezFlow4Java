@@ -4151,6 +4151,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				} else { // 수정 전에 설정되었던 만료일로 세팅함
 					endDateTime = item.getEndDate().split(" ")[0];
 				}
+				
+				item.setExtensionAttribute4(item.getExtensionAttribute4().replace("&amp;", "&"));
 			} else { //새 게시나 답변인 경우
 				if (expireDays.equals("-1")) {
 					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd"); 
