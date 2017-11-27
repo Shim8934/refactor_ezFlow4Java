@@ -219,7 +219,10 @@
 
 		    var checkname2_cross_dialogArguments = new Array();
 		    function deptsearch_click() {
-		        if (deptkeyword.value == "") {
+		    	
+		    	var deptKeyword = deptkeyword.value.trim().length;
+		    	
+		        if (deptKeyword == 0) {
 		            alert("<spring:message code='ezResource.t129'/>");
 		            deptkeyword.focus();
 		            return;
