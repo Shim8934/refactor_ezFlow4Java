@@ -233,14 +233,8 @@ function GetTableMiniBodyObj() {
 
 // 선택한 월의 날짜 입력 시작
 function MonthMiniData(oThisDate) {
-
     var objTd = document.createElement("TD");
-
     var divID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
-
-    console.log(divID);
-    console.log(nowDay);
-    
     
     var className = "";
     if (divID == nowDay) {

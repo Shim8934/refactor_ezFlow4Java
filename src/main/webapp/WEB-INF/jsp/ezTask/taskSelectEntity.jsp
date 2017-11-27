@@ -102,6 +102,7 @@
 	    function TreeViewNodeClick() {
 	        issearch = false;
 	        CurPage = "1";
+	        p_ListOrderObject = "";
 	        var treeView = new TreeView();
 	        treeView.LoadFromID("FromTreeView");
 	        var nodeIdx = treeView.GetSelectNode();
@@ -820,6 +821,12 @@
 	    }
 
 	    function InsertUser() {
+	    	
+            if (p_ListOrderObject == "") {
+                alert("<spring:message code='ezSchedule.t1053' />");
+                return;
+            }
+            
 	    	// 공유자
 	    	if (type == 2) {
 		        for (var i = 0; i < listContentArry.length; i++) {
@@ -1236,15 +1243,15 @@
 	                            </table>
 	                        </td>
 	                        <td style="width: 30px; text-align: center;">                            
-	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
-	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertUser(ListViewMsgTo)"><br>
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteUser(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezTask.t137' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteUser(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
