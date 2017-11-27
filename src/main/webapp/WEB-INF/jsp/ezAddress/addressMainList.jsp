@@ -441,11 +441,6 @@
 	                alert("<spring:message code='ezAddress.t220' />");
 	                return;
                 } 
-                if (pQemail == "") {
-                		document.getElementById("qemail").focus();
-	                alert("<spring:message code='ezAddress.t350' />");
-	                return;
-	            }
 	        		
 	            if (document.getElementById("qemail").value != "" && regex.test(document.getElementById("qemail").value) === false) {
 	                alert("<spring:message code='ezAddress.t1100' />");
