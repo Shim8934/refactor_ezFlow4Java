@@ -297,9 +297,10 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-       
+       			
 		        if (ExpireDays != -1) {
 			        var utcDate = new Date(strNow.substring(0, 10));
+			        alert(utcDate);
 			        utcDate.setDate(utcDate.getDate() + Number(ExpireDays));
 		        } else {
 			        var utcDate = new Date(strNow.substring(0, 10));
@@ -430,10 +431,14 @@
 		            pEndDateTime = "9999-12-30 23:59:59";
 		        } else {
 		            if ((pMode == "modify" || pMode == "temp") && $('#Sdatepicker2').val().substring(0, 4) != "9999") {
-		                pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
+		            	//만료일자가 오늘 23:59:59 이전까지 포함할수있게 수정
+		                //pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
+		            	pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
 		            }
 		            else {
-		                pEndDateTime = $('#Sdatepicker2').val() + strNow.substring(10, 19);
+		            	//만료일자가 오늘 23:59:59 이전까지 포함할수있게 수정
+		                //pEndDateTime = $('#Sdatepicker2').val() + strNow.substring(10, 19);
+		            	pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
 		            }
 		        }
 		        return pEndDateTime;
@@ -490,7 +495,8 @@
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
-		        
+		        alert(pStartDate);
+		        alert(pEndDate);
 		        if (document.getElementById("ChkPermanence").checked == false) {
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
