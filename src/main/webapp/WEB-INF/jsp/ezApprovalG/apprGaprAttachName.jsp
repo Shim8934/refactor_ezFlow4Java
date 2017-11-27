@@ -101,7 +101,7 @@
 		        }
 		
 		        txtPageNum.value = RetValue[0];
-		        txtDisplayName.value = RetValue[1];
+		        txtDisplayName.value = ReplaceText(RetValue[1], "&amp;", "&");
 		        ret[0] = "cancel";
 		        ret[1] = txtPageNum.value;
 		        ret[2] = txtDisplayName.value;
