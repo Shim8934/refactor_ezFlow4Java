@@ -2440,6 +2440,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                }
 		            // 임시 보관함에 저장하는 경우
 		            } else {
+		            	//임시보관함에 저장할 경우에는 style 빼도록 수정
+		            	htmlBody = htmlBody.replace("<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> ", "");
+		            	
 		            	message.setContent(htmlBody, "text/html; charset=utf-8");
 		            	content.setContent(htmlBody, "text/html; charset=utf-8");
 		            }

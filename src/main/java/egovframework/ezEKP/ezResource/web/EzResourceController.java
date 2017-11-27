@@ -503,6 +503,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdNm = "";
 		int brdCount;
 		String useEditor = "";
+		String lang = userInfo.getLang();
 		
 		if(req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
@@ -551,6 +552,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdCount", brdCount);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("startDay", startDay);
+		model.addAttribute("lang", lang);		
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
