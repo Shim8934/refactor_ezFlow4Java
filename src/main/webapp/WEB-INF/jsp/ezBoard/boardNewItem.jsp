@@ -300,7 +300,6 @@
        			
 		        if (ExpireDays != -1) {
 			        var utcDate = new Date(strNow.substring(0, 10));
-			        alert(utcDate);
 			        utcDate.setDate(utcDate.getDate() + Number(ExpireDays));
 		        } else {
 			        var utcDate = new Date(strNow.substring(0, 10));
