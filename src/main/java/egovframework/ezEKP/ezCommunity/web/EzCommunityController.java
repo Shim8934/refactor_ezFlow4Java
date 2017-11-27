@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -822,7 +823,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/saveItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String saveItem (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr, CommunityBoardItemVO item, HttpServletRequest request) throws Exception {
+	public String saveItem(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr, CommunityBoardItemVO item, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlData = commonUtil.convertStringToDocument(xmlStr);
 		String pMode = request.getParameter("mode");
@@ -4195,33 +4196,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
 		String itemID = xmlDom.getElementsByTagName("ITEMID").item(0).getTextContent();
 		
+		if (mode.equals("New")) {
+			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		}
+		
 		logger.debug("attachList : " + attachList + ", smallName : " + smallName + ", fileName : " + fileName + ", title : " + title + ", itemID : " + itemID);
 		
-		String[] attachArray = attachList.split(";");
-        String[] smallArray = smallName.split(";");
-        String[] itemIDArray = itemID.split(";");
-        String[] fileNameArray = fileName.split(";");
-
-        if (attachArray.length == smallArray.length) {
-        	for (int i = 0; i < attachArray.length; i++) {
-        		xmlDom.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attachArray[i] + ";");
-        		xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).setTextContent(smallArray[i]);
-        		xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).setTextContent(fileNameArray[i]);
-        		xmlDom.getElementsByTagName("ITEMID").item(0).setTextContent(itemIDArray[i]);
-        		xmlDom.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemIDArray[i]);
-        		
-        		if (attachArray.length > 2) {
-        			xmlDom.getElementsByTagName("TITLE").item(0).setTextContent(title + "_" + Integer.toString(i + 1));
-        		}
-        		
-        		if (i > 0) {
-        			mode = "New";
-        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-        		}
-        		
-        		ret = ezCommunityService.newItem(xmlDom, mode, commonUtil.getRealPath(request), userInfo);
-        	}
-        }
+        xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).setTextContent(fileName);
+		xmlDom.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemID);
+		xmlDom.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attachList);
+		xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).setTextContent(smallName);
+    		
+		ret = ezCommunityService.newItem(xmlDom, mode, commonUtil.getRealPath(request), userInfo);
         
         logger.debug("saveItemPhoto ended.");
         
@@ -4309,7 +4295,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
-			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + item.getExtensionAttribute4();
+			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
 			
 			File file = new File(pFilePath);
 			
