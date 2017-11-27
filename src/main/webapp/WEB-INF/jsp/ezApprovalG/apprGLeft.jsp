@@ -261,12 +261,15 @@
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:NOT");
 		                    break;
 		                case "MYDEPTCONT":
+		                		document.getElementById('myDeptCont0').onclick();
 		                    break;
 		                case "ITEMCONT":
+		                	document.getElementById('itemList0').onclick();
 		                    break;
 		                case "DEPTCONT":
 		                    break;
 		                case "USERCONT":
+		                	document.getElementById('spn_UserContTree_0').onclick();
 		                    break;
 		                case "m01":
 		                    DocManageMain(pthis.id);
@@ -973,7 +976,7 @@
 			<h2><span id="ITEMCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 			<ul>
           	<c:forEach var="itemList" items="${itemList}" varStatus="status">
-          	    <li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}<spring:message code='ezApprovalG.t456'/>) </span></li>
+          	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}<spring:message code='ezApprovalG.t456'/>) </span></li>
           	</c:forEach>
         	</ul>
 

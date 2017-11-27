@@ -10,8 +10,8 @@
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
-	    <script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>	    
+	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+	    <script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezSchedule/TreeView.js"></script>
@@ -1509,7 +1509,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title"><spring:message code='ezCircular.t40' /></h1>
+		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
 		<table style="width:100%">
 			<tr>
 				<td>

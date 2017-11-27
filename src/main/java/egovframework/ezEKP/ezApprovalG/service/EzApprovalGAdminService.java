@@ -162,4 +162,6 @@ public interface EzApprovalGAdminService {
 	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMHT, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception;
 
 	public String formConnSave(String formID, String formText, String path, String companyID) throws Exception;
+	
+	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception;
 }

@@ -50,6 +50,7 @@
 				            window.close();
 				        }
 					} else {
+							flag = true;
 				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 				            OpenAlertUI(pAlertContent);
 				            return;

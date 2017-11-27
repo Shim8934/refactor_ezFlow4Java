@@ -47,6 +47,7 @@
 			        else
 			            window.returnValue = rtnVal;
 		        } else {
+		        	flag = true;
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;

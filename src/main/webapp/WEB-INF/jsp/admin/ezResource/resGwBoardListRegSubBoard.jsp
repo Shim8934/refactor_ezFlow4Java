@@ -37,7 +37,9 @@
 					return;
 				}
 				
-		    	if (document.getElementById("Brd_NM").value == "") {
+				var checkSpace = document.getElementById("Brd_NM").value.trim();
+				
+		    	if (checkSpace.length == 0) {
 					alert("<spring:message code='ezResource.t31' />");
 					document.getElementById("Brd_NM").focus();
 					return;

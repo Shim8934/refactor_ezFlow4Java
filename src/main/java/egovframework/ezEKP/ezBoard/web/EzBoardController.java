@@ -4163,6 +4163,8 @@ public class EzBoardController extends EgovFileMngUtil{
             }
         }
 		
+        boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
+        
 		if (boardItem.getExtensionAttribute3() == null || boardItem.getExtensionAttribute3().equals("")) {
 			boardItem.setExtensionAttribute3(" ");
 		}
