@@ -374,7 +374,7 @@
 		</script>
 	</head>
 	<body class="mainbody" onload = "makePageSelPage()">
-		<h1><c:out value='${brdNm}' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
+		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 
 		<div id="mainmenu">
   			<ul>
