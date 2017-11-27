@@ -725,8 +725,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
-			            
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
 			            String offset = loginInfo.getOffset();
@@ -737,10 +736,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
-			            
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
-			            
+			            //to-do
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
+
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 						if (orgMessageSubject != null && !orgMessageSubject.equals("")) {
 							rawHeaders = orgMessage.getHeader("subject");

@@ -972,8 +972,7 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";				
 		}
-//to-do	
-		logger.debug("################# " + pAttachListHtml + " #################");
+
 		resultList.add(htmlBody);
 		resultList.add(pAttachListHtml);
 		resultList.add(filesize);
