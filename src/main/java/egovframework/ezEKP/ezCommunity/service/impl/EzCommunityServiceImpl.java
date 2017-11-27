@@ -3640,7 +3640,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 					
 					if (item != null) {
 						bIsMyContent = true;
-						guestEditOkUpdate(no, code, memo.replaceAll("\r\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getId(), userInfo.getTenantId());
+						guestEditOkUpdate(no, code, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getId(), userInfo.getTenantId());
 					}
 				}
 				
