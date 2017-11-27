@@ -3018,6 +3018,10 @@ function addReceiverFromList(iWhich, receiverlist) {
         recvEmail = receiverlist["email"][nCnt1];
         recvHref = receiverlist["href"][nCnt1];
 
+        if ( recvEmail == "a@a.com" ) {
+        	continue;
+        }
+        
         newElem = PrepareMailTag(iWhich, recvType, recvName, recvEmail, recvHref);
 
         switch (iWhich) {
