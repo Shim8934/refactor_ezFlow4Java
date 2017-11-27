@@ -282,6 +282,7 @@
 	            document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
 	            document.getElementById("printImportance").textContent = document.getElementById("importanceDIV").textContent;
 	            document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
+	            document.getElementById("printItem").textContent = document.getElementById("itemList").textContent;
 	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent;
 	        }
 
@@ -453,7 +454,7 @@
 		        		</tr>
 		        		<tr>
 		            		<th><spring:message code='ezResource.t374' /></th>
-		            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
+		            		<td colspan="7" id="itemList"></td>
 		        		</tr>
 		        		<tr>
 		            		<th><spring:message code='ezResource.t224' /></th>
@@ -486,15 +487,19 @@
 						<tr style="height:25px"> 
  							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
  							<td style="padding-left:10px"> <div id="printOwner"></div></td> 
-						</tr> 
-						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th>
- 							<td style="padding-left:10px"> <div id="printImportance"></div></td>
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
  							<td style="padding-left:10px"> <div id="printDate"></div></td> 
-						</tr> 
+						</tr>
+						<tr style="height:25px"> 
+ 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th>
+ 							<td style="padding-left:10px"> <div id="printImportance"></div></td>
+						</tr>
+						<tr>
+		            		<th style="padding-left:10px"><spring:message code='ezResource.t374' /></th>
+		            		<td style="padding-left:10px;"> <div id="printItem"></div></td>
+		        		</tr> 
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
  							<td style="padding-left:10px"> <div id="printTitle"></div></td> 
