@@ -47,9 +47,9 @@
 			var currentGroupSticker 	= -1;
 			var flagEvent 				= -1;
 			var currentEditingCmt 		= -1;
-			var colors 					= ["#49A0D8", "#D353A0", "#FFC527", "#DF4C27", "#34CB34", "#7127DF", "#90C3D4", "#C390D4", "#A1D490", "#D4A190",
-			             				   "#581845", "#581825", "#582B18", "#584B18", "#455818", "#255818", "#C15AA3", "#C15A6F", "#C1785A", "#C1AC5A",
-			              				   "#A3C15A", "#70C15A", "#4EC479", "#4EC4B4", "#4E99C4", "#4E5EC4", "#794EC4", "#B44EC4", "#AFC44E", "#74C44E"];
+			var colors 					= ["#efa1a1", "#fbcf9f", "#d4e69f", "#7fd9e3", "#e9c9ff", "#ffe56e", "#53cead", "#2c8aff", "#74a27b", "#f783fb",
+			             				   "#e17474", "#ff9522", "#b9de4d", "#37bccb", "#c592e8", "#ffc000", "#26a986", "#1e67c2", "#437b4c", "#d849dd",
+			              				   "#ff694c", "#db7200", "#91be0d", "#108895", "#9456bf", "#d29e00", "#167c61", "#0a448d", "#285830", "#ad04b3"];
             var iframeStyle 			= "<style>";            
             iframeStyle += "P    	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "DIV  	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -1154,6 +1154,10 @@
 		    	    xhr1.open("POST", "/ezPoll/deleteComment.do");
 		    	    xhr1.send(fd);				    
 				}
+		    	
+		    	if (document.getElementById("sendComment").style.display == "none") {	
+		    		document.getElementById("sendComment").style.display = "block";
+		    	}
 		    }
 		    
 		    function sendComment() {		    	
