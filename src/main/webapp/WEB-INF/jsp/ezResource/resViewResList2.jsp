@@ -238,7 +238,7 @@
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;">
-		<h1><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
+		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
