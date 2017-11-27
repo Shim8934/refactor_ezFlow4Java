@@ -16226,11 +16226,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + langData;
 				}
 				
-				if (fieldName.equals("DOCSTATENAME")) {
-					fieldValue = docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent();
-            	} else {
-            		fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-            	}
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + " </VALUE>");
 				
@@ -16262,6 +16258,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
+		
+		logger.debug("resultXML : " + resultXML.toString());
 		
 		return resultXML.toString();
 	}
@@ -21619,6 +21617,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
+				
  		return resultXML.toString();
 	}
 
