@@ -189,6 +189,7 @@
                     var pAlertContent = "<spring:message code='ezApproval.t309'/>";
                     OpenAlertUI(pAlertContent);
                     TreeViewRefresh();
+                    opener.TreeViewRefresh();
                     return;
                 }
                 else {
@@ -267,6 +268,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t300'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {
@@ -296,6 +298,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t303'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {
