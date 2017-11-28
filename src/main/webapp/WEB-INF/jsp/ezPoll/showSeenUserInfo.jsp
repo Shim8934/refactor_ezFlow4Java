@@ -66,7 +66,7 @@
 						<tr id="${list2.id}" class="white" style="border: 1px solid #DDD;">
 						   <td>
 							<img src="${list2.userFileUrl}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list2.id}')">
-								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
+								<a style="cursor:pointer; display:inline-block; float:left; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width: 111px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
 									<c:choose>
 										<c:when test="${list2.primary == '1'}">
 											<c:out value ="${list2.displayName1}"/>

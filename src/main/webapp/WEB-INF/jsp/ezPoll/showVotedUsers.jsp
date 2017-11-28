@@ -43,7 +43,7 @@
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
 							<td >
 								<img src="${list.userImage}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">
-								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
+								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px; overflow: hidden; text-overflow: ellipsis; max-width:180px;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
 									<c:out value ="${list.userName}"/>
 								</a>
 							</td>
