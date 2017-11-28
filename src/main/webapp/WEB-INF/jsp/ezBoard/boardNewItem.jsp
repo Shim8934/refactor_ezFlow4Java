@@ -494,8 +494,7 @@
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
-		        alert(pStartDate);
-		        alert(pEndDate);
+		        
 		        if (document.getElementById("ChkPermanence").checked == false) {
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
