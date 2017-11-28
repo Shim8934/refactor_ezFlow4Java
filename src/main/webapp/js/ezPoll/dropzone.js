@@ -139,8 +139,6 @@ function setAttachFileInfo1(strXML) {
     var xml = loadXMLString(strXML);  
     
     try {    	
-        var strAttach = "";
-        strPreViewAttach = "";
         var listtable;    
         listtable = document.getElementById("filelist");
         document.getElementById("lstAttachLink").appendChild(listtable);
@@ -165,9 +163,9 @@ function setAttachFileInfo1(strXML) {
                 
                 var image_tag = document.createElement("img");
                 image_tag.setAttribute("_path", fileinfo);
-                image_tag.src = "/images/minus1600.png";
+                image_tag.src = "/images/poll/pollAddFile_Delicon.png";
                 image_tag.setAttribute("height", "24");
-                image_tag.setAttribute("width", "24");
+                image_tag.setAttribute("width", "20");
                 image_tag.setAttribute("vertical-align", "middle");
                 image_tag.onclick = function () { filedelete(this); };
                 objTd.appendChild(image_tag);

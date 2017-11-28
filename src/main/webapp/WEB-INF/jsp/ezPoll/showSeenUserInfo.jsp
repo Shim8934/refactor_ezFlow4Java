@@ -58,7 +58,7 @@
 						</tr>
 					</c:forEach>
 				</table>
-				<table border=1px style="float: left;clear: none;width : 50%;">
+				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;">
 					<tr> 
 						<th style="background:#eaeaea; height:40px; color:#000;"> <a id="unseenUser_" style="color:#000;"><spring:message code='ezPoll.t137'/> <c:out value='${numberOfUnseenUsers}'/></a></th> 
 					</tr>

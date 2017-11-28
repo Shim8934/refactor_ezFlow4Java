@@ -43,3 +43,5 @@
 .vote_attachedFile .txt{height:50px; line-height:50px; padding:0px 10px 0px 46px; background:#f4f9ff; border-bottom:1px solid #e1ebf7;}
 .vote_attachedFile .attach_img{position:absolute; top:13px; left:15px; hegith:20px; width:20px;}
 .vote_attachedFile .all_save{position:absolute; top:13px; left:230px; float: left;}
+
+.voteComment #sendBttn:active{background:#00346d;}

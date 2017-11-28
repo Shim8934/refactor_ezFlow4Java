@@ -28,7 +28,7 @@
 		var messageCode2	  = '<spring:message code="ezPoll.t165"/>';
 		var messageCode3	  = '<spring:message code="ezPoll.t208"/>';
 	    var filesize 		  = 0;
-	    var file 			  = new Array;
+	    var file 			  = new Array();
 	    var xhr 			  = new XMLHttpRequest();
 		var lstAttachLink 	  = document.getElementById("lstAttachLink");
 	    var isfileup 		  = false;
@@ -638,7 +638,7 @@
 							<spring:message code="ezPoll.t151"/>
 						</div>
 					</div> 
-					<input id="file" type="file" onchange="onDrop()" multiple style="width: 1px; height: 1px" /> 
+					<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px;" /> 
 					<input type="hidden" onclick="fileupload()"/>
 				</td>
 			</tr>

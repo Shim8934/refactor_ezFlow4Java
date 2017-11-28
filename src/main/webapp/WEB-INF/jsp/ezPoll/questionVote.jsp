@@ -2235,10 +2235,10 @@
 							<td style="width: 145px; position:relative;">
 								<div style="position: absolute; top:10px; right:18px; color:#a3a3a3;"><c:out value ="${_comt.cmtTime}" /></div>
 								<c:if test="${_comt.userId == curentUser}">								
-									<img src="/images/option3.png" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
-									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;" tabindex=0>							
-										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
-										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
+									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; width: 120px;" tabindex=0>							
+										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
+										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
 									</div>
 								</c:if>
 							</td>
@@ -2501,7 +2501,7 @@
 							</div>
 						</div>
 					</div>					
-					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
+					<img id="_addEmoticon" src="/images/poll/add_emo_vote2.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
 				<div style="float:left; display:block; width:74%; height:45px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:45px; line-height: 15px; padding:0px; outline: none; border:none; resize:none;"  onkeyup="auto_grow(this)"></textarea>
@@ -2511,7 +2511,7 @@
 						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
 					</div>	
-					<button id="sendBttn" style="display:inline-block; width: 96px; height:45px; border:none; border-radius:5px; background:#004896; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
+					<button id="sendBttn" style="display:inline-block; width: 96px; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;">Send</button>						
 				</div>
 				
 			</div>

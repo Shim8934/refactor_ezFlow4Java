@@ -46,21 +46,21 @@
 	<body class="popup">
 		<form id="Form1" method="post"> 
 			<h1 style="padding-left: 40%;"><spring:message code='ezPoll.t127'/></h1>
-			<div style="height:119px; overflow: auto;">
+			<div style="overflow: auto;">
 	  			<table class="content" style="table-layout: fixed;">   				
 	    			<tr > 
 	      				<th style="width:30px;"><spring:message code='ezPoll.t128'/></th> 
-	      				<th><spring:message code='ezPoll.t129'/></th>				
+	      				<th style="text-align:center;"><spring:message code='ezPoll.t129'/></th>				
 	    			</tr> 
 	    			<c:forEach var="list" items="${listQuestionIDs}" varStatus="status">
 		    			<tr> 
-		      				<td style="width: 25px;padding-left: 40px;">${list}</td>
-		      				<td>${listQuestionContents[status.index]}</td> 
+		      				<td style="width: 25px; text-align:center;">${list}</td>
+		      				<td style="padding:0px 10px;">${listQuestionContents[status.index]}</td> 
 		    			</tr> 
 	    			</c:forEach>
 	  			</table>
 	  		</div>
-  			<div class="box" style="padding:10px;margin-top:10px">
+  			<div class="box" style="padding:10px; margin-top:10px; line-height:19px;">
   				<c:if test="${numberOfQst == 1}">
   					<spring:message code='ezPoll.t130'/><br> 
         			<spring:message code='ezPoll.t131'/>
@@ -70,9 +70,9 @@
 	        		<spring:message code='ezPoll.t131'/>
   				</c:if>
         	</div>
-			<div class="btnposition">
+			<div class="btnposition conf_btnPosi">
 				<input type="button" name="Submit" value="<spring:message code='ezQuestion.t268' />" onclick="btn_Delete()"> 
-        		<input type="button" name="Submit2" value="<spring:message code='ezQuestion.t269' />" onclick="window.close()">
+        		<input type="button" name="Submit2" style="background:#d0d0d0; color:#333;" value="<spring:message code='ezQuestion.t269' />" onclick="window.close()">
         	</div>
 		</form> 
 	</body>
