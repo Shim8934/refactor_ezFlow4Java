@@ -366,10 +366,10 @@
 		        
 		        if (approvalFlag == 'S') {
 		        	if (tempCode == "") {
-			            OpenAlertUI("<spring:message code = 'ezApprovalG.t743' />");
+			            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
 			            return;
 			        } else if (tempCode.length < 6) {
-			            OpenAlertUI("<spring:message code = 'ezApprovalG.t744' />");
+			            OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
 			            return;
 			        }
 		        } else {
