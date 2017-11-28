@@ -46,6 +46,11 @@ public class EzMainAdminController {
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
 		model.addAttribute("firstScreen_Mail", firstScreenMail);
+		
+		if (firstScreenMail == null || firstScreenMail.equals("")) {
+			model.addAttribute("firstScreen_Mail", "NO");
+		}
+		
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
