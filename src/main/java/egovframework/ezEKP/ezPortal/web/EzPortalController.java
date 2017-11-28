@@ -3141,9 +3141,12 @@ public class EzPortalController extends EgovFileMngUtil {
 			pakageType = commonUtil.PT_STANDARD;
 		}
 		
+		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("firstScreen_Mail", firstScreenMail);
 		
 		logger.debug("top ended");
 		return "/ezPortal/help/top";
@@ -3368,6 +3371,21 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		logger.debug("leftSchedule ended");
 		return "/ezPortal/help/leftSchedule";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftCircular 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftCircular.do")
+	public String leftCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("leftCircular started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("leftCircular ended");
+		return "/ezPortal/help/leftCircular";
 	}
 	
 	/**

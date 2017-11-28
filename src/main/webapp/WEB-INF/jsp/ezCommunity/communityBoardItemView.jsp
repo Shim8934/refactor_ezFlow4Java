@@ -81,6 +81,7 @@
 					
 					$("#message").contents().find("body").css("word-wrap", "break-word");
 					$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
+					$("#message").contents().find("body").css("font-size", "13px");
 					
 	    	        AddLinkTarget();
 	    	        SetAttachmentInfo();
@@ -1004,16 +1005,7 @@
 	        </tr>
 	        <tr>
 	            <td class="pad1" style="height:400px">
-	            
-<%-- 	            	<c:choose> --%>
-<%-- 	            		<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%-- 	            			<iframe id="message" class="viewbox" src="/ezCommunity/boardItemViewContent.do?type=COMMUNITYCONTENT&docID=${pItemID}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe> --%>
-<%-- 	            		</c:when> --%>
-<%-- 	            		<c:otherwise> --%>
-	            			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
-<%-- 	            		</c:otherwise> --%>
-<%-- 	            	</c:choose> --%>
-	                
+           			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
 	            </td>
 	        </tr>
 	        

@@ -1351,4 +1351,13 @@
 		AND
 			USERID = #userID#
 	</select>
+	
+	<select id="EzOrganDAO.getExtension4ID" parameterClass="Map" resultClass="OrganDeptVO">
+		SELECT 
+			CN, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE4, TENANT_ID
+		FROM
+			TBL_DEPTMASTER
+		WHERE 
+			EXTENSIONATTRIBUTE4 = #extension4#
+	</select>
 </sqlMap>

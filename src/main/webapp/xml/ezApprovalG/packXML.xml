@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<header>
+		<send-orgcode></send-orgcode>
+		<send-id></send-id>
+		<send-name></send-name>
+		<receive-id></receive-id>
+		<date></date>
+		<title></title>
+		<doc-id></doc-id>
+		<doc-type type="" dept="" name=""></doc-type>
+		<send-gw>ezFlow2000/G</send-gw>
+		<dtd-version>2.0</dtd-version>
+		<xsl-version>2.0</xsl-version>
+	</header>
+	<contents>
+	</contents>
+</pack>

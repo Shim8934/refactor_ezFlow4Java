@@ -232,6 +232,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		String secondary= ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String title = "", topID = "";
+		String parentID = request.getParameter("parentID");
+		String parentName = "";
 		
 		if (tCheck.equals("fContIns")) {
 			title = egovMessageSource.getMessage("ezApprovalG.t1623", userInfo.getLocale());
@@ -244,6 +246,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		} else {
 			topID = "Top";
 		}
+
+		if (parentID != null) {
+			if (!parentID.equalsIgnoreCase("ROOT")) {
+				parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+			} else {//ezApprovalG.t1539
+				parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
+			}						
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
@@ -253,6 +263,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("topID", topID);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("parentName", parentName);
 		
 		logger.debug("formContMain ended.");
 		
@@ -2001,7 +2012,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
-		String result = ezApprovalGAdminService.getSealList(listFlag, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGAdminService.getSealList(commonUtil.getRealPath(request), listFlag, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}

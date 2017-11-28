@@ -840,9 +840,7 @@
 		        
 		        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA1");
 		        
-		        for (i = 0; i < xmldomNodes.length; i++) {
-		            strRet += getNodeText(xmldomNodes.item(i)) + ";";
-		        }
+	            strRet += getNodeText(xmldomNodes.item(0));
 		        
 		        return strRet;
 		    }

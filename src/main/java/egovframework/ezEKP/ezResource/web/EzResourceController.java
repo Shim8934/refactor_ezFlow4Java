@@ -503,6 +503,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdNm = "";
 		int brdCount;
 		String useEditor = "";
+		String lang = userInfo.getLang();
 		
 		if(req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
@@ -551,6 +552,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdCount", brdCount);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("startDay", startDay);
+		model.addAttribute("lang", lang);		
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
@@ -2011,6 +2013,20 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (cmd.equals("add")) {
 			num = "-1";
 		}
+		
+		logger.debug("frequency: " + frequency);
+		logger.debug("selType: " + selType);
+		logger.debug("endRecurType" + endRecurType);
+		logger.debug("startDateTime" + startDateTime);
+		logger.debug("endDateTime" + endDateTime);
+		logger.debug("interval" + interval);
+		logger.debug("instances" + instances);
+		logger.debug("daysOfWeek" + daysOfWeek);
+		logger.debug("byPosition" + byPosition);
+		logger.debug("daysOfMonth" + daysOfMonth);
+		logger.debug("monthsOfYear" + monthsOfYear);
+		
+		
 		
 		if (isRep) {
 			logger.debug("===반복예약일 때===");

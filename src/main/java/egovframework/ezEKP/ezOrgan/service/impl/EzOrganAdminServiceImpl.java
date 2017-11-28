@@ -10,6 +10,9 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
+
+import javax.naming.directory.DirContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
@@ -64,6 +68,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     
     @Autowired
     private EzEmailUtil ezEmailUtil;
+    
+    @Autowired
+    private ADConnection conn;
     
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
@@ -342,8 +349,26 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         		ezOrganAdminDao.moveDBData_U1(map);
         		ezOrganAdminDao.moveDBData_U2(map);
         		ezOrganAdminDao.moveDBData_U3(map);
+        		
+        		/**
+        		 * Active Directory
+        		 * - 부서의 부서이동
+        		 * */
+        		if(ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
+        			DirContext ctx = conn.setConnection();
+        			ezOrganAdminDao.moveDeptInAD(ctx, map, parentCn);
+        		}
         	} else {
     	    	ezOrganAdminDao.moveGroupUser_U(map);
+    	    	
+    	    	/**
+    	    	 * Active Directory
+    	    	 * - 유저의 부서 이동
+    	    	 * */
+    	    	if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
+    	    		DirContext ctx = conn.setConnection();
+    	    		ezOrganAdminDao.moveUserInAD(ctx, map, parentCn);    	    		
+    	    	}
         	}
         }
 		
@@ -360,6 +385,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		loginVO.setTenantId(tenantID);
 		
 		loginDAO.updatePassword(loginVO);
+		
+		if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
+			DirContext ctx = conn.setConnection();
+			// Active Direcrtory 사용자 비밀번호
+			loginVO.setPassword(password);
+			ezOrganAdminDao.changePasswordInAD(ctx, loginVO);
+		}
 	}
 	
 	@Override
@@ -426,6 +458,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		    ezOrganAdminDao.retireDBData_I(map);
 		    ezOrganAdminDao.retireDBData(map);
 		    ezOrganAdminDao.retireDBData_D3(map);
+		    
+		    /**
+		     * Active Directory
+		     * - 퇴작자 처리
+		     * */
+		    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
+		    	DirContext ctx = conn.setConnection();
+		    	ezOrganAdminDao.retireUserInAD(ctx, map);
+		    }
 		}       
 		
 		logger.debug("retireEntry ended");
@@ -665,7 +706,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void insertDBData_user(OrganUserVO vo) throws Exception {
+	public void insertDBData_user(OrganUserVO vo, String oriPass) throws Exception {
         logger.debug("insertDBData_user started");
         logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn() + ",displayName=" + vo.getDisplayName()
                 + ",displayName2=" + vo.getDisplayName2() + ",parentCn=" + vo.getParentCn());
@@ -715,6 +756,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTH", vo.getBirth() != null ? vo.getBirth() : "");		
 		map.put("v_BIRTHTYPE", vo.getBirthType() != null ? vo.getBirthType() : "");
 		map.put("v_PASS", vo.getPassword());
+		map.put("v_INSERTADPASS", oriPass);
 				
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -763,6 +805,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
 			ezOrganAdminDao.updateUserDeptDisplayName(vo);
+			
+			/**
+			 * Active Directory
+			 * - 부서 정보 수정
+			 * */
+			if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
+				DirContext ctx = conn.setConnection();
+				ezOrganAdminDao.updateDeptInAD(ctx, vo);				
+			}
 		}
 		
 		logger.debug("updateDBData_dept ended");
@@ -805,15 +856,33 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		        ezOrganAdminDao.deleteCompany_D17(map);
 		        ezOrganAdminDao.deleteCompany_D18(map);
 		        ezOrganAdminDao.deleteCompany_D19(map);
+		        
+			    /**
+			     * Active Directory
+			     * - 부서 정보 삭제
+			     * */
+			    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
+			    	DirContext ctx = conn.setConnection();
+			    	ezOrganAdminDao.deleteDeptInAD(ctx, cn);
+			    }			        
 		    } else {
 		        ezOrganAdminDao.deleteDBDataForJMocha(map);
 	     
 		        ezOrganAdminDao.deleteDBData_D1(map);
 		        ezOrganAdminDao.deleteDBData_D4(map);
 		        ezOrganAdminDao.deleteDBData_D5(map);
+		        
+			    /**
+			     * Active Directory
+			     * - 유저 정보 삭제
+			     * */
+			    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
+			    	DirContext ctx = conn.setConnection();
+			    	ezOrganAdminDao.deleteUserInAD(ctx, cn);
+			    }		        
 		    }
-		}
-		
+
+		}		
 		logger.debug("deleteDBData ended.");
 	}
 
@@ -1040,5 +1109,5 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
 	}
-
+	
 }

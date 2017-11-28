@@ -2716,8 +2716,6 @@ function resetList()
     
 }
 
-
-
 function CheckLineArea()
 {
     var pAlertContent = "";

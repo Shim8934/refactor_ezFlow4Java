@@ -2,6 +2,7 @@
 var strLang2 = "协议"
 var strLang3 = "协议"
 var strLang4 = "返还"
+var strLang5 = "의견있음)" //문서유통
 var strLang6 = "批准前"
 var strLang7 = "代理"
 var strLang8 = "代 "
@@ -946,7 +947,7 @@ var strLangS599 = "분류 코드가 지정되어 있지 않습니다.";
 var strLangS600 = "분류 코드를 선택하세요.";
 var strLangS601 = "이미 등록된 분류 코드입니다.";
 var strLangS602 = "즐겨찾기에 등록되었습니다.";
-var strLangS603 = "즐겨찾기에서 제거되었습니다.";
+var strLangS603 = "즐겨찾기에서 삭제되었습니다.";
 var strLangS604 = "분류코드 등록 오류입니다.";
 var strLangS605 = "분류코드 삭제 오류입니다.";
 var strLangS957 = "수신자 리스트에 데이터가 없습니다.<br/>수신자를 지정해 주십시요.";
@@ -985,7 +986,7 @@ var strLangS826 = "회람을 발송하지 못하였습니다.";
 var strLangpjj27 = "편집하려는 즐겨찾기를 공람자 리스트에 적용 해야 편집 할 수 있습니다.";
 var strLangHYJ28 = "회람자 리스트가 존재하지 않습니다.";
 
-var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
+var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\\n추가 할 수 없습니다.";
 
 //2017-11-09 장진혁 추가
 var strLangjjh01 = "첨부파일은 총 ";

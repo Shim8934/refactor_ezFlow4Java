@@ -118,7 +118,7 @@
 		            SetOpinionAction("ADD");
 		            var OpContent;
 		            var Opstate;
-		            OpContent = document.getElementById("txt_OpinionContent").value;
+		            OpContent = trim(document.getElementById("txt_OpinionContent").value);
 		            // Opstate에 현재 btn_OpinionAdd의 텍스트 값을 가져온다 ex) 저장, 수정 ..
 		            Opstate = document.getElementById("btn_OpinionAdd").textContent;
 		            ChkFlag = true;

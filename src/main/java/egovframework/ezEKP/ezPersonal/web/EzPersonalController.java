@@ -150,11 +150,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (buJaeInfo != null && !buJaeInfo.equals("")) {
 			if (buJaeInfo.split(":").length >= 5) {
-				buJaeInfo2 = buJaeInfo.split(":")[0] + ":" + buJaeInfo.split(":")[1] + ":" + buJaeInfo.split(":")[2] + ":" + buJaeInfo.split(":")[3] + ":" + buJaeInfo.split(":")[4];
+				buJaeInfo2 = buJaeInfo.split(":")[0] + ":" + buJaeInfo.split(":")[1] + ":" + buJaeInfo.split(":")[2] + ":" + buJaeInfo.split(":")[3] + ":" + buJaeInfo.split(":")[4] + ":" + buJaeInfo.split(":")[5] + ":"  + buJaeInfo.split(":")[6];
 			}
 			
-			if (buJaeInfo.split(":").length > 5) {
-				buJaeInfo2 += ":" + buJaeInfo.split(":")[5];
+			if (buJaeInfo.split(":").length > 7) {
+				buJaeInfo2 +=  ":" + buJaeInfo.split(":")[7];
 			}
 		}
 		
@@ -302,31 +302,29 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
-		
+		String cDate = "";
+		String cTime = "";
 		if (result != null && !result.equals("")) {
 			String[] info = result.split(":");
-
-			if (info.length > 6) {
-				userID = info[0];
-				textName = info[1];
-				deptID = info[2];
-				startDate = info[3] + ":" + info[4];
-				endDate = info[5] + ":" + info[6];
-				
-				if (info.length > 7) {
-					bReason = info[7];
-				}
-			} else {
-				userID = info[0];
-				textName = info[1];
-				deptID = info[2];
-				startDate = info[3];
-				endDate = info[4];
-				
-				if (info.length > 5) {
-					bReason = info[5];
-				}
+			
+			userID = info[0];
+			textName = info[1];
+			deptID = info[2];
+			startDate = info[3] + ":" + info[4];
+			endDate = info[5] + ":" + info[6];
+			
+			if (info.length > 7) {
+				bReason = info[7];
 			}
+		} else {
+			cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
+			cTime = cDate.split(" ")[1].substring(0, 2);
+			
+			cDate = cDate.substring(0, 10);
+			startDate = cDate + " " + cTime + ":00:00";
+			
+			cDate = cDate.substring(0, 10);
+			endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
 		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
@@ -733,12 +731,12 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("personSearch started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useOCS = config.getProperty("config.USE_OCS");
+		
 		String searchString = "";
 		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
 			searchString = req.getParameter("searchString");
 		}
-		model.addAttribute("useOCS", useOCS);
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("searchString", searchString);
 
@@ -754,9 +752,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("personSearchPrint started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useOCS = config.getProperty("config.USE_OCS");
 		
-		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("personSearchPrint ended");
@@ -787,18 +783,36 @@ public class EzPersonalController extends EgovFileMngUtil {
 		SSL = req.getRequestURL().toString();
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
+		
+		//초기화면 메일만 사용하고 싶을 때 YES
+		String	firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		//회람판 사용여부
+		String	useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", userInfo.getTenantId());
+		//마이포탈설정 0:보이게,1:마이포탈페이지만,2:초기화면설정만
+		String portalEnv = ezCommonService.getTenantConfig("portalEnv", userInfo.getTenantId());
+		
+		if (portalEnv == null || portalEnv.equals("")) {
+			portalEnv = "0";
+		}
+		if (firstScreen_Mail == null || firstScreen_Mail.equals("")) {
+			firstScreen_Mail = "NO";
+		}
+		if (useCircular == null || useCircular.equals("")) {
+			useCircular = "NO";
+		}
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
-
-        String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-        
+		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
+		model.addAttribute("USE_CIRCULAR", useCircular);
         model.addAttribute("packageType", packageType);
-		
+        model.addAttribute("portalEnv", portalEnv);
+        
 		logger.debug("leftEnvironment ended");
 		return "/ezPersonal/persLeftEnvirionment";
 	}
@@ -936,6 +950,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		vo.setTenantId(userInfo.getTenantId());
+		
+		logger.debug("<<<1. : " + vo.getCn());
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));

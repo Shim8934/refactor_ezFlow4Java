@@ -1348,7 +1348,7 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvRECEPTLIST");
 		        var CurSelRow = listview.GetSelectedRows();
-		        var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/AprDeptName_Cross.aspx";
+		        var windowName = "/ezApprovalG/aprDeptName.do";
 		        var parameter = "status:no;dialogWidth:340px;dialogHeight:195px;scroll:no;edge:sunken;help:no";
 		
 		        if (CurSelRow[0] == undefined) {
@@ -1551,7 +1551,12 @@
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
+	                                        <c:if test="${approvalFlag == 'G' }">
+	                                        <div class="border_gray"">
+	                                        </c:if>
+	                                        <c:if test="${approvalFlag == 'S' }">
 	                                        <div class="border_gray" style="border-right-width: 0px;">
+	                                        </c:if>
 	                                            <div id="APRTEMPLIST" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                            </div>
 	                                        </div>
@@ -1572,12 +1577,13 @@
 	                                </tr>
 	                                <tr>
 	                                    <td style="vertical-align: top;">
-	                                        <div class="border_gray" style="border-right-width: 0px;">
 	                                        <c:if test="${approvalFlag == 'G' }">
+	                                        <div class="border_gray">
 	                                            <div id="APRTEMP" style="Width: 386px; Height: 295px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                            </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
+	                                        <div class="border_gray" style="border-right-width: 0px;">
 	                                            <div id="APRTEMP" style="Width: 386px; Height: 260px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                             	</div>
                                             </c:if>
@@ -1588,7 +1594,12 @@
 	                        </div>
 	                    </td>
 	                    <td style="vertical-align: top">
+	                    <c:if test="${approvalFlag == 'G' }">
+	                        <table style="margin-left: 5px;">
+	                    </c:if>
+	                    <c:if test="${approvalFlag == 'S' }">
 	                        <table>
+	                    </c:if>
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t407'/>
@@ -1601,7 +1612,7 @@
 	                                    </h2>
 	                                    <div class="border_gray" style="margin-top:4px">
 	                                        <c:if test="${approvalFlag == 'G' }">
-	                                        <div id="APRLINE" style="Width: 717px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
@@ -1686,7 +1697,7 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                	<c:if test="${approvalFlag =='G' }">
-		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 524px; width: 388px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
+		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 524px; width: 358px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
 		                                    </div>
 	                                    </c:if>
 	                                    <c:if test="${approvalFlag == 'S' }">
@@ -1816,7 +1827,7 @@
 	                        <br>
 	                        <img src="/images/arr_l.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDelete" onclick="return DeleteRec();">
 	                        <br>
-	                        <img src="/images/arr_ll.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDeleteAll" onclick="return DeleteRecAll();">
+	                        <img src="/images/arr_ll.gif" alt="" width="16" height="16" border="0" style="cursor:pointer; -webkit-margin-end: 5px;" id="imgDeleteAll" onclick="return DeleteRecAll();">
 	                    </div>
 	                </td>
 	                <td style="vertical-align: top">
@@ -1887,7 +1898,7 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span style="vertical-align: middle; position: absolute; right: 20px">
+		                                <span  style="vertical-align: middle; margin-left: 200px;">
 		                                    <select id="selSearchOption" style="vertical-align: middle;">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>
@@ -2213,8 +2224,8 @@
 	                                    <td style="background-color: transparent; height: 28px;">
 	                                        <input id="textUserCC" style="width: 150px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
 	                                        <a class="imgbtn"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
-<!-- 	                                        부서추가 -->
-<%-- 	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a> --%>
+											<!-- 부서추가 -->
+											<a class="imgbtn" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                                    </td>
 	                                </tr>
 			                    </table>
@@ -2358,6 +2369,8 @@
 	    Tab1_NewTabIni("tab1");
 	    Tab2_NewTabIni("tab2");
 	    Tab3_NewTabIni("tab3");
-	    Tab5_NewTabIni("tab5");
+	    if (approvalFlag == "S") {
+		    Tab5_NewTabIni("tab5");
+	    }
 	</script>
 </html>

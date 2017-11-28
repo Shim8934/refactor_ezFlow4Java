@@ -87,7 +87,7 @@
 		    var SignType = new Array();
 		    var SignName = new Array();
 		    var SignContent = new Array();
-		    var RootURL = document.location.protocol + "//" + document.location.hostname;  
+		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;
 		    var arr_userinfo = new Array();
 		    var onlydocinfiview;
 		    arr_userinfo[0]  = "user";
@@ -243,8 +243,7 @@
 		            window.parent.close();
 		            btnClose_onclick();
 		        } else {
-		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht")
-		            {
+		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
 		                openOtherApprovUI();
 		                return;
 		            }
@@ -471,14 +470,15 @@
 		    {
 		        ChangeBtnState();
 		    }
+
 		    function process_AfterOpen()
 		    {
 		        getCurApproverAprLine("${isUsed}");
+		
 		        pGubun = "8";
 		        
 		        if (approvalFlag == "S") {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)  {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -500,8 +500,7 @@
 			            pGubun = "14";
 			        }
 		        } else {
-			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-			        {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
 			            setMenuBar("btntotaldocinfo", false);
 			            setMenuBar("btnJunKyul", false);
 			            setMenuBar("btnModAprLine", false);
@@ -513,8 +512,7 @@
 			            setMenuBar("btnSetTaskCode", false);
 			            setMenuBar("btnAddSepAttach", false); 
 			            pGubun = "10";
-			        }
-			        else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			        } else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			            setMenuBar("btnModAprLine", false);
 			            pGubun = "5";
 			        }
@@ -529,27 +527,25 @@
 		                pGubun = "7";
 		            }
 		        }
-		        if(pDraftFlag == "SUSIN")
-		        {
+		        if(pDraftFlag == "SUSIN") {
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "susinbody");
-		            if(field)
+		            if(field) {
 		                setMenuBar("btnEdit", true);
-		            else
+		            } else {
 		                setMenuBar("btnEdit", false);
+		            }
 		
 		            setMenuBar("btnModAprDept", false);
 		            setMenuBar("btnFileAttach", false);
 		            setMenuBar("btnAprDocAttach", false);
 		            pGubun = "6";
 		        }
-		        else
-		        {
+		        else {
 		            pSuSinFlag = "N";		
 		            var fields = message.GetFieldsList(); 
 		            var RtnVal = message.GetListItem(fields, "recipient");
-		            if(RtnVal != null)
-		            { 
+		            if(RtnVal != null) { 
 		                pSuSinFlag = "Y";
 		                setMenuBar("btnModAprDept", true);
 		                
@@ -558,13 +554,17 @@
 		                setMenuBar("btnModAprDept", false);
 		                if (pGubun == "5") {
 		                    pGubun = "7";
-		                }
-		                else {
+		                } else {
 		                    pGubun = "6";
 		                }
 		            }		
 		        }
-		        SignCheck();
+		        //없이 테스트
+// 		        SignCheck();
+		        if (pDraftFlag == "HABYUI") {
+		            setMenuBar("btntotaldocinfo", false);
+		        }
+
 		    }
 		    function btnApprove_onclick()
 		    {
@@ -928,8 +928,7 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t37'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
-		            }
-		            else {
+		            } else {
 		                var rtnVal = ExcuteInfo("BANSONG_AFTER", "");
 		                if (!rtnVal) {
 		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";

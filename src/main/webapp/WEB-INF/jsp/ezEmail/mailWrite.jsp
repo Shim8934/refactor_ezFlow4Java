@@ -116,6 +116,11 @@
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
 	    var isCrossBrowser = "${isCrossBrowser}";
+	    var useSecureMail = "${useSecureMail}";
+	    var isSecureMail = "${isSecureMail}";
+	    var securePassword = "";
+	    var secureReadCount = "0";
+	    var secureReadDate = "";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -131,6 +136,7 @@
 	                window.opener.document.Script.refreshUnreadCount()
 	            } catch (e) { }
 	        }
+	        
 	        if (pSecurity == "Security") {
 	            pSecurity = "3";
 	        }
@@ -801,7 +807,13 @@
 	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
 	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
-                    document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+                    var textContentArray = message.GetEditorTextContent().split("----------------------------------------------------------------------------------------------------");
+                    if (textContentArray[0] == "" && pUse_Editor == "NAMO") {
+                    	document.getElementById("plainTextArea").value = "\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");	
+                    } else {
+                    	document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+                    }
+                    console.log(textContentArray[1]);
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -815,6 +827,9 @@
 	            textData = "";
 	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 	            for (var i=0; i<texts.length; i++) {
+	            	if (i == 0 && $.trim(texts[i]) == "" && pUse_Editor == "NAMO") {
+	            		textData += "<br/>";
+	            	}
 	            	if (texts[i] != "" && texts[i] != " ") {
 	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;");
 	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
@@ -933,8 +948,13 @@
 	                            ${mailSendObject}
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background: none; border: 0; padding-left: 10px; padding-right: 0; cursor: default; display: none;" nowrap="nowrap">
-	                                <input type="checkbox" style="display: inline;" id="chkeachmail" onclick="setEachMail()" /><spring:message code='ezEmail.t748' /></li>
+	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
+	                            <img src="/images/pbar.gif">
+	                        </li>
+	                        <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
+	                        	<input type="checkbox" id="chkSecureMail" />
+	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
+	                        </li>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -947,6 +967,14 @@
 	                <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		      			
+		      			if (useSecureMail == "YES") {
+		    	        	$('.securemail').css('display', '');
+		    	        	
+		    	        	if (isSecureMail == "true") {
+		    	        		document.getElementById("chkSecureMail").checked = true;
+		    	        	}
+		    	        }
 		  			</script>
 	            </td>
 	        </tr>

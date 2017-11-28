@@ -234,5 +234,23 @@ public class ResGetScheduleVO {
 	public void setJobTitle2(String jobTitle2) {
 		this.jobTitle2 = jobTitle2;
 	}
+	@Override
+	public String toString() {
+		return "ResGetScheduleVO [ownerID=" + ownerID + ", num=" + num
+				+ ", pNum=" + pNum + ", companyID=" + companyID + ", writerID="
+				+ writerID + ", title=" + title + ", location=" + location
+				+ ", timeDisplay=" + timeDisplay + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", allDay=" + allDay
+				+ ", alertTime=" + alertTime + ", content=" + content
+				+ ", importance=" + importance + ", reFlag=" + reFlag
+				+ ", gresFlag=" + gresFlag + ", writeDay=" + writeDay
+				+ ", entryList=" + entryList + ", characterID=" + characterID
+				+ ", attachFlag=" + attachFlag + ", publicFlag=" + publicFlag
+				+ ", approveFlag=" + approveFlag + ", scheduleID=" + scheduleID
+				+ ", deptNm=" + deptNm + ", deptNm2=" + deptNm2 + ", ownerNm="
+				+ ownerNm + ", ownerNm2=" + ownerNm2 + ", jobTitle=" + jobTitle
+				+ ", jobTitle2=" + jobTitle2 + "]";
+	}
+	
 	
 }

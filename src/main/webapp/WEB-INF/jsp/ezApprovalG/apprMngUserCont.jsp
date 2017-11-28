@@ -138,7 +138,7 @@
                 treeNode.LoadFromID(nodeIdx);
 
                 var ContID = treeNode.GetNodeData("DATA1");
-                var ContName = getContName(treeNode.GetNodeData("VALUE"));
+                var ContName = valData;
                 if (ContName != "cancel") {
                     getContName_Complete(ContName, "MOD");
                 }
@@ -189,6 +189,7 @@
                     var pAlertContent = "<spring:message code='ezApproval.t309'/>";
                     OpenAlertUI(pAlertContent);
                     TreeViewRefresh();
+                    opener.TreeViewRefresh();
                     return;
                 }
                 else {
@@ -196,7 +197,8 @@
                     OpenInformationUI(OpinionContent, Del_Complete_MUST);
                 }
             } else {
-            	self.close();
+            	//self.close();
+            	DivPopUpHidden();
             }
         }
 
@@ -222,7 +224,7 @@
         
         var getcontname_dialogArgument = new Array();
         function getContName(tempName, type) {
-            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + encodeURIComponent(tempName);
+            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + escape(encodeURIComponent(tempName));
             if (CrossYN()) {
                 var para = new Array();
                 para[0] = type;
@@ -266,6 +268,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t300'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {
@@ -295,6 +298,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t303'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {

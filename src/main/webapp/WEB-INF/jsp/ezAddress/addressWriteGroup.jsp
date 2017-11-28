@@ -349,53 +349,61 @@
 	        }
 	
 	        function add() {
-	        	var pTextName = document.getElementById("TextName").value.trim();
+	        		var pTextName = document.getElementById("TextName").value.trim();
 	            if ( pTextName == "") {
 	                alert("<spring:message code='ezAddress.t346' />");
-	                    return;
-	                }
-	
-	                var xmlHTTP = createXMLHttpRequest();
-	                var xmlDom = createXmlDom();
-	                //createNodeAndInsertCDataText
-	                var objNode, objRow, objRows, objRowRow;
-	                objNode = createNodeInsert(xmlDom, objNode, "DATA");
-	                createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderid);
-	                createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", changekey);
-	                createNodeAndInsertText(xmlDom, objNode, "TYPE", foldertype);
-	                createNodeAndInsertText(xmlDom, objNode, "OWNERID", ownerid);
-	                createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
-	                createNodeAndInsertCDataText(xmlDom, objNode, "SNAME", pTextName);
-	                createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
-	                createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);
-	                objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "CONTACTGROUP");
-	
-	                for (var i = 0; i < document.getElementById("ListViewMsgTo").children.item(0).children.item(1).childNodes.length; i++) {
-	                    var strName = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data1");
-	                    var strKey = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data4");
-	                    var strType = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data5");
-	                    objRows = createNodeAndAppandNode(xmlDom, objRow, objRows, "ROW");
-	                    createNodeAndAppandNodeCDataText(xmlDom, objRows, objRowRow, "DISPLAYNAME", strName);
-	                    createNodeAndAppandNodeCDataText(xmlDom, objRows, objRowRow, "KEY", strKey);
-	                    createNodeAndAppandNodeCDataText(xmlDom, objRows, objRowRow, "TYPE", strType);
-	                }
-	                xmlHTTP.open("POST", "/ezAddress/addressGroupSave.do", false);
-	                xmlHTTP.send(xmlDom);
-	
-	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                    alert("<spring:message code='ezAddress.t347' />");
-				    }
-				    else {
-				        alert("<spring:message code='ezAddress.t348' />");
-	
-				        try {
-				            window.opener.location.reload(false);
-				        }
-				        catch (e) { }
-	
-				        window.close();
-				    }
+	                return;
 	            }
+	
+                var xmlHTTP = createXMLHttpRequest();
+                var xmlDom = createXmlDom();
+                //createNodeAndInsertCDataText
+                var objNode, objRow, objRows, objRowRow;
+                objNode = createNodeInsert(xmlDom, objNode, "DATA");
+                createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderid);
+                createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", changekey);
+                createNodeAndInsertText(xmlDom, objNode, "TYPE", foldertype);
+                createNodeAndInsertText(xmlDom, objNode, "OWNERID", ownerid);
+                createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
+                createNodeAndInsertCDataText(xmlDom, objNode, "SNAME", pTextName);
+                createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
+                createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);
+                objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "CONTACTGROUP");
+
+                for (var i = 0; i < document.getElementById("ListViewMsgTo").children.item(0).children.item(1).childNodes.length; i++) {
+                    var strName = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data1");
+                    var strKey = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data4");
+                    var strType = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data5");
+                    objRows = createNodeAndAppandNode(xmlDom, objRow, objRows, "ROW");
+                    createNodeAndAppandNodeCDataText(xmlDom, objRows, objRowRow, "DISPLAYNAME", strName);
+                    createNodeAndAppandNodeCDataText(xmlDom, objRows, objRowRow, "KEY", strKey);
+                    createNodeAndAppandNodeCDataText(xmlDom, objRows, objRowRow, "TYPE", strType);
+                }
+                xmlHTTP.open("POST", "/ezAddress/addressGroupSave.do", false);
+                xmlHTTP.send(xmlDom);
+
+                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+                	if (xmlHTTP.status != 200) {
+		            	alert("<spring:message code='ezAddress.t347' />");
+		            }
+		            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
+		            	alert("<spring:message code='ezAddress.t1' />");
+		            }
+		            else {
+	                    alert("<spring:message code='ezAddress.t347' />");
+		            }
+			    }
+			    else {
+			        alert("<spring:message code='ezAddress.t348' />");
+
+			        try {
+			            window.opener.location.reload(false);
+			        }
+			        catch (e) { }
+
+			        window.close();
+			    }
+            }
 	
             function check_length(chkstr, maxlength, fieldname) {
                 var length = 0;
@@ -924,7 +932,7 @@
 	        } 
 	        
 	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
 	        
 	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 	            alert("<spring:message code='ezAddress.t1100' />");

@@ -192,7 +192,7 @@ function RegisterRecord() {
             objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DOCTYPE", "1");
         }
         else {
-            objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DOCTYPE", "0");
+		    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DOCTYPE", "0");
         }
     }
     else if (ListTypeFlag == "10") {
