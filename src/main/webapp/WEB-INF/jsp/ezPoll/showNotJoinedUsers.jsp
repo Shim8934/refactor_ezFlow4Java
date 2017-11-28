@@ -38,7 +38,7 @@
 						<tr id="${list.id}" class="white" style="border: 1px solid #b6b6b6;">
 							<td >
 								<img src="${list.userFileUrl}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.id}')">
-								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px; overflow: hidden; text-overflow: ellipsis; max-width:180px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.id}')">	
+								<a style="cursor:pointer; display:inline-block; padding: 0px 20px 0px 42px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:180px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.id}')">	
 									<c:choose>
 										<c:when test="${list.primary == '1'}">
 											<c:out value ="${list.displayName1}"/>

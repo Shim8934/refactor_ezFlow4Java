@@ -1575,18 +1575,23 @@
 		    }
 		    
 		    function addSticker() {
-		    	processGroupStickers();
-		    	stickerIndex = 1;		    	
-		    	document.getElementById("_group1").style.backgroundColor  = "#d9d9d9";
-		    	document.getElementById("_listG1").style.display = "block";
-		    	
-		    	for (var i = 2; i <= numberOfGroupSticker; i++) {
-		    		document.getElementById("_group" + i).style.backgroundColor  = "#fff";
-		    		document.getElementById("_listG" + i).style.display = "none";
+		    	if (document.getElementById("emoticonPanel").style.display == "block") {
+		    		document.getElementById("emoticonPanel").style.display = "none";
 		    	}
-		    	
-		    	document.getElementById("emoticonPanel").style.display = "block";
-		    	checkScrollBars();
+		    	else {			    				    	
+			    	processGroupStickers();
+			    	stickerIndex = 1;		    	
+			    	document.getElementById("_group1").style.backgroundColor  = "#d9d9d9";
+			    	document.getElementById("_listG1").style.display = "block";
+			    	
+			    	for (var i = 2; i <= numberOfGroupSticker; i++) {
+			    		document.getElementById("_group" + i).style.backgroundColor  = "#fff";
+			    		document.getElementById("_listG" + i).style.display = "none";
+			    	}		    		    	
+			    	
+			    	document.getElementById("emoticonPanel").style.display = "block";
+			    	checkScrollBars();
+		    	}
 		    }
 		    
 		    function changeStickerGroup(obj) {		    	
