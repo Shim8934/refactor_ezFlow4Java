@@ -75,7 +75,7 @@
 					beforeShow: function (input) {
 						var i_offset = $(input).offset();
 						setTimeout(function () {
-							$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+							//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
 						})
 					}
 				});
@@ -90,7 +90,7 @@
 					beforeShow: function (input) {
 						var i_offset = $(input).offset();
 						setTimeout(function () {
-							$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+							//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
 		     			})
 		 			}
 				});

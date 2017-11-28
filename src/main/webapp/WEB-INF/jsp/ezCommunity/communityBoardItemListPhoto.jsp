@@ -112,8 +112,8 @@
                             
                             var title = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim();
                             
-                            if (title.Length > 8) {
-                                title = title.Substring(0, 8) + "...";
+                            if (title.length > 8) {
+                                title = title.substring(0, 8) + "...";
                             }
                             
                             listXML += title;

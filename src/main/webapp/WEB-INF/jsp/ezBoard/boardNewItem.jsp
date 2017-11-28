@@ -297,7 +297,7 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-       
+       			
 		        if (ExpireDays != -1) {
 			        var utcDate = new Date(strNow.substring(0, 10));
 			        utcDate.setDate(utcDate.getDate() + Number(ExpireDays));
@@ -430,10 +430,14 @@
 		            pEndDateTime = "9999-12-30 23:59:59";
 		        } else {
 		            if ((pMode == "modify" || pMode == "temp") && $('#Sdatepicker2').val().substring(0, 4) != "9999") {
-		                pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
+		            	//만료일자가 오늘 23:59:59 이전까지 포함할수있게 수정
+		                //pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
+		            	pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
 		            }
 		            else {
-		                pEndDateTime = $('#Sdatepicker2').val() + strNow.substring(10, 19);
+		            	//만료일자가 오늘 23:59:59 이전까지 포함할수있게 수정
+		                //pEndDateTime = $('#Sdatepicker2').val() + strNow.substring(10, 19);
+		            	pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
 		            }
 		        }
 		        return pEndDateTime;
@@ -1730,7 +1734,8 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                    Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";
+		                    Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + "\\')";
+		                    
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                }
@@ -1795,7 +1800,8 @@
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
 
-		        Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+		        Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + imgSrc + "\\')";
+		        alert(Td.style.backgroundImage);
 		        Table.style.width = imgWidth + "px";
 		        Table.style.height = imgHeight + "px";
 
@@ -2226,7 +2232,7 @@
 	        </tr>
 	        <tr>
 	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=BOARDBACKGROUND" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
 	            </td>
 	        </tr>
 	        <tr id="docTR" style="display: none">

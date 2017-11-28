@@ -87,6 +87,14 @@
 		            window.returnValue = "cancel";
 		
 		        document.getElementById("TxtAprLineTempletName").focus();
+		        
+		        // 한글 입력시 maxlength + 1이 입력되는 현상 제어
+			    $("#TxtAprLineTempletName").keyup( function(e){
+			    	var maxlength = $(this).prop("maxlength");
+			    	if ($(this).val().length >= maxlength) {
+			    		$(this).val($(this).val().substr(0, maxlength));
+			    	}
+			    });
 		    };
 		
 		    function KeEventControl(obj) {
