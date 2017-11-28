@@ -415,12 +415,13 @@ public class IMAPAccess {
 				return 2;
 			}
 			
+			unSubscribeAndGetSubscribeFolderSet(folder, new HashSet<String>());
+			
 			if (!folder.delete(true)) {
 				logger.debug("fail to delete folder.");
 				return 1;
 			}
 			
-			unSubscribeAndGetSubscribeFolderSet(folder, new HashSet<String>());
 			logger.debug(folderPath + " is deleted.");
 			result = 0;
 			
@@ -456,17 +457,17 @@ public class IMAPAccess {
 				return 3;
 			}
 			
-			if (!((IMAPFolder)oldFolder).renameTo(newFolder)) {
-				logger.debug("fail to move folder.");
-				return 1;
-			}
-			
 			Set<String> folderSet = new HashSet<String>();
 			folderSet = unSubscribeAndGetSubscribeFolderSet(oldFolder, folderSet);
 			
 			Set<String> newFolderSet = new HashSet<String>();
 			for (String folderPath : folderSet) {
 				newFolderSet.add(folderPath.replace(oldFolderPath, newFolderPath));
+			}
+			
+			if (!((IMAPFolder)oldFolder).renameTo(newFolder)) {
+				logger.debug("fail to move folder.");
+				return 1;
 			}
 			
 			for (String folderPath : newFolderSet) {
