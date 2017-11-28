@@ -70,12 +70,12 @@
                                 var conPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("CONDITION").item(0);
         
                                 for (var j = 0; j < conPath.getElementsByTagName("KIND").length; j++) {
-                                    _con += "#" + conPath.getElementsByTagName("KIND").item(j).textContent;
-                                    _conval += "#" + conPath.getElementsByTagName("VALUES").item(j).textContent;
+                                    _con += "|!|" + conPath.getElementsByTagName("KIND").item(j).textContent;
+                                    _conval += "|!|" + conPath.getElementsByTagName("VALUES").item(j).textContent;
                                 }
         
-                                _con = _con.substring(1, _con.length);
-                                _conval = _conval.substring(1, _conval.length);
+                                _con = _con.substring(3, _con.length);
+                                _conval = _conval.substring(3, _conval.length);
         
                                 var _act = "";
                                 var _actfid = "";
@@ -90,35 +90,35 @@
                                     curkind = actPath.getElementsByTagName("KIND").item(j).textContent;
                                     
                                     if (curkind == "MOVE" || curkind == "COPY") {
-                                        _act += "#" + curkind;
-                                        _actfid += "#" + actPath.getElementsByTagName("FOLDERID").item(actfcnt).textContent;
-                                        _actfnm += "#" + actPath.getElementsByTagName("FOLDERNAME").item(actfcnt).textContent;
-                                        _actval += "#0";
+                                        _act += "|!|" + curkind;
+                                        _actfid += "|!|" + actPath.getElementsByTagName("FOLDERID").item(actfcnt).textContent;
+                                        _actfnm += "|!|" + actPath.getElementsByTagName("FOLDERNAME").item(actfcnt).textContent;
+                                        _actval += "|!|0";
                                         actfcnt++;
                                     }
                                     else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
-                                        _act += "#" + curkind;
-                                        _actval += "#" + actPath.getElementsByTagName("VALUES").item(j).textContent;
+                                        _act += "|!|" + curkind;
+                                        _actval += "|!|" + actPath.getElementsByTagName("VALUES").item(j).textContent;
                                     }
                                     else if (curkind == "READ" || curkind == "DELETE") {
-                                        _act += "#" + curkind;
-                                        _actval += "#0";
+                                        _act += "|!|" + curkind;
+                                        _actval += "|!|0";
                                     }
                                     else {
                                         _act += "#NONE";
-                                        _actval += "#0";
+                                        _actval += "|!|0";
                                     }
                                 }
         
                                 if (actPath.getElementsByTagName("KIND").length == 0) {
                                     _act += "#NONE";
-                                    _actval += "#0";
+                                    _actval += "|!|0";
                                 }
         
-                                _act = _act.substring(1, _act.length);
-                                _actfid = _actfid.substring(1, _actfid.length);
-                                _actfnm = _actfnm.substring(1, _actfnm.length);
-                                _actval = _actval.substring(1, _actval.length);
+                                _act = _act.substring(3, _act.length);
+                                _actfid = _actfid.substring(3, _actfid.length);
+                                _actfnm = _actfnm.substring(3, _actfnm.length);
+                                _actval = _actval.substring(3, _actval.length);
         
                                 var _expt = "";
                                 var _exptval = "";
@@ -126,15 +126,15 @@
                                 var exptPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("EXCEPTION").item(0);
         
                                 for (var j = 0; j < exptPath.getElementsByTagName("KIND").length; j++) {
-                                    _expt += "#" + exptPath.getElementsByTagName("KIND").item(j).textContent;
-                                    _exptval += "#" + exptPath.getElementsByTagName("VALUES").item(j).textContent;
+                                    _expt += "|!|" + exptPath.getElementsByTagName("KIND").item(j).textContent;
+                                    _exptval += "|!|" + exptPath.getElementsByTagName("VALUES").item(j).textContent;
                                 }
         
-                                _expt = _expt.substring(1, _expt.length);
-                                _exptval = _exptval.substring(1, _exptval.length);
+                                _expt = _expt.substring(3, _expt.length);
+                                _exptval = _exptval.substring(3, _exptval.length);
         
                                 _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-                                //alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
+//                                 alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
                                 
                                 if (_act.indexOf("NONE") != -1) {
                                     if (_Use == "Y")
@@ -157,7 +157,7 @@
                                     _html += "<td style='width:32%;text-align:center;color:Red;'> " + strLang201 + "</td>";
                                 else
                                 */
-                                    _html += "<td style='width:32%;text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + _actfnm.replace("#", ", ") + "</td>";
+                                    _html += "<td style='width:32%;text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + _actfnm.replace("|!|", ", ") + "</td>";
                                 
                             
                                 _html += "</tr></html>";
@@ -181,12 +181,12 @@
                                 var conPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("CONDITION").item(0);
         
                                 for (var j = 0; j < conPath.getElementsByTagName("KIND").length; j++) {
-                                    _con += "#" + conPath.getElementsByTagName("KIND").item(j).text;
-                                    _conval += "#" + conPath.getElementsByTagName("VALUES").item(j).text;
+                                    _con += "|!|" + conPath.getElementsByTagName("KIND").item(j).text;
+                                    _conval += "|!|" + conPath.getElementsByTagName("VALUES").item(j).text;
                                 }
         
-                                _con = _con.substring(1, _con.length);
-                                _conval = _conval.substring(1, _conval.length);
+                                _con = _con.substring(3, _con.length);
+                                _conval = _conval.substring(3, _conval.length);
         
                                 var _act = "";
                                 var _actfid = "";
@@ -201,35 +201,35 @@
                                     curkind = actPath.getElementsByTagName("KIND").item(j).text;
                                     
                                     if (curkind == "MOVE" || curkind == "COPY") {
-                                        _act += "#" + curkind;
-                                        _actfid += "#" + actPath.getElementsByTagName("FOLDERID").item(actfcnt).text;
-                                        _actfnm += "#" + actPath.getElementsByTagName("FOLDERNAME").item(actfcnt).text;
-                                        _actval += "#0";
+                                        _act += "|!|" + curkind;
+                                        _actfid += "|!|" + actPath.getElementsByTagName("FOLDERID").item(actfcnt).text;
+                                        _actfnm += "|!|" + actPath.getElementsByTagName("FOLDERNAME").item(actfcnt).text;
+                                        _actval += "|!|0";
                                         actfcnt++;
                                     }
                                     else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
-                                        _act += "#" + curkind;
-                                        _actval += "#" + actPath.getElementsByTagName("VALUES").item(j).text;
+                                        _act += "|!|" + curkind;
+                                        _actval += "|!|" + actPath.getElementsByTagName("VALUES").item(j).text;
                                     }
                                     else if (curkind == "READ" || curkind == "DELETE") {
-                                        _act += "#" + curkind;
-                                        _actval += "#0";
+                                        _act += "|!|" + curkind;
+                                        _actval += "|!|0";
                                     }
                                     else {
                                         _act += "#NONE";
-                                        _actval += "#0";
+                                        _actval += "|!|0";
                                     }
                                 }
         
                                 if (actPath.getElementsByTagName("KIND").length == 0) {
                                     _act += "#NONE";
-                                    _actval += "#0";
+                                    _actval += "|!|0";
                                 }
         
-                                _act = _act.substring(1, _act.length);
-                                _actfid = _actfid.substring(1, _actfid.length);
-                                _actfnm = _actfnm.substring(1, _actfnm.length);
-                                _actval = _actval.substring(1, _actval.length);
+                                _act = _act.substring(3, _act.length);
+                                _actfid = _actfid.substring(3, _actfid.length);
+                                _actfnm = _actfnm.substring(3, _actfnm.length);
+                                _actval = _actval.substring(3, _actval.length);
         
                                 var _expt = "";
                                 var _exptval = "";
@@ -237,12 +237,12 @@
                                 var exptPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("EXCEPTION").item(0);
         
                                 for (var j = 0; j < exptPath.getElementsByTagName("KIND").length; j++) {
-                                    _expt += "#" + exptPath.getElementsByTagName("KIND").item(j).text;
-                                    _exptval += "#" + exptPath.getElementsByTagName("VALUES").item(j).text;
+                                    _expt += "|!|" + exptPath.getElementsByTagName("KIND").item(j).text;
+                                    _exptval += "|!|" + exptPath.getElementsByTagName("VALUES").item(j).text;
                                 }
         
-                                _expt = _expt.substring(1, _expt.length);
-                                _exptval = _exptval.substring(1, _exptval.length);
+                                _expt = _expt.substring(3, _expt.length);
+                                _exptval = _exptval.substring(3, _exptval.length);
         
                                 _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
                                 //alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
@@ -268,7 +268,7 @@
                                     _html += "<td style='width:32%;text-align:center;color:Red;'> " + strLang201 + "</td>";
                                 else
                                 */
-                                    _html += "<td style='width:32%;text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + _actfnm.replace("#", ", ") + "</td>";
+                                    _html += "<td style='width:32%;text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + _actfnm.replace("|!|", ", ") + "</td>";
                                 
                             
                                 _html += "</tr></html>";
@@ -327,14 +327,14 @@
 		        var _act = "";
 		        var _expt = "";
 		
-		        var con = _RowObject.getAttribute("_con").split('#');
-		        var conval = _RowObject.getAttribute("_conval").split('#');
-		        var act = _RowObject.getAttribute("_act").split('#');
-		        var actfid = _RowObject.getAttribute("_actfid").split('#');
-		        var actfnm = _RowObject.getAttribute("_actfnm").split('#');
-		        var actval = _RowObject.getAttribute("_actval").split('#');
-		        var expt = _RowObject.getAttribute("_expt").split('#');
-		        var exptval = _RowObject.getAttribute("_exptval").split('#');
+		        var con = _RowObject.getAttribute("_con").split('|!|');
+		        var conval = _RowObject.getAttribute("_conval").split('|!|');
+		        var act = _RowObject.getAttribute("_act").split('|!|');
+		        var actfid = _RowObject.getAttribute("_actfid").split('|!|');
+		        var actfnm = _RowObject.getAttribute("_actfnm").split('|!|');
+		        var actval = _RowObject.getAttribute("_actval").split('|!|');
+		        var expt = _RowObject.getAttribute("_expt").split('|!|');
+		        var exptval = _RowObject.getAttribute("_exptval").split('|!|');
 		
 		        // CONDITION
 		        _html += "<span style='font-weight:bold;color:#3B7CBE;'>" + strLang203 + "</span><p/>";
@@ -435,9 +435,9 @@
 		                    break;
 		            }
 		        }
-		
+
 		        _html += "<span>" + _act + "</span>";
-		
+
 		        // EXCEPTION
 		        if (_RowObject.getAttribute("_expt") != "") {
 		            _html += "<p/><span style='font-weight:bold;color:#3B7CBE;'>" + strLang349 + "</span><p/>";
