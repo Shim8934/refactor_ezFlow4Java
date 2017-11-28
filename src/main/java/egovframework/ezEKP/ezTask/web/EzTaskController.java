@@ -1263,7 +1263,7 @@ public class EzTaskController extends EgovFileMngUtil {
 				}   				
 			}
 			
-			if (pSelectTab.equals("taskrepetition") && (vo.getTaskType().equals("5") || vo.getTaskType().equals("6"))) {
+			if (pSelectTab.equals("") && (vo.getTaskType().equals("4") || vo.getTaskType().equals("5") || vo.getTaskType().equals("6"))) {
 				//Set percentage and status
 				String realDate = commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), true);
 				int status = ezTaskService.getStatusOfRepTask(vo.getTaskID(), realDate, tenantID);
