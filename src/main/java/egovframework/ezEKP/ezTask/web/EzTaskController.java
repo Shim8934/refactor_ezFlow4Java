@@ -137,6 +137,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String completeRateList = "";
 		String statusList = "";	
 		String repeatCntList = "";
+		String mode = (request.getParameter("mode") == null ? "" : request.getParameter("mode"));
 		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
 
 		//업무정보 조회
@@ -172,56 +173,62 @@ public class EzTaskController extends EgovFileMngUtil {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String endDate = "";	
 			
-	        //Get user today time
-			String[] offsetArr = offset.split("\\|");				
-			nsdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
-		    String utcTime = nsdf.format(new Date());	    		    
-			String todayText = utcTime + " 00:00:00";
-			Date today = sdf.parse(todayText); 
-	        Calendar calendar1 = Calendar.getInstance();  
-	        calendar1.setTime(today); 
-	        
-			if (taskInfoVO.getTotalRep() != -1) {
-				endDate = taskInfoVO.getEndDate();
-				Date taskEndDate = sdf.parse(endDate); 
-		        Calendar calendar2 = Calendar.getInstance();  
-		        calendar2.setTime(taskEndDate);         
+			if (mode.equals("")) {
+				//Get user today time
+				String[] offsetArr = offset.split("\\|");				
+				nsdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+			    String utcTime = nsdf.format(new Date());	    		    
+				String todayText = utcTime + " 00:00:00";
+				Date today = sdf.parse(todayText); 
+		        Calendar calendar1 = Calendar.getInstance();  
+		        calendar1.setTime(today); 
 		        
-		        if (calendar1.compareTo(calendar2) >= 0) {	        	
-		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
-		        	date = endDate.substring(0, 10);
-		        }
-		        else {		        	
-		        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
-		        	
-		        	for (String d: result.keySet()) {	        			        		
+				if (taskInfoVO.getTotalRep() != -1) {
+					endDate = taskInfoVO.getEndDate();
+					Date taskEndDate = sdf.parse(endDate); 
+			        Calendar calendar2 = Calendar.getInstance();  
+			        calendar2.setTime(taskEndDate);         
+			        
+			        if (calendar1.compareTo(calendar2) >= 0) {	        	
+			        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
+			        	date = endDate.substring(0, 10);
+			        }
+			        else {		        	
+			        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+			        	
+			        	for (String d: result.keySet()) {	        			        		
+			        		Date dDate = sdf.parse(d + " 00:00:00"); 
+			    	        Calendar calendar3 = Calendar.getInstance();  
+			    	        calendar3.setTime(dDate); 
+			    	        
+			    	        if (calendar3.compareTo(calendar1) >= 0) {		    	        	
+			    	        	date = d;
+			    	        	break;
+			    	        }
+			        	}
+			        }		        		        
+				}
+				else {				
+					result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+					
+		        	for (String d: result.keySet()) {
 		        		Date dDate = sdf.parse(d + " 00:00:00"); 
 		    	        Calendar calendar3 = Calendar.getInstance();  
 		    	        calendar3.setTime(dDate); 
 		    	        
-		    	        if (calendar3.compareTo(calendar1) >= 0) {		    	        	
+		    	        if (calendar3.compareTo(calendar1) >= 0) {
 		    	        	date = d;
 		    	        	break;
 		    	        }
 		        	}
-		        }		        		        
+				}					        
 			}
-			else {				
-				result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
-				
-	        	for (String d: result.keySet()) {
-	        		Date dDate = sdf.parse(d + " 00:00:00"); 
-	    	        Calendar calendar3 = Calendar.getInstance();  
-	    	        calendar3.setTime(dDate); 
-	    	        
-	    	        if (calendar3.compareTo(calendar1) >= 0) {
-	    	        	date = d;
-	    	        	break;
-	    	        }
-	        	}
+			else {
+				//In search mode
+				result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);
 			}
 			
-	        for (Map.Entry<String, Integer> entry : result.entrySet()) {
+			for (Map.Entry<String, Integer> entry : result.entrySet()) {
 	            String key = entry.getKey();
 	            Integer value = entry.getValue();	
 	            
@@ -248,7 +255,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			taskInfoVO.setTaskStatus(status);
 			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
 			taskInfoVO.setCompleteRate(completionPercentage);			
-			taskInfoVO.setRepeatCount(result.get(date));			
+			taskInfoVO.setRepeatCount(result.get(date));	        			
 		}	
 		//end
 
