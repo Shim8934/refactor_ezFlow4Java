@@ -247,3 +247,6 @@ style="height:14px;width:14px;align:middle"
 .pollButton02 .pollButton04 span{background:#efefef; color:#000; display:block; height:28px; line-height:28px; margin:0px; padding:0px; border-radius:5px;}
 
 .pollAddFile{height:45px; line-height:45px; background:#f9f9f9; border-bottom:1px solid #DDD; padding:0px 10px 0px 10px; color:#818181;}
+
+.pollImgbtn{ white-space:nowrap; display:inline-block; cursor: pointer;	height:25px; vertical-align:top; cursor:pointer; margin-bottom:2px; }
+.pollImgbtn span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px;	font:12px gulim; letter-spacing:-1; vertical-align:top;	line-height:25px;}

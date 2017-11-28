@@ -249,11 +249,11 @@
 			<ul>
 				<li>
 					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" placeholder="<spring:message code="ezPoll.t144"/>" >
-					<a class="imgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezQuestion.t34"/></span></a>
+					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezQuestion.t34"/></span></a>
 				</li>
-				<li id="btnDel"><a class="imgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202"/></span></a></li>
-				<li id="btnHid"><a class="imgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203"/></span></a></li>
-				<li><a class="imgbtn" onClick="menu_Show()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
+				<li id="btnDel"><a class="pollImgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202"/></span></a></li>
+				<li id="btnHid"><a class="pollImgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203"/></span></a></li>
+				<li><a class="pollImgbtn" onClick="menu_Show()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left; margin:10px 4px 0px 5px;"><span><spring:message code="ezPoll.t205" /></span></li>
 			</ul>
 		</div>
