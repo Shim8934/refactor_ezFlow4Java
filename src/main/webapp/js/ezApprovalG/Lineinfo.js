@@ -598,7 +598,12 @@ function APRDEPTADD() {
         treeView.LoadFromID("FromTreeView");
 
         var pTreeSelNode = treeView.GetSelectNode();
-        APRLINEATTENDADDFunction(pTreeSelNode, "DEPT");
+        
+        if (approvalFlag == "S") {
+        	SAPRLINEATTENDADDFunction(pTreeSelNode, "DEPT");
+        } else {
+        	APRLINEATTENDADDFunction(pTreeSelNode, "DEPT");
+        }
     }
 }
 //############################################################################################################################################# 결재순번(Down) 1)
