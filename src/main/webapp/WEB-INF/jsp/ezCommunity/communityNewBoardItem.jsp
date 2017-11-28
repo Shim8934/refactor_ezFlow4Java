@@ -516,14 +516,21 @@
 			                    xmlhttp.open("POST", "/ezCommunity/sendPostNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
 			                    xmlhttp.send();
 			                    xmlhttp = null;
-			                }
+			                } */
 			                
 			                if (pMode == "reply") {
-			                    xmlhttp = createXMLHttpRequest();
-			                    xmlhttp.open("POST", "/ezCommunity/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID + "&itemTreeID=" + strUpperItemIDTree, false);
-			                    xmlhttp.send();
-			                    xmlhttp = null;
-			                } */
+			                	$.ajax({
+							    	type : "POST",
+							    	url : "/ezCommunity/sendReplyNoticeMail.do",
+							    	async : false,
+							    	data : {boardID : pBoardID,
+						    				itemID : newID,
+						    				itemTreeID : strUpperItemIDTree},
+							    	dataType : 'json',
+							    	success : function (result) {
+							    	}
+							    });
+			                }
 			                
 			                alert("<spring:message code='ezCommunity.t282'/>");
 						} else {
