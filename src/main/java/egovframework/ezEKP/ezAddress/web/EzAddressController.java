@@ -767,14 +767,17 @@ public class EzAddressController{
 		StringBuilder listMember = new StringBuilder();
 		
 		int listMemberSize = 0;
+		
         if (address != null && !address.trim().equals("")) {
-        	String[] addrList = address.split(";");
-        	listMemberSize = addrList.length;
+	        	String[] addrList = address.split(";");
+	        	listMemberSize = addrList.length;
         	
-        	for (String addr : addrList) {
-        		addr = EgovStringUtil.getSpclStrCnvr(addr);
-        		listMember.append("<option>" + addr + "</option>");
-        	}
+	        	for (String addr : addrList) {
+	        		logger.debug("addr Before=" + addr);
+	        		addr = EgovStringUtil.getSpclStrCnvr(addr).replaceAll("\"", "");
+	        		addr = "<option title='"+ addr +"'>" + addr + "</option>";
+	        		listMember.append(addr);
+	        	}
         }
         
 		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
