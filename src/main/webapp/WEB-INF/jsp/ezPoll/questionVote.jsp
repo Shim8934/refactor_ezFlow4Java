@@ -526,7 +526,7 @@
 		    
 		    function DownloadAttach(downloadPath, fileName) {	
 		    	var downloadUrl = "/ezPoll/downloadAttach.do?folderPath=" + encodeURIComponent(downloadPath) + "&filename=" + encodeURIComponent(fileName);
-		    	console.log("Download URL: " + downloadUrl);
+		    	//console.log("Download URL: " + downloadUrl);
 		        AttachDownFrame.location.href = downloadUrl;
 		    }
 		    
@@ -536,7 +536,7 @@
 		    	var test = ${numOfFile};
 		    	
 		        if (suffix < test) {
-		        	setTimeout(function () { FileDownload(document.getElementsByName("file_path").item(suffix++).getAttribute("_filehref")) }, 2000);
+		        	setTimeout(function () { FileDownload(document.getElementsByName("file_path").item(suffix++)) }, 2000);
 		        }		            
 		        else {	
 		        	suffix = 0;
@@ -544,9 +544,14 @@
 		        }
 		    }
 		    
-		    function FileDownload(pFileUrl) {
-		        if (pFileUrl != null) {
-		            AttachDownFrame.location.href = pFileUrl;
+		    function FileDownload(obj) {
+		        if (obj != null) {
+		        	var downloadPath = obj.getAttribute("_path");
+		        	var fileName = obj.getAttribute("_file");
+		        	var downloadUrl = "/ezPoll/downloadAttach.do?folderPath=" + encodeURIComponent(downloadPath) + "&filename=" + encodeURIComponent(fileName);
+		        	//console.log("Download URL: " + downloadUrl);
+		        	
+		            AttachDownFrame.location.href = downloadUrl;
 		            AttachAllDownload();
 		        }
 		        else {		
@@ -2115,7 +2120,7 @@
 							<table class="content" style="width: 100%; height:32px; line-height:30px; border:none; border-bottom:1px solid #e1ebf7;">
 								<tr>
 									<td class="vote_listTd" style="border:none;">
-										<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer; width:16px; height:16px; margin:0px; padding:0px 5px;">
+										<span name="file_path" _file="${list}" _path="${filePaths[status.index]}" onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer; width:16px; height:16px; margin:0px; padding:0px 5px;">
 											<img src="/images/poll/icon_adddownload_vote.gif" width="16" height="16" style="padding-left: 5px; vertical-align:middle; margin:-3px 0px 0px 0px;">											
 										</span>
 										<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">	
