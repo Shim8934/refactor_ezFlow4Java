@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -7167,4 +7168,66 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("deleteReservedBoardItem ended");
 	}
 	
+	@Override
+	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception {
+		logger.debug("sendReplyNoticeMail started.");
+		logger.debug("boardID = " + boardID + " || itemID = " + itemID + " || itemTreeID = " + itemTreeID);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, boardID);
+		
+		if (boardInfo.getReplyNotify().equals("1")) {
+			CommunityBoardItemVO vo = getItemXML(boardID, itemID, userInfo);
+			StringBuilder bodyContent = new StringBuilder();
+			Locale locale = userInfo.getLocale();
+			
+			String communityID = sendPostNoticeMailGet1(boardID);
+			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + vo.getTitle();
+			bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + boardInfo.getBoardName());
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", locale) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", " + userInfo.getCompanyName() + ")");
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
+        	bodyContent.append("</DIV>");
+    		
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	OrganUserVO uvo = sendReplyNoticeMail(boardID, itemTreeID.substring(0, 38), userInfo.getTenantId());
+        	
+        	InternetAddress to = new InternetAddress();
+        	to.setPersonal(uvo.getDisplayName(), "UTF-8");
+        	to.setAddress(uvo.getMail());
+        	
+        	logger.debug("from = " + userInfo.getEmail());
+        	logger.debug("to = " + uvo.getMail());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			
+		}
+		
+		logger.debug("sendReplyNoticeMail ended.");
+	}
+	
+	private OrganUserVO sendReplyNoticeMail(String boardID, String itemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		OrganUserVO uvo = ezCommunityDAO.sendReplyNoticeMail(map);
+		
+		return uvo;
+	}
+	
+	private String sendPostNoticeMailGet1(String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		
+		String result = ezCommunityDAO.sendPostNoticeMailGet1(map);
+		
+		return result;
+	}
 }

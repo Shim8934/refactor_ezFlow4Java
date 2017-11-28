@@ -718,7 +718,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strAbstract", strAbstract);
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-		model.addAttribute("searchConfig", searchConfig);
+		model.addAttribute("searchConfig", searchConfig.substring(0, searchConfig.length() - 2));
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("strXML", strXML);
 		
@@ -4527,6 +4527,22 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("getMyCoummunityBoardList ended.");
 		return result;
+	}
+	
+	/**
+	 * 커뮤니티 답변메일발송
+	 */
+	@RequestMapping(value = "/ezCommunity/sendReplyNoticeMail.do")
+	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("sendReplyNoticeMail started.");
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String itemTreeID = request.getParameter("itemTreeID");
+		
+		ezCommunityService.sendReplyNoticeMail(boardID, itemID, itemTreeID, loginCookie);
+		
+		logger.debug("sendReplyNoticeMail ended.");
 	}
 }
 
