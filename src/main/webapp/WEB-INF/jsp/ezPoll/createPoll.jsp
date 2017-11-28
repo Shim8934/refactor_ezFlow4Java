@@ -361,10 +361,10 @@
 	            var item_no = document.getElementById("item_no").value;
 	
 	            if (CrossYN()) {
-	            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
+	            	var szUrl = "/ezPoll/qstRangeSelect.do?brdID=6&itemNo=" + item_no;
 	            }
 	            else {
-	            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
+	            	var szUrl = "/ezPoll/qstRangeSelect.do?brdID=6&itemNo=" + item_no;
 	            }
 	  
 	            var _MSIE = 'MSIE';
@@ -418,7 +418,7 @@
 		
 	    function menu_SelectRange_IE() {
 	        var item_no = document.all("item_no").value;
-	        var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no; 
+	        var szUrl = "/ezPoll/qstRangeSelect.do?brdID=6&itemNo=" + item_no; 
 	        
 	        if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 	            if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {

@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1686,7 +1687,40 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Show seen users info finishes!");
 		return "/ezPoll/showSeenUserInfo";
 	}
+	
+	@RequestMapping(value="/ezPoll/qstRangeSelect.do")
+	public String qstRangeSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		logger.debug("qstRangeSelect started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userInfoDeptCode="";				
+		String pCompanyID="";
+		String brdID = "";
+		String itemID = "";
+		
+		if (req.getParameter("brdID") != null) {
+			brdID = req.getParameter("brdID");
+		}
+		
+		if (req.getParameter("itemNo") != null) {
+			itemID = req.getParameter("itemNo");
+		}
+
+		userInfoDeptCode = userInfo.getDeptID();
+		pCompanyID = userInfo.getCompanyID();
+		
+		String langData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());		
+		
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("itemNo", itemID);
+		model.addAttribute("pCompanyID",pCompanyID);
+		model.addAttribute("userInfoDeptCode", userInfoDeptCode);
+		model.addAttribute("langData",langData);
+		
+		logger.debug("qstRangeSelect ended");
+		return "/ezPoll/rangeSelect";
+	}
+	
 	private String addUserAndAnswer(PollUserAnswerVO pollUserAnswer) {
 		String strXML = "";
 		
