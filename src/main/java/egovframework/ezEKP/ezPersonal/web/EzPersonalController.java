@@ -783,11 +783,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 		SSL = req.getRequestURL().toString();
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		//초기화면 메일만 사용하고 싶을 때 YES
 		String firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		//회람판 사용여부
 		String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", userInfo.getTenantId());
+		//마이포탈설정 0:보이게,1:마이포탈페이지만,2:초기화면설정만
+		String portalEnv = ezCommonService.getTenantConfig("portalEnv", userInfo.getTenantId());
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
@@ -796,11 +799,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
 		model.addAttribute("USE_CIRCULAR", useCircular);
-		
-        String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-        
         model.addAttribute("packageType", packageType);
-		
+        model.addAttribute("portalEnv", portalEnv);
+        
 		logger.debug("leftEnvironment ended");
 		return "/ezPersonal/persLeftEnvirionment";
 	}
