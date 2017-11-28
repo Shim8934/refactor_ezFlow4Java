@@ -159,40 +159,24 @@ public class IMAPAccess {
 			
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
-				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				inbox.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
+				createFolder(inbox.getFullName());
 			}
-			
 			if (!sent.exists()) {
-				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				sent.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
+				createFolder(sent.getFullName());
 			}
-			
 			if (!draft.exists()) {
-				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				draft.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
+				createFolder(draft.getFullName());
 			}
-			
 			if (!trash.exists()) {
-				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				trash.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
+				createFolder(trash.getFullName());
 			}
-			
 			if (!personal.exists()) {
-				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				personal.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
+				createFolder(personal.getFullName());
+			}
+			if (!junk.exists()) {
+				createFolder(junk.getFullName());
 			}
 			
-			if (!junk.exists()) {
-				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				junk.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
-			}			
 		} catch(MessagingException e) {
 			e.printStackTrace();
 		}
@@ -219,40 +203,23 @@ public class IMAPAccess {
 			
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
-				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				inbox.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
+				createFolder(inbox.getFullName());
 			}
-			
 			if (!sent.exists()) {
-				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				sent.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
+				createFolder(sent.getFullName());
 			}
-			
 			if (!draft.exists()) {
-				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				draft.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
+				createFolder(draft.getFullName());
 			}
-			
 			if (!trash.exists()) {
-				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				trash.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
+				createFolder(trash.getFullName());
 			}
-			
 			if (!personal.exists()) {
-				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				personal.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
+				createFolder(personal.getFullName());
 			}
-			
 			if (!junk.exists()) {
-				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				junk.setSubscribed(true);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
-			}						
+				createFolder(junk.getFullName());
+			}
 			
 			Folder[] folderList = null;
 			if (isSubscribe) {
@@ -335,6 +302,7 @@ public class IMAPAccess {
 		} catch(MessagingException e){
 			logger.error("Error get default folder: " + e.getMessage());
 		}
+		
 		return topLevelFolders;
 	}
 	
@@ -409,12 +377,12 @@ public class IMAPAccess {
 			Folder newFolder = rootFolder.getFolder(folderPath);
 			
 			if (newFolder.exists()) {
-				logger.error("folder already exist. folderPath=" + folderPath);
+				logger.debug("folder already exist. folderPath=" + folderPath);
 				return 2;
 			}
 
 			if (!newFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES)) {
-				logger.error("fail to create folder.");
+				logger.debug("fail to create folder.");
 				return 1;
 			}
 			
@@ -443,12 +411,12 @@ public class IMAPAccess {
 			Folder folder = rootFolder.getFolder(folderPath);
 			
 			if (!folder.exists()) {
-				logger.error("folder not exist. folderPath=" + folderPath);
+				logger.debug("folder not exist. folderPath=" + folderPath);
 				return 2;
 			}
 			
 			if (!folder.delete(true)) {
-				logger.error("fail to delete folder.");
+				logger.debug("fail to delete folder.");
 				return 1;
 			}
 			
@@ -489,7 +457,7 @@ public class IMAPAccess {
 			}
 			
 			if (!((IMAPFolder)oldFolder).renameTo(newFolder)) {
-				logger.error("fail to move folder.");
+				logger.debug("fail to move folder.");
 				return 1;
 			}
 			
