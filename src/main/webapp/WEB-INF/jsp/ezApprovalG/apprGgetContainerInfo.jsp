@@ -1270,7 +1270,7 @@
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
 	    <div id="MOC_Div" style="display: none"></div>
-	    <h1><spring:message code='ezApprovalG.t102'/><span id="presentcell" style="color:#666;font-weight:normal;"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+	    <h1><spring:message code='ezApprovalG.t1755'/><span id="presentcell" style="color:#666;font-weight:normal;"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezApprovalG.t106'/>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezApprovalG.t445'/>
