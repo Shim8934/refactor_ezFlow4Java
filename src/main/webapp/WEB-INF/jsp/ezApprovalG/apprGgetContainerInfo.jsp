@@ -375,7 +375,7 @@
 		        ContainerID = ContainerID + "'" + retVal[i] + "'";
 		        subCondition = "";
 		        if (ContainerID != "'undefined'") {
-		            document.getElementById("presentcell").innerHTML = unescape(" - <spring:message code='ezApproval.t576'/>");
+		            document.getElementById("presentcell").innerHTML = unescape("<spring:message code='ezApproval.t576'/>");
 		            GetDocList();
 		        }
 		    }
@@ -389,7 +389,7 @@
 		            GamSaFlag = false;
 		        }
 		
-		        document.getElementById("presentcell").innerHTML = " - " + ContainerName;
+		        document.getElementById("presentcell").innerHTML = ContainerName;
 		
 		        ContainerID = cont;
 		        subCondition = "";
@@ -420,7 +420,7 @@
 		    }
 		    function SelCont_onclick3(cont, Containers, ContainerName) {
 		        var i;
-		        document.getElementById("presentcell").innerHTML = " - " + ContainerName;
+		        document.getElementById("presentcell").innerHTML = ContainerName;
 		
 		        for (i = 0; i < 25; i++) {
 		            condition[i] = "";
@@ -1270,7 +1270,7 @@
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
 	    <div id="MOC_Div" style="display: none"></div>
-	    <h1><spring:message code='ezApprovalG.t102'/><span id="presentcell" style="color:#666;font-weight:normal;"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+	    <h1><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezApprovalG.t106'/>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezApprovalG.t445'/>

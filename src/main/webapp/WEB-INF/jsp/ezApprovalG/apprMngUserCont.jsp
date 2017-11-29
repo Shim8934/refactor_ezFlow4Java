@@ -189,6 +189,7 @@
                     var pAlertContent = "<spring:message code='ezApproval.t309'/>";
                     OpenAlertUI(pAlertContent);
                     TreeViewRefresh();
+                    opener.TreeViewRefresh();
                     return;
                 }
                 else {
@@ -223,7 +224,7 @@
         
         var getcontname_dialogArgument = new Array();
         function getContName(tempName, type) {
-            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + encodeURIComponent(tempName);
+            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + escape(encodeURIComponent(tempName));
             if (CrossYN()) {
                 var para = new Array();
                 para[0] = type;
@@ -267,6 +268,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t300'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {
@@ -296,6 +298,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t303'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {

@@ -20788,6 +20788,7 @@
    	</select>
    	
    	<select id="EzApprovalG.getUserContTree" parameterClass="Map" resultClass="ApprUserContInfoVO">
+   	<![CDATA[
    		SELECT 
    			 USERCONTID ,
              USERCONTNAME ,
@@ -20804,6 +20805,7 @@
         	OWNUSERID = #v_USERID#
         ORDER BY 
         	USERCONTNAME
+     ]]>
    	</select>
    	
     <select id="EzApprovalG.getUserContTreeLeaf" parameterClass="Map" resultClass="ApprUserContInfoVO">
