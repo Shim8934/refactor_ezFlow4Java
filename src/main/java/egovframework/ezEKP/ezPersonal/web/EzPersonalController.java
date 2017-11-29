@@ -456,12 +456,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String signPath = "APPROVALSIGN";
+		String signPath = "APPROVALGSIGN";
 		String signImageSize = "4";
-		
-		if (config.getProperty("config.UserInfo_ApprovalG").equals("YES")) {
-			signPath = "APPROVALGSIGN";
-		}
 		
 		signImageSize = ezCommonService.getTenantConfig("SignImageSizeLimit", userInfo.getTenantId());
 		
@@ -767,7 +763,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String funCode = "";
 		String ezInfoSSL = "";
 		String SSL = "";
-		String usePortal = "";
 		
 		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
 			funCode = req.getParameter("funCode");
@@ -780,7 +775,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		
 		//초기화면 메일만 사용하고 싶을 때 YES
 		String	firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
@@ -803,7 +797,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
-		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
 		model.addAttribute("USE_CIRCULAR", useCircular);
         model.addAttribute("packageType", packageType);
