@@ -180,3 +180,6 @@
 
 .pollImgbtn{ white-space:nowrap; display:inline-block; cursor: pointer;	height:25px; vertical-align:top; cursor:pointer; margin-bottom:2px; }
 .pollImgbtn span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px;	font:12px gulim; letter-spacing:-1; vertical-align:top;	line-height:25px;}
+
+.pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:20px; vertical-align:top; cursor:pointer; margin-top: 4px;}
+.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:20px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:20px;}

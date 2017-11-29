@@ -717,7 +717,7 @@
 						<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
 						<option value="1"><spring:message code="ezPoll.t238" /></option>
 					</select>	
-					<a class="imgbtn" id="receiverBttn"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>																		
+					<a class="pollImgbtn1" id="receiverBttn"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>																		
 				</div>
 				<div style="display:none">
 					<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
