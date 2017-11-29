@@ -73,6 +73,8 @@ public class EzConnController {
 				
 				String cmd = request.getParameter("cmd");
 				
+				logger.debug("cmd=" + cmd);
+				
 				if (cmd != null && cmd.equals("boardDotNet")) {
 					String boardID = request.getParameter("boardID");
 					String itemID = request.getParameter("itemID");
@@ -83,7 +85,7 @@ public class EzConnController {
 					String strImgCount = "";
 					
 					resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
-				} if (cmd != null && cmd.equals("CommunityDotNet")) {
+				} else if (cmd != null && cmd.equals("CommunityDotNet")) {
 					String boardID = request.getParameter("boardID");
 					String itemID = request.getParameter("itemID");
 					
