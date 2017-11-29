@@ -126,6 +126,7 @@
 				document.getElementById("sendBttn").addEventListener("click", function(event) {
 				    event.preventDefault();
 				});
+				document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
 				document.getElementById("sendBttn").disabled = true;
 			}
 			
@@ -1173,6 +1174,7 @@
 		    function sendComment() {		    	
 		    	var fd = new FormData();
 		    	commentIndex = commentIndex + 1;
+		    	document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
 		    	document.getElementById("sendBttn").disabled = true;		    		    		    		    	
 		    	var currentText = document.getElementById("comment_input").value;		    			    	
 		    	var oTable = document.getElementById("commentListView");
@@ -1420,7 +1422,8 @@
 			    	var cancelPreview = document.getElementById("cancelImg");
 			    	cancelPreview.setAttribute("_fileInfo", fileinfo);
 			    	cancelPreview.setAttribute("_type", "file");
-			    	imagePreview.setAttribute("_fileInfo", fileinfo);			    	   	  		
+			    	imagePreview.setAttribute("_fileInfo", fileinfo);	
+			    	document.getElementById("sendBttn").style.backgroundColor = "#004896";
 			    	document.getElementById("sendBttn").disabled = false;
 		    	}
 		    	else {
@@ -1543,15 +1546,18 @@
 		        uploadFileElement.style.display = "none";
 		        
 		        if (document.getElementById("comment_input").value == "") {
+		        	document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
 		        	document.getElementById("sendBttn").disabled = true;
 		        }
 		    }
 		    
 		    function auto_grow(element) {
 				if (element.value == "" && document.getElementById("uploadedFile").style.display == "none") {
+					document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
 					document.getElementById("sendBttn").disabled = true;
 				}
 				else {
+					document.getElementById("sendBttn").style.backgroundColor = "#004896";
 			    	document.getElementById("sendBttn").disabled = false;
 /* 			        element.style.height = "5px";
 			        element.style.height = (element.scrollHeight) + "px"; */
@@ -1643,6 +1649,7 @@
 			    	imagePreview.setAttribute("_fileInfo", actualUrl);
 			    	imagePreview.setAttribute("_type", "sticker");
 			    	imagePreview.src = actualUrl;
+			    	document.getElementById("sendBttn").style.backgroundColor = "#004896";
 			    	document.getElementById("sendBttn").disabled = false;
 		    	}
 		    	else {
