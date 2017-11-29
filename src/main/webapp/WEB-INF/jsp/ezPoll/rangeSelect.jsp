@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezPoll.t222' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">   
+		<link href="/css/ezPoll/rangeSelect.css" rel="stylesheet" type="text/css">     
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/ListView_list.js"></script>
@@ -650,7 +651,7 @@
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
-		</style>
+		</style>		
 	</head>
 	<body class="popup"> 
 		<xml id="listviewheader" style="display:none">
@@ -735,13 +736,13 @@
         		<td>
             		<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px" />
             		<%--<input id = "cnkeybtn" onclick="cnsearch_click()" type="button" value="<%=RM.GetString("t34")%>" class="imginput" style="cursor:pointer" /> --%>
-            		<a class="imgbtn"  = "cnkeybtn" onclick="cnsearch_click()"  ><span><spring:message code='ezPoll.t227' /></span></a>
+            		<a class="imgbtn btnSearch"  = "cnkeybtn" onclick="cnsearch_click()"  ><span><spring:message code='ezPoll.t227' /></span></a>
         		</td>
         		<td></td>
         		<td>         
             		<div class="btnposition" style="margin-top:0px;padding-top:0px">
-                		<a class="imgbtn" name="Submit" onClick="SetRange()" ><span><spring:message code='ezPoll.t228' /></span></a>
-                		<a class="imgbtn" name="Submit2" onClick="close_onclick()" ><span><spring:message code='ezPoll.t139' /></span></a>
+                		<a class="imgbtn btnSave" name="Submit" onClick="SetRange()" ><span><spring:message code='ezPoll.t228' /></span></a>
+                		<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick()" ><span><spring:message code='ezPoll.t139' /></span></a>
             		</div>
         		</td>
     		</tr>

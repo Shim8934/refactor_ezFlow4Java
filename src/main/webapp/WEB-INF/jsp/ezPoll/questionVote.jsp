@@ -877,14 +877,16 @@
 		    	var tagA1 = document.createElement("button"); 
 		    	tagA1.innerHTML = "<spring:message code = 'ezPoll.t139'/>"; 
 		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(8));
+		    	tagA1.setAttribute("class", "voteCancelBttn");
 		    	tagA1.setAttribute("_cmtIndex", id.slice(8));
-		    	tagA1.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
+		    	tagA1.setAttribute("style", "cursor: pointer; width:46px; height:24px; margin:0px 4px 0px 0px; padding:0px; background:#eee; border:1px solid #999;");
 		    	tagA1.onclick = function (event) { event.stopPropagation(); event.preventDefault(); cancelEditComment(this); };
 		    	
 		    	var tagA2 = document.createElement("button");		    	
 		    	tagA2.innerHTML = "<spring:message code = 'ezPoll.t140'/>";
 		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(8));
-		    	tagA2.setAttribute("style", "padding-left: 8px; cursor: pointer; ");
+		    	tagA2.setAttribute("class", "voteSaveBttn");
+		    	tagA2.setAttribute("style", "cursor: pointer; width:46px; height:24px; color:#FFF; background:#004896; border:none;");
 		    	tagA2.setAttribute("_cmtIndex", id.slice(8));
 		    	tagA2.onclick = function (event) { event.stopPropagation(); event.preventDefault(); saveEditComment(this); };
 		    	innerDiv3.appendChild(tagA1);
@@ -2066,7 +2068,7 @@
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
-	<body class="mainbody"  id="mainbodytag">
+	<body class="mainbody"  id="mainbodytag" style="min-width: 385px;>
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 3px">
@@ -2517,7 +2519,7 @@
 					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
 				<div style="float:left; display:block; width:74%; height:45px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
-					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:45px; line-height: 15px; padding:0px; outline: none; border:none; resize:none;"  oninput="auto_grow(this)"></textarea>
+					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:17px; line-height:15px; padding:16px 0px; outline: none; border:none; resize:none;"  oninput="auto_grow(this)"></textarea>
 				</div>
 				<div style="position:absolute; top:9px; right:10px; display:block; width: 96px; height:45px; border:none; margin:0px">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
