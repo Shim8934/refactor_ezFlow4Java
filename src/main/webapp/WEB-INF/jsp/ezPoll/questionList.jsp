@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html style="width:100%;">
 	<head>
-		<title><spring:message code="ezQuestion.t270" /></title>		
+		<title><spring:message code="ezPoll.t229" /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
@@ -130,7 +130,7 @@
 		    
 		    function menu_Hide() {
 		    	if (checkedArr.length == 0) {
-		            alert('<spring:message code="ezQuestion.t294" />');
+		            alert('<spring:message code="ezPoll.t239" />');
 		            return;
 		    	}
 		    	
@@ -157,7 +157,7 @@
 		    
 		    function menu_Delete() {
 		    	if (checkedArr.length == 0) {
-		            alert('<spring:message code="ezQuestion.t294"/>');
+		            alert('<spring:message code="ezPoll.t239"/>');
 		            return;
 		    	}
 		    	
@@ -218,7 +218,7 @@
 			<ul>
 				<li>
 					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" placeholder="<spring:message code="ezPoll.t144"/>" >
-					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezQuestion.t34"/></span></a>
+					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t227"/></span></a>
 				</li>
 				<li id="btnDel"><a class="pollImgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202"/></span></a></li>
 				<li id="btnHid"><a class="pollImgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203"/></span></a></li>
@@ -263,10 +263,10 @@
 			          	
 			          	<%-- Target --%>
 			          	<c:if test="${list.target == 0}">
-			          		<td><spring:message code = 'ezQuestion.t251'/></td>	
+			          		<td><spring:message code = 'ezPoll.t237'/></td>	
 			          	</c:if>
 			          	<c:if test="${list.target == 1}">
-			          		<td><spring:message code = 'ezQuestion.t252'/></td>	
+			          		<td><spring:message code = 'ezPoll.t238'/></td>	
 			          	</c:if> 
 			          	
 			          	<%-- End date--%>
@@ -275,10 +275,10 @@
 			          	
 			          	<%-- Secret setting --%>
 			          	<c:if test="${list.secretVote == 0}">
-			          		<td><spring:message code = 'ezQuestion.t238'/></td>	
+			          		<td><spring:message code = 'ezPoll.t240'/></td>	
 			          	</c:if>
 			          	<c:if test="${list.secretVote == 1}">
-			          		<td><spring:message code = 'ezQuestion.t239'/></td>	
+			          		<td><spring:message code = 'ezPoll.t111'/></td>	
 			          	</c:if>
 			          	
 			          	<c:choose>
@@ -306,7 +306,7 @@
 		        
 			    <c:if test="${list.size() == 0}"> 
 			        <tr> 
-						<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
+						<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td> 
 		       		</tr> 
 		        </c:if> 
 			</table> 

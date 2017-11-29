@@ -521,7 +521,7 @@
     	
     	function form_check() {
 	        if (trim_Cross(document.getElementById("qst_title").value) == "") {
-	            alert('<spring:message code="ezQuestion.t185"/>');	            
+	            alert('<spring:message code="ezPoll.t234"/>');	            
 	            document.getElementById("qst_title").focus();
 	            return false;
 	        }
@@ -529,7 +529,7 @@
 	        if (document.getElementById("set_Target").selectedIndex == 1) {
 	            if (document.getElementById("select_YN").value != "YES") {
 	            	if (mode != "modify") {
-		            	alert('<spring:message code="ezQuestion.t432" />');
+		            	alert('<spring:message code="ezPoll.t235" />');
 		                return false;
 	            	}	            	
 	            	document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
@@ -546,12 +546,12 @@
 	        L_EndDate 	= L_EndDate.substring(0, 10);
 	        
 	        if (L_StartDate > L_EndDate) {
-	        	alert('<spring:message code="ezQuestion.jjs2" />');
+	        	alert('<spring:message code="ezPoll.t236" />');
 	            return false;
 	        }
 	        else if (L_StartDate == L_EndDate) {
 	        	if (L_StartTime >= L_EndTime) {
-		        	alert('<spring:message code="ezQuestion.jjs2" />');
+		        	alert('<spring:message code="ezPoll.t236" />');
 		            return false;
 	        	}
 	        }
@@ -714,8 +714,8 @@
 				<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px;">
 					<span><spring:message code="ezPoll.t162"/></span>
 					<select id="set_Target">
-						<option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option>
-						<option value="1"><spring:message code="ezQuestion.t252" /></option>
+						<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
+						<option value="1"><spring:message code="ezPoll.t238" /></option>
 					</select>	
 					<a class="imgbtn" id="receiverBttn"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>																		
 				</div>
@@ -739,8 +739,8 @@
 		</table> 
 		
 		<div class="button pollButton02" style="padding-top: 20px;">				
-			<a class="imgbtn pollButton03" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>				
-			<a class="imgbtn pollButton04" onclick="fun_Cancel()" style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><span style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><spring:message code="ezQuestion.t38" /></span></a>				
+			<a class="imgbtn pollButton03" onclick="fun_OK()"><span><spring:message code="ezPoll.t145" /></span></a>				
+			<a class="imgbtn pollButton04" onclick="fun_Cancel()" style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><span style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><spring:message code="ezPoll.t139" /></span></a>				
 		</div>
 			
 	</form>
