@@ -62,9 +62,9 @@
 		        var _Expt = _OpenerObject.getAttribute("_expt");
 		        var _ExptVal = _OpenerObject.getAttribute("_exptval");
 		
-		        var spltRule = _Con.split('#');
-		        var spltAct = _Act.split('#');
-		        var spltExpt = _Expt.split('#');
+		        var spltRule = _Con.split('|!|');
+		        var spltAct = _Act.split('|!|');
+		        var spltExpt = _Expt.split('|!|');
 		
 		        /*
 		        if (spltRule.length > 4 || spltAct.length > 4 || spltExpt.length > 4) {
@@ -78,7 +78,7 @@
 		
 		        // =========================================================================================================================
 		        // CONDITION ===============================================================================================================
-		        var spltRuleVal = _ConVal.split('#');
+		        var spltRuleVal = _ConVal.split('|!|');
 		        var ConRowObj = null;
 		        var isFirstRow = 0; // 첫번째 행일 때 0, 그 외 1
 		
@@ -149,9 +149,9 @@
 		
 		        // =========================================================================================================================
 		        // ACTION ==================================================================================================================
-		        var spltActVal = _ActVal.split('#');
-		        var spltActFid = _ActFid.split('#');
-		        var spltActFnm = _ActFnm.split('#');
+		        var spltActVal = _ActVal.split('|!|');
+		        var spltActFid = _ActFid.split('|!|');
+		        var spltActFnm = _ActFnm.split('|!|');
 		        var ActRowObj = null;
 		        var isFirstRow = 0; // 첫번째 행일 때 0, 그 외 1
 		        var ActFcnt = 0;
@@ -234,7 +234,7 @@
 		
 		        // =========================================================================================================================
 		        // EXCEPTION ===============================================================================================================
-		        var spltExptVal = _ExptVal.split('#');
+		        var spltExptVal = _ExptVal.split('|!|');
 		        var ExptRowObj = null;
 		        var isFirstRow = 0; // 첫번째 행일 때 0, 그 외 1
 		

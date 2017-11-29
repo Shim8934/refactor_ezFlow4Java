@@ -1184,8 +1184,8 @@
 		                    var orgfile = temppath.split("/");
 		                    orgfile = orgfile[orgfile.length - 1];
 		                    xmlstring += "<ROW><FILENAME><![CDATA[" + getNodeText(SelectNodes(xmldom, "ATTACHNAME")[i]) + "]]></FILENAME>";
-		                    xmlstring += "<FILEPATH>" + temppath + "</FILEPATH>";
-		                    xmlstring += "<ORGFILEPATH>" + orgfile + "</ORGFILEPATH>";
+		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
 		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
 		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
 		                    else
@@ -1193,16 +1193,16 @@
 		                    xmlstring += "<FILESIZE>" + getNodeText(SelectNodes(xmldom, "ATTACHFILESIZE")[i]) + "</FILESIZE></ROW>";
 		                }
 		                if (pUrl.toLowerCase().indexOf(".hwp") > -1) {
-		                    xmlstring += "<ROW><FILENAME>" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "</FILENAME>";
+		                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
 		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1) {
-		                        xmlstring += "<FILEPATH>" + pUrl.split("upload_approval")[1] + "</FILEPATH>";
+		                        xmlstring += "<FILEPATH><![CDATA[" + pUrl.split("upload_approval")[1] + "]]></FILEPATH>";
 		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
 		                    }
 		                    else {
-		                        xmlstring += "<FILEPATH>" + pUrl.split("upload_approvalG")[1] + "</FILEPATH>";
+		                        xmlstring += "<FILEPATH><![CDATA[" + pUrl.split("upload_approvalG")[1] + "]]></FILEPATH>";
 		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
 		                    }
-		                    xmlstring += "<ORGFILEPATH>" + "<spring:message code='ezBoard.t419' />" + "</ORGFILEPATH>";
+		                    xmlstring += "<ORGFILEPATH><![CDATA[" + "<spring:message code='ezBoard.t419' />" + "]]></ORGFILEPATH>";
 		                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
 		                }
 		                xmlstring += "</ROWS></DATA>";

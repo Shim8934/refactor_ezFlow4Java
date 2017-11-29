@@ -21,9 +21,11 @@
 			var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
+		    
 			window.onload = function () {
 				window.resizeTo(370,560);
 			}
+			
 			function show_personinfo(whoto) {
 			    var userid = "";
 			    if (whoto == 0)
@@ -133,8 +135,8 @@
 		        <td><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
 		      </tr>
 		    </table>
-		    <div class="nobox" style="margin-top:10px">
-		    	<select id="ListMember" name="ListMember" style="width:100%;height:258px" size="4">${listMember}</select>
+		    <div class="nobox" style="margin-top:10px;">
+		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px" size="4">${listMember}</select>
 		  	</div>
 		  </div>
 		  <div id="printScreen" style="DISPLAY: none">

@@ -3143,6 +3143,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		
+		if (firstScreenMail == null || firstScreenMail.equals("")) {
+			firstScreenMail = "NO";
+		}
+		
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pakageType", pakageType);

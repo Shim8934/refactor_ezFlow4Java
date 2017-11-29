@@ -718,7 +718,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strAbstract", strAbstract);
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-		model.addAttribute("searchConfig", searchConfig);
+		model.addAttribute("searchConfig", searchConfig.substring(0, searchConfig.length() - 2));
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("strXML", strXML);
 		
