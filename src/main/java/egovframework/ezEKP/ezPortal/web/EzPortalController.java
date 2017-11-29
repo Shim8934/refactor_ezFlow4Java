@@ -1470,10 +1470,21 @@ public class EzPortalController extends EgovFileMngUtil {
 		//Get list of questions for user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
 		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, "");
+		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
 		
 		if (!setOfQuestions.isEmpty()) {
-			//Sort listQuestions by question id
-			List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
+			List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
+			
+			for (PollQuestionVO pollQstVO : listTotalQuestions) {
+				if (pollQstVO.getIsMofifying() == 1) {
+					listOfModifyingQst.add(pollQstVO);
+				}
+			}
+			
+			//Remove all modifying questions
+			listTotalQuestions.removeAll(listOfModifyingQst);
+			
+			//Sort listQuestions by question id					
 			Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
 		        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
 			});		

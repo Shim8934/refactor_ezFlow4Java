@@ -68,7 +68,30 @@
 		    }
 		    
 		    function vote_poll() {
-		         window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : true,
+		    		url : "/ezPoll/checkPoll.do",
+		    		data : {
+		    			qstId : qstId
+		    		},
+		    		success: function(data) {		    			
+						var result = JSON.parse(data).result;					
+						
+						if (result == "Normal") {
+							window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
+						}
+						else {
+							alert("<spring:message code = 'ezPoll.t233'/>");
+							window.location.reload();
+						}
+			        },
+			        error: function(error) {
+			        	alert(error);
+			        }
+		    	});
+		        
 		    }
 		    
 		    function updateGraph() {		    	
