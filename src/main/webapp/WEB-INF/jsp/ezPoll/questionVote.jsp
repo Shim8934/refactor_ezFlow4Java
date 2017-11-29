@@ -1201,7 +1201,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 0px 20px; max-width: 80%;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUser;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
@@ -1317,7 +1317,7 @@
                 var objTd3 = document.createElement("td");
                 objTd3.setAttribute("style", "width: 145px; position: relative;");                
                 var fistChildForTd3 = document.createElement("div");
-                fistChildForTd3.setAttribute("style", "position: absolute; top:10px;");     
+                fistChildForTd3.setAttribute("style", "position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;");     
                 fistChildForTd3.innerHTML = formatCmtTime();
                 objTd3.appendChild(fistChildForTd3);                
                 
@@ -1328,7 +1328,7 @@
                 imagForTd3.setAttribute("height", "25");
                 imagForTd3.setAttribute("width", "25");
                 imagForTd3.setAttribute("vertical-align", "middle");
-                imagForTd3.setAttribute("style", "float:right; display: block; cursor:pointer;");
+                imagForTd3.setAttribute("style", "margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;");
                 imagForTd3.onclick = function (event) { event.stopPropagation(); showEditPanel(this); };
                 objTd3.appendChild(imagForTd3);
                 
@@ -1340,12 +1340,12 @@
                 innerDiv1ForTd3.setAttribute("id", "_eCmt" + commentIndex);
                 innerDiv1ForTd3.innerHTML = "<spring:message code = 'ezPoll.t125'/>";
                 innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
-                innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");
+                innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;");
                 innerDiv1ForTd3.onclick = function (event) { editComment(this); };
                 var innerDiv2ForTd3 = document.createElement("div");                
                 innerDiv2ForTd3.innerHTML = "<spring:message code = 'ezPoll.t126'/>";
                 innerDiv2ForTd3.setAttribute("_comtIndex", commentIndex);  
-                innerDiv2ForTd3.setAttribute("style", "text-align: center; padding-top: 5px;padding-bottom: 5px; cursor: pointer;");         
+                innerDiv2ForTd3.setAttribute("style", "text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;");         
                 innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
                 div1ForTd3.appendChild(innerDiv1ForTd3);
                 div1ForTd3.appendChild(innerDiv2ForTd3);
@@ -1551,7 +1551,7 @@
 		        }
 		    }
 		    
-		    function auto_grow(element) {
+		    function auto_grow(element) {	    		    		    	
 				if (element.value == "" && document.getElementById("uploadedFile").style.display == "none") {
 					document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
 					document.getElementById("sendBttn").disabled = true;
@@ -1749,7 +1749,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; width: 40%; height: auto; padding-left: 8px; padding-bottom: 7px;padding-top: 2px;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 0px 20px; max-width: 80%;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userId;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
@@ -1820,7 +1820,7 @@
                 var objTd3 = document.createElement("td");
                 objTd3.setAttribute("style", "width: 145px; position: relative;");                
                 var fistChildForTd3 = document.createElement("div");
-                fistChildForTd3.setAttribute("style", "position: absolute; top:10px;");     
+                fistChildForTd3.setAttribute("style", "position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;");     
                 fistChildForTd3.innerHTML = cmtTime;
                 
                 objTd3.appendChild(fistChildForTd3);                                         
@@ -2208,7 +2208,7 @@
 					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 				</div> 
 			</c:if>-->
-			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%;">
+			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; border-bottom: none;">
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${listComments}">
 						<tr style="border-bottom: 1px dotted #b6b6b6;">
@@ -2217,7 +2217,7 @@
 							</td>
 							<td>
 								<div style="display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;">${_comt.userId}</div>
-								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 0px 20px;" >
+								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 0px 20px; max-width: 80%;" >
 									<c:if test="${_comt.textContent != ''}">
 										<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
 									</c:if>
@@ -2243,9 +2243,9 @@
 								<div id="editCmtDiv<c:out value ="${_comt.cmtId}" />" style="display: none;"></div>
 							</td>
 							<td style="width: 145px; position:relative;">
-								<div style="position: absolute; top:10px; right:18px; color:#a3a3a3;"><c:out value ="${_comt.cmtTime}" /></div>
+								<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
 								<c:if test="${_comt.userId == curentUser}">								
-									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" style="float:right; display: block; cursor:pointer;" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
 									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; width: 120px;" tabindex=0>							
 										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
 										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
@@ -2514,7 +2514,7 @@
 					<img id="_addEmoticon" src="/images/poll/add_emo_vote2.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
 				<div style="float:left; display:block; width:74%; height:45px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
-					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:45px; line-height: 15px; padding:0px; outline: none; border:none; resize:none;"  onkeyup="auto_grow(this)"></textarea>
+					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:45px; line-height: 15px; padding:0px; outline: none; border:none; resize:none;"  oninput="auto_grow(this)"></textarea>
 				</div>
 				<div style="position:absolute; top:9px; right:10px; display:block; width: 96px; height:45px; border:none; margin:0px">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
