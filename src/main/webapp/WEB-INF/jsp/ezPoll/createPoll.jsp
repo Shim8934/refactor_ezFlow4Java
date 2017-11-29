@@ -19,7 +19,7 @@
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
+	<!-- <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script> -->
 	<script type="text/javascript" src="/js/ezPoll/dropzone.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   	<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	  
