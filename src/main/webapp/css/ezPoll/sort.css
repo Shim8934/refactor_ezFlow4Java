@@ -183,3 +183,8 @@
 
 .pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:20px; vertical-align:top; cursor:pointer; margin-top: 4px;}
 .pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:20px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:20px;}
+
+/* 20171129 showSeenUserInfo */
+.voteSeenTbl th{height:40px; background:#004896; color:#FFF;}
+.voteSeenTbl td{background:#f4f9ff}
+.voteUnseenTbl th{height:40px; background:#d0d0d0; color:#000;}

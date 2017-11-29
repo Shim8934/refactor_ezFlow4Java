@@ -15,10 +15,7 @@
 			window.onload = function () {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
-				}
-				
-				document.getElementById("seenUser_").style.color = "#5ea84b";
-				document.getElementById("unseenUser_").style.color = "#cc8b12";				
+				}			
 			}
 			
 		    function menuQst_DetailUserInfo(pUserID) {
@@ -36,14 +33,14 @@
 			    </div>				
 			</div>
 			<div style="height:359px; overflow: auto;">
-				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey">
+				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey" class="voteSeenTbl">
 					<tr> 
-						<th style="background:#004896; height:40px; color:#FFF;"> <a id="seenUser_" style="color:#FFF;"><spring:message code='ezPoll.t136'/> <c:out value='${numberOfSeenUsers}'/></a></th> 
+						<th> <a id="seenUser_" style="color:#FFF;"><spring:message code='ezPoll.t136'/> (<c:out value='${numberOfSeenUsers}'/>)</a></th> 
 					</tr>
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
 						<tr id="${list1.id}" class="white" style="border: 1px solid #DDD;">
 							<td>
-								<img src="${list1.userFileUrl}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
+								<img src="${list1.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
 								<a style="cursor:pointer; display:inline-block; float:left; width:111px; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
 									<c:choose>
 										<c:when test="${list1.primary == '1'}">
@@ -58,14 +55,14 @@
 						</tr>
 					</c:forEach>
 				</table>
-				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;">
+				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;" class="voteUnseenTbl">
 					<tr> 
-						<th style="background:#eaeaea; height:40px; color:#000;"> <a id="unseenUser_" style="color:#000;"><spring:message code='ezPoll.t137'/> <c:out value='${numberOfUnseenUsers}'/></a></th> 
+						<th> <a id="unseenUser_" style="color:#000;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a></th> 
 					</tr>
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
 						<tr id="${list2.id}" class="white" style="border: 1px solid #DDD;">
 						   <td>
-							<img src="${list2.userFileUrl}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list2.id}')">
+							<img src="${list2.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list2.id}')">
 								<a style="cursor:pointer; display:inline-block; float:left; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width: 111px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
 									<c:choose>
 										<c:when test="${list2.primary == '1'}">

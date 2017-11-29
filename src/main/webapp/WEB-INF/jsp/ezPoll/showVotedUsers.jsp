@@ -29,20 +29,20 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: inline-block; padding-left: 25%;">
-			        <h1 style="padding-left: 35px;"><spring:message code='ezPoll.t138'/><font color="red"> <c:out value='${totalVotes}'/></font></h1>
+			        <h1 style="padding-left: 35px;"><spring:message code='ezPoll.t138'/><font color="white"> <c:out value='${totalVotes}'/></font></h1>
 			    </div>				
 			</div>
-			<div style="display: inline-block; width: 100%;border-bottom: 1px solid #b6b6b6; padding-bottom: 10px; padding-left: 8px;"><b><c:out value='${content}'/></b></div>	
-			<div style="display: inline-block; ">
-				<img src="/images/group.png" height="16" width="16" style="float: left; display: block; padding-top: 5px; padding-left: 8px;">
-				<div style="float: left; display: block;padding-top: 5px; padding-left: 5px;"><c:out value='${totalVotesForOption}'/></div>
+			<div style="display: inline-block; width: 100%; height:35px; line-height:34px; text-align:center; font-size:16px; background:#d1e3f5; border-radius:5px; color:#212121;"><b><c:out value='${content}'/></b></div>	
+			<div style="display: inline-block; padding:8px 0px 2px 0px;">
+				<img src="/images/group2.png" height="22" width="35" style="float:left; display:block; vertical-align:middle; padding:0px 5px 0px 0px;">
+				<div style="float:left; display:block;"><c:out value='${totalVotesForOption}'/></div>
 			</div>	
 			<div style="height:300px; overflow: auto;">
 				<table border=1 style="width : 100%; border-color: grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
 							<td >
-								<img src="${list.userImage}" style="display:inline-block;float:left; height:50px;width:50px; padding-left: 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">
+								<img src="${list.userImage}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">
 								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px; overflow: hidden; text-overflow: ellipsis; max-width:180px;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
 									<c:out value ="${list.userName}"/>
 								</a>

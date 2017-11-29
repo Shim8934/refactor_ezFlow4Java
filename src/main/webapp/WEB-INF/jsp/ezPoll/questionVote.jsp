@@ -28,13 +28,13 @@
 			var tenantId 				= "<c:out value='${question.tenantId}'/>";
 			var curentUser 				= "<c:out value='${curentUser}'/>";
 			var curentUserName 			= "<c:out value='${curentUserName}'/>";
-			var numberOfUnvotedUsers 	= "<c:out value='${numberOfUnvotedUsers}'/>";
+			var numberOfUnvotedUsers 	= parseInt("<c:out value='${numberOfUnvotedUsers}'/>");
 			var numberOfSelected 		= 0;
 			var maxLoop 				= 0;			
 			var _status 				= "<c:out value='${question.status}'/>";
 			var sessionId 				= "<c:out value='${question.creator}'/>";			
-			var commentIndex 			= "<c:out value='${numberOfCmt}'/>";
-			var votedUsers 				= "<c:out value='${votedUsers}'/>";
+			var commentIndex 			= parseInt("<c:out value='${numberOfCmt}'/>");
+			var votedUsers 				= parseInt("<c:out value='${votedUsers}'/>");
 			var window_open1			= null;		
 			var window_open2			= null;
 			var window_open3			= null;
@@ -1362,7 +1362,8 @@
 		        //Send add comment request to server
 		        fd.append("qstId", qstId);
 		        fd.append("cmtId", commentIndex);
-		        fd.append("cmtTime", fistChildForTd3.innerHTML);		        
+		        fd.append("cmtTime", fistChildForTd3.innerHTML);	        		       
+		        
 	    	    xhr1.open("POST", "/ezPoll/addComment.do");
 	    	    xhr1.send(fd); 		        
 		    }
@@ -1586,8 +1587,10 @@
 		    function addSticker() {
 		    	if (document.getElementById("emoticonPanel").style.display == "block") {
 		    		document.getElementById("emoticonPanel").style.display = "none";
+		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
 		    	}
-		    	else {			    				    	
+		    	else {
+		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote2.png";
 			    	processGroupStickers();
 			    	stickerIndex = 1;		    	
 			    	document.getElementById("_group1").style.backgroundColor  = "#d9d9d9";
@@ -2511,7 +2514,7 @@
 							</div>
 						</div>
 					</div>					
-					<img id="_addEmoticon" src="/images/poll/add_emo_vote2.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
+					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
 				<div style="float:left; display:block; width:74%; height:45px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
 					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:45px; line-height: 15px; padding:0px; outline: none; border:none; resize:none;"  oninput="auto_grow(this)"></textarea>

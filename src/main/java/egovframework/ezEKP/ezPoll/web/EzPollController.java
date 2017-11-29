@@ -693,8 +693,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		logger.debug("check poll finishes!");	
 		return data;		
-	}
-	
+	}	
 
 	@RequestMapping(value="/ezPoll/downloadAttach.do")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -1572,11 +1571,11 @@ public class EzPollController extends EgovFileMngUtil {
 						user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + realPath);
 					}
 					else {
-						user.setUserFileUrl("/images/poll/default_pic_vote.gif");
+						user.setUserFileUrl("/images/poll/default_pic_vote2.png");
 					}
 				} 
 				else {
-					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
+					user.setUserFileUrl("/images/poll/default_pic_vote2.png");
 				}
 			}
 		}		
@@ -1697,11 +1696,11 @@ public class EzPollController extends EgovFileMngUtil {
 					user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
 				else {
-					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
+					user.setUserFileUrl("/images/poll/default_pic_vote2.png");
 				}
 			} 
 			else {
-				user.setUserFileUrl("/images/poll/default_pic_vote.gif");
+				user.setUserFileUrl("/images/poll/default_pic_vote2.png");
 			}
 		}
 		
