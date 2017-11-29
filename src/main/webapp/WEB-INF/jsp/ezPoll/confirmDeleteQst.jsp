@@ -6,9 +6,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code="ezQuestion.t270" /></title>		
+		<title><spring:message code="ezPoll.t229" /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
@@ -28,13 +28,13 @@
 		        var resultXML = xmlHttp.responseXML;
 		        
 		        if (resultXML.xml == "") {
-		            alert("<spring:message code='ezQuestion.t263'/>" + "\n" + "<spring:message code='ezQuestion.t264'/>");
+		            alert("<spring:message code='ezPoll.t230'/>" + "\n" + "<spring:message code='ezPoll.t231'/>");
 		        }
 		        else {
 		            state = SelectSingleNodeValue(resultXML, "DATA");
 		            
 		            if (state != "DELETE_OK") {
-		                alert("<spring:message code='ezQuestion.t263'/>" + "\n" + "<spring:message code='ezQuestion.t264'/>");
+		                alert("<spring:message code='ezPoll.t230'/>" + "\n" + "<spring:message code='ezPoll.t231'/>");
 		            }
 		            else {
 		            	window.close();
@@ -71,8 +71,8 @@
   				</c:if>
         	</div>
 			<div class="btnposition conf_btnPosi">
-				<input type="button" name="Submit" value="<spring:message code='ezQuestion.t268' />" onclick="btn_Delete()"> 
-        		<input type="button" name="Submit2" style="background:#d0d0d0; color:#333;" value="<spring:message code='ezQuestion.t269' />" onclick="window.close()">
+				<input type="button" name="Submit" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
+        		<input type="button" name="Submit2" style="background:#d0d0d0; color:#333;" value="<spring:message code='ezPoll.t139' />" onclick="window.close()">
         	</div>
 		</form> 
 	</body>

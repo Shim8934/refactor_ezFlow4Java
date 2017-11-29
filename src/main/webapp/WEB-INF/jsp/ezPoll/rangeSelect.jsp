@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<title><spring:message code='ezPoll.t222' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

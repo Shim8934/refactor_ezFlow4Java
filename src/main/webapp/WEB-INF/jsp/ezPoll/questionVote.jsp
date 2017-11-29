@@ -4,9 +4,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezQuestion.t378' /></title>
+		<title><spring:message code='ezPoll.t232' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
@@ -28,13 +28,13 @@
 			var tenantId 				= "<c:out value='${question.tenantId}'/>";
 			var curentUser 				= "<c:out value='${curentUser}'/>";
 			var curentUserName 			= "<c:out value='${curentUserName}'/>";
-			var numberOfUnvotedUsers 	= ${numberOfUnvotedUsers};
+			var numberOfUnvotedUsers 	= "<c:out value='${numberOfUnvotedUsers}'/>";
 			var numberOfSelected 		= 0;
 			var maxLoop 				= 0;			
 			var _status 				= "<c:out value='${question.status}'/>";
 			var sessionId 				= "<c:out value='${question.creator}'/>";			
-			var commentIndex 			= ${numberOfCmt};
-			var votedUsers 				= ${votedUsers};
+			var commentIndex 			= "<c:out value='${numberOfCmt}'/>";
+			var votedUsers 				= "<c:out value='${votedUsers}'/>";
 			var window_open1			= null;		
 			var window_open2			= null;
 			var window_open3			= null;
@@ -72,9 +72,7 @@
 				commentCheck();				
  				getConnect(); 				
 				document.getElementById("seenPeople").innerHTML = "(" + s_Users + ")";				
-				document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")" ;
-				//document.getElementById("seenPeople").style.color = "red";
-				//document.getElementById("status").style.color = "#2828e2";	
+				document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")" ;	
 				document.getElementById("status").style.color = "white";	
 				
 	            var doc = document.getElementById("message_test").contentWindow.document;	        

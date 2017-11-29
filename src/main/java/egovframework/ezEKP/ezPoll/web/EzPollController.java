@@ -209,8 +209,8 @@ public class EzPollController extends EgovFileMngUtil {
 			return "redirect:/ezPoll/pollVote.do";
 		}
 		
-		List<Integer> listOfModifyingQst = new ArrayList<Integer>();
-		ObjectMapper om = new ObjectMapper();
+		List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
+		//ObjectMapper om = new ObjectMapper();
 		
 		if (loginVO.getRollInfo().indexOf("c=1") == -1 && loginVO.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
@@ -253,12 +253,30 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Set status for each question
 		setStatusForQuestions(setOfQuestions, listHiddenQuestionIds, loginVO, checkingArray, seeAll);
+		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);
 		
-		//Sort list of questions by question id
-		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
+		//Get list of modifying questions
+		for (PollQuestionVO pollQstVO : listTotalQuestions) {
+			if (pollQstVO.getIsMofifying() == 1) {
+				try {
+					String modifyingUser = ezPollService.getModifyingUser(loginVO.getTenantId(), pollQstVO.getQstId());
+					if (!loginVO.getId().equals(modifyingUser)) {
+						listOfModifyingQst.add(pollQstVO);
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}				
+			}
+		}
+		
+		//Remove all modifying questions
+		listTotalQuestions.removeAll(listOfModifyingQst);
+		
+		//Sort list of questions by question id				
 		Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
 	        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
-		});
+		});		
 		
 		int totalQuestions = listTotalQuestions.size();
 		totalPages = (totalQuestions + pageSize - 1)/pageSize;
@@ -279,24 +297,9 @@ public class EzPollController extends EgovFileMngUtil {
 				List<PollQuestionVO> listRenderQuestions = listTotalQuestions.subList(startPoint, endPoint);
 				model.addAttribute("list", listRenderQuestions);
 			}			
-		}	
+		}			
 		
-		//Get list of modifying questions
-		for (PollQuestionVO pollQstVO : listTotalQuestions) {
-			if (pollQstVO.getIsMofifying() == 1) {
-				try {
-					String modifyingUser = ezPollService.getModifyingUser(loginVO.getTenantId(), pollQstVO.getQstId());
-					if (!loginVO.getId().equals(modifyingUser)) {
-						listOfModifyingQst.add(pollQstVO.getQstId());
-					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}				
-			}
-		}
-		
-		model.addAttribute("listOfModifyingQst", om.writeValueAsString(listOfModifyingQst));
+		//model.addAttribute("listOfModifyingQst", om.writeValueAsString(listOfModifyingQst));
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("currPage", currPage);
 		model.addAttribute("totalQuestions", totalQuestions);
@@ -445,7 +448,7 @@ public class EzPollController extends EgovFileMngUtil {
 		if (pollQuestionVO == null) {			
 			redirectAttributes.addAttribute("brdID", 6);			
 			return "redirect:/ezPoll/pollList.do";
-		}		
+		}	
 		
 		Date endDate = formatter.parse(pollQuestionVO.getEndDate());
 		Date nowTime = new Date();
@@ -478,7 +481,6 @@ public class EzPollController extends EgovFileMngUtil {
 					}										
 				}	
 			}
-
 		}
 		else {
 			pollQuestionVO.setStatus(0);
@@ -664,11 +666,35 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("question", pollQuestionVO);
 		model.addAttribute("curentUser", loginVO.getId());
 		model.addAttribute("curentUserName", loginVO.getDisplayName());
-		model.addAttribute("userPhoto", userPhoto);
+		model.addAttribute("userPhoto", userPhoto);		
 		
 		logger.debug("Question vote finishes!");		
 		return "/ezPoll/questionVote";
-	}		
+	}	
+	
+	@RequestMapping(value="/ezPoll/checkPoll.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String checkPoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("check poll is running!");			
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		int tenantId = loginVO.getTenantId();
+		int qstId =	Integer.parseInt(request.getParameter("qstId"));
+		String data = "";
+		
+		//Get question
+		PollQuestionVO pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
+		
+		if (pollQuestionVO.getIsMofifying() == 0) {
+			data = "{\"result\":\"Normal\"}";
+		}
+		else {
+			data = "{\"result\":\"Abnormal\"}";
+		}		
+		
+		logger.debug("check poll finishes!");	
+		return data;		
+	}
+	
 
 	@RequestMapping(value="/ezPoll/downloadAttach.do")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {

@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code="ezQuestion.t270" /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
 		
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -16,12 +16,7 @@
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>		
 		<script type="text/javascript" src="/js/ezPoll/page_render.js"></script>	
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<style>
-			#QstList{
-				padding : 5px;
-			}
-		</style>
-		
+				
 		<script type="text/javascript">	
 			var strLang39		  = "<spring:message code = 'ezPoll.t167'/>";
 			var strLang40 		  = "<spring:message code = 'ezPoll.t168'/>";
@@ -179,36 +174,10 @@
 	    		for (var i = 1; i < checkedArr.length; i++) {	    			
 	    			checkedList = checkedList + "," + checkedArr[i];
 	    			qstTitleList = qstTitleList + "," + document.getElementById("tlt" + checkedArr[i]).innerHTML;
-	    		}
-		    	
-		    	//Checking if some one is modifying this vote
-		    	var listModifyingQst = ${listOfModifyingQst};
-		    	
-		    	if (listModifyingQst.length > 0) {
-		    		var flag = 0;
-		    		
-		    		for (var j = 0; j < checkedArr.length; j++) {
-				    	for (var i = 0; i < listModifyingQst.length; i++) {
-				    		if (listModifyingQst[i] == checkedArr[j]) {
-								flag = 1;
-								break;
-				    		}
-				    	}
-		    		}
-		    		
-			    	if (flag == 1) {
-			    		alert('<spring:message code="ezPoll.t142"/>');
-			    		document.location.href = "/ezPoll/pollList.do?brdID=6";			    		
-			    	}    
-			    	else {
-				        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=300px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-				        w.focus();
-			    	}
-		    	}	
-		    	else {
-			        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=300px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        w.focus();
-		    	}
+	    		}		    	
+
+		        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=300px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        w.focus();
 		    }
 		    
 		    function popupClosing() {    	
@@ -216,29 +185,29 @@
 		    }
 		    
 		    function title_OnClick(pReceve) {
-		    	var listModifyingQst = ${listOfModifyingQst};
-		    	
-		    	if (listModifyingQst.length > 0) {
-		    		var flag = 0;
-		    		
-			    	for (var i = 0; i < listModifyingQst.length; i++) {
-			    		if (listModifyingQst[i] == pReceve) {
-							flag = 1;
-							break;
-			    		}
-			    	}
-			    	
-			    	if (flag == 1) {
-			    		alert('<spring:message code="ezPoll.t143"/>');
-			    		document.location.href = "/ezPoll/pollList.do?brdID=6";		    		
-			    	}
-			    	else {
-			    		document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve;
-			    	}	    						    			   			
-		    	}
-		    	else {
-		    		document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve;
-		    	}		    			    		        
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : true,
+		    		url : "/ezPoll/checkPoll.do",
+		    		data : {
+		    			qstId : pReceve
+		    		},
+		    		success: function(data) {		    			
+						var result = JSON.parse(data).result;					
+						
+						if (result == "Normal") {
+							document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve;
+						}
+						else {
+							alert("<spring:message code = 'ezPoll.t233'/>");
+			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
+						}
+			        },
+			        error: function(error) {
+			        	alert(error);
+			        }
+		    	});
 		    }
 		    
 		</script>
