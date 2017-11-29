@@ -1333,10 +1333,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 									for (int i = 0; i < mailboxList.size(); i++) {
 										Folder mailbox = ia.getFolder(mailboxList.get(i));
 										
-										// TODO: 상위 메일함 없을 경우 생성되도록
 										if (!mailbox.exists()) {
-											mailbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-											logger.debug(mailbox.getFullName() + " created.");
+											ia.createFolder(mailbox.getFullName());
 										}
 									}
 								} finally {
