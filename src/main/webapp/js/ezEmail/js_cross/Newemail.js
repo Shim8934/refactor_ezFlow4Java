@@ -154,6 +154,7 @@ function MailPreviewResize(e) {
             }
             document.getElementById("ResizeBarW").style.top = newPos_W + "px";
         }
+        setTimeout(function () { isScrollMailList(); }, 500);
     }
 }
 function new_mail_onclick() {
@@ -1055,6 +1056,7 @@ function PreviewRayerChange(pGubun) {
                 }
             }
         }
+    	isScrollMailList();
         MailOptionHidden();
         PreviewMode_ChangeBtn();
         isPreviewChange = false;

@@ -684,11 +684,26 @@ function GetListIevent_ongetxmlcomplete() {
             	}
             }
             
+            isScrollMailList();
+            
             HiddenMailProgress();
             GetList_HTTP = null;
         }
     }
 }
+
+function isScrollMailList(){
+	if ($("#contentlist").height() < $("table.mainlist#MailList").height()) {
+		if ($("#MailHeader tr th#forScroll").length < 1) {
+			$("#MailHeader tr").append('<th id="forScroll" style="width:10px;"><th>');
+		}
+	} else {
+		if ($("#MailHeader tr th#forScroll").length > 0) {
+			$("#MailHeader tr th#forScroll").remove();
+		}
+	}
+}
+
 function GetListIevent_ongetxmlcomplete_SUB() {
     if (GetList_HTTP_SUB != null && GetList_HTTP_SUB.readyState == 4) {
         if (GetList_HTTP_SUB.status >= 200 && GetList_HTTP_SUB.status < 300) {

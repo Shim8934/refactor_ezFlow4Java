@@ -514,7 +514,7 @@
 				<th style="height:auto"><spring:message code='ezTask.t181' /></th>
 				<td>
 					<select id="search_field" name="search_field" style="WIDTH: 70px;vertical-align:middle">
-						<option  value="title" selected><spring:message code='ezTask.t182' /></option>
+						<option  value="title" selected><spring:message code='ezTask.t118' /></option>
 						<option  value="personName" ><spring:message code='ezTask.t2005' /></option>
 					</select>
 					<select name="search_class" id="search_class" style="WIDTH: 80px;vertical-align:middle">
