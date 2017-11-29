@@ -497,11 +497,11 @@ public class EzPollController extends EgovFileMngUtil {
 				pollQuestionVO.setCreatorImage("/ezCommon/downloadAttach.do?filePath=" + realPath);
 			}
 			else {
-				pollQuestionVO.setCreatorImage("/images/default_pic.jpg");
+				pollQuestionVO.setCreatorImage("/images/poll/default_pic_vote.gif");
 			}
 		} 
 		else {
-			pollQuestionVO.setCreatorImage("/images/default_pic.jpg");
+			pollQuestionVO.setCreatorImage("/images/poll/default_pic_vote.gif");
 		}
 		
 		//Get all related users for this question
@@ -617,11 +617,11 @@ public class EzPollController extends EgovFileMngUtil {
 					commentVO.setUserImage("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
 				else {
-					commentVO.setUserImage("/images/default_pic.jpg");
+					commentVO.setUserImage("/images/poll/default_pic_vote.gif");
 				}
 			} 
 			else {
-				commentVO.setUserImage("/images/default_pic.jpg");
+				commentVO.setUserImage("/images/poll/default_pic_vote.gif");
 			}
 		}
 		
@@ -643,11 +643,11 @@ public class EzPollController extends EgovFileMngUtil {
 				userPhoto = "/ezCommon/downloadAttach.do?filePath=" + realPath;
 			}
 			else {
-				userPhoto = "/images/default_pic.jpg";
+				userPhoto = "/images/poll/default_pic_vote.gif";
 			}
 		} 
 		else {
-			userPhoto = "/images/default_pic.jpg";
+			userPhoto = "/images/poll/default_pic_vote.gif";
 		}
 		
 		model.addAttribute("listComments", listComments);
@@ -918,10 +918,10 @@ public class EzPollController extends EgovFileMngUtil {
 				pollCmtVO.setUserImage("/ezCommon/downloadAttach.do?filePath=" + realPath);
 			}
 			else {
-				pollCmtVO.setUserImage("/images/default_pic.jpg");
+				pollCmtVO.setUserImage("/images/poll/default_pic_vote.gif");
 			}
 		} else {
-			pollCmtVO.setUserImage("/images/default_pic.jpg");
+			pollCmtVO.setUserImage("/images/poll/default_pic_vote.gif");
 		}
 		
 		//Process comment
@@ -1507,11 +1507,11 @@ public class EzPollController extends EgovFileMngUtil {
 					userAnswer.setUserImage("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
 				else {
-					userAnswer.setUserImage("/images/default_pic.jpg");
+					userAnswer.setUserImage("/images/poll/default_pic_vote.gif");
 				}
 			} 
 			else {
-				userAnswer.setUserImage("/images/default_pic.jpg");
+				userAnswer.setUserImage("/images/poll/default_pic_vote.gif");
 			}
 		}
 
@@ -1572,11 +1572,11 @@ public class EzPollController extends EgovFileMngUtil {
 						user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + realPath);
 					}
 					else {
-						user.setUserFileUrl("/images/default_pic.jpg");
+						user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 					}
 				} 
 				else {
-					user.setUserFileUrl("/images/default_pic.jpg");
+					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 				}
 			}
 		}		
@@ -1672,11 +1672,11 @@ public class EzPollController extends EgovFileMngUtil {
 					user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
 				else {
-					user.setUserFileUrl("/images/default_pic.jpg");
+					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 				}
 			} 
 			else {
-				user.setUserFileUrl("/images/default_pic.jpg");
+				user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 			}
 			listofSeenUsers.add(user);
 		}		
@@ -1697,11 +1697,11 @@ public class EzPollController extends EgovFileMngUtil {
 					user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
 				else {
-					user.setUserFileUrl("/images/default_pic.jpg");
+					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 				}
 			} 
 			else {
-				user.setUserFileUrl("/images/default_pic.jpg");
+				user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 			}
 		}
 		

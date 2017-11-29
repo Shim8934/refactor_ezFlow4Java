@@ -634,7 +634,7 @@
 					</div>
 					<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #b6b6b6;overflow: auto; margin:8px 0px 0px 0px;">
 						<div id="addFile" class="pollAddFile">
-							<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px;" onclick="uploadbtn()">
+							<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px; cursor: pointer;" onclick="uploadbtn()">
 							<spring:message code="ezPoll.t151"/>
 						</div>
 					</div> 

@@ -166,7 +166,7 @@ function setAttachFileInfo1(strXML) {
                 image_tag.src = "/images/poll/pollAddFile_Delicon.png";
                 image_tag.setAttribute("height", "24");
                 image_tag.setAttribute("width", "20");
-                image_tag.setAttribute("vertical-align", "middle");
+                image_tag.setAttribute("style", "vertical-align: middle; cursor: pointer;");                
                 image_tag.onclick = function () { filedelete(this); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);
