@@ -70,8 +70,10 @@ public class EzApprovalGRelayScheduler {
 	
 	@Scheduled(cron = "0 0/5 * * * *")
 	public void receiverMain() throws Exception{
+		if (config.getProperty("config.Run_RelayScheduler").equals("NO")) {
+			return;
+		}
 		logger.debug("receiverSchedulerMain Started");
-
 		 String strRelayFolderPath = "";
 		 String strAprDocPath =  "";
 
@@ -532,7 +534,7 @@ public class EzApprovalGRelayScheduler {
 //             }
     		 logger.debug("receiverSchedulerMain ended");
 	}
-
+	
 	public String MakeMailContent(List<List<String[]>> list) {
 		String body = null;
 		StringBuilder sb = new StringBuilder(32);

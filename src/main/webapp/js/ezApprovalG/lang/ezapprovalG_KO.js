@@ -993,3 +993,5 @@ var strLangjjh01 = "첨부파일은 총 ";
 var strLangjjh02 = "MB까지 업로드 가능합니다.";
 var strLangjjh03 = "첨부파일을 추가하는중입니다.";
 
+//2017-11-28 박종균 추가
+var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?"
