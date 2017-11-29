@@ -1360,4 +1360,17 @@
 		WHERE 
 			EXTENSIONATTRIBUTE4 = #extension4#
 	</select>
+
+	<select id="EzOrganDAO.getChildrenDeptID" parameterClass="Map" resultClass="OrganDeptVO">
+		SELECT 
+			CN
+		FROM
+			TBL_DEPTMASTER
+		WHERE 
+			DEPT_CD_PATH LIKE CONCAT('%', #v_PARENTID#, '%')
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			EXTENSIONATTRIBUTE2 = #v_COMPANYID#			
+	</select>
 </sqlMap>

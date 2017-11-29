@@ -496,31 +496,60 @@ function APRDeptXMLParsingCC(APRDEPT, pDocID) {
  * 회람 정보 -> 부서추가 기능
  */
 function btn_addDepartment() {
-
-	if (confirm("하위 부서를 모두 포함하시겠습니까?")) {
-		console.log("YES");
+	// 포함할 경우 하위부서 정보를 전부 가져와서 처리
+	if (confirm(strLangPJG02)) {
+		
+		var treeView = new TreeView();
+		treeView.LoadFromID("FromTreeViewCC");
+		var selnode = treeView.GetSelectNode();
+		var deptID = selnode.GetNodeData("CN");
+		var jsonInfo;
+		
 		$.ajax({
 			type : "POST",
 			dataType : "text",
-			url : "",
+			url : "/ezOrgan/getAllDeptID",
+			async : false,
 			data : {
-				deptID : ""
+				deptID : deptID
 			},
 			success : function(result) {
+				jsonInfo = JSON.parse(result);
 				
+				for (var i=jsonInfo.length-1; i>=0; i--) {
+					getUserInDept(jsonInfo[i].cn);
+				}
 			}
 		});
 	} else {
-		console.log("NO");
 		var listView = new ListView();
 		listView.LoadFromID("DivUserList");
 	
 		var listObj = listView.GetDataRows();
 		
 		for (var i = listObj.length-1; i >= 0; i --) {
-			var test = listObj[i];
 			APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
 		}
 	}
 
+}
+// 부서원 정보를 가져온다.
+function getUserInDept(dept) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+			deptID : dept,
+			cell 	 : "displayName;description;title;telephoneNumber",
+			prop     : "department;extensionAttribute4;displayName;description;title",
+			type 	 : "user"
+		},
+		success: function(xml) {
+			//console.log("row xml : " + xml);
+			xml = loadXMLString(xml);
+			aprLineAddDeptUser("PERSON", xml);
+		}		
+	});
 }
