@@ -1098,7 +1098,7 @@
 			</c:when>
 			<c:otherwise>
 			    <script type="text/javascript">
-			        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
+			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 			    </script>
 			    <span style="display:none; float:right;font-weight:normal;color:black;">
 		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208' />
