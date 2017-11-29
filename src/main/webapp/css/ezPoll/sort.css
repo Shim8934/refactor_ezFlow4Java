@@ -153,7 +153,7 @@
 .mainlist1_depth tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
 #mainmenu11 ul, #mainmenu11 ul.on{ list-style-type: none; padding-bottom: 5px;}
-.myBorder{ border-bottom:1px solid #b6b6b6;}
+.myBorder{ border-bottom: 1px solid #b6b6b6;}
 .floatedTable{ float:left;}
 
 #mainmenu1{	clear: both; margin:0; padding:0;}
@@ -166,7 +166,7 @@
 #columnsbnk li input:focus { outline-width: 0;}
 .bnkbtn span { display: inline-block; background: url(/images/kr/cm/btn_middle_right.gif) top right; background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; line-height: 20px; text-decoration: none; clear: both;}
 #columnsbnk li span{ display:inline-block; height:100%; line-height:30px; margin:0px; padding:0px 0px; background:#f9f9f9; border-right:1px solid #DDD; text-align: center; width: 28px;}
-#columnsbnk li img{	display:inline-block; padding-top: 5px;	float:right; border: 0px; height: 20px;	width:20px;}
+#columnsbnk li img{	display:inline-block; padding: 5px 5px 0px 0px; float:right; border: 0px; height: 20px;	width:20px;}
 
 /* 20171114 추가 */
 .content .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px;}

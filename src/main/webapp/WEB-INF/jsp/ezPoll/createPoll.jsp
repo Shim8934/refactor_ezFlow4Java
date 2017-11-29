@@ -53,7 +53,7 @@
     	}; 
 		window.onload = function() {	
 			preProcessing();		
-			setBorder();
+			//setBorder();
 			
 			$( "#columnsbnk" ).sortable({
 				handle: ".drag_drop",
@@ -63,9 +63,9 @@
 		    	update: function() {
 					for(var i = 0; i < $('#columnsbnk li').length; i++){
 						$('#columnsbnk li').eq(i).children("span").text(i + 1);
-						$('#columnsbnk li').eq(i).removeClass("myBorder");
+						//$('#columnsbnk li').eq(i).removeClass("myBorder");
 					}
-					setBorder();
+					//setBorder();
 		    	}
 				
 		    });
@@ -343,7 +343,7 @@
 			}
 			else {
 				$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
-				$('#columnsbnk').append('<li> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
+				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 			}					
 		}
 		
@@ -648,21 +648,21 @@
 		</table> 
 		
 			    <!------------Answer option---------------->
-		<table class="content" style="width: 100%; margin:0px 0px 10px 0px;"> 
+		<table class="content" style="width: 100%; margin:0px 0px 10px 0px; border-bottom:none;"> 
 			<tr>
-				<td style="padding-left: 0px;"  class="pollTd01">
+				<td style="padding: 0px; border-bottom: none;" class="pollTd01">
 					<ul id="columnsbnk" >
-						<li>
+						<li class="myBorder">
 							<span>1</span>
 							<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();">
 							<img src="/images/sortIcon.png" class="drag_drop">
 						</li>
-						<li>
+						<li class="myBorder">
 							<span>2</span>
 							<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();">
 							<img src="/images/sortIcon.png" class="drag_drop">
 						</li>
-						<li>
+						<li class="myBorder">
 							<span>3</span>
 							<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();">
 							<img src="/images/sortIcon.png" class="drag_drop">
