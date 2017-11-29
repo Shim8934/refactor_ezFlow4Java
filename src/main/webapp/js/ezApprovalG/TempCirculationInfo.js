@@ -25,7 +25,8 @@ function btn_AprDeptTempletDelCC_onclick() {
         }
         temp_CheckAprDeptTempletSN;
         temp_CheckAprDeptTempletSN = p_CheckAprDeptTempletSN;
-        var pInformationContent = linealt16;
+//        var pInformationContent = linealt16;
+        var pInformationContent = strLangPJG01;
         var Ans = OpenInformationUI(pInformationContent, btn_AprDeptTempletDelCC_onclick_Complete);
         if (!CrossYN() && Ans) {
             DelAprDeptTempletListCC(pUserID, pFormIDCC, p_CheckAprDeptTempletSN);
@@ -495,13 +496,31 @@ function APRDeptXMLParsingCC(APRDEPT, pDocID) {
  * 회람 정보 -> 부서추가 기능
  */
 function btn_addDepartment() {
-	var listView = new ListView();
-	listView.LoadFromID("DivUserList");
 
-	var listObj = listView.GetDataRows();
+	if (confirm("하위 부서를 모두 포함하시겠습니까?")) {
+		console.log("YES");
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			url : "",
+			data : {
+				deptID : ""
+			},
+			success : function(result) {
+				
+			}
+		});
+	} else {
+		console.log("NO");
+		var listView = new ListView();
+		listView.LoadFromID("DivUserList");
 	
-	for (var i = listObj.length-1; i >= 0; i --) {
-		var test = listObj[i];
-		APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
+		var listObj = listView.GetDataRows();
+		
+		for (var i = listObj.length-1; i >= 0; i --) {
+			var test = listObj[i];
+			APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
+		}
 	}
+
 }
