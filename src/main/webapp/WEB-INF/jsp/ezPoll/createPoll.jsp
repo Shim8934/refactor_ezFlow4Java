@@ -199,6 +199,8 @@
 	        	$("#sTimePicker").val(sHourMinute).change();
 	        	$("#eTimePicker").val(eHourMinute).change();
 	        	
+	        	$('#_dateTimePicker').show();
+	        	
 	        	//Select Target
 	        	var _selectedTarget = "<c:out value='${question.target}'/>";
 
@@ -702,7 +704,7 @@
 					<span><spring:message code="ezPoll.t159"/></span>
 				</div>	
 				
-				<div id="_dateTimePicker" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">		
+				<div id="_dateTimePicker" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px; display: none;">		
 					<span><spring:message code="ezPoll.t160"/></span>			
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
 					<select id="sTimePicker"></select>
@@ -717,7 +719,7 @@
 						<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
 						<option value="1"><spring:message code="ezPoll.t238" /></option>
 					</select>	
-					<a class="pollImgbtn1" id="receiverBttn"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>																		
+					<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>																		
 				</div>
 				<div style="display:none">
 					<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
