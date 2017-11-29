@@ -180,12 +180,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 전자결재 결재환경설정 호출 Method
 	 */
 	@RequestMapping(value = "/ezPersonal/ezApprovalConfig.do")
-	public String ezApprovalConfig(Model model) throws Exception{
+	public String ezApprovalConfig(Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
 		logger.debug("ezApprovalConfig started");
-
-		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
-		
-		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
 
 		logger.debug("ezApprovalConfig ended");
 		return "ezPersonal/persEzApprovalConfig";
