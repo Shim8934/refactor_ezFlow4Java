@@ -742,6 +742,7 @@
 		    	document.getElementById("toolCmt" + currentEditingCmt).style.display = "block";	
 		    	
 		    	if (document.getElementById("editCmtArea" + currentEditingCmt).value == "") {
+		    		document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#eee";
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = true;
 		    	}
 		    }
@@ -767,7 +768,7 @@
 		    	innerDiv2.setAttribute("id", "descriptCmt" + id.slice(8));
 		    	innerDiv2.setAttribute("style", "display: none;  padding-left: 10px; position: relative;");	
 		    	var innerDiv3 = document.createElement("div");	
-		    	innerDiv3.setAttribute("style", "padding-top: 10px;");			    	
+		    	innerDiv3.setAttribute("style", "padding: 5px 0px 5px 20px;");			    	
 		    	editDiv2Cmt.appendChild(innerDiv1);
 		    	editDiv2Cmt.appendChild(innerDiv2);
 		    	
@@ -779,13 +780,13 @@
 		    	
 		    	//Copy text comment
 		    	var innInnerDiv1 = document.createElement("div");
-		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #b6b6b6;padding-left: 0px;margin-left: 7px; width: 500px;");
+		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #b6b6b6;padding-left: 0px;margin-left: 20px; width: 500px; border-radius: 3px;");
 		    	var editTxtArea = document.createElement("textarea");
 		    	editTxtArea.setAttribute("id", "editCmtArea" + id.slice(8));
 		    	editTxtArea.setAttribute("cols", "20");
 		    	editTxtArea.setAttribute("rows", "1");
-		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding-left: 5px; width: 90%;");
-		    	editTxtArea.onkeyup =  function () { editAutoGrow(this); }	
+		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding: 5px 5px; width: 490px;");
+		    	editTxtArea.oninput =  function () { editAutoGrow(this); }	
 		    	
 		    	innInnerDiv1.appendChild(editTxtArea);		
 		    	innerDiv1.appendChild(innInnerDiv1);	
@@ -879,20 +880,25 @@
 		    	tagA1.setAttribute("id", "clA1cmt" + id.slice(8));
 		    	tagA1.setAttribute("class", "voteCancelBttn");
 		    	tagA1.setAttribute("_cmtIndex", id.slice(8));
-		    	tagA1.setAttribute("style", "cursor: pointer; width:46px; height:24px; margin:0px 4px 0px 0px; padding:0px; background:#eee; border:1px solid #999;");
+		    	/* tagA1.setAttribute("style", "cursor: pointer; width:46px; height:24px; margin:0px 4px 0px 0px; padding:0px; background:#eee; border:1px solid #999;"); */
 		    	tagA1.onclick = function (event) { event.stopPropagation(); event.preventDefault(); cancelEditComment(this); };
 		    	
 		    	var tagA2 = document.createElement("button");		    	
 		    	tagA2.innerHTML = "<spring:message code = 'ezPoll.t140'/>";
 		    	tagA2.setAttribute("id", "clA2cmt" + id.slice(8));
 		    	tagA2.setAttribute("class", "voteSaveBttn");
-		    	tagA2.setAttribute("style", "cursor: pointer; width:46px; height:24px; color:#FFF; background:#004896; border:none;");
+		    	/* tagA2.setAttribute("style", "cursor: pointer; width:46px; height:24px; color:#FFF; background:#004896; border:none;"); */
 		    	tagA2.setAttribute("_cmtIndex", id.slice(8));
 		    	tagA2.onclick = function (event) { event.stopPropagation(); event.preventDefault(); saveEditComment(this); };
 		    	innerDiv3.appendChild(tagA1);
 		    	innerDiv3.appendChild(tagA2);
 		    	
 		    	editDiv2Cmt.appendChild(innerDiv3);
+		    	
+		    	//baonk added to test		    	
+		    	//editTxtArea.style.height = (editTxtArea.scrollHeight) + "px";
+		    	//end
+		    	
 		    	editDiv2Cmt.style.display = "inline-block";	
 		    	editTxtArea.focus(); 
 		    }
@@ -1203,7 +1209,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 0px 20px; max-width: 80%;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUser;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
@@ -1489,6 +1495,7 @@
 		    		}
 		    		
 		    		imagePreview.parentElement.style.display = "block";	
+		    		document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#004896";
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 		    	}
 		    	
@@ -1570,9 +1577,11 @@
 		    
 		    function editAutoGrow(element) {
 				if (element.value == "" && document.getElementById("descriptCmt" + currentEditingCmt).style.display == "none") {
+					document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#eee";
 					document.getElementById("clA2cmt" + currentEditingCmt).disabled = true;
 				}
 				else {
+					document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#004896";
 					document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 				}
 				
@@ -1674,6 +1683,7 @@
 		    		}
 		    		
 		    		editPreviewTag.parentElement.style.display = "block";
+		    		document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#004896";
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 		    	}
 
@@ -1754,7 +1764,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 0px 20px; max-width: 80%;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userId;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
@@ -2068,7 +2078,7 @@
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
-	<body class="mainbody"  id="mainbodytag" style="min-width: 385px;>
+	<body class="mainbody"  id="mainbodytag" style="min-width: 750px;>
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 3px">
@@ -2182,7 +2192,7 @@
 		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
 		               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;"><spring:message code = 'ezPoll.t122'/></div>
-		               				<img src="/images/arrow_right.png" height="10px" width="10px" style="cursor: pointer; float:left; display:block; margin: 5px 0px 0px 5px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
+		               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 		               			</div>
 		               		</div>          		
 		               </td>		               
@@ -2222,7 +2232,7 @@
 							</td>
 							<td>
 								<div style="display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;">${_comt.userId}</div>
-								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 0px 20px; max-width: 80%;" >
+								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;" >
 									<c:if test="${_comt.textContent != ''}">
 										<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
 									</c:if>
@@ -2518,8 +2528,8 @@
 					</div>					
 					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
-				<div style="float:left; display:block; width:74%; height:45px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
-					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow-x: hidden; overflow-y: auto; height:17px; line-height:15px; padding:16px 0px; outline: none; border:none; resize:none;"  oninput="auto_grow(this)"></textarea>
+				<div style="float:left; display:block; width:74%; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
+					<textarea cols="20" rows="1" id="comment_input" placeholder="Add a comment." style="display: inline-block; overflow: hidden; height:17px; line-height:15px; padding:16px 0px; outline: none; border:none; resize:none;"  oninput="auto_grow(this)"></textarea>
 				</div>
 				<div style="position:absolute; top:9px; right:10px; display:block; width: 96px; height:45px; border:none; margin:0px">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
