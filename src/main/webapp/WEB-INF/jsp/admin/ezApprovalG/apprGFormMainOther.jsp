@@ -997,8 +997,8 @@
                         <img style="cursor:pointer" src="/images/arr_ll.gif" width="24" height="24" onclick="return deleteAllCont_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_u.gif" width="24" height="24" onclick="return moveUp_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_d.gif" width="24" height="24" onclick="return moveDown_onclick()"><br>
-                        <div style="height:250px;<c:if test="${approvalFlag != 'S'}">display:none;</c:if>">&nbsp;</div>
-                        <img style="cursor:pointer;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()"><br>
+                        <div style="height:300px;<c:if test="${approvalFlag != 'S'}">display:none;</c:if>">&nbsp;</div>
+                        <img style="cursor:pointer;margin-bottom:50px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()">
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
                         <h2><spring:message code='ezApproval.t61'/></h2>

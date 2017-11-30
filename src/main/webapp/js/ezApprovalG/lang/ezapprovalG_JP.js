@@ -282,7 +282,7 @@ var strLang434 = "신청에 실패하였습니다!"
 var strLang435 = "자료관과의 연결이 없습니다. 신청을 완료할 수 없습니다."
 var strLang436 = "단위업무 코드"
 // ezCabinet\Manage\TaskCodeManage.js
-var strLang437 = "単位業務を選択してください!"//G
+var strLang437 = "単位業務を選択してください."//G
 var strLang438 = "회사아이디"
 // ezCabinet\Manage\TaskManage.js
 var strLang439 = "단위업무 리스트"

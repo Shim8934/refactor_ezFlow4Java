@@ -611,14 +611,7 @@ function reject_onclick_Complete(retVal)
     result = replaceAll(result, "<DATA><![CDATA[", "");
     result = replaceAll(result, "]]></DATA>", "");
 
-    if (result == 'OK') {
-        alert(strLang61);
-    }
-    else if (result == "DOMAINERROR")
-        alert(strLang352);
-    else {
-        alert(strLang138);
-    }
+    return result;
 }
 function replaceAll(pStrContent, pStrOrg, pStrRep) {
     return pStrContent.split(pStrOrg).join(pStrRep);

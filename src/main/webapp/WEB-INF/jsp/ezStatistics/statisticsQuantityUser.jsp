@@ -415,13 +415,13 @@
     }
 
     function getmailsize(size) {
-        if (parseInt(size) / 1024 / 1024 / 1024 > 1)
+        if (parseInt(size) / 1024 / 1024 / 1024 > 1) {
             return (parseInt(size) / 1024 / 1024 / 1024).toFixed(1) + "GB";
-        else if (parseInt(size) / 1024 / 1024 > 1)
+        } else if (parseInt(size) / 1024 / 1024 > 1) {
             return (parseInt(size) / 1024 / 1024).toFixed(1) + "MB";
-        else if (parseInt(size) / 1024 > 1)
+        } else if (parseInt(size) / 1024 > 1) {
             return (parseInt(size) / 1024).toFixed(1) + "KB";
-        else
+        } else {
             return (parseInt(size)).toFixed(1) + "B";
     }
 
@@ -477,7 +477,7 @@
     }
 
     function searchdept() {
-        if (keyword.value == "") {
+        if (keyword.value.trim() == "") {
             alert("<spring:message code='ezStatistics.t1010' />");
             keyword.focus();
             return;
@@ -654,9 +654,9 @@
             </span>
         </td>
         <td>
-            <div id="mainmenu" style="float: right; height: 28px; width: 100px">
+            <div id="mainmenu" style="float: right; height: 28px;">
                 <ul>
-                    <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
+                    <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                 </ul>
             </div>
         </td>

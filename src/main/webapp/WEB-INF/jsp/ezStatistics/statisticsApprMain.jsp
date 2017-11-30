@@ -312,9 +312,9 @@
 	                    <spring:message code='ezStatistics.t55'/></span>
 	            </td>
 	            <td>
-	                <div id="mainmenu" style="height: 28px; width: 110px">
+	                <div id="mainmenu" style="height: 28px;">
 	                    <ul>
-	                        <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -362,7 +362,7 @@
 	            </dl>
 	        </div>
 	    </div>
-	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/excelExportOut.do">
+	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsTotalA.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
 	        <input type="hidden" id="userAgent" name="userAgent" value="">
 	    </form>

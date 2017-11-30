@@ -988,13 +988,7 @@ function chkBtn(pBtnflag, approvalFlag) {
     setMenuBar("btnSetTaskCode", pBtnflag);
     setMenuBar("btnAddSepAttach", pBtnflag);
     setMenuBar("btnhistory", pBtnflag);
-    
-    if (approvalFlag == 'S') {
-    	
-    } else {
-    	setMenuBar("tbtnTotalSave", pBtnflag);
-    }
-    
+    setMenuBar("tbtnTotalSave", pBtnflag);
     setMenuBar("btntotaldocinfo", pBtnflag);
 
     if (trim(pDraftFlag) == "GONGRAM" || trim(pDraftFlag) == "CHAMJO") {
@@ -2841,7 +2835,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 550, "/ezApprovalG/aprDocAttach.do");
+        	DivPopUpShow(1050, 660, "/ezApprovalG/aprDocAttach.do");
         }
     } catch (e) {
         alert(e.description);

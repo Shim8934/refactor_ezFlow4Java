@@ -581,6 +581,7 @@ function ListView() {
                 colCount = oHeaders.length;
             }
         }
+
        if(_rowCount == 0)
         {
             var objTr = document.createElement("TR");
@@ -593,7 +594,12 @@ function ListView() {
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
 
-             return oTbody;
+            var objTd2 = document.getElementById("timeForm");
+            if (document.getElementById("timeForm") != null) {
+            	objTd2.style.display = "none";
+            }
+
+            return oTbody;
         }
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");

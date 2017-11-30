@@ -113,8 +113,14 @@
 			function toggle_menu(pIndex) {
 				if (pmode == "new" && g_bSaved == false) {
 					if (pIndex.toString() != "1")
-					{
-						alert("<spring:message code='ezPortal.t83'/>");
+					{						
+						alert("<spring:message code='ezPortal.t83'/>");						
+						
+						setTimeout(function() {
+							$("#tabnav ul li").attr("class","off");
+							$("#tabnav ul li:first").attr("class","on");							
+						}, 1);
+						
 						return;
 					}
 				}
@@ -921,7 +927,7 @@
   			</tr>
   			<tr>
     			<th ><spring:message code='ezPortal.t151'/></th>
-    			<td><input type="text" id="txtURL" style="width:384px" value="${prop.url}" maxLength="512"></td>
+    			<td><input type="text" id="txtURL" style="width:99%" value="${prop.url}" maxLength="512"></td>
   			</tr>  
     		<tr>
     			<th ><spring:message code='ezPortal.t990025'/></th>
@@ -973,7 +979,7 @@
   			<tr id="tr_url1">
     			<th ><spring:message code='ezPortal.t135'/></th>
     			<td>
-    				<input type="text" name="txtMoveURL" id="txtMoveURL" style="width:384px" value="${pMoveURL}">
+    				<input type="text" name="txtMoveURL" id="txtMoveURL" style="width:99%" value="${pMoveURL}">
     			</td>
   			</tr>
 		</table>
@@ -1099,16 +1105,16 @@
 			<!-- 인자설정 -->
 			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none">
   				<tr>
-    				<th><spring:message code='ezPortal.t115'/></th>
-    				<th ><spring:message code='ezPortal.t116'/></th>
-    				<th ></th>
+    				<th style="border-bottom:0px"><spring:message code='ezPortal.t115'/></th>
+    				<th style="border-bottom:0px"><spring:message code='ezPortal.t116'/></th>
+    				<th style="border-bottom:0px"></th>
   				</tr>
 				${paramHtml}
 			</table>
 			<table id="toggle_tbl2_2" class="content" style="display:none">
   				<tr>
     				<th width="85" ><spring:message code='ezPortal.t117'/></th>
-    				<td><input type="text" id="newParamName" style="width:100%"></td>
+    				<td><input type="text" id="newParamName" style="width:99%;margin-left:2px"></td>
   				</tr>
   				<tr>
     				<th ><spring:message code='ezPortal.t118'/></th>
@@ -1170,7 +1176,7 @@
   						</tr>
   					</c:forEach>
 				</table>
-				<table id="toggle_tbl3_2" class="content" style="display:none">
+				<table id="toggle_tbl3_2" class="content" style="display:none;margin-top:5px">
   					<tr>
     					<th><spring:message code='ezPortal.t91'/></th>
     					<td>
@@ -1186,7 +1192,7 @@
   					</tr>
   					<tr>
     					<th ><spring:message code='ezPortal.t92'/></th>
-    					<td><input type="text" id="newAccessName" style="width:100%" readonly></td>
+    					<td><input type="text" id="newAccessName" style="width:99%;margin-left:2px" readonly></td>
   					</tr>
   					<tr>
     					<th ><spring:message code='ezPortal.t93'/></th>
