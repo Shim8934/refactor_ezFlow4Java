@@ -155,13 +155,13 @@ public class EzUCMessengerController {
 			} else {
 				// Check if his/her tenant allows using employeeID to login
 				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+				logger.debug("useEmpNumberLogin=" + useEmpNumberLogin);
 				
 				// 사원번호를 사용한 로그인을 허용하는 경우
 				if (useEmpNumberLogin.equals("YES")) {
 					orgId = resultVO.getId();
 				}
 			}
-			
 		}
 		
 		logger.debug("getIdIfUserExists ended. orgId=" + orgId);
@@ -185,8 +185,11 @@ public class EzUCMessengerController {
 			// 사용자 ID를 사용해 로그인하는 경우
 			if (id.equals(resultVO.getId())) {
 				
+				String useAD = ezCommonService.getTenantConfig("USE_AD", tenantId);
+				logger.debug("useAD=" + useAD);
+				
 	            // AD를 사용하는 경우(MASTERADMIN 제외)
-	            if (!id.equalsIgnoreCase("MASTERADMIN") && ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+	            if (!id.equalsIgnoreCase("MASTERADMIN") && useAD.equalsIgnoreCase("YES")) {
 	            	String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
 	            	
 	            	if (chkADpass.equalsIgnoreCase("TRUE")) {
@@ -214,6 +217,7 @@ public class EzUCMessengerController {
 				
 				// Check if his/her tenant allows using employeeID to login
 				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+				logger.debug("useEmpNumberLogin=" + useEmpNumberLogin);
 				
 				// 사원번호를 사용한 로그인을 허용하는 경우
 				if (useEmpNumberLogin.equals("YES")) {
