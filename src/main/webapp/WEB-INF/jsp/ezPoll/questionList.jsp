@@ -212,7 +212,7 @@
 		    
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" style="min-width: 750px;">
 		<h1><spring:message code="ezPoll.t103"/><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu1">
 			<ul>

@@ -931,11 +931,11 @@
 		    		fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'));
 		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
-		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'); //baonk added to test
+		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
-		    			pForTd2.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'); //baonk added to test
+		    			pForTd2.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
 		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
 		    		}
 		    	}
@@ -1174,6 +1174,8 @@
 		    	if (document.getElementById("sendComment").style.display == "none") {	
 		    		document.getElementById("sendComment").style.display = "block";
 		    	}
+		    	
+		    	currentEditingCmt = -1;
 		    }
 		    
 		    function sendComment() {		    	

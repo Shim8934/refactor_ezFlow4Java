@@ -605,7 +605,7 @@
 <xmp id="sigBody3" style="display: none;">${targetPath}</xmp>
 <xmp id="sigBody2" style="display: none;">${filePath}</xmp>
 <xmp id="sigBody" style="display: none;">${content}</xmp>
-<body class="mainbody">
+<body class="mainbody" style="min-width: 750px;">
 	<form id="frmCreate" method="post" action="/ezPoll/pollComplete.do" name="frmCreate"> 	
 		<h1><spring:message code="ezPoll.t206" /></h1>
 
