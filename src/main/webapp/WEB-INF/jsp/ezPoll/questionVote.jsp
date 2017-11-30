@@ -1211,7 +1211,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUser;
-                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
+                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (currentText.length > 0) {
@@ -1363,7 +1363,9 @@
                 
                 //Clean the place
                 document.getElementById("comment_input").value = "";          
-		        document.getElementById("uploadedFile").style.display = "none"; 	            
+		        document.getElementById("uploadedFile").style.display = "none"; 
+		        document.getElementById("sendComment").style.height = "66px";
+		        document.getElementById("comment_input").style.height = "15px";
 		        window.scrollTo(0, document.body.scrollHeight);
 		        
 		        //Send add comment request to server
@@ -1568,8 +1570,10 @@
 				else {
 					document.getElementById("sendBttn").style.backgroundColor = "#004896";
 			    	document.getElementById("sendBttn").disabled = false;
-/* 			        element.style.height = "5px";
-			        element.style.height = (element.scrollHeight) + "px"; */
+ 			        element.style.height = "1px"; 			        
+ 			        var value = element.scrollHeight;
+			        element.style.height = (element.scrollHeight - 32) + "px";			        
+			        document.getElementById("sendComment").style.height = value + 18 + "px";
 			        window.scrollTo(0, document.body.scrollHeight);
 				}
 		    }
@@ -1766,7 +1770,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userId;
-                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;");       
+                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (txtContent.length > 0) {
@@ -2230,7 +2234,7 @@
 								<img src="${_comt.userImage}" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>
 							<td>
-								<div style="display: block; color:#004896; font-size:18px; padding:0px 0px 0px 20px;">${_comt.userId}</div>
+								<div style="display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;">${_comt.userId}</div>
 								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;" >
 									<c:if test="${_comt.textContent != ''}">
 										<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
