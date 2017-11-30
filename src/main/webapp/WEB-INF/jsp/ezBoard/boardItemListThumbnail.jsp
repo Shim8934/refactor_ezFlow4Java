@@ -1014,7 +1014,7 @@
 		</c:when>
 		<c:otherwise>
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>"+"${boardName}"+"<span id='mailBoxInfo'></span></h1>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}"+"<span id='mailBoxInfo'></span>";
 		    </script>
 		    <br />
 		    <span style="display:none; float:right;font-weight:normal;color:black;">

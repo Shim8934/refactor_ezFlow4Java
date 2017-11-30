@@ -284,7 +284,7 @@ function utcDate(offset){
 function utcDate2(offset){
 	var today = new Date();
 	today.setTime(today.getTime()+(1000*60*offset));
-	return new Date(today.toUTCString().replace(" GMT", ""));
+	return new Date(today.toUTCString().replace(" GMT", "").replace(" UTC", ""));
 }
 
 function specialChk(val){

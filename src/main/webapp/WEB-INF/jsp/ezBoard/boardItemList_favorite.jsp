@@ -256,7 +256,7 @@
 	</head>
 	<!-- <body class="mainbody" style="height: 89%;"> -->
 	<body class="mainbody" style="height: 95%; overflow:hidden;">
-	    <h1><spring:message code='ezBoard.t10031'/><span id='mailBoxInfo'></span></h1>
+	    <h1><spring:message code='ezBoard.t00010'/><span id='mailBoxInfo'></span></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        </div>

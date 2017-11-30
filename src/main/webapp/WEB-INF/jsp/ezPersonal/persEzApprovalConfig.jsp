@@ -10,8 +10,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		    document.onselectstart = function () { return false; };
-		    window.onload = function()
-		    {
+		    window.onload = function() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -23,18 +22,23 @@
 		        window_resize();
 		    };
 		    window.onresize = window_resize;
+		    
 		    function window_resize() {
 		        document.getElementById("mainframe").style.height = (document.documentElement.clientHeight - 200) + "PX";
 		    }
+		    
 		    var Tab1_SelectID = "";
 		    var Tab1_flag = true;
+		    
 		    function Tab1_MouserOver(obj) {
 		        obj.className = "tabover";
 		    }
+		    
 		    function Tab1_MouserOut(obj) {
 		        if (Tab1_SelectID != obj.id)
 		            obj.className = "";
 		    }
+		    
 		    function Tab1_MouseClick(obj) {
 		        obj.className = "tabon";
 		        if (obj.id != Tab1_SelectID) {
@@ -46,6 +50,7 @@
 		            ChangeTab(obj);
 		        }
 		    }
+		    
 		    function Tab1_NewTabIni(pTabNodeID) {
 		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 		            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
@@ -64,7 +69,8 @@
 		            }
 		        }
 		    }
-		     function ChangeTab(obj) {
+		    
+		    function ChangeTab(obj) {
 		        var pSelectTab = obj.getAttribute("divname");
 		        switch (pSelectTab) {
 		            case "passTab": Approval_config_ini(); break;
@@ -74,27 +80,26 @@
 		            case "signTab": sign_ini(); break;
 		        }
 		    }
-		     function Approval_config_ini()
-		    {
+		    
+		     function Approval_config_ini() {
 		         document.getElementById("mainframe").src = "/ezPersonal/approvalConfig.do";
 		    }
-		     function ManageBujae_ini()
-		    {
+		     
+		     function ManageBujae_ini() {
 		         document.getElementById("mainframe").src = "/ezPersonal/manageBujaeG.do";
 		    }
-		     function ManageBujaeG_ini()
-		    {
+		     
+		     function ManageBujaeG_ini() {
 		         document.getElementById("mainframe").src = "/ezPersonal/manageBujaeG.do";
 		    }
-		     function SetApprovNoticeMail_ini()
-		    {
-		         document.getElementById("mainframe").src = "/ezPersonal/setApprovNoticeMail.do";
-		     }
-		     function sign_ini()
-		     {
-		         document.getElementById("mainframe").src = "/ezPersonal/signimageConfig.do";
-		     }
-		      
+		     
+		    function SetApprovNoticeMail_ini() {
+		    	document.getElementById("mainframe").src = "/ezPersonal/setApprovNoticeMail.do";
+		    }
+		    
+		    function sign_ini() {
+		    	document.getElementById("mainframe").src = "/ezPersonal/signimageConfig.do";
+		    }
 		</script>
 	    <title><spring:message code='ezPersonal.t999900008'/></title>
 	</head>
@@ -103,15 +108,8 @@
 	    <div class="portlet_tabpart01" style="margin-top:3px;">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p><span id="1tab1" divname="passTab"><spring:message code='ezPersonal.t999900024'/></span></p>
-	            <c:if test="${userInfoApprovalG == 'NO' || userInfoApprovalG == 'BOTH'}">
-		            <p><span id="1tab2" divname="bujaeTab"><spring:message code='ezPersonal.t999900025'/></span></p>
-	            </c:if>
-	            <c:if test="${userInfoApprovalG == 'YES' || userInfoApprovalG == 'BOTH'}">
-		            <p><span id="1tab3" divname="bujaeGTab"><spring:message code='ezPersonal.t999900025'/></span></p>
-	            </c:if>
-	            <c:if test="${userInfoApprovalG == 'YES' || userInfoApprovalG == 'NO' || userInfoApprovalG == 'BOTH'}">
-		            <p><span id="1tab4" divname="noticeTab"><spring:message code='ezPersonal.t999900027'/></span></p>
-	            </c:if>
+		        <p><span id="1tab3" divname="bujaeGTab"><spring:message code='ezPersonal.t999900025'/></span></p>
+		        <p><span id="1tab4" divname="noticeTab"><spring:message code='ezPersonal.t999900027'/></span></p>
 	            <p><span id="1tab5" divname="signTab"><spring:message code='ezPersonal.t3000'/></span></p>
 	        </div>
 	    </div>

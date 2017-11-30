@@ -559,24 +559,23 @@
             AND
             	A.BoardID = B.boardid
             JOIN 
-            	TBL_Board_BoardInfo P   
+                TBL_Board_BoardInfo P   
            	ON 
            		P.TENANT_ID = B.TENANT_ID
            	AND
            		P.BoardID = B.boardid
-       		WHERE  
-       			( NOT EXISTS ( SELECT 
-       								USERID
-                               FROM 
-                               		TBL_Board_Item_Read 
-                               WHERE
-                               		tenant_id = #v_TENANTID#
-                               AND  
-                               		userid = #v_pUserID#
-                               AND 
-                               		itemid = A.itemid
-                               AND 
-                               		ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY) ) )
+       		LEFT JOIN
+                TBL_Board_Item_Read C  
+            ON 
+                A.itemid = C.itemid
+            AND
+                C.ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+            AND
+                C.tenant_id = #tenantID#
+            AND
+                C.userid = #userID#
+            WHERE  
+                C.itemid IS NULL  
             AND 
             	A.StartDate < #nowDate#
             AND 

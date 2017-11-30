@@ -185,8 +185,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-	border-top:1px solid #aeabab;
-	border-bottom: 1px solid #aeabab;
+	border-top:1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -199,7 +199,7 @@ form{display:inline;margin:0}
 #left h2.on, #TopBoards h2.on{
 	font-weight: bold;
 	background: url('/images/kr/left/01_plus.gif') no-repeat right 13px;
-	background-color:#ffffff;
+	background-color:#eee;
 	color:#333333;
 }
 
@@ -275,6 +275,17 @@ form{display:inline;margin:0}
     overflow:auto;
 }
 .mainbody h1 {
+	font-size:15px;
+	font-weight:bold;
+	padding-left:5px;
+	margin:16px 0px 24px;
+	left:7px;
+	color:#333;
+	height:20px;
+	line-height:20px;
+}
+
+.mainbody #presentcell {
 	font-size:15px;
 	font-weight:bold;
 	padding-left:5px;
