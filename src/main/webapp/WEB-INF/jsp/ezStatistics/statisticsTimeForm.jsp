@@ -68,10 +68,8 @@
                 var headerData = createXmlDom();
                 headerData = loadXMLString(forminfoxml.innerHTML.toUpperCase());
                 if (text != "") {
-
                     var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
-                        headerData.documentElement.appendChild(xmlRtn);
-                    
+                    headerData.documentElement.appendChild(xmlRtn);
                 }
                 var pUserList = new ListView();
                 pUserList.SetID("lvformlist");
@@ -80,6 +78,12 @@
                 pUserList.SetHeightFree(true);
                 pUserList.DataSource(headerData);
                 pUserList.DataBind("formlist");
+                
+                pUserList.SetSelectedIndex(0);
+	              
+             	 if (loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0].textContent != "") {
+	          	  	getapprovalstatistics();
+              	 }
 	        }
 	
 	        function search_press(e) {

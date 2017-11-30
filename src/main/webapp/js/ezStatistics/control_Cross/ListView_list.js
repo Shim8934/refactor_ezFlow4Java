@@ -595,7 +595,9 @@ function ListView() {
             objTr.appendChild(objTd);
 
             var objTd2 = document.getElementById("timeForm");
-            objTd2.style.display = "none";
+            if (document.getElementById("timeForm") != null) {
+            	objTd2.style.display = "none";
+            }
 
             return oTbody;
         }

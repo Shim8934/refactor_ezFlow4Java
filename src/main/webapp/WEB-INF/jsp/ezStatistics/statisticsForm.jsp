@@ -135,6 +135,12 @@
                 pUserList.SetHeightFree(true);
                 pUserList.DataSource(headerData);
                 pUserList.DataBind("formlist");
+                
+                pUserList.SetSelectedIndex(0);
+	              
+            	 if (loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0].textContent != "") {
+	          	  	getapprovalstatistics();
+             	 }
 	        }
 	
 	        function getapprovalstatistics() {
@@ -327,7 +333,7 @@
 	             <td style="width: 99%">
 	                 <span id="topmenu" style="float: left; width: 500px">
 	                     <spring:message code='ezStatistics.t195'/> :
-	        <select id="SCompID" name="SCompID" onchange="return getforminfo()">${companySel}</select>
+	       		 <select id="SCompID" name="SCompID" onchange="return getforminfo()">${companySel}</select>
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1002'/> : 
 	             <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
 	                     ~ 

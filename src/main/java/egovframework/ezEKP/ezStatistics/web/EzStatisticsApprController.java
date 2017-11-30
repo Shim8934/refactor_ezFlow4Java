@@ -156,7 +156,11 @@ public class EzStatisticsApprController {
 		
 		for (OrganDeptVO vo : deptVOs) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + vo.getCn() + "'>");
+				if (vo.getCn().equals(userInfo.getCompanyID())) {
+					companySel.append("<option value='" + vo.getCn() + "' selected>");
+				} else {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+				}
 				companySel.append(vo.getDisplayName());
 				companySel.append("</option>");
 			}
@@ -385,7 +389,11 @@ public class EzStatisticsApprController {
 		
 		for (OrganDeptVO vo : deptVOs) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + vo.getCn() + "'>");
+				if (vo.getCn().equals(userInfo.getCompanyID())) {
+					companySel.append("<option value='" + vo.getCn() + "' selected>");
+				} else {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+				}
 				companySel.append(vo.getDisplayName());
 				companySel.append("</option>");
 			}
@@ -460,12 +468,16 @@ public class EzStatisticsApprController {
 		
 		for (OrganDeptVO vo : deptVOs) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + vo.getCn() + "'>");
+				if (vo.getCn().equals(userInfo.getCompanyID())) {
+					companySel.append("<option value='" + vo.getCn() + "' selected>");
+				} else {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+				}
 				companySel.append(vo.getDisplayName());
 				companySel.append("</option>");
 			}
 		}
-		
+    	
 		model.addAttribute("companySel", companySel);
 		model.addAttribute("userInfo", userInfo);
 		
