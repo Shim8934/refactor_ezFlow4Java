@@ -8,6 +8,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<style>
+			.box {
+				border-right:0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -740,7 +745,7 @@
 	        DisplayUserImageList();
 	    }
 	    function keyword_Clear() {
-	        document.getElementsByName('keyword').item(0).value = "";
+	        document.getElementById('keyword').value = "";
 	    }
 
 	    function close_onclick() {
