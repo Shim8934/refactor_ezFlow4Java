@@ -807,13 +807,18 @@
 	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
 	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
-                    var textContentArray = message.GetEditorTextContent().split("----------------------------------------------------------------------------------------------------");
-                    if (textContentArray[0] == "" && pUse_Editor == "NAMO") {
-                    	document.getElementById("plainTextArea").value = "\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");	
+                    
+                    if (pUse_Editor == "NAMO") {
+                    	if (message.GetEditorTextContent().includes("----------------------------------------------------------------------------------------------------")) {
+                    		document.getElementById("plainTextArea").value = "\r\n\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+                    	} else {
+                    		document.getElementById("plainTextArea").value = "\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+                    	}
+                        		
                     } else {
-                    	document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-                    }
-                    console.log(textContentArray[1]);
+                    	document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");	
+                    }	
+                    
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
