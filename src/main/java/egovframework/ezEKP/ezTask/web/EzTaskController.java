@@ -894,8 +894,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("originColor", configVO.getOriginColor());
 		model.addAttribute("originColor2", configVO.getOriginColor2());
 
-		logger.debug("taskConfig ended.");
+		TaskGeneralVO taskGeneralVO = ezTaskService.getTaskGeneral(userInfo.getId(), userInfo.getTenantId());
 
+		model.addAttribute("taskGeneralVO", taskGeneralVO);
+		
+		logger.debug("taskConfig ended.");
+		
 		return "/ezTask/taskConfig";
 	}
 	
@@ -923,7 +927,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		String completeColor = request.getParameter("completeColor");
 		String originColor = request.getParameter("originColor");
 		String originColor2 = request.getParameter("originColor2");
-
+		
+		int listCount = Integer.parseInt(request.getParameter("listCount"));
+		String selectTaskStatus = request.getParameter("selectTaskStatus");
+		
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("originDelayColor : " + configVO.getDelayColor() + " | originCompleteColor : " + configVO.getCompleteColor());
@@ -931,7 +938,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		if (configVO != null) {
 			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, completeColor, originColor, originColor2, userInfo.getTenantId());
 		}
-
+		
+		ezTaskService.updateTaskGeneral(userInfo.getId(), listCount, selectTaskStatus, userInfo.getTenantId());
+		
 		logger.debug("taskSaveConfig ended.");
 
 		return "json";

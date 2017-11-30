@@ -7,14 +7,18 @@
 		<title><spring:message code = 'ezApprovalG.t1285' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style>
+			.mainlist tr th {
+	    		border-top:0px;
+	    	}
+	    </style>	
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Pagenation_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezStatistics_Cross.js"></script>
-		
+		<script type="text/javascript" src="/js/ezApprovalG/ezStatistics_Cross.js"></script>		
 		<script type="text/javascript">
 			var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, DocList_Flag, DocTitle, pUserFlag;
 	        var StatistList = createXmlDom();

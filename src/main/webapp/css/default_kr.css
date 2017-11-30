@@ -186,8 +186,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-	border-top:1px solid #aeabab;
-	border-bottom: 1px solid #aeabab;
+	border-top:1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -200,7 +200,7 @@ form{display:inline;margin:0}
 #left h2.on, #TopBoards h2.on{
 	font-weight: bold;
 	background: url('/images/kr/left/01_plus.gif') no-repeat right 13px;
-	background-color:#ffffff;
+	background-color:#eaeaea;
 	color:#333333;
 }
 
@@ -276,6 +276,17 @@ form{display:inline;margin:0}
     overflow:auto;
 }
 .mainbody h1 {
+	font-size:15px;
+	font-weight:bold;
+	padding-left:5px;
+	margin:16px 0px 24px;
+	left:7px;
+	color:#333;
+	height:20px;
+	line-height:20px;
+}
+
+.mainbody #presentcell {
 	font-size:15px;
 	font-weight:bold;
 	padding-left:5px;
@@ -612,7 +623,7 @@ form{display:inline;margin:0}
 	overflow:auto;
 }
 
-#tabnav, #tabnav2 {background:url('/images/kr/cm/tab1_bar.gif') repeat-x bottom;font-weight:bold;width:100%;clear:both;}
+#tabnav, #tabnav2 {font-weight:bold;width:100%;clear:both;}
 #tabnav ul, #tabnav2 ul{margin-left:5px;}
 #tabnav ul {overflow:hidden; width:100%; padding-left:1px;}
 
@@ -626,8 +637,8 @@ form{display:inline;margin:0}
 	line-height:26px;
 	cursor:pointer;
 	border:1px solid #c0bfbf;
-	
-	}
+	border-bottom:1px solid #ddd;
+}
 #tabnav li span, #tabnav li span.off,#tabnav2 li span, #tabnav2 li span.off{
 	display:block;
 	float:left;	
@@ -637,7 +648,7 @@ form{display:inline;margin:0}
 	margin-bottom:0px;
 	color:#666;
 	background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x top;
-	}
+}
 #tabnav li.off,#tabnav li {position:relative;}
 #tabnav li.on, #tabnav2 li.on{
 	top:0;
@@ -648,10 +659,8 @@ form{display:inline;margin:0}
 	line-height:27px;
 	z-index:5;
 	border:1px solid #41506e;
-	border-top:2px solid #41506e;
 	border-bottom:0px;
-	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;
-	 
+	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;	 
 }
 #tabnav li.on span, #tabnav2 li.on span{
 	display:block;	

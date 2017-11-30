@@ -130,6 +130,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("userIE11Browser", userIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("noUsePOP3", ezCommonService.getTenantConfig("noUsePOP3", userInfo.getTenantId()));
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";

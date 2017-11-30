@@ -1801,7 +1801,7 @@
 		        Td.style.wordBreak = "break-all";
 
 		        Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + imgSrc + "\\')";
-		        alert(Td.style.backgroundImage);
+		        
 		        Table.style.width = imgWidth + "px";
 		        Table.style.height = imgHeight + "px";
 

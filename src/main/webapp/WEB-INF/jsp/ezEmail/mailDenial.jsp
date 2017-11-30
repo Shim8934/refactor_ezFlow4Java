@@ -7,6 +7,7 @@
 	    <title><spring:message code='ezEmail.t341' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/ie_methods.js"></script>
 	    <script type="text/javascript">
@@ -96,7 +97,18 @@
                     return;
                 }
                 Ret = params;
-                ReturnFunction(Ret);
+                
+                var result = ReturnFunction(Ret);
+                
+                if (result == 'OK') {
+                    alert(strLang61);
+                }
+                else if (result == "DOMAINERROR")
+                    alert(strLang352);
+                else {
+                    alert(strLang138);
+                }
+                
                 if(!DivPopup) {
                     window.close();
                 }

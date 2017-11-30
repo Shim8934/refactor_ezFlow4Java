@@ -1409,4 +1409,9 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganDeptVO> getExtension4ID(Map<String, Object> map) throws Exception {
 		return (List<OrganDeptVO>) list("EzOrganDAO.getExtension4ID", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getChildrenDeptID(Map<String, Object> map) throws Exception {
+		return (List<OrganDeptVO>) list("EzOrganDAO.getChildrenDeptID", map);
+	}
 }

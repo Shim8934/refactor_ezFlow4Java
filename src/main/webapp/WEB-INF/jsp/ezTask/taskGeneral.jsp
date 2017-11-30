@@ -39,7 +39,7 @@
 			<p>
 			<table class="content" style="width:240px;margin-left:15px;">
 				<tr>
-                	<th><spring:message code='ezTask.jsh14' /></th>
+                	<th><spring:message code='ezTask.jsh15' /></th>
                 		<td>
                     		<select id="listcount" name="pListCount" style="WIDTH: 100px">
                 				<option value='10' ${taskGeneralVO.listCount == '10' ? 'selected' : ''}>10</option>
@@ -55,8 +55,9 @@
                 	<th><spring:message code='ezTask.jsh14' /></th>
                 		<td>
                 			<select id="selectTaskStatus" name="pSelectTask" style="WIDTH: 100px">
-                				<option value="taskprog" ${taskGeneralVO.selectTaskStatus == 'taskprog' ? 'selected' : ''}><spring:message code='ezTask.t2007' /></option>
-                				<option value="taskdictate" ${taskGeneralVO.selectTaskStatus == 'taskdictate' ? 'selected' : ''}><spring:message code='ezTask.t2008' /></option>
+                				<option value="taskpr" ${taskGeneralVO.selectTaskStatus == 'taskpr' ? 'selected' : ''}><spring:message code='ezTask.t200901' /></option>
+                				<option value="taskre" ${taskGeneralVO.selectTaskStatus == 'taskre' ? 'selected' : ''}><spring:message code='ezTask.t200902' /></option>
+                				<option value="taskdi" ${taskGeneralVO.selectTaskStatus == 'taskdi' ? 'selected' : ''}><spring:message code='ezTask.t200903' /></option>
                 			</select>
                 		</td>
             	</tr>
