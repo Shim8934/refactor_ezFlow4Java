@@ -97,7 +97,7 @@ function btnViewTaskInfo_onclick() {
         }
     }
     else {
-    	OpenAlertUI(strLang437);
+    	alert(strLang437);
     }
 }
 
@@ -122,7 +122,7 @@ function btnViewTaskHistoryInfo_onclick() {
         }
     }
     else {
-    	OpenAlertUI(strLang437);
+    	alert(strLang437);
     }
 }
 

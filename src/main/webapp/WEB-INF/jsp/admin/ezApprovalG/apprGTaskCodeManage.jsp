@@ -16,14 +16,18 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<style>
+			.mainlist tr th {
+				border-top:0px;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TaskCodeManage_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 		    var OrderCell = "";
 		    var companyID = "<c:out value = '${userInfo.companyID}' />";
@@ -121,9 +125,9 @@
 		            
 		            if (pLevel == "3") {
 		                var pAlertContent = "<spring:message code = 'ezApprovalG.t766' />";
-						OpenAlertUI(pAlertContent);
+						alert(pAlertContent);
 		                
-		                return
+		                return;
 		            }
 		            
 		            temppGroupID = pGroupID;
@@ -143,15 +147,20 @@
 		            TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=ins&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
 		            try { TaskCategoryInsert_Cross.focus(); } catch (e) { }
 		        } else {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t768' />";
-		            OpenAlertUI(pAlertContent);
+		        	if (approvalFlag == 'S') {
+		        		var pAlertContent = "<spring:message code = 'ezApprovalG.t768' />";
+		        	} else {
+		        		var pAlertContent = "<spring:message code = 'ezBoard.t10035' />";		        			
+		        	}
+		            
+		            alert(pAlertContent);
 		        }
 		    }
 		    
 		    function btnAddTree_onclick_Complete(retVal) {
 		        if (retVal[0] == "TRUE") {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t767' />";
- 		            OpenAlertUI(pAlertContent);
+ 		            alert(pAlertContent);
 		            TaskCategoryInsert_Cross.close();
 		            getGroupTree(1, 1, 0, true);
 		        }
@@ -168,7 +177,7 @@
 	
 		            if (pParent == "NULL") {
 		            	var pAlertContent = "<spring:message code = 'ezApprovalG.t769' />";
- 		                OpenAlertUI(pAlertContent);
+ 		                alert(pAlertContent);
  		                
 		                return;
 		            }
@@ -188,11 +197,15 @@
 	                var TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=update&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
 	                try { TaskCategoryInsert_Cross.focus(); } catch (e) { }
 		        } else {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t771' />";
-		            OpenAlertUI(pAlertContent);
+		        	if (approvalFlag == 'S') {
+		        		var pAlertContent = "<spring:message code = 'ezApprovalG.t771' />";
+		        	} else {
+		        		var pAlertContent = "<spring:message code = 'ezBoard.t10037' />";		        			
+		        	}		            
+		            alert(pAlertContent);
 		        }
 		    }
-	
+		    
 		    function btnEditTree_onclick_Complete(retVal) {
 		        if (retVal[0] == "TRUE") {
 		            var treeview = new TreeView();
@@ -202,7 +215,7 @@
 		            var pParent = nodeIdx.GetNodeData("DATA4");
 	
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t770' />";
-		            OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
 	
 		            if (pParent == retVal[5]) {
 		                nodeIdx.SetNodeName(retVal[1]);
@@ -228,7 +241,7 @@
 	
 		            if (pParent == "NULL") {
 		                var pAlertContent = "<spring:message code = 'ezApprovalG.t772' />";
-		                OpenAlertUI(pAlertContent);
+		                alert(pAlertContent);
 		                return;
 		            }
 		            
@@ -238,25 +251,31 @@
 		            if (tempVal != "FALSE") {
 		            	if (approvalFlag == 'S') {
 			                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
-			                OpenAlertUI(pAlertContent);
+			                alert(pAlertContent);
 			                
 			                return;		            		
 		            	} else {
 			                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
-			                OpenAlertUI(pAlertContent);
+			                alert(pAlertContent);
 			                
 			                return;
 		            	}
 		            }
-	
-		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t774' />\n<spring:message code = 'ezApprovalG.t775' />";
+		            if (confirm("<spring:message code = 'ezApprovalG.t775' />\r\n<spring:message code = 'ezApprovalG.t774' />")) {
+		            	btnDelTree_onclick_Complete(true);
+					}
+		            /* ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t774' />\n<spring:message code = 'ezApprovalG.t775' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelTree_onclick_Complete;
 	
 		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200));
-		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
-		        } else {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t777' />";
-		            OpenAlertUI(pAlertContent);
+		            try { ezAPROPINION_Cross.focus(); } catch (e) { } */
+		        } else {		        	
+		        	if (approvalFlag == 'S') {
+		        		var pAlertContent = "<spring:message code = 'ezApprovalG.t777' />";
+		        	} else {
+		        		var pAlertContent = "<spring:message code = 'ezBoard.t10039' />";		        			
+		        	}		            
+		            alert(pAlertContent);
 		        }
 		    }
 	
@@ -277,8 +296,8 @@
 		            	data : {cateType : pLevel, cateCode : pGroupID, companyID : companyID},
 		            	success : function(result) {
 		            		if (result == "TRUE") {
-		            			var pAlertContent = "<spring:message code = 'ezApprovalG.t776' />";
-		 	                    OpenAlertUI(pAlertContent);
+		            			/* var pAlertContent = "<spring:message code = 'ezApprovalG.t776' />";
+		 	                    alert(pAlertContent); */
 			                    
 			                    nodeIdx.DeleteNode(treeview.GetID());
 		            		}
@@ -299,14 +318,14 @@
 		            if (approvalFlag == 'S') {
 		            	if (pLevel == '0') {
 		            		var pAlertContent = "<spring:message code = 'ezApprovalG.lhj12' />";
-							OpenAlertUI(pAlertContent);
+							alert(pAlertContent);
 			                
-			                return
+			                return;
 		            	}
 		            } else {
 			            if (pLevel != "3") {
 			            	var pAlertContent = "<spring:message code = 'ezApprovalG.t778' />\n<spring:message code = 'ezApprovalG.t779' />";
-	 		                OpenAlertUI(pAlertContent);
+	 		                alert(pAlertContent);
 	
 			                return;
 			            }
@@ -358,14 +377,19 @@
 		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
 		                	}
 		                    
- 		                    OpenAlertUI(pAlertContent);
+ 		                    alert(pAlertContent);
 	
 		                    TreeView_onNodeSelect();
 		                }
 		            }
 		        } else {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t782' />";
- 		            OpenAlertUI(pAlertContent);
+		        	if (approvalFlag == 'S') {
+		        		var pAlertContent = "<spring:message code = 'ezApprovalG.t782' />";
+		        	} else {
+		        		var pAlertContent = "<spring:message code = 'ezBoard.t10035' />";		        			
+		        	}
+		            
+ 		            alert(pAlertContent);
 		        }
 		    }
 	
@@ -379,7 +403,7 @@
                 		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
                 	}
 		            
- 		            OpenAlertUI(pAlertContent);
+ 		            alert(pAlertContent);
 	
 		            TreeView_onNodeSelect();
 		        }
@@ -393,8 +417,8 @@
 		        if (nodeIdx) {
 		            listview.LoadFromID("lvtDocForm");
 		            var selRow = listview.GetSelectedRows();
-		            
-		            if (selRow) {
+
+		            if (selRow != "") {
 		                var para = new Array();
 		                para[0] = "U";
 		                para[1] = selRow[0].getAttribute("DATA1");
@@ -430,22 +454,33 @@
 		                    
 		                    if (retVal == "TRUE") {
 		                        var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
- 		                        OpenAlertUI(pAlertContent);
+ 		                        alert(pAlertContent);
 	
 		                        TreeView_onNodeSelect();
 		                    }
 		                }
+		            } else {
+		            	if (approvalFlag == 'S') {
+			        		var pAlertContent = "<spring:message code = 'ezApprovalG.t137' />";
+	                	} else {
+	                		var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
+	                	}		            
+	 		            alert(pAlertContent);
 		            }
-		        } else {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
- 		            OpenAlertUI(pAlertContent);
+		        } else {		        	
+		        	if (approvalFlag == 'S') {
+		        		var pAlertContent = "<spring:message code = 'ezApprovalG.t137' />";
+                	} else {
+                		var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
+                	}		            
+ 		            alert(pAlertContent);
 		        }
 		    }
 	
 		    function btnEditItem_onclick_Complete(retVal) {
 		        if (retVal == "TRUE") {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
- 		            OpenAlertUI(pAlertContent);
+ 		            alert(pAlertContent);
 	
 		            TreeView_onNodeSelect();
 		        }
@@ -462,20 +497,26 @@
 			            
 			            if (tempVal != "FALSE") {
 			            	var pAlertContent = "<spring:message code = 'ezApprovalG.t785' />";
-	 		                OpenAlertUI(pAlertContent);
+	 		                alert(pAlertContent);
 	 		                
 			                return;
-			            }
+			            } 
 		        	}
-	
-		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
+					if (confirm("<spring:message code = 'ezApprovalG.t787' />\r\n<spring:message code = 'ezApprovalG.t786' />")) {
+						btnDelItem_onclick_Complete(true);
+					}
+		            /* ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
 		            
-		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200));
-		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
+		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200)); */
+		            /* try { ezAPROPINION_Cross.focus(); } catch (e) { } */
 		        } else {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
- 		            OpenAlertUI(pAlertContent);
+		        	if (approvalFlag == 'S') {
+		        		var pAlertContent = "<spring:message code = 'ezApprovalG.t137' />";
+                	} else {
+                		var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
+                	}
+ 		            alert(pAlertContent);
 		        }
 		    }
 	
@@ -494,7 +535,7 @@
 		            	success : function(result) {
 		            		if (result == "TRUE") {
 								var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
-		  	                    OpenAlertUI(pAlertContent);
+		  	                    alert(pAlertContent);
 
 		 	                    TreeView_onNodeSelect();
 		            		}
@@ -531,22 +572,25 @@
 		                
 		                if (retVal == "TRUE") {
 		                    var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
- 		                    OpenAlertUI(pAlertContent);
 		                    alert(pAlertContent);
 	
 		                    TreeView_onNodeSelect();
 		                }
 		            }
 		        } else {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
- 		            OpenAlertUI(pAlertContent);
+		        	if (approvalFlag == 'S') {
+		        		var pAlertContent = "<spring:message code = 'ezApprovalG.t137' />";
+                	} else {
+                		var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
+                	}
+ 		            alert(pAlertContent);
 		        }
 		    }
 	
 		    function btnConItem_onclick_Complete(retVal) {
 		        if (retVal == "TRUE") {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
- 		            OpenAlertUI(pAlertContent);
+ 		            alert(pAlertContent);
 	
 		            TreeView_onNodeSelect();
 		        }
@@ -680,9 +724,9 @@
 						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApproval.t709' /></span></li>
 						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApproval.t710' /></span></li>
 						<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
-						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApproval.t711' /></span></li>
-						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApproval.t712' /></span></li>
-						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApproval.t713' /></span></li>
+						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
+						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
+						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
 		        	</c:when>
 		        	<c:otherwise>
 		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
@@ -697,8 +741,7 @@
 						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
 						<li><span onClick="return btnConItem_onclick()"><spring:message code = 'ezApprovalG.t798' /></span></li>
 		        	</c:otherwise>
-		        </c:choose>
-				
+		        </c:choose>				
 			</ul>
 		</div>
 		<table>
