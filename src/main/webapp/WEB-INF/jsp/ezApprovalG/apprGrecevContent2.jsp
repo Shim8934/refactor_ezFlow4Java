@@ -14,16 +14,33 @@
 	        var DocTitleHTML;
 	        var _htmlcontent;
 	        window.onload = function () {
-	            try {
-	                parent.DocumentComplete2();
-	            } catch (e)
-	            { }
-	            
-	            try {
-		        	$('#div_Content #body').css('overflow', 'auto');
-		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
-		        } catch (e)
-		        { }
+	        	if (parent.message.orderFlag) {
+		            try {
+		                parent.DocumentComplete2();
+		            } catch (e)
+		            { }
+		            
+		            try {
+			        	$('#div_Content #body').css('overflow', 'auto');
+			        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
+			        } catch (e)
+			        { }
+	        	} else {
+	        		window.setTimeout(function() {
+			            try {
+			                parent.DocumentComplete2();
+			            } catch (e)
+			            { }
+			            
+			            try {
+				        	$('#div_Content #body').css('overflow', 'auto');
+				        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
+				        } catch (e)
+				        { }
+	        		}, 1000);
+	        	}
+		        
+		        console.log("second iFrame End");
 	        };
 	
 	        function Set_EditorContentURL(url) {
