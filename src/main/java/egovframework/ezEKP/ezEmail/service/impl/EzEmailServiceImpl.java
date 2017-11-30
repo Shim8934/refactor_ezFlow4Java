@@ -1093,9 +1093,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
 	    		
 	    		if (!sentFolder.exists()) {
-	    			sentFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-	    			sentFolder.setSubscribed(true);
-					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
+	    			ia.createFolder(sentFolder.getFullName());
 	    		}
 	    		
     			sentFolder.open(Folder.READ_WRITE);
@@ -1196,8 +1194,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
 	    		
 	    		if (!sentFolder.exists()) {
-	    			sentFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
+	    			ia.createFolder(sentFolder.getFullName());
 	    		}
 	    		
 	    		message.setFlag(Flags.Flag.SEEN, true);
