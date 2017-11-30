@@ -151,17 +151,6 @@
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			   	}
-				
-				if (document.getElementById("Title").value == "") {
-					alert("<spring:message code = 'ezPersonal.t148' />");
-					return;
-				}
-				
-				if (document.getElementById("Title2").value == "")
-				{
-					alert("<spring:message code = 'ezPersonal.t148' />");
-					return;
-				}
 	
 				if (parseInt(document.getElementById("wWidth").value, 10) != document.getElementById("wWidth").value)
 				{
@@ -184,6 +173,29 @@
 				if (parseInt(document.getElementById("wHeight").value, 10) > 800)
 				{
 					alert("<spring:message code = 'ezPersonal.t254' />");
+					return;
+				}
+				
+				if (parseInt(document.getElementById("wWidth").value, 10) < 100)
+				{
+					alert("<spring:message code = 'ezAdmin.jjh01' />");
+					return;
+				}
+	
+				if (parseInt(document.getElementById("wHeight").value, 10) < 250)
+				{
+					alert("<spring:message code = 'ezAdmin.jjh02' />");
+					return;
+				}
+				
+				if (document.getElementById("Title").value == "") {
+					alert("<spring:message code = 'ezPersonal.t148' />");
+					return;
+				}
+				
+				if (document.getElementById("Title2").value == "")
+				{
+					alert("<spring:message code = 'ezPersonal.t148' />");
 					return;
 				}
 	
