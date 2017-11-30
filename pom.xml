@@ -291,7 +291,12 @@
             <groupId>com.sun.xml.security</groupId>
             <artifactId>xml-security-impl</artifactId>
             <version>1.0</version>
-        </dependency>   
+        </dependency>
+        <dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-web</artifactId>
+		    <version>${spring.maven.artifact.version}</version>
+		</dependency>   
         
         <!-- 웹 소켓 -->
         <dependency>
