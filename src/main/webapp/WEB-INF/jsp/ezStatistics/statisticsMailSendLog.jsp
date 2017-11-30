@@ -328,8 +328,8 @@
 	   	    				
 	   						html += "<tr>";
 	   						html += "	<td>" + i.LogTime 									    	+ "</td>";
-	   	    				html += "	<td>" + i.senderName + " (" + i.senderEmail + ")"	    	+ "</td>";
 	   	    				html += "	<td>" + i.senderDeptName	 						   		+ "</td>";
+	   	    				html += "	<td>" + i.senderName + " (" + i.senderEmail + ")"	    	+ "</td>";
 	   						
 	   	    				if (i.recipientName == "") {
 		   	    				html += "	<td>" +  i.recipientEmail 								+ "</td>";
@@ -411,8 +411,8 @@
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/> : &nbsp;
 					<select id="searchField"> 
 						<option value="senderName"><spring:message code='ezStatistics.kyj3'/></option>
+						<option value="senderDeptName"><spring:message code='ezStatistics.t83'/></option>
 						<option value="senderEmail"><spring:message code='ezStatistics.kyj4'/></option>
-						<option value="senderDeptName"><spring:message code='ezStatistics.kyj5'/></option>
 						<option value="recipientName"><spring:message code='ezStatistics.kyj6'/></option>
 						<option value="recipientEmail"><spring:message code='ezStatistics.kyj7'/></option>
 						<option value="subject"><spring:message code='ezStatistics.t1056'/></option>
@@ -432,9 +432,11 @@
 				</span> 
 			</td>
 			<td width="5%">
-				<a class="imgbtn">
-					<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
-				</a>
+				<div id="mainmenu" style="height: 28px;">
+                    <ul>
+						<li><span style="width: 110px;text-align:center" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
+					</ul>
+				</div>
 			</td>
 		</tr>
 	</table>
@@ -447,8 +449,8 @@
 		<thead>
 			<tr>
 				<th width='12%' ><spring:message code='ezStatistics.kyj9'/></th>
+				<th width='8%'><spring:message code='ezStatistics.t83'/></th>
 				<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='8%'><spring:message code='ezStatistics.kyj5'/></th> 
 				<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
 				<th width='17%'><spring:message code='ezStatistics.t1056'/></th>
 				<th width='15%'><spring:message code='ezStatistics.t1057'/></th>

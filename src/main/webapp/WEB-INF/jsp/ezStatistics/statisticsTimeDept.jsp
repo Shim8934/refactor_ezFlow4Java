@@ -431,17 +431,17 @@
 	        <tr>
 	            <td style="width: 99%">
 	                <span id="topmenu" style="float: left; width: 500px"><spring:message code='ezStatistics.t1002'/> : 
-	            <select id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
+	            	<select id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
 	                    <spring:message code='ezStatistics.t55'/>
-	       &nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
-	             <input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
+	       				&nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
+	             		<input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
 	                    <a class="imgbtn" style="vertical-align: middle"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>
 	                </span>
 	            </td>
 	            <td>
-	                <div id="mainmenu" style="float: right; height: 28px; width: 110px">
+	                <div id="mainmenu" style="float: right; height: 28px;">
 	                    <ul>
-	                        <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
 	                </div>
 	            </td>

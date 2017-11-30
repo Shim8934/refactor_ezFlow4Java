@@ -716,8 +716,7 @@ function displayUserListCC(DeptID) {
 				type 	 : "user"
 		},
 		success: function(xml){
-			xml = loadXMLString(xml);
-			
+			xml = loadXMLString(xml);		
 			if (document.getElementById("UserListCC").innerHTML != "")
 		        document.getElementById("UserListCC").innerHTML = "";
 			

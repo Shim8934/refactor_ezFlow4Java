@@ -24,18 +24,38 @@
 			}
 
 			function btnSave_Click() {
+				
+		
 				var re = /[\\/:*?\"<>&|]/gi;
 				if (re.test(document.getElementById("Brd_NM").value) || re.test(document.getElementById("Brd_NM2").value)){
 					alert("<spring:message code='ezResource.kms1' />");
 					return;
 				}
 				
-				if (document.getElementById("Brd_NM").value == "") {
+				var checkSpace = document.getElementById("Brd_NM").value.trim();
+				
+				if (checkSpace == 0) {
 					alert("<spring:message code='ezResource.t145'/>");
 					document.getElementById("Brd_NM").focus();
 					return;
 				}
 
+				var brdNmTag = document.getElementById("Brd_NM");
+				var brdNm2Tag = document.getElementById("Brd_NM2");
+				var resLocTag = document.getElementById("ResLocation");
+				
+				if(CheckLenthForRes(brdNmTag, 50)){
+					return;	
+				};
+				
+				if(CheckLenthForRes(brdNm2Tag, 50)){
+					return;
+				};
+				
+				if(CheckLenthForRes(resLocTag , 50)){
+					return;
+				};	
+				
 				var xmlpara = createXmlDom();
 				var xmlHttp = createXMLHttpRequest();
 
@@ -80,10 +100,13 @@
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
 				}
 
-				if (document.getElementById("Brd_NM2").value == "") {
+				var checkSpace2 = document.getElementById("Brd_NM2").value.trim();
+				
+				if (checkSpace2 == 0) {
 					document.getElementById("Brd_NM2").value = document.getElementById("Brd_NM").value;
 				}
-
+				
+				
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Brd_NM2").value);
 
 				xmlHttp.open("Post", "/ezResource/callAddClsItem.do", false);
@@ -207,14 +230,14 @@
 					<table class="content">
         				<tr>
           					<th> <spring:message code="ezResource.t151"/></th>
-          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 200px"></td>
+          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 200px" readonly></td>
           					<th> <spring:message code="ezResource.t152"/></th>
           					<td id="MakeDate" nowrap style="width:120px;padding-right:15px">${makeDate} </td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t153"/></th>
           					<td>
-          						<input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px">
+          						<input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px" readonly>
             						<a class="imgbtn">
             							<span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span>
             						</a>
@@ -228,18 +251,18 @@
           						<table style="width:100%">
         							<tr class="primary">
 										<th> ${langPrimary}</th>
-										<td><input type="text" name="Brd_NM" id="Brd_NM" idval="" value="" tabindex="0" style="width: 98%;" onBlur="CheckLen(this, 50)"></td>
+										<td><input type="text" name="Brd_NM" id="Brd_NM" idval="" value="" tabindex="0" style="width: 98%;" ></td>
         							</tr>
         							<tr class="secondary">
 										<th> ${langSecondary}</th>
-										<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="" value="" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
+										<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="" value="" style="width: 98%" ></td>
         							</tr>
     							</table>
           					</td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 98%" ></td>
         					</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>

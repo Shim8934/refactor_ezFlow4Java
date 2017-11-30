@@ -333,14 +333,14 @@
 	                     ~ 
 	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1032'/> : 
-	        <input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
+	        			<input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
 	                     <a class="imgbtn" style="vertical-align: middle"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>
 	                 </span>
 	             </td>
 	             <td>
-	                 <div id="mainmenu" style="float: right; height: 28px; width: 110px">
+	                 <div id="mainmenu" style="float: right; height: 28px;">
 	                     <ul>
-	                         <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                         <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                     </ul>
 	                 </div>
 	             </td>

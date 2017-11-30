@@ -41,7 +41,7 @@
 			$(document).ready(function(){
 	            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 	            var reheight = document.documentElement.clientHeight - parseInt(height);
-	            document.getElementById('div_AprLine').style.height = reheight + "px";
+	            //document.getElementById('div_AprLine').style.height = reheight + "px";
 	            
 	            if (type == 'admin') {
 	            	document.getElementById("SCompID").value = pCompanyID;
@@ -749,7 +749,7 @@
 			window.onresize = function () {
 			    var height = parseInt(divList.style.height.replace('px', '')) + 200;
 			    var reheight = document.documentElement.clientHeight - parseInt(height);
-			    document.getElementById('div_AprLine').style.height = reheight + "px";
+			    //document.getElementById('div_AprLine').style.height = reheight + "px";
 			};
 			
 			function onkeydown_start_search() {
@@ -849,7 +849,7 @@
         	</ul>
     	</div>
 
-    	<div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+    	<div style="WIDTH:100%;HEIGHT:204px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
         	<div id="lvAprLine"></div>
     	</div>
 
