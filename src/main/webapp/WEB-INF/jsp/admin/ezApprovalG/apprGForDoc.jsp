@@ -11,8 +11,7 @@
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		
+		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>		
 		<script type="text/javascript">
 			var labelcolor = "gray";
 			var OrderCell = "";
@@ -48,7 +47,7 @@
 				}
 				var height = parseInt(divList.style.height.replace('px', '')) + 200;
 				var reheight = document.documentElement.clientHeight - parseInt(height);
-				document.getElementById('div_AprLine').style.height = reheight + "px";
+				//document.getElementById('div_AprLine').style.height = reheight + "px";
 				
 				if (type == 'admin') {
 					document.getElementById("SCompID").value = pCompanyID;
@@ -709,7 +708,7 @@
 			window.onresize = function () {
 			    var height = parseInt(divList.style.height.replace('px', '')) + 200;
 			    var reheight = document.documentElement.clientHeight - parseInt(height);
-			    document.getElementById('div_AprLine').style.height = reheight + "px";
+			    //document.getElementById('div_AprLine').style.height = reheight + "px";
 			};
 			
 			function onkeydown_start_search() {
@@ -778,8 +777,7 @@
 		        </select><br /><br />
 		        </c:if>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
-	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>
-	            <img src="/images/i_bar.gif" align="absmiddle">
+	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	            
 	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
 	        </ul>
 	    </div>
@@ -810,7 +808,7 @@
 	  		</ul>
 		</div>
 	
-		<div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:204px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	  		<div id="lvAprLine" ></div>
 		</div>
 
