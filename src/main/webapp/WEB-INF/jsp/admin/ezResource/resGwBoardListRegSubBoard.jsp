@@ -190,12 +190,12 @@
 						<tr class="primary">
 							<th>${langPrimary}</th>
 							<td>
-								<input type="text" id="Brd_NM" name="Brd_NM" style="width: 99%"></td>
+								<input type="text" id="Brd_NM" name="Brd_NM" style="width: 99%" maxlength="30"></td>
 						</tr>
 						<tr class="secondary">
 							<th>${langSecondary}</th>
 							<td>
-								<input type="text" id="Brd_NM2" name="Brd_NM2" style="width: 99%">
+								<input type="text" id="Brd_NM2" name="Brd_NM2" style="width: 99%" maxlength="30">
 							</td>
 						</tr>
 					</table>
