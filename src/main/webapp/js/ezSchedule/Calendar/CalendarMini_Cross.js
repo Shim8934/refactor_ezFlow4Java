@@ -318,12 +318,16 @@ function CalendarMiniDataSource(XmlNode) {
 
     if (XmlNode != undefined) {
 	    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-	    	var hDay = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10);    	
-	    	var hDayCal = document.getElementById("TDMINI_" + hDay + "_Day");
-	
-	        if (hDayCal) {
-	        	hDayCal.style.color = "red"        
-	        }
+	    	var hDay = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10);
+	    	var isHoriday =	GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent;
+	    	
+	    	if (isHoriday == 1) {
+		    	var hDayCal = document.getElementById("TDMINI_" + hDay + "_Day");
+		
+		        if (hDayCal) {
+		        	hDayCal.style.color = "red"
+		        }
+	    	}
 	    }
     }
     
