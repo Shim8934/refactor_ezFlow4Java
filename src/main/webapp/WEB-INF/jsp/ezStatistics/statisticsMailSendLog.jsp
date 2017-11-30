@@ -432,9 +432,11 @@
 				</span> 
 			</td>
 			<td width="5%">
-				<a class="imgbtn">
-					<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
-				</a>
+				<div id="mainmenu" style="height: 28px;">
+                    <ul>
+						<li><span style="width: 110px;text-align:center" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
+					</ul>
+				</div>
 			</td>
 		</tr>
 	</table>
