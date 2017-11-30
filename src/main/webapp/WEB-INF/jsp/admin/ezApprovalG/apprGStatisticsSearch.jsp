@@ -168,442 +168,442 @@
 	
 	            if (draftfrom != "" && draftto != "") {
 	                if (new Date(draftfrom) > new Date(draftto)) {
-	                    OpenAlertUI("<spring:message code='ezApproval.t429'/><br><spring:message code='ezApproval.t430'/>");
+	                    alert("<spring:message code='ezApproval.t429'/>");
 	                    return;
 	                }
 	            }
 	
 	            if (apprfrom != "" && apprto != "") {
 	                if (new Date(apprfrom) > new Date(apprto)) {
-	                    OpenAlertUI("<spring:message code='ezApproval.t431'/><br><spring:message code='ezApproval.t430'/>");
-	                return;
-	            }
-	        }
-	        if (draftfrom != "")
-	            draftfrom = draftfrom + " 00:00:01";
-	
-	        if (draftto != "")
-	            draftto = draftto + " 23:59:59";
-	
-	        if (apprfrom != "")
-	            apprfrom = apprfrom + " 00:00:01";
-	
-	        if (apprto != "")
-	            apprto = apprto + " 23:59:59";
-	        
-	        RtnVal[0] = DocNumber.value;
-	        RtnVal[1] = DocTitle.value;
-	        RtnVal[2] = drafter.value;
-	        RtnVal[3] = draftfrom;
-	        RtnVal[4] = draftto;
-	        RtnVal[5] = apprfrom;
-	        RtnVal[6] = apprto;
-	
-	        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
-	            RtnVal[7] = "";
-	        else
-	            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
-	
-	        RtnVal[8] = approvUser.value;
-	        RtnVal[9] = drafterdept.value;
-	
-	        RtnVal[10] = "";
-	        if (document.getElementById("keyword").value != "") {
-	            RtnVal[10] = document.getElementById("keyword").value;
-	        } else {
-	            RtnVal[10] = "";
-	        }
-	
-	        if (document.getElementById("tbItemCode").value != "") {
-	            if (RtnVal[10] != "")
-	                RtnVal[10] = RtnVal[10] + " and ";
-	
-	            RtnVal[10] = RtnVal[10] + " itemcode = '" + document.getElementById("tbItemCode").value + "' ";
-	        }
-	    
-	        for (i = 0; i < 12; i++) {
-	            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
-	                chkVal = true;
-	                break;
-	            }
-	        }
-	
-	      	//RtnVal = SearchDateXML(RtnVal);
-	
-	        if (!chkVal) {
-	            RtnVal = "";
-	            OpenAlertUI("<spring:message code='ezApproval.t432'/>");
-	        } else {
-	            if (ReturnFunction != null) {
-	                ReturnFunction(RtnVal);
-	            } else {
-	                window.returnValue = RtnVal;
-	            }
-	            window.close();
-	        }
-	    }
-	    function OpenAlertUI(pAlertContent) {
-	        var parameter = pAlertContent;
-	        var url = "/admin/ezApproval/ezAprAlert.do";
-	        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-	        feature = feature + GetShowModalPosition(330, 205);
-	        var RtnVal = window.showModalDialog(url, parameter, feature);
-	    }
-	
-	    function btncancel_onclick() {
-	        window.close();
-	    }
-	
-	    var getformcont_cross_dialogArguments = new Array();
-	    /* function btn_FormSelect_onclick() {
-	        var parameter = new Array();
-alert(arr_userinfo[0])	        
-	        parameter[0] = arr_userinfo[0];
-	        parameter[1] = "000";
-	
-	        var url = "/ezApprovalG/getFormCont.do";
-	
-	        if (CrossYN() || pNoneActiveX == "YES") {            
-	            getFormCont_dialogArguments[0] = parameter;
-	            getFormCont_dialogArguments[1] = FormSelect_Complete;
-	            var result = GetOpenWindow(url, "", 713, 570, "NO");
-	        } else {
-	            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no"
-	            var retVal = window.showModalDialog(url, parameter, feature);
-	            
-	            if (typeof (retVal) != "undefined" && retVal[0] != "cancel") {
-	                document.getElementById("FormName").value = retVal[3];
-	                document.getElementById("FormName").setAttribute("pId", retVal[2]);
-	            }
-	        }
-	    } */
-	    
-	    function btn_FormSelect_onclick() {
-	        var parameter = new Array();
-	    
-	        parameter[0] = arr_userinfo[0];
-	        parameter[1] = "000";
-
-	        var url = "/ezApprovalG/getFormCont.do";
-	        var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-	        feature = feature + GetShowModalPosition(713, 570);
-
-	        getformcont_cross_dialogArguments[0] = parameter;
-	        getformcont_cross_dialogArguments[1] = FormSelect_Complete;
-
-	        getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
-	        
-	        try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
-	    }
-	
-	    function getPositionOpenWin(popUpW, popUpH) {
-	        var heigth = window.screen.availHeight;
-	        var width = window.screen.availWidth;
-	        var left = 0;
-	        var top = 0;
-	        var pleftpos;
-	        pleftpos = parseInt(width) - popUpW;
-	        heigth = parseInt(heigth) - popUpH;
-	        width = parseInt(width) - pleftpos;
-	        left = pleftpos / 2;
-	        top = heigth / 2;
-	
-	        var Positon = new Array(left, top);
-	
-	        return Positon;
-	    }
-	
-	    function FormSelect_Complete(RtnVal) {
-	        if (typeof (RtnVal) != "undefined" && RtnVal[0] != "cancel" && RtnVal != "") {
-	            document.getElementById("FormName").value = RtnVal[3];
-	            document.getElementById("FormName").setAttribute("pId", RtnVal[2]);
-	        }	
-	        DivPopUpHidden();
-	    }
-	
-	    function btnToDaySearch_onclick() {
-	        var RtnVal = new Array()
-	
-	        RtnVal[0] = DocNumber.value;
-	        RtnVal[1] = DocTitle.value;
-	        RtnVal[2] = drafter.value;
-	
-	        if ("${aprFlag}" == "END") {
-	            RtnVal[3] = "";
-	            RtnVal[4] = "";
-	            RtnVal[5] = initdate.substring(0, 10) + " 00:00:01";
-	            RtnVal[6] = initdate.substring(0, 10) + " 23:59:59";
-	        } else {
-	            RtnVal[3] = initdate.substring(0, 10) + " 00:00:01";
-	            RtnVal[4] = initdate.substring(0, 10) + " 23:59:59";
-	            RtnVal[5] = "";
-	            RtnVal[6] = "";
-	        }
-	
-	        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
-	            RtnVal[7] = "";
-	        else
-	            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
-	
-	        RtnVal[8] = approvUser.value;
-	        RtnVal[9] = drafterdept.value;
-	
-	        RtnVal[10] = "";
-	        if (keyword.value != "") {
-	            RtnVal[10] = " keyword like '%" + keyword.value + "%' ";
-	        } else {
-	            RtnVal[10] = "";
-	        }
-	
-	        if (tbItemCode.value != "") {
-	            if (RtnVal[10] != "")
-	                RtnVal[10] = RtnVal[10] + " and ";
-	
-	            RtnVal[10] = RtnVal[10] + " itemcode = '" + tbItemCode.value + "' ";
-	        }
-	
-	        //RtnVal = SearchDateXML(RtnVal);
-	
-	        if (ReturnFunction != null) {
-	            ReturnFunction(RtnVal);
-	        } else {
-	            window.returnValue = RtnVal;
-	        }
-	        window.close();
-	    }
-	    function getWeek() {	
-	        var szYear = initdate.substring(0, 4);
-	        var szMonth = initdate.substring(5, 7);
-	        var szDay = initdate.substring(8, 10);
-	        var szHr = initdate.substring(11, 13);
-	        var szMin = initdate.substring(14, 16);
-	        var szSec = initdate.substring(17, 19);
-	
-	        var now = new Date(szYear, szMonth - 1, szDay, szHr, szMin, szSec);
-	
-	        var nowDayOfWeek = now.getDay();
-	        var nowDay = now.getDate();
-	        var nowMonth = now.getMonth();
-	        var nowYear = now.getYear();
-	        nowYear += (nowYear < 2000) ? 1900 : 0;
-	
-	        var RtnVal = new Array();
-	        RtnVal[0] = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek);
-	        RtnVal[1] = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek));
-	
-	        return RtnVal;
-	    }
-	    function getMonth() {	
-	        var szYear = initdate.substring(0, 4);
-	        var szMonth = initdate.substring(5, 7);
-	        var szDay = initdate.substring(8, 10);
-	        var szHr = initdate.substring(11, 13);
-	        var szMin = initdate.substring(14, 16);
-	        var szSec = initdate.substring(17, 19);
-	        var now = new Date(szYear, szMonth - 1, szDay, szHr, szMin, szSec);
-	
-	        var nowDayOfWeek = now.getDay();
-	        var nowDay = now.getDate();
-	
-	        var nowMonth = now.getMonth();
-	
-	        var nowYear = now.getYear();
-	        nowYear += (nowYear < 2000) ? 1900 : 0;
-	
-	        var RtnVal = new Array();
-	        if (nowMonth <= 0)
-	            RtnVal[0] = new Date(nowYear - 1, 11, nowDay);
-	        else
-	            RtnVal[0] = new Date(nowYear, nowMonth - 1, nowDay);
-	
-	        RtnVal[1] = new Date(nowYear, nowMonth, nowDay);
-	
-	        return RtnVal;
-	    }
-	    function btnMonthSearch_onclick() {
-	        var RtnVal = new Array();
-	        var CurrentWeek = new Array();
-	        CurrentWeek = getMonth();
-	
-	        var sDay = makeString(2, "0", String(CurrentWeek[0].getDate()));
-	        var sMonth = makeString(2, "0", String(CurrentWeek[0].getMonth() + 1));
-	        var sYear = CurrentWeek[0].getFullYear();
-	
-	        var sDay2 = makeString(2, "0", String(CurrentWeek[1].getDate()));
-	        var sMonth2 = makeString(2, "0", String(CurrentWeek[1].getMonth() + 1));
-	        var sYear2 = CurrentWeek[1].getFullYear();
-	        if (sMonth2 == "00") {
-	            sMonth2 = "12";
-	            sYear2 = String(Number(sYear2 - 1));
-	        }
-	
-	        RtnVal[0] = DocNumber.value;
-	        RtnVal[1] = DocTitle.value;
-	        RtnVal[2] = drafter.value;
-	        if ("${aprFlag}" == "END") {
-	            RtnVal[3] = "";
-	            RtnVal[4] = "";
-	            RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
-	            RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
-	        } else {
-	            RtnVal[3] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
-	            RtnVal[4] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
-	            RtnVal[5] = "";
-	            RtnVal[6] = "";	
-	        }
-	
-	        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
-	            RtnVal[7] = "";
-	        else
-	            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
-	
-	        RtnVal[8] = approvUser.value;
-	        RtnVal[9] = drafterdept.value;
-	
-	        RtnVal[10] = "";
-	        if (keyword.value != "") {
-	            RtnVal[10] = " keyword like '%" + keyword.value + "%' ";
-	        } else {
-	            RtnVal[10] = "";
-	        }
-	
-	        if (tbItemCode.value != "") {
-	            if (RtnVal[10] != "")
-	                RtnVal[10] = RtnVal[10] + " and ";
-	
-	            RtnVal[10] = RtnVal[10] + " itemcode = '" + tbItemCode.value + "' ";
-	        }
-	
-	        RtnVal[11] = approvUser.value;
-	
-	        //RtnVal = SearchDateXML(RtnVal);
-	
-	        if (ReturnFunction != null) {
-	            ReturnFunction(RtnVal);
-	        } else {
-	            window.returnValue = RtnVal;
-	        }
-	        window.close();
-	    }
-	    function makeString(strLen, empCh, custStr) {
-	        var index;
-	        var szEmpty = "";
-	
-	        for (index = custStr.length; index < strLen; index++) {
-	            szEmpty += empCh;
-	        }
-	
-	        return (szEmpty + custStr);
-	    }
-	    function btnWeekSearch_onclick() {
-	        var RtnVal = new Array();	
-	        var CurrentWeek = new Array();
-	        CurrentWeek = getWeek();
-	
-	        var sDay = makeString(2, "0", String(CurrentWeek[0].getDate()));
-	        var sMonth = makeString(2, "0", String(CurrentWeek[0].getMonth() + 1));
-	        var sYear = CurrentWeek[0].getFullYear();
-	
-	        var sDay2 = makeString(2, "0", String(CurrentWeek[1].getDate()));
-	        var sMonth2 = makeString(2, "0", String(CurrentWeek[1].getMonth() + 1));
-	        var sYear2 = CurrentWeek[1].getFullYear();
-	        
-	        if (sMonth2 == "00") {
-	            sMonth2 = "12";
-	            sYear2 = String(Number(sYear2 - 1));
-	        }
-	
-	        RtnVal[0] = DocNumber.value;
-	        RtnVal[1] = DocTitle.value;
-	        RtnVal[2] = drafter.value;
-	
-	        if ("${aprFlag}" == "END") {
-	            RtnVal[3] = "";
-	            RtnVal[4] = "";
-	            RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
-	            RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
-	        } else {
-	            RtnVal[3] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
-	            RtnVal[4] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
-	            RtnVal[5] = "";
-	            RtnVal[6] = "";
-	        }
-	
-	        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
-	            RtnVal[7] = "";
-	        else
-	            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
-	
-	        RtnVal[8] = approvUser.value;
-	        RtnVal[9] = drafterdept.value;
-	
-	        RtnVal[10] = "";
-	        RtnVal[11] = drafterdept.value;
-	
-	        RtnVal[12] = "";
-	        if (keyword.value != "") {
-	            RtnVal[12] = " keyword like '%" + keyword.value + "%' ";
-	        } else {
-	            RtnVal[12] = "";
-	        }
-	
-	        if (tbItemCode.value != "") {
-	            if (RtnVal[12] != "")
-	                RtnVal[12] = RtnVal[12] + " and ";
-	
-	            RtnVal[12] = RtnVal[12] + " itemcode = '" + tbItemCode.value + "' ";
-	        }
-	
-	        //RtnVal = SearchDateXML(RtnVal);
-	
-	        if (ReturnFunction != null) {
-	            ReturnFunction(RtnVal);
-	        } else {
-	            window.returnValue = RtnVal;
-	        }
-	        window.close();
-	    }
-	    function btnItemCode_onclick() {
-	        var url = "/myoffice/ezApproval/DocNum/docnumui_Cross.aspx";
-	        var feature = "dialogWidth:745px;dialogHeight:370px;status:no;help:no;scroll:no;edge:sunken";
-	        feature = feature + GetShowModalPosition(745, 370);
-	        var retVal = window.showModalDialog(url, "", feature);
-	
-	        if (retVal[0] != "cancel") {
-	            tbItemCode.value = retVal[0];
-	            tbItemName.value = retVal[1];
-	        }
-	    }
-	    function SearchDateXML(pArrDate) {
-	        try {	
-	            var PARAMETER;
-	            var DATA;
-	            var pDATE;	
-	            var xmlpara = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");	
-	
-	            for (i = 3; i <= 6; i++) {
-	                createNodeAndInsertText(xmlpara, objNode, "DATA", pArrDate[i]);
-	            }
-	            
-	            xmlhttp.open("Post", "/myoffice/ezApproval/aspx/ConvertDate.aspx", false);
-	            xmlhttp.send(xmlpara);	            
-	            var XmlNode = loadXMLString(xmlhttp.responseText);
-	            
-	            if (XmlNode.xml) {
-	                var pNode = XmlNode.selectSingleNode("PARAMETER");
-	
-	                for (i = 0; i <= 3; i++) {
-	                    if (getNodeText(pNode.childNodes(i)) != "")
-	                        pArrDate[3 + i] = getNodeText(pNode.childNodes(i));
-	                }	
-	            }
-	            return pArrDate;	
-	        } catch (e) {
-	            alert("SearchDateXML ::" + e.description);
-	        }
-	    }
+	                    alert("<spring:message code='ezApproval.t431'/>");
+		                return;
+		            }
+		        }
+		        if (draftfrom != "")
+		            draftfrom = draftfrom + " 00:00:01";
+		
+		        if (draftto != "")
+		            draftto = draftto + " 23:59:59";
+		
+		        if (apprfrom != "")
+		            apprfrom = apprfrom + " 00:00:01";
+		
+		        if (apprto != "")
+		            apprto = apprto + " 23:59:59";
+		        
+		        RtnVal[0] = DocNumber.value;
+		        RtnVal[1] = DocTitle.value;
+		        RtnVal[2] = drafter.value;
+		        RtnVal[3] = draftfrom;
+		        RtnVal[4] = draftto;
+		        RtnVal[5] = apprfrom;
+		        RtnVal[6] = apprto;
+		
+		        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
+		            RtnVal[7] = "";
+		        else
+		            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
+		
+		        RtnVal[8] = approvUser.value;
+		        RtnVal[9] = drafterdept.value;
+		
+		        RtnVal[10] = "";
+		        if (document.getElementById("keyword").value != "") {
+		            RtnVal[10] = document.getElementById("keyword").value;
+		        } else {
+		            RtnVal[10] = "";
+		        }
+		
+		        if (document.getElementById("tbItemCode").value != "") {
+		            if (RtnVal[10] != "")
+		                RtnVal[10] = RtnVal[10] + " and ";
+		
+		            RtnVal[10] = RtnVal[10] + " itemcode = '" + document.getElementById("tbItemCode").value + "' ";
+		        }
+		    
+		        /* for (i = 0; i < 12; i++) {
+		            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
+		                chkVal = true;
+		                break;
+		            }
+		        } */
+		
+		      	//RtnVal = SearchDateXML(RtnVal);
+		
+		        /* if (!chkVal) {
+		            RtnVal = "";
+		            OpenAlertUI("<spring:message code='ezApproval.t432'/>");
+		        } else { */
+		            if (ReturnFunction != null) {
+		                ReturnFunction(RtnVal);
+		            } else {
+		                window.returnValue = RtnVal;
+		            }
+		            window.close();
+		        /* } */
+		    }
+		    function OpenAlertUI(pAlertContent) {
+		        var parameter = pAlertContent;
+		        var url = "/admin/ezApproval/ezAprAlert.do";
+		        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		        feature = feature + GetShowModalPosition(330, 205);
+		        var RtnVal = window.showModalDialog(url, parameter, feature);
+		    }
+		
+		    function btncancel_onclick() {
+		        window.close();
+		    }
+		
+		    var getformcont_cross_dialogArguments = new Array();
+		    /* function btn_FormSelect_onclick() {
+		        var parameter = new Array();
+	alert(arr_userinfo[0])	        
+		        parameter[0] = arr_userinfo[0];
+		        parameter[1] = "000";
+		
+		        var url = "/ezApprovalG/getFormCont.do";
+		
+		        if (CrossYN() || pNoneActiveX == "YES") {            
+		            getFormCont_dialogArguments[0] = parameter;
+		            getFormCont_dialogArguments[1] = FormSelect_Complete;
+		            var result = GetOpenWindow(url, "", 713, 570, "NO");
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no"
+		            var retVal = window.showModalDialog(url, parameter, feature);
+		            
+		            if (typeof (retVal) != "undefined" && retVal[0] != "cancel") {
+		                document.getElementById("FormName").value = retVal[3];
+		                document.getElementById("FormName").setAttribute("pId", retVal[2]);
+		            }
+		        }
+		    } */
+		    
+		    function btn_FormSelect_onclick() {
+		        var parameter = new Array();
+		    
+		        parameter[0] = arr_userinfo[0];
+		        parameter[1] = "000";
+	
+		        var url = "/ezApprovalG/getFormCont.do";
+		        var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		        feature = feature + GetShowModalPosition(713, 570);
+	
+		        getformcont_cross_dialogArguments[0] = parameter;
+		        getformcont_cross_dialogArguments[1] = FormSelect_Complete;
+	
+		        getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
+		        
+		        try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
+		    }
+		
+		    function getPositionOpenWin(popUpW, popUpH) {
+		        var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = 0;
+		        var top = 0;
+		        var pleftpos;
+		        pleftpos = parseInt(width) - popUpW;
+		        heigth = parseInt(heigth) - popUpH;
+		        width = parseInt(width) - pleftpos;
+		        left = pleftpos / 2;
+		        top = heigth / 2;
+		
+		        var Positon = new Array(left, top);
+		
+		        return Positon;
+		    }
+		
+		    function FormSelect_Complete(RtnVal) {
+		        if (typeof (RtnVal) != "undefined" && RtnVal[0] != "cancel" && RtnVal != "") {
+		            document.getElementById("FormName").value = RtnVal[3];
+		            document.getElementById("FormName").setAttribute("pId", RtnVal[2]);
+		        }	
+		        DivPopUpHidden();
+		    }
+		
+		    function btnToDaySearch_onclick() {
+		        var RtnVal = new Array()
+		
+		        RtnVal[0] = DocNumber.value;
+		        RtnVal[1] = DocTitle.value;
+		        RtnVal[2] = drafter.value;
+		
+		        if ("${aprFlag}" == "END") {
+		            RtnVal[3] = "";
+		            RtnVal[4] = "";
+		            RtnVal[5] = initdate.substring(0, 10) + " 00:00:01";
+		            RtnVal[6] = initdate.substring(0, 10) + " 23:59:59";
+		        } else {
+		            RtnVal[3] = initdate.substring(0, 10) + " 00:00:01";
+		            RtnVal[4] = initdate.substring(0, 10) + " 23:59:59";
+		            RtnVal[5] = "";
+		            RtnVal[6] = "";
+		        }
+		
+		        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
+		            RtnVal[7] = "";
+		        else
+		            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
+		
+		        RtnVal[8] = approvUser.value;
+		        RtnVal[9] = drafterdept.value;
+		
+		        RtnVal[10] = "";
+		        if (keyword.value != "") {
+		            RtnVal[10] = " keyword like '%" + keyword.value + "%' ";
+		        } else {
+		            RtnVal[10] = "";
+		        }
+		
+		        if (tbItemCode.value != "") {
+		            if (RtnVal[10] != "")
+		                RtnVal[10] = RtnVal[10] + " and ";
+		
+		            RtnVal[10] = RtnVal[10] + " itemcode = '" + tbItemCode.value + "' ";
+		        }
+		
+		        //RtnVal = SearchDateXML(RtnVal);
+		
+		        if (ReturnFunction != null) {
+		            ReturnFunction(RtnVal);
+		        } else {
+		            window.returnValue = RtnVal;
+		        }
+		        window.close();
+		    }
+		    function getWeek() {	
+		        var szYear = initdate.substring(0, 4);
+		        var szMonth = initdate.substring(5, 7);
+		        var szDay = initdate.substring(8, 10);
+		        var szHr = initdate.substring(11, 13);
+		        var szMin = initdate.substring(14, 16);
+		        var szSec = initdate.substring(17, 19);
+		
+		        var now = new Date(szYear, szMonth - 1, szDay, szHr, szMin, szSec);
+		
+		        var nowDayOfWeek = now.getDay();
+		        var nowDay = now.getDate();
+		        var nowMonth = now.getMonth();
+		        var nowYear = now.getYear();
+		        nowYear += (nowYear < 2000) ? 1900 : 0;
+		
+		        var RtnVal = new Array();
+		        RtnVal[0] = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek);
+		        RtnVal[1] = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek));
+		
+		        return RtnVal;
+		    }
+		    function getMonth() {	
+		        var szYear = initdate.substring(0, 4);
+		        var szMonth = initdate.substring(5, 7);
+		        var szDay = initdate.substring(8, 10);
+		        var szHr = initdate.substring(11, 13);
+		        var szMin = initdate.substring(14, 16);
+		        var szSec = initdate.substring(17, 19);
+		        var now = new Date(szYear, szMonth - 1, szDay, szHr, szMin, szSec);
+		
+		        var nowDayOfWeek = now.getDay();
+		        var nowDay = now.getDate();
+		
+		        var nowMonth = now.getMonth();
+		
+		        var nowYear = now.getYear();
+		        nowYear += (nowYear < 2000) ? 1900 : 0;
+		
+		        var RtnVal = new Array();
+		        if (nowMonth <= 0)
+		            RtnVal[0] = new Date(nowYear - 1, 11, nowDay);
+		        else
+		            RtnVal[0] = new Date(nowYear, nowMonth - 1, nowDay);
+		
+		        RtnVal[1] = new Date(nowYear, nowMonth, nowDay);
+		
+		        return RtnVal;
+		    }
+		    function btnMonthSearch_onclick() {
+		        var RtnVal = new Array();
+		        var CurrentWeek = new Array();
+		        CurrentWeek = getMonth();
+		
+		        var sDay = makeString(2, "0", String(CurrentWeek[0].getDate()));
+		        var sMonth = makeString(2, "0", String(CurrentWeek[0].getMonth() + 1));
+		        var sYear = CurrentWeek[0].getFullYear();
+		
+		        var sDay2 = makeString(2, "0", String(CurrentWeek[1].getDate()));
+		        var sMonth2 = makeString(2, "0", String(CurrentWeek[1].getMonth() + 1));
+		        var sYear2 = CurrentWeek[1].getFullYear();
+		        if (sMonth2 == "00") {
+		            sMonth2 = "12";
+		            sYear2 = String(Number(sYear2 - 1));
+		        }
+		
+		        RtnVal[0] = DocNumber.value;
+		        RtnVal[1] = DocTitle.value;
+		        RtnVal[2] = drafter.value;
+		        if ("${aprFlag}" == "END") {
+		            RtnVal[3] = "";
+		            RtnVal[4] = "";
+		            RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
+		            RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
+		        } else {
+		            RtnVal[3] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
+		            RtnVal[4] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
+		            RtnVal[5] = "";
+		            RtnVal[6] = "";	
+		        }
+		
+		        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
+		            RtnVal[7] = "";
+		        else
+		            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
+		
+		        RtnVal[8] = approvUser.value;
+		        RtnVal[9] = drafterdept.value;
+		
+		        RtnVal[10] = "";
+		        if (keyword.value != "") {
+		            RtnVal[10] = " keyword like '%" + keyword.value + "%' ";
+		        } else {
+		            RtnVal[10] = "";
+		        }
+		
+		        if (tbItemCode.value != "") {
+		            if (RtnVal[10] != "")
+		                RtnVal[10] = RtnVal[10] + " and ";
+		
+		            RtnVal[10] = RtnVal[10] + " itemcode = '" + tbItemCode.value + "' ";
+		        }
+		
+		        RtnVal[11] = approvUser.value;
+		
+		        //RtnVal = SearchDateXML(RtnVal);
+		
+		        if (ReturnFunction != null) {
+		            ReturnFunction(RtnVal);
+		        } else {
+		            window.returnValue = RtnVal;
+		        }
+		        window.close();
+		    }
+		    function makeString(strLen, empCh, custStr) {
+		        var index;
+		        var szEmpty = "";
+		
+		        for (index = custStr.length; index < strLen; index++) {
+		            szEmpty += empCh;
+		        }
+		
+		        return (szEmpty + custStr);
+		    }
+		    function btnWeekSearch_onclick() {
+		        var RtnVal = new Array();	
+		        var CurrentWeek = new Array();
+		        CurrentWeek = getWeek();
+		
+		        var sDay = makeString(2, "0", String(CurrentWeek[0].getDate()));
+		        var sMonth = makeString(2, "0", String(CurrentWeek[0].getMonth() + 1));
+		        var sYear = CurrentWeek[0].getFullYear();
+		
+		        var sDay2 = makeString(2, "0", String(CurrentWeek[1].getDate()));
+		        var sMonth2 = makeString(2, "0", String(CurrentWeek[1].getMonth() + 1));
+		        var sYear2 = CurrentWeek[1].getFullYear();
+		        
+		        if (sMonth2 == "00") {
+		            sMonth2 = "12";
+		            sYear2 = String(Number(sYear2 - 1));
+		        }
+		
+		        RtnVal[0] = DocNumber.value;
+		        RtnVal[1] = DocTitle.value;
+		        RtnVal[2] = drafter.value;
+		
+		        if ("${aprFlag}" == "END") {
+		            RtnVal[3] = "";
+		            RtnVal[4] = "";
+		            RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
+		            RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
+		        } else {
+		            RtnVal[3] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
+		            RtnVal[4] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
+		            RtnVal[5] = "";
+		            RtnVal[6] = "";
+		        }
+		
+		        if (GetAttribute(document.getElementById("FormName"), "pId") == "FormName")
+		            RtnVal[7] = "";
+		        else
+		            RtnVal[7] = GetAttribute(document.getElementById("FormName"), "pId");
+		
+		        RtnVal[8] = approvUser.value;
+		        RtnVal[9] = drafterdept.value;
+		
+		        RtnVal[10] = "";
+		        RtnVal[11] = drafterdept.value;
+		
+		        RtnVal[12] = "";
+		        if (keyword.value != "") {
+		            RtnVal[12] = " keyword like '%" + keyword.value + "%' ";
+		        } else {
+		            RtnVal[12] = "";
+		        }
+		
+		        if (tbItemCode.value != "") {
+		            if (RtnVal[12] != "")
+		                RtnVal[12] = RtnVal[12] + " and ";
+		
+		            RtnVal[12] = RtnVal[12] + " itemcode = '" + tbItemCode.value + "' ";
+		        }
+		
+		        //RtnVal = SearchDateXML(RtnVal);
+		
+		        if (ReturnFunction != null) {
+		            ReturnFunction(RtnVal);
+		        } else {
+		            window.returnValue = RtnVal;
+		        }
+		        window.close();
+		    }
+		    function btnItemCode_onclick() {
+		        var url = "/myoffice/ezApproval/DocNum/docnumui_Cross.aspx";
+		        var feature = "dialogWidth:745px;dialogHeight:370px;status:no;help:no;scroll:no;edge:sunken";
+		        feature = feature + GetShowModalPosition(745, 370);
+		        var retVal = window.showModalDialog(url, "", feature);
+		
+		        if (retVal[0] != "cancel") {
+		            tbItemCode.value = retVal[0];
+		            tbItemName.value = retVal[1];
+		        }
+		    }
+		    function SearchDateXML(pArrDate) {
+		        try {	
+		            var PARAMETER;
+		            var DATA;
+		            var pDATE;	
+		            var xmlpara = createXmlDom();
+		            var objNode;
+		            createNodeInsert(xmlpara, objNode, "PARAMETER");	
+		
+		            for (i = 3; i <= 6; i++) {
+		                createNodeAndInsertText(xmlpara, objNode, "DATA", pArrDate[i]);
+		            }
+		            
+		            xmlhttp.open("Post", "/myoffice/ezApproval/aspx/ConvertDate.aspx", false);
+		            xmlhttp.send(xmlpara);	            
+		            var XmlNode = loadXMLString(xmlhttp.responseText);
+		            
+		            if (XmlNode.xml) {
+		                var pNode = XmlNode.selectSingleNode("PARAMETER");
+		
+		                for (i = 0; i <= 3; i++) {
+		                    if (getNodeText(pNode.childNodes(i)) != "")
+		                        pArrDate[3 + i] = getNodeText(pNode.childNodes(i));
+		                }	
+		            }
+		            return pArrDate;	
+		        } catch (e) {
+		            alert("SearchDateXML ::" + e.description);
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
