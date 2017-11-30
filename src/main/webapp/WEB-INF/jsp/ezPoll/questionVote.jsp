@@ -807,7 +807,7 @@
 		    	//Copy files/stickers
 		    	if (nChilds == 1) {		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {		    			
-			    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML;
+			    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML.replace(/<br\s*\/?>/mg,"\n");
 			    		innInnerDiv2.style.display = "block";
 			    	}
 		    		else {		    			
@@ -845,7 +845,7 @@
 		    		innInnerDiv2.style.display = "none";
 		    		
 		    		//Copy files/sticker to a div
-		    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML;
+		    		editTxtArea.value = div2Cmt.firstElementChild.innerHTML.replace(/<br\s*\/?>/mg,"\n");
 		    		imgForInnerDiv2.src = div2Cmt.lastElementChild.firstElementChild.src;
 		    		innerDiv2.style.display = "block";
 		    			
@@ -928,14 +928,14 @@
 		    		}
 		    	}
 		    	else {
-		    		fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value);
+		    		fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'));
 		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
-		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value;
+		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'); //baonk added to test
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
-		    			pForTd2.innerHTML = document.getElementById("editCmtArea" + commentIndex).value;
+		    			pForTd2.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'); //baonk added to test
 		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
 		    		}
 		    	}
@@ -2081,7 +2081,7 @@
 			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 3px">
 				  <div style="float: left; display: block;" class="voteInfo">
 				  		<img src="${question.creatorImage}" style="display:inline-block;float:left; height:60px;width:60px; padding-bottom: 1px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
-						<div id="textTest" style="display:inline-block; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;" class="voteTextTest">
+						<div id="textTest" style="display:inline-block;" class="voteTextTest">
 							<span style="display:block; font-size:18px; color:#000; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;"><c:out value='${question.creatorName}'/></span>
 							<span style="display:block; font-size:12px; color:#969595;"><c:out value='${question.startDate}'/></span>
 						</div>

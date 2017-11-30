@@ -892,7 +892,7 @@
 	            WHERE
 	            		ID			= #id#
 	            	AND
-	            		QST_ID		= qst_id
+	            		QST_ID		= #qst_id#
 	            	AND
 	            		TENANT_ID	= #tenant_id#
 		]]>
