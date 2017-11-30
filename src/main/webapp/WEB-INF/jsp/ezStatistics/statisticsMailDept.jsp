@@ -488,7 +488,7 @@
     }
 
     function searchdept() {
-        if (deptkeyword.value == "") {
+        if (deptkeyword.value.trim() == "") {
             alert("<spring:message code='ezStatistics.t1010' />");
             deptkeyword.focus();
             return;

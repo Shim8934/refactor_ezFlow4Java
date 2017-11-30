@@ -553,7 +553,7 @@
     }
 
     function searchdept() {
-        if (keyword.value == "") {
+        if (keyword.value.trim() == "") {
             alert("<spring:message code='ezStatistics.t1010' />");
             keyword.focus();
             return;
