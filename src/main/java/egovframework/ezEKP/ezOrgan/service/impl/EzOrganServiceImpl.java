@@ -18,6 +18,9 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1673,6 +1676,32 @@ public class EzOrganServiceImpl implements EzOrganService {
 		List<OrganDeptVO> list = ezOrganDAO.getExtension4ID(map);
 		logger.debug("getExtensionAttr4ID started");
 		return list;
+	}
+	
+	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception {
+		logger.debug("getChildrenDeptID sratred.");
+		
+		JSONArray jArr = new JSONArray();
+				
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PARENTID", parentID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		logger.debug("parentID : " + parentID + " companyID : " + companyID + " tenantID : " + tenantID);
+		
+		List<OrganDeptVO> list = ezOrganDAO.getChildrenDeptID(map);
+		logger.debug("list : " + list.get(0).getCn().toString());
+		
+		for (int i = 0; i < list.size(); i++) {
+			JSONObject jObj = new JSONObject();
+			jObj.put("cn", list.get(i).getCn());
+			jArr.add(jObj);
+		}		
+		
+		logger.debug("jArr.toString : " + jArr.toString());
+		
+		logger.debug("getChildrenDeptID ended.");
+		return jArr.toString();
 	}
 }
 
