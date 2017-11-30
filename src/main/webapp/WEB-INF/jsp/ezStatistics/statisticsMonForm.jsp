@@ -32,6 +32,8 @@
 	                document.getElementById("topmenu").style.cssFloat = "";
 	            else
 	                document.getElementById("topmenu").style.whiteSpace = "nowrap";
+	            
+	            companyID = document.getElementById("SCompID").value;
 	            makeoptionyear();
 	            getforminfo();
 	        }
@@ -340,14 +342,8 @@
 	              var headerData = createXmlDom();
 	              headerData = loadXMLString(forminfoxml.innerHTML.toUpperCase());
 	              if (text != "") {
-	                  if (CrossYN()) {
-	                      var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
-	                      var Node = headerData.importNode(xmlRtn, true);
-	                      headerData.documentElement.appendChild(Node);
-	                  } else {
-	                      var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
-	                      headerData.documentElement.appendChild(xmlRtn);
-	                  }
+                     var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+                     headerData.documentElement.appendChild(xmlRtn);
 	              }
 	              var pUserList = new ListView();
 	              pUserList.SetID("lvformlist");
@@ -356,6 +352,11 @@
 	              pUserList.SetHeightFree(true);
 	              pUserList.DataSource(headerData);
 	              pUserList.DataBind("formlist");
+	              pUserList.SetSelectedIndex(0);
+	              
+	              if (loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0].textContent != "") {
+		          	  getapprovalstatistics();
+	              }
 	        }
 	
 	        function search_press(e) {
