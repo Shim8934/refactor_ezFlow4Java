@@ -940,7 +940,7 @@
 	    	}
 	    	
 	    	function keyword_Clear() {
-	        	document.getElementsByName('keyword').item(0).value = "";
+	        	document.getElementById('keyword').value = "";
 	    	}
 	    	
 	    	function makeArray(n) {
