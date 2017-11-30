@@ -109,11 +109,11 @@ public class EzUCMessengerController {
         int tenantId = loginService.getTenantId(serverName);
         logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 		
-		boolean isUserExists = checkIfUserExists(orgId, tenantId);
-		logger.debug("isUserExists=" + isUserExists);
+        orgId = getIdIfUserExists(orgId, tenantId);
+		logger.debug("orgId=" + orgId);
 		
 		String redirectUrl = "redirect:/user/login/login.do";
-		if (isUserExists) {
+		if (orgId != null) {
 			loginController.createLoginCookie(orgId, " ", " ", tenantId, request, response);
 			
 			if (type == null) { // 홈 화면으로 이동
@@ -131,54 +131,122 @@ public class EzUCMessengerController {
 		return redirectUrl;
 	}
 	
-	private boolean checkIfUserExists(String id, int tenantId) throws Exception {
-		logger.debug("checkIfUserExists started. id=" + id + ",tenantId=" + tenantId);
+	
+	private String getIdIfUserExists(String id, int tenantId) throws Exception {
+		logger.debug("getIdIfUserExists started. id=" + id + ",tenantId=" + tenantId);
 		
-		boolean isUserExists = false;
+		String orgId = null;
 		
-    	LoginVO loginVO = new LoginVO();	
-		
+		// Check if this user exists
+		LoginVO loginVO = new LoginVO();	
 		loginVO.setId(id);
 		loginVO.setTenantId(tenantId);
 		loginVO.setDn("NOPASSWORD");
-		
 		LoginVO resultVO = loginService.selectUser(loginVO);
-		logger.debug("resultVO=" + resultVO);
 		
-		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
-			isUserExists = true;
+		// 사용자 ID 혹은 사원번호가 발견된 경우
+		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+			
+			// 사용자 ID를 사용해 로그인하는 경우
+			if (id.equals(resultVO.getId())) {
+				orgId = id;
+				
+			// 사원번호를 사용해 로그인하는 경우
+			} else {
+				// Check if his/her tenant allows using employeeID to login
+				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+				
+				// 사원번호를 사용한 로그인을 허용하는 경우
+				if (useEmpNumberLogin.equals("YES")) {
+					orgId = resultVO.getId();
+				}
+			}
+			
 		}
 		
-		logger.debug("checkIfUserExists ended.");
-		return isUserExists;
+		logger.debug("getIdIfUserExists ended. orgId=" + orgId);
+		return orgId;
 	}
     
 	private boolean checkIfUserExistsWithPassword(String id, String pw, int tenantId) throws Exception {
 		logger.debug("checkIfUserExistsWithPassword started. id=" + id + ",tenantId=" + tenantId);
 		
 		boolean isUserExists = false;
-		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
 		
-        if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
-    		String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
-        	
-        	if (chkADpass.equalsIgnoreCase("TRUE")) {
-        		isUserExists = true;
-        	}
-        } else {
-        	LoginVO loginVO = new LoginVO();	
-    		
-    		loginVO.setId(id);
-    		loginVO.setTenantId(tenantId);
-    		loginVO.setPassword(encryptedPw);
-    		
-    		LoginVO resultVO = loginService.selectUser(loginVO);
-    		logger.debug("resultVO=" + resultVO);
-    		
-    		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
-    			isUserExists = true;
-    		}
-        }
+		// Check if this user exists
+		LoginVO loginVO = new LoginVO();	
+		loginVO.setId(id);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+		LoginVO resultVO = loginService.selectUser(loginVO);
+		
+		// 사용자 ID 혹은 사원번호가 발견된 경우
+		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+			// 사용자 ID를 사용해 로그인하는 경우
+			if (id.equals(resultVO.getId())) {
+				
+	            // AD를 사용하는 경우(MASTERADMIN 제외)
+	            if (!id.equalsIgnoreCase("MASTERADMIN") && ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+	            	String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
+	            	
+	            	if (chkADpass.equalsIgnoreCase("TRUE")) {
+	            		isUserExists = true;
+	            	}
+	            	
+	            // AD를 사용하지 않는 경우
+	            } else {
+	            	String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+	            	
+	        		loginVO.setId(id);
+	        		loginVO.setPassword(encryptedPw);
+	        		loginVO.setDn("PASSWORD");
+	        		
+	        		resultVO = loginService.selectUser(loginVO);
+	        		logger.debug("resultVO=" + resultVO);
+	        		
+	        		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+	        			isUserExists = true;
+	        		}
+	            }
+				
+			// 사원번호를 사용해 로그인하는 경우
+			} else {
+				
+				// Check if his/her tenant allows using employeeID to login
+				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+				
+				// 사원번호를 사용한 로그인을 허용하는 경우
+				if (useEmpNumberLogin.equals("YES")) {
+					
+					// 실제 사용자 ID를 사용한다.
+					id = resultVO.getId();
+					
+					// AD를 사용하는 경우(MASTERADMIN 제외)
+					if (!id.equalsIgnoreCase("MASTERADMIN") && ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+		            	String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
+		            	
+		            	if (chkADpass.equalsIgnoreCase("TRUE")) {
+		            		isUserExists = true;
+		            	}
+		            	
+		            // AD를 사용하지 않는 경우
+					} else {
+						String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+						
+			        	loginVO.setId(id);
+			        	loginVO.setPassword(encryptedPw);
+			            loginVO.setDn("PASSWORD");
+			            
+			            resultVO = loginService.selectUser(loginVO);
+		        		logger.debug("resultVO=" + resultVO);
+		        		
+		        		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+		        			isUserExists = true;
+		        		}
+					}
+				}
+			}
+		}
 		
 		logger.debug("checkIfUserExistsWithPassword ended.");
 		return isUserExists;
