@@ -261,7 +261,7 @@
 		        else
 		            alert(strLang223);
 		    }
-		    function pop_addcon2(rulekind, value) {
+		    function pop_addcon2(rulekind, value, i) {
 		        if (value.length > 0) {
 		            if (rulekind == "SENDER" || rulekind == "RECEIVER" || rulekind == "FORWARD" || rulekind == "REDIRECTION") {
 		                if (value.split("<").length > 1) {
@@ -273,7 +273,8 @@
 		                }
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
+		                $("div#Conitems div:nth-child(" + i + ")  nobr").text(value);
 		            }
 		        }
 		    }
@@ -367,16 +368,17 @@
 		        }
 		        for (var i = 0; i < Conitems.children.length; i++) {
 		            if (_exp == "") {		
-                        _exp = "\"" + MakeXMLString(TrimText(Conitems.children.item(i).textContent)) + "\"";
+                        _exp = "\"" + TrimText(Conitems.children.item(i).textContent) + "\"";
                         _value = MakeXMLString(TrimText(Conitems.children.item(i).textContent));                            
 		            }
 		            else {
-                        _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.children.item(i).textContent))) + "\"";
+                        _exp += "" + strLang235 + "" + TrimText(Conitems.children.item(i).textContent) + "\"";
                         _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		            }
 		        }
 		        if (_curCellObj != null) {
-		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + _value + "'><nobr><u>" + _exp + "</u></nobr></span>";;
+		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + _value + "'><nobr><u></u></nobr></span>";
+		            $(_curCellObj).find("span nobr u").text(_exp);
 		            _curCellObj.setAttribute("value", _value);
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		        }
@@ -490,7 +492,7 @@
 		        if (obj.value != "") {
 		            for (var i = 0; i < obj.getAttribute("value").split(';').length; i++) {
 		                var _value = obj.getAttribute("value").split(';')[i];
-		                pop_addcon2(_RuleKind, _value);
+		                pop_addcon2(_RuleKind, _value, i+1);
 		            }
 		        }
 		        if (_RuleKind == "SENDER" || _RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
