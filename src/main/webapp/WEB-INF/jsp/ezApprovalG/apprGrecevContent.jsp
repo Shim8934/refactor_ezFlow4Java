@@ -13,6 +13,7 @@
 	        var DocTitleObj;
 	        var DocTitleHTML;
 	        var _htmlcontent;
+	        var orderFlag = false;
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
@@ -24,6 +25,9 @@
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        } catch (e)
 		        { }
+		        
+		        orderFlag = true;
+		        console.log("first iFrame End");
 	        };
 	        function Set_EditorContentURL(url) {
 	            try {
