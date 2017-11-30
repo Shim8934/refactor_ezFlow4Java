@@ -187,11 +187,11 @@
 		 			<table style="width:100%">
 						<tr class="primary">
 							<th>${langPrimary}</th>
-							<td><input type="text"  id="Brd_NM" name="Brd_NM" value="<c:out value="${getBrdInfo.brdNm}" />" style="width:99%"></td>
+							<td><input type="text"  id="Brd_NM" name="Brd_NM" value="<c:out value="${getBrdInfo.brdNm}" />" style="width:99%" maxlength="30"></td>
 						</tr>
 						<tr class="secondary">
 							<th>${langSecondary}</th>
-							<td><input type="text"  id="Brd_NM2" name="Brd_NM2" value="<c:out value="${getBrdInfo.brdNm2}" />" style="width:99%"></td>
+							<td><input type="text"  id="Brd_NM2" name="Brd_NM2" value="<c:out value="${getBrdInfo.brdNm2}" />" style="width:99%" maxlength="30"></td>
 						</tr>
 					</table>
     			</td>
