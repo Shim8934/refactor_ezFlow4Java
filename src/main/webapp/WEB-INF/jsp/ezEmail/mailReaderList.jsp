@@ -9,6 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -220,6 +221,22 @@
 	                else if (pGubun == "CANCEL" && CancelStatus != "") {
 	                    GetListInfo_ContentObject.appendChild(TR);
 	                }
+	            }
+
+	            if ($("#contentlist").height() < $("#MailList").height()){
+	            	if ($("#Table1 tbody tr th#scrollTh").length < 1) {
+	            		$("#Table1 tbody tr").append('<th id="scrollTh" style="width:10px"></th>');	
+	            	}
+	            	if ($("#Table1 tbody tr th:nth-child(3)").width() == 212) {
+	            		$("#Table1 tbody tr th:nth-child(3)").width(214)
+	            	}
+	            } else {
+	            	if ($("#Table1 tbody tr th#scrollTh").length > 0) {
+	            		$("#Table1 tbody tr th#scrollTh").remove();
+	            	}
+	            	if ($("#Table1 tbody tr th:nth-child(3)").width() == 214) {
+	            		$("#Table1 tbody tr th:nth-child(3)").width(212)
+	            	}
 	            }
 	        }
 	        function event_listCheckboxclick(obj) {

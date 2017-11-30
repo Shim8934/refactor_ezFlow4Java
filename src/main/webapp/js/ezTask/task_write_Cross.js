@@ -654,7 +654,7 @@ function save_task() {
 			}				
 						
 	        parent.DivPopUpHidden();
-	        
+
 	        if (mode == "1") {
 	        	parent.RefreshView();
 	        	parent.location.reload();
@@ -662,7 +662,7 @@ function save_task() {
 	        	parent.load_bodyhtml();
 				parent.getTaskAttachList();
 	        } else {
-	        	parent.location.reload();
+	        	opener.location.reload();
 	        }
 	        
 	        //parent.taskReadJson();
