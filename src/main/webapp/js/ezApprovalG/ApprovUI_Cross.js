@@ -988,13 +988,7 @@ function chkBtn(pBtnflag, approvalFlag) {
     setMenuBar("btnSetTaskCode", pBtnflag);
     setMenuBar("btnAddSepAttach", pBtnflag);
     setMenuBar("btnhistory", pBtnflag);
-    
-    if (approvalFlag == 'S') {
-    	
-    } else {
-    	setMenuBar("tbtnTotalSave", pBtnflag);
-    }
-    
+    setMenuBar("tbtnTotalSave", pBtnflag);
     setMenuBar("btntotaldocinfo", pBtnflag);
 
     if (trim(pDraftFlag) == "GONGRAM" || trim(pDraftFlag) == "CHAMJO") {
