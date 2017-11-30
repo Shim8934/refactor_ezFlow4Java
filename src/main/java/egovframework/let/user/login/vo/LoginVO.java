@@ -135,7 +135,11 @@ public class LoginVO implements Serializable {
     private String gyumJik;
     /** 사용자 사진파일경로 */
     private String userFileUrl;
-	
+    /** 리얼패스*/
+    private String realPath;
+    /** 사용자사번*/
+    private String sabun;
+
 	public String getId() {
 		return id;
 	}
@@ -420,48 +424,38 @@ public class LoginVO implements Serializable {
 	}
 	public void setTableViewOption(String tableViewOption) {
 		this.tableViewOption = tableViewOption;
-	}
-	
+	}	
     public int getTenantId() {
         return tenantId;
-    }
-    
+    }    
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
-    }
-    
+    }    
     public String getServerName() {
         return serverName;
-    }
-    
+    }    
     public void setServerName(String serverName) {
         this.serverName = serverName;
-    }
-    
+    }    
 	public String getLastLogin() {
 		return lastLogin;
-	}
-	
+	}	
 	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
-	
 	public int getLoginCnt() {
 		return loginCnt;
-	}
-	
+	}	
 	public void setLoginCnt(int loginCnt) {
 		this.loginCnt = loginCnt;
-	}
-	
+	}	
 	public String getGyumJik() {
 		return gyumJik;
-	}
-	
+	}	
 	public void setGyumJik(String gyumJik) {
 		this.gyumJik = gyumJik;
 	}	
-	
+
 	public String getUserFileUrl() {
 		return userFileUrl;
 	}	
@@ -482,4 +476,18 @@ public class LoginVO implements Serializable {
 	public int hashCode() {
 		return id.hashCode() + tenantId;
 	}
+
+	public String getRealPath() {
+		return realPath;
+	}
+	public void setRealPath(String realPath) {
+		this.realPath = realPath;
+	}
+	public String getSabun() {
+		return sabun;
+	}
+	public void setSabun(String sabun) {
+		this.sabun = sabun;
+	}
+
 }

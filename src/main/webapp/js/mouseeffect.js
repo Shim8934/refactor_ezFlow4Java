@@ -284,7 +284,7 @@ function utcDate(offset){
 function utcDate2(offset){
 	var today = new Date();
 	today.setTime(today.getTime()+(1000*60*offset));
-	return new Date(today.toUTCString().replace(" GMT", ""));
+	return new Date(today.toUTCString().replace(" GMT", "").replace(" UTC", ""));
 }
 
 function specialChk(val){
@@ -303,7 +303,7 @@ function CheckPassword(str){
 	var eng = pw.search(/[a-z]/ig);
 	var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);				 
 	
-	if (pw.length < 6 || pw.length > 50) {
+	if (pw.length < 8 || pw.length > 50) {
 		return false;
 	}
 	

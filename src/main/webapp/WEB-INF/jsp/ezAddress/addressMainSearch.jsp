@@ -73,7 +73,10 @@
 	            document.getElementById("search_text").value = "";
 	        }
 	        function search_start() {
-	            if (document.getElementById("search_text").value == "") {
+	        	
+	        	var searchText = document.getElementById("search_text").value.trim();
+	        	
+	            if (searchText == "") {
 	                alert("<spring:message code='ezAddress.t310' />");
 	                document.getElementById("search_text").focus();
 	                return;
@@ -108,7 +111,6 @@
 	            }
 	
 	            var subtype = document.getElementById("search_case").value;
-	            var searchText = document.getElementById("search_text").value;
 	            filter = subtype + "," + searchText;
 	            pCurrentPage = "1";
 	            Get_SearchAddressList();
@@ -170,8 +172,6 @@
 	                var pTop = (pheight - conHeight) / 2;
 	                var pLeft = (pwidth - 890) / 2;
 	
-	
-	
 	                if (CrossYN() || pNoneActiveX == "YES")
 	                    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
 	                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -183,10 +183,9 @@
 	                        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
 	                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                }
-	
-	
 	            }
 	        }
+	        
 	        function isValidEmail(email_address) {
 	            var format = /^[_0-9a-zA-Z-]+(\.[_0-9a-zA-Z-]+)*@[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*$/;
 	            if (email_address.search(format) != -1) {
@@ -315,42 +314,44 @@
 	                alert("<spring:message code='ezAddress.t212' />");
 	            }
 	            else {
-	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
-	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                    if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                        if (AddressObj.getAttribute("_foldertype") != "P") {
-	                            if (AddressObj.getAttribute("_foldertype") == "D" && Badmin != "Y" || AddressObj.getAttribute("_foldertype") == "C" && Cadmin != "Y") {
-	                                if (AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
-	                                    alert("<spring:message code='ezAddress.t211' />");
-	                                    return;
-	                                }
-	                            }
-	                        }
-	                    }
-	                }
-	                var xmlDom = createXmlDom();
-	                var objNode;
-	                var objRow;
-	                var objRowNode;
-	                objNode = createNodeInsert(xmlDom, objNode, "DATA");
-	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
-	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                    objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ROW");
-	                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
-	                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "OLDFOLDERTYPE", AddressObj.getAttribute("_foldertype"));
-	                }
-	                var xmlHTTP = createXMLHttpRequest();
-	                xmlHTTP.open("POST", "/ezAddress/addressDelete.do", false);
-	                xmlHTTP.send(xmlDom);
-	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-	                    alert("<spring:message code='ezAddress.t214' />");
-	                else {
-	                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
-	                    pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
-	                    if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
-	                        pCurrentPage--;
-	                    Get_SearchAddressList();
-	                }
+	            	if (confirm(listContentArry.length + "<spring:message code='ezAddress.t213' />")) {
+		                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
+		                    var AddressObj = document.getElementById(listContentArry[Cnt]);
+		                    if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
+		                        if (AddressObj.getAttribute("_foldertype") != "P") {
+		                            if (AddressObj.getAttribute("_foldertype") == "D" && Badmin != "Y" || AddressObj.getAttribute("_foldertype") == "C" && Cadmin != "Y") {
+		                                if (AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+		                                    alert("<spring:message code='ezAddress.t211' />");
+		                                    return;
+		                                }
+		                            }
+		                        }
+		                    }
+		                }
+		                var xmlDom = createXmlDom();
+		                var objNode;
+		                var objRow;
+		                var objRowNode;
+		                objNode = createNodeInsert(xmlDom, objNode, "DATA");
+		                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
+		                    var AddressObj = document.getElementById(listContentArry[Cnt]);
+		                    objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ROW");
+		                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
+		                    createNodeAndAppandNodeText(xmlDom, objRow, objRowNode, "OLDFOLDERTYPE", AddressObj.getAttribute("_foldertype"));
+		                }
+		                var xmlHTTP = createXMLHttpRequest();
+		                xmlHTTP.open("POST", "/ezAddress/addressDelete.do", false);
+		                xmlHTTP.send(xmlDom);
+		                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+		                    alert("<spring:message code='ezAddress.t214' />");
+		                else {
+		                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
+		                    pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
+		                    if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
+		                        pCurrentPage--;
+		                    Get_SearchAddressList();
+		                }
+	            	}
 	            }
 	        }
 	        function check_click(obj) {
@@ -416,12 +417,12 @@
 	        </tr>
 	    </table>
 	    <div style="vertical-align: top; border: 0px solid red;" id="list_Layer">
-	        <table class="mainlist" id="DetailList_header" style="width:100%">
+	        <table class="mainlist" id="DetailList_header" style="width:100%; table-layout: fixed;">
 	            <tr>
-	                <th style="cursor: pointer; padding: 0; width: 20px">
+	                <th style="cursor: pointer; padding: 0; width: 1%;">
 	                	<input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)">
 	                </th>
-	                <th style="padding:0;text-align:center;width:16px"><img src="/images/i_individual.gif" border="0"></th>
+	                <th style="padding:0;text-align:center;width:2%;"><img src="/images/i_individual.gif" border="0"></th>
 	                <th id="CompanyName"  style="CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t124' /><span id="S_NAME"><img border="0" src="/images/view-sortup.gif"></span></th>
 	                <th id="PhoneNumber" style="CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
 	                <th id="width1" style="CURSOR: pointer; width: 15%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
@@ -431,7 +432,7 @@
 	            </tr>
 	        </table>
 	        <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 650px; width: 100%; overflow-y: auto;">
-	            <table class="mainlist" style="width: 100%;" id="MailList">
+	            <table class="mainlist" style="width: 100%; table-layout: fixed;" id="MailList">
 	            </table>
 	            <div style="width: 100%; height: 100%; display: none;" id="MailListCard">
 	            </div>

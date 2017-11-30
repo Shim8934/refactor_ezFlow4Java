@@ -34,16 +34,15 @@
 		        if (p_AprLineTempletName == "") {
 		        	var pAlertContent;
 		        	if (type == "") {
-	                    pAlertContent = "<spring:message code='ezApprovalG.t387'/>";
+	                    alert("<spring:message code='ezApprovalG.t387'/>");
 		        	} else {
 		        		if (approvalFlag == "G") {
-			        		pAlertContent = "<spring:message code='ezApprovalG.t6003'/>";
+			        		alert("<spring:message code='ezApprovalG.t6003'/>");
 		        		} else {
-			        		pAlertContent = "<spring:message code='ezApprovalG.hyj10'/>";
+			        		alert("<spring:message code='ezApprovalG.hyj10'/>");
 		        		}
 		        	}
 		        	
-		            OpenAlertUI(pAlertContent);
 		            if (!CrossYN())
 		                document.getElementById("TxtAprLineTempletName").focus();
 		
@@ -88,6 +87,14 @@
 		            window.returnValue = "cancel";
 		
 		        document.getElementById("TxtAprLineTempletName").focus();
+		        
+		        // 한글 입력시 maxlength + 1이 입력되는 현상 제어
+			    $("#TxtAprLineTempletName").keyup( function(e){
+			    	var maxlength = $(this).prop("maxlength");
+			    	if ($(this).val().length >= maxlength) {
+			    		$(this).val($(this).val().substr(0, maxlength));
+			    	}
+			    });
 		    };
 		
 		    function KeEventControl(obj) {

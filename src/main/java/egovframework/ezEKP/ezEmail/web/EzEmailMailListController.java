@@ -52,7 +52,6 @@ import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -114,6 +113,16 @@ public class EzEmailMailListController {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
+		
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+		
+		if (useMailBoxBackUp.equals("")) {
+			useMailBoxBackUp = "NO";
+		}
 		
 		if (dispname != null) {
 			folderName = dispname;
@@ -153,10 +162,13 @@ public class EzEmailMailListController {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("importanceColor", importanceColor);
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
-				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor);
+				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -442,9 +454,16 @@ public class EzEmailMailListController {
 				subject = (subject != null) ? subject : "";
 				subject = commonUtil.cleanValue(subject);
 				
+				// secureMail
+				if (ezEmailUtil.hasSecureMailFlag(message)) {
+					sb.append(String.format("<securemail>1</securemail>"));
+				} else {
+					sb.append(String.format("<securemail>0</securemail>"));
+				}
+				
 				if (viewSelectIndex.equals("1")) {
 					((IMAPMessage)message).setPeek(true);
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false, locale);
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false, false, locale, null, null);
 					String htmlBody = bodyInfoList.get(0);
 					
 					Pattern p = Pattern.compile("\\s*<(head|title|style)(.*?)<\\/(head|title|style)>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
@@ -1101,6 +1120,10 @@ public class EzEmailMailListController {
 				// subject
 				String subject = ezEmailUtil.getSubject(message);				
 				subject = (subject != null) ? subject : "";
+				
+				if (ezEmailUtil.hasSecureMailFlag(message)) {
+					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+				}
 				
 				sb.append("<NODE>");
 				sb.append("<HREF><![CDATA[" + href + "]]></HREF>");

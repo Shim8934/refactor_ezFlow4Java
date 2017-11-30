@@ -21,6 +21,13 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
+		    var getMemo = "${getsMemo}";
+		    
+		    window.onload = function () {
+		        getMemo = getMemo.replace(/(<br>|<br\/>|<br \/>)/g, "\r\n");
+		        document.getElementById("TextMemo").innerText = getMemo;
+		    }
+		    
 			function show_personinfo(whoto)
 			{
 				var userid = whoto;
@@ -137,12 +144,12 @@
 			    selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			    selToggleList(document.getElementById("close"), "ul", "li", "0");
 		    </script>
-		    <table class="popuplist" style="width:100%">
+		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr>
-		            <th><spring:message code='ezAddress.t124' /></th>
-		            <td style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
-		            <th><spring:message code='ezAddress.t286' /></th>
-		            <td title="<spring:message code='ezAddress.t287' />" style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
+		            <th width="70px"><spring:message code='ezAddress.t124' /></th>
+		            <td style="width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName"> <c:out value='${addressInfo.sName}' /></span></td>
+		            <th width="70px"><spring:message code='ezAddress.t286' /></th>
+		            <td title="<spring:message code='ezAddress.t287' />" style="width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t51' /></th>
@@ -164,7 +171,7 @@
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t291' /></th>
-		            <td colspan="3" title="<spring:message code='ezAddress.t285' />" style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:blue;text-decoration:underline;"><span onClick="send_email()"><span id="TextEmail" style="cursor:pointer;"><c:out value='${addressInfo.sEmail}' /></span></span></td>
+		            <td colspan="3" title="<spring:message code='ezAddress.t285' />" style="color:blue; overflow: hidden;"><span onClick="send_email()"><span id="TextEmail" style="cursor:pointer"><c:out value='${addressInfo.sEmail}' /></span></span></td>
 		          </tr>
 		          <tr style="height:10px;">
 		              <td colspan="4" style="height:10px;border-left:1px solid #ffffff;border-right:1px solid #ffffff;">&nbsp;</td>

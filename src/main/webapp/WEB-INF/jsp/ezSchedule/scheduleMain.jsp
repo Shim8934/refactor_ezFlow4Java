@@ -8,7 +8,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
         <link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
         <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-        <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />        
+        <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />  
+        <script type="text/javascript">
+        	var UserOffset = "<c:out value='${pOffset}'/>";
+        </script>      
         <script type="text/javascript" src="/js/Holiday.js"></script>        
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -16,8 +19,7 @@
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>    	
-		<script type="text/javascript">
-		    var UserOffset = "<c:out value='${pOffset}'/>";
+		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
 			var receivecount = "<c:out value='${receiveCount}'/>";
 			var groupcount = "<c:out value='${groupCount}'/>";
@@ -965,6 +967,7 @@
 	            <li onClick="IDClick('P')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezSchedule.t221'/></li>
 	            <li onClick="IDClick('D')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezSchedule.t222'/></li>
 	            <li onClick="IDClick('C')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezSchedule.t223'/></li>
+                <li style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='main.t00022'/></li>
             </ul>
         </div>
 

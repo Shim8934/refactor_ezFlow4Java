@@ -52,8 +52,8 @@
 	</servlet>	
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>	
+		<url-pattern>/</url-pattern>		
+	</servlet-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
@@ -78,5 +78,7 @@
         <error-code>500</error-code>
         <location>/common/error.jsp</location>
     </error-page>
+
+
     
 </web-app>

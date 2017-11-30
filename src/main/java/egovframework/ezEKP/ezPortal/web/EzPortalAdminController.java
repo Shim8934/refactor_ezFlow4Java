@@ -139,10 +139,17 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		
+		if (firstScreenMail == null || firstScreenMail.equals("")) {
+			firstScreenMail = "NO";
+		}
+		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-
+		
+		model.addAttribute("firstScreen_Mail", firstScreenMail);
 		logger.debug("leftTop ended");
 		return "/admin/ezPortal/portalLeftTop";
 	}

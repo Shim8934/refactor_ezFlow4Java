@@ -20,6 +20,7 @@
 	        var pOwerID = "${pOwerId}";
 	        var deptAdmin = "${deptAdmin}";
 	        var compAdmin = "${compAdmin}";
+	        var useAnyoneEdit = "${useAnyoneEdit}";
 	        var pCurrentPage = "1";
 	        var pOrderOption = "S_NAME:0";
 	        var pFilter = "";
@@ -78,14 +79,17 @@
 	
 	        }
 	        function new_address() {
-	            if (deptAdmin != "Y" && pFolderType == "D") {
-	                alert("<spring:message code='ezAddress.t999900003' />");
-	                return;
-	            }
-	            else if (compAdmin != "Y" && pFolderType == "C") {
-	                alert("<spring:message code='ezAddress.t999900004' />");
-	                return;
-	            }
+	        	if (useAnyoneEdit != "YES") {
+	        		if (deptAdmin != "Y" && pFolderType == "D") {
+		                alert("<spring:message code='ezAddress.t999900003' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		                alert("<spring:message code='ezAddress.t999900004' />");
+		                return;
+		            }
+	        	}
+	            
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var conHeight = 500;
@@ -96,14 +100,17 @@
 	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function new_group() {
-	        	if (deptAdmin != "Y" && pFolderType == "D") {
-	                alert("<spring:message code='ezAddress.t999900003' />");
-	                return;
-	            }
-	            else if (compAdmin != "Y" && pFolderType == "C") {
-	                alert("<spring:message code='ezAddress.t999900004' />");
-	                return;
-	            }
+	        	if (useAnyoneEdit != "YES") {
+		        	if (deptAdmin != "Y" && pFolderType == "D") {
+		                alert("<spring:message code='ezAddress.t999900003' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		                alert("<spring:message code='ezAddress.t999900004' />");
+		                return;
+		            }
+	        	}
+	        	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var conHeight = 655;
@@ -233,7 +240,7 @@
 	                            var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                            if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")) {
 	                                alert("<spring:message code='ezAddress.t170' />");
-	                            return;
+	                                return;
 	                        	}
 	                    	}
 		                }
@@ -247,7 +254,7 @@
 	                        for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
 	                            var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                            if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+                            		if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
 	                            		alert("<spring:message code='ezAddress.t217' />");
 	                                    return;
 	                            	}
@@ -306,7 +313,7 @@
 	                        var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                        if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
 	                        	if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                        		if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
 	                            		alert("<spring:message code='ezAddress.t217' />");
 	                                    return;
 	                            	}
@@ -341,6 +348,12 @@
 	            } catch (e) {}
 	        }
 	        function delete_address() {
+	        		
+	        		if ( pTotalCnt == 0) {
+	        			alert("<spring:message code='ezAddress.t212' />");
+	        			return;
+	        		}
+	        		
 	            if (listContentArry.length == 0) {
 	                alert("<spring:message code='ezAddress.t212' />");
 	            }
@@ -419,24 +432,21 @@
 	            }
 	        }
 	        function quick_add() {
-	            if (document.getElementById("qname").value == "") {
+	        		var pQname = document.getElementById("qname").value.trim();
+	            var pQemail = document.getElementById("qemail").value.trim();
+	        		var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	            
+                if (pQname == "") {
+                		document.getElementById("qname").focus();
 	                alert("<spring:message code='ezAddress.t220' />");
-	                document.getElementById("qname").focus();
 	                return;
-	            }
-	
-	            var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-	            if (regex.test(document.getElementById("qemail").value) === false) {
-	                alert("<spring:message code='ezAddress.t350' />");
+                } 
+	        		
+	            if (document.getElementById("qemail").value != "" && regex.test(document.getElementById("qemail").value) === false) {
+	                alert("<spring:message code='ezAddress.t1100' />");
 	                document.getElementById("qemail").focus();
 	                return;
 	            }
-	
-	            if (!check_length(document.getElementById("qname").value, 50, "<spring:message code='ezAddress.t124' />")) return;
-	            if (!check_length(document.getElementById("qcompany").value, 50, "<spring:message code='ezAddress.t221' />")) return;
-	            if (!check_length(document.getElementById("qcomphone").value, 20, "<spring:message code='ezAddress.t222' />")) return;
-	            if (!check_length(document.getElementById("qmobile").value, 20, "<spring:message code='ezAddress.t223' />")) return;
-	            if (!check_length(document.getElementById("qemail").value, 250, "<spring:message code='ezAddress.t224' />")) return;
 	
 	            if (document.getElementById("qemail").value != "") {
 	                var AddressCnt = Get_SameAddressCnt();
@@ -449,7 +459,7 @@
 	            
 	            var xmlHTTP = createXMLHttpRequest();
 	            var xmlDom = createXmlDom();
-	
+				
 	            var objNode, objRow;
 	            objNode = createNodeInsert(xmlDom, objNode, "DATA");
 	            createNodeAndInsertText(xmlDom, objNode, "FOLDERID", pFolderID);
@@ -458,7 +468,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", "");
 	            createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", "");
 	            createNodeAndInsertText(xmlDom, objNode, "PHOTOPATH", "");
-	            createNodeAndInsertText(xmlDom, objNode, "SNAME", document.getElementById("qname").value);
+	            createNodeAndInsertText(xmlDom, objNode, "SNAME", pQname);
 	            createNodeAndInsertText(xmlDom, objNode, "SCOMPANY", document.getElementById("qcompany").value);
 	            createNodeAndInsertText(xmlDom, objNode, "SDEPT", "");
 	            createNodeAndInsertText(xmlDom, objNode, "STITLE", "");
@@ -503,22 +513,6 @@
 	            	window.location.href = window.location.href;
 	            }	            
 	        }
-	        function check_length(chkstr, maxlength, fieldname) {
-	            var length = 0;
-	            var i;
-	
-	            for (i = 0; i < chkstr.length; i++)
-	                if (chkstr.charCodeAt(i) > 256)
-	                    length = length + 2;
-	                else
-	                    length++;
-	
-	            if (length > maxlength) {
-	                alert(fieldname + "<spring:message code='ezAddress.t227' />" + maxlength + "<spring:message code='ezAddress.t228' />");
-			    	return false
-				}	
-	        	return true;
-	        }	
 	        function address_inout(which) {
 	            var feature = "dialogWidth:390px; dialogHeight:290px; scroll:no; status:no; help:no;edge:sunken";
 	            feature = feature + GetShowModalPosition(390, 290);
@@ -536,10 +530,24 @@
 	        	$.modal.close();
 	        }	        
 	        function ShowQuickAddres() {
+	        	if (useAnyoneEdit != "YES") {
+		        	if (deptAdmin != "Y" && pFolderType == "D") {
+		                alert("<spring:message code='ezAddress.t999900003' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		                alert("<spring:message code='ezAddress.t999900004' />");
+		                return;
+		            }
+	        	}
+	        	
 	        	$("#addpopup").modal();
 	        }	
 	        function search_start() {
-	            if (document.getElementById("search_text").value == "") {
+	        	
+	        	var searchText = document.getElementById("search_text").value.trim();
+	        	
+	            if (searchText == "") {
 	                alert("<spring:message code='ezAddress.t310' />");
 	                document.getElementById("search_text").focus();
 	                return;
@@ -574,7 +582,6 @@
 	            }	
 	
 	            var subtype = document.getElementById("search_case").value;
-	            var searchText = document.getElementById("search_text").value;
 	            filter = subtype + "," + searchText;
 	            pCurrentPage = "1";
 	            searchFlag = true;
@@ -609,14 +616,16 @@
             	document.getElementById("loadingLayer").style.display = "none";
 	        }	        
 	        function crossImport() {
-	        	if (deptAdmin != "Y" && pFolderType == "D") {
-	        		alert("<spring:message code='ezAddress.t1' />");
-	                return;
-	            }
-	            else if (compAdmin != "Y" && pFolderType == "C") {
-	            	alert("<spring:message code='ezAddress.t1' />");
-	                return;
-	            }
+	        	if (!useAnyoneEdit == "YES") {
+	        		if (deptAdmin != "Y" && pFolderType == "D") {
+		        		alert("<spring:message code='ezAddress.t1' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		            	alert("<spring:message code='ezAddress.t1' />");
+		                return;
+		            }
+	        	}
 	        	
 	            document.getElementById("file1").click();
 	        }	        
@@ -656,6 +665,15 @@
 		        }		        
 		        window.location.reload();
 		    }
+	        
+	        function quick_add_close(){
+	        	var child = document.getElementById("addpopup_list").getElementsByTagName('td');
+	        	var i;
+	        	for (i = 0; i < child.length; i++) {
+	        		child[i].childNodes[0].value = "";
+	        	}
+	        }
+	        
 	    </script>
     </head>
 	<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -666,10 +684,8 @@
 				<li><span  onClick="new_group()"><spring:message code='ezAddress.t237' /></span></li>
 				<li id="importaddress"><span  onClick="address_inout(1)"><spring:message code='ezAddress.t210' /></span></li>
 				<li id="exportaddress"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
-				
 				<li id="importaddress_Cross"><span onclick="crossImport()"><spring:message code='ezAddress.t210' /></span></li>
-        		<li id="exportaddress_Cross"><span onclick="crossexport()"><spring:message code='ezAddress.t143' /></span></li>
-				
+        			<li id="exportaddress_Cross"><span onclick="crossexport()"><spring:message code='ezAddress.t143' /></span></li>
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
 				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
@@ -776,13 +792,13 @@
 			--%>
 		</ul>
 		<br />
-		<div style="vertical-align:top;border:0px solid red;" id="list_Layer">
-			<table class="mainlist" id="DetailList_header">
+		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
+			<table class="mainlist" id="DetailList_header" style="width:100%; table-layout: fixed;">
 			    <tr>
-					<th style="cursor:pointer;padding:0;width:12px">
+					<th style="cursor:pointer;padding:0;width:1%">
 				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
 					</th>
-					<th style="padding:0;text-align:center;width:16px"><img src="/images/i_individual.gif" border="0"></th>
+					<th style="padding:0;text-align:center;width:2%;"><img src="/images/i_individual.gif" border="0"></th>
 					<th id="CompanyName" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
 					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
 					<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
@@ -792,7 +808,7 @@
 				</tr>
 			</table>
 			<div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
-				<table class="mainlist" style="" id="MailList"></table>
+				<table class="mainlist" style="width: 100%; table-layout: fixed;" id="MailList" ></table>
 				<div style="height:100%;display:none;" id="MailListCard" ></div>
 			</div>
 			<div id="tblPageRayer"  style="width:600px; margin:6px auto;"></div>
@@ -807,33 +823,33 @@
 					▒ <spring:message code='ezAddress.t2003' />
 				</div>				
 				<!-- 내용 -->
-			    <table class="popuplist" style="width:440px;margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px"><spring:message code='ezAddress.t124' /></th>
-						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
+						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="24"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px"><spring:message code='ezAddress.t221' /></th>
-						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
+			  			<th style="width:90px"><spring:message code='ezAddress.t51' /></th>
+						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="24"></td>
 					</tr>
 					<tr>
 			  			<th style="width:90px" ><spring:message code='ezAddress.t222' /></th>
-						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
+						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20"></td>
 					</tr>
 					<tr>
 						<th style="width:90px"><spring:message code='ezAddress.t223' /></th>
-						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
+						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20"></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezAddress.t264' /></th>
-						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="250">      </td>
+						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"></td>
 					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
 					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span><spring:message code='ezAddress.t11' /></span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
 			    </div>
 			</div>
 		</div>

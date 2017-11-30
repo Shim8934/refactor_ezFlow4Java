@@ -17,6 +17,9 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>
+	    <script type="text/javascript">
+	    	var UserOffset = "${userOffset}";
+	    </script>
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_Cross.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 
@@ -29,7 +32,7 @@
 	        var xmlDom_treeview = createXmlDom();	        
 	        var ch_selected = false;
 			var totalCnt = 0;
-			select_memorialDays(uselang);
+			select_memorialDays(uselang);			
 				   	    
 		    function schedule_get_holiday() {
 		        $.ajax({
@@ -183,7 +186,7 @@
 		                break;
 
 		            case 3:		// Task
-		                window.open("/ezSchedule/scheduleMain.do?funCode=3", "right");
+		                window.open("/ezTask/taskMain.do", "right");
 		                break;
 
 		            case 5:		// schedule group management 
@@ -195,7 +198,7 @@
 		                break;
 
 		            case 7:		// Search Task
-		                window.open("/myoffice/ezTask/task_search_Cross.aspx", "right");
+		                window.open("/ezTask/taskSearch.do", "right");
 		                break;
 
 		            case 10:	// Search public search
@@ -231,32 +234,30 @@
 	            if (_funCode == 2)
 	                parent.frames["right"].WriteDateSchedule_left(obj)
 	        }
-           
 		</script>
-	
 	</head>
 
 	<body class="leftbody">	    
         <div class="left_pims" title="PIMS"></div>
-        <div id="CalendarMini" style=" margin:10px;"></div>
 	        
 	    <div id="left">
 	        <div class="left_pims1" title="<spring:message code='ezSchedule.t1010'/>" id='pims1'></div>
 		    <div class="left_pims2" title="<spring:message code='ezSchedule.t1017'/>" id='pims2' style="display:none"></div>
 		    <div class="left_pims3" title="<spring:message code='ezSchedule.t1011'/>" id='pims3' style="display:none"></div>
-			<div class="gray_line"></div>	
-		    <h2><span id='Schedule' onClick="Function_Flag(2)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1010'/></span></h2>		    
+		    <h2><span id='Schedule' onClick="Function_Flag(2)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1010'/></span></h2>
 		    <ul>
+		    	<div id="CalendarMini" style="margin-right: 10px; margin-bottom: 10px; margin-left: 10px; margin-top:5px; margin-bottom:12px"></div>
+		    	<div class="gray_line"></div>
 			    <li evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li>
 	            <li evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
-		    </ul> 
-		    <%-- <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
+		    </ul>
+		    <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
 		    <ul>
 			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
 			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
-		    </ul> --%>
+		    </ul>
 	        <h3><span id='Schedule_Config' onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
 		</div>		
 	    <script type="text/javascript">

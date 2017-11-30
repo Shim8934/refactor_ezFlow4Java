@@ -38,14 +38,19 @@ public class EzMainAdminController {
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String use_ezDMS = config.getProperty("config.Use_ezDMS");
 		String use_portal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
+		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		
-		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
-		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+		model.addAttribute("firstScreen_Mail", firstScreenMail);
+		
+		if (firstScreenMail == null || firstScreenMail.equals("")) {
+			model.addAttribute("firstScreen_Mail", "NO");
+		}
+		
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());

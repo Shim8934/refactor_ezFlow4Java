@@ -92,7 +92,7 @@
 		                    }
 		                }
 		                document.getElementById('TreeCtrl_MyBoardTree').scrollTop = 0;
-		
+
 		                favoriteList();
 		            }
 		        }
@@ -330,7 +330,7 @@
 		        xmlhttp = null;
 		    }
 		
-		    function ShowMyBoardItem() {
+		    function ShowMyBoardItem(val01) {
 		        SetTreeConfig();
 		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
 		        var treeView = new TreeView();
@@ -509,7 +509,7 @@
 		        }
 		    }
 		    function favoriteList() {
-		    	$(".on").attr("class", "off");
+		    	$(".fList h2").attr("class", "on");
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
@@ -537,7 +537,13 @@
 	    <div id="left" style="overflow: auto">
 	        <div class="left_board" title="BOARD"></div>
 	        <c:if test="${MyBoardTopFlag != 'NO'}">
-		        <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
+	        	<div class="fList" onclick="favoriteList()">
+	        		<h2>
+	        			<img alt="" src="/images/ImgIcon/icon-flag.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t00010" /></span>
+	        			<!-- <h2 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"></span></h2> -->
+	        		</h2>	
+	        	</div>
+	        	<ul></ul>		        
 		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
 	<%-- 	            	<span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
@@ -569,7 +575,13 @@
 	        	</script>
 	        </div>
 	        <c:if test="${MyBoardTopFlag == 'NO'}">
-		        <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
+		        <div class="fList" onclick="favoriteList()">
+	        		<h2>
+	        			<img alt="" src="/images/ImgIcon/icon-flag.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t00010" /></span>
+	        			<!-- <h2 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"></span></h2> -->
+	        		</h2>	
+	        	</div>
+	        	<ul></ul>
 		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
 	<%-- 	            	<span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>

@@ -1,4 +1,4 @@
-﻿var xmlHTTPAddressList = null;
+﻿﻿var xmlHTTPAddressList = null;
 var ListXML = null;
 function View_Change() {
     listContentArry = new Array();
@@ -135,6 +135,7 @@ function MakeAddressList() {
             var _TR = document.createElement("TR");
             _TR.style.verticalAlign = "middle";
             _TR.style.height = "25px";
+            _TR.style.width = "100%";
             _TR.setAttribute("id", "Maillist_" + Cnt);
             _TR.style.cursor = "pointer";
             _TR.setAttribute("_SType", SType);
@@ -164,7 +165,7 @@ function MakeAddressList() {
                 _TR.ondblclick = function () { event_listDBClick(this); };
 
             var _TD1 = document.createElement("TD");
-            _TD1.style.width = "12px";
+            _TD1.style.width = "1%";
             //_TD1.style.margin = "0px";
             //_TD1.style.padding = "0px";
             var _TDCheckBox_Sub = document.createElement("INPUT");
@@ -184,9 +185,10 @@ function MakeAddressList() {
             _TR.appendChild(_TD1);
 
             var _TD2 = document.createElement("TD");
-            _TD2.style.width = "16px";            
+            _TD2.style.width = "2%";            
             _TD2.style.margin = "0px";
             _TD2.style.padding = "0px";
+            _TD2.style.textAlign = "center";
             var _Img = document.createElement("IMG");
             if (SType == "P")
                 _Img.src = "/images/i_individual.gif";
@@ -198,20 +200,24 @@ function MakeAddressList() {
             var _TD3 = document.createElement("TD");
             _TD3.style.width = "20%";
             _TD3.style.margin = "0px";
-            _TD3.style.padding = "0px";
+            _TD3.style.padding = "0px 0px 0px 5px";
             _TD3.style.whiteSpace = "nowrap";
-            _TD3.style.textOverflow = "ellipsis";
             _TD3.style.overflow = "hidden";
+            _TD3.style.textOverflow = "ellipsis";
             if (CrossYN())
-                _TD3.innerHTML = "&nbsp;"+Sname;
+                _TD3.innerText = Sname;
             else
-                _TD3.innerHTML = "&nbsp;"+Sname;
+                _TD3.innerHTML = "&nbsp;" + Sname;
             _TR.appendChild(_TD3);
 
             var _TD4 = document.createElement("TD");            
             _TD4.style.width = "20%";
             _TD4.style.margin = "0px";
             _TD4.style.padding = "0px";
+            _TD4.style.whiteSpace = "nowrap";
+            _TD4.style.overflow = "hidden";
+            _TD4.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD4.textContent = Scompany;
             else
@@ -226,6 +232,10 @@ function MakeAddressList() {
                 _TD5.style.width = "20%";
             _TD5.style.margin = "0px";
             _TD5.style.padding = "0px";
+            _TD5.style.whiteSpace = "nowrap";
+            _TD5.style.overflow = "hidden";
+            _TD5.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD5.textContent = ScompnayPhone;
             else
@@ -240,6 +250,10 @@ function MakeAddressList() {
             	_TD6.style.width = "20%";
             _TD6.style.margin = "0px";
             _TD6.style.padding = "0px";
+            _TD6.style.whiteSpace = "nowrap";
+            _TD6.style.overflow = "hidden";
+            _TD6.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD6.textContent = Smobile;
             else
@@ -250,6 +264,10 @@ function MakeAddressList() {
             _TD7.style.width = "20%";
             _TD7.style.margin = "0px";
             _TD7.style.padding = "0px";
+            _TD7.style.whiteSpace = "nowrap";
+            _TD7.style.overflow = "hidden";
+            _TD7.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
                 _TD7.textContent = Semail;
             else
@@ -319,13 +337,18 @@ function MakeAddressList() {
             var SubDivLayer = document.createElement("DIV");
             SubDivLayer.className = "back";
 
-            var SubPTag = document.createElement("P");
+            var SubPTag = document.createElement("p");
             SubPTag.className = "topinfo";
-            if (SType == "P")
-                SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + Sname;
-            else
-                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + Sname;
 
+            var pContentSub = document.createElement("span");
+            pContentSub.innerText = Sname;
+            
+            if (SType == "P"){
+            		SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
+            } else {
+                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + "<c:out value=\"" + Sname + "\" />";
+            }
+            SubPTag.appendChild(pContentSub);
 
             var ULTag = document.createElement("ul");
 
@@ -341,10 +364,21 @@ function MakeAddressList() {
                 UITag2.textContent = Scompany;
             else
                 UITag2.innerText = Scompany;
+            
             var UITag3 = document.createElement("li");
-            UITag3.innerHTML = CardHeader1 + ":<span class=\"point_txt\">" + ScompnayPhone + "</span>";
+            var span3 = document.createElement("span");
+            span3.setAttribute("class", "point_txt");
+            span3.innerText = ScompnayPhone;
+            UITag3.innerText =  CardHeader1 + ":";
+            UITag3.appendChild(span3);
+            
             var UITag4 = document.createElement("li");
-            UITag4.innerHTML = CardHeader2 + ":<span class=\"point_txt\">" + Smobile + "</span>";
+            var span4 = document.createElement("span");
+            span4.setAttribute("class", "point_txt");
+            span4.innerText = Smobile;
+            UITag4.innerText = CardHeader2 + ":";
+            UITag4.appendChild(span4);
+            
             var UITag5 = document.createElement("li");
             UITag5.innerHTML = CardHeader3 + ":<span class=\"point_txt\">" + Semail + "</span>";
 
@@ -486,7 +520,7 @@ function td_Create1(strtext) {
     document.getElementById("tblPageRayer").innerHTML = strtext;
 }
 function makePageSelPage() {
-    var strtext;
+	var strtext;
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     strtext = "<div class=\"pagenavi\">";
@@ -526,13 +560,18 @@ function makePageSelPage() {
         MaxNum = totalPage;
     }
     for (i = startNum; i <= MaxNum; i++) {
-        if (i == pageNum) {
+        if (i == pageNum){
             PagingHTML += "<span class=\"on\">" + i + "</span>";
         }
         else {
             PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
         }
     }
+    
+    if (pTotalCnt == 0 ){
+    	PagingHTML += "<span class=\"on\">" + i + "</span>";
+    }
+    	
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
             PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" width=\"16\" height=\"16\"></span>";
@@ -896,7 +935,7 @@ function event_listDBClick(obj) {
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         window.open("/ezAddress/addressRead.do?addressid=" + encodeURIComponent(pAddressID) + "&folderid=" + encodeURIComponent(pFolderID) + "&type=" + pFolderType, "",
-            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
     else {
         var conHeight = 470;
@@ -904,7 +943,7 @@ function event_listDBClick(obj) {
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
-                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
 }
 function event_SearchlistDBClick(obj) {

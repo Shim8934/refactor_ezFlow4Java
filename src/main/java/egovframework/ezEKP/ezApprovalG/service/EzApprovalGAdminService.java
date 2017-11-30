@@ -75,7 +75,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception;
 	
-	public String getSealList(String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getSealList(String realPath, String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
 	public String sealDelete(String realPath, String dirPath, String fileName) throws Exception;
 	
@@ -162,4 +162,6 @@ public interface EzApprovalGAdminService {
 	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMHT, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception;
 
 	public String formConnSave(String formID, String formText, String path, String companyID) throws Exception;
+	
+	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception;
 }

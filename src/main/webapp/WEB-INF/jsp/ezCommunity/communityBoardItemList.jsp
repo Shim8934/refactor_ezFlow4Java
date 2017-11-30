@@ -104,7 +104,7 @@
 					listXML += "<TD>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
-						listXML += "<TD align=center><img src='/images/i_save01.gif'></TD>";
+						listXML += "<TD><img src='/images/i_save01.gif'></TD>";
 					} else {
 						listXML += "<TD></TD>";
 					}

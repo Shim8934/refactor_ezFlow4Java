@@ -41,8 +41,7 @@ function putBansongSign() {
             phabyuidate = pSusinSN + "habyuidate";
             phabyuijikwee = pSusinSN + "habyuipositon";
             phabyuidept = pSusinSN + "habyui";
-        }
-        else {
+        } else {
             phabyuisign = "habyuisign";
             phabyuidate = "habyuidate";
             phabyuijikwee = "habyuipositon";
@@ -734,8 +733,8 @@ function putJunkyulSign(signID) {
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, signID);
     if (field) {
-        var signWidth = parseInt(field.offsetWidth) - 4 - 15;
-        var signHeight = parseInt(field.offsetHeight) - 4;
+        var signWidth = Number(field.offsetWidth) - 4 - 15;
+        var signHeight = Number(field.offsetHeight) - 4;
         var strimg;
         field.style.fontSize = "12pt";
         field.style.fontWeight = "bolder";
@@ -921,7 +920,7 @@ function openFileAttachUI() {
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
 
-    DivPopUpShow(535, 285, url);
+    DivPopUpShow(535, 415, url);
 }
 
 function openFileAttachUI_Complete(ret) {
@@ -1302,13 +1301,13 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 
         if (window.screen.width > 800) {
             var pleftpos;
-            pleftpos = parseInt(width) - 725;
-            heigth = parseInt(heigth) - 30;
-            width = parseInt(width) - pleftpos;
+            pleftpos = Number(width) - 725;
+            heigth = Number(heigth) - 30;
+            width = Number(width) - pleftpos;
             left = pleftpos / 2;
         } else {
-            heigth = parseInt(heigth) - 30;
-            width = parseInt(width) - 10;
+            heigth = Number(heigth) - 30;
+            width = Number(width) - 10;
         }
 
         var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
@@ -1342,6 +1341,9 @@ function getCurApproverAprLine(type) {
 
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     LastKyulSN = getLastSignSN(objNodes);
+    
+    //최종 결재에 개인 합의 추가 하기 위해 결재선에 표시된 전체 개수
+    LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
 
     for (var i = 0; i < objNodes.length; i++) {
@@ -1723,7 +1725,7 @@ function CheckDocCellInfo() {
             pSuSinFlag = "N";
         }
     }
-    pSusinNextSN = parseInt(pSusinSN) + 1;
+    pSusinNextSN = Number(pSusinSN) + 1;
 
     fieldname = pSusinNextSN + "sign1";
     var field;
@@ -2583,38 +2585,65 @@ function getLastSignSN(pNodes) {
         var dataNodes = GetLastChildNodes(pNodes[i], params);
 
         var pCurrentAprType = getNodeText(dataNodes[11]);
-        if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3) {
-            if (pCurrentAprType == strAprType4) junkyulflag = true;
+        
+        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 ) {
+                if (pCurrentAprType == strAprType4) junkyulflag = true;
 
-            switch (pCurrentAprType) {
-                case strAprType1:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                switch (pCurrentAprType) {
+                    case strAprType1:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType18:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType18:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType19:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType19:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType4:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType4:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType16:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType16:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
 
-                case strAprType3:
-                    lastaprlineSN = lastaprlineSN + 1;
-                    break;
+                    case strAprType3:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
+                }
             }
         }
-    }
-    return lastaprlineSN
+        
+    return lastaprlineSN;
 }
+
+function getLastTotalSignSN(pNodes) {
+    var i;
+    var aprlineSN;
+    var junkyulflag = false;
+
+    aprlineSN = pNodes.length;
+    lastHabYuiSN = 0;
+    
+    
+	var params = new Array();
+    params[0] = "0";
+    
+    //결재선 인덱스가 높은숫자가 sn 1번이라 최종이 0 
+    var dataNodes = GetLastChildNodes(pNodes[0], params);
+
+    var pCurrentAprType = getNodeText(dataNodes[11]);
+    
+    if (pCurrentAprType == "001") {
+    	lastHabYuiSN = 1;
+    }
+
+	 return lastHabYuiSN;
+}
+
 function HabyuiResultOpinion() {
     try {
         var parameter = new Array();
@@ -2911,8 +2940,8 @@ function putSignXML(SignXML) {
                     else {
                     	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
                         var img = SignCont.split("::");
-                        var signWidth = parseInt(field.offsetWidth) - 4 - 15;
-                        var signHeight = parseInt(field.offsetHeight) - 4;
+                        var signWidth = Number(field.offsetWidth) - 4 - 15;
+                        var signHeight = Number(field.offsetHeight) - 4;
                         signWidth = 50;
                         
                         if (seumyung) {
@@ -3534,17 +3563,17 @@ function setDocNumFormat(pPrefix) {
                 break;
 
             case "YY":
-                numHeader += d.getYear() + Tail;
+                numHeader += d.getFullYear() + Tail;
                 break;
                 
             case "yy":
-                var yyear = d.getYear();
-                numHeader += yyear.toString().substr(1) + Tail;
+                var yyear = d.getFullYear();
+                numHeader += yyear.toString().substr(2) + Tail;
                 break;
 
             case "MM":
                 var mmonth = d.getMonth() + 1;
-                if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                if (Number(mmonth) < 10) mmonth = "0" + mmonth;
                 numHeader += mmonth + Tail;
                 break;
 
@@ -3571,15 +3600,15 @@ function setDocNumFormat(pPrefix) {
             	break;
             	
             case "YM":
-            	var yyear = d.getYear();
-                numHeader += yyear.toString().substr(1);
+            	var yyear = d.getFullYear();
+                numHeader += yyear.toString().substr(2);
                 
             	var mmonth = d.getMonth() + 1;
-                if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                if (Number(mmonth) < 10) mmonth = "0" + mmonth;
                 numHeader += mmonth;
                 
                 var mdate = d.getDate();
-                if (parseInt(mdate) < 10) mdate = "0" + mdate;
+                if (Number(mdate) < 10) mdate = "0" + mdate;
                 numHeader += mdate + Tail;
                 
                 break;

@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,6 +24,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -57,6 +59,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * @Description [Controller] 메일 예약발송관리
@@ -95,7 +98,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
+	
 	/**
 	 * 메일 예약발송 화면 호출 함수
 	 */
@@ -178,6 +184,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String bodyType = "0";
 		String importance = "1";
 		String isEach = "FALSE";
+		String isSecureMail = "false";
+		String securePassword = null;
+		String secureReadCount = null;
+		String secureReadDate = null;
 		String replySendTime = "0";
 		String replyReadTime = "1";
 		String pReservedSaveTime = "";
@@ -312,7 +322,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
-		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
+		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail);
 		
 		String senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
 		logger.debug("senderInfo=" + senderInfo);
@@ -394,7 +405,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			
 			// analyze the message and retrieve the attached file list.
 			List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-			List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, draftsFolderName, uid, -1, attachedFileList, false, locale);					
+			List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, draftsFolderName, uid, -1, attachedFileList, false, false, locale, null, null);
 			body = EgovStringUtil.getSpclStrCnvr2(bodyInfoList.get(0));
 			
 			if (attachedFileList.size() > 0) {
@@ -434,11 +445,28 @@ public class EzEmailReservationController extends EgovFileMngUtil {
               Header h = (Header) headers.nextElement();
               logger.debug("@@"+h.getName() + ": " + h.getValue());
             }
+            
             //set isEachMail
         	if (message.getHeader("X-JMocha-Each-Mail") != null) {
         		isEach = message.getHeader("X-JMocha-Each-Mail")[0];
     		}  
 			
+        	//set isSecureMail
+    		if (message.getHeader("X-JMocha-Secure-Mail") != null) {
+    			isSecureMail = message.getHeader("X-JMocha-Secure-Mail")[0];
+    			securePassword = message.getHeader("X-JMocha-Secure-Mail-Password")[0];
+    			secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
+    			secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
+				
+    			// 암호화되어있는 securePassword 복호화
+    			String prm = egovFileScrty.getPrm();
+            	String pre = egovFileScrty.getPre();
+            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
+    			
+				logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount + ",secureReadDate=" + secureReadDate);
+    		}
+    		
         	//set bodyType
         	if (message.getHeader("Content-Type") != null) {
         		String tempBodyType = ezEmailUtil.getTextPart(message).get(1);
@@ -560,6 +588,11 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
+		model.addAttribute("useSecureMail", useSecureMail);
+		model.addAttribute("isSecureMail", isSecureMail);
+		model.addAttribute("securePassword", securePassword);
+		model.addAttribute("secureMaxReadCount", secureReadCount);
+		model.addAttribute("secureMaxReadDate", secureReadDate);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		
         logger.debug("mailEdit ended.");

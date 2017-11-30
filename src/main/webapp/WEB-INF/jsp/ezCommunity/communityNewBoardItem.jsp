@@ -140,13 +140,13 @@
 			        	document.getElementById('Makedate').style.display = "none";
 			        }
 								
-			        if( pMode == "modify") {												
-			            document.getElementById("txtTitle").value  = "<c:out value = '${item.title}' />";
-			            document.getElementById("txtAbstract").value = "<c:out value = '${item.absTract}' />";
+			        if( pMode == "modify") {
+			            document.getElementById("txtTitle").value  = ConvMakeXMLString("<c:out value = '${item.title}' />");
+			            document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value = '${item.absTract}' />");
 			        }
 								
 			        if (pMode == "reply") {
-			            document.getElementById("txtTitle").value = "<c:out value = '${item.title}' />";
+			            document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value = '${item.title}' />");
 			        }
 			        
 			        ChkPermanent();
@@ -270,9 +270,9 @@
 				
 		            for(i=0;i<xmldomNodes.length;i++) {
 		                str += "<ROW><CELL>";	
-		                str += "<VALUE>" + SelectSingleNodeValue(xmldomNodes[i], "FileName") + "</VALUE>";
-		                str += "<DATA1>" + SelectSingleNodeValue(xmldomNodes[i], "FileName") + "</DATA1>";
-		                str += "<DATA2>" + SelectSingleNodeValue(xmldomNodes[i], "FilePath") + "</DATA2>";
+		                str += "<VALUE>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</VALUE>";
+		                str += "<DATA1>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</DATA1>";
+		                str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath")) + "</DATA2>";
 		                str += "<DATA3></DATA3>";
 		                str += "<DATA4></DATA4>";
 		                str += "<DATA5>Y</DATA5>";
@@ -283,6 +283,7 @@
 		            }
 		            
 		            str += "</ROWS></LISTVIEWDATA>";
+		            
 		            return str;
 		        }
 	
@@ -307,9 +308,9 @@
 			            pEndDateTime = "9999-12-30 23:59:59";
 			        } else {
 			            if ((pMode == "modify" || pMode == "temp") && $('#Edatepicker').val().substring(0, 4) != "9999") {
-			                pEndDateTime = $('#Edatepicker').val() + strEndDate.substring(10, 19);
+			                pEndDateTime = $('#Edatepicker').val() + " 23:59:59";
 			            } else {
-			                pEndDateTime = $('#Edatepicker').val() + strNow.substring(10, 19);
+			                pEndDateTime = $('#Edatepicker').val() + " 23:59:59";
 			            }
 			        }
 			        
@@ -515,14 +516,21 @@
 			                    xmlhttp.open("POST", "/ezCommunity/sendPostNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
 			                    xmlhttp.send();
 			                    xmlhttp = null;
-			                }
+			                } */
 			                
 			                if (pMode == "reply") {
-			                    xmlhttp = createXMLHttpRequest();
-			                    xmlhttp.open("POST", "/ezCommunity/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID + "&itemTreeID=" + strUpperItemIDTree, false);
-			                    xmlhttp.send();
-			                    xmlhttp = null;
-			                } */
+			                	$.ajax({
+							    	type : "POST",
+							    	url : "/ezCommunity/sendReplyNoticeMail.do",
+							    	async : false,
+							    	data : {boardID : pBoardID,
+						    				itemID : newID,
+						    				itemTreeID : strUpperItemIDTree},
+							    	dataType : 'json',
+							    	success : function (result) {
+							    	}
+							    });
+			                }
 			                
 			                alert("<spring:message code='ezCommunity.t282'/>");
 						} else {
@@ -781,9 +789,9 @@
 		                            htmlData = "<body free>" + htmlData + "</body>";
 		                            
 		                            if (gubun != "2") {
-		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + "<c:out value = '${item.title}' />" + "<br><br>" + htmlData;
+		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
 		                            } else {
-		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "<br><B><spring:message code='ezCommunity.t885'/></B>" + "<c:out value = '${item.title}' />" + "<br><br>" + htmlData;
+		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
 		                            }
 		                            
 		                            message.SetEditorContent(htmlData);
@@ -835,9 +843,6 @@
 	                }
 	                
 	                AttachFileInfo(strXML);
-	
-	//                 document.getElementById("file1").type = "text";
-	//                 document.getElementById("file1").type = "file";
 	            }
 			</script>
 

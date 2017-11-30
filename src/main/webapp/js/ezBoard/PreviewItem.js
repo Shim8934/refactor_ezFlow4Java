@@ -865,8 +865,7 @@ function ListCount(pCount) {
     
 }
 
-function Set_BoardConfig()
-{
+function Set_BoardConfig() {
     $.ajax({
 		type : "POST",
 		dataType : "text",

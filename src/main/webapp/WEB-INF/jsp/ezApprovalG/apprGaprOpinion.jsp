@@ -53,6 +53,16 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    var junGyulFlag = "${junGyulFlag}";
+		    var move_on, frameLeft, frameTop;
+		    var layerStartX, layerStartY;
+		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
+		    var height = window.parent.document.documentElement.clientHeight;
+		    if (height== 0)
+		    	height = window.parent.document.body.clientHeight;
+
+		    var width = window.parent.document.documentElement.clientWidth;
+		    if (width == 0)
+		        width = window.parent.document.body.clientWidth;
 		    
 		    window.onload = function () {
 		        try {
@@ -108,7 +118,7 @@
 		            SetOpinionAction("ADD");
 		            var OpContent;
 		            var Opstate;
-		            OpContent = document.getElementById("txt_OpinionContent").value;
+		            OpContent = trim(document.getElementById("txt_OpinionContent").value);
 		            // Opstate에 현재 btn_OpinionAdd의 텍스트 값을 가져온다 ex) 저장, 수정 ..
 		            Opstate = document.getElementById("btn_OpinionAdd").textContent;
 		            ChkFlag = true;
@@ -189,7 +199,7 @@
 		            alert("OPINIONOnSelChange :: " + e.description);
 		        }
 		    }
-		    
+		    		    
 		    function txt_OpinionContent_onfocus() {
 		        if (pDisplay == "Show") {
 		            document.getElementById("btn_OpinionCancel").focus();
@@ -205,13 +215,37 @@
 		            pWindow.document.Script.OpinionAction = pFlag;
 		        } catch (e) { }
 		    }
+		    
+		    function layerStart() {
+		    	layerStartX = event.clientX;
+		    	layerStartY = event.clientY;
+		    	move_on = true;
+// 		    	alert(iFramePanel.offsetWidth);
+// 		    	alert(iFramePanel.offsetHeight);
+		    }
+
+		    function layerMove() {
+		    	if(move_on == true) {
+		    		if(iFramePanel.offsetLeft > 0 && ((event.clientX - layerStartX + iFramePanel.offsetLeft) > 5) && ((event.clientX - layerStartX + iFramePanel.offsetLeft + iFramePanel.offsetWidth) < 1145)) {
+		    			iFramePanel.style.left = (event.clientX - layerStartX + iFramePanel.offsetLeft) + "px";
+		    		}
+		    		
+		    		if(iFramePanel.offsetTop > 0 && ((event.clientY - layerStartY + iFramePanel.offsetTop) > 5) && ((event.clientY - layerStartY + iFramePanel.offsetTop + iFramePanel.offsetHeight) < 990)) {
+		    			iFramePanel.style.top = (event.clientY - layerStartY + iFramePanel.offsetTop) + "px";
+		    		}
+		    	}
+		    }
+		    	
+		    function layerStop() {
+				move_on = false;
+		    }
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
 		</style>
 	</head>
 	<body class="popup">
-	    <h1>
+	    <h1 style="cursor:move;" onmousedown="layerStart()" onmouseup="layerStop()" onmousemove="layerMove()">
 	        <spring:message code='ezApprovalG.t55'/>
 	        <span id="TDHeSongMsg" style="font-size: 8pt; display: none">*
 	            <spring:message code='ezApprovalG.t422'/>

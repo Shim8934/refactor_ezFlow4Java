@@ -1403,8 +1403,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 
 	public OrganProxyVO getProxyInfo(Map<String, Object> map) throws Exception {
 		return (OrganProxyVO) select("EzOrganDAO.getProxyInfo", map);
-	}
-	
+	}	
+
     @SuppressWarnings("unchecked")
     public List<String> getAllSubDeptId(Map<String, Object> map) {      
         return (List<String>) list("EzOrganDAO.getAllSubDeptId", map);
@@ -1414,4 +1414,13 @@ public class EzOrganDAO extends EgovAbstractDAO {
         return (String) select("EzOrganDAO.getDeptPath", map);
     }
 
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getExtension4ID(Map<String, Object> map) throws Exception {
+		return (List<OrganDeptVO>) list("EzOrganDAO.getExtension4ID", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getChildrenDeptID(Map<String, Object> map) throws Exception {
+		return (List<OrganDeptVO>) list("EzOrganDAO.getChildrenDeptID", map);
+	}
 }

@@ -169,8 +169,7 @@
 		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage"
-		parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="G">
 			<![CDATA[
 				SELECT
@@ -4040,7 +4039,7 @@
 		]]>
 	</update>
 	
-	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map">
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				count(*)
@@ -4064,5 +4063,20 @@
 			FROM 
 				TBL_FORMCONNINFO 
 		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getParentContName" parameterClass="Map" resultClass="String">
+		SELECT
+			FORMCONTNAME,
+			CASE #v_LANG# WHEN '1' THEN FORMCONTNAME 
+				          WHEN '2' THEN FORMCONTNAME END AS FORMCONTNAME 
+		FROM
+			TBL_FORMCONTAINER
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			FORMCONTID = #v_PARENTID#
 	</select>
 </sqlMap>

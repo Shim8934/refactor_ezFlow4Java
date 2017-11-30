@@ -416,9 +416,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		if (duplicated == null) {
 			duplicated = "";
-		}
-		
-		if (duplicated == null) {
 			logger.debug("insertContainer duplicated.");
 			
 			return "FALSE";
@@ -1411,7 +1408,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getSealList(String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getSealList(String realPath, String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getSealList started.");
 		StringBuilder sb = new StringBuilder();
 		
@@ -1433,12 +1430,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealWidth() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), offset, false) + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate().substring(0, 19), offset, false) + "</VALUE></CELL>");
 			
 			if (vo.getDelDate() == null) {
 				sb.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
 			} else {
-				sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getDelDate(), offset, false) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getDelDate().substring(0, 19), offset, false) + "</VALUE></CELL>");
 			}
 			
 			sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
@@ -3656,4 +3653,20 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return result;
 	}
+	
+	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception {
+		logger.debug("getParentContName started.");
+		
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_PARENTID", formID);
+		map.put("v_LANG", langType);
+		
+		result = ezApprovalGAdminDAO.getParentContName(map);
+		
+		logger.debug("getParentContName ended.");
+		return result;
+	};
 }

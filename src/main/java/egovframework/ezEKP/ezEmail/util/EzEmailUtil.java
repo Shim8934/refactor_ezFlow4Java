@@ -54,6 +54,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
+import javax.mail.search.ComparisonTerm;
 import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -112,17 +113,20 @@ public class EzEmailUtil {
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
-	public String getSizeWithUnit(double size) {
+	public String getSizeWithUnit(double size) {		
 		String strSize;
-		
+
 		if (size > 1024 * 1024) {
-			size = size / 1024.0 / 1024.0;
-			strSize = String.format("%.1fMB", size);
+			/*size = size / 1024.0 / 1024.0;*/
+			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
+			/*strSize = String.format("%.1fMB", size);*/
 		} else if (size > 1024) {
-			size = size / 1024.0;
-			strSize = String.format("%dKB", (int)size);
+			/*size = size / 1024.0;*/
+			strSize = (int)(size/1024) + "KB";
+			/*strSize = String.format("%dKB", (int)size);*/
 		} else {
-			strSize = size + "B";
+			/*strSize = size + "B";*/
+			strSize = (int)size + "B";
 		}
 
 		return strSize;
@@ -495,7 +499,8 @@ public class EzEmailUtil {
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, Locale locale) throws Exception {
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, boolean mobile, Locale locale, 
+			String secureKey, String securePassword) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
@@ -539,9 +544,9 @@ public class EzEmailUtil {
                 logger.debug("Content-Transfer-Encoding=" + encodingName);
                 if (encodingName.equalsIgnoreCase("base64")) {
                     // decrease the size because base64 increases the size to 4/3 times.
-                    size = (int)(size*0.75); 
+                    size = size / 138 * 101;
                 }
-            }                                       
+            }
             
             String strSize = getSizeWithUnit(size);
 		    
@@ -640,6 +645,15 @@ public class EzEmailUtil {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
 				pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
+			} else if (secureKey != null) {
+				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span></li>";
+			} else if (mobile) {
+				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
+				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
+				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " </p>";
 			} else {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
@@ -722,7 +736,7 @@ public class EzEmailUtil {
 			// process in-line images
 			int index1 = -1;
 			int index2 = -1;
-			while((index1 = strContent.indexOf("src=\"cid:")) > -1 || (index2 = strContent.indexOf("src='cid:")) > -1){
+			while ((index1 = strContent.indexOf("src=\"cid:")) > -1 || (index2 = strContent.indexOf("src='cid:")) > -1) {
 				char quoteChar;
 				int index;
 				if (index1 > -1) {
@@ -735,24 +749,30 @@ public class EzEmailUtil {
 				}
 				
 				int lastindex = index+9;
-				while(true){
-					if(lastindex>=strContent.length()){
+				while (true) {
+					if (lastindex>=strContent.length()) {
 						lastindex = -1;
 						break;
 					}						
 					char c = strContent.charAt(lastindex);
-					if(c == quoteChar){
+					if (c == quoteChar) {
 						break;
 					}
 					++lastindex;
 				}
-				if(lastindex == -1){
+				if (lastindex == -1) {
 					break;
 				}
+				
 				String cid = strContent.substring(index+9, lastindex);
 				String contentId = "<"+cid+">";
 				String orgSrc = "src=" + quoteChar + "cid:" + cid + quoteChar;
-				strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&contentId="+URLEncoder.encode(contentId,"UTF-8") + "\"");						
+				
+				if (secureKey != null) {
+					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadSecureInline.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "\"");						
+				} else {
+					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath=" + URLEncoder.encode(folderPath, "UTF-8") + "&uid=" + uid + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "\"");						
+				}
 			}
 			htmlBody += strContent;
 			
@@ -764,7 +784,7 @@ public class EzEmailUtil {
 			
 			// 메일 본문의 링크를 누르면 별도의 창으로 표시되도록 하는 처리
 			htmlBody = addTargetBlank(htmlBody);				
-		} else if(part.isMimeType("text/plain")){
+		} else if(part.isMimeType("text/plain")) {
 			String strContent = "";
 			String[] headers = part.getHeader("Content-Type");
 			
@@ -850,7 +870,7 @@ public class EzEmailUtil {
 					logger.debug("disposition=" + p.getDisposition());
 				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
 				} else {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, locale);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -874,7 +894,7 @@ public class EzEmailUtil {
 			Part p = null;
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, locale);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -891,7 +911,7 @@ public class EzEmailUtil {
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, locale);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -909,7 +929,7 @@ public class EzEmailUtil {
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, locale);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -926,13 +946,23 @@ public class EzEmailUtil {
 			
 			String filename = getSubject(nestedMessage);;
 			filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
-			String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+			
 			
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
 				pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
+			} else if (secureKey != null) {
+				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span></li>";
+			} else if (mobile) {
+				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
+				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
+				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " </p>";
 			} else {
+				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
@@ -942,7 +972,7 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";				
 		}
-		
+
 		resultList.add(htmlBody);
 		resultList.add(pAttachListHtml);
 		resultList.add(filesize);
@@ -1121,7 +1151,7 @@ public class EzEmailUtil {
 			) throws Exception {
 		Message[] messages = folder.getMessages();
 		
-		logger.debug("searchField=" + searchField);
+		logger.debug("searchField=" + searchField + ", endDate=" + endDate + ", isImportantOnly=" + isImportantOnly );
 		
 		SearchTerm sTerm = existingSearchTerm; 
 		
@@ -1269,6 +1299,52 @@ public class EzEmailUtil {
                     }
                 };                  			    
 			}
+			
+			if (searchField.equalsIgnoreCase("SUBJECT&FROM")) {
+				logger.debug("if SUBJECT&FROM start");
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				        try {
+				        	String subject = getSubject(message);				        	
+				        	String from = getFullFromAddressOfMessage(message);
+				        	
+				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
+				        	boolean fromFlag = from != null & from.toLowerCase().contains(searchValue.toLowerCase());
+				        	
+				            if (subjectFlag || fromFlag) {
+				                return true;
+				            }
+				        } 
+				        catch (Exception e) {
+				        }
+				        
+				        return false;
+				    }
+				};					
+			}
+			
+			if (searchField.equalsIgnoreCase("SUBJECT&TO")) {
+				logger.debug("if SUBJECT&TO start");
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				        try {
+				        	String subject = getSubject(message);				        	
+				        	String from = getFullFromAddressOfMessage(message);
+				        	
+				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
+				        	boolean toFlag = toSearch(message, searchValue);
+				        	
+				            if (subjectFlag || toFlag) {
+				                return true;
+				            }
+				        } 
+				        catch (Exception e) {
+				        }
+				        
+				        return false;
+				    }
+				};					
+			}
 		}
 		
 		if (sTerm != null) {
@@ -1281,7 +1357,7 @@ public class EzEmailUtil {
 			}
 			
 			if (startDate != null) {
-				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.GE, startDate));
+				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.GT, startDate));
 			}
 
 			if (endDate != null) {
@@ -1322,14 +1398,99 @@ public class EzEmailUtil {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
 			
 			messages = folder.search(sTerm);
+			logger.debug("UnRead Message Count : " + messages.length);
 		}
+		
 		else if (isImportantOnly) {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
 			
 			messages = folder.search(sTerm);
-		}
+			logger.debug("Important Message Count : " + messages.length);
+		} 
+		
 		else {
-			return null;
+//			messages = null;
+		}
+		
+		if (endDate != null) {
+			if(sTerm == null) {// filter search 없을 때
+
+				ArrayList<Message> arrayList = new ArrayList<>();
+
+				Date from = endDate;       
+				Folder f = folder;
+
+				int end = f.getMessageCount();       
+				long lFrom = from.getTime(); //endDate
+
+				Date rDate;//message Date       
+				long lrDate;//message Date long for  comparing endDate
+
+				Message orgMsg[] = f.getMessages();
+				if ( orgMsg.length > 0 ) {
+					this.sortMessages(folder, orgMsg, "receivedDate", true);
+					
+					int j = 0;
+					do {                
+						Message testMsg = orgMsg[end-1];         
+						rDate = testMsg.getReceivedDate();         
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							arrayList.add(testMsg);
+							j++;
+						}
+					} 
+					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				}
+				
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+
+				return msg;
+			} else { //filter 있을 때
+				
+				ArrayList<Message> arrayList = new ArrayList<>();
+				
+				Date from = endDate;       
+				Folder f = folder;
+				
+				int end = f.search(sTerm).length;       
+				long lFrom = from.getTime(); //endDate
+				
+				Date rDate;//message Date       
+				long lrDate;//message Date long for  comparing endDate       
+				int j = 0;
+				
+				Message orgMsg[] = f.search(sTerm);
+				if ( orgMsg.length > 0 ) {
+					this.sortMessages(folder, orgMsg, "receivedDate", true);
+					
+					do {                
+						Message testMsg = orgMsg[end-1];         
+						rDate = testMsg.getReceivedDate();         
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							if (isUnreadOnly || isImportantOnly) {
+								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
+									arrayList.add(testMsg);
+									j++;
+								} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
+									arrayList.add(testMsg);
+									j++;
+								}
+							} else {
+								arrayList.add(testMsg);
+								j++;
+							}
+						}
+					} 
+					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				}
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+				
+				messages = msg;
+			}
 		}
 		
 		return messages;
@@ -1739,6 +1900,26 @@ public class EzEmailUtil {
 		Flags mdnSentFlag = new Flags("$MDNSent");
 		
 		message.setFlags(mdnSentFlag, isSet);
+	}
+	
+	public boolean hasSecureMailFlag(Message message) throws MessagingException {
+		boolean isSecureMail = false;
+		String[] flags = message.getFlags().getUserFlags();		
+		
+		for (String flag : flags) {
+			if (flag.equals("$SecureMail")) {
+				isSecureMail = true;
+				break;
+			}
+		}
+
+		return isSecureMail;
+	}
+	
+	public void setSecureMailFlag(Message message, boolean isSet) throws MessagingException {
+		Flags secureMailFlag = new Flags("$SecureMail");
+		
+		message.setFlags(secureMailFlag, isSet);
 	}
 	
 	public List<String> getInnerDomain(int tenantId) throws Exception {
@@ -2465,6 +2646,77 @@ public class EzEmailUtil {
     	return result;
     }
     
+    public String getSecureBodyHtml(String fileName, Locale locale) {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("<div class=\"security_message\" style=\"background:#d0e1ff;min-width:770px;\">\n");
+    	sb.append("    <div class=\"security_img\" style=\"max-width:780px;margin:0 auto;padding-left:40px;padding-bottom:20px\">\n");
+    	sb.append("        <img src=\"cid:" + fileName + ".gif@12345678.87654321\">\n");
+    	sb.append("        <section class=\"security_txt\" style=\"margin:0px 0px 0px 300px;padding:54px 0px;font-family:" + egovMessageSource.getMessage("main.t0620", locale).replace(";", ",") + ";position:relative;left:-50px;margin-top:-250px\">\n");
+    	sb.append("            <h4 style=\"margin:0px;padding:3px 0px 0px 0px;font-size:22px;letter-spacing:-1px;color:#333;border-bottom:2px solid #727985;line-height:44px\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "</h4>\n");
+    	sb.append("            <p style=\"margin:0px;padding:5px 0px 0px 0px;font-size:15px;color:#333;line-height:22px\">" + egovMessageSource.getMessage("ezEmail.lhm58", locale) + "</p>\n");
+    	sb.append("        </section>\n");
+    	sb.append("    </div>\n");
+    	sb.append("</div>\n");
+    	
+    	return sb.toString();
+    }
+    
+    public String getSecureAttachHtml(String serverName, Locale locale, String useHttps) {
+    	String protocol = "http";
+    	if (useHttps.equals("YES")) {
+    		protocol = "https";
+    	}
+    	
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("<!DOCTYPE html>\n");
+    	sb.append("<html style=\"height:100%;\">\n");
+    	sb.append("    <head>\n");
+    	sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
+    	sb.append("        <title>SECURE MAIL</title>\n");
+    	sb.append("        <style>\n");
+    	sb.append("            body{font-family:" + egovMessageSource.getMessage("main.t0620", locale).replace(";", ",") + "}\n");
+    	sb.append("            .security_layerpopup{width:100%; height:100%; background:#f1f1f1;}\n");
+    	sb.append("            .security_layerpopup .popup_img{margin:0px; padding:84px 0px 0px 0px; text-align:center;}\n");
+    	sb.append("            .security_layerpopup .popup_txt{margin:0px; padding:0px; text-align:center; font-size:24px; color:#333; font-weight:600;}\n");
+    	sb.append("            .security_layerpopup .popup_txt span{font-size:18px; font-weight:300; letter-spacing:-1px;}\n");
+    	sb.append("            .security_layerpopup form{width:465px; margin: 35px auto;}\n");
+    	sb.append("            .security_layerpopup form fieldset {margin:0; padding:0; border:0; clear:both;}\n");
+    	sb.append("            .security_layerpopup legend {visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0}\n");
+    	sb.append("            .security_layerpopup .password{float:left; width:380px; height:45px; margin:0px; padding::0px; background:url(" + protocol + "://" + serverName + "/images/email/secureMail/input_pw_bg.gif) no-repeat;}\n");
+    	sb.append("            .security_layerpopup #TextPassword {width:300px; height:43px; margin:1px 0px 0px 46px; padding:0px 0px 0px 10px; line-height:21px; color:#777; font-size:18px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}\n");
+    	sb.append("            .security_layerpopup .input_text.focus, .input_text.focusnot{background:#fff !important;}\n");
+    	sb.append("            .security_layerpopup .btn{float:left; width:75px; height:45px; margin:0px 0px 0px 10px; padding:0px;}\n");
+    	sb.append("            .security_layerpopup .btn_check{width:75px; height:45px; margin:0px; padding:0px;border-radius:5px;border:none;color:white;font-size:17px;text-decoration:none;background-color:rgb(48, 77, 127);}\n");
+    	sb.append("        </style>\n");
+    	sb.append("        <script>\n");
+    	sb.append("            function submitForm() {\n");
+    	sb.append("                if (document.secureForm.securePassword.value.length == 0) {\n");
+    	sb.append("                   alert(\"" + egovMessageSource.getMessage("ezEmail.lhm42", locale) + "\");\n");
+    	sb.append("                   return;\n");
+    	sb.append("                }\n");
+    	sb.append("                var f = document.secureForm;\n");
+    	sb.append("                f.submit();\n");
+    	sb.append("            }\n");
+    	sb.append("        </script>\n");
+    	sb.append("    </head>\n");
+    	sb.append("    <body style=\"margin:0;height:100%;\">\n");
+    	sb.append("        <div class=\"security_layerpopup\">\n");
+    	sb.append("            <p class=\"popup_img\"><img src=\"" + protocol + "://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
+    	sb.append("            <p class=\"popup_txt\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "<br /><span>" + egovMessageSource.getMessage("ezEmail.lhm40", locale) + "</span></p>\n");
+    	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"" + protocol + "://" + serverName + "/ezEmail/readSecureMail.do\">\n");
+    	sb.append("                <fieldset>\n");
+    	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" placeholder=\"" + egovMessageSource.getMessage("ezEmail.lhm42", locale) + "\" /></p>\n");
+    	sb.append("                    <p class=\"btn\"><input type=\"button\" name=\"Button\" id=\"Button\" value=\"" + egovMessageSource.getMessage("ezEmail.t38", locale) + "\" tabindex=\"3\" class=\"btn_check\" onclick=\"submitForm()\" /></p>\n");
+    	sb.append("                </fieldset>\n");
+    	sb.append("                <input type=\"hidden\" name=\"secureKey\" value=\"${X-JMocha-Secure-Mail-Key}\" />\n");
+    	sb.append("            </form>\n");
+    	sb.append("        </div>\n");
+    	sb.append("    </body>\n");
+    	sb.append("</html>\n");
+    	
+    	return sb.toString();
+    }
+    
     private String toHexString(byte[] array) {
         return DatatypeConverter.printHexBinary(array);
     }    
@@ -2538,6 +2790,60 @@ public class EzEmailUtil {
 		return result.toString();		
 	}	
 	
+	public boolean toSearch (Message message, String searchValue) {
+		if (",<>@".contains(searchValue)) {
+			return false;
+		}
+			
+		try {
+			StringBuilder sb = new StringBuilder();
+			
+			// retrieve the TO addresses from the message.
+			Address[] addresses = message.getRecipients(Message.RecipientType.TO);
+			String[] rawHeaders = message.getHeader("To");
+			String rawHeader = rawHeaders != null ? rawHeaders[0] : "";							
+			String to = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
+			
+			if (!to.equals("")) {
+				sb.append(to);
+			}
+			
+			// retrieve the CC addresses from the message.
+			addresses = message.getRecipients(Message.RecipientType.CC);
+			rawHeaders = message.getHeader("Cc");
+			rawHeader = rawHeaders != null ? rawHeaders[0] : "";														
+			String cc = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
+			
+			if (!cc.equals("")) {
+				if (!to.equals("")) {
+					sb.append(",");
+				}
+				
+				sb.append(cc);
+			}
+			
+			// retrieve the BCC addresses from the message.
+			addresses = message.getRecipients(Message.RecipientType.BCC);
+			String bcc = getStringListOfAddresses(addresses, true);
+
+			if (!bcc.equals("")) {
+				if (!to.equals("") || !cc.equals("")) {
+					sb.append(",");
+				}
+				
+				sb.append(bcc);
+			}							
+			
+			if (sb.toString().toLowerCase().contains(searchValue.toLowerCase())) {
+				return true;
+			}
+		}
+
+		catch (MessagingException e) {					    		
+		}
+			
+		return false;
+		}
 }
 
 

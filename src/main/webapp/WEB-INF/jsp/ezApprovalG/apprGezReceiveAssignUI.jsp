@@ -301,6 +301,9 @@
 	
 	}
 	</script>
+	<style>
+	   .mainlist tr th {border-top:0px}
+	</style>
 	</head>
 	<body class="popup">
 	    <xml id="listviewheader" style="display: none">
@@ -331,17 +334,20 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <h2><spring:message code='ezApprovalG.t232'/></h2>
-	                <div class="box" style="overflow: auto; height: 240px; width: 200px" id="TreeView"></div>
+	                <div class="box" style="overflow: auto; height: 242px; width: 200px" id="TreeView"></div>
 	            </td>
 	            <td style="vertical-align: top;padding-left:10px;">
 	                <h2><spring:message code='ezApprovalG.t233'/></h2>
 	                <div class="listview">
-	                    <div id="OrganListView" style="border: 0; Width: 280px; Height: 218px; overflow: auto; margin: 1px 1px 1px 1px;"></div><!-- width : 225px -->
+
+	                    <div id="OrganListView" style="border: 0; Width: 280px; Height: 218px; overflow: auto;"></div>
+
 	                </div>
 	                <table style="width: 100%;">
 	                    <tr>
-	                        <td style="height: 30px; text-align: center;">
-	                            <input type="text" id="textUser" name="textUser" style="width: 130px;" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn" style="margin-left:5px;vertical-align:middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a></td>
+	                        <td style="height: 30px; text-align: left;">
+	                        	<input type="text" id="textUser" name="textUser" style="width: 130px;" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn" style="margin-left:5px;vertical-align:middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+	                        </td>
 	                    </tr>
 	                </table>
 	            </td>

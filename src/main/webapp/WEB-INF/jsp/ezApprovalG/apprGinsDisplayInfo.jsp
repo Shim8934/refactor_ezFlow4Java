@@ -122,7 +122,7 @@
 		  <tr> 		  
 		    <th><spring:message code='ezApprovalG.t843'/></th>
 		    <td >
-		      <TextArea style="width:100%;height:80px;" id="txtDisplayReason" name="txtDisplayReason"></TextArea>
+		      <TextArea style="width:100%;height:80px;padding:0px;" id="txtDisplayReason" name="txtDisplayReason"></TextArea>
 			  </td>
 		  </tr>
 		</table>	

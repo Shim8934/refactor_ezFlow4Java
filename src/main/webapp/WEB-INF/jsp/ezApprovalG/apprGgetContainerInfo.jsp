@@ -375,7 +375,7 @@
 		        ContainerID = ContainerID + "'" + retVal[i] + "'";
 		        subCondition = "";
 		        if (ContainerID != "'undefined'") {
-		            document.getElementById("presentcell").innerHTML = unescape(" - <spring:message code='ezApproval.t576'/>");
+		            document.getElementById("presentcell").innerHTML = unescape("<spring:message code='ezApproval.t576'/>");
 		            GetDocList();
 		        }
 		    }
@@ -389,7 +389,7 @@
 		            GamSaFlag = false;
 		        }
 		
-		        document.getElementById("presentcell").innerHTML = " - " + ContainerName;
+		        document.getElementById("presentcell").innerHTML = ContainerName;
 		
 		        ContainerID = cont;
 		        subCondition = "";
@@ -420,7 +420,7 @@
 		    }
 		    function SelCont_onclick3(cont, Containers, ContainerName) {
 		        var i;
-		        document.getElementById("presentcell").innerHTML = " - " + ContainerName;
+		        document.getElementById("presentcell").innerHTML = ContainerName;
 		
 		        for (i = 0; i < 25; i++) {
 		            condition[i] = "";
@@ -608,6 +608,7 @@
 		            pURL = tr.getAttribute("DATA2");
 		
 		            var formid = tr.getAttribute("DATA6");
+		            var docState =  tr.getAttribute("DATA12");
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
@@ -616,7 +617,7 @@
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid);
+		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
@@ -731,14 +732,24 @@
 		
 		            if (window.screen.width > 800) {
 		                var pleftpos;
-		
+
 		                pleftpos = parseInt(width) - 967;
 		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
 		                width = parseInt(width) - pleftpos;
 		                left = pleftpos / 2;
 		            }
 		            else {
 		                heigth = parseInt(heigth) - 30;
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
 		                width = parseInt(width) - 10;
 		            }
 		
@@ -1259,7 +1270,7 @@
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
 	    <div id="MOC_Div" style="display: none"></div>
-	    <h1><spring:message code='ezApprovalG.t102'/><span id="presentcell" style="color:#666;font-weight:normal;"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+	    <h1><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezApprovalG.t106'/>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezApprovalG.t445'/>
@@ -1304,7 +1315,7 @@
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            </c:if>
-	            <select id="sel_year" name="sel_year" style="width:70px;" onchange="onSelect_Year(this);">    
+	            <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  
 	        </ul>

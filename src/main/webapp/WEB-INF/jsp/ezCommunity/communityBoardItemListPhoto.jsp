@@ -112,8 +112,8 @@
                             
                             var title = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim();
                             
-                            if (title.Length > 8) {
-                                title = title.Substring(0, 8) + "...";
+                            if (title.length > 8) {
+                                title = title.substring(0, 8) + "...";
                             }
                             
                             listXML += title;
@@ -191,12 +191,12 @@
 	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
-	            var pTop = (pheight - 720) / 2;
-	            var pLeft = (pwidth - 765) / 2;
+	            var pTop = (pheight - 800) / 2;
+	            var pLeft = (pwidth - 750) / 2;
 	            if (CrossYN()) {
-	                window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=800,width=750,top=" + pTop + ",left=" + pLeft, "");
 	            } else {
-	                window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=800,width=750,top=" + pTop + ",left=" + pLeft, "");
 	            }
 	        }
 	

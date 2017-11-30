@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -767,12 +768,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
         
         String url = "";
-        if (type.equals("HTMLPORTLET") || type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM") || type.equals("COMMUNITYCONTENT")) {
+        if (type.equals("HTMLPORTLET") || type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM") || type.equals("COMMUNITYCONTENT") || type.equals("")) {
         	url = request.getParameter("href");
         } else if (type.equals("COMMUNITYNOTI")) {
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
         } else if (type.equals("SCHEDULECONTENT")) {
         	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;        	
+        } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {
+        	url = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + itemID;
         }
         
         String m_strMHT = "";
@@ -837,9 +840,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
-						//절대경로에서 realPath "" 으로 대체
-						//Chrome 에서 도메인없으면 배경이미지 안뿌려줘서 추가시켰는데 맞는지 모르겄네
-						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), scheme + domain + m_ListImageLocalLocation.get(i).replace(realPath, ""));
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(realPath, ""));
 					}
 				} else {
 					return egovMessageSource.getMessage("main.t0601", locale);

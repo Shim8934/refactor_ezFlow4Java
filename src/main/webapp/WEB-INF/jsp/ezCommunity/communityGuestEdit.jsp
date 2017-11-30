@@ -36,7 +36,7 @@
 		        			name : $("#name").val(),
 		        			code : $("#code").val(),
 		        			mode : $("#mode").val(),
-		        			memo : encodeURIComponent($("#memo").val())
+		        			memo : encodeURIComponent($("#memo").val().trim())
 		        			},
 		        	success : function(result) {
 		        		goPage(1);
