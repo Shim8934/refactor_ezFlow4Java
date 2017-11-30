@@ -809,6 +809,10 @@ function event_xmlhttp_mailPreview_Complete() {
             }
             
             ///
+
+            if (pFromemail=="a@a.com") {
+            	pFromemail = "";
+            }
             
             var pOCS = "";
             if (USE_OCS == "YES") {

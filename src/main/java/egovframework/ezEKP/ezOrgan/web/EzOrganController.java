@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import antlr.collections.List;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -348,5 +351,25 @@ public class EzOrganController {
 		
 		logger.debug("getOrgInfo ended");
 		return strXML;
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getAllDeptID", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String getAllDeptID(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("getAllDeptID started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String parentID = request.getParameter("deptID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+		
+		//List<String> list = new ArrayList<String>();
+		
+		String result = ezOrganService.getChildrenDeptID(parentID, companyID, tenantID);		
+		
+		//logger.debug("list.toString() : " + list.toString());
+		
+		logger.debug("getAllDeptID ended.");
+		return result;
 	}
 }
