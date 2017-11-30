@@ -54,13 +54,17 @@
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 
 		        document.getElementById("list").style.height = height + "px";
-		        if (changeTab == "taskprog") {
-			        ChangeTab(document.getElementById("1tab1"));
-			        $("#1tab1").click();
-		        } else {
+		        if (changeTab == "taskre") {
+			        ChangeTab(document.getElementById("1tab3"));
+			        $("#1tab3").click();
+		        } else if (changeTab == "taskdi") {
 		        	ChangeTab(document.getElementById("1tab2"));
 		        	$("#1tab2").click();
+		        } else {
+		        	ChangeTab(document.getElementById("1tab1"));
+		        	$("#1tab1").click();
 		        }
+		        
 		        selectelem = "";
 		    }
 		    
