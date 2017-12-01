@@ -1182,7 +1182,7 @@ var listEventCheckbox = false;
 var listSubEventCheckbox = false;
 function event_listclick(obj) {
 	if (!event) {
-		var event = obj;
+		event = obj;
 	}
 	
 	if (obj.tagName == "TD") {
