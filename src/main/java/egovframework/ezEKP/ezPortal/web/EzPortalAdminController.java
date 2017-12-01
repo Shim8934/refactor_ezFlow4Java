@@ -1686,7 +1686,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/saveLogoImage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String saveLogoImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+	public String saveLogoImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody(required=false) String xmlStr) throws Exception {
 		logger.debug("saveLogoImage started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
