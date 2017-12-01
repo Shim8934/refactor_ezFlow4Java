@@ -882,18 +882,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
-	
-	public String tempUploadSave() throws Exception{
-		
-		// 암호화 기능을 사용하고, 해당 파일이 암호화 되어있는 유저인경우
-		// 익셉션이 발생하면, 여기로 들어온다.
-		String guid = UUID.randomUUID().toString(); // 
-		
-		
-		return "";
-	}
-	
-	
 	/**
 	 * PC에서 메일함(메일파일묶음) 가져오기 실행 함수
 	 */
