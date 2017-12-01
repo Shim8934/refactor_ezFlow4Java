@@ -809,7 +809,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(600, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
+		        DivPopUpShow(510, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
 		    }
 		
 		    function btnAssign_onclick_Complete(ret) {

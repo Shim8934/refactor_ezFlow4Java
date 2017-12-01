@@ -2631,7 +2631,8 @@ function getLastTotalSignSN(pNodes) {
 
     var pCurrentAprType = getNodeText(dataNodes[11]);
     
-    if (pCurrentAprType == "001") {
+    //최종결재가 결재거나 참조일 경우 채번되도록
+    if (pCurrentAprType == "001" || pCurrentAprType == "007" ) {
     	lastHabYuiSN = 1;
     }
 

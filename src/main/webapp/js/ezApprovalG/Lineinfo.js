@@ -3267,7 +3267,15 @@ function chkLastKyuljea(AprLineRow) {
 				rtnVal = false;
 				break;
 			}
-		} else {
+
+		} else if (addLastKyulJeYN == "2") {
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType9 || (GetAttribute(AprLineRow[0],"DATA11") != strAprType11 && GetAttribute(AprLineRow[0],"DATA11") != strAprType8 && aprtype == strAprType12)) {
+				rtnVal = false;
+				break;
+			}
+		} else if (addLastKyulJeYN == "0") {
+
 			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType8 || aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
 				rtnVal = false;
@@ -3312,7 +3320,14 @@ function chkLastKyuljeaCF(AprLineRow) {
 				rtnVal = false;
 				break;
 			}
-		} else {
+
+		} else if (addLastKyulJeYN == "2") {
+			if (aprtype == strAprType8 || aprtype == strAprType11 || aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType2) {
+				rtnVal = false;
+				break;
+			}
+		}  else {
 			if (aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType2) {
 				rtnVal = false;
