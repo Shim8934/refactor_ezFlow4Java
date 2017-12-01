@@ -2631,7 +2631,7 @@ function getLastTotalSignSN(pNodes) {
 
     var pCurrentAprType = getNodeText(dataNodes[11]);
     
-    if (pCurrentAprType == "001") {
+    if (pCurrentAprType == "001" || pCurrentAprType == "007" ) {
     	lastHabYuiSN = 1;
     }
 
