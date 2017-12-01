@@ -809,12 +809,7 @@
 	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
                     
                     if (pUse_Editor == "NAMO") {
-                    	if (message.GetEditorTextContent().includes("----------------------------------------------------------------------------------------------------")) {
-                    		document.getElementById("plainTextArea").value = "\r\n\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-                    	} else {
-                    		document.getElementById("plainTextArea").value = "\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-                    	}
-                        		
+                    		document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
                     } else {
                     	document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");	
                     }	
@@ -832,12 +827,12 @@
 	            textData = "";
 	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 	            for (var i=0; i<texts.length; i++) {
-	            	if (i == 0 && $.trim(texts[i]) == "" && pUse_Editor == "NAMO") {
-	            		textData += "<br/>";
+	            	if (i == 0 && $.trim(texts[i]) == ""  && pUse_Editor == "NAMO") {
+	            		textData = "<br/>";
 	            	}
 	            	if (texts[i] != "" && texts[i] != " ") {
-	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;");
-	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/gi, "\n");
+	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + " " + "</p>";
 	            	} else {
 	            		textData += "<p " + defaultFontAndSize + ">" + " " + "</p>";
 	            	}
