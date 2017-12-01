@@ -656,7 +656,14 @@
 		                alert("<spring:message code='ezOrgan.t249' />");
 		                return;
 		            }
-
+		            
+		            var titleName = document.getElementById("txt_TitleName").value.trim();
+		            
+					if (titleName == "") {
+						alert("<spring:message code'ezOrgan.kyj01' />");
+						return;
+					}
+						
 		            var listview = new ListView();
 		            listview.LoadFromID("lvUserList");
 		            var UserAddjoblistview = new ListView();
