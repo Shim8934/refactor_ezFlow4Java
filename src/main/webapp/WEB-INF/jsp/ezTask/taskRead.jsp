@@ -1050,12 +1050,12 @@
 			
 			    if (tasktype != "1" && document.getElementById("printAttach2").innerHTML.trim() != "")
 			    	printattachViewProgress.style.display = "";
-			
-			    window.print();
+			   
+			   //window.print();
 			    
 			    $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 			    
-			    document.getElementById("printScreen").style.display = "none";
+			    //document.getElementById("printScreen").style.display = "none";
 			    document.getElementById("taskInfo").style.display = "";
 			    document.getElementById("normalScreen").style.display = "";
 			    document.getElementById("menu").style.display = "";
@@ -1432,7 +1432,7 @@
 		</script>
 	</head>
 	
-	<body class="popup" style="overflow:hidden; height:99%">
+	<body class="popup" style="overflow:auto; height:99%">
 		<div id="menu" style="margin-bottom:10px;">
 			<ul>
 				<c:if test="${userInfo.id == taskInfoVO.creatorID }">

@@ -282,7 +282,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Sender;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onclick = function (event) { event_listclick(this, event); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
                             _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
@@ -303,7 +303,7 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onclick = function (event) { event_listclick(this, event); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
                             _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
@@ -315,7 +315,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onclick = function (event) { event_listclick(this, event); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
                             _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
@@ -327,7 +327,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = FormatSize(p_Size);
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onclick = function (event) { event_listclick(this, event); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
                             _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
@@ -1180,11 +1180,7 @@ var listContentArry = new Array();
 var listSubContentArry = new Array();
 var listEventCheckbox = false;
 var listSubEventCheckbox = false;
-function event_listclick(obj) {
-	if (!event) {
-		event = obj;
-	}
-	
+function event_listclick(obj, event) {	
 	if (obj.tagName == "TD") {
         obj = obj.parentElement;
     }
