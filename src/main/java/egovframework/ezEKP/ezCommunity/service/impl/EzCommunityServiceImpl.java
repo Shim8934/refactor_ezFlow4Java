@@ -693,6 +693,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, Model model) throws Exception {
 		String strWriterFakeName = "";
 		String startDateTime = "";
+		logger.debug("newBoardItem started.");
+		logger.debug("pMode = " + pMode);
 		
 		if (!pUrl.equals("")) {
 			startDateTime = item.getStartDate();
@@ -730,7 +732,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                             item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                         }
                     } else {
-                    	item.setEndDate(item.getEndDate().substring(0, 4));
+                    	item.setEndDate(item.getEndDate());
                     }
                 	
                 	if (boardInfo.getGubun() != null) {
