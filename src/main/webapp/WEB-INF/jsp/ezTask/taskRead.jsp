@@ -1018,7 +1018,7 @@
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
 			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			
-			    if (tasktype != "1") {
+			    if (tasktype != "1" && tasktype != "4") {
 			    	$("#printTaskWork").show();
 			    	$("#printTaskWorkContent").show();
 			        document.getElementById("printDocument2").innerHTML = message2.document.body.innerHTML;
@@ -1788,12 +1788,14 @@
 				</tr>
 				<tr style="height:20px;">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
-						<c:if test="${taskInfoVO.taskType == '1'}">
-							<spring:message code='ezTask.t2011' />
-						</c:if>
-						<c:if test="${taskInfoVO.taskType != '1'}">
-							<spring:message code='ezTask.t2010' />
-						</c:if>
+						<c:choose>
+							<c:when test="${taskInfoVO.taskType == '1' || taskInfoVO.taskType == '4'}">
+								<spring:message code='ezTask.t2011' />
+							</c:when>
+							<c:otherwise>
+								<spring:message code='ezTask.t2010' />
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 				<tr>

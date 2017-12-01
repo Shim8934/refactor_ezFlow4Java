@@ -3003,8 +3003,10 @@ public class EzBoardController extends EgovFileMngUtil{
         				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
         			}
         		} else {
-        			boardListVO.setEndDate(commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false));
-        			endDateTime = commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false).split(" ")[0];
+        			//boardListVO.setEndDate(commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false));
+        			//endDateTime = commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false).split(" ")[0];
+        			//2017-12-01 게시글 만료일을 지정하고, 그 만료일보다 더 늦은 날짜를 지정할 수 있게 하기 위해 수정
+        			endDateTime = "9999-12-31";
         		}
         		
         		startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
