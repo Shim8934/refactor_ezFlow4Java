@@ -118,7 +118,7 @@
                             
                             listXML += title;
                             listXML += "</td>";
-                            listXML += "<tr><td style='padding-left:5px'><span class='photo_name'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterName").trim() + "</span> / " + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriteDate").split(' ')[0];
+                            listXML += "<tr><td style='padding-left:5px'><span class='photo_name' style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width:146px; display: inline-block;'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterName").trim() + " / " + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriteDate").split(' ')[0] + "</span>"
                             listXML += "</td></tr></table>";
     					}
     					listXML += "</td>";
