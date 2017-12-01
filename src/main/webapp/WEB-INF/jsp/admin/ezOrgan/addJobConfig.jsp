@@ -660,7 +660,7 @@
 		            var titleName = document.getElementById("txt_TitleName").value.trim();
 		            
 					if (titleName == "") {
-						alert("<spring:message code'ezOrgan.kyj01' />");
+						alert("<spring:message code='ezOrgan.kyj01' />");
 						return;
 					}
 						
