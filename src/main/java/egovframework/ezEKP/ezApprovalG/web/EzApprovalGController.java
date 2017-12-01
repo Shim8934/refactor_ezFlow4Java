@@ -4526,6 +4526,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
 
 		String susinAdmin = "";
 		String hasOpinionYN = "";
@@ -4627,6 +4628,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("callBackType", callBackType);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		
 		logger.debug("aprDocView ended.");
 		

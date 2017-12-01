@@ -2279,7 +2279,7 @@ function cancelYN_after(xml) {
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
     else {
-    	if (forceCallBackYN != "NO") {
+    	if (forceCallBackYN == "YES") {
     	var result = "";
     	
     	$.ajax({
