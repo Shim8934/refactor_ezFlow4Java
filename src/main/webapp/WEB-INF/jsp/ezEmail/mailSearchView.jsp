@@ -542,7 +542,7 @@
 						},
 						success: function(result){
 							if (result != "") {
-						    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result;
+						    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=";
 						    	AttachDownFrame.location.href = fullpath;
 						        AttachDownFrame.target = "_blank";
 							} else {
