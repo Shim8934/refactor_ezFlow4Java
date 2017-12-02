@@ -704,7 +704,7 @@ function btn_addDepartment() {
 		var listObj = listView.GetDataRows();
 		
 		for (var i = listObj.length-1; i >= 0; i --) {
-			APRLINEATTENDADDFunction(listObj[i], "PERSON");
+			APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
 		}
 	}
 
@@ -732,7 +732,7 @@ function getUserInDept(dept) {
 
 function aprLineAddDeptUser(mode, xmlData) {
 	
-	try {
+//	try {
 		var pparsingXML;
         var objXML = createXmlDom();
 
@@ -823,17 +823,17 @@ function aprLineAddDeptUser(mode, xmlData) {
 
             if (tr.length == 0) {
                 if (InitTr.length == 0) {
-                    if (document.getElementById("APRLINECC").innerHTML != "")
-                        document.getElementById("APRLINECC").innerHTML = "";
+                    if (document.getElementById("APRLINE").innerHTML != "")
+                        document.getElementById("APRLINE").innerHTML = "";
 
                     var pAPRLINE = new ListView();      
                     pAPRLINE.SetID("pAPRLINE");
                     pAPRLINE.SetMulSelectable(false);    
-                    pAPRLINE.SetRowOnDblClick("AprlineDel_onclickCC");            
+                    pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");            
                     pAPRLINE.SetSelectFlag(false);
                     pAPRLINE.SetHeightFree(true);
                     pAPRLINE.DataSource(objXML);
-                    pAPRLINE.DataBind("APRLINECC");
+                    pAPRLINE.DataBind("APRLINE");
                 } else {
                     var objTr = pAPRLINE.NewAddRow(0, "pAPRLINE" + "_TR_" + eval(MaxID + 1));
                     pAPRLINE.AddDataRow(objTr, objXML);
@@ -847,8 +847,8 @@ function aprLineAddDeptUser(mode, xmlData) {
             AprLineAddIndex = AprLineAddIndex + 1;      
 		}//end FOR
 	
-	} catch (e){
-		alert("aprLineAddDeptUser :: " + e.description);
-	}
+//	} catch (e){
+//		alert("aprLineAddDeptUser :: " + e.description);
+//	}
 
 }
