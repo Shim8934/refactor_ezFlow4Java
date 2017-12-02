@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -541,7 +541,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				path = dir.getPath().substring(0, dir.getName().length()) + fileName;
 			}
 			
-			zos = new ZipOutputStream(new FileOutputStream(path + ".zip"));
+			zos = new ZipOutputStream(new FileOutputStream(path + ".zip"), Charset.forName("UTF-8"));
 			
 			for (File file : fileList) {
 				if (!file.isDirectory()) {
