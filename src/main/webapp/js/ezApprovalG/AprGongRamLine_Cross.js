@@ -704,7 +704,7 @@ function btn_addDepartment() {
 		var listObj = listView.GetDataRows();
 		
 		for (var i = listObj.length-1; i >= 0; i --) {
-			APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
+			APRLINEATTENDADDFunction(listObj[i], "PERSON");
 		}
 	}
 
@@ -732,7 +732,7 @@ function getUserInDept(dept) {
 
 function aprLineAddDeptUser(mode, xmlData) {
 	
-//	try {
+	try {
 		var pparsingXML;
         var objXML = createXmlDom();
 
@@ -764,7 +764,7 @@ function aprLineAddDeptUser(mode, xmlData) {
 	        if (DuplicateFlag) {
 	            var pAlertContent = strLangS824;
 	            OpenAlertUI(pAlertContent);
-	            return;
+	            continue;
 	        }
 		
             pparsingXML = "<LISTVIEWDATA><HEADERS>";
@@ -847,8 +847,8 @@ function aprLineAddDeptUser(mode, xmlData) {
             AprLineAddIndex = AprLineAddIndex + 1;      
 		}//end FOR
 	
-//	} catch (e){
-//		alert("aprLineAddDeptUser :: " + e.description);
-//	}
+	} catch (e){
+		alert("aprLineAddDeptUser :: " + e.description);
+	}
 
 }
