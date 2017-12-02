@@ -764,7 +764,7 @@ function aprLineAddDeptUser(mode, xmlData) {
 	        if (DuplicateFlag) {
 	            var pAlertContent = strLangS824;
 	            OpenAlertUI(pAlertContent);
-	            return;
+	            continue;
 	        }
 		
             pparsingXML = "<LISTVIEWDATA><HEADERS>";
@@ -823,17 +823,17 @@ function aprLineAddDeptUser(mode, xmlData) {
 
             if (tr.length == 0) {
                 if (InitTr.length == 0) {
-                    if (document.getElementById("APRLINECC").innerHTML != "")
-                        document.getElementById("APRLINECC").innerHTML = "";
+                    if (document.getElementById("APRLINE").innerHTML != "")
+                        document.getElementById("APRLINE").innerHTML = "";
 
                     var pAPRLINE = new ListView();      
                     pAPRLINE.SetID("pAPRLINE");
                     pAPRLINE.SetMulSelectable(false);    
-                    pAPRLINE.SetRowOnDblClick("AprlineDel_onclickCC");            
+                    pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");            
                     pAPRLINE.SetSelectFlag(false);
                     pAPRLINE.SetHeightFree(true);
                     pAPRLINE.DataSource(objXML);
-                    pAPRLINE.DataBind("APRLINECC");
+                    pAPRLINE.DataBind("APRLINE");
                 } else {
                     var objTr = pAPRLINE.NewAddRow(0, "pAPRLINE" + "_TR_" + eval(MaxID + 1));
                     pAPRLINE.AddDataRow(objTr, objXML);

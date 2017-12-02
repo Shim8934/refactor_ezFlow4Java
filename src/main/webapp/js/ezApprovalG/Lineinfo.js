@@ -418,7 +418,7 @@ function aprLineAddDeptUser(mode, xmlData) {
 	        if (DuplicateFlag) {
 	            var pAlertContent = strLangS824;
 	            OpenAlertUI(pAlertContent);
-	            return;
+	            continue;
 	        }
 		
             pparsingXML = "<LISTVIEWDATA><HEADERS>";
