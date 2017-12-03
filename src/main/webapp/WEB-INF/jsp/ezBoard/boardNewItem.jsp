@@ -1718,6 +1718,8 @@
 		    }
 		
 		    function backgroundimagechange() {
+		    	var editor = "${editor}";
+		    	
 		        for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
 		            if (document.getElementsByName("backradio")[i].checked) {
 		                var Table = document.createElement("TABLE");
@@ -1736,7 +1738,11 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                    Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + "\\')";
+		                	if (editor == 'NAMO') {
+		                		Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + "\\')";	
+		                	} else {
+		                		Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
+		                	}
 		                    
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
@@ -1773,6 +1779,7 @@
 		    }
 		    
 		    function BackImageUp_After(rtn) {
+		    	var editor = "${editor}";
 		        var xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
 
@@ -1801,8 +1808,12 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
-
-		        Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + imgSrc + "\\')";
+				
+		        if (editor == 'NAMO') {
+		        	Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + imgSrc + "\\')";
+		        } else {
+		        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";	
+		        }
 		        
 		        Table.style.width = imgWidth + "px";
 		        Table.style.height = imgHeight + "px";
