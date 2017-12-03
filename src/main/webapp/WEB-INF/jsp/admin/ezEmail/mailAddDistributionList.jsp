@@ -352,12 +352,17 @@
 	        var checkname2_cross_dialogArguments = new Array();
 	        var rgParams = new Array();
 	        function deptsearch_click() {
-	            if (document.all("deptkeyword").value == "") {
+	            // 검색어 양쪽의 whitespace를 제거한다.
+	            var searchWord = document.all("deptkeyword").value.trim();
+	            // whitespace를 제거한 스트링으로 Text Box를 다시 세트한다.
+	            document.all("deptkeyword").value = searchWord;
+	            
+	            if (searchWord == "") {
 	                alert("<spring:message code='ezEmail.t10' />");
 	                document.all("deptkeyword").focus();
 	                return;
 	            }
-	            
+	            	            
 	            var xmlDOM = createXmlDom();
 	            
 	            $.ajax({
@@ -366,7 +371,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {
-		        		search : "displayname::" + document.all("deptkeyword").value, 
+		        		search : "displayname::" + searchWord, 
 		        		cell : "extensionAttribute3;displayName;extensionAttribute9;", 
 		        		prop : "cn", 
 		        		type : "group"
