@@ -296,7 +296,7 @@
 	        }
 	        function search_click() {
 	        	p_ListOrderObject = null;
-	            if (document.all("keyword").value == "") {
+	            if (document.all("keyword").value.trim() == "") {
 	                alert("<spring:message code='ezEmail.t10' />");
 	                document.all("keyword").focus();
 	                return;
