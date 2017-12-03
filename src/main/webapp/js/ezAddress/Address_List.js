@@ -923,6 +923,7 @@ function event_listclick(obj) {
     else
         listEventCheckbox = false;
 }
+
 function event_listDBClick(obj) {
     var pAddressID = obj.getAttribute("_AddressID");
     var pAddressType = obj.getAttribute("_SType");
@@ -941,10 +942,12 @@ function event_listDBClick(obj) {
         var conWidth = 370;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
+        address_group_edit_dialogArguments[0] = edit_group;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
                 "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
 }
+var address_group_edit_dialogArguments = new Array();
 function event_SearchlistDBClick(obj) {
     var pAddressID = obj.getAttribute("_AddressID");
     var pAddressType = obj.getAttribute("_SType");
@@ -965,10 +968,24 @@ function event_SearchlistDBClick(obj) {
         var conWidth = 370;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
+        address_group_edit_dialogArguments[0] = edit_group;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
             "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
     }
 }
+
+function edit_group(ret) {
+	var pheight = window.screen.availHeight;
+    var pwidth = window.screen.availWidth;
+	var conHeight = 655;
+    var conWidth = 970;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - conWidth) / 2;
+	
+	window.open("/ezAddress/addressWriteGroup.do?addressid=" + encodeURIComponent(ret[0]) + "&foldertype=" + ret[1], "",
+			"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 655px, width = 970px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+}
+
 function quick_cancel()
 {
     ShowQuickAddres();
