@@ -158,18 +158,27 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
-		        for (i = 0; i < listview.GetSelectedIndexes().length; i++) {
-		            createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+		        var selectedCount = listview.GetSelectedIndexes().length;
+		        
+		        if (selectedCount > 0) {
+			        for (i = 0; i < selectedCount; i++) {
+			            createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+			        }
+			        
+			        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
+			        xmlHTTP.send(xmlDom);
+			        
+			        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+			            alert("<spring:message code='ezEmail.t53' />");
+			            company_change();
+			            return;
+			        }
+			        
+			        alert(listview.GetSelectedIndexes().length + "<spring:message code='ezEmail.t54' />");
+			        company_change();
+		        } else {
+		            alert("<spring:message code='ezEmail.t51' />");		            
 		        }
-		        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
-		        xmlHTTP.send(xmlDom);
-		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-		            alert("<spring:message code='ezEmail.t53' />");
-		            company_change();
-		            return;
-		        }
-		        alert(listview.GetSelectedIndexes().length + "<spring:message code='ezEmail.t54' />");
-		        company_change();
 		    }
 		    var mail_add_distributionlist_cross_dialogArguments = new Array();
 		    function add_dl() {
