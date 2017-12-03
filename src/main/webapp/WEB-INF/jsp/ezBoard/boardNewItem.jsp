@@ -1738,11 +1738,7 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                	if (editor == 'NAMO') {
-		                		Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + "\\')";	
-		                	} else {
-		                		Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
-		                	}
+	                		Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
 		                    
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
@@ -1809,12 +1805,8 @@
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
 				
-		        if (editor == 'NAMO') {
-		        	Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + imgSrc + "\\')";
-		        } else {
-		        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";	
-		        }
-		        
+	        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+	        	
 		        Table.style.width = imgWidth + "px";
 		        Table.style.height = imgHeight + "px";
 
