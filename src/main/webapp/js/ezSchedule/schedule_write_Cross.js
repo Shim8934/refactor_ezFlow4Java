@@ -63,8 +63,15 @@ function check_time() {
 }
 
 var SaveScheduleId = "";
+var saveCheck = false;
 function save_schedule()
 {
+	if(saveCheck) {
+		return;
+	} else {
+		saveCheck = true;
+	}
+	
     if (scheduleid == "") {
     	if (useAnyoneEdit != "YES") {
 	        var selectValue = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value.split(';;')[1];
@@ -333,8 +340,11 @@ function save_schedule()
 	
 	xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
 	xmlHTTP.send(xmlDom);
-
+	
 	if (xmlHTTP.status != 200) {
+		
+		saveCheck = false;
+		
 	    if (xmlHTTP.responseText.indexOf("OK") == -1) {
 	        if (xmlHTTP.responseText == "XSS")
 	            alert(strLang116);
@@ -343,7 +353,10 @@ function save_schedule()
 	    }
 	}
 	else {		
-	    if (ResourceSaveResult) {	    	
+	    if (ResourceSaveResult) {
+	    	
+	    	saveCheck = false;
+	    	
 	        SaveScheduleId = trim(xmlHTTP.responseText);	        
 	        if (SaveScheduleId != "") {
 	            var rntVal = resource_save(resDate);

@@ -20,46 +20,65 @@
 		    var newguBun = "";
 		    var xmlDom_treeview = createXmlDom();
 		    var ReturnFunction;
-		
-		    function Select() {		    	
+		    
+		    var board_alertArguments = new Array();
+		    
+		    function Select() {
+		    	board_alertArguments[1] = DivPopUpHidden;
 		    	if (selectedBoard == "") {
-		            alert("<spring:message code='ezBoard.t179'/>");
+		    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t179' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t179'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t179'/>");
 		            return;
 		        }
 
 		    	if (oldguBun > 0) {
 			    	if (oldguBun != newguBun) {
-			        	alert("<spring:message code='ezBoard.jsh01'/>");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, pUrl);
+// 			        	alert("<spring:message code='ezBoard.jsh01'/>");
 			            return;
 			        }
 			    	if (oldguBun == "3" && newguBun == "3") {
-			        	alert("<spring:message code='ezBoard.jsh01'/>");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, pUrl);
+// 			        	alert("<spring:message code='ezBoard.jsh01'/>");
 			            return;
 			        }
 		    	} else {
 		    		if (newguBun != "0") {
-			        	alert("<spring:message code='ezBoard.jsh01'/>");
+		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, pUrl);
+// 			        	alert("<spring:message code='ezBoard.jsh01'/>");
 			            return;
 			        }
 		    	}
 
 		    	if (CheckIfAnonyBoard(selectedBoard) == "1") {
-		            alert("<spring:message code='ezBoard.jsh01'/>");
+		    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.jsh01'/>");
 		            return;
 		        }
 
 		        if (CheckIfAnonyBoard(selectedBoard) == "2") {
-		            alert("<spring:message code='ezBoard.t999070'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999070' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999070'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t999070'/>");
 		            return;
 		        }
 
 		        if (BoardIDList.indexOf(selectedBoard) != -1) {
-		            alert("<spring:message code='ezBoard.t139'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t139' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t139'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t139'/>");
 		            return;
 		        }
 
 		        if (CheckIfCanWrite(selectedBoard) == false) {
-		            alert("<spring:message code='ezBoard.t354'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t354' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t354'/>");
 		            return;
 		        }
 
@@ -81,13 +100,19 @@
 		        xmlhttp.open("POST", "/ezBoard/moveItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardIDList + "&destItemIDList=" + destItemIDList + "&destBoardID=" + pDestBoardID, false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
-		            alert("<spring:message code='ezBoard.t126'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t126' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t126'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					board_alertArguments[1] = window.close;
+// 		            alert("<spring:message code='ezBoard.t126'/>");
 		            rtnVal = "OK";
-		            window.close();
+// 		            window.close();
 		        } else {
 		            rtnVal = "ERROR";
-		            window.close();
-		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
+		            board_alertArguments[1] = window.close;
+// 		            window.close();
+		            var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t181' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t181'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
 		        }
 		    }
 		    window.onunload = function () {
@@ -223,5 +248,9 @@
 		    <a class="imgbtn" name="Submit"  onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
 		    <a class="imgbtn" name="Submit"  onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
 		</div>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

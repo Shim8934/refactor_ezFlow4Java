@@ -1051,11 +1051,11 @@
 			    if (tasktype != "1" && document.getElementById("printAttach2").innerHTML.trim() != "")
 			    	printattachViewProgress.style.display = "";
 			   
-			   //window.print();
+			   window.print();
 			    
 			    $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 			    
-			    //document.getElementById("printScreen").style.display = "none";
+			    document.getElementById("printScreen").style.display = "none";
 			    document.getElementById("taskInfo").style.display = "";
 			    document.getElementById("normalScreen").style.display = "";
 			    document.getElementById("menu").style.display = "";
