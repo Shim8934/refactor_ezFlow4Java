@@ -613,7 +613,7 @@
 				}
 				
 				if (result == "ABORT") { // marformd 에러  
-					alert("호환되지 않는 파일형식이 있습니다.");
+					alert("<spring:message code='ezEmail.kyj15' />");
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
