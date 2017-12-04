@@ -400,7 +400,7 @@
 	
 			            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-				            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
+				            tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='max-width: 500px; overflow: hidden; text-overflow: ellipsis; display: inline-block;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>" + "<div style='display: inline-block;'><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>";
 				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
 				        } else {
 				        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
