@@ -776,6 +776,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				List<Message> messageList = new ArrayList<Message>();
 				Message message = null;
 				int count = 0;
+				int emlCount = 0;
 				long lastTime = System.currentTimeMillis();
 	
 				JSONObject jsonObj = new JSONObject();
@@ -806,6 +807,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	
 						message = sa.readMimeMessage(zis);
 						messageList.add(message);
+						emlCount ++;
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -840,7 +842,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 	
 				logger.debug("count=" + count);
-	
+				logger.debug("emlCount=" + emlCount);
+				
+				// 압축파일 내에 eml파일이 없을 경우
+				if (emlCount == 0) {
+					logger.debug("emlCount is 0.");
+					throw new Exception("ZEROEML");
+				}
+				
 				folder.appendMessages(messageList.toArray(new Message[0]));
 				folder.close(true);
 			}
@@ -850,7 +859,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (exceptionMessage != null) {
 				if (exceptionMessage.equals("encrypted ZIP entry not supported")) {
 					returnValue = "NOT";
-	
+					
 					if (useEncryptZipForEmail.equals("YES")) { // 암호화를 사용하면
 						String guid = UUID.randomUUID().toString(); // 새 id를 만들어서
 						File file = new File(tempFileUploadPath + commonUtil.separator + guid + ".zip"); // 파일을 생성하고
@@ -859,21 +868,26 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						returnTempId = guid;
 					}
 				} else if (exceptionMessage.endsWith("empty or null password provided for AES Decryptor")) {
+					logger.error("empty or null password provided for AES Decryptor.");
 					returnValue = "NULL";
 					returnTempId = retryPathId;
-				} else if (exceptionMessage.endsWith("Wrong Password for file")) {
+				} else if (exceptionMessage.contains("Wrong Password for file")) {
+					logger.error("Wrong Password for file.");
 					returnValue = "DIFF";
 					returnTempId = retryPathId;
 				} else if (exceptionMessage.equals("MALFORMED")) {
+					logger.error("MALFORMED.");
 					returnValue = "ABORT";
+				} else if (exceptionMessage.equals("ZEROEML")) {
+					returnValue = "ZEROEML";
 				} else {
 					returnValue = "ERROR";
+					e.printStackTrace();
 				}
 			} else {
 				returnValue = "ERROR";
+				e.printStackTrace();
 			}
-	
-			e.printStackTrace();
 		} finally {
 			if (ia != null) {
 				try { ia.close(); } catch (Exception e) {}
