@@ -613,7 +613,7 @@
 			<tr>    <!------------Question title----------------> 
 				<%-- <th>Question</th>			--%>
 				<td style="width: 100%;" class="pollTd01">							
-					<input id="qst_title" name="qst_title" type="text"  placeholder="Question" style="width: 100%;" class="createPoll_title" maxlength="150">
+					<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150">
 				</td>
 
 			</tr>
