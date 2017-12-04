@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.ibm.icu.util.ChineseCalendar;
 
+import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -332,8 +336,10 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		String solarValue = "";
 		StringBuilder result = new StringBuilder("<DATA>");
-		String[] array = new String[1000];
 		
+		List<OrganUserVO> tempList = new ArrayList<OrganUserVO>();
+		
+		//음력->양력으로 변환한 리스트
 		for (OrganUserVO orgranUserInfo : list) {
 			solarValue = orgranUserInfo.getBirth();
 			if (orgranUserInfo.getBirthType().equals("N")) {
@@ -343,8 +349,23 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 				if (!solarValue.equals("FALSE")) {
 					solarValue = solarValue.substring(0, 10);
 				}
+				orgranUserInfo.setBirth(solarValue);
 			}
 			
+			tempList.add(orgranUserInfo);
+		}	
+		
+		 //오름차순으로 정렬!
+        Collections.sort(tempList, new Comparator<OrganUserVO>() {
+			@Override
+			public int compare(OrganUserVO o1, OrganUserVO o2) {
+				return o1.getBirth().split("-")[2].compareTo(o2.getBirth().split("-")[2]);
+			}
+		});
+		
+		for (OrganUserVO orgranUserInfo : tempList) {	
+			solarValue = orgranUserInfo.getBirth();
+
 			if (!solarValue.equals("FALSE")) {
 				if (curMon.equals(solarValue.substring(5, 7))) {
 					result.append("<ROW>");
@@ -359,6 +380,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 						if (field.getName().toUpperCase().equals("BIRTH")) {
 							result.append("<" + field.getName().toUpperCase() + ">");
 							result.append(solarValue.substring(5, 10));
+
 							result.append("</" + field.getName().toUpperCase() + ">");
 							result.append("<BIRTHDAY>");
 							result.append(solarValue.substring(8, 10));
@@ -371,10 +393,10 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 					}
 					
 					result.append("</ROW>");
-						
 				}
 			}
 		}
+		
 		result.append("</DATA>");
 		return result.toString();
 	}
