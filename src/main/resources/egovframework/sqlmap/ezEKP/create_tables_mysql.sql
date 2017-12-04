@@ -8098,6 +8098,8 @@ CREATE TABLE `tbl_vote_comment` (
   `QST_ID` int(11) NOT NULL,
   `TENANT_ID` int(11) NOT NULL,
   `USER_ID` varchar(50) NOT NULL,
+  `USER_NAME1` varchar(120) NOT NULL,
+  `USER_NAME2` varchar(120) NOT NULL,
   `TEXT_CONTENT` varchar(500) NOT NULL DEFAULT '',
   `IMAGE_TYPE` varchar(50) NOT NULL DEFAULT '',
   `FILE_TYPE` varchar(250) NOT NULL DEFAULT '',
@@ -8126,7 +8128,8 @@ CREATE TABLE `tbl_vote_question` (
   `TITLE` varchar(250) NOT NULL,
   `SECRET_VOTE` tinyint(4) NOT NULL DEFAULT '0',
   `CREATOR` varchar(80) NOT NULL DEFAULT '0',
-  `CREATOR_NAME` varchar(80) NOT NULL DEFAULT '0',
+  `CREATOR_NAME1` varchar(120) NOT NULL,
+  `CREATOR_NAME2` varchar(120) NOT NULL,
   `FILE_PATH` longtext,
   `RESULT_FIRST` tinyint(4) NOT NULL DEFAULT '1',
   `IS_MODIFYING` tinyint(4) NOT NULL DEFAULT '0',
@@ -8165,7 +8168,8 @@ CREATE TABLE `tbl_vote_user_and_answer` (
   `QST_ID` mediumint(9) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(9) NOT NULL,
-  `USER_NAME` varchar(50) NOT NULL,
+  `USER_NAME1` varchar(120) NOT NULL,
+  `USER_NAME2` varchar(120) NOT NULL,
   `VOTE_DATE` varchar(70) NOT NULL,
   PRIMARY KEY (`ANS_ID`,`QST_ID`,`USER_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
