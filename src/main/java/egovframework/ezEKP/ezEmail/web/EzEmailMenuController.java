@@ -820,7 +820,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					// 진행율 클라이언트에게 전송
 					if (userkey != null) {
 						
-						//TODO: 왜 messageCount-1로 되어있었는지 궁금함.
 						int percent = (int)((double) count / (double) messageCount * 100.0);
 						long currTime = System.currentTimeMillis();
 						int interval = (int) (currTime - lastTime);
@@ -1280,7 +1279,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						long currTime = System.currentTimeMillis();
 						int interval = (int) (currTime - lastTime);
 						
-						//TODO
 						int percent = (int)((double) currCount / (double) messageCount * 100.0 );
 						
 						JSONObject jsonObj = new JSONObject();
