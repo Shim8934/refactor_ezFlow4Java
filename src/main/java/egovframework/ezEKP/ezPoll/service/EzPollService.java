@@ -25,7 +25,7 @@ public interface EzPollService {
 
 	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID) throws Exception;
 
-	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary) throws Exception;
+	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary, String mode) throws Exception;
 
 	public List<Integer> getHiddenQuestionIds(String userID, int tenantId) throws Exception;
 
@@ -37,7 +37,7 @@ public interface EzPollService {
 
 	public void insertCommentQuestion(PollQuestionStatusVO pollQstStatusVO) throws Exception;
 
-	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary) throws Exception;
+	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary, String mode) throws Exception;
 
 	public PollQuestionVO getQuestionByIdAndTenantId(int qstId, int tenantId) throws Exception;
 
@@ -69,7 +69,7 @@ public interface EzPollService {
 
 	public void updateEndDateForQst(int qstId, int tenantId, String dateNow) throws Exception;
 
-	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary) throws Exception;
+	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary, String mode) throws Exception;
 
 	public void updateModifyingQuestion(int qstId, int tenantId, int value) throws Exception;
 
@@ -89,7 +89,7 @@ public interface EzPollService {
 
 	public void deleteSpecificCmt(int cmtId, int qstId, int tenantId) throws Exception;
 
-	public void getAllQuestionForUser(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr)  throws Exception;
+	public void getAllQuestionForUser(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr, String mode) throws Exception;
 
 	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception;	
 }

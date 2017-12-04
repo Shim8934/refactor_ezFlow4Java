@@ -31,6 +31,7 @@
 			var brdID			  = ${brdID};	
 			var primary 		  = "<c:out value='${primary}'/>";
 			var searchParam	  	  = "<c:out value='${strSearch}'/>";
+			var radioBttn		  = "<c:out value='${mode}'/>";
 			var userID 			  = "<c:out value='${userID}'/>";
 			var seeCheck 		  = "<c:out value='${seeCheck}'/>";	
 			var deleteBttn 		  = "<c:out value='${deleteBttn}'/>";			
@@ -68,11 +69,16 @@
 			
 			function preProcessing() {
 				//Uncheck all checkboxes after reload for firefox
-		    	$(':checkbox:checked').removeAttr('checked');    	
+		    	$(':checkbox:checked').removeAttr('checked');  
+				
+				if(radioBttn == "wri") {
+					$("#radio2").prop("checked", true);
+				}				
 				
 				if (seeCheck == 1) {
 					$('#seeAll').prop('checked', true);
 				}
+				
 				if (deleteBttn == 1 || admin == 1) {
 					$('#btnDel').show();
 				}
@@ -102,6 +108,9 @@
 		    function menu_Search() {
 		    	var checkSeeAll = 0;
 		    	var search_str = "";
+		    	var mode = $("input[name=searchCheck]:checked").val();
+		    	
+		    	//if ($("input[name=searchCheck]:checked").val() == ) {}
 		    	
 		    	if ($('#seeAll').is(':checked')) {
 		    		checkSeeAll = 1;
@@ -111,7 +120,7 @@
 		    		search_str = document.getElementById("searchInput").value;
 		    	}
 		    	
-		        var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&search=" + search_str + "&see=" + checkSeeAll;
+		        var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&search=" + search_str + "&see=" + checkSeeAll + "&mode=" + mode;
 		        window.location.href = szUrl;
 		    }
 		    
@@ -232,13 +241,21 @@
 		</script>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
-		<h1><spring:message code="ezPoll.t103"/><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code="ezPoll.t103"/>
+			<span id="mailBoxInfo"></span>
+			<span style="float: right;">
+					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t106"/></span>
+					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t107"/></span>
+					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" >
+					<a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a>
+			</span>
+		</h1>
 		<div id="mainmenu1">
 			<ul>
-				<li>
+<%-- 				<li>
 					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" >
 					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t227"/></span></a>
-				</li>
+				</li> --%>
 				<li id="btnDel"><a class="pollImgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202"/></span></a></li>
 				<li id="btnHid"><a class="pollImgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203"/></span></a></li>
 				<li><a class="pollImgbtn" onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				

@@ -111,7 +111,7 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary) throws Exception {		
+	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary, String mode) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", userID);
 		map.put("v_deptPath", deptPath);
@@ -119,6 +119,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", tenantID);	
 		map.put("search_str", searchStr);	
 		map.put("primary", primary);
+		map.put("mode", mode);
 		return ezPollDAO.getQuestionsTest(map);		
 
 	}
@@ -159,12 +160,13 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary) throws Exception {
+	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary, String mode) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", userID);
 		map.put("tenant_id", tenantID);	
 		map.put("search_str", searchStr);	
 		map.put("primary", primary);
+		map.put("mode", mode);
 		return ezPollDAO.getOwnQuestions(map);	
 	}
 
@@ -301,11 +303,12 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary) throws Exception {
+	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary, String mode) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("tenant_id", tenantID);	
 		map.put("search_str", searchStr);	
 		map.put("primary", primary);
+		map.put("mode", mode);
 		return ezPollDAO.getAllQuestions(map);	
 	}
 
@@ -411,7 +414,7 @@ public class EzPollServiceImpl implements EzPollService{
 		ezPollDAO.deleteSpecificCmt(map);		
 	}
 	
-	public void getAllQuestionForUser(LoginVO loginvo, Set<PollQuestionVO> set, String searchStr) throws Exception {
+	public void getAllQuestionForUser(LoginVO loginvo, Set<PollQuestionVO> set, String searchStr, String mode) throws Exception {
 		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
 		int tenantID = loginvo.getTenantId();
 		String primary = loginvo.getPrimary();
@@ -425,7 +428,7 @@ public class EzPollServiceImpl implements EzPollService{
 			
 			try {
 				String depPath = ezOrganService.getDeptPath(deptID, tenantID);
-				listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary);
+				listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary, mode);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -434,13 +437,13 @@ public class EzPollServiceImpl implements EzPollService{
 			
 			//Get all question which this user is creator
 			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
-			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary);		
+			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode);		
 			set.addAll(listOfQuestion2);
 		}
 		else {
 			//Get all questions for admin privilege user
 			try {
-				listOfQuestion = getAllQuestions(tenantID, searchStr, primary);
+				listOfQuestion = getAllQuestions(tenantID, searchStr, primary, mode);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

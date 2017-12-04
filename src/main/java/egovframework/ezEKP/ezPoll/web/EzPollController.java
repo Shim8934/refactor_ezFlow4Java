@@ -207,6 +207,7 @@ public class EzPollController extends EgovFileMngUtil {
 			return "redirect:/ezPoll/pollVote.do";
 		}
 		
+		String mode = (request.getParameter("mode") != null) ? request.getParameter("mode"): "";;
 		String listQst = (request.getParameter("listQst") != null) ? request.getParameter("listQst"): "";
 		
 		if (!listQst.equals("")) {
@@ -256,7 +257,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get list of questions for this user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();	
-		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, searchStr);
+		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, searchStr, mode);
 		List<Integer> listHiddenQuestionIds = ezPollService.getHiddenQuestionIds(userID, loginVO.getTenantId());
 		
 		//Set status for each question
@@ -314,6 +315,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("userID", loginVO.getId());
 		model.addAttribute("tenantID", loginVO.getTenantId());
 		model.addAttribute("strSearch", searchStr);		
+		model.addAttribute("mode", mode);
 		model.addAttribute("seeCheck", seeAll);
 		model.addAttribute("deleteBttn", checkingArray);		
 		model.addAttribute("adminPrivilege", adminPrivilege);

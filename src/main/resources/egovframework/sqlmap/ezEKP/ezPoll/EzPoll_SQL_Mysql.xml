@@ -373,27 +373,25 @@
 						TENANT_ID = #tenant_id#
 				)
 			AND
-				TENANT_ID = #tenant_id#
-			AND 
-				(
-						TITLE LIKE CONCAT('%', #search_str#, '%')
-					OR
-						CONTENT LIKE CONCAT('%', #search_str#, '%')					
-					
-		]]>			
-		<isEqual property="primary" compareValue="1" prepend="OR">
+				TENANT_ID = #tenant_id#								
+		]]>	
+		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
-						CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')
-				)
+				TITLE LIKE CONCAT('%', #search_str#, '%')				
 			]]>
 		</isEqual>	
-		<isNotEqual property="primary" compareValue="1" prepend="OR">
-			<![CDATA[
-        				CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')
-				)
-	        ]]>
-		 </isNotEqual>
-		
+		<isEqual property="mode" compareValue="wri" prepend="AND">
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+				]]>
+			</isEqual>	
+			<isNotEqual property="primary" compareValue="1">
+				<![CDATA[
+	        		CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+		        ]]>
+			 </isNotEqual>
+		</isEqual>			
     </select> 
     
     <select id="EzPollDAO.getAllQuestions" resultMap="pollQuestion">   
@@ -403,26 +401,25 @@
 			FROM 
 				TBL_VOTE_QUESTION
 			WHERE 
-				TENANT_ID = #tenant_id#
-			AND 
-				(
-						TITLE LIKE CONCAT('%', #search_str#, '%')
-					OR
-						CONTENT LIKE CONCAT('%', #search_str#, '%')
-										
-		]]>		
-		<isEqual property="primary" compareValue="1" prepend="OR">
+				TENANT_ID = #tenant_id#											
+		]]>	
+		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
-						CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')
-				)
+				TITLE LIKE CONCAT('%', #search_str#, '%')				
 			]]>
 		</isEqual>	
-		<isNotEqual property="primary" compareValue="1" prepend="OR">
-			<![CDATA[
-        				CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')
-				)
-	        ]]>
-		 </isNotEqual>		
+		<isEqual property="mode" compareValue="wri" prepend="AND">
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+				]]>
+			</isEqual>	
+			<isNotEqual property="primary" compareValue="1">
+				<![CDATA[
+	        		CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+		        ]]>
+			 </isNotEqual>
+		</isEqual>			
     </select>     
     
     <select id="EzPollDAO.getOwnQuestions" resultMap="pollQuestion">   
@@ -434,26 +431,25 @@
 			WHERE  
 				CREATOR = #user_id#
 			AND
-				TENANT_ID = #tenant_id#
-			AND
-				(
-						TITLE LIKE CONCAT('%', #search_str#, '%')
-					OR
-						CONTENT LIKE CONCAT('%', #search_str#, '%')
-	
-		]]>		
-		<isEqual property="primary" compareValue="1" prepend="OR">
+				TENANT_ID = #tenant_id#	
+		]]>	
+		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
-						CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')
-				)
+				TITLE LIKE CONCAT('%', #search_str#, '%')				
 			]]>
 		</isEqual>	
-		<isNotEqual property="primary" compareValue="1" prepend="OR">
-			<![CDATA[
-        				CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')
-				)
-	        ]]>
-		 </isNotEqual>			
+		<isEqual property="mode" compareValue="wri" prepend="AND">
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+				]]>
+			</isEqual>	
+			<isNotEqual property="primary" compareValue="1">
+				<![CDATA[
+	        		CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+		        ]]>
+			 </isNotEqual>
+		</isEqual>		
     </select>  
     
     <select id="EzPollDAO.getListOptionsOfQst" resultMap="pollAnswer">   
