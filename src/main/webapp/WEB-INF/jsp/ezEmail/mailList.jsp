@@ -623,7 +623,13 @@
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
-
+				
+				if (result == "ZEROEML") { // eml파일이 없을 경우
+					alert("<spring:message code='ezEmail.kyj16' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
 				if (result == "OK") {
 					document.importMailboxform.file1.value = "";
 					MailListRefresh(); 
