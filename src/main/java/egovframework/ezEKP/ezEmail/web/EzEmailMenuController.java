@@ -729,7 +729,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					try { zis1.close(); } catch (Exception e1) {}
 				}
 				
-				//TODO: fis를 다시 생성해야하는지, 안닫아도 되는지 궁금함.
 				if (zipFilePath != null) {
 					fis = new FileInputStream(zipFilePath);
 				} else {
@@ -755,12 +754,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			
 			// 유저정보를 키로 가지고있는 세션맵에서 메세지 보낼 세션정보를 확인한다.
 			if (userkey != null) {
-				if (zipFilePath != null) {
-					fis = new FileInputStream(zipFilePath);
-				} else {
-					fis = multiFile.get(0).getInputStream();
-				}
-				
 				session = sessionMap.get(userkey);
 				logger.info("[WebSocket] mailBoxImportZip Started. SessionMap Size = "+ sessionMap.size() + " userkey=" + userkey + " SessionId=" + session.getId() + " SessionInfo=" + session.getBasicRemote());
 			}
@@ -820,7 +813,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					// 진행율 클라이언트에게 전송
 					if (userkey != null) {
 						
-						//TODO: 왜 messageCount-1로 되어있었는지 궁금함.
 						int percent = (int)((double) count / (double) messageCount * 100.0);
 						long currTime = System.currentTimeMillis();
 						int interval = (int) (currTime - lastTime);
@@ -852,9 +844,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				folder.appendMessages(messageList.toArray(new Message[0]));
 				folder.close(true);
 			}
-	
-			zis.closeEntry();
-	
 		} catch (Exception e) {
 			String exceptionMessage = e.getMessage();
 			
@@ -887,10 +876,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
-				ia.close();
+				try { ia.close(); } catch (Exception e) {}
 			}
 			if (zis != null) {
-				zis.close();
+				try { zis.closeEntry(); } catch (Exception e) {}
+				try { zis.close(); } catch (Exception e) {}
 			}
 		}
 	
@@ -1280,7 +1270,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						long currTime = System.currentTimeMillis();
 						int interval = (int) (currTime - lastTime);
 						
-						//TODO
 						int percent = (int)((double) currCount / (double) messageCount * 100.0 );
 						
 						JSONObject jsonObj = new JSONObject();

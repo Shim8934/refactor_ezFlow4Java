@@ -567,6 +567,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			
 			fis = null;
 			
+			zos.close();
+			zos = null;
 		} catch (Exception e) {
 			throw e;
 			
@@ -576,6 +578,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			}
 			
 			if (zos != null) {
+				try { zos.closeEntry(); } catch (Exception e) {}
 				try { zos.close(); } catch (Exception e) {}
 			}
 			

@@ -175,18 +175,22 @@ function AttachList() {
 }
 
 function delAttachDoc() {
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
-
-    createNodeAndInsertText(xmlpara, objNode, "NODE", pDocID);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezAPRDOCATTACH/aspx/delAttachDoc.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseText;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/delAttachDoc.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
+	
+    return result;
 }
 
 function DocMoveParser() {
