@@ -1066,6 +1066,10 @@ function PreviewRayerChange(pGubun) {
 }
 function Window_resize() {
     try {
+
+    	document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
+        document.getElementById("layer_popup").style.top = "100px";
+
         if (!isPreviewChange) {
 
             if (parseInt(document.documentElement.clientWidth) < 1000) {
