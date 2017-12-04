@@ -84,12 +84,12 @@ function confirm() {
 	
 	if (useEncrytZipFileChk) {
 		
-		if (document.getElementById("securePassword").value.trim() == "") {
+		if (document.getElementById("securePassword").value == "") {
 			alert("<spring:message code='ezEmail.lhm42' />");
 			return;
 		}
 		
-		if (document.getElementById("securePasswordCheck").value.trim() == "") {
+		if (document.getElementById("securePasswordCheck").value == "") {
 			alert("<spring:message code='ezEmail.lhm62' />");
 			return;
 		}

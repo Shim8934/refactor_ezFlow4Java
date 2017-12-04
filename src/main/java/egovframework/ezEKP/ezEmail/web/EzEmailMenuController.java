@@ -691,7 +691,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				String destFolderPath = tempFileUploadPath + commonUtil.separator + retryPathId;
 	
 				ZipFile zipFile = new ZipFile(sourceFile);
-				zipFile.setPassword(encryptPw);
+				zipFile.setPassword(encryptPw.toCharArray());
 				zipFile.extractAll(destFolderPath);
 				
 				if (sourceFile.delete()) {

@@ -45,7 +45,7 @@ window.onload = function(){
 
 function confirm(){
 	
-	if (document.getElementById("securePassword").value.trim() == "") {
+	if (document.getElementById("securePassword").value == "") {
 		alert("<spring:message code='ezEmail.kyj14' />");
 		return;
 	} else {
