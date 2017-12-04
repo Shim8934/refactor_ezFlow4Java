@@ -194,9 +194,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String searchStr = "";
 		String hideQstList = "";
 		int seeAll = 0;	
-		int[] checkingArray = new int[2];
-		checkingArray[0] = 0;
-		checkingArray[1] = 0;
+		int checkingArray = 0;
 		int adminPrivilege = -1;
 		String qstId = "";
 		
@@ -209,8 +207,18 @@ public class EzPollController extends EgovFileMngUtil {
 			return "redirect:/ezPoll/pollVote.do";
 		}
 		
-		List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
-		//ObjectMapper om = new ObjectMapper();
+		String listQst = (request.getParameter("listQst") != null) ? request.getParameter("listQst"): "";
+		
+		if (!listQst.equals("")) {
+			String [] questionIDs = listQst.split(",");			
+			
+			for (int i = 0; i < questionIDs.length; i++) {
+				//Unhide each question
+				ezPollService.unhideQuestion(questionIDs[i], userID, loginVO.getTenantId());								
+			}
+		}
+		
+		List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();		
 		
 		if (loginVO.getRollInfo().indexOf("c=1") == -1 && loginVO.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
@@ -252,7 +260,7 @@ public class EzPollController extends EgovFileMngUtil {
 		List<Integer> listHiddenQuestionIds = ezPollService.getHiddenQuestionIds(userID, loginVO.getTenantId());
 		
 		//Set status for each question
-		setStatusForQuestions(setOfQuestions, listHiddenQuestionIds, loginVO, checkingArray, seeAll);
+		checkingArray = setStatusForQuestions(setOfQuestions, listHiddenQuestionIds, loginVO, checkingArray, seeAll);
 		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);
 		
 		//Get list of modifying questions
@@ -298,8 +306,7 @@ public class EzPollController extends EgovFileMngUtil {
 				model.addAttribute("list", listRenderQuestions);
 			}			
 		}			
-		
-		//model.addAttribute("listOfModifyingQst", om.writeValueAsString(listOfModifyingQst));
+				
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("currPage", currPage);
 		model.addAttribute("totalQuestions", totalQuestions);
@@ -308,8 +315,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("tenantID", loginVO.getTenantId());
 		model.addAttribute("strSearch", searchStr);		
 		model.addAttribute("seeCheck", seeAll);
-		model.addAttribute("deleteBttn", checkingArray[0]);
-		model.addAttribute("hideBttn", checkingArray[1]);
+		model.addAttribute("deleteBttn", checkingArray);		
 		model.addAttribute("adminPrivilege", adminPrivilege);
 		model.addAttribute("primary", loginVO.getPrimary());
 		
@@ -1879,7 +1885,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}		
 	}
 
-	private void setStatusForQuestions(Set<PollQuestionVO> setOfQuestions, List<Integer> listHiddenQuestionIds, LoginVO loginVO, int[] checkingArray, int seeAll) throws ParseException {
+	private int setStatusForQuestions(Set<PollQuestionVO> setOfQuestions, List<Integer> listHiddenQuestionIds, LoginVO loginVO, int checkingArray, int seeAll) throws ParseException {
 		String userID = loginVO.getId();		
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date endDate;
@@ -1907,10 +1913,7 @@ public class EzPollController extends EgovFileMngUtil {
 				
 				//Checking Array
 				if (userID.equals(pollQstVO.getCreator())) {
-					checkingArray[0] = 1;
-				}
-				else {
-					checkingArray[1] = 1;
+					checkingArray = 1;
 				}
 			}
 		}
@@ -1938,14 +1941,12 @@ public class EzPollController extends EgovFileMngUtil {
 					
 					//Checking Array
 					if (userID.equals(pollQstVO.getCreator())) {
-						checkingArray[0] = 1;
-					}
-					else {
-						checkingArray[1] = 1;
+						checkingArray = 1;
 					}
 				}
 			}
 		}
+		return checkingArray;
 	}
 	
 	private void saveHiddenQuestion(String hideQstList, LoginVO loginVO) throws Exception {

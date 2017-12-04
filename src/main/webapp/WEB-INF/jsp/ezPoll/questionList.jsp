@@ -33,8 +33,7 @@
 			var searchParam	  	  = "<c:out value='${strSearch}'/>";
 			var userID 			  = "<c:out value='${userID}'/>";
 			var seeCheck 		  = "<c:out value='${seeCheck}'/>";	
-			var deleteBttn 		  = "<c:out value='${deleteBttn}'/>";
-			var hideBttn 		  = "<c:out value='${hideBttn}'/>";
+			var deleteBttn 		  = "<c:out value='${deleteBttn}'/>";			
 			var checkedArr		  = [];					
 			var chkDelete		  = 0;
 			var tenantId		  =  "<c:out value='${tenantID}'/>";
@@ -80,14 +79,19 @@
 				else {
 					$('#btnDel').hide();
 				}
-				if (hideBttn == 1) {
-					$('#btnHid').show();
-				}
-				else {
-					$('#btnHid').hide();
-				}
-				
+			
 				document.getElementById("searchInput").value = searchParam;
+				
+				$('#seeAll').click(function() {
+					var checkSeeAll = 0;
+					
+					if (this.checked) {						
+						checkSeeAll = 1;
+					}
+
+					var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&see=" + checkSeeAll;
+					window.location.href = szUrl;
+				});	
 			}
 		    
 		    function menuQst_DetailUserInfo(pUserID) {
@@ -122,9 +126,18 @@
 		    	}
 		    	else {
 		    		var test = checkedArr.indexOf($(t).val());
+		    		chkDelete = 0;
 		    		
 		    		if (test != -1) {
 		    			checkedArr.splice(test, 1);
+		    		}
+		    		
+		    		for (var i = 0; i < checkedArr.length; i++) {
+		    			var creator = "creator" + checkedArr[i];
+			    		
+						if (document.getElementById(creator).value != userID && admin == 0) {
+							chkDelete = 1;
+						}		    				
 		    		}
 		    	}
 		    }
@@ -145,23 +158,28 @@
 	    		window.location.href = szUrl;
 		    }
 		    
-		    function menu_Show() {
-		    	var checkSeeAll = 0;
+ 		    function menu_Show() {
+		    	if (checkedArr.length == 0) {
+		            alert('<spring:message code="ezPoll.t239"/>');
+		            return;
+		    	}	
 		    	
-		    	if ($('#seeAll').is(':checked')) {
-		    		checkSeeAll = 1;
-		    	}
+		    	var checkedList = checkedArr[0];
 		    	
-		    	var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&see=" + checkSeeAll;
-		    	window.location.href = szUrl;
-		    }
+	    		for (var i = 1; i < checkedArr.length; i++) {	    			
+	    			checkedList = checkedList + "," + checkedArr[i];	    			
+	    		}
+	    		
+	    		var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&listQst=" + checkedList;
+		    	window.location.href = szUrl;		    	
+		    } 
 		    
 		    function menu_Delete() {
 		    	if (checkedArr.length == 0) {
 		            alert('<spring:message code="ezPoll.t239"/>');
 		            return;
 		    	}
-		    	
+
 		    	if (chkDelete == 1) {
 		            alert('<spring:message code="ezPoll.t141"/>');
 		            return;
@@ -223,7 +241,7 @@
 				</li>
 				<li id="btnDel"><a class="pollImgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202"/></span></a></li>
 				<li id="btnHid"><a class="pollImgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203"/></span></a></li>
-				<li><a class="pollImgbtn" onClick="menu_Show()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
+				<li><a class="pollImgbtn" onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left; margin:10px 4px 0px 5px;"><span><spring:message code="ezPoll.t205" /></span></li>
 			</ul>
 		</div>

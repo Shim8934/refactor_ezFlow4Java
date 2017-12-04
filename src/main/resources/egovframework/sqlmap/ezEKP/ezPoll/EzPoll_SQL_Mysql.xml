@@ -638,7 +638,22 @@
                 AND
                   	 TENANT_ID = #tenant_id#
 		]]>
-    </update>     
+    </update>   
+    
+    <update id="EzPollDAO.unhideQuestion" parameterClass="Map">
+   		<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 HIDE = 0
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+    </update>   
    
     <insert id="EzPollDAO.insertSeenQuestion" parameterClass="Map">      	
         <selectKey keyProperty="v_temp" resultClass="Integer">

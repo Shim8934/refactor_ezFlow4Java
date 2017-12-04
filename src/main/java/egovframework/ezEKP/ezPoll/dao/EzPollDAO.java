@@ -80,6 +80,10 @@ public class EzPollDAO extends EgovAbstractDAO {
 		update("EzPollDAO.updateNumberOfVotesForAnswer", map);
 	}	
 	
+	public void unhideQuestion(Map<String, Object> map) {
+		update("EzPollDAO.unhideQuestion", map);
+	}	
+	
 	public void updateModifyingQuestion(Map<String, Object> map) {
 		update("EzPollDAO.updateModifyingQuestion", map);
 	}	

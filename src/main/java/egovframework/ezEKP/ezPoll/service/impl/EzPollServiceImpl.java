@@ -450,4 +450,13 @@ public class EzPollServiceImpl implements EzPollService{
 		}	
 	}
 
+	@Override
+	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("qst_id", qstID);
+		map.put("user_id", userID);			
+		map.put("tenant_id", tenantId);			
+		ezPollDAO.unhideQuestion(map);	
+	}
+
 }
