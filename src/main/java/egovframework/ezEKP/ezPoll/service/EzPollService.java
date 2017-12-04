@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPoll.service;
 
 import java.util.List;
 import java.util.Set;
+
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
@@ -24,7 +25,7 @@ public interface EzPollService {
 
 	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID) throws Exception;
 
-	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr) throws Exception;
+	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary) throws Exception;
 
 	public List<Integer> getHiddenQuestionIds(String userID, int tenantId) throws Exception;
 
@@ -36,7 +37,7 @@ public interface EzPollService {
 
 	public void insertCommentQuestion(PollQuestionStatusVO pollQstStatusVO) throws Exception;
 
-	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr) throws Exception;
+	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary) throws Exception;
 
 	public PollQuestionVO getQuestionByIdAndTenantId(int qstId, int tenantId) throws Exception;
 
@@ -68,7 +69,7 @@ public interface EzPollService {
 
 	public void updateEndDateForQst(int qstId, int tenantId, String dateNow) throws Exception;
 
-	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr) throws Exception;
+	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary) throws Exception;
 
 	public void updateModifyingQuestion(int qstId, int tenantId, int value) throws Exception;
 

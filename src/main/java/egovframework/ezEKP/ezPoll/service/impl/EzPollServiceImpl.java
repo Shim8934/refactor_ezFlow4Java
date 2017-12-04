@@ -57,7 +57,8 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("title", pollQuestionVO.getTitle());
 		map.put("secret_vote", pollQuestionVO.getSecretVote());
 		map.put("creator", pollQuestionVO.getCreator());
-		map.put("creator_name", pollQuestionVO.getCreatorName());
+		map.put("creator_name1", pollQuestionVO.getCreatorName1());
+		map.put("creator_name2", pollQuestionVO.getCreatorName2());
 		map.put("file_path", pollQuestionVO.getFilePath());	
 		map.put("result_first", pollQuestionVO.getResultFirst());	
 		ezPollDAO.insertQuestion(map);
@@ -110,13 +111,14 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr) throws Exception {		
+	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", userID);
 		map.put("v_deptPath", deptPath);
 		map.put("company_id", companyID);
 		map.put("tenant_id", tenantID);	
 		map.put("search_str", searchStr);	
+		map.put("primary", primary);
 		return ezPollDAO.getQuestionsTest(map);		
 
 	}
@@ -157,11 +159,12 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr) throws Exception {
+	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", userID);
 		map.put("tenant_id", tenantID);	
 		map.put("search_str", searchStr);	
+		map.put("primary", primary);
 		return ezPollDAO.getOwnQuestions(map);	
 	}
 
@@ -244,7 +247,8 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("qst_id", pollUserAnswer.getQstId());
 		map.put("user_id", pollUserAnswer.getUserId());
 		map.put("tenant_id", pollUserAnswer.getTenantId());	
-		map.put("user_name", pollUserAnswer.getUserName());	
+		map.put("user_name1", pollUserAnswer.getUserName1());	
+		map.put("user_name2", pollUserAnswer.getUserName2());
 		map.put("vote_date", pollUserAnswer.getVoteDate());	
 		ezPollDAO.addAnswerAndUser(map);			
 	}
@@ -297,10 +301,11 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr) throws Exception {
+	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("tenant_id", tenantID);	
 		map.put("search_str", searchStr);	
+		map.put("primary", primary);
 		return ezPollDAO.getAllQuestions(map);	
 	}
 
@@ -363,7 +368,9 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("id", pollCmtVO.getCmtId());
 		map.put("qst_id", pollCmtVO.getQstId());			
 		map.put("tenant_id", pollCmtVO.getTenantId());
-		map.put("user_id", pollCmtVO.getUserId());		
+		map.put("user_id", pollCmtVO.getUserId());	
+		map.put("user_name1", pollCmtVO.getUserName1());	
+		map.put("user_name2", pollCmtVO.getUserName2());
 		map.put("text_content", pollCmtVO.getTextContent());
 		map.put("image_type", pollCmtVO.getImageAttach());			
 		map.put("file_type", pollCmtVO.getFileAttach());
@@ -407,17 +414,18 @@ public class EzPollServiceImpl implements EzPollService{
 	public void getAllQuestionForUser(LoginVO loginvo, Set<PollQuestionVO> set, String searchStr) throws Exception {
 		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
 		int tenantID = loginvo.getTenantId();
+		String primary = loginvo.getPrimary();
 		
 		//Check if user has admin privilege
 		if (loginvo.getRollInfo().indexOf("c=1") == -1 && loginvo.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
 			String companyID = loginvo.getCompanyID();
 			String deptID = loginvo.getDeptID();
-			String userID = loginvo.getId();
+			String userID = loginvo.getId();			
 			
 			try {
 				String depPath = ezOrganService.getDeptPath(deptID, tenantID);
-				listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr);
+				listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -426,13 +434,13 @@ public class EzPollServiceImpl implements EzPollService{
 			
 			//Get all question which this user is creator
 			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
-			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr);		
+			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary);		
 			set.addAll(listOfQuestion2);
 		}
 		else {
 			//Get all questions for admin privilege user
 			try {
-				listOfQuestion = getAllQuestions(tenantID, searchStr);
+				listOfQuestion = getAllQuestions(tenantID, searchStr, primary);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

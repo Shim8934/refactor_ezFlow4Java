@@ -16,7 +16,8 @@ public class PollQuestionVO implements Serializable {
 	private String title;
 	private int secretVote;
 	private String creator;
-	private String creatorName;
+	private String creatorName1;
+	private String creatorName2;
 	private String creatorImage;
 	private int status;	
 	private String receiverType;
@@ -111,16 +112,24 @@ public class PollQuestionVO implements Serializable {
 	
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}	
+	
+	public String getCreatorName1() {
+		return creatorName1;
 	}
-	
-	public String getCreatorName() {
-		return creatorName;
+
+	public void setCreatorName1(String creatorName1) {
+		this.creatorName1 = creatorName1;
 	}
-	
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
-	}		
-	
+
+	public String getCreatorName2() {
+		return creatorName2;
+	}
+
+	public void setCreatorName2(String creatorName2) {
+		this.creatorName2 = creatorName2;
+	}
+
 	public String getCreatorImage() {
 		return creatorImage;
 	}

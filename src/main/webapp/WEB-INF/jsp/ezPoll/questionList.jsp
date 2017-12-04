@@ -29,6 +29,7 @@
 		    var status_processing = "<spring:message code = 'ezPoll.t101'/>";
 		    var status_finish 	  = "<spring:message code = 'ezPoll.t102'/>";		   
 			var brdID			  = ${brdID};	
+			var primary 		  = "<c:out value='${primary}'/>";
 			var searchParam	  	  = "<c:out value='${strSearch}'/>";
 			var userID 			  = "<c:out value='${userID}'/>";
 			var seeCheck 		  = "<c:out value='${seeCheck}'/>";	
@@ -256,7 +257,14 @@
 						</c:if>
 						
 			          	<%-- Creator --%>
-			          	<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName} </a> </td>
+		          		<c:choose>
+							<c:when test="${primary == '1'}">
+								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td>
+							</c:when>
+							<c:otherwise>
+								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName2} </a> </td>
+							</c:otherwise>
+						</c:choose>	
 			          	
 			          	<%-- CreatorID --%>
 			          	<td style="display:none"><input type="text" id="creator<c:out value ="${list.qstId}" />" value=<c:out value="${list.creator}"/> style="display:none"> </td>

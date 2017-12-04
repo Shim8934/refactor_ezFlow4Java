@@ -6,7 +6,8 @@ public class PollUserAnswerVO {
 	private int qstId;
 	private String userId;
 	private int tenantId;
-	private String userName;
+	private String userName1;
+	private String userName2;
 	private String voteDate;
 	private String userImage;
 	
@@ -49,13 +50,21 @@ public class PollUserAnswerVO {
 	public void setVoteDate(String voteDate) {
 		this.voteDate = voteDate;
 	}
-	
-	public String getUserName() {
-		return userName;
+
+	public String getUserName1() {
+		return userName1;
 	}
-	
-	public void setUserName(String userName) {
-		this.userName = userName;
+
+	public void setUserName1(String userName1) {
+		this.userName1 = userName1;
+	}
+
+	public String getUserName2() {
+		return userName2;
+	}
+
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
 	}
 
 	public String getUserImage() {

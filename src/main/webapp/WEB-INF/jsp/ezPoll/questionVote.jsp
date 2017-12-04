@@ -17,6 +17,7 @@
 		<script type="text/javascript">	
 			var filesize 				= 0;
 			var xhr1 					= new XMLHttpRequest();
+			var _primary 				= "<c:out value='${primary}'/>";
 			var hasVoted 				= "<c:out value='${hasVoted}'/>";
 			var votePrivilege 			= "<c:out value='${hasVotePrivilege}'/>";
 			var numberOfMultiSelect 	= "<c:out value='${question.multiSelect}'/>";
@@ -361,6 +362,14 @@
 			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
 			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
 			        	var _userPhoto = JSON.parse(updatedInfo.body).userPhoto;
+			        	var _userName = "";
+			        	
+			        	if (_primary == 1) {
+			        		_userName = JSON.parse(updatedInfo.body).userName1;
+			        	}
+			        	else {
+			        		_userName = JSON.parse(updatedInfo.body).userName2;
+			        	}
 			        	
 			            if (_userId != curentUser) {			          		
 			            	if (_cmdId <= commentIndex) {
@@ -368,7 +377,7 @@
 			          			return;
 			          		}
 			            	
-			            	updateNewCmt(_userId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto);
+			            	updateNewCmt(_userId, _userName, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto);
 					    }
 				    });
 			        
@@ -413,7 +422,14 @@
 			        	var optId = JSON.parse(updatedInfo.body).optionId;			        	
 			        	var mode = JSON.parse(updatedInfo.body).mode;
 			        	var user = JSON.parse(updatedInfo.body).userId;
-			        	var userName = JSON.parse(updatedInfo.body).userName;
+			        	var userName = "";
+			        	
+			        	if (_primary == 1) {
+			        		userName = JSON.parse(updatedInfo.body).userName1;
+			        	}
+			        	else {
+			        		userName = JSON.parse(updatedInfo.body).userName2;
+			        	}
 			        	
 			        	if (user != curentUser) {
 			        		var voteId = -1;
@@ -1197,7 +1213,7 @@
                 
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
-                div1ForTd2.innerHTML = curentUser;
+                div1ForTd2.innerHTML = curentUserName;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
                 
                 //Add text comment if exists
@@ -1728,7 +1744,7 @@
 		    	}
 		    }
 		    
-		    function updateNewCmt(userId, attach, type, name, path, txtContent, cmtTime, userPhoto) {
+		    function updateNewCmt(userId, userName, attach, type, name, path, txtContent, cmtTime, userPhoto) {
 		    	commentIndex = commentIndex + 1;
 		    	var oTable = document.getElementById("commentListView");
 		    	
@@ -1756,7 +1772,7 @@
                 
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
-                div1ForTd2.innerHTML = userId;
+                div1ForTd2.innerHTML = userName;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
                 
                 //Add text comment if exists
@@ -2075,7 +2091,14 @@
 				  <div style="float: left; display: block;" class="voteInfo">
 				  		<img src="${question.creatorImage}" style="display:inline-block;float:left; height:60px;width:60px; padding-bottom: 1px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
 						<div id="textTest" style="display:inline-block;" class="voteTextTest">
-							<span style="display:block; font-size:18px; color:#000;" class="questionFont"><c:out value='${question.creatorName}'/></span>
+							<c:choose>
+								<c:when test="${primary == '1'}">
+									<span style="display:block; font-size:18px; color:#000;" class="questionFont"><c:out value='${question.creatorName1}'/></span>
+								</c:when>
+								<c:otherwise>
+									<span style="display:block; font-size:18px; color:#000;" class="questionFont"><c:out value='${question.creatorName2}'/></span>
+								</c:otherwise>
+							</c:choose>							
 							<span style="display:block; font-size:12px; color:#969595;"><c:out value='${question.startDate}'/></span>
 						</div>
 				  </div>
@@ -2169,7 +2192,12 @@
 		               					for(var i = 0; i < listUserAnswer.length; i ++){
 		               						if (listUserAnswer[i].ansId == optionID) {
 												var tempObj = new Object();
-												tempObj[listUserAnswer[i].userId] = listUserAnswer[i].userName;
+												if (_primary == "1") {
+													tempObj[listUserAnswer[i].userId] = listUserAnswer[i].userName1;
+												}
+												else {
+													tempObj[listUserAnswer[i].userId] = listUserAnswer[i].userName2;
+												}												
 		               							userNameArr[loopIdx].push(tempObj);
 		               						}
 		               					}
@@ -2223,7 +2251,15 @@
 								<img src="${_comt.userImage}" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>
 							<td>
-								<div style="display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;">${_comt.userId}</div>
+								<c:choose>
+									<c:when test="${primary == '1'}">
+										<div style="display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;">${_comt.userName1}</div>
+									</c:when>
+									<c:otherwise>
+										<div style="display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;">${_comt.userName2}</div>
+									</c:otherwise>
+								</c:choose>								
+								
 								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;" >
 									<c:if test="${_comt.textContent != ''}">
 										<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
