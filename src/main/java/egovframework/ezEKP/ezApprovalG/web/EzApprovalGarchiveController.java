@@ -2079,7 +2079,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	/** 문서유통 암호화여부 팝업*/
 	@RequestMapping(value = "/ezApprovalG/selectEnc.do", produces = "text/xml;charset=utf-8")
-	public String selectEnc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+	public String selectEnc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("selectEnc started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
