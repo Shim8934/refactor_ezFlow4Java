@@ -129,6 +129,12 @@
 		                document.getElementById("select").item(3).selected = true;
 		                break;
 		            case "draft":
+		                reply.style.display = 'none';
+		                p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
+		                p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
+		                p_Listoption = "2";
+		                document.getElementById("select").selectedIndex = 3;
+		                document.getElementById("select").item(3).selected = true;
 		                g_bdraft = true;
 		                break;
 		            case "delete":
