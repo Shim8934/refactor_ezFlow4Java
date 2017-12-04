@@ -1051,11 +1051,11 @@
 			    if (tasktype != "1" && document.getElementById("printAttach2").innerHTML.trim() != "")
 			    	printattachViewProgress.style.display = "";
 			   
-			   //window.print();
+			   window.print();
 			    
 			    $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 			    
-			    //document.getElementById("printScreen").style.display = "none";
+			    document.getElementById("printScreen").style.display = "none";
 			    document.getElementById("taskInfo").style.display = "";
 			    document.getElementById("normalScreen").style.display = "";
 			    document.getElementById("menu").style.display = "";
@@ -1101,28 +1101,6 @@
 			
 			function RefreshView() {
 				window.opener.RefreshView();
-			}
-			
-			function getTaskAttachList() {
-				$.ajax({
-					type : "POST",
-					url : "/ezTask/getTaskAttachList.do",
-					dataType : "json",
-					data : {
-							taskID : taskid,
-					},
-					success : function(result) {
-						hasTaskAttach = result.hasTaskAttach;
-						taskAttachList = result.taskAttachList;
-						
-						if (hasTaskAttach == 'Y') {
-							document.getElementById('attachedfileDIV').innerHTML = taskAttachList
-				    	}
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						
-					}
-				})
 			}
 			
 			function getTaskAttachList() {
@@ -1453,7 +1431,7 @@
 		</script>
 		
 		<div class="wrap_progress" style="height:245px;">
-			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="'${taskInfoVO.title }' />">${taskInfoVO.title }</h4>
+			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="${taskInfoVO.title }">${taskInfoVO.title }</h4>
 			<div style="">
 				<div class="circle progress_graph" style="width:30%; margin: 10px 20px; top:15px;">
 					<strong></strong>

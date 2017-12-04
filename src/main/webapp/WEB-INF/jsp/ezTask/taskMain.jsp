@@ -400,7 +400,7 @@
 	
 			            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-				            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
+				            tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='max-width: 500px; overflow: hidden; text-overflow: ellipsis; display: inline-block;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>" + "<div style='display: inline-block;'><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>";
 				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
 				        } else {
 				        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
@@ -509,13 +509,17 @@
 					var notRep = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t204' /></td>";
 
 					var rep = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t200912' /></td>";
+					
+					var toSend = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t200915' /></td>";
 
 			    	$('#tr_ing').empty();
 					
 		            if ($(".tabon").attr("divname") == "taskrepetition") {
 		            	$('#tr_ing').append(rep);	
+		            } else if ($(".tabon").attr("divname") == "taskdictate") {
+		            	$('#tr_ing').append(toSend);
 		            } else {
-		            	$('#tr_ing').append(notRep);
+		            	$('#tr_ing').append(notRep);	
 		            }
 		            
 		            document.getElementById("tr_ing").style.display = "";
@@ -1018,6 +1022,9 @@
 						</tr>
 						<tr id="tr_rep" style="text-align:center;display:none;">
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t200912' /></td>
+						</tr>
+						<tr id="tr_send" style="text-align:center;display:none;">
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t200915' /></td>
 						</tr>
 				    </table>
 

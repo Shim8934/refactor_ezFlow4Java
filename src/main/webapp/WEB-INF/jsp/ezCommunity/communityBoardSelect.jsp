@@ -31,14 +31,21 @@
 	        var xmlDom_treeview = createXmlDom();
 	        var ReturnFunction;
 	        
+		    var board_alertArguments = new Array();
+		    board_alertArguments[1] = DivPopUpHidden;
+	        
 	        function Select() {
 	            if (SelectedBoardID == "") {
-	                alert("<spring:message code = 'ezCommunity.t411' />");
+	            	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t411' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t411'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 	                alert("<spring:message code = 'ezCommunity.t411' />");
 	                return;
 	            }
 	
 	            if (chkPhotoBrd == "3") {
-	                alert("<spring:message code = 'ezCommunity.t413' />");
+	            	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t413' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t413'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 	                alert("<spring:message code = 'ezCommunity.t413' />");
 	                return;
 	            }
 	            
@@ -210,6 +217,9 @@
 	    <div class="btnposition">
 	        <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
 	    </div>
-	    
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>
