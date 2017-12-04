@@ -238,7 +238,7 @@
 	</head>
 
 	<body class="leftbody">	    
-        <div class="left_pims" title="PIMS"></div>
+        <div class="left_pims" title="<spring:message code='ezSchedule.t1010'/>"></div>
 	        
 	    <div id="left">
 	        <div class="left_pims1" title="<spring:message code='ezSchedule.t1010'/>" id='pims1'></div>
