@@ -24,7 +24,7 @@
 		    var getMemo = "${getsMemo}";
 		    
 		    window.onload = function () {
-		        getMemo = getMemo.replace(/(<br>|<br\/>|<br \/>)/g, "\r\n");
+		        getMemo = getMemo.replace(/\\\\/gi, "\\").replace(/&gt;/gi, ">").replace(/&quot;/gi, "\"").replace(/;<br>;/gi, '\n');
 		        document.getElementById("TextMemo").innerText = getMemo;
 		    }
 		    
