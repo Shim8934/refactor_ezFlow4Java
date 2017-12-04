@@ -1247,16 +1247,16 @@
 			        menuName = obj.name;
 			        document.getElementById("menu_" + obj.name).style.left = 0;			        
 			        document.getElementById("menu_" + obj.name).style.display = "";
-			        var LeftMargin = parseInt(document.getElementsByName(menuName)[0].offsetLeft);
+			        var LeftMargin = parseInt(document.getElementsByName(menuName)[0].offsetLeft) - 50;
 			        
-			        $("#menu_" + obj.name).css("padding-left", LeftMargin + "px");
-			        $("#menu_" + obj.name).css("width", "100%");
+			        /* $("#menu_" + obj.name).css("padding-left", LeftMargin + "px");
+			        $("#menu_" + obj.name).css("width", "100%"); */
 
 			        if (window.document.documentElement.clientWidth < document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth) {
 			            LeftMargin = LeftMargin - (document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth - window.document.documentElement.clientWidth);
 			            LeftMargin = LeftMargin - 30;
 			        }			        
-			        //document.getElementById("menu_" + obj.name).style.left = LeftMargin + "px";
+			        document.getElementById("menu_" + obj.name).style.left = LeftMargin + "px";
 			    }
 			    
 			    else {
