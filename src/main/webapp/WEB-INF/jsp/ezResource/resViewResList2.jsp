@@ -248,7 +248,7 @@
     			</c:if>
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
-      			<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+      			<li style="background:none;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
 				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
   			</ul>
 		</div>
@@ -271,19 +271,19 @@
                 		<table style="width:100%;margin-top:10px;">
                     		<tr>
                 				<td style="text-align:center;font-weight: bold;font-size:14px">
-				                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:top;" id=Img2 onClick="pagenavi('PREV');">
-				                	&nbsp;<span id="divViewHeader" style="color: #404040; text-align:center;"></span>&nbsp;
-				                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:top;" id=Img3 onClick="pagenavi('NEXT');">
+				                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
+				                	&nbsp;<span id="divViewHeader" style="color: #404040; text-align:center;vertical-align: middle;"></span>&nbsp;
+				                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
 				            	</td>
 				            </tr>
                     		<tr>
-                      			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
-                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div>
+                      			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->
+                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div> 
                         			<div id="tdDateCalendarViewer" style="padding-bottom:5px;padding-top:10px;height:100%; text-align:center" > </div>
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
-                        		<td colspan="2" style="font-weight:bold;padding-bottom:10px;padding-left:5px;vertical-align:top;" ><h2 class="h2_dot">&nbsp;<spring:message code="ezResource.t402" /></h2></td>
+                        		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
                     		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
@@ -291,7 +291,7 @@
                         		</td>
                     		</tr>
                     		<tr style="display:none;" id="approval">
-                        		<td colspan="2" style="font-weight:normal;vertical-align:top;text-align:right"><h2 style="font-weight:normal;">※&nbsp;<spring:message code="ezResource.t401" /></h2></td>
+                        		<td colspan="2" style="font-weight:normal;vertical-align:top;text-align:right"><%-- <h2 style="font-weight:normal;">※&nbsp;<spring:message code="ezResource.t401" /></h2> --%></td>
                     		</tr>
                 		</table>
                 	</div>

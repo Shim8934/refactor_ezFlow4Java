@@ -909,7 +909,7 @@
 		    </td>
 		  </tr>
 		  <tr id="displayTR2">
-		    <th ><spring:message code='ezApprovalG.t1554'/></th>
+		    <th ><spring:message code='ezApprovalG.pjj32'/></th>
 		    <td >
 		        <input type="text" id="Sdatepickerapp" style="width:80px;text-align:center">
 		        <input type="text" id="Edatepickerapp" style="width:80px;text-align:center">
@@ -920,7 +920,7 @@
 		<div class="btnposition" >
 		<a class="imgbtn"><span onClick="return btnSearch_onclick()" style="width:40px;" id="Submit3"><spring:message code='ezApprovalG.t111'/></span></a>
 		<a class="imgbtn"><span onClick="return btnToDaySearch_onclick()" style="width:70px;" id="Submit0"><spring:message code='ezApprovalG.t1336'/></span></a>
-		<a class="imgbtn"><span onClick="return btnWeekSearch_onclick()" style="width:70px;" id="Submit1"><spring:message code='ezApprovalG.t1556'/></span></a>
+		<a class="imgbtn"><span onClick="return btnWeekSearch_onclick()" style="width:70px;" id="Submit1"><spring:message code='ezApprovalG.t1337'/></span></a>
 		<a class="imgbtn"><span onClick="return btnMonthSearch_onclick()" style="width:70px;" id="Submit2"><spring:message code='ezApprovalG.t1557'/></span></a>
 		<a class="imgbtn"><span onClick="return btncancel_onclick()" style="width:40px;" id="Submit4"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>

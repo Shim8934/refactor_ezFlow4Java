@@ -622,7 +622,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (주간)
 	 */
 	@RequestMapping(value="/mobile/ezschedule/week-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject mScheduleWeekList(@PathVariable String userId, HttpServletRequest request){
+	public JSONObject mScheduleWeekList(@PathVariable String userId, HttpServletRequest request, Locale locale){
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -738,49 +738,49 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				
 				if(i == 0) {
 					dayMap.put("weekDay", "sun");
-					dayMap.put("yoil", "일");
+					dayMap.put("yoil", egovMessageSource.getMessage("ezSchedule.t9990008", locale));
 					dayMap.put("scheduleList", sList);
 					dayMap.put("scheduleCount", sList.size());
 					dayMap.put("weekDate", arrYMD[0]);
 					resultList.add(dayMap);
 				} else if(i == 1) {
 					dayMap.put("weekDay", "mon");
-					dayMap.put("yoil", "월");
+					dayMap.put("yoil", egovMessageSource.getMessage("ezSchedule.t9990009", locale));
 					dayMap.put("scheduleList", sList);
 					dayMap.put("scheduleCount", sList.size());
 					dayMap.put("weekDate", arrYMD[1]);
 					resultList.add(dayMap);
 				} else if(i == 2) {
 					dayMap.put("weekDay", "tues");
-					dayMap.put("yoil", "화");
+					dayMap.put("yoil", egovMessageSource.getMessage("ezSchedule.t9990010", locale));
 					dayMap.put("scheduleList", sList);
 					dayMap.put("scheduleCount", sList.size());
 					dayMap.put("weekDate", arrYMD[2]);
 					resultList.add(dayMap);
 				} else if(i == 3) {
 					dayMap.put("weekDay", "wed");
-					dayMap.put("yoil", "수");
+					dayMap.put("yoil", egovMessageSource.getMessage("ezSchedule.t9990011", locale));
 					dayMap.put("scheduleList", sList);
 					dayMap.put("scheduleCount", sList.size());
 					dayMap.put("weekDate", arrYMD[3]);
 					resultList.add(dayMap);
 				} else if(i == 4) {
 					dayMap.put("weekDay", "thur");
-					dayMap.put("yoil", "목");
+					dayMap.put("yoil", egovMessageSource.getMessage("ezSchedule.t9990012", locale));
 					dayMap.put("scheduleList", sList);
 					dayMap.put("scheduleCount", sList.size());
 					dayMap.put("weekDate", arrYMD[4]);
 					resultList.add(dayMap);
 				} else if(i == 5) {
 					dayMap.put("weekDay", "fri");
-					dayMap.put("yoil", "금");
+					dayMap.put("yoil", egovMessageSource.getMessage("ezSchedule.t9990013", locale));
 					dayMap.put("scheduleList", sList);
 					dayMap.put("scheduleCount", sList.size());
 					dayMap.put("weekDate", arrYMD[5]);
 					resultList.add(dayMap);
 				} else if(i == 6) {
 					dayMap.put("weekDay", "sat");
-					dayMap.put("yoil", "토");
+					dayMap.put("yoil", egovMessageSource.getMessage("ezSchedule.t9990014", locale));
 					dayMap.put("scheduleList", sList);
 					dayMap.put("scheduleCount", sList.size());
 					dayMap.put("weekDate", arrYMD[6]);

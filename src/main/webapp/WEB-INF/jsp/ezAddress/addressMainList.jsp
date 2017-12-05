@@ -30,7 +30,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
-	        var m_strColorSelect = "rgb(233, 241, 244)";
+	        var m_strColorSelect = "rgb(233, 241, 255)";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var searchFlag = false;

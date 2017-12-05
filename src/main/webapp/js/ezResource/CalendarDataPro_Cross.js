@@ -1569,7 +1569,7 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     var _img = document.createElement("IMG");
     if (pApproveFlag == "1") {
         _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "middle";
+        _img.style.verticalAlign = "bottom";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;

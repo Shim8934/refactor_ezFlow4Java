@@ -21,10 +21,10 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
-		    var getMemo = "${getsMemo}";
+		    var getMemo = '${getsMemo}';
 		    
 		    window.onload = function () {
-		        getMemo = getMemo.replace(/\\\\/gi, "\\").replace(/&gt;/gi, ">").replace(/&quot;/gi, "\"").replace(/;<br>;/gi, '\n');
+		    	getMemo = getMemo.replace(/&lt;br&gt;/gi, "\n").replace(/\\\\/gi, "\\"); 
 		        document.getElementById("TextMemo").innerText = getMemo;
 		    }
 		    

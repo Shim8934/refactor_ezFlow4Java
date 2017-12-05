@@ -1373,7 +1373,7 @@
 		</td>
 		  </tr>
 		  <tr>
-		    <td style="padding-bottom:10px;height:100%;">
+		    <td style="padding-bottom:10px;height:90%;">
 		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="recevEndContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		    </td>
 		  </tr>
