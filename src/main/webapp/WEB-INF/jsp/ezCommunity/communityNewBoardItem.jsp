@@ -788,8 +788,15 @@
 		        		            
 		                            htmlData = "<body free>" + htmlData + "</body>";
 		                            
-		                            if (gubun != "2") {
-		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
+		                            if (gubun != "2") {		                            	
+		                            		                            	
+		                            	if(strParentWriteDate > strWriteDate) {
+		                            		htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strParentWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
+		                            	} else {
+		                            		htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;				                         		
+		                            	}
+		                            
+		                            
 		                            } else {
 		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
 		                            }
