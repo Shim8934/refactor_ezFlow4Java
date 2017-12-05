@@ -79,7 +79,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_PUSERID", userID);
 		map.put("v_PFLAG", flag);
 		map.put("v_PPWD", newPWD);
-		map.put("v_PPWDTYPE", pwdType);
+		//결재암호 사용안할 시 무조건 로그인 암호로 저장됨
+		if (flag.equals("N")) {
+			map.put("v_PPWDTYPE", "L");
+		} else {
+			map.put("v_PPWDTYPE", pwdType);
+		}
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
