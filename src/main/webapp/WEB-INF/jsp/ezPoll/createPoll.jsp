@@ -338,8 +338,10 @@
 		function addOption() {		
 			var currentOptionNumber = $('#columnsbnk li').length + 1;	
 			
-			if ($('#qst_title').val() == '') {
+			if ($('#qst_title').val().replace(/ /g,'') == '') {
 				alert('<spring:message code="ezPoll.t147"/>');
+	            document.getElementById("qst_title").value = "";	           
+	            document.getElementById("qst_title").focus();
 			}
 			else {
 				$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
@@ -526,7 +528,8 @@
     	
     	function form_check() {
 	        if (trim_Cross(document.getElementById("qst_title").value) == "") {
-	            alert('<spring:message code="ezPoll.t234"/>');	            
+	            alert('<spring:message code="ezPoll.t234"/>');	    
+	            document.getElementById("qst_title").value = "";	           
 	            document.getElementById("qst_title").focus();
 	            return false;
 	        }
