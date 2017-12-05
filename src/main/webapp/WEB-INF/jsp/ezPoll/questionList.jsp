@@ -124,6 +124,32 @@
 		        window.location.href = szUrl;
 		    }
 		    
+		    function getCheckAll(t) {
+		    	var listInputs = document.getElementsByClassName("checkBnk");
+		    	
+		    	if ($(t).is(':checked')) {      		
+		    		for (var i = 0; i < listInputs.length; i++) {
+		    			listInputs[i].checked = true;
+		    			checkedArr.push(listInputs[i].value);
+		    			
+		    			var creator = "creator" + listInputs[i].value;
+		    			
+						if (document.getElementById(creator).value != userID && admin == 0) {
+							chkDelete = 1;
+						}		    		
+		    		}		    		
+		    	}
+		    	else {
+		    		for (var i = 0; i < listInputs.length; i++) {
+		    			listInputs[i].checked = false;		    			    		
+		    		}	
+		    		
+		    		checkedArr = [];
+		    		chkDelete = 0;
+		    	}
+
+		    }
+		    
 		    function getChecked(t) {			    	
 		    	if ($(t).is(':checked')) {    				    		
 		    		checkedArr.push($(t).val());
@@ -271,7 +297,9 @@
 		<form method="post">
 			<table id="QstList" class="mainlist1" style="width:100%"> 
 			    <tr> 
-					<th width="30px" align="center"> <spring:message code="ezPoll.t105"/></th> 
+					<th width="30px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
+						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
+					</th> 
 					<th><spring:message code="ezPoll.t106"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t104"/></th> 
 					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
@@ -282,7 +310,7 @@
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.qstId}" class="white">
 
-			        	<td style="padding:0"> <input type="checkbox" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}"/>  onchange="javascript:getChecked(this)"></td> 
+			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td> 
 			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" ><c:out value ="${list.title}"/></td>
 			          	
 			          	<%-- Question status --%>
