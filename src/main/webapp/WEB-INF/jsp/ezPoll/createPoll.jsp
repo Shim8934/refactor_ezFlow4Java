@@ -513,8 +513,11 @@
     		for (var i = 1; i <= totalOptions; i++) {
     			var optionId = "#option" + i;
     			
-    			if ($(optionId).val() != "") {    				
+    			if ($(optionId).val().replace(/ /g,'') != "") {    				
     				count ++;
+    			}
+    			else {
+    				$(optionId).val("");
     			}
     		} 
     		
@@ -681,7 +684,7 @@
 					<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
 				</div>
 				<div id="numberOfMultiSelect" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-					<spring:message code="ezPoll.t155"/>
+					<span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span>
 					<select id="myList">
 						<option value="1"><spring:message code="ezPoll.t156"/></option>
 						<option value="2">2</option>
@@ -714,7 +717,7 @@
 				</div>
 	
 				<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px;">
-					<span><spring:message code="ezPoll.t162"/></span>
+					<span style="margin-right: 3px;"><spring:message code="ezPoll.t162"/></span>
 					<select id="set_Target">
 						<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
 						<option value="1"><spring:message code="ezPoll.t238" /></option>
