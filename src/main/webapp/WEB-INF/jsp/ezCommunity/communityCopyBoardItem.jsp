@@ -21,8 +21,9 @@
 			var BoardID = "<c:out value = '${boardID}' />";
 			var code = "<c:out value = '${code}' />";
 			var xmlDom_treeview = createXmlDom();
-
+			
 			function Select() {
+				
     			if (selectedBoard == "") {
         			alert("<spring:message code='ezCommunity.t994' />");
     				return;
@@ -41,6 +42,7 @@
 			}
 
 			function CopyItem(pDestBoardID) {
+							
 			    if (CheckIfCanWrite(pDestBoardID) == false) {
 			        alert("<spring:message code='ezCommunity.t1049' />");
 			    	return;
@@ -285,10 +287,13 @@
 	<body class = "popup" style = "overflow : hidden">
 		<h1><spring:message code='ezCommunity.t359' /></h1>
 		
-	    <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
+	    <div class="box" style="width: 420px; height: 550px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
 	    <div class="btnposition">
 	        <a class="imgbtn" name="Submit" onclick="return Select()"><span><spring:message code='ezCommunity.t278' /></span></a>
 	        <a class="imgbtn" name="Submit" onclick="javascript: window.close();"><span><spring:message code='ezCommunity.t21' /></span></a>
+	    </div>
+	    <div id="dialog_alert" style="display:none;">
+	    	<button id="close_pop">확인</button>
 	    </div>
 	</body>
 </html>
