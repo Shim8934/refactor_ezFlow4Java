@@ -80,7 +80,7 @@
 				document.getElementById("qst_title").value = questionTitle;
 				var pathFile = sigBody2.innerHTML;
 
-				if (pathFile != null || pathFile != "") {
+				if (pathFile != null && pathFile.replace(/ /g,'') != "") {
 					var oTable = document.getElementById("filelist");
 					
 					if (oTable == null) {
