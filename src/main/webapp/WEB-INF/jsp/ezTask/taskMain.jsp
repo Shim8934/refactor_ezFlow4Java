@@ -117,7 +117,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "rgb(233, 241, 244)";
+		        elem.style.backgroundColor = "rgb(233, 241, 255)";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strListInfo 값 셋팅
@@ -885,7 +885,7 @@
 					strListInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "rgb(233, 241, 244)");
+					$(".row_body").css("background", "rgb(233, 241, 255)");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
