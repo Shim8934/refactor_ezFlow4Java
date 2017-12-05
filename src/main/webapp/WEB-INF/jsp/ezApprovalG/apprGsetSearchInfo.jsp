@@ -921,7 +921,7 @@
 		<a class="imgbtn"><span onClick="return btnSearch_onclick()" style="width:40px;" id="Submit3"><spring:message code='ezApprovalG.t111'/></span></a>
 		<a class="imgbtn"><span onClick="return btnToDaySearch_onclick()" style="width:70px;" id="Submit0"><spring:message code='ezApprovalG.t1336'/></span></a>
 		<a class="imgbtn"><span onClick="return btnWeekSearch_onclick()" style="width:70px;" id="Submit1"><spring:message code='ezApprovalG.t1337'/></span></a>
-		<a class="imgbtn"><span onClick="return btnMonthSearch_onclick()" style="width:70px;" id="Submit2"><spring:message code='ezApprovalG.t1338'/></span></a>
+		<a class="imgbtn"><span onClick="return btnMonthSearch_onclick()" style="width:70px;" id="Submit2"><spring:message code='ezApprovalG.t1557'/></span></a>
 		<a class="imgbtn"><span onClick="return btncancel_onclick()" style="width:40px;" id="Submit4"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<c:if test ="${approvalFlag =='S'}">
