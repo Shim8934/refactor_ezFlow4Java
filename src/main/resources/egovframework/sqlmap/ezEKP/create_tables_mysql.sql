@@ -8118,7 +8118,7 @@ DROP TABLE IF EXISTS `tbl_vote_question`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_vote_question` (
-  `ID` mediumint(9) NOT NULL,
+`ID` mediumint(9) NOT NULL,
   `TENANT_ID` mediumint(9) NOT NULL,
   `CONTENT` longtext,
   `MULTI_SELECT` tinyint(4) NOT NULL DEFAULT '0',
@@ -8133,6 +8133,7 @@ CREATE TABLE `tbl_vote_question` (
   `FILE_PATH` longtext,
   `RESULT_FIRST` tinyint(4) NOT NULL DEFAULT '1',
   `IS_MODIFYING` tinyint(4) NOT NULL DEFAULT '0',
+  `SET_DATE` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
