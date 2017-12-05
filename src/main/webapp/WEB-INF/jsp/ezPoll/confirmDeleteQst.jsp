@@ -46,7 +46,7 @@
 	<body class="popup">
 		<form id="Form1" method="post"> 
 			<h1 style="padding-left: 40%;"><spring:message code='ezPoll.t127'/></h1>
-			<div style="overflow: auto;">
+			<div style="overflow: auto; max-height: 120px;">
 	  			<table class="content" style="table-layout: fixed;">   				
 	    			<tr > 
 	      				<th style="width:30px;"><spring:message code='ezPoll.t128'/></th> 

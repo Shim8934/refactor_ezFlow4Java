@@ -204,7 +204,7 @@
 	    			qstTitleList = qstTitleList + "," + document.getElementById("tlt" + checkedArr[i]).innerHTML;
 	    		}		    	
 
-		        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=300px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=310px,width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        w.focus();
 		    }
 		    
