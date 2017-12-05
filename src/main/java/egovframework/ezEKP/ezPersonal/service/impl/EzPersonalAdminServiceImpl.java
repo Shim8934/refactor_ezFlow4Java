@@ -250,7 +250,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		if (pMode.equals("modify")) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_QUICKLINKID", pQuickLinkID);
+			map.put("quickLinkID", pQuickLinkID);
 			map.put("tenantID", userInfo.getTenantId());
 			ezPersonalAdminDAO.deleteQuickLinkID(map);
 		}
@@ -675,7 +675,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		if (mode != null && mode.equals("DEL")) {
 			ezPersonalAdminDAO.setQuickLink_D(map);
 		} else {
-			ezPersonalAdminDAO.setQuickLink_D(map);
 			ezPersonalAdminDAO.setQuickLink_I(map);
 		}
 		
