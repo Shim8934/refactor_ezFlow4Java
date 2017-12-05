@@ -909,7 +909,7 @@
 		    </td>
 		  </tr>
 		  <tr id="displayTR2">
-		    <th ><spring:message code='ezApprovalG.t1554'/></th>
+		    <th ><spring:message code='ezApprovalG.pjj32'/></th>
 		    <td >
 		        <input type="text" id="Sdatepickerapp" style="width:80px;text-align:center">
 		        <input type="text" id="Edatepickerapp" style="width:80px;text-align:center">

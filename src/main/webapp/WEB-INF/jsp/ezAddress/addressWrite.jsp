@@ -38,7 +38,7 @@
 		        }
 		        
 		        var getMemo = document.getElementById("TextMemo").value;
-		        getMemo = getMemo.replace(/\\\\/gi, "\\").replace(/&gt;/gi, ">").replace(/&quot;/gi, "\"").replace(/;<br>;/gi, "\n");
+		        getMemo = getMemo.replace(/\\\\/gi, "\\");
 		        document.getElementById("TextMemo").innerText = "";
 		        document.getElementById("TextMemo").innerText = getMemo;
 		    }
@@ -250,8 +250,7 @@
 		        createNodeAndInsertCDataText(xmlDom, objNode, "SCOMPANYADDR", document.getElementById("TextComAddr").value);
 		        createNodeAndInsertText(xmlDom, objNode, "SHOMEZIP", document.getElementById("TextHomeZip").value);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "SHOMEADDR", document.getElementById("TextHomeAddr").value);
-		        var transMemo = document.getElementById("TextMemo").value.replace(/\\/gi, "\\\\").replace(/>/gi, "&gt;").replace(/\"/gi, "&quot;").replace(/(\n|\r\n)/gi, ';<br>;');
-		        createNodeAndInsertCDataText(xmlDom, objNode, "SMEMO", transMemo);
+		        createNodeAndInsertCDataText(xmlDom, objNode, "SMEMO", document.getElementById("TextMemo").value);
 		        createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);

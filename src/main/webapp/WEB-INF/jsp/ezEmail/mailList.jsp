@@ -432,7 +432,6 @@
 		    	// 웹소켓 연결
 	            webSocket= new WebSocket(host);
 		    	var encryptPw = "";
-	        	var stt = "";
 	            
 		    	if (typeof pwd != "undefined") {
 		    		encryptPw = pwd;

@@ -579,7 +579,10 @@ public class EzAddressController{
 		dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false);
 		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
 		addressInfo.setModifyDate(dateInUserTimeZone);
-				
+		
+		String replaceMemo = addressInfo.getsMemo();
+		replaceMemo = addressInfo.getsMemo().replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&lt;br&gt;").replaceAll("/", "\\\\/");
+		
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -591,7 +594,7 @@ public class EzAddressController{
 		model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
-		model.addAttribute("getsMemo", addressInfo.getsMemo().replace("\n", "<br/>"));
+		model.addAttribute("getsMemo", replaceMemo);
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo

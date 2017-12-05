@@ -2735,10 +2735,21 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String draftFromMonth = request.getParameter("draftFromMonth");
         String draftFromDay = request.getParameter("draftFromDay");
         
+        String draftFrom = "";
+        
+        if (draftFromYear != "") {
+        	draftFrom = draftFromYear + "-" + draftFromMonth + "-" + draftFromDay;
+        }
         String draftToYear = request.getParameter("draftToYear");
         String draftToMonth = request.getParameter("draftToMonth");
         String draftToDay = request.getParameter("draftToDay");
 
+        String draftTo = "";
+        
+        if (draftToYear != "") {
+        	draftTo = draftToYear + "-" + draftToMonth + "-" + draftToDay;
+        }
+        
         String apprFromYear = request.getParameter("apprFromYear");
         String apprFromMonth = request.getParameter("apprFromMonth");
         String apprFromDay = request.getParameter("apprFromDay");
@@ -2773,7 +2784,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         
         String result = "";
         if (approvalFlag.equals("S")) {
-        	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, aprFrom, aprTo, aprFrom,
+        	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFrom, draftTo, aprFrom,
         			aprTo, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         } else {
         	result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
