@@ -235,7 +235,7 @@
 			vertical-align:top;
 			font-size: 9pt;
 			height : 15px;
-			background-color : rgb(233, 241, 244);
+			background-color : rgb(233, 241, 255);
 			cursor : hand;
 		}
 		.node_hover{
