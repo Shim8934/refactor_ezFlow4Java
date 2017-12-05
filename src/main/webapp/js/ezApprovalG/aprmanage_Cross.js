@@ -1497,7 +1497,13 @@ function makePageSelPage() {
         var nowmonth = new Date().getMonth() + 1;
         var nowday = new Date().getDate();
         if (SearchCond.length > 0) {
-            period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
+        	if (SearchCond[5] != "") {
+        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
+        	}
+        	
+        	if (SearchCond[3] != "") {
+        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + SearchCond[3].substring(5, 7) + strLang1029 + " " + SearchCond[3].substring(8, 10) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + SearchCond[4].substring(5, 7) + strLang1029 + " " + SearchCond[4].substring(8, 10) + strLang1030;
+        	}
         } else {
         	period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
         }
