@@ -29,7 +29,7 @@
 		var messageCode3	  = '<spring:message code="ezPoll.t208"/>';
 	    var filesize 		  = 0;
 	    var file 			  = new Array();
-	    var xhr 			  = new XMLHttpRequest();
+	    //var xhr 			  = new XMLHttpRequest();
 		var lstAttachLink 	  = document.getElementById("lstAttachLink");
 	    var isfileup 		  = false;
 	    var mode 			  = "<c:out value='${mode}'/>";
@@ -37,18 +37,34 @@
 		var L_EndDate 		  = "";
 		var L_StartTime 	  = "";
 		var L_EndTime 		  = "";
-		var g_windowReference = null;	
-		
+		var g_windowReference = null;			
 		
 		window.onunload = function() {
 			if (mode == "modify") {
 				//Update the vote modifying status
-				var qstID = "<c:out value='${question.qstId}'/>";
+/* 				var qstID = "<c:out value='${question.qstId}'/>";
 				var fd = new FormData();
 				fd.append("questionId", qstID);
 			    xhr.open("POST", "/ezPoll/undoModifyVote.do");
 			    xhr.send(fd); 
-			    window.close();
+			    window.close(); */
+			    var qstID = "<c:out value='${question.qstId}'/>";
+			    
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPoll/undoModifyVote.do",
+		    		data : {
+		    			questionId : qstID
+		    		},
+		    		success: function(data) {	    			
+
+			        },
+			        error: function(error) {
+			        	//alert(error);
+			        }
+		    	});   
 			}			
     	}; 
 		window.onload = function() {	

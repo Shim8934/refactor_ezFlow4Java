@@ -216,7 +216,7 @@
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
-		    		async : true,
+		    		async : false,
 		    		url : "/ezPoll/checkPoll.do",
 		    		data : {
 		    			qstId : pReceve

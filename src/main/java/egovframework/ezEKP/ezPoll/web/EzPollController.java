@@ -271,7 +271,7 @@ public class EzPollController extends EgovFileMngUtil {
 					String modifyingUser = ezPollService.getModifyingUser(loginVO.getTenantId(), pollQstVO.getQstId());
 					if (!loginVO.getId().equals(modifyingUser)) {
 						listOfModifyingQst.add(pollQstVO);
-					}
+					}					
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -1104,28 +1104,35 @@ public class EzPollController extends EgovFileMngUtil {
 		return strXML;
 	}	
 	
-	@RequestMapping(value="/ezPoll/undoModifyVote.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
-	@ResponseBody
-	public String undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/ezPoll/undoModifyVote.do", method = RequestMethod.POST)
+	//@ResponseBody
+	public void undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("Undo modify vote is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String strXML = "";
+		//String strXML = "";
 		int qstId = -1;
 		
 		if (request.getParameter("questionId") != null) {
 			qstId = Integer.parseInt(request.getParameter("questionId"));
 		}
-		
+		/*
 		if (qstId == -1) {
 			strXML = "<DATA>FAIL</DATA>";
-			return strXML;
+			return strXML;			
 		}
-		
+		*/
 		//Update current vote modifying status
 		try {
-			ezPollService.updateModifyingQuestion(qstId, loginVO.getTenantId(), 0);
+			//Set PollQuestionStatusVO fields
+			PollQuestionStatusVO pollQstStatusVO = new PollQuestionStatusVO();
+			pollQstStatusVO.setUserId(loginVO.getId());
+			pollQstStatusVO.setTenantId(loginVO.getTenantId());
+			pollQstStatusVO.setQustId(qstId);
 			
-			//Get all related users for this question
+			ezPollService.updateModifyingQuestion(qstId, loginVO.getTenantId(), 0);
+			ezPollService.updateModifyingQuestionRelatedStatus(pollQstStatusVO);
+			
+/*			//Get all related users for this question
 			Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
 			getAllUserForQuestion(loginVO, qstId, setOfUserIds);
 			List<LoginVO> listofTotalUsers = new ArrayList<LoginVO>(setOfUserIds);
@@ -1141,17 +1148,17 @@ public class EzPollController extends EgovFileMngUtil {
 			}
 			else {
 				ezPollService.deleteModifyingQuestionRelatedStatus(pollQstStatusVO);
-			}
+			}*/
 			
-			strXML = "<DATA>OK</DATA>";
+			//strXML = "<DATA>OK</DATA>";
 		} 
 		catch (Exception e) {
-			strXML = "<DATA>FAIL</DATA>";
+			//strXML = "<DATA>FAIL</DATA>";
 			e.printStackTrace();
 		}
 		
 		logger.debug("Undo modify vote finishes!");
-		return strXML;
+		//return strXML;
 	}
 	
 	@RequestMapping(value="/ezPoll/deleteQuestion.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
