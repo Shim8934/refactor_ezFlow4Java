@@ -368,7 +368,8 @@
 	
 		            var url = "";
 		            var HWP = "&type=HWP";
-		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA8")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+		            
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
 		                if (isIE) {
 							url = "/admin/ezApprovalG/formMainOther.do";

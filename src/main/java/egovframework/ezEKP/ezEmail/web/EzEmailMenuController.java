@@ -116,7 +116,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailLeft.do")
 	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("showMailLeft started.");
-		System.out.println("mailLeft="+this);
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
 		
@@ -691,7 +691,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				String destFolderPath = tempFileUploadPath + commonUtil.separator + retryPathId;
 	
 				ZipFile zipFile = new ZipFile(sourceFile);
-				zipFile.setPassword(encryptPw);
+				zipFile.setPassword(encryptPw.toCharArray());
 				zipFile.extractAll(destFolderPath);
 				
 				if (sourceFile.delete()) {

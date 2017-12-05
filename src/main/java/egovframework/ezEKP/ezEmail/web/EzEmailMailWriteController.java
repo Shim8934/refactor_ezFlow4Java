@@ -3783,12 +3783,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 설정화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSecureOption.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSecureOption.do")
 	public String mailSecureOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
-			Model model, 
-			@RequestBody String bodyData) throws Exception{
+			Model model) throws Exception{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());

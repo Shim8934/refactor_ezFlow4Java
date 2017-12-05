@@ -1010,8 +1010,8 @@ form{display:inline;margin:0}
 }
 .tbresult { background:#fafafa}
 
-.icon_01{background:url(/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:17px; height:16px;}
-.icon_02{background:url(/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:17px; height:16px;}
+.icon_01{background:url(/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:17px; padding-right:5px; height:16px;}
+.icon_02{background:url(/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:17px; padding-right:5px; height:16px;}
 
 
 .table_layout 
@@ -1886,7 +1886,7 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 
 
 .content_property .tabTitle:hover{background:rgb(48, 77, 127); color:#fff;}
-.content_property .tabList table td:hover{background:rgb(233, 241, 244);}
+.content_property .tabList table td:hover{background:rgb(233, 241, 255);}
 
 .content_propertyInfo{margin:10px 0px 0px 0px;}
 .content_propertyInfo table{border-collapse:collapse; border-spacing:0;}
