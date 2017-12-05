@@ -2743,10 +2743,21 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String apprFromMonth = request.getParameter("apprFromMonth");
         String apprFromDay = request.getParameter("apprFromDay");
         
+        String aprFrom = "";
+        
+        if (apprFromYear != "") {
+        	aprFrom = apprFromYear + "-" + apprFromMonth + "-" + apprFromDay;
+        }
+        
         String apprToYear = request.getParameter("apprToYear");
         String apprToMonth = request.getParameter("apprToMonth");
         String apprToDay = request.getParameter("apprToDay");
-
+        String aprTo = "";
+        
+        if (apprToYear != "") {
+        	aprTo =apprToYear + "-" + apprToMonth + "-" + apprToDay;
+        }
+        	
         String formID = request.getParameter("formID");
         String draftDeptName = request.getParameter("deptName1");
         String pageNum = request.getParameter("pageNum");
@@ -2762,8 +2773,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         
         String result = "";
         if (approvalFlag.equals("S")) {
-        	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear+draftFromMonth+draftFromDay, draftToYear+draftToMonth+draftToDay, apprFromYear+apprFromMonth+apprFromDay,
-        			apprToYear+apprToMonth+apprToDay, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+        	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, aprFrom, aprTo, aprFrom,
+        			aprTo, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         } else {
         	result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
     				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
