@@ -246,8 +246,10 @@
 			<span style="float: right;">
 					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t106"/></span>
 					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t107"/></span>
-					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" >
-					<a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a>
+					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
+					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
+					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" >
+					<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle; margin-bottom: 2px;" onclick="menu_Search()"></a>
 			</span>
 		</h1>
 		<div id="mainmenu1">
