@@ -26,6 +26,7 @@
         <result property="filePath"          	column="file_path"                 columnIndex="13" />
         <result property="resultFirst"          column="result_first"              columnIndex="14" />
         <result property="isMofifying"          column="is_modifying"              columnIndex="15" />
+        <result property="setDate"          	column="set_date"              	   columnIndex="16" />
     </resultMap>    
     
     <resultMap id="pollAnswer" class="PollAnswerVO">
@@ -95,12 +96,12 @@
 	            INSERT INTO TBL_VOTE_QUESTION(
 	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       START_DATE,         
 	                END_DATE,           TARGET,            TITLE,          		SECRET_VOTE,        CREATOR,			
-	                CREATOR_NAME1,		CREATOR_NAME2,	   FILE_PATH,		    RESULT_FIRST
+	                CREATOR_NAME1,		CREATOR_NAME2,	   FILE_PATH,		    RESULT_FIRST,		SET_DATE
 	            )
 	            VALUES(
 	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #start_date#,      
 	                #end_date#,         #target#,           #title#,     		#secret_vote#,      #creator#,		
-	               	#creator_name1#,	#creator_name2#,	#file_path#,		#result_first#
+	               	#creator_name1#,	#creator_name2#,	#file_path#,		#result_first#,		#set_date#
             )  
         	]]>
         </isEqual>
@@ -120,7 +121,8 @@
 	            	 CREATOR_NAME1	= #creator_name1#,
 	            	 CREATOR_NAME2	= #creator_name2#,
 	            	 FILE_PATH		= #file_path#,
-	            	 RESULT_FIRST	= #result_first#
+	            	 RESULT_FIRST	= #result_first#,
+	            	 SET_DATE		= #set_date#
 	            WHERE
 	            		ID				= #id#
 	            	AND

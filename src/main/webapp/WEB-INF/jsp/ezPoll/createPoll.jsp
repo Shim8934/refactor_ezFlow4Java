@@ -156,6 +156,9 @@
 				}
 				
 				//Set end date	
+				var _setDate = "<c:out value='${question.setDate}'/>";
+				console.log("SetDate: " + _setDate);
+				
 		    	$("#Sdatepicker").datepicker({
 		        	changeMonth: true,
 		        	changeYear: true,
@@ -172,9 +175,8 @@
 		        	showOn: "both",
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
 		        	buttonImageOnly: true
-		    	});
+		    	});				
 				
-				$('#endDate ').attr('checked', true);
 				var _startD = "<c:out value='${question.startDate}'/>";
 				var _endD = "<c:out value='${question.endDate}'/>";
 				
@@ -215,7 +217,14 @@
 	        	$("#sTimePicker").val(sHourMinute).change();
 	        	$("#eTimePicker").val(eHourMinute).change();
 	        	
-	        	$('#_dateTimePicker').show();
+	        	if (_setDate == "1") {
+	        		$('#endDate ').attr('checked', true);
+	        		$('#_dateTimePicker').show();
+	        	}
+	        	else {
+	        		$('#endDate ').attr('checked', false);
+	        		$('#_dateTimePicker').hide();
+	        	}      		        	
 	        	
 	        	//Select Target
 	        	var _selectedTarget = "<c:out value='${question.target}'/>";
@@ -475,6 +484,13 @@
     		L_StartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
     		L_EndDate   = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
     		
+       		if ($('#endDate').is(':checked')) {
+       			document.getElementById("hidSetDate").value = "1";
+    		}
+    		else {
+    			document.getElementById("hidSetDate").value = "0";
+    		}
+    		
     		if ($('#anonymousVote').is(':checked')) {
     			$('#hidSecreteVote').val("1");
     		}
@@ -490,7 +506,7 @@
     		} 
     		
 	        if ($('#multipleCheck').is(':checked')) {
-	    		if ($("#myList option:selected").text() == "<spring:message code="ezPoll.t156"/>") {
+	    		if ($("#myList option:selected").text() == "<spring:message code='ezPoll.t156'/>") {
 	    			$('#multiSelectNumber').val('0');
 	    		}
 	    		else {
@@ -505,8 +521,8 @@
         	} 
     		else {        		
             	document.getElementById("hidStartDate").value = L_StartDate + " " + L_StartTime ; 
-            	document.getElementById("hidEndDate").value   = L_EndDate + " " + L_EndTime ;           	
-            	document.getElementById("hidContent").innerHTML   = message.GetEditorContent();          	       	
+            	document.getElementById("hidEndDate").value = L_EndDate + " " + L_EndTime ;           	
+            	document.getElementById("hidContent").innerHTML = message.GetEditorContent();          	       	
 		    	var listtable = document.getElementById("filelist");
 		    	var filelist = GetChildNodes(listtable);		    	
 				
@@ -756,7 +772,8 @@
 					<input type="text" name="hidResultFirst" id="hidResultFirst" value="" style="display:none"> 
 					<input type="text" name="hidModifyInfo" id="hidModifyInfo" value="" style="display:none"> 
 					<textarea name="hidContent" id="hidContent" style="display:none"></textarea>
-					<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">					
+					<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
+					<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">				
 				</div>
 				</td>
 			</tr>						

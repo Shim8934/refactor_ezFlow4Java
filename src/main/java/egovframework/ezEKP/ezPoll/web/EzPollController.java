@@ -341,7 +341,8 @@ public class EzPollController extends EgovFileMngUtil {
 		int numberOfMultiSelect = Integer.parseInt(req.getParameter("multiSelectNumber"));
 		String range = req.getParameter("RangeXMLStr");		
 		int resultFirst = Integer.parseInt(req.getParameter("hidResultFirst"));
-		String qstModifyInfo = req.getParameter("hidModifyInfo");		
+		String qstModifyInfo = req.getParameter("hidModifyInfo");
+		int setDate = Integer.parseInt(req.getParameter("hidSetDate"));
 		
 		//Get list of options for this question
 		List<String> listOptions = new ArrayList<String>();
@@ -383,6 +384,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setSecretVote(secretVote);
 		pollQuestionVO.setResultFirst(resultFirst);
 		pollQuestionVO.setMultiSelect(numberOfMultiSelect);
+		pollQuestionVO.setSetDate(setDate);
 		
 		if (!qstModifyInfo.equals("")) {
 			pollQuestionVO.setQstId(Integer.parseInt(qstModifyInfo));

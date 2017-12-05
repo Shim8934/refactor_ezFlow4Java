@@ -25,6 +25,7 @@ public class PollQuestionVO implements Serializable {
 	private int resultFirst;
 	private int isHidden;
 	private int isMofifying;
+	private int setDate;
 	
 	public int getQstId() {
 		return qstId;
@@ -184,8 +185,16 @@ public class PollQuestionVO implements Serializable {
 	
 	public void setReceiverType(String receiverType) {
 		this.receiverType = receiverType;
-	}		
+	}	
 	
+	public int getSetDate() {
+		return setDate;
+	}
+
+	public void setSetDate(int setDate) {
+		this.setDate = setDate;
+	}
+
 	public boolean equals(Object object) {
 		if (object instanceof PollQuestionVO) {
 			PollQuestionVO obj = (PollQuestionVO) object;
