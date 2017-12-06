@@ -778,7 +778,7 @@
 		    	//Create image element for stickers/files
 		    	var imgForInnerDiv2 = document.createElement("img"); 
 		    	imgForInnerDiv2.setAttribute("id", "editPreviewImg" + id.slice(8));
-		    	imgForInnerDiv2.setAttribute("style", "display: block; height: 60px; width: 60px; ");	    	
+		    	imgForInnerDiv2.setAttribute("style", "display: block; height: 60px; width: 60px; padding-left: 10px; padding-right: 5px;");	    	
 		    	innerDiv2.appendChild(imgForInnerDiv2);		    	
 		    	
 		    	//Copy text comment

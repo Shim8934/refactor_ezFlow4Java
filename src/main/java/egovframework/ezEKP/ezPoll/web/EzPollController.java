@@ -1000,6 +1000,8 @@ public class EzPollController extends EgovFileMngUtil {
 			txtContent = request.getParameter("cmtTxt");
 		}	
 		
+		logger.debug("cmtAttach: " + attachFilePath + " || fileType: " + fileType + " || fileName: " + fileName + " || filePath: " + filePath + " || txtContent: " + txtContent);
+		
 		if (qstId == -1 || cmtId == -1) {
 			strXML = "<DATA>FAIL</DATA>";
 			return strXML;
@@ -1034,6 +1036,13 @@ public class EzPollController extends EgovFileMngUtil {
 				pollCmtVO.setFileName(fileName);
 				pollCmtVO.setFilePath(filePath);
 			}		
+		}
+		else if (fileType.equals("images")) {			
+			attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
+			pollCmtVO.setFileAttach(attachFilePath);
+			pollCmtVO.setImageAttach("");
+			pollCmtVO.setFileName("");
+			pollCmtVO.setFilePath("");
 		}
 		else {
 			pollCmtVO.setImageAttach("");
