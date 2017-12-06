@@ -1871,7 +1871,7 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .content_poll{border:0px !important;}
 .content_poll .pollTd01{ border:none;}
 .content_poll tbody{border:0px;}
-.content td .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px;}
+.content td .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px; border: 1px solid #b6b6b6;}
 
 
 
