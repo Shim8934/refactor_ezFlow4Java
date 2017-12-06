@@ -586,7 +586,7 @@
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
 							
 							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")' onMouseOver='this.style.color=\"#006BB6\"' onMouseOut='this.style.color=\"#393939\"'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/ImgIcon/comment_del.gif' style='cursor:pointer;position:absolute;width:14px;padding-left:1px;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
+							taskCommentList += "<span class='opinion_list' style='position: relative;'>" + vo.comment + "&nbsp;<img src='/images/ImgIcon/comment_del.gif' style='cursor:pointer;position:absolute;width:14px;padding-left:1px;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
 							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
 						
@@ -1696,7 +1696,7 @@
 						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
 							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
-							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>
+							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;"><textarea id="TextComment" maxlength="500" style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>
 							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a></td>
 							
 						</tr>
