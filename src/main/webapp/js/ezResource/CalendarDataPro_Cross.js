@@ -1370,7 +1370,7 @@ function mfFormatTime(iMin) {
 
 //날짜에 마우스 오버시
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#eaf2f5";
+    pThis.style.backgroundColor = "rgb(233, 241, 255)";
 }
 
 //마우스 아웃시
