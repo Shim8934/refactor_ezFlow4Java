@@ -46,6 +46,18 @@
     		        stompClient.disconnect();
     		    }
         	}; 
+        	
+        	window.onresize = function () {
+				var divList = document.getElementById("divList");				
+				var reheight = document.documentElement.clientHeight - 155;	
+				
+				if (reheight < 500) {
+					divList.style.height = "500px";	
+				}
+				else {
+					divList.style.height = reheight + "px";		
+				}
+			};
 		   
 			window.onload = function() {				
 				preProcessing();				
@@ -68,6 +80,10 @@
 			}
 			
 			function preProcessing() {
+				var divList = document.getElementById("divList");				
+				var reheight = document.documentElement.clientHeight - 155;	
+				divList.style.height = reheight + "px";				
+				
 				//Uncheck all checkboxes after reload for firefox
 		    	$(':checkbox:checked').removeAttr('checked');  
 				
@@ -300,7 +316,7 @@
 			selToggleList(document.getElementById("mainmenu1"), "ul", "li", "0");
 		</script>	
 			 
-		<form method="post">
+		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
 			<table id="QstList" class="mainlist1" style="width:100%"> 
 			    <tr> 
 					<th width="30px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
@@ -392,7 +408,7 @@
 			<div style="display:none">
 				<input type="text" name="hiddenSeeAll" id="hiddenSeeAll" value="" style="display:none">
 			</div>
-		</form>
+		</div>
 		 
 		<div id="tblPageRayer"></div>
 	</body>
