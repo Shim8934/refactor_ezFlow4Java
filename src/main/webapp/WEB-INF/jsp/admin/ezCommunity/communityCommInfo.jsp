@@ -82,7 +82,14 @@
 		                <table style="table-layout:fixed;width:240px;">
 		                    <tr>
 		                        <td style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:240px;">
-		                            <c:out value = '${clubVO.c_ClubName}' />
+		                        	<c:choose>   
+			                            <c:when test="${userInfo.primary != '2' }">
+											<c:out value = '${clubVO.c_ClubName}' />
+										</c:when>
+										<c:otherwise>
+											<c:out value = '${clubVO.c_ClubName2}' />
+										</c:otherwise>
+									</c:choose>
 		                        </td>
 		                    </tr>
 		                </table>
