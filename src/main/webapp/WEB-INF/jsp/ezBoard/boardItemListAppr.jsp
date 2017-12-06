@@ -878,8 +878,9 @@
 		                }
 		                if (CurPage == 0) CurPage = 1;
 		                
-		                getBoardList();
-		            }
+// 		                getBoardList();
+		                refresh_onclick();
+					}
 		        }
 		    }
 		    function Appr_onclick_Complete() {
