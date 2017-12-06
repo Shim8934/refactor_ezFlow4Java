@@ -423,6 +423,7 @@
             return (parseInt(size) / 1024).toFixed(1) + "KB";
         } else {
             return (parseInt(size)).toFixed(1) + "B";
+        }
     }
 
     function drawingchart(type) {
