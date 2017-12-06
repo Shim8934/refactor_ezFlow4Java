@@ -997,7 +997,7 @@
 				  	//baonk added
 				    document.getElementById("taskRep").style.display = "";				    
 				    var height = $("#new_list_body")[0].clientHeight;
-				    document.getElementById("new_div_body").style.height = (height + 10) + "px";				    
+				    document.getElementById("new_div_body").style.height = (height + 20) + "px";				    
 				    
 				    var repData = $("#taskRep").html();
 				    
