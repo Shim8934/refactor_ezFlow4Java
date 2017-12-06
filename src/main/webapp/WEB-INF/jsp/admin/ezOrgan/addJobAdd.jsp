@@ -220,8 +220,8 @@
 	<body>
 	    <table style="width:100%;">
 	        <tr>
-	            <th style="background-color: #e9e9e9; border-right:0px; border-left:0px; border-top:0px;">
-	                <div style="width:100%; text-align:right">
+	            <th style="background-color: #e9e9e9; border-right:0px; border-left:0px; border-top:0px; padding-left:3px;padding-top:3px">
+	                <div style="width:100%; text-align:left">
 	                    <input name="Input" id="deptkeyword" style="WIDTH: 110px; margin: 0px;" onkeypress="deptsearch_press()" />
 	                    <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
 	                </div>        
