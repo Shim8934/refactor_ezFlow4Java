@@ -1001,8 +1001,7 @@
 				    
 				    var repData = $("#taskRep").html();
 				    
-				    $("#repTable").html(repData);
-				    var repData = $("#taskRep").html();
+				    $("#repTable").html(repData);				   
 				    document.getElementById("new_div_body").style.height = "450px";
 				    document.getElementById("taskRep").style.display = "none";
 				    //end			    	
@@ -1102,6 +1101,9 @@
 			        document.getElementById("tablework").style.display = "none";
 			        document.getElementById("tablecomment").style.display = "";
 			    }
+			    
+			    //clean the place
+		    	$("#repTable").html("");
 			}
 
 			window.onunload = function (e) {
