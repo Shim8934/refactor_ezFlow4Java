@@ -225,7 +225,8 @@
         				deleteAfter : iDeleteAfter,
         				boardColor : encodeURIComponent(brd_color),
         				versionUse : versionuse,
-        				checkUse : checkUse
+        				checkUse : checkUse,
+        				url: url
         				},
         		success : function(result) {
         			if (result["result"] == "OK") {
