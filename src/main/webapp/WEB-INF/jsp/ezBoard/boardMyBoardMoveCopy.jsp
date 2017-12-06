@@ -14,6 +14,7 @@
 	    <script type="text/javascript">
 	        var treeView = new TreeView();
 	        var pSelID = "${selID}";
+	        var pNodeTreeID = "${nodeID}";
 	        var ReturnFunction;
 	        
 	        window.onload = function () {
@@ -50,6 +51,7 @@
 	        var SelectedBoardID = "";
 	        var SelectedBoardName = "";
 	        var selectedBoardtype = "";
+	        var selectedNodeID = "";
 	        var selNewBoard = false;
 	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
 	            var treeNode = new TreeNode();
@@ -57,6 +59,7 @@
 	            SelectedBoardID = treeNode.GetNodeData("DATA1");
 	            selectedBoardtype = treeNode.GetNodeData("DATA4");
 	            SelectedBoardName = treeNode.GetNodeData("VALUE");
+	            selectedNodeID = treeNode.GetNodeData("id");
 	            if (treeNode.GetNodeData("DATA3") == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
 	                selNewBoard = true;
 	        }
@@ -92,7 +95,12 @@
 	                alert("<spring:message code='ezBoard.t10036'/>");
 	                return;
 	            }
-	
+				
+	            if (selectedNodeID.indexOf(pNodeTreeID) == 0) {
+	            	alert("<spring:message code='ezBoard.t10047'/>");
+	            	return;
+	            }
+	            
 	            var xmlhttp = createXMLHttpRequest();
 	            var xmlpara = createXmlDom();
 	            var objNode;
