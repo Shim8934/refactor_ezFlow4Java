@@ -1691,7 +1691,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-top:8px">
+				<td style="padding-top:5px">
 					<table class="content">
 						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
