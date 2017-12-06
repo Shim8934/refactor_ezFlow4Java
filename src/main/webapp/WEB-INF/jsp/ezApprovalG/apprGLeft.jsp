@@ -52,6 +52,8 @@
 		    var tmpValue = "";
 		    var nodeIdx;
 		    var localValue = "";
+		    var hideSusin = "${hideSusin}";
+		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
 		      		if(hideCabinet == "0") {
@@ -909,8 +911,9 @@
 				<c:if test="${approvalFlag == 'S'}">
 				<li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.hyj04'/><span id="count99"></span></span></li>
 				</c:if>
+				<c:if test="${hideSusin != 'N'}">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
-
+				</c:if>
 	            <c:if test="${userInfoEnforce == '2'}">
 	            	<li>
 	            		<span style="width: 100%; display: inline-block;" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')">
