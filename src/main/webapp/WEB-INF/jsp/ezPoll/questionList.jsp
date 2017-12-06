@@ -179,7 +179,7 @@
 		    
 		    function menu_Hide() {
 		    	if (checkedArr.length == 0) {
-		            alert('<spring:message code="ezPoll.t239" />');
+		            alert('<spring:message code="ezPoll.t242" />');
 		            return;
 		    	}
 		    	
@@ -195,7 +195,7 @@
 		    
  		    function menu_Show() {
 		    	if (checkedArr.length == 0) {
-		            alert('<spring:message code="ezPoll.t239"/>');
+		            alert('<spring:message code="ezPoll.t243"/>');
 		            return;
 		    	}	
 		    	

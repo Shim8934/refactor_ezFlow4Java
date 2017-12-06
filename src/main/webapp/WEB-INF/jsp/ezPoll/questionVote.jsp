@@ -11,7 +11,8 @@
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+		<script src="/js/jquery/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		
 		<script type="text/javascript">	
