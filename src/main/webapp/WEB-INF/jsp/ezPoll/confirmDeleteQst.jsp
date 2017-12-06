@@ -15,9 +15,9 @@
 		<style>
 		</style>
 		<script type="text/javascript">
- 		    window.onunload = function() {
+/*  		    window.onunload = function() {
  				window.opener.popupClosing();
-		    }; 
+		    }; */ 
 		    
 		    function btn_Delete() {
 		    	var checkedList = "<c:out value='${listQstIds}'/>";

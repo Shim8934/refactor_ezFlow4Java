@@ -234,9 +234,9 @@
 		        w.focus();
 		    }
 		    
-		    function popupClosing() {    	
+/* 		    function popupClosing() {    	
 		    	document.location.href = "/ezPoll/pollList.do?brdID=6";
-		    }
+		    } */
 		    
 		    function title_OnClick(pReceve) {
 		    	$.ajax({
