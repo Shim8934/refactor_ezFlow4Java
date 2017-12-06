@@ -349,11 +349,20 @@
 	        }
 	
 	        function add() {
-	        		var pTextName = document.getElementById("TextName").value.trim();
-	            if ( pTextName == "") {
+	        	
+	        	var pTextName = document.getElementById("TextName").value.trim();
+	            
+	        	if ( pTextName == "") {
+	        		document.getElementById("TextName").focus();
 	                alert("<spring:message code='ezAddress.t346' />");
 	                return;
 	            }
+	        	
+	        	if (pTextName.indexOf('<') != -1 || pTextName.indexOf('>') != -1 || pTextName.indexOf(';') != -1) {
+	        		document.getElementById("TextName").focus();
+		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
+		        	return;
+		        }
 	
                 var xmlHTTP = createXMLHttpRequest();
                 var xmlDom = createXmlDom();
@@ -921,23 +930,31 @@
 	    }
 	
 	    function inputAddress() {
-	        if (document.getElementById("emailname").value == "") {
-	            document.getElementById("emailname").focus();
+
+	    	var emailname = document.getElementById("emailname").value;
+	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
+	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	    	
+	        if (emailname == "") {
 	            alert("<spring:message code='ezAddress.t349' />");
+	        	document.getElementById("emailname").focus();
 	            return;
 	        } else if (document.getElementById("emailaddr").value == "") {
-	            document.getElementById("emailaddr").focus();
                 alert("<spring:message code='ezAddress.t350' />");
+	        	document.getElementById("emailaddr").focus();
                 return;
 	        } 
 	        
-	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	        if (emailname.indexOf('<') != -1 || emailname.indexOf('>') != -1 || emailname.indexOf(';') != -1) {
+	        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
+	        	document.getElementById("emailname").focus();
+	        	return;
+	        }
 	        
 	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 	            alert("<spring:message code='ezAddress.t1100' />");
-	            document.getElementById("emailaddr").value = pTextEmail;
 	            document.getElementById("emailaddr").focus();
+	            document.getElementById("emailaddr").value = pTextEmail;
 	            return;
 	        }
 	        

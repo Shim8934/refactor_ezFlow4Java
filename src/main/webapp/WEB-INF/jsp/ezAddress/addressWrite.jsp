@@ -192,12 +192,18 @@
 		    }
 		    function insert_address() {
 		        var pTextName = TrimText(document.getElementById("TextName").value);
+		        
 		        if (pTextName == "") {
 		            alert("<spring:message code='ezAddress.t220' />");
-		
 		            document.getElementById("TextName").value = "";
 		            document.getElementById("TextName").focus();
 		            return;
+		        }
+		        
+		        if (pTextName.indexOf('<') != -1 || pTextName.indexOf('>') != -1 || pTextName.indexOf(';') != -1) {
+		        	document.getElementById("TextName").focus();
+		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
+		        	return;
 		        }
 		        
 		        if (!check_length(document.getElementById("TextCompanyPhone").value, 20, "<spring:message code='ezAddress.t222' />")) return;
