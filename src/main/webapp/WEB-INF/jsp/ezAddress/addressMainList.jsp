@@ -131,6 +131,7 @@
 	                    if (AddressObj.getAttribute("_stype") == "P") {
 	                        var addrname = AddressObj.getAttribute("_Sname");
 	                        var addremail = AddressObj.getAttribute("_Semail");
+	                        
 	                        if (isValidEmail(addremail)) {
 	                            if (email == "")
 	                                email = "\"" + addrname + "\" <" + addremail + ">";
@@ -180,8 +181,8 @@
 	                var pwidth = window.screen.availWidth;
 	                var pTop = (pheight - conHeight) / 2;
 	                var pLeft = (pwidth - 890) / 2;
-		
-                    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
                         "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
 	        }
@@ -432,15 +433,21 @@
 	            }
 	        }
 	        function quick_add() {
-	        		var pQname = document.getElementById("qname").value.trim();
+	        	var pQname = document.getElementById("qname").value.trim();
 	            var pQemail = document.getElementById("qemail").value.trim();
-	        		var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	        	var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
 	            
                 if (pQname == "") {
-                		document.getElementById("qname").focus();
+                	document.getElementById("qname").focus();
 	                alert("<spring:message code='ezAddress.t220' />");
 	                return;
                 } 
+                
+                if (pQname.indexOf('<') != -1 || pQname.indexOf('>') != -1 || pQname.indexOf(';') != -1) {
+	        		document.getElementById("qname").focus();
+		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
+		        	return;
+		        }
 	        		
 	            if (document.getElementById("qemail").value != "" && regex.test(document.getElementById("qemail").value) === false) {
 	                alert("<spring:message code='ezAddress.t1100' />");
