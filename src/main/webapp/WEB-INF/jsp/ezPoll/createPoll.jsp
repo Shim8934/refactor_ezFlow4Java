@@ -13,7 +13,8 @@
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
 	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --> 
+	<script src="/js/jquery/jquery.min.js"></script> 
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
@@ -21,7 +22,8 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<!-- <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script> -->
 	<script type="text/javascript" src="/js/ezPoll/dropzone.js"></script>
-  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  -->
+  	<script src="/js/jquery-ui/jquery-ui.js"></script>
   	<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	  
 	<script type="text/javascript">	
 		var messageCode1	  = '<spring:message code="ezPoll.t164"/>';
@@ -29,7 +31,7 @@
 		var messageCode3	  = '<spring:message code="ezPoll.t208"/>';
 	    var filesize 		  = 0;
 	    var file 			  = new Array();
-	    //var xhr 			  = new XMLHttpRequest();
+	    var xhr 			  = new XMLHttpRequest();
 		var lstAttachLink 	  = document.getElementById("lstAttachLink");
 	    var isfileup 		  = false;
 	    var mode 			  = "<c:out value='${mode}'/>";

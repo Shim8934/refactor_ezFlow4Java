@@ -1470,7 +1470,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//Get list of questions for user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
-		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, "");
+		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, "", "");
 		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
 		
 		if (!setOfQuestions.isEmpty()) {

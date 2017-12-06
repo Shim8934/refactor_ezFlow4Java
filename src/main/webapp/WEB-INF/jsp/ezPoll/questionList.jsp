@@ -281,7 +281,7 @@
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
 					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);">
-					<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle; margin-bottom: 2px;" onclick="menu_Search()"></a>
+					<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onclick="menu_Search()"></a>
 			</span>
 		</h1>
 		<div id="mainmenu1">
