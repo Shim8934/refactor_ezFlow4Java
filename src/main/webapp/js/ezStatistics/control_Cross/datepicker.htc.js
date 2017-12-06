@@ -213,7 +213,7 @@ function datepicker(thisobjid, elobjid) {
     this.startHours = function(a) {
         if (!a) {
             return get_startHours.call(this);
-        
+        }
 
         return put_startHours.call(this, a);
     };
