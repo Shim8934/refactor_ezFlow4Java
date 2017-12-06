@@ -3487,7 +3487,9 @@ public class EzBoardController extends EgovFileMngUtil{
         pMode = request.getParameter("mode");
         
         String strXML = "";
-
+        if (pTitle != null) {
+        	pTitle = pTitle.replaceAll("[\\\\/:*?\"<>|]", "_");
+        }
         if (pMode != null && (pMode.equals("boardContent") || pMode.equals("boardAttach"))) {
         	strXML = getItemAttachmentXML_Retrans(pItemID, realPath, pMode, pConLocation, pTitle, userInfo.getTenantId());
         } else {
