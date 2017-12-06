@@ -99,7 +99,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'MaxAllowedCountOfLoginFail','0','계정 잠금이 되는 로그인 실패 횟수');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'addLastKyulJeYN','0','최종 결재선이 결재 외의 것이 올 수 있는지 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'approvalForDoc','N','결재조회관리자 권한 사용여부(Y/N)');
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseAnyoneEdit','NO','YES일 경우 부서/회사 주소록, 일정을 아무나 수정 가능.');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseAnyoneEdit','NO','YES일 경우 부서/회사 주소록, 일정을 누구나 수정 가능.');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ApprTotalAttachLimit','50','전자결재 첨부파일 총용량 제한크기. 단위는 MB. 0일 경우 무제한.');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseEncryptZipForEmail','NO','메일 내보내기/가져오기 압축파일 암호화 사용유무 (YES인경우 사용)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseMailBoxBackUp','NO','편지함 내보내기/가져오기 사용여부 (YES : 사용)');
@@ -111,7 +111,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_CIRCULAR','YES','회람판 모듈 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_HTMLMODE','YES','에디터 HTML 모드 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'portalEnv','0','0 : 마이포탈설정 전부 보임, 1:마이포탈페이지만 보임, 2:초기화면설정만 보임, 3:전부 안보임');
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'noUsePOP3','NO','pop3 사용유무. YES일 경우 사용안함.');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'noUsePOP3','NO','외부메일확인 사용유무. YES일 경우 사용안함.');
 
 
 INSERT INTO `tbl_deptmaster` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`USEFLAG`,`MAIL`,`COMPNM2`,`DEPTLEVEL`,`DEPT_CD_PATH`,`DEPT_NM_PATH`,`EXTENSIONATTRIBUTE1`,`EXTENSIONATTRIBUTE2`,`EXTENSIONATTRIBUTE3`,`EXTENSIONATTRIBUTE4`,`EXTENSIONATTRIBUTE5`,`EXTENSIONATTRIBUTE6`,`EXTENSIONATTRIBUTE7`,`EXTENSIONATTRIBUTE8`,`EXTENSIONATTRIBUTE9`,`EXTENSIONATTRIBUTE10`,`EXTENSIONATTRIBUTE11`,`EXTENSIONATTRIBUTE12`,`EXTENSIONATTRIBUTE13`,`EXTENSIONATTRIBUTE14`,`EXTENSIONATTRIBUTE15`,`ADFLAG`,`ADSPATH`,`UPDATEDT`) VALUES (0,'Top','조직도','OrganizationChart',NULL,'Top@jtest.kaoni.com','OrganizationChart','1','Top','조직도',NULL,'Top','조직도',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Y','CN=Top,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com','2017-01-06 00:00:00');
