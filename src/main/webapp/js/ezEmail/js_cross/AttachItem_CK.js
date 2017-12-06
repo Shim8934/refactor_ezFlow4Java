@@ -53,10 +53,12 @@ function DelAttachFileAtList(obj) {
     try {
         var pItemID = obj.getAttribute("_itemid");
         var pISBig = obj.getAttribute("_big");
+        var pIndex = obj.getAttribute("_fileindex");
         if (pISBig != "Y") {
             var xml = "<FILE>";
             xml += "<ROW>";
             xml += "<ATTACHID><![CDATA[" + pItemID + "]]></ATTACHID>";
+            xml += "<ATTACHINDEX><![CDATA[" + pIndex + "]]></ATTACHINDEX>";
             xml += "<BIGYN><![CDATA[" + pISBig + "]]></BIGYN>";
             xml += "</ROW>";
             xml += "<ITEMID><![CDATA[" + g_url + "]]></ITEMID></FILE>";
