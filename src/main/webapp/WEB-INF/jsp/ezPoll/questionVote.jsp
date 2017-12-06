@@ -338,8 +338,7 @@
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	var user = JSON.parse(updatedInfo.body).userId;	
 			        	
-			            /* if (ret == "CHANGED" && user != curentUser) { */	
-			            if (ret == "CHANGED") {
+			            if (ret == "CHANGED" && user != curentUser) {			            
 							alert(user + "<spring:message code = 'ezPoll.t113'/>");
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
