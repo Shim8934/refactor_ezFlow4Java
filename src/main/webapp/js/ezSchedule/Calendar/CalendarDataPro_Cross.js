@@ -1407,7 +1407,7 @@ function leadingZeros(n, digits) {
 }
 
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#eaf2f5";
+    pThis.style.backgroundColor = "rgb(233, 241, 255)";
 }
 
 
@@ -1422,7 +1422,7 @@ function Schedule_onMouseClick(event) {
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
         }
 
-        event.style.backgroundColor = "#eaf2f5";
+        event.style.backgroundColor = "rgb(233, 241, 255)";
 
         g_szCurrentApptDivID = GetAttribute(event, "id");
     }
