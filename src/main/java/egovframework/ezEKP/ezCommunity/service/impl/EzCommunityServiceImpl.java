@@ -2538,6 +2538,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGubun(strProp.getGubun());
 			boardInfo.setUrl(strProp.getUrl());
+			boardInfo.setReplyNotify(strProp.getReplyNotify());
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
