@@ -55,6 +55,7 @@
 	        var SelectedBoardID = "";
 	        var SelectedBoardName = "";
 	        var selectedBoardtype = "";
+	        var selectedNodeID = "";
 	        var selNewBoard = false;
 	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
 	            var treeNode = new TreeNode();
@@ -62,6 +63,7 @@
 	            SelectedBoardID = treeNode.GetNodeData("DATA1");
 	            selectedBoardtype = treeNode.GetNodeData("DATA4");
 	            SelectedBoardName = treeNode.GetNodeData("VALUE");
+	            selectedNodeID = treeNode.GetNodeData("id");
 	            if (treeNode.GetNodeData("DATA3") == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
 	                selNewBoard = true;
 	        }
@@ -137,6 +139,7 @@
 	                        SelectedBoardID = "";
 	                        SelectedBoardName = "";
 	                        selectedBoardtype = "";
+	                        selectedNodeID = "";
 	                    }
 	                }
 	            }
@@ -173,6 +176,7 @@
 	                    SelectedBoardID = "";
 	                    SelectedBoardName = "";
 	                    selectedBoardtype = "";
+	                    selectedNodeID = "";
 	                }
 	            }
 	        }
@@ -223,6 +227,7 @@
 	                        SelectedBoardID = "";
 	                        SelectedBoardName = "";
 	                        selectedBoardtype = "";
+	                        selectedNodeID = "";
 	                    }
 	                }
 	            }
@@ -254,6 +259,7 @@
 	                    SelectedBoardID = "";
 	                    SelectedBoardName = "";
 	                    selectedBoardtype = "";
+	                    selectedNodeID = "";
 	                }
 	            }
 	        }
@@ -343,7 +349,7 @@
 	            if (CrossYN()) {
 	                myboard_movecopy_dialogArguments[0] = "";
 	                myboard_movecopy_dialogArguments[1] = move_onclick_Complete;
-	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID);
+	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID + "&nodeID=" + selectedNodeID);
 	            }
 	            else {
 	                var feature = "dialogWidth:320px; dialogHeight:375px; status:no; help:no; scroll:no; edge:sunken";
