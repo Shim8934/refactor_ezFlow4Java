@@ -3913,8 +3913,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/myBoardmovecopy.do")
 	public String myBoardmovecopy(Model model, HttpServletRequest request) {
 		String selID = request.getParameter("selID");
-		
+		String nodeID = "";
+		if (request.getParameter("nodeID") != null) {
+			nodeID = request.getParameter("nodeID");
+		}
+	
 		model.addAttribute("selID", selID);
+		model.addAttribute("nodeID", nodeID);
 		
 		return "ezBoard/boardMyBoardMoveCopy";
 	}
