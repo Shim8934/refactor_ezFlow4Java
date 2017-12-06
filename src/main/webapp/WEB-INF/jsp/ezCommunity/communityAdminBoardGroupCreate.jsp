@@ -213,12 +213,12 @@
 	                    <tr class="primary">
 	                        <th>${lang_Primary}</th>
 	                        <td>
-	                            <input type="text" id="txtNewGroupName" name="txtNewGroupName" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+	                            <input type="text" id="txtNewGroupName" name="txtNewGroupName" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength=23></td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th>${lang_Secondary}</th>
 	                        <td>
-	                            <input type="text" id="txtNewGroupName2" name="txtNewGroupName2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+	                            <input type="text" id="txtNewGroupName2" name="txtNewGroupName2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength=23></td>
 	                    </tr>
 	                </table>
 	            </td>
