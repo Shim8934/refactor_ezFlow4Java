@@ -997,13 +997,13 @@
 				  	//baonk added
 				    document.getElementById("taskRep").style.display = "";				    
 				    var height = $("#new_list_body")[0].clientHeight;
-				    document.getElementById("new_div_body").style.height = (height + 10) + "px";
+				    document.getElementById("new_div_body").style.height = (height + 10) + "px";				    
 				    
-				    console.log("height: " + height);
 				    var repData = $("#taskRep").html();
 				    
 				    $("#repTable").html(repData);
 				    var repData = $("#taskRep").html();
+				    document.getElementById("new_div_body").style.height = "450px";
 				    document.getElementById("taskRep").style.display = "none";
 				    //end			    	
 			    }
