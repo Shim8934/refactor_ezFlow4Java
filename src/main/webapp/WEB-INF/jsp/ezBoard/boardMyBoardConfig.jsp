@@ -298,6 +298,10 @@
 	                    alert("<spring:message code='ezBoard.t268'/>");
 	                    makeTreeList();
 	                }
+	                SelectedBoardID = "";
+                    SelectedBoardName = "";
+                    selectedBoardtype = "";
+                    selectedNodeID = "";
 	            }
 	        }
 	        function add_MyBoard() {
