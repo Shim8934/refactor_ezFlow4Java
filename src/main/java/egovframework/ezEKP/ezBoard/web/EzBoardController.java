@@ -3487,7 +3487,9 @@ public class EzBoardController extends EgovFileMngUtil{
         pMode = request.getParameter("mode");
         
         String strXML = "";
-
+        if (pTitle != null) {
+        	pTitle = pTitle.replaceAll("[\\\\/:*?\"<>|]", "_");
+        }
         if (pMode != null && (pMode.equals("boardContent") || pMode.equals("boardAttach"))) {
         	strXML = getItemAttachmentXML_Retrans(pItemID, realPath, pMode, pConLocation, pTitle, userInfo.getTenantId());
         } else {
@@ -3913,8 +3915,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/myBoardmovecopy.do")
 	public String myBoardmovecopy(Model model, HttpServletRequest request) {
 		String selID = request.getParameter("selID");
-		
+		String nodeID = "";
+		if (request.getParameter("nodeID") != null) {
+			nodeID = request.getParameter("nodeID");
+		}
+	
 		model.addAttribute("selID", selID);
+		model.addAttribute("nodeID", nodeID);
 		
 		return "ezBoard/boardMyBoardMoveCopy";
 	}

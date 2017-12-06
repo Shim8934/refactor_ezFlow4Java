@@ -271,7 +271,7 @@
 				strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
 				strXML += "<DEPTID>" + SSDeptID + "</DEPTID>";
 	            strXML += "<STARTDATE>" + pStartDate + "</STARTDATE>";
-	            strXML += "<CONTENT2>" + content + "</CONTENT2>";
+	            strXML += "<CONTENT2>" + MakeXMLString(content) + "</CONTENT2>";
 	            strXML += "<FILEPATH>" + filepath + "</FILEPATH>";
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
 			    strXML += "</NODE>";

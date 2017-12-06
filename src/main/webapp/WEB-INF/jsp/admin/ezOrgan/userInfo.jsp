@@ -630,7 +630,7 @@
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t00003' /></th>
 	            <td style="width: 240px;">
-	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" />	                
+	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly"/>	                
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
 	            </td>
