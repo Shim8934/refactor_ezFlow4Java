@@ -2813,6 +2813,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		for (String item : itemList.split(";")) {
 			String itemID = item.split(",")[0];
 			
+			logger.debug("itemID = " + itemID + " || tenantID = " + tenantID);
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pItemID", itemID);
 			map.put("tenantID", tenantID);
