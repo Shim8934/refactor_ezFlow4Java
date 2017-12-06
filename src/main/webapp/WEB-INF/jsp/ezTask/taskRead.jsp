@@ -47,6 +47,21 @@
 			   table.content tr td, table.content tr th, table.content tr {
 			        page-break-inside: avoid;
 			   }
+			   
+			   .content2 {
+				    border: 1px solid #b6b6b6;
+				    margin: 0;
+				    width: 100%;
+			   }
+				
+			   .content2 td {
+				    padding: 0px 2px 0px 2px;
+				    background: #FFF;
+				    border: 1px solid #b6b6b6;
+				    height: 29px;
+				    word-break: break-all;
+			   }	   
+		    
 		</style>
 		
 		<script type="text/javascript">
@@ -565,13 +580,13 @@
 						}
 						
 						/* commentList */
-						taskCommentList = "<ul class='opinion_ul'>";
+						taskCommentList = "<ul class='opinion_ul' id='opi_ul'>";
 						list.forEach(function(vo, index) {
 							commentorID = "\"" + vo.commentorID + "\"";
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
 							
 							taskCommentList += "<li><span class='opinion_dept' onclick='show_personinfo(" + commentorID + ")' onMouseOver='this.style.color=\"#006BB6\"' onMouseOut='this.style.color=\"#393939\"'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span class='opinion_list'>" + vo.comment + "&nbsp;<img src='/images/ImgIcon/comment_del.gif' style='cursor:pointer;position:absolute;width:14px;padding-left:1px;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
+							taskCommentList += "<span class='opinion_list' style='position: relative;'>" + vo.comment + "&nbsp;<img src='/images/ImgIcon/comment_del.gif' style='cursor:pointer;position:absolute;width:14px;padding-left:1px;' onclick='delete_comment(" + deleteCommentParam + ")'></span>";
 							taskCommentList += "<span class='opinion_date'>" + vo.commentDate.substring(0, 16) + "</span></li>";
 						});
 						
@@ -997,7 +1012,7 @@
 				  	//baonk added
 				    document.getElementById("taskRep").style.display = "";				    
 				    var height = $("#new_list_body")[0].clientHeight;
-				    document.getElementById("new_div_body").style.height = (height + 20) + "px";				    
+				    document.getElementById("new_div_body").style.height = (height + 30) + "px";				    
 				    
 				    var repData = $("#taskRep").html();
 				    
@@ -1027,8 +1042,8 @@
 			
 				status += ", <spring:message code='ezTask.t144' />" + completerate + "%";
 			
-			    $("#printComment").html($("#taskCommentList").html());
-			    $("#printComment img").remove();
+			    //$("#printComment").html($("#taskCommentList").html());
+			    //$("#printComment img").remove();
 			    
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
 			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
@@ -1053,7 +1068,44 @@
 			    }
 			    
 			    if ($("#taskCommentList").html().trim() != "") {
-			        document.getElementById("printCommentView").style.display = "";
+			    	//baonk added
+			    	var printCommentView = document.getElementById("printCommentView");
+					while (printCommentView.firstChild) {
+						printCommentView.removeChild(printCommentView.firstChild);
+					}
+			    	
+			    	var tableOption = document.createElement("TABLE");
+			    	tableOption.setAttribute("class", "content2");
+			    	
+			    	$('#opi_ul li').each(function (i) {
+			    		var userName = $(this).children().eq(0).text();
+			    		var content  = $(this).children().eq(1).text();
+			    		var dateTime = $(this).children().eq(2).text();
+						
+			    		
+			    		var trElmt  = document.createElement("TR");
+			    		var tdElmt1 = document.createElement("TD");
+			    		var tdElmt2 = document.createElement("TD");
+			    		var tdElmt3 = document.createElement("TD");
+			    		tdElmt1.innerHTML = userName;
+			    		tdElmt2.innerHTML = content;
+			    		tdElmt3.innerHTML = dateTime;
+			    		
+			    		tdElmt1.setAttribute("style", "min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;");
+			    		tdElmt2.setAttribute("style", "vertical-align: middle; padding: 0px 10px;");
+			    		tdElmt3.setAttribute("style", "min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;");
+			    		
+			    		trElmt.appendChild(tdElmt1);
+			    		trElmt.appendChild(tdElmt2);
+			    		trElmt.appendChild(tdElmt3);
+			    		tableOption.appendChild(trElmt);
+			    	});
+			    	
+			    	printCommentView.appendChild(tableOption);			    	
+			    	printCommentView.style.display = "";
+			    	//end
+			    	
+			        //document.getElementById("printCommentView").style.display = "";
 			        document.getElementById("optiontr").style.display = "";
 			    } else {
 			        document.getElementById("printCommentView").style.display = "none";
@@ -1639,12 +1691,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-top:8px">
+				<td style="padding-top:5px">
 					<table class="content">
 						<tr style="height:58px">
 							<th><spring:message code='ezTask.t2012' /></th>
 							<!-- <td class="pos1"><input id="TextComment" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="comment_keydown()"></td> -->
-							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;"><textarea id="TextComment" style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>
+							<td class="pos1" style="padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;"><textarea id="TextComment" maxlength="500" style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>
 							<td class="pos2"><a class="imgbtn"><span onClick="add_comment()" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a></td>
 							
 						</tr>
@@ -1835,13 +1887,13 @@
 				</tr>
 				
 				<tr id="printCommentView" style="display:none">
-					<td style="height:20px">
+<!-- 					<td style="height:20px">
 						<table class="file">
 							<tr>
 								<td colspan='2' style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
 							</tr>
 						</table>
-					</td>
+					</td> -->
 				</tr>				
 				<!-- 반복업무현황 -->
 				<tr id ="reptr" style="height:20px;padding-bottom:20px;display:none;">
