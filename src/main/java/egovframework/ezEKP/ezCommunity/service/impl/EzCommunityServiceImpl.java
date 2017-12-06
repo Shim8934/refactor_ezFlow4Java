@@ -2538,6 +2538,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGubun(strProp.getGubun());
 			boardInfo.setUrl(strProp.getUrl());
+			boardInfo.setReplyNotify(strProp.getReplyNotify());
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
@@ -2811,6 +2812,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		for (String item : itemList.split(";")) {
 			String itemID = item.split(",")[0];
+			
+			logger.debug("itemID = " + itemID + " || tenantID = " + tenantID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pItemID", itemID);
