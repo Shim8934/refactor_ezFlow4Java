@@ -43,6 +43,10 @@
 			   		width: 40px;
     				padding-right: 5px;
 			   }   
+			   
+			   table.content tr td, table.content tr th, table.content tr {
+			        page-break-inside: avoid;
+			   }
 		</style>
 		
 		<script type="text/javascript">
@@ -988,8 +992,20 @@
 			    
 			    if(tasktype == 4 || tasktype == 5 ||  tasktype == 6) {
 				    document.getElementById("reptr").style.display = "block";
+				  	//$("#printTable").append(repData);	
+				    
+				  	//baonk added
+				    document.getElementById("taskRep").style.display = "";				    
+				    var height = $("#new_list_body")[0].clientHeight;
+				    document.getElementById("new_div_body").style.height = (height + 10) + "px";
+				    
+				    console.log("height: " + height);
 				    var repData = $("#taskRep").html();
-				    $("#printTable").append(repData);			    	
+				    
+				    $("#repTable").html(repData);
+				    var repData = $("#taskRep").html();
+				    document.getElementById("taskRep").style.display = "none";
+				    //end			    	
 			    }
 			    
 			    $("#updateStatus").hide();
@@ -1051,7 +1067,7 @@
 			    if (tasktype != "1" && document.getElementById("printAttach2").innerHTML.trim() != "")
 			    	printattachViewProgress.style.display = "";
 			   
-			   window.print();
+			    window.print();
 			    
 			    $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 			    
@@ -1831,7 +1847,9 @@
 						<spring:message code='ezTask.t200904' />
 					</td>
 				</tr>
-			
+				
+				<tr id="repTable">
+				</tr>			
 			</table>
 		</div>
 
