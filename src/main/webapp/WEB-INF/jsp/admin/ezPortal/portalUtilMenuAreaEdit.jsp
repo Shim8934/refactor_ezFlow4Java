@@ -37,7 +37,7 @@
 					return;
 				}
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 350px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 350));
 			    //else
 			    //   window.open("MenuItem_Edit.aspx?pageid=" + pageid + "&mode=new&parentuid=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 			}
