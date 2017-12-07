@@ -16634,7 +16634,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMKIND", kind);
 		map.put("v_LANGTYPE", strMultiData);
 		map.put("v_SEARCHTYPE", searchType);
-		map.put("v_SEARCHNAME", searchName);
+		if(globals.getProperty("Globals.DbType").equals("mysql")){
+			if (searchName.equals("_")) {
+				map.put("v_SEARCHNAME", "\"" + searchName);
+			} else {
+				map.put("v_SEARCHNAME", searchName);
+			}
+		} else { 
+			map.put("v_SEARCHNAME", searchName);
+		}
+		
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		

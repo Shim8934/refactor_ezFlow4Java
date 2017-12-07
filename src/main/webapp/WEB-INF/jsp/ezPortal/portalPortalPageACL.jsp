@@ -7,6 +7,13 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPortal.t87'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<style>
+			.pstitle {
+				border-top:0px;
+				border-left:0px;
+				
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		 	var uid = "${uID}";
@@ -98,85 +105,85 @@
     			<li id="menu_1" class="on"><span><spring:message code='ezPortal.t87'/></span></li>
   			</ul>
 		</div>
-        <div style="width:100%;height:300px;overflow-x:hidden;overflow-y:auto;border:1px solid #B6B6B6;">
-        <table class="content">
-            <tr>
-			<th style="width:150px;" class="pstitle"><spring:message code='ezPortal.t91'/></th>
-			<th style="width:50%;" class="pstitle"><spring:message code='ezPortal.t92'/></th>
-			<th style="width:80px;" class="pstitle"><spring:message code='ezPortal.t93'/></th>
-			<th style="width:80px;" class="pstitle"><spring:message code='ezPortal.t94'/></th>
-			<th style="width:80px;">&nbsp;</th>
-            </tr>
-
-		    <c:forEach items="${list}" var="item">
-		    	<tr>
-			    	<td style="width:150px;">${item.accessID}</td>
-			    	<td style="width:50%;">${item.accessName}</td>
-			    	<td style="text-align:center;width:80px;">
-			    		<c:choose>
-			    			<c:when test="${item.edit_Right == 2}">
-			    				<spring:message code='ezPortal.t95'/>
-			    			</c:when>
-			    			<c:otherwise>
-			    				<spring:message code='ezPortal.t96'/>
-			    			</c:otherwise>
-			    		</c:choose>	
-			    	</td>
-			    	<td style="text-align:center;width:80px;">
-			    		<c:choose>
-			    			<c:when test="${item.view_Right == 2}">
-				    			<spring:message code='ezPortal.t95'/>
-				    		</c:when>
-				    		<c:otherwise>
-				    			<spring:message code='ezPortal.t96'/>
-			    			</c:otherwise>
-			    		</c:choose>	
-			    	</td>
-			    	<td style="width:70px;text-align:center;">
-                		<a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')"><spring:message code='ezPortal.t67'/></span></a>
-					</td>
-			    </tr>
-		    </c:forEach>
-		</table>
-        </div>
-        <table class="content">
-            <tr>
-                <th><spring:message code='ezPortal.t91'/></th>
-                <td>
-                    <table>
-                    <tr>
-						<td><input type="text" id="newAccessID" style="width:100%" readonly> </td>
-						<td>
-                            <a class="imgbtn"><span onClick="SelectID()"><spring:message code='ezPortal.t45'/></span></a>
+        <div style="width:100%;height:300px;overflow-x:hidden;overflow-y:auto;border:1px solid #B6B6B6;border-bottom:0px;">
+	        <table class="content" style="border-top:0px;border-left:0px;border-bottom:0px;border-right:0px">
+	            <tr>
+					<th style="width:150px;" class="pstitle"><spring:message code='ezPortal.t91'/></th>
+					<th style="width:50%;" class="pstitle"><spring:message code='ezPortal.t92'/></th>
+					<th style="width:80px;" class="pstitle"><spring:message code='ezPortal.t93'/></th>
+					<th style="width:80px;" class="pstitle"><spring:message code='ezPortal.t94'/></th>
+					<th style="width:80px;border-right:0px" class="pstitle">&nbsp;</th>
+	            </tr>
+	
+			    <c:forEach items="${list}" var="item">
+			    	<tr>
+				    	<td style="width:150px;border-left:0px">${item.accessID}</td>
+				    	<td style="width:50%;border-left:0px">${item.accessName}</td>
+				    	<td style="text-align:center;width:80px;border-left:0px">
+				    		<c:choose>
+				    			<c:when test="${item.edit_Right == 2}">
+				    				<spring:message code='ezPortal.t95'/>
+				    			</c:when>
+				    			<c:otherwise>
+				    				<spring:message code='ezPortal.t96'/>
+				    			</c:otherwise>
+				    		</c:choose>	
+				    	</td>
+				    	<td style="text-align:center;width:80px;border-left:0px">
+				    		<c:choose>
+				    			<c:when test="${item.view_Right == 2}">
+					    			<spring:message code='ezPortal.t95'/>
+					    		</c:when>
+					    		<c:otherwise>
+					    			<spring:message code='ezPortal.t96'/>
+				    			</c:otherwise>
+				    		</c:choose>	
+				    	</td>
+				    	<td style="width:70px;text-align:center;border-left:0px">
+	                		<a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')"><spring:message code='ezPortal.t67'/></span></a>
 						</td>
-                        
-					</tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <th><spring:message code='ezPortal.t92'/></th>
-                <td ><input type="text" id="newAccessName" style="width:100%" readonly></td>
-            </tr>
-            <tr>
-                <th><spring:message code='ezPortal.t93'/></th>
-                <td style="text-align:center;">
-                    <input type="radio" name="SelectEditRight" value="1" checked> <spring:message code='ezPortal.t97'/>
-				    <input type="radio" name="SelectEditRight" value="2"> <spring:message code='ezPortal.t95'/>
-                </td>
-            </tr>
-            <tr>
-			<th ><spring:message code='ezPortal.t94'/></th>
-			<td style="text-align:center;">
-				<input type="radio" name="SelectViewRight" value="1" checked> <spring:message code='ezPortal.t97'/>
-				<input type="radio" name="SelectViewRight" value="2"> <spring:message code='ezPortal.t95'/>
-			</td>
-		</tr>
-	     <tr style="display:none" >
-	       <td><input type="text" id="AccessDeptName" style="display:none"></td>
-	     </tr>
-        </table>
-
+				    </tr>
+			    </c:forEach>
+			</table>
+        </div>
+        <div style="width:100%;border:1px solid #B6B6B6;border-top:0px;border-bottom:0px">
+	        <table class="content" style="border-top:0px;border-left:0px;border-bottom:0px;border-right:0px">
+	            <tr>
+	                <th style="border-left:0px"><spring:message code='ezPortal.t91'/></th>
+	                <td style="border-right:0px">
+	                    <table>
+		                    <tr>
+								<td><input type="text" id="newAccessID" style="width:100%" readonly> </td>
+								<td>
+		                            <a class="imgbtn"><span onClick="SelectID()"><spring:message code='ezPortal.t45'/></span></a>
+								</td>	                        
+							</tr>
+	                    </table>
+	                </td>
+	            </tr>
+	            <tr>
+	                <th style="border-left:0px"><spring:message code='ezPortal.t92'/></th>
+	                <td style="padding-left:4px"><input type="text" id="newAccessName" style="width:99%;" readonly></td>
+	            </tr>
+	            <tr>
+	                <th style="border-left:0px"><spring:message code='ezPortal.t93'/></th>
+	                <td style="text-align:left;">
+	                    <input type="radio" name="SelectEditRight" value="1" checked> <spring:message code='ezPortal.t97'/>
+					    <input type="radio" name="SelectEditRight" value="2"> <spring:message code='ezPortal.t95'/>
+	                </td>
+	            </tr>
+	            <tr>
+					<th style="border-left:0px"><spring:message code='ezPortal.t94'/></th>
+					<td style="text-align:left;">
+						<input type="radio" name="SelectViewRight" value="1" checked> <spring:message code='ezPortal.t97'/>
+						<input type="radio" name="SelectViewRight" value="2"> <spring:message code='ezPortal.t95'/>
+					</td>
+				</tr>
+			    <tr style="display:none" >
+					<td><input type="text" id="AccessDeptName" style="display:none"></td>
+			    </tr>
+	        </table>
+		</div>
         <div style="text-align:center;margin-top:10px;">
             <a class="imgbtn"><span onClick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
         </div>

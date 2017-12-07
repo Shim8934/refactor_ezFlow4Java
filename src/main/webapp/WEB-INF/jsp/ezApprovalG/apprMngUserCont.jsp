@@ -160,6 +160,8 @@
             }
 
             var ContName = treeNode.GetNodeData("VALUE");
+            ContName = ContName.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+            
             var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t307'/>";
 
             if (CrossYN()){

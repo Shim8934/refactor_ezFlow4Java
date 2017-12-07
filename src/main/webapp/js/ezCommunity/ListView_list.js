@@ -569,7 +569,10 @@ function ListView() {
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
         
-        var oHeaders;
+        var oHeaders = _dataSource.getElementsByTagName("HEADER");
+        var colCount = oHeaders.length;
+        
+        /*var oHeaders;
         var colCount;
         if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
             oHeaders = _dataSource.getElementsByTagName("HEADER");
@@ -596,7 +599,8 @@ function ListView() {
             objTr.appendChild(objTd);
 
              return oTbody;
-        }
+        }*/
+        
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);

@@ -38,6 +38,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -71,6 +72,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
 	
 	@Autowired
 	private EgovMessageSource messageSource;
@@ -1389,7 +1393,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String to[] = request.getParameter("to").split(",");
 		String Subject = request.getParameter("Subject");
 		String Content = request.getParameter("Content");
-		String SaveSendBoxFlag = request.getParameter("SaveSendBoxFlag");
         boolean flag;
 		StringBuilder bodyContent = new StringBuilder();
         
@@ -1404,11 +1407,17 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     	to1.setPersonal(to[0], "UTF-8");
     	to1.setAddress(to[1]);
     	
-    	if (SaveSendBoxFlag.equals("Y")) {
+    	String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
+    	Document doc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
+		String saveSendBoxFlag = doc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
+		logger.debug("saveSendBoxFlag=" + saveSendBoxFlag);
+		
+    	if (saveSendBoxFlag.equals("Y")) {
     		flag = true;
     	} else {
     		flag = false;
     	}
+    	
     	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, bodyContent.toString(),flag);
     	
     	logger.debug("mail_intersend ended");

@@ -782,6 +782,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (request.getParameter("itemID") != null) {
 			pItemID = request.getParameter("itemID");
+			item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		}
 		if (request.getParameter("reservedItem") != null) {
 			pReservedItem = request.getParameter("reservedItem");
@@ -796,6 +797,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";
 		}
+		
+		
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
@@ -814,6 +817,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("item", item);
+		
+		logger.debug("item.endDate: " + item.getEndDate());
 		
 		return "ezCommunity/communityNewBoardItem";
 	}

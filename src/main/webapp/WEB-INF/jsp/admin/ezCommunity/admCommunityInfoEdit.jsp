@@ -90,7 +90,8 @@
 				}
 				
 				try {
-					window.opener.location.reload(true);
+					window.opener.location.reload();
+					window.close();
 				} catch(e) {}
 			}
 			

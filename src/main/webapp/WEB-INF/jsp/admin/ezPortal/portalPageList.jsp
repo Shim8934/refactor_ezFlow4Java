@@ -333,7 +333,7 @@
 			        if(g_UID == "")
 			            alert("<spring:message code='ezPortal.t240'/>");
 			        else
-			            window.open("/ezPortal/portalPageACL.do?uID=" + g_UID, "", "height = 500px, width = 535px, status = no, toolbar=no, menubar=no,location=no, resizable=yes"+GetOpenPosition(535, 500));
+			            window.open("/ezPortal/portalPageACL.do?uID=" + g_UID, "", "height = 510px, width = 535px, status = no, toolbar=no, menubar=no,location=no, resizable=yes"+GetOpenPosition(535, 510));
 			    }
 		</script>
 	</head>
