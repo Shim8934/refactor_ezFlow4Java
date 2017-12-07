@@ -39,18 +39,19 @@
 		var L_EndDate 		  = "";
 		var L_StartTime 	  = "";
 		var L_EndTime 		  = "";
-		var g_windowReference = null;			
+		var g_windowReference = null;
+		var qst_ID 			  = "<c:out value='${question.qstId}'/>";
+		var flag			  = 0;
 		
 		window.onunload = function() {
-			if (mode == "modify") {
+			if (mode == "modify" && flag == 0) {
 				//Update the vote modifying status
 /* 				var qstID = "<c:out value='${question.qstId}'/>";
 				var fd = new FormData();
 				fd.append("questionId", qstID);
 			    xhr.open("POST", "/ezPoll/undoModifyVote.do");
 			    xhr.send(fd); 
-			    window.close(); */
-			    var qstID = "<c:out value='${question.qstId}'/>";
+			    window.close(); */			   
 			    
 		    	$.ajax({
 		    		type : "POST",
@@ -58,14 +59,8 @@
 		    		async : false,
 		    		url : "/ezPoll/undoModifyVote.do",
 		    		data : {
-		    			questionId : qstID
-		    		},
-		    		success: function(data) {	    			
-
-			        },
-			        error: function(error) {
-			        	//alert(error);
-			        }
+		    			questionId : qst_ID
+		    		}
 		    	});   
 			}			
     	}; 
@@ -163,15 +158,18 @@
 				}
 				
 				//Set end date	
-				var _setDate = "<c:out value='${question.setDate}'/>";				
-				
+				var _setDate = "<c:out value='${question.setDate}'/>";	
+								
 		    	$("#Sdatepicker").datepicker({
 		        	changeMonth: true,
 		        	changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
-		        	buttonImageOnly: true
+		        	buttonImageOnly: true,
+		            onSelect: function(dateText, inst) {
+		            	dateCompare(dateText, SDate);
+		            }
 		    	});
 				
 				$("#Edatepicker").datepicker({
@@ -181,8 +179,8 @@
 		        	showOn: "both",
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
 		        	buttonImageOnly: true
-		    	});				
-				
+		    	});		
+		
 				var _startD = "<c:out value='${question.startDate}'/>";
 				var _endD = "<c:out value='${question.endDate}'/>";
 				
@@ -286,6 +284,28 @@
 			}); 
 		}
 		
+		function dateCompare(dateText, SDate) {
+			var newDate = new Date();					
+			var year = newDate.getFullYear();
+			var month = newDate.getMonth() + 1;
+			var day = newDate.getDate();					
+			var curDate = year + "-" + ("0" + month).slice(-2) + "-" + ("0" + day).slice(-2);
+			
+			if (curDate > dateText) {				
+				alert('<spring:message code="ezPoll.t245"/>');
+				
+				if (mode == "modify") {
+					$("#Sdatepicker").datepicker('setDate', SDate);
+				}
+				else {
+					$("#Sdatepicker").datepicker('setDate', curDate);
+				}
+			}
+			else {
+				$("#Sdatepicker").datepicker('setDate', dateText);
+			}
+		}
+		
 		function checkOptionsList() {			
     		var totalOptions = $('#columnsbnk li').length;
     		var check_flag = 0;
@@ -343,15 +363,20 @@
 	        	changeMonth: true,
 	        	changeYear: true,
 	        	autoSize: true,
+	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
 	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
-	        	buttonImageOnly: true
+	        	buttonImageOnly: true,
+	            onSelect: function(dateText, inst) {
+	            	dateCompare(dateText);
+	            }
 	    	});
 	    	
 			$("#Edatepicker").datepicker({
 		        changeMonth: true,
 	    	    changeYear: true,
 	        	autoSize: true,
+	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
 	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	        	buttonImageOnly: true
@@ -560,6 +585,7 @@
 		    	if (mode == "modify") {
 		    		var qstID = "<c:out value='${question.qstId}'/>";
 		    		document.getElementById("hidModifyInfo").value = qstID;
+		    		flag = 1;
 		    	}
 				
 		    	document.getElementById("hidFilePath").value = document.getElementById("hidFilePath").value.substring(0, document.getElementById("hidFilePath").value.length - 1);               	  
