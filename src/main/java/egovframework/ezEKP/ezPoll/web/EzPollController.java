@@ -196,7 +196,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int seeAll = 0;	
 		int checkingArray = 0;
 		int adminPrivilege = -1;
-		String qstId = "";
+		String qstId = "";		
 		
 		if (request.getParameter("qstId") != null) {			
 			qstId = request.getParameter("qstId");
@@ -207,8 +207,9 @@ public class EzPollController extends EgovFileMngUtil {
 			return "redirect:/ezPoll/pollVote.do";
 		}
 		
-		String mode = (request.getParameter("mode") != null) ? request.getParameter("mode"): "";;
-		String listQst = (request.getParameter("listQst") != null) ? request.getParameter("listQst"): "";
+		String mode = (request.getParameter("mode") != null) ? request.getParameter("mode") : "";
+		String mode1 = (request.getParameter("mode1") != null) ? request.getParameter("mode1") : mode;
+		String listQst = (request.getParameter("listQst") != null) ? request.getParameter("listQst") : "";
 		
 		if (!listQst.equals("")) {
 			String [] questionIDs = listQst.split(",");			
@@ -240,10 +241,17 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		if (request.getParameter("search") != null) {
 			searchStr = request.getParameter("search");
-		}
+		}		
+		
+		String searchStr1 = (request.getParameter("searchN") != null) ? request.getParameter("searchN"): searchStr;
 		
 		if (request.getParameter("currPage") != null) {
 			currPage = Integer.parseInt(request.getParameter("currPage"));
+		}
+		else {
+			if (request.getParameter("paging") != null) {
+				currPage = Integer.parseInt(request.getParameter("paging"));
+			}
 		}
 		
 		if (request.getParameter("brdID") != null) {
@@ -301,7 +309,10 @@ public class EzPollController extends EgovFileMngUtil {
 				model.addAttribute("list", listRenderQuestions);
 			}
 			else {
-				int startPoint = (currPage - 1)*pageSize;
+				if (currPage > totalPages) {
+					currPage = totalPages;
+				}
+				int startPoint = (currPage - 1) * pageSize;
 				int endPoint = totalQuestions;
 				List<PollQuestionVO> listRenderQuestions = listTotalQuestions.subList(startPoint, endPoint);
 				model.addAttribute("list", listRenderQuestions);
@@ -315,7 +326,9 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("userID", loginVO.getId());
 		model.addAttribute("tenantID", loginVO.getTenantId());
 		model.addAttribute("strSearch", searchStr);		
+		model.addAttribute("strSearch1", searchStr1);	
 		model.addAttribute("mode", mode);
+		model.addAttribute("mode1", mode1);
 		model.addAttribute("seeCheck", seeAll);
 		model.addAttribute("deleteBttn", checkingArray);		
 		model.addAttribute("adminPrivilege", adminPrivilege);

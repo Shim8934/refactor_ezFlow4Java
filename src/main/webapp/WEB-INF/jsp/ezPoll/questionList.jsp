@@ -13,8 +13,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>		
-		<script type="text/javascript" src="/js/ezPoll/page_render.js"></script>	
+		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>				
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 				
 		<script type="text/javascript">	
@@ -61,7 +60,7 @@
 		   
 			window.onload = function() {				
 				preProcessing();				
-				makePageSelPage(currentPage, totalPages, totalQuestions, blockSize);
+				makePageSelPage();
 				getConnect();
 			}		
 			
@@ -73,7 +72,7 @@
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 						if (ret == "DELETED"){
 							//reload page
-							document.location.href = "/ezPoll/pollList.do?brdID=6";
+							document.location.href = "/ezPoll/pollList.do?brdID=6&paging=" + currentPage;
 						}
 				    });
 			    });
@@ -87,9 +86,9 @@
 				//Uncheck all checkboxes after reload for firefox
 		    	$(':checkbox:checked').removeAttr('checked');  
 				
-				if(radioBttn == "wri") {
+/* 				if(radioBttn == "wri") {
 					$("#radio2").prop("checked", true);
-				}				
+				} */				
 				
 				if (seeCheck == 1) {
 					$('#seeAll').prop('checked', true);
@@ -102,7 +101,7 @@
 					$('#btnDel').hide();
 				}
 			
-				document.getElementById("searchInput").value = searchParam;
+				//document.getElementById("searchInput").value = searchParam;
 				
 				$('#seeAll').click(function() {
 					var checkSeeAll = 0;
@@ -286,17 +285,158 @@
 		    	}
 		    }
 		    
+			function makePageSelPage(){
+		        var strtext;
+		        var PagingHTML = "";
+		        document.getElementById("tblPageRayer").innerHTML = "";
+		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalQuestions + " </span>" + strLang42 + "]";
+		        strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+		        var pageNum = currentPage;
+		        
+		        if (totalPages > 1 && pageNum != 1) {
+		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPages > blockSize) {
+		            if (pageNum > blockSize) {
+		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                PagingHTML += strtext;
+		            }
+		            else {
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        var MaxNum;
+		        var i;
+		        var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+		        
+		        if (totalPages >= (startNum + parseInt(blockSize))) {
+		            MaxNum = (startNum + parseInt(blockSize)) - 1;
+		        }
+		        else {
+		            MaxNum = totalPages;
+		        }
+		        
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum) {
+		                strtext = "<span class='on'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		            else {
+						strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        
+		        if (totalPages > blockSize) {
+		        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
+		        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                PagingHTML += strtext;
+		        	}
+		        	else {
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                PagingHTML += strtext;
+		        	}
+		        }
+		        else {
+		            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
+		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        PagingHTML += "</div>";
+		        td_Create1(PagingHTML);
+		    }
+		    
+		    function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+		    }
+		    
+		    function goToPageByNum(Value){
+		    	currentPage = Value;
+		        makePageSelPage();
+		        search_Set(currentPage);
+		    }
+		    
+		    function selbeforeBlock(){
+		        var pageNum = parseInt(currentPage);
+		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selbeforeBlock_one(){
+		        var pageNum = parseInt(currentPage);
+		        if(parseInt(pageNum - 1) > 0)
+		            goToPageByNum(parseInt(pageNum - 1));
+		        else
+		            return;
+		    }
+		    
+		    function selafterBlock(){
+		        var pageNum = parseInt(currentPage);
+		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selafterBlock_one(){
+		        var pageNum = parseInt(currentPage);
+		        if(parseInt(pageNum + 1) <= totalPages)
+		            goToPageByNum(parseInt(pageNum + 1));
+		        else
+		            return;
+		    }	    
+		    
+		    function search_Set(pPage) {
+		    	var _searchPrm = document.getElementById("searchInput").value;
+		    	var mode1 = $("input[name=searchCheck]:checked").val();
+		    	var g_BrdID = "6";
+		    	
+				if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt(totalPages)) {
+					var szUrl = "/ezPoll/pollList.do?brdID=" + g_BrdID + "&currPage=" + pPage + "&mode=" + radioBttn + "&search=" + searchParam + "&mode1=" + mode1 + "&searchN=" + _searchPrm;			
+					window.location.href = szUrl;
+				}
+			}
+		    
 		</script>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
 		<h1><spring:message code="ezPoll.t103"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
+				<c:if test="${mode1 != 'wri'}">
 					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t106"/></span>
 					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t107"/></span>
+				</c:if>
+				<c:if test="${mode1 == 'wri'}">
+					<input name="searchCheck" id="radio1" type="radio" value="sub" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t106"/></span>
+					<input name="searchCheck" id="radio2" type="radio" value="wri" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t107"/></span>
+				</c:if>
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
-					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);">
+					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
 					<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onclick="menu_Search()"></a>
 			</span>
 		</h1>
