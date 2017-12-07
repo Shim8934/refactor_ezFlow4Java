@@ -68,6 +68,16 @@
 				
 				window.open("/ezPersonal/sms/sms_main.do?num="+pMobile, "", "height=560px,width=570px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			}
+			
+			function personPrint() {
+				$("#litrealInfo").css("overflow", "hidden");
+				$("#litrealInfo").css("height", "100%");
+				
+				window.print();
+				
+				$("#litrealInfo").css("overflow", "auto");
+				$("#litrealInfo").css("height", "80px");
+			}
 		</script>
 	</head>
 	
@@ -76,7 +86,7 @@
 			<div id="normalScreen">
 			    <div id="menu">
 					<ul>
-			        	<li><span onClick="window.print()"><spring:message code='main.t73' /></span></li>
+			        	<li><span onClick="personPrint()"><spring:message code='main.t73' /></span></li>
 					</ul>
 			    </div>
 			    <div id="close">
@@ -153,7 +163,7 @@
 					<tr>
 					  	<th><spring:message code='main.t85' /></th>
 						<td colspan="2">
-							<div style="WIDTH:100%;HEIGHT:80px;overflow:auto; line-height:18px">
+							<div id="litrealInfo" style="WIDTH:100%;HEIGHT:80px;overflow:auto; line-height:18px">
 					        	${LiteralInfo }
 					        </div>
 					    </td>
