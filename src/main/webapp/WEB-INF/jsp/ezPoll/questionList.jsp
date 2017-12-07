@@ -326,7 +326,8 @@
 					<th width="60px"><spring:message code="ezPoll.t104"/></th> 
 					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t108"/></th>
-					<th width="80px"><spring:message code="ezPoll.t201"/></th> 
+					<th width="80px"><spring:message code="ezPoll.t160"/></th> 
+					<th width="80px"><spring:message code="ezPoll.t161"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t109"/></th>			
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
@@ -363,6 +364,10 @@
 			          	<c:if test="${list.target == 1}">
 			          		<td><spring:message code = 'ezPoll.t238'/></td>	
 			          	</c:if> 
+			          	
+			          	<%-- Start date--%>
+			          	<c:set var="pollStartDate" value="${list.startDate}"/>
+			          	<td> ${fn:substring(pollStartDate,0,10) } </td>
 			          	
 			          	<%-- End date--%>
 			          	<c:set var="pollEndDate" value="${list.endDate}"/>
