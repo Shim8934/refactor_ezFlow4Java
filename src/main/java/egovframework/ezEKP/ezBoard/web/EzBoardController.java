@@ -2984,6 +2984,9 @@ public class EzBoardController extends EgovFileMngUtil{
         		} else {
         			boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         		}
+        		
+        		boardListVO.setWriteDate(commonUtil.getDateStringInUTC(boardListVO.getWriteDate(), userInfo.getOffset(), false));
+        		
         		if (mode.equals("reply")) {
         			boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));
         			boardListVO.setABSTRACT("");
