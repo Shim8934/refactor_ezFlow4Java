@@ -429,10 +429,10 @@
 		
 		function menuQst_List() {
     		if (CrossYN()) {
-    			var szUrl = "/ezPoll/pollList.do?brdID=6"
+    			var szUrl = "/ezPoll/pollList.do?brdID=6";
     		} 
     		else {
-    			var szUrl = "/ezPoll/pollList.do?brdID=6"
+    			var szUrl = "/ezPoll/pollList.do?brdID=6";
     		}
     		
     		window.location.href = szUrl;	

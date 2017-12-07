@@ -284,7 +284,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Sort list of questions by question id				
 		Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
-	        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
+	        return Integer.valueOf(qst2.getQstId()).compareTo(qst1.getQstId());
 		});		
 		
 		int totalQuestions = listTotalQuestions.size();
@@ -306,7 +306,7 @@ public class EzPollController extends EgovFileMngUtil {
 				List<PollQuestionVO> listRenderQuestions = listTotalQuestions.subList(startPoint, endPoint);
 				model.addAttribute("list", listRenderQuestions);
 			}			
-		}			
+		}
 				
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("currPage", currPage);
