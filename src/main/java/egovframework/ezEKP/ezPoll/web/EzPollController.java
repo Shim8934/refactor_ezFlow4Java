@@ -1750,6 +1750,34 @@ public class EzPollController extends EgovFileMngUtil {
 			}
 		}
 		
+		//Sort list of seen users
+		if (listofSeenUsers.size() > 0) {
+			if (loginVO.getPrimary().equals("1")) {
+				Collections.sort(listofSeenUsers, (LoginVO user1, LoginVO user2) -> {
+			        return user1.getDisplayName1().compareTo(user2.getDisplayName1());		        
+				});
+			}
+			else {
+				Collections.sort(listofSeenUsers, (LoginVO user1, LoginVO user2) -> {
+			        return user1.getDisplayName2().compareTo(user2.getDisplayName2());		        
+				});
+			}
+		}
+		
+		//Sort list of unseen users
+		if (listofUnseenUsers.size() > 0) {
+			if (loginVO.getPrimary().equals("1")) {
+				Collections.sort(listofUnseenUsers, (LoginVO user1, LoginVO user2) -> {
+			        return user1.getDisplayName1().compareTo(user2.getDisplayName1());		        
+				});
+			}
+			else {
+				Collections.sort(listofUnseenUsers, (LoginVO user1, LoginVO user2) -> {
+			        return user1.getDisplayName2().compareTo(user2.getDisplayName2());		        
+				});
+			}
+		}
+		
 		model.addAttribute("listOfSeenUsers", listofSeenUsers);
 		model.addAttribute("listOfUnSeenUsers", listofUnseenUsers);
 		model.addAttribute("numberOfSeenUsers", numberOfSeenUsers);
