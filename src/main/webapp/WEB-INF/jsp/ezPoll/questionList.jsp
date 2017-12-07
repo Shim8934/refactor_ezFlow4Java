@@ -291,7 +291,7 @@
 	<body class="mainbody" style="min-width: 750px;">
 		<h1><spring:message code="ezPoll.t103"/>
 			<span id="mailBoxInfo"></span>
-			<span style="float: right;">
+			<span style="float: right; font-weight:normal;color:black;">
 					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t106"/></span>
 					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t107"/></span>
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
