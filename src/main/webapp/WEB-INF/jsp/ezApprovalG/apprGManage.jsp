@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 			.pagetd{padding-top:6px; }
@@ -15,6 +16,9 @@
 			.Right_Point01 {
 				font:bold;
 				color:#017bec;
+			}
+			#div_AprLine .mainlist tr th {
+				border-top:0px;
 			}
 		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>	
@@ -1639,6 +1643,57 @@
 		            alert(InformationString);
 		        }
 		    }
+		    
+		    var Tab1_SelectID = "";
+		    function Tab1_MouserOver(obj) {
+		        obj.className = "tabover";
+		    }
+	
+		    function Tab1_MouserOut(obj) {
+		        if(Tab1_SelectID != obj.id)
+		            obj.className = "";
+		    }
+	
+		    function Tab1_MouseClick(obj) {		    	
+		        obj.className = "tabon";
+		        if (obj.id != Tab1_SelectID) {
+		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+		                document.getElementById(Tab1_SelectID).className = "";
+	
+		            obj.className = "tabon";
+		            Tab1_SelectID = obj.id;
+		            ChangeTab(obj);
+		        }
+		    }
+		    
+		    function ChangeTab(obj) {
+		        var pSelectTab = obj.id;
+
+		        switch (pSelectTab) {
+		            case "tagsub1": pDocInfoValue='1';Approval_onclick(); break;
+		            case "tagsub2": pDocInfoValue='2';Recipent_onclick(); break;
+		            case "tagsub3": pDocInfoValue='4';Attach_onclick(); break;
+		            case "tagsub4": pDocInfoValue='3';Opinion_onclick(); break;
+		            case "tagsub5": pDocInfoValue='5';Circulation_onclick(); break;
+		        }
+		    }
+		    
+		    function Tab1_NewTabIni(pTabNodeID) {
+		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+		            if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
+		                if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };
+
+		                    if (i == 1) {
+		                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).className = "tabon";
+		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).id;
+		                    }	
+		                }
+		            }
+		        }
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
@@ -1652,8 +1707,8 @@
 		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
 		    </span>
 		</h1>
-		    <div id="mainmenu">
-		  <ul>  
+		<div id="mainmenu">
+			<ul>  
 		  		<li id="tbtnRegUserCont" style="DISPLAY:none"><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
 				<li id="tbtnDraft" style="DISPLAY:none"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
 				<li id="tbtnLinkDraft" style="display:none"><span id="btnLinkDraft" onclick="return btnLinkDraft_onclick()"><spring:message code='ezApprovalG.t1737'/></span></li>
@@ -1695,9 +1750,9 @@
 		            <option value="ALL">ALL</option>
 		        </select>  
 			</ul>
-			</div>
+		</div>
 		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
-		  <div id="lvDocList"></div>
+			<div id="lvDocList"></div>
 		</div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
@@ -1705,28 +1760,24 @@
 		    <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
 		</div>
 		
-		    <div id="tblPageRayer"></div>
-		<br>
-		
-		<div id="tabnav" style="width:100%">
-		  <ul>
-		    <li id="tagsub1"><span onClick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()" ><spring:message code='ezApprovalG.t1769'/></span></li>
-		    <li id="tagsub2"><span onClick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()" ><spring:message code='ezApprovalG.t950'/></span></li>
-		    <li id="tagsub3"><span onClick="pDocInfoValue='4'; MM_swapImagesub('3', event);Attach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>
-		    <li id="tagsub4"><span onClick="pDocInfoValue='3'; MM_swapImagesub('4', event);Opinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
-		    <c:if test="${approvalFlag != 'G'}">
-			    <li id="tagsub5"><span onClick="pDocInfoValue='5'; MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
-		    </c:if>
-		  </ul>
+		<div id="tblPageRayer"></div>
+		<br/>
+				
+		<div id="tabnav" class="portlet_tabpart01" style="width:100%">
+			<div class="portlet_tabpart01_top" id="tab1">
+			    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
+			    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
+			    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
+			    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
+			    <c:if test="${approvalFlag != 'G'}">
+				   	<p><span id="tagsub5"><spring:message code='ezApprovalG.hyj24'/></span></p>
+			    </c:if>
+		  	</div>	
 		</div>
 		
 		<div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
-		  <div id="lvAprLine" ></div>
-		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-		</script>
+			<div id="lvAprLine" ></div>
+		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
@@ -1734,5 +1785,10 @@
 		<form id="formAPP">
 	        <input type="hidden"  id="APPXML" name="APPXML" />
 	    </form>
+	    <script type="text/javascript">
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+			Tab1_NewTabIni("tab1");
+		</script>
 	</body>
 </html>

@@ -640,7 +640,6 @@ function prevShow() {
         }
         //if (Old_Preview_Href == Preview_Href)
         //    return;
-
         Old_Preview_Href = Preview_Href;
         var strQuery = "<URL>" + Preview_Href + "</URL>";
         xmlhttp_mailPreview = createXMLHttpRequest();
@@ -741,6 +740,8 @@ function event_xmlhttp_mailPreview_Complete() {
             var pCcHtml = "";
             var pCcSubHtml = "";
             var pCcDetailHtml = "";
+            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
             if (pCc != "") {
                 var pMailCc = pCc;
                 var pCcArray = pMailCc.split(";");
@@ -799,6 +800,8 @@ function event_xmlhttp_mailPreview_Complete() {
                 else {
                     document.getElementById("PreW_CCMain").style.display = "";
                 }
+                $("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+                $("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
             }
             
             ///

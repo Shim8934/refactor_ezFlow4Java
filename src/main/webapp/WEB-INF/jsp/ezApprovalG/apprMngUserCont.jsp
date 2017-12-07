@@ -160,6 +160,8 @@
             }
 
             var ContName = treeNode.GetNodeData("VALUE");
+            ContName = ContName.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+            
             var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t307'/>";
 
             if (CrossYN()){
@@ -191,8 +193,13 @@
                     TreeViewRefresh();
                     opener.TreeViewRefresh();
                     return;
+                } else if (rvalue == "HASSUBCONT") {
+                	var pAlertContent = "<spring:message code='ezApprovalG.pjj34'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
                 }
                 else {
+                	ContName = ContName.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
                     var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t310'/>" + rvalue + "]<spring:message code='ezApproval.t311'/>"
                     OpenInformationUI(OpinionContent, Del_Complete_MUST);
                 }

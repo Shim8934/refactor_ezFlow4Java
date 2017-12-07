@@ -7,12 +7,17 @@
 		<title><spring:message code = 'ezApprovalG.t1310' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<style>
+			#div_AprLine .mainlist tr th {
+				border-top:0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		
 		<script type="text/javascript">
 			var labelcolor = "gray";
 	        var OrderCell = "";
@@ -785,6 +790,57 @@
 			    pageNum = 1;
 			    GetDocList();
 			}
+			
+			var Tab1_SelectID = "";
+		    function Tab1_MouserOver(obj) {
+		        obj.className = "tabover";
+		    }
+	
+		    function Tab1_MouserOut(obj) {
+		        if(Tab1_SelectID != obj.id)
+		            obj.className = "";
+		    }
+	
+		    function Tab1_MouseClick(obj) {		    	
+		        obj.className = "tabon";
+		        if (obj.id != Tab1_SelectID) {
+		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+		                document.getElementById(Tab1_SelectID).className = "";
+	
+		            obj.className = "tabon";
+		            Tab1_SelectID = obj.id;
+		            ChangeTab(obj);
+		        }
+		    }
+		    
+		    function ChangeTab(obj) {
+		        var pSelectTab = obj.id;
+
+		        switch (pSelectTab) {
+		            case "tagsub1": pDocInfoValue='1';Approval_onclick(); break;
+		            case "tagsub2": pDocInfoValue='2';Recipent_onclick(); break;
+		            case "tagsub3": pDocInfoValue='4';Attach_onclick(); break;
+		            case "tagsub4": pDocInfoValue='3';Opinion_onclick(); break;
+		            case "tagsub5": pDocInfoValue='5';Circulation_onclick(); break;
+		        }
+		    }
+		    
+		    function Tab1_NewTabIni(pTabNodeID) {
+		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+		            if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
+		                if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };
+
+		                    if (i == 1) {
+		                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).className = "tabon";
+		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).id;
+		                    }	
+		                }
+		            }
+		        }
+		    }
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -797,9 +853,9 @@
 					</HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
-		</xml>
-		
-		<h1><spring:message code = 'ezApprovalG.t1315' /><span id="mailBoxInfo"></span>
+		</xml>		
+		<h1>
+			<spring:message code = 'ezApprovalG.t1315' /><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code = 'ezApprovalG.t106' />
 				<input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code = 'ezApprovalG.t445' />
@@ -807,8 +863,7 @@
 				<input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	        	<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
 	        </span>
-    	</h1>    
-
+    	</h1>
     	<div id="mainmenu">
         	<ul>
         		<c:if test="${type == 'admin' }">
@@ -822,14 +877,13 @@
             	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
         	</ul>
     	</div>
-
     	<div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
         	<div id="lvtDoclist"></div>
     	</div>
-    	<div id="tblPageRayer" style="margin-bottom: 10px;"></div>
+    	<div id="tblPageRayer"></div>
     	<br />
 
-    	<div id="tabnav" style="width: 100%">
+    	<%-- <div id="tabnav" style="width: 100%">
         	<ul>
             	<li id="tagsub1"><span onclick="pDocInfoValue='1'; MM_swapImagesub('1', event);Approval_onclick()"><spring:message code = 'ezApprovalG.t1769' /></span></li>
             	<li id="tagsub2">
@@ -847,7 +901,24 @@
             	<li id="tagsub3"><span onclick="pDocInfoValue='4'; MM_swapImagesub('3', event);Attach_onclick()"><spring:message code = 'ezApprovalG.t56' /></span></li>
             	<li id="tagsub4"><span onclick="pDocInfoValue='3'; MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code = 'ezApprovalG.t55' /></span></li>
         	</ul>
-    	</div>
+    	</div> --%>
+    	
+    	<div id="tabnav" class="portlet_tabpart01" style="width:100%">
+			<div class="portlet_tabpart01_top" id="tab1">
+			    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
+			    <c:if test="${approvalFlag == 'S'}">
+			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t999932' /></span></p>
+			    </c:if>
+			    <c:if test="${approvalFlag != 'S'}">
+			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t950' /></span></p>
+			    </c:if>			    
+			    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
+			    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
+			    <%-- <c:if test="${approvalFlag != 'G'}">
+				   	<p><span id="tagsub5"><spring:message code='ezApprovalG.hyj24'/></span></p>
+			    </c:if> --%>
+		  	</div>	
+		</div>
 
     	<div style="WIDTH:100%;HEIGHT:204px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
         	<div id="lvAprLine"></div>
@@ -855,7 +926,8 @@
 
     	<script type="text/javascript">
         	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-        	selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+        	//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+        	Tab1_NewTabIni("tab1");
     	</script>
 	</body>
 </html>
