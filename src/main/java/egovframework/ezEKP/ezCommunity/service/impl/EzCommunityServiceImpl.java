@@ -2622,7 +2622,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueB(strSelCateB, userInfo));
 		strHTML.append("</Select>");
-		strHTML.append("<Select name=\"cCateC\" class=\"text\" style='display:none'>");
+		strHTML.append("<Select name=\"cCateC\" class=\"text\" style=\"display:none;\">");
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueC(strSelCateC, userInfo));
 		strHTML.append("</Select>");
@@ -2811,6 +2811,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		for (String item : itemList.split(";")) {
 			String itemID = item.split(",")[0];
+			
+			logger.debug("itemID = " + itemID + " || tenantID = " + tenantID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pItemID", itemID);
