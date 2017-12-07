@@ -186,6 +186,25 @@
 					},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
+						
+						var imgTag = "";
+						
+	                    if (OrderOption == "") {
+	                    	imgTag = '<img src="/images/view-sortup.gif" width="9" height="9">';
+	                    	}
+	                    else {
+	                    	imgTag = '<img src="/images/view-sortdown.gif" width="9" height="9">';
+	                    	}
+						
+		                if(OrderCell == 'TITLE') {
+		                	$('#BoardList_TH_4').append(imgTag);
+		                } else if(OrderCell == 'MEMBERNAME') {
+		                	$('#BoardList_TH_5').append(imgTag);
+		                } else if(OrderCell == 'REGDATE') {
+		                	$('#BoardList_TH_6').append(imgTag);
+		                } else if(OrderCell == 'STATUS') {
+		                	$('#BoardList_TH_8').append(imgTag);
+		                }
 					}     			
 				});
 	        }
