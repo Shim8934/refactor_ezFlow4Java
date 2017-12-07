@@ -364,13 +364,13 @@
 			        	pAttachListXml = parser.parseFromString(pAttachListXml, "text/xml");
 			            parser = null;
 			            
-			            newID += "{" + GetGUID().toUpperCase() + "};";
+			            newID += "{" + GetGUID().toUpperCase() + "}";
 	            	</c:if>
 		        } else {
 		        	var xmldomNodes = SelectNodes(pAttachListXml,"LISTVIEWDATA/ROWS/ROW");
             		
     		        for(var i=xmldomNodes.length; i>0; i--) {
-    		            newID += "{" + GetGUID().toUpperCase() + "};";
+    		            newID += "{" + GetGUID().toUpperCase() + "}";
     		        }
 		        }
 		        

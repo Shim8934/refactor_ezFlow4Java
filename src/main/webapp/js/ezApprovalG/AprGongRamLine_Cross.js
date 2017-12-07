@@ -790,12 +790,12 @@ function aprLineAddDeptUser(mode, xmlData) {
             //회람 docstate
             pparsingXML = pparsingXML + "<DATA11>015</DATA11>";
             pparsingXML = pparsingXML + "<DATA12>001</DATA12>";
-            pparsingXML = pparsingXML + "<DATA13>" + getNodeText(GetElementsByTagName(xmlData, "DATA8")[i]) + "</DATA13>";		
-            pparsingXML = pparsingXML + "<DATA14>" + getNodeText(GetElementsByTagName(xmlData, "DATA9")[i]) + "</DATA14>";		
-            pparsingXML = pparsingXML + "<DATA15>" + getNodeText(GetElementsByTagName(xmlData, "DATA10")[i]) + "</DATA15>";		
-            pparsingXML = pparsingXML + "<DATA16>" + getNodeText(GetElementsByTagName(xmlData, "DATA11")[i]) + "</DATA16>";	
-            pparsingXML = pparsingXML + "<DATA17>" + getNodeText(GetElementsByTagName(xmlData, "DATA12")[i]) + "</DATA17>";	
-            pparsingXML = pparsingXML + "<DATA18>" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "</DATA18>";
+            pparsingXML = pparsingXML + "<DATA13><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA8")[i]) + "]]></DATA13>";
+            pparsingXML = pparsingXML + "<DATA14><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA9")[i]) + "]]></DATA14>";
+            pparsingXML = pparsingXML + "<DATA15><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA10")[i]) + "]]></DATA15>";
+            pparsingXML = pparsingXML + "<DATA16><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA11")[i]) + "]]></DATA16>";
+            pparsingXML = pparsingXML + "<DATA17><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA12")[i]) + "]]></DATA17>";
+            pparsingXML = pparsingXML + "<DATA18><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "]]></DATA18>";
             
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA5")[i]) + "</VALUE>";

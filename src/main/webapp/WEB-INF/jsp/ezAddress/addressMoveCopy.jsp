@@ -73,16 +73,14 @@
 	        	return;
 		    }
             
-            if (useAnyoneEdit != "YES") {
-            	if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
-    	            alert("<spring:message code='ezAddress.t168' />");
-    	        	return;
-    		    }
-    	        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
-    	            alert("<spring:message code='ezAddress.t169' />");
-    		        return;
-    		    }
-            }
+           	if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
+   	            alert("<spring:message code='ezAddress.t168' />");
+   	        	return;
+   		    }
+   	        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
+   	            alert("<spring:message code='ezAddress.t169' />");
+   		        return;
+   		    }
 	        
 	        var retVal = new Array();
 	        retVal["cmd"] = "COPY";
@@ -106,16 +104,14 @@
 		        return;
 		    }
 	        
-	        if (useAnyoneEdit != "YES") {
-		        if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
-		            alert("<spring:message code='ezAddress.t168' />");
-			        return;
-			    }
-		        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
-		            alert("<spring:message code='ezAddress.t169' />");
-			        return;
-			    }
-	        }
+	        if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
+	            alert("<spring:message code='ezAddress.t168' />");
+		        return;
+		    }
+	        if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
+	            alert("<spring:message code='ezAddress.t169' />");
+		        return;
+		    }
 	        
 	        var retVal = new Array();
 	        retVal["cmd"] = "MOVE";
