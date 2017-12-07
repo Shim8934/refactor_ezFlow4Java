@@ -75,7 +75,7 @@
 
 	            document.make.hiddenClubName.value = document.make.clubName.value;
 
-	            if (document.make.clubName2.value != "") {
+	            if (document.make.clubName2.value != "" && trim_Cross(document.make.clubName2.value) != "") {
 	                document.make.hiddenClubName2.value = document.make.clubName2.value;
 	            }
 
