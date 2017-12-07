@@ -993,7 +993,7 @@
 			</tr>
 			<tr>
     			<td style="height:100%" id="EdtorSize">
-	    			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
+	    			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do?type=COMMUNITYPHOTO" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
     			</td>
   			</tr>
   			<tr id="docTR" style="display:none">
