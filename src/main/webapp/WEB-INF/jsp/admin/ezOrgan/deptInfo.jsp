@@ -113,28 +113,28 @@
 			function OK_Click(){
 	            for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
 	                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
-	                    alert("<spring:message code='ezOrgan.x0003' />");
+	                	OpenAlertUI("<spring:message code='ezOrgan.x0003'/>");
 	                    return;
 	                }
 	            }
 				if (DeptID.value == ""){
-					alert("<spring:message code='ezOrgan.t210' />");
+                	OpenAlertUI("<spring:message code='ezOrgan.t210'/>");
 					return;
 				}				
 				if (DeptID.value.length < 3){
-					alert("<spring:message code='ezOrgan.t211' />");
+                	OpenAlertUI("<spring:message code='ezOrgan.t211'/>");
 					return;
 				}				
 				if (!Check_ID(DeptID.value)){
-					alert("<spring:message code='ezOrgan.t212' />");
+                	OpenAlertUI("<spring:message code='ezOrgan.t212'/>");
 					return;
 				}				
 				if (DeptName.value == ""){
-					alert("<spring:message code='ezOrgan.t213' />");
+                	OpenAlertUI("<spring:message code='ezOrgan.t213'/>");
 					return;
 				}
 				if (DeptName.value.indexOf("(") != -1 || DeptName.value.indexOf(")") != -1){
-					alert("<spring:message code='ezOrgan.t214' /><,>,_,-,& <spring:message code='ezOrgan.t215' />");
+                	OpenAlertUI("<spring:message code='ezOrgan.t214' /><,>,_,-,& <spring:message code='ezOrgan.t215' />");
 					return 0;	
 				}
 												
@@ -166,9 +166,9 @@
 						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11},
 					success : function(result){						
 						if (result == "PRE"){
-							alert("<spring:message code='ezOrgan.t119' />");
+							OpenAlertUI("<spring:message code='ezOrgan.t119'/>");
 						}else if (result == "EMAIL_ERROR"){
-							alert("<spring:message code='ezOrgan.t217' />");//TODO: 적절한 메시지 넣기
+							OpenAlertUI("<spring:message code='ezOrgan.t217'/>");//TODO: 적절한 메시지 넣기
 						}else{
 							if (ReturnFunction != null){
 					            ReturnFunction(DeptID.value);
@@ -179,10 +179,28 @@
 						}
 					},
 					error : function(){
-						alert("<spring:message code='ezOrgan.t217' />");
+						OpenAlertUI("<spring:message code='ezOrgan.t217'/>");
 					}
 				});
 			}
+			
+			var ezapralert_cross_dialogArguments = new Array();
+		    function OpenAlertUI(pAlertContent, CompleteFunction) {
+		        var parameter = pAlertContent;
+		        var url = "/ezApprovalG/ezAprAlert.do";
+
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = parameter;
+		            if (CompleteFunction != undefined)
+		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+		            else
+		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            DivPopUpShow(300, 205, url);
+		        }
+		    }
+		    function OpenAlertUI_Complete() {
+		        DivPopUpHidden();
+		    }
 	    </script>
 	</head>
 	<body class="popup">
@@ -252,6 +270,10 @@
 		<div class="btnposition">
 		    <a class="imgbtn" id=bt_OK  onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
 		    <a class="imgbtn" id=bt_Cancel onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
+		</div>
+			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>
