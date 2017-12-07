@@ -23037,4 +23037,17 @@
 	  	FROM
 	  		TBL_TENANT
 	  </select>
+	  
+	  <select id="EzApprovalG.getUserContSubCount" parameterClass="Map" resultClass="int">
+	  		SELECT
+	  			COUNT(*)
+	  		FROM
+	  			TBL_USERCONT
+	  		WHERE 
+	  			PARENTCONTID = #v_PCONTID#
+	  		AND
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
+	  </select>
 </sqlMap>

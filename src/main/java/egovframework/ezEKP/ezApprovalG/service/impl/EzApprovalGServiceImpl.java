@@ -20720,6 +20720,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		
+		int hasSubCont = ezApprovalGDAO.getUserContSubCount(map);
+		
+		if (hasSubCont > 0) {
+			return "<RESULT>HASSUBCONT</RESULT>";
+		}
+		
 		int docCount = 0;
 		if (mode.toLowerCase().equals("check")) {
 			docCount = ezApprovalGDAO.delUserConutCnt(map);
