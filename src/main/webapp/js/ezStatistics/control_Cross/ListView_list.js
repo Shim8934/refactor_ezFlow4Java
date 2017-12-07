@@ -574,7 +574,7 @@ function ListView() {
             colCount = oHeaders.length;
         }
         else {
-            oHeaders = _dataSource.selectNodes("LISTVIEWDATA/HEADERS/HEADER");
+            oHeaders = SelectNodes(_dataSource, "LISTVIEWDATA/HEADERS/HEADER");
             colCount = oHeaders.length;
             if (colCount == 0) {
                 oHeaders = _dataSource.getElementsByTagName("HEADER");

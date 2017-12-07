@@ -168,6 +168,12 @@
 			                setPresentValue("<spring:message code='ezApprovalG.t912'/>");
 			                DocManageMain("m02");
 			            }
+			            if (pListTypeValue == "99") {
+			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
+			                document.getElementById('APPROVAL99').parentElement.onclick();
+			                document.getElementById('APPROVAL99').onclick();
+			            }
+			            
 		        }
 			        getAprCount();
 		    };

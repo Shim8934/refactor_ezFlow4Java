@@ -200,6 +200,7 @@ public class EzCommunityAdminController {
 
 		for(CommunityClubVO club : clubList) {
 			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getTenantId()));
+			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -223,6 +224,7 @@ public class EzCommunityAdminController {
 		
 		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), code, userInfo.getTenantId());
 		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getTenantId()));
+		club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n"));
 		
 		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C(), userInfo);
 		

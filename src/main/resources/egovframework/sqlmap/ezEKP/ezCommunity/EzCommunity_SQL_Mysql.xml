@@ -4791,6 +4791,7 @@
 				itemexpires,
 				attachsizelimit,
 				boardno,
+				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -4802,6 +4803,7 @@
 				-1,
 				#v_ATTACHSIZELIMIT#,
 				#v_BOARDNO#,
+				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5541,6 +5543,7 @@
 				boardname2,
 				parentboardid,
 				boardno,
+				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -5549,6 +5552,7 @@
 				#v_BOARDGROUPNAME2#,
 				'top',
 				#v_BOARDNO#,
+				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5634,6 +5638,7 @@
 				itemexpires,
 				attachsizelimit,
 				boardno,
+				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -5645,6 +5650,7 @@
 				-1,
 				#v_COMATT#,
 				#v_BOARDNO#,
+				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -6321,7 +6327,29 @@
 	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="MAP"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
-				*
+				c_clubno,
+				boardid,
+				boardname,
+				boardname2,
+				treevieworder,
+				boardlevel,
+				parentboardid,
+				boarddescription,
+				itemexpires,
+				attachsizelimit,
+				IFNULL(replynotify, 0) AS replynotify,
+				boardgroupid,
+				alertpostitem,
+				gubun,
+				url,
+				deleteafter,
+				boardcolor,
+				boardno,
+				versionuse,
+				checkuse,
+				showposition,
+				sn,
+				tenant_id
 			FROM
 	        	TBL_COMM_BOARDINFO
 			WHERE

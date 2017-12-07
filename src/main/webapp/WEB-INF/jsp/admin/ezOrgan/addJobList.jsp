@@ -226,6 +226,10 @@
 		        createNodeInsert(xmlDom, objNode, "DATA");
 
 		        if (mode == "DEL") {
+		        	if (obj != null && obj != "") {
+		        		_RowObject = obj;
+		        	}
+		        	
 		            if (_RowObject == null || _RowObject == "") {
 		                alert("<spring:message code='ezOrgan.t196' />");
 		                return;
