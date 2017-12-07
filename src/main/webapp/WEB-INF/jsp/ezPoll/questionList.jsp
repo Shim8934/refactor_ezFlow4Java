@@ -475,17 +475,10 @@
 			        <tr id="${list.qstId}" class="white">
 			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td>
 			        	
-			        	<td>
-			        	<c:choose>
-							<c:when test="${list.isHidden == 1}">
+			        	<td>			        	
+							<c:if test="${list.isHidden == 1}">
 								<img src="/images/ImgIcon/icon-highimportance.gif" border="0">
-							</c:when>
-							<c:otherwise>
-							    <c:if test="${list.status == 0}">
-									<img src="/images/ImgIcon/icon-lowimportance.gif" border="0">
-								</c:if>
-							</c:otherwise>
-						</c:choose>
+							</c:if>						
 			        	</td>
 			        	 
 			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" ><c:out value ="${list.title}"/></td>
