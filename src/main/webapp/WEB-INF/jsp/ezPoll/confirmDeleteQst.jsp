@@ -47,14 +47,14 @@
 		<form id="Form1" method="post"> 
 			<h1 style="padding-left: 40%;"><spring:message code='ezPoll.t127'/></h1>
 			<div style="overflow: auto; max-height: 120px;">
-	  			<table class="content" style="table-layout: fixed;">   				
+	  			<table class="content" style="table-layout: fixed; width: 100%;">   				
 	    			<tr > 
-	      				<th style="width:30px;"><spring:message code='ezPoll.t128'/></th> 
-	      				<th style="text-align:center;"><spring:message code='ezPoll.t129'/></th>				
+	      				<%-- <th style="width:30px;"><spring:message code='ezPoll.t128'/></th>  --%>
+	      				<th style="text-align:center;"><spring:message code='ezPoll.t244'/></th>				
 	    			</tr> 
 	    			<c:forEach var="list" items="${listQuestionIDs}" varStatus="status">
 		    			<tr> 
-		      				<td style="width: 25px; text-align:center;">${list}</td>
+		      				<%-- <td style="width: 25px; text-align:center;">${list}</td> --%>
 		      				<td style="overflow: hidden; cursor: default; text-overflow: ellipsis; padding:0px 10px; max-width: 270px; white-space: nowrap; line-height: 25px;" title="${listQuestionContents[status.index]}">${listQuestionContents[status.index]}</td> 
 		    			</tr> 
 	    			</c:forEach>
