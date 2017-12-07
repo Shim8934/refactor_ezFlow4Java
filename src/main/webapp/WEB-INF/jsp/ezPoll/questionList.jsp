@@ -319,11 +319,12 @@
 		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
 			<table id="QstList" class="mainlist1" style="width:100%"> 
 			    <tr> 
-					<th width="30px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
+					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
 					</th> 
+					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 					<th><spring:message code="ezPoll.t106"/></th> 
-					<th width="60px"><spring:message code="ezPoll.t104"/></th> 
+					<th width="60px"><spring:message code="ezPoll.t104"/></th> 					
 					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t108"/></th>
 					<th width="80px"><spring:message code="ezPoll.t160"/></th> 
@@ -332,8 +333,21 @@
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.qstId}" class="white">
-
-			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td> 
+			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td>
+			        	
+			        	<td>
+			        	<c:choose>
+							<c:when test="${list.isHidden == 1}">
+								<img src="/images/ImgIcon/icon-highimportance.gif" border="0">
+							</c:when>
+							<c:otherwise>
+							    <c:if test="${list.status == 0}">
+									<img src="/images/ImgIcon/icon-lowimportance.gif" border="0">
+								</c:if>
+							</c:otherwise>
+						</c:choose>
+			        	</td>
+			        	 
 			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" ><c:out value ="${list.title}"/></td>
 			          	
 			          	<%-- Question status --%>
@@ -379,28 +393,8 @@
 			          	</c:if>
 			          	<c:if test="${list.secretVote == 1}">
 			          		<td><spring:message code = 'ezPoll.t111'/></td>	
-			          	</c:if>
-			          	
-			          	<c:choose>
-							<c:when test="${list.isHidden == 1}">
-							    	<script>
-										var id = ${list.qstId};
-										var id2 = "test" + ${list.qstId};										
-										document.getElementById(id2).style.color="red";
-										document.getElementById(id).style.color="red";
-									</script>
-							</c:when>
-							<c:otherwise>
-							    <c:if test="${list.status == 0}">
-									<script>
-										var id = ${list.qstId};
-										var id2 = "test" + ${list.qstId};										
-										document.getElementById(id2).style.color="blue";
-										document.getElementById(id).style.color="blue";
-									</script>
-								</c:if>
-							</c:otherwise>
-						</c:choose>
+			          	</c:if>			          	
+
 			        </tr>
 		        </c:forEach>
 		        
