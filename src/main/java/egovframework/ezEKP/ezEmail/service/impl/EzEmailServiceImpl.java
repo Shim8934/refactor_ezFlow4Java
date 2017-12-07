@@ -1097,6 +1097,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	    			ia.createFolder(sentFolder.getFullName());
 	    		}
 	    		
+	    		message.setFlag(Flags.Flag.SEEN, true);
     			sentFolder.open(Folder.READ_WRITE);
     			sentFolder.appendMessages(new Message[]{message});
     			sentFolder.close(true);
