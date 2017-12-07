@@ -92,6 +92,11 @@
 		}
 		
 		function preProcessing() {
+			var sHourMinute = null;
+        	var eHourMinute = null;	  
+        	var EDate = null;
+        	var SDate = null;
+			
 			if (mode == "modify") {
 				//Modify the vote
 				var questionTitle = "<c:out value='${question.title}'/>";
@@ -158,8 +163,7 @@
 				}
 				
 				//Set end date	
-				var _setDate = "<c:out value='${question.setDate}'/>";
-				console.log("SetDate: " + _setDate);
+				var _setDate = "<c:out value='${question.setDate}'/>";				
 				
 		    	$("#Sdatepicker").datepicker({
 		        	changeMonth: true,
@@ -187,7 +191,7 @@
 				var sDay = _startD.substring(8, 10);
 				var sHour = _startD.substring(11, 13);
 				var sMin = _startD.substring(14, 16);				
-				var SDate = new Date(sYear, sMonth-1, sDay);
+				SDate = new Date(sYear, sMonth-1, sDay);
 				
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
@@ -197,13 +201,13 @@
 				var eDay = _endD.substring(8, 10);
 				var eHour = _endD.substring(11, 13);
 				var eMin = _endD.substring(14, 16);				
-	        	var EDate = new Date(eYear, eMonth-1, eDay);
+	        	EDate = new Date(eYear, eMonth-1, eDay);
 	        	
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Edatepicker").datepicker('setDate', EDate);
 	        	
-	        	var sHourMinute = sHour + sMin;
-	        	var eHourMinute =  eHour + eMin;	  
+	        	sHourMinute = sHour + sMin;
+	        	eHourMinute = eHour + eMin;	  
 	        	
 	        	var selection = "";
 	        	var i = 0;
@@ -260,7 +264,12 @@
 			
 			$('#endDate').click(function() {
 				if (this.checked) {
-					showDateTimePicker();
+					if (mode == "modify") {
+						showDateTimePicker2(SDate, EDate, sHourMinute, eHourMinute); 
+					}
+					else {
+						showDateTimePicker();
+					}					
 				}
 				else {
 					$('#_dateTimePicker').hide();					
@@ -301,6 +310,23 @@
 				$('#columnsbnk li').eq(i).addClass("myBorder");
 			}
 		}
+		
+		function showDateTimePicker2(SDate, EDate, sHourMinute, eHourMinute) {
+	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#Sdatepicker").datepicker('setDate', SDate);
+        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+        	$("#Edatepicker").datepicker('setDate', EDate);
+        	
+        	$("#sTimePicker").val(sHourMinute).change();
+        	$("#eTimePicker").val(eHourMinute).change();
+        	
+			$('#_dateTimePicker').show();
+			$('#Edatepicker').show();
+			$('#eTimePicker').show();
+			$('#Sdatepicker').show();
+			$('#sTimePicker').show();
+		}
+		
 		
 		function showDateTimePicker() {
 			$('#_dateTimePicker').show();
