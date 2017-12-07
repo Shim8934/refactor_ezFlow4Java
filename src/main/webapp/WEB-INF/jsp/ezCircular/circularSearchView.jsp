@@ -154,7 +154,9 @@
 		    		return;
 		    	}
 		    	
-		        if (document.getElementById("keyword").value == "") {
+		    	var keyword = document.getElementById("keyword").value.trim();
+		    	
+		        if (keyword.length == 0) {
 		            alert("<spring:message code='ezCircular.t135'/>");
 		            document.getElementById("keyword").focus();
 		            return;

@@ -1522,7 +1522,7 @@
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px; padding:0px;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
