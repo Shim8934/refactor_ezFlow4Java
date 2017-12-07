@@ -518,7 +518,10 @@
                     		}
                     			oInput.disabled = "true";
                     			oTd.appendChild(oInput);
-                    			oTd.innerHTML = oTd.innerHTML + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ANSWERTITLE")[0]);
+                    			
+                    			oAnswer = document.createTextNode(getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ANSWERTITLE")[0]));
+                				oTd.appendChild(oAnswer);
+                			
                     			oTr.appendChild(oTd);
                     			oTable.appendChild(oTr);
                     		if (QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length > 0) {
@@ -592,8 +595,10 @@
                     		oInput.disabled = "true";
                     		oInput.readOnly = "true";
                     		oTd.appendChild(oInput);
-                    		oTd.innerHTML = oTd.innerHTML + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ANSWERTITLE")[0]);
-                    		oTr.appendChild(oTd);
+                    		
+                    		oAnswer = document.createTextNode(getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ANSWERTITLE")[0]));
+                			oTd.appendChild(oAnswer);
+                			
                     		oTable.appendChild(oTr);
 		                    if (QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length > 0) {
         		                oFileTable = document.createElement("table");
