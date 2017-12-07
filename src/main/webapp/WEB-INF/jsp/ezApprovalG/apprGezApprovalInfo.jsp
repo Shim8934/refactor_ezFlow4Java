@@ -1561,12 +1561,7 @@
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
-	                                        <c:if test="${approvalFlag == 'G' }">
 	                                        <div class="border_gray"">
-	                                        </c:if>
-	                                        <c:if test="${approvalFlag == 'S' }">
-	                                        <div class="border_gray" style="border-right-width: 0px;">
-	                                        </c:if>
 	                                            <div id="APRTEMPLIST" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                            </div>
 	                                        </div>
@@ -1593,7 +1588,7 @@
 	                                            </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
-	                                        <div class="border_gray" style="border-right-width: 0px;">
+	                                        <div class="border_gray">
 	                                            <div id="APRTEMP" style="Width: 386px; Height: 260px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                             	</div>
                                             </c:if>
@@ -2249,7 +2244,7 @@
 			                        <tr>
 			                            <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 			                                <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
-			                                <div class="border_gray" style="border-right-width: 0px;">
+			                                <div class="border_gray">
 			                                    <div id="RecSaveListCC" style="border: 0px; Width: 386px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 			                                    </div>
 			                                </div>
@@ -2270,7 +2265,7 @@
 			                        </tr>
 			                        <tr>
 			                            <td style="vertical-align: top;">
-			                                <div class="border_gray" style="border-right-width: 0px;">
+			                                <div class="border_gray">
 			                                    <div id="RecSaveDetailCC" style="Width: 386px; Height: 208px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 			                                    </div>
 			                                </div>
@@ -2293,7 +2288,7 @@
 			                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 			                	</div>
 			                </h2>
-			                <div class="border_gray" style="margin-top:4px">
+			                <div class="border_gray" style="margin-top:6px; margin-left:4px;">
                                 <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                               	</div>
                             </div>
