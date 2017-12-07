@@ -802,7 +802,7 @@
 	    		var divSticker = document.getElementById("_stickerArea");
 	    		var cloneOfDivFile = divFile.cloneNode(true);
 	    		var cloneOfDivSticker = divSticker.cloneNode(true);
-	    		cloneOfDivFile.setAttribute("style", "float:left; display:block; height:25px; width:25px; cursor: pointer;padding-left: 10px;");
+	    		cloneOfDivFile.setAttribute("style", "float:left; display:block; height:25px; width:25px; cursor: pointer; padding-left: 10px;");
 	    		cloneOfDivSticker.setAttribute("style", "float:left; display:block; padding: 0px;");
 	    		innInnerDiv2.appendChild(cloneOfDivFile);
 	    		innInnerDiv2.appendChild(cloneOfDivSticker);
@@ -936,10 +936,12 @@
 		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
 		    			pForTd2.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+		    			pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
 		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
 		    		}
 		    	}
@@ -974,7 +976,7 @@
 					    		imgForinnerDiv1.setAttribute("_type", "images");					    		
 						    	imgForinnerDiv1.setAttribute("height", "60");
 						    	imgForinnerDiv1.setAttribute("width", "60");	
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px;");
 					    		imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
@@ -984,7 +986,7 @@
 			    			else {					    		
 			    				imgForinnerDiv1.setAttribute("height", "60");
 						    	imgForinnerDiv1.setAttribute("width", "60");
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px;");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px;");
 						    	imgForinnerDiv1.setAttribute("_type", "file");
 						    	imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;
 						    	imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo")); 
@@ -1031,7 +1033,7 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");					    		
 			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
-			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -1093,7 +1095,7 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");					    		
 		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");	
-		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -1257,7 +1259,7 @@
 				    		fd.append("fileType", "file");
 					    	imgForinnerDiv1.setAttribute("height", "60");
 					    	imgForinnerDiv1.setAttribute("width", "60");	
-					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px;");
 				    		imgForinnerDiv1.src = "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];	
 				    		imgForinnerDiv1.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);   
 				    		imgForinnerDiv1.onclick = function() { downloadFileInCmt(this); };
@@ -1278,7 +1280,7 @@
 			    		fd.append("fileType", "file");
 			    		imgForinnerDiv1.setAttribute("height", "60");
 				    	imgForinnerDiv1.setAttribute("width", "60");
-				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px;");
+				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px; padding-right: 5px;");
 				    	imgForinnerDiv1.setAttribute("_type", "file");
 				    	imgForinnerDiv1.setAttribute("_fileInfo", fileinfo.split("/")[0]); 
 				    	imgForinnerDiv1.setAttribute("_fileName", fileinfo.split("/")[1]);
@@ -1861,10 +1863,12 @@
 		    	else {		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			div2Cmt.firstElementChild.innerHTML = txtContent;
+		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
 		    			pForTd2.innerHTML = txtContent;
+		    			pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
 		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
 		    		}
 		    	}
@@ -1897,7 +1901,7 @@
 					    		imgForinnerDiv1.setAttribute("_type", "images");					    		
 						    	imgForinnerDiv1.setAttribute("height", "60");
 						    	imgForinnerDiv1.setAttribute("width", "60");	
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px;");
 					    		imgForinnerDiv1.src = attachFilePath;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", attachFilePath); 
 					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
@@ -1946,7 +1950,7 @@
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");					    		
 			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
 			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
-			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -2001,7 +2005,7 @@
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");					    		
 		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
 		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");	
-		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
 		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
