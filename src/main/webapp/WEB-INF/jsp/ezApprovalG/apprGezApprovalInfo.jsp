@@ -1538,11 +1538,21 @@
                                 </c:if>
 
 	                                <tr>
-	                                    <td style="background-color: transparent; height: 28px;">
-	                                        <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
+	                                <c:if test="${approvalFlag == 'S'}">
+	                                    <td style="background-color: transparent; height: 28px; padding-top: 5px; vertical-align: top;">
+	                                    <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
 	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
 	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                    </td>
+	                                </c:if>
+	                                <c:if test="${approvalFlag == 'G'}">
+	                                    <td style="background-color: transparent; height: 28px;" >
+	                                    <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    </td>
+	                                </c:if>
+	                                        
 	                                </tr>
 	                            </table>
 	                        </div>
@@ -1610,16 +1620,19 @@
 	                                                <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align:middle"/></span></a>
 	                                        </div>
 	                                    </h2>
-	                                    <div class="border_gray" style="margin-top:4px">
+	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
+	                                        <div class="border_gray" style="margin-top:4px">
 	                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        </div>
 	                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
+	                                        <div class="border_gray" style="margin-top:6px; margin-left:4px;">
 	                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                         	</div>
+                                        	</div>
                                         	</c:if>
-	                                    </div>
 	                                </td>
 	                            </tr>
 	                            <tr class="approvalG">
@@ -1659,7 +1672,7 @@
 	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
-	                                 <td style="padding-top: 3px; text-align: right; vertical-align: top;">
+	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top;">
 	                                 <a class="imgbtn">
 	                                 </c:if>
 	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
