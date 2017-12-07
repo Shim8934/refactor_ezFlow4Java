@@ -40,10 +40,10 @@
 							
 							if (vo.memberNameCount == 0) {
 								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "</td>";
-								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t92' />]</a></td>";
+								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							} else {
 								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "&nbsp;<spring:message code='ezCircular.t50' />" + vo.memberNameCount + "<spring:message code='ezCircular.t51' /></td>"
-								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t92' />]</a></td>";
+								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							}
 								
 							circularDeptList += "</tr>";

@@ -154,7 +154,9 @@
 		    		return;
 		    	}
 		    	
-		        if (document.getElementById("keyword").value == "") {
+		    	var keyword = document.getElementById("keyword").value.trim();
+		    	
+		        if (keyword.length == 0) {
 		            alert("<spring:message code='ezCircular.t135'/>");
 		            document.getElementById("keyword").focus();
 		            return;
@@ -212,6 +214,25 @@
 		        	},
 		        	success : function(xml) {
 		        		getSearchList_after(loadXMLString(xml));
+		        		
+						var imgTag = "";
+						
+	                    if (OrderOption == "") {
+	                    	imgTag = '<img src="/images/view-sortup.gif" width="9" height="9">';
+	                    	}
+	                    else {
+	                    	imgTag = '<img src="/images/view-sortdown.gif" width="9" height="9">';
+	                    	}
+						
+		                if(OrderCell == 'TITLE') {
+		                	$('#BoardList_TH_5').append(imgTag);
+		                } else if(OrderCell == 'MEMBERNAME') {
+		                	$('#BoardList_TH_6').append(imgTag);
+		                } else if(OrderCell == 'REGDATE') {
+		                	$('#BoardList_TH_7').append(imgTag);
+		                } else if(OrderCell == 'STATUS') {
+		                	$('#BoardList_TH_9').append(imgTag);
+		                }
 		        	}
 		        })
 		    }

@@ -31,7 +31,7 @@ function putBansongSign() {
     var CurrentDate = RtnVal.split(".");
     var s = CurrentDate[1] + "." + CurrentDate[2];
     // aprType 9(개인병렬협조), 11(부서순차협조), 12(부서병렬협조)
-    if (pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+    if (pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
         var phabyuijikwee;
@@ -1377,6 +1377,9 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
+	 if (pAprLineType == "009") {
+		   SignCheck();
+	  }
     SaveFile();
     SignSave();
 
@@ -2903,10 +2906,8 @@ function SignCheck() {
 
     var rtnVal = putSignXML(SignXML);
 
-    if (rtnVal) {
-        SaveFile();
-    }
 }
+
 function putSignXML(SignXML) {
     var retVal = false;
     
@@ -2926,11 +2927,15 @@ function putSignXML(SignXML) {
                 }
                 
                 var field = message.GetListItem(fields, SignName);
+                var field2 = message.GetListItem(fields, SignName.replace("habyuisign", "habyuija"));
                 
                 if (field) {
                     retVal = true;
                     if (SignType == "TEXT" || SignType == "HTML") {
                         field.innerHTML = SignCont;
+                        if (field2) {
+                        	field2.textContent = SignCont.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+                        }
                     }
                     else {
                     	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));

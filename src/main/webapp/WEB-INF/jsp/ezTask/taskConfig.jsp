@@ -104,8 +104,8 @@
 	<body style="margin-left:10px;overflow:hidden;">
 		<form method="post" runat="server">
 			<br />
-			<h2 class="h2_dot"><spring:message code='ezTask.jsh13' /></h2> 
-			<h2 class="h2_dot"><spring:message code='ezTask.t239' /></h2> 
+			<h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezTask.jsh13' /></h2> 
+			<h2 style="font-weight: normal;margin-top:5px">▒&nbsp;<spring:message code='ezTask.t239' /></h2> 
 			<p>
 			<table class="content" style="width:250px;margin-left:15px;">
 					<tr>
