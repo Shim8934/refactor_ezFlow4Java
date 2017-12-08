@@ -179,6 +179,7 @@
 		        }
 		        else {
 		            alert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
+		            return;
 		        }
 		        
 		        var imagelist = "";
