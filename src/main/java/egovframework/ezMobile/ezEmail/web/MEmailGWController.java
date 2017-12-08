@@ -2590,6 +2590,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		JSONObject result = new JSONObject();
 		JSONObject mail = new JSONObject();
 		IMAPAccess ia = null;
+		List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
 		
 		try {		
 			folderId = URLDecoder.decode(folderId, "UTF-8");
@@ -2952,10 +2953,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						flagged = "1";
 					}
 					
-					mail.put("flag",flagged);
-
-					mail.put("folderName",f.getName());
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale, null, null);
+					mail.put("flag", flagged);
+					mail.put("folderName", f.getName());
+															
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, false, true, locale, null, null);
 
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
@@ -3026,6 +3027,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				mail.put("pAttachListHtml", bodyInfoList.get(1));
 				mail.put("isAttach", bodyInfoList.get(4));
 			}
+			
+			mail.put("attachedFileList", attachedFileList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
