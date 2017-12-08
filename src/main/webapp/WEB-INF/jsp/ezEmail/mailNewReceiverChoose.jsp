@@ -3070,7 +3070,7 @@
             }
 	    </script>
 	</head>
-	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
+	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<xml id="listviewheader" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
