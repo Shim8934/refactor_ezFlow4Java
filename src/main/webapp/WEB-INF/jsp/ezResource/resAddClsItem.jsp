@@ -34,7 +34,7 @@
 				
 				var checkSpace = document.getElementById("Brd_NM").value.trim();
 				
-				if (checkSpace == 0) {
+				if (checkSpace.length == 0) {
 					alert("<spring:message code='ezResource.t145'/>");
 					document.getElementById("Brd_NM").focus();
 					return;
@@ -243,7 +243,7 @@
             						</a>
             				</td>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="width:120px;padding-right:15px"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 120px" maxLength="20"></td>
+          					<td style="width:120px;padding-right:15px"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 120px" maxlength="20"></td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>
