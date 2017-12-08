@@ -787,12 +787,12 @@
 		    	
 		    	//Copy text comment
 		    	var innInnerDiv1 = document.createElement("div");
-		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #b6b6b6;padding-left: 0px;margin-left: 20px; width: 500px; border-radius: 3px;");
+		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #b6b6b6;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;");
 		    	var editTxtArea = document.createElement("textarea");
 		    	editTxtArea.setAttribute("id", "editCmtArea" + id.slice(8));
 		    	editTxtArea.setAttribute("cols", "20");
 		    	editTxtArea.setAttribute("rows", "1");
-		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding: 5px 5px; width: 490px;");
+		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding: 5px 5px; width: 1300px;");
 		    	editTxtArea.oninput =  function () { editAutoGrow(this); }	
 		    	
 		    	innInnerDiv1.appendChild(editTxtArea);		
@@ -1217,7 +1217,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUserName;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
@@ -1776,7 +1776,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userName;
                 div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
@@ -2092,7 +2092,7 @@
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
-	<body class="mainbody"  id="mainbodytag" style="min-width: 750px;">
+	<body class="mainbody"  id="mainbodytag" style="min-width: 1600px;">
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 3px">
@@ -2268,7 +2268,7 @@
 									</c:otherwise>
 								</c:choose>								
 								
-								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 600px;" >
+								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
 									<c:if test="${_comt.textContent != ''}">
 										<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
 									</c:if>
@@ -2564,7 +2564,7 @@
 					</div>					
 					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
 				</div >				
-				<div style="float:left; display:block; width:74%; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
+				<div style="float:left; display:block; min-width:1300px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
 					<textarea cols="20" rows="1" id="comment_input"  style="display: inline-block; overflow: hidden; height:17px; line-height:15px; padding:16px 0px; outline: none; border:none; resize:none;"  oninput="auto_grow(this)"></textarea>
 				</div>
 				<div style="position:absolute; top:9px; right:10px; display:block; width: 96px; height:45px; border:none; margin:0px">
