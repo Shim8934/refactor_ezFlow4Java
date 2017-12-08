@@ -218,7 +218,7 @@
 			    	return;
 			    }
 		    	
-		        if (deptkeyword.value == "") {
+		        if (deptkeyword.value.trim() == "") {
 		            alert("<spring:message code='ezPersonal.t61'/>");
 		            deptkeyword.focus();
 		            return;
@@ -231,7 +231,7 @@
 		    		async : false,
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
-		    			search : "displayname::" + deptkeyword.value,
+		    			search : "displayname::" + deptkeyword.value.trim(),
 		    			cell   : "extensionAttribute3;displayname;extensionAttribute9;",
 		    			prop   : "",
 		    			type   : "group"
