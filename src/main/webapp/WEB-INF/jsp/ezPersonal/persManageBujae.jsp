@@ -233,9 +233,9 @@
 		        				alert("<spring:message code='ezPersonal.pjj2'/>");
 		        				return true;
 		        			}
-		        		} else {
-			        		alert("<spring:message code='ezPersonal.pjj1'/>");
-					        return true;
+		        		} else if ($("#Stimepicker").val() == $("#Etimepicker").val()) {
+		        			alert("<spring:message code='ezPersonal.pjj1'/>");
+	        				return true;
 		        		}
 		        	}
 		        }
