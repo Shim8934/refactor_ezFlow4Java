@@ -2994,7 +2994,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
 			
 			if (bodyInfoList != null) { 
-				mail.put("htmlBody", bodyInfoList.get(0));
+				String htmlBody = bodyInfoList.get(0);
+				String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
+				
+				if (dotNetIntegration.equals("YES")) {
+					String mobileDownloadInline = config.getProperty("config.MobileDownloadInline");
+										
+					htmlBody = htmlBody.replace("/ezEmail/downloadInline.do", mobileDownloadInline);
+				}
+				
+				mail.put("htmlBody", htmlBody);
 				mail.put("pAttachListHtmlSub", pAttachListHtmlSub);
 				mail.put("pAttachListHtml", bodyInfoList.get(1));
 				mail.put("isAttach", bodyInfoList.get(4));
