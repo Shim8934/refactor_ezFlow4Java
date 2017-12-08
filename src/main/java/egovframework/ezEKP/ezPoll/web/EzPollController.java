@@ -281,7 +281,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get list of modifying questions
 		for (PollQuestionVO pollQstVO : listTotalQuestions) {
 			if (pollQstVO.getIsMofifying() == 1) {
-				try {
+/*				try {
 					String modifyingUser = ezPollService.getModifyingUser(loginVO.getTenantId(), pollQstVO.getQstId());
 					if (!loginVO.getId().equals(modifyingUser)) {
 						listOfModifyingQst.add(pollQstVO);
@@ -289,7 +289,8 @@ public class EzPollController extends EgovFileMngUtil {
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-				}				
+				}	*/			
+				listOfModifyingQst.add(pollQstVO);
 			}
 		}
 		
