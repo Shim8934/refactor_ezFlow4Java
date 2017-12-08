@@ -14,7 +14,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "rgb(233, 241, 244)";
+var m_strColorSelect = "rgb(233, 241, 255)";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -569,7 +569,10 @@ function ListView() {
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
         
-        var oHeaders;
+        var oHeaders = _dataSource.getElementsByTagName("HEADER");
+        var colCount = oHeaders.length;
+        
+        /*var oHeaders;
         var colCount;
         if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
             oHeaders = _dataSource.getElementsByTagName("HEADER");
@@ -596,7 +599,8 @@ function ListView() {
             objTr.appendChild(objTd);
 
              return oTbody;
-        }
+        }*/
+        
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);

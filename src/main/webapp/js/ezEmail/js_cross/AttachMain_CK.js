@@ -197,6 +197,7 @@ function AppendFileAttachInfo(ret) {
         var strAttach = "";
         strPreViewAttach = "";
         rep = /'/g;
+        var fileIndex = $("#dadiframe").contents().find('#filelist tr[_big=N]').length;
         for (i = 0; i < objAttachNodes.length; i++) {
             var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]);
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
@@ -214,7 +215,10 @@ function AppendFileAttachInfo(ret) {
                         objTr.setAttribute("_big", is_big);
                         objTr.setAttribute("_itemid", ServerFile);
                         objTr.setAttribute("_filesize", fileSize);
-                        
+                        if (is_big == "N") {
+                        	objTr.setAttribute("_fileIndex", fileIndex);
+                        	fileIndex++;
+                        }
                         var objTd = document.createElement("TD");
                         objTd.style.textAlign = "center";
 
@@ -268,6 +272,10 @@ function AppendFileAttachInfo(ret) {
                             objTr.setAttribute("_big", is_big);
                             objTr.setAttribute("_itemid", ServerFile);
                             objTr.setAttribute("_filesize", fileSize);
+                            if (is_big == "N") {
+                            	objTr.setAttribute("_fileIndex", fileIndex);
+                            	fileIndex++;
+                            }
                             var objTd = document.createElement("TD");
                             objTd.style.textAlign = "center";
 

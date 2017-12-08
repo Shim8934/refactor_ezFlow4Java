@@ -782,6 +782,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (request.getParameter("itemID") != null) {
 			pItemID = request.getParameter("itemID");
+			item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		}
 		if (request.getParameter("reservedItem") != null) {
 			pReservedItem = request.getParameter("reservedItem");
@@ -796,6 +797,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";
 		}
+		
+		
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
@@ -814,6 +817,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("item", item);
+		
+		logger.debug("item.endDate: " + item.getEndDate());
 		
 		return "ezCommunity/communityNewBoardItem";
 	}
@@ -2442,6 +2448,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		if (club != null) {
+			//커뮤니티 소개글 수정할 때 br태그 안나오게 \r\n으로 치환
+			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n")); 
 			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
 			
 			if (userInfo.getLang().equals("2")) {
@@ -2483,6 +2491,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (sysopCheck != 1) {
 			return "cmm/error/egovError";
 		}
+		
+		//커뮤니티 소개글 저장할때 줄바꿈이 안되서, \r\n을 <br>태그로 치환
+		clubVO.setC_ClubDesc(clubVO.getC_ClubDesc().replaceAll("\r\n", "<br>"));
 		
 		ezCommunityService.adminBasicOkUpdate(clubVO, code, userInfo.getTenantId());
 		

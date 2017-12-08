@@ -34,8 +34,7 @@
 				
 				if (g_PortletCategoryXML != "")
 				{
-				    xmldom = loadXMLString(g_PortletCategoryXML);
-					
+				    xmldom = loadXMLString(g_PortletCategoryXML);					
 					
 					for (var i=0; i<xmldom.getElementsByTagName("CATEGORY").length; i++)
 					{
@@ -65,12 +64,12 @@
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null )
 				{
-				    pObj.style.backgroundColor = "rgb(233, 241, 244)";
+				    pObj.style.backgroundColor = "rgb(233, 241, 255)";
 					g_SelectedObj = pObj;
 				}
 				else
 				{
-				    pObj.style.backgroundColor = "rgb(233, 241, 244)";
+				    pObj.style.backgroundColor = "rgb(233, 241, 255)";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;
@@ -78,12 +77,12 @@
 			}
 			
 			function selectItem(pUID, pObj) {
-			    window.open("/admin/ezPortal/portletEdit.do?uID=" + pUID, "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
+			    window.open("/admin/ezPortal/portletEdit.do?uID=" + pUID, "", "height = 420px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
 			}
 			
 			// 새로만들기
 			function newpage() {
-				window.open("/admin/ezPortal/portletEdit.do?mode=new", "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
+				window.open("/admin/ezPortal/portletEdit.do?mode=new", "", "height = 420px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
 			}
 			
 			// 미리보기
@@ -236,23 +235,20 @@
   				<c:otherwise>
   					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')">
   				</c:otherwise>
-  			</c:choose>
-  			
+  			</c:choose>  			
   		</div>
-
-		<table class="mainlist" style="width:100%">	
+		<table class="mainlist" style="width:100%;margin-top:15px;">	
 		<tr>
 			<th width="300"><spring:message code='ezPortal.t130'/></th>
 			<th><spring:message code='ezPortal.t260'/></th>
 		</tr>
-		</table>
-		
+		</table>		
 		<table class="mainlist" style="width:100%">
 			${strHtml}
 		</table>
 		<br><br>
-<script type="text/javascript">    
-	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-</script>
+		<script type="text/javascript">    
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
 	</body>
 </html>

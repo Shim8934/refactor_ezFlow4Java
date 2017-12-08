@@ -611,14 +611,7 @@ function reject_onclick_Complete(retVal)
     result = replaceAll(result, "<DATA><![CDATA[", "");
     result = replaceAll(result, "]]></DATA>", "");
 
-    if (result == 'OK') {
-        alert(strLang61);
-    }
-    else if (result == "DOMAINERROR")
-        alert(strLang352);
-    else {
-        alert(strLang138);
-    }
+    return result;
 }
 function replaceAll(pStrContent, pStrOrg, pStrRep) {
     return pStrContent.split(pStrOrg).join(pStrRep);
@@ -647,7 +640,6 @@ function prevShow() {
         }
         //if (Old_Preview_Href == Preview_Href)
         //    return;
-
         Old_Preview_Href = Preview_Href;
         var strQuery = "<URL>" + Preview_Href + "</URL>";
         xmlhttp_mailPreview = createXMLHttpRequest();
@@ -748,6 +740,8 @@ function event_xmlhttp_mailPreview_Complete() {
             var pCcHtml = "";
             var pCcSubHtml = "";
             var pCcDetailHtml = "";
+            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
             if (pCc != "") {
                 var pMailCc = pCc;
                 var pCcArray = pMailCc.split(";");
@@ -806,6 +800,8 @@ function event_xmlhttp_mailPreview_Complete() {
                 else {
                     document.getElementById("PreW_CCMain").style.display = "";
                 }
+                $("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+                $("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
             }
             
             ///
@@ -1073,6 +1069,10 @@ function PreviewRayerChange(pGubun) {
 }
 function Window_resize() {
     try {
+
+    	document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
+        document.getElementById("layer_popup").style.top = "100px";
+
         if (!isPreviewChange) {
 
             if (parseInt(document.documentElement.clientWidth) < 1000) {
@@ -1110,6 +1110,9 @@ function Window_resize() {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
+                if($("#PreW_CCMain").css("display") != "none") {
+                	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
+                }
             }
             else if (pPreviewShow_HOW == "H") {
                 if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -1143,6 +1146,9 @@ function Window_resize() {
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+                if($("#PreH_CCMain").css("display") != "none") {
+                	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+                }                
             }
             else if (pPreviewShow_HOW == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";

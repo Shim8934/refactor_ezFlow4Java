@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -692,6 +693,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, Model model) throws Exception {
 		String strWriterFakeName = "";
 		String startDateTime = "";
+		logger.debug("newBoardItem started.");
+		logger.debug("pMode = " + pMode);
 		
 		if (!pUrl.equals("")) {
 			startDateTime = item.getStartDate();
@@ -729,7 +732,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                             item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                         }
                     } else {
-                    	item.setEndDate(item.getEndDate().substring(0, 4));
+                    	item.setEndDate(item.getEndDate());
                     }
                 	
                 	if (boardInfo.getGubun() != null) {
@@ -2535,6 +2538,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGubun(strProp.getGubun());
 			boardInfo.setUrl(strProp.getUrl());
+			boardInfo.setReplyNotify(strProp.getReplyNotify());
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
@@ -2615,11 +2619,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueA(strSelCateA, userInfo));
 		strHTML.append("</Select>");
-		strHTML.append("<Select name=\"cCateB\" class=\"text\">");
+		strHTML.append("<Select name=\"cCateB\" class=\"text\" style=\"font-size:11px;\">");
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueB(strSelCateB, userInfo));
 		strHTML.append("</Select>");
-		strHTML.append("<Select name=\"cCateC\" class=\"text\" style='display:none'>");
+		strHTML.append("<Select name=\"cCateC\" class=\"text\" style=\"display:none;\">");
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueC(strSelCateC, userInfo));
 		strHTML.append("</Select>");
@@ -2808,6 +2812,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		for (String item : itemList.split(";")) {
 			String itemID = item.split(",")[0];
+			
+			logger.debug("itemID = " + itemID + " || tenantID = " + tenantID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pItemID", itemID);
@@ -3795,7 +3801,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<COMPANYNAME>" + item.getWriterCompanyName() + "</COMPANYNAME>");
         sb.append("<COMPANYNAME2>" + item.getWriterCompanyName2() + "</COMPANYNAME2>");
         sb.append("<IMPORTANCE>" + item.getImportance() + "</IMPORTANCE>");
-        sb.append("<TITLE>" + item.getTitle() + "</TITLE>");
+        sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8") + "</TITLE>");
         sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");

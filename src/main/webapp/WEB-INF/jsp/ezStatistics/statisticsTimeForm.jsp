@@ -68,10 +68,8 @@
                 var headerData = createXmlDom();
                 headerData = loadXMLString(forminfoxml.innerHTML.toUpperCase());
                 if (text != "") {
-
                     var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
-                        headerData.documentElement.appendChild(xmlRtn);
-                    
+                    headerData.documentElement.appendChild(xmlRtn);
                 }
                 var pUserList = new ListView();
                 pUserList.SetID("lvformlist");
@@ -80,6 +78,12 @@
                 pUserList.SetHeightFree(true);
                 pUserList.DataSource(headerData);
                 pUserList.DataBind("formlist");
+                
+                pUserList.SetSelectedIndex(0);
+	              
+             	 if (loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0].textContent != "") {
+	          	  	getapprovalstatistics();
+              	 }
 	        }
 	
 	        function search_press(e) {
@@ -134,9 +138,12 @@
 	        }
 	
 	        function getapprovalstatistics() {
+	        	var objTd2 = document.getElementById("timeForm");
+	        	objTd2.style.display = "";
+	        	
 	            var pformList = new ListView();
 	            pformList.LoadFromID("lvformlist");
-	            
+
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -323,9 +330,9 @@
 	                </span>
 	            </td>
 	            <td>
-	                <div id="mainmenu" style="float: right; height: 28px; width: 110px">
+	                <div id="mainmenu" style="float: right; height: 28px;">
 	                    <ul>
-	                        <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -338,11 +345,11 @@
 	            <td style="vertical-align:top">
 	                <div id="formlist" style="Width: 300px; Height: 630px; overflow: auto;display:none;border-right:1px solid #b6b6b6;"></div>
 	            </td>
-	            <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
+	            <td id="timeForm" style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
 	                <div id="colorbox" class="statistics_addition" style="display: none">
 	                    <dl>
 	                        <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
-	                        <dd class="additiontext"><spring:message code='ezStatistics.t1035'/>(<spring:message code='ezStatistics.t57'/>)</dd>
+	                        <dd class="additiontext"><spring:message code='ezStatistics.t1035'/></dd>
 	                    </dl>
 	                </div>
 	                <div id="chartdiv" style="width: 100%; text-align: center; display: none">
@@ -353,7 +360,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/excelExportOut.do">
+	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsApprovalTime.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
 	        <input type="hidden" id="userAgent" name="userAgent" value="">
 	    </form>

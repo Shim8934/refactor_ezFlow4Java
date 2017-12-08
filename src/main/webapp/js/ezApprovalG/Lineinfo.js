@@ -418,7 +418,7 @@ function aprLineAddDeptUser(mode, xmlData) {
 	        if (DuplicateFlag) {
 	            var pAlertContent = strLangS824;
 	            OpenAlertUI(pAlertContent);
-	            return;
+	            continue;
 	        }
 		
             pparsingXML = "<LISTVIEWDATA><HEADERS>";
@@ -444,12 +444,12 @@ function aprLineAddDeptUser(mode, xmlData) {
             //회람 docstate
             pparsingXML = pparsingXML + "<DATA11>015</DATA11>";
             pparsingXML = pparsingXML + "<DATA12>001</DATA12>";
-            pparsingXML = pparsingXML + "<DATA13>" + getNodeText(GetElementsByTagName(xmlData, "DATA8")[i]) + "</DATA13>";		
-            pparsingXML = pparsingXML + "<DATA14>" + getNodeText(GetElementsByTagName(xmlData, "DATA9")[i]) + "</DATA14>";		
-            pparsingXML = pparsingXML + "<DATA15>" + getNodeText(GetElementsByTagName(xmlData, "DATA10")[i]) + "</DATA15>";		
-            pparsingXML = pparsingXML + "<DATA16>" + getNodeText(GetElementsByTagName(xmlData, "DATA11")[i]) + "</DATA16>";	
-            pparsingXML = pparsingXML + "<DATA17>" + getNodeText(GetElementsByTagName(xmlData, "DATA12")[i]) + "</DATA17>";	
-            pparsingXML = pparsingXML + "<DATA18>" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "</DATA18>";
+            pparsingXML = pparsingXML + "<DATA13><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA8")[i]) + "]]></DATA13>";
+            pparsingXML = pparsingXML + "<DATA14><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA9")[i]) + "]]></DATA14>";
+            pparsingXML = pparsingXML + "<DATA15><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA10")[i]) + "]]></DATA15>";
+            pparsingXML = pparsingXML + "<DATA16><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA11")[i]) + "]]></DATA16>";
+            pparsingXML = pparsingXML + "<DATA17><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA12")[i]) + "]]></DATA17>";
+            pparsingXML = pparsingXML + "<DATA18><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "]]></DATA18>";
             
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA5")[i]) + "</VALUE>";
@@ -3267,7 +3267,15 @@ function chkLastKyuljea(AprLineRow) {
 				rtnVal = false;
 				break;
 			}
-		} else {
+
+		} else if (addLastKyulJeYN == "2") {
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType9 || (GetAttribute(AprLineRow[0],"DATA11") != strAprType11 && GetAttribute(AprLineRow[0],"DATA11") != strAprType8 && aprtype == strAprType12)) {
+				rtnVal = false;
+				break;
+			}
+		} else if (addLastKyulJeYN == "0") {
+
 			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType8 || aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
 				rtnVal = false;
@@ -3312,7 +3320,14 @@ function chkLastKyuljeaCF(AprLineRow) {
 				rtnVal = false;
 				break;
 			}
-		} else {
+
+		} else if (addLastKyulJeYN == "2") {
+			if (aprtype == strAprType8 || aprtype == strAprType11 || aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType2) {
+				rtnVal = false;
+				break;
+			}
+		}  else {
 			if (aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType2) {
 				rtnVal = false;

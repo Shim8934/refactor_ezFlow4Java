@@ -34,6 +34,9 @@
 			.calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
 			.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
+			.table_layout th {
+				color:#888;
+			}
 		</style>
 		<script type="text/javascript">
 			var pBrdid = "${brdID}";
@@ -248,7 +251,7 @@
     			</c:if>
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
-      			<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+      			<li style="background:none;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
 				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
   			</ul>
 		</div>
@@ -263,33 +266,37 @@
             	<div id="TD_CaseOfMonthView"></div>
         	</tr>
         	<tr id="TR_Line2" style="text-align:center;vertical-align:middle;height:30px;font-weight:bold;margin-top:10px;">
-            	<td>
-                	<img src="/images/page_previous.gif"  style="cursor:pointer;width:15px;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-                	<span id="divViewHeader" style="color: #404040; text-align:center"></span>
-                	<img src="/images/page_next.gif" style=" cursor:pointer;width:15px;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
-            	</td>
+            	
         	</tr>
-
         	<tr>
             	<td style="vertical-align:top;">
                 	<div id="mainlistlayout" style="width:100%;height:780px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;margin-top:10px;">
-                    		<tr style="display:none;" id="approval">
-                        		<td colspan="2" style="font-weight:bold;padding-left:5px;vertical-align:top;"><h2 class="h2_dot">&nbsp;<spring:message code="ezResource.t401" /></h2></td>
-                    		</tr>
                     		<tr>
-                      			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
-                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div>
-                        			<div id="tdDateCalendarViewer" style="padding-bottom:20px;padding-top:10px;height:100%; text-align:center" > </div>
+                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f8f8f8;">
+                					<div style="border:1px solid #ddd;border-bottom:0px;padding-top:9px;padding-bottom:7px;height:19px">
+					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
+					                	&nbsp;<span id="divViewHeader" style="color: #999; text-align:center;vertical-align: middle;"></span>&nbsp;
+					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
+				                	</div>
+				            	</td>
+				            </tr>
+                    		<tr>
+                      			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->
+                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div> 
+                        			<div id="tdDateCalendarViewer" style="padding-bottom:5px;height:100%; text-align:center" > </div>
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
-                        		<td colspan="2" style="font-weight:bold;padding-bottom:10px;padding-left:5px;vertical-align:top;" ><h2 class="h2_dot">&nbsp;<spring:message code="ezResource.t402" /></h2></td>
+                        		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
                     		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
                         			<div id="idCalendarViewer2" style='height:100%; text-align:center'> </div>
                         		</td>
+                    		</tr>
+                    		<tr style="display:none;" id="approval">
+                        		<td colspan="2" style="font-weight:normal;vertical-align:top;text-align:right"><%-- <h2 style="font-weight:normal;">※&nbsp;<spring:message code="ezResource.t401" /></h2> --%></td>
                     		</tr>
                 		</table>
                 	</div>

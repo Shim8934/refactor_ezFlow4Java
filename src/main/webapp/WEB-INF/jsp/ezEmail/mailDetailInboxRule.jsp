@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -481,7 +482,8 @@
 		            }
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-		                    ConCellRow.outerHTML = "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+		                	ConCellRow.outerHTML = "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
+		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                    inputBtn.textContent = strLang239;
@@ -489,6 +491,7 @@
 		                }
 		                else {
 		                    Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                }
@@ -502,7 +505,7 @@
 		        else
 		            alert(strLang223);
 		    }
-		    function pop_addcon2(RuleKind, value) {
+		    function pop_addcon2(RuleKind, value, i) {
 		        if (value.length > 0) {
 		            if (RuleKind == "SENDER" || RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
 		                if (value.split("<").length > 1) {
@@ -514,7 +517,8 @@
 		                }
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
+		                $("div#Conitems div:nth-child(" + i + ")  nobr").text(value);
 		            }
 		        }
 		    }
@@ -533,7 +537,7 @@
 		            _popObj.style.backgroundColor = "#ffffff";
 		        }
 		        _popObj = obj;
-		        obj.style.backgroundColor = "rgb(233, 241, 244)";
+		        obj.style.backgroundColor = "rgb(233, 241, 255)";
 		    }
 		    function random() {
 		        return Math.floor(Math.random() * 100);
@@ -561,7 +565,7 @@
 		        if (obj.value != "") {
 		            for (var i = 0; i < obj.getAttribute("value").split(';').length; i++) {
 		                var _value = obj.getAttribute("value").split(';')[i];
-		                pop_addcon2(_RuleKind, _value);
+		                pop_addcon2(_RuleKind, _value, i+1);
 		            }
 		        }
 		        if (_RuleKind == "SENDER" || _RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
@@ -629,16 +633,17 @@
 		        }
 		        for (var i = 0; i < Conitems.children.length; i++) {
 		            if (_exp == "") {
-		            	_exp = "\"" + MakeXMLString(TrimText(Conitems.children.item(i).textContent)) + "\"";
+		            	_exp = "\"" + TrimText(Conitems.children.item(i).textContent) + "\"";
 	                    _value = MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		            }
 		            else {
-		            	_exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.children.item(i).textContent))) + "\"";
+		            	_exp += "" + strLang235 + "" + TrimText(Conitems.children.item(i).textContent) + "\"";
 	                    _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		            }
 		        }
 		        if (_curCellObj != null) {
-		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + _value + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + _value + "'><nobr><u></u></nobr></span>";
+		            $(_curCellObj).find("span nobr u").text(_exp);
 		            _curCellObj.setAttribute("value", _value);
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		        }

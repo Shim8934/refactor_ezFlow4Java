@@ -30,16 +30,23 @@
 			var tmpSelectedBoardGroupID = "";
 			var tmpSelectedBoardGroupName = "";
 			
+		    var board_alertArguments = new Array();
+		    board_alertArguments[1] = DivPopUpHidden;
+			
 			function Select() {
 			    var objGList = document.all("GChkBox");
 	
 			    if (SelectedBoardID == "" && tmpSelectedBoardGroupID == "") {
-			        alert("<spring:message code = 'ezCommunity.t356' />");
+			    	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t356' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t356'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 			        alert("<spring:message code = 'ezCommunity.t356' />");
 				    return;
 				}
 	
 			    if (SelectedBoardID == BoardID) {
-			        alert("<spring:message code = 'ezCommunity.t357' />");
+			    	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t357' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t357'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 			        alert("<spring:message code = 'ezCommunity.t357' />");
 				    return;
 				}
 	
@@ -236,5 +243,9 @@
         <div class="btnposition">
             <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
         </div>
+        <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

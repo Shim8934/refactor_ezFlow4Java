@@ -764,7 +764,7 @@ function aprLineAddDeptUser(mode, xmlData) {
 	        if (DuplicateFlag) {
 	            var pAlertContent = strLangS824;
 	            OpenAlertUI(pAlertContent);
-	            return;
+	            continue;
 	        }
 		
             pparsingXML = "<LISTVIEWDATA><HEADERS>";
@@ -790,12 +790,12 @@ function aprLineAddDeptUser(mode, xmlData) {
             //회람 docstate
             pparsingXML = pparsingXML + "<DATA11>015</DATA11>";
             pparsingXML = pparsingXML + "<DATA12>001</DATA12>";
-            pparsingXML = pparsingXML + "<DATA13>" + getNodeText(GetElementsByTagName(xmlData, "DATA8")[i]) + "</DATA13>";		
-            pparsingXML = pparsingXML + "<DATA14>" + getNodeText(GetElementsByTagName(xmlData, "DATA9")[i]) + "</DATA14>";		
-            pparsingXML = pparsingXML + "<DATA15>" + getNodeText(GetElementsByTagName(xmlData, "DATA10")[i]) + "</DATA15>";		
-            pparsingXML = pparsingXML + "<DATA16>" + getNodeText(GetElementsByTagName(xmlData, "DATA11")[i]) + "</DATA16>";	
-            pparsingXML = pparsingXML + "<DATA17>" + getNodeText(GetElementsByTagName(xmlData, "DATA12")[i]) + "</DATA17>";	
-            pparsingXML = pparsingXML + "<DATA18>" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "</DATA18>";
+            pparsingXML = pparsingXML + "<DATA13><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA8")[i]) + "]]></DATA13>";
+            pparsingXML = pparsingXML + "<DATA14><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA9")[i]) + "]]></DATA14>";
+            pparsingXML = pparsingXML + "<DATA15><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA10")[i]) + "]]></DATA15>";
+            pparsingXML = pparsingXML + "<DATA16><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA11")[i]) + "]]></DATA16>";
+            pparsingXML = pparsingXML + "<DATA17><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA12")[i]) + "]]></DATA17>";
+            pparsingXML = pparsingXML + "<DATA18><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "]]></DATA18>";
             
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA5")[i]) + "</VALUE>";
@@ -823,17 +823,17 @@ function aprLineAddDeptUser(mode, xmlData) {
 
             if (tr.length == 0) {
                 if (InitTr.length == 0) {
-                    if (document.getElementById("APRLINECC").innerHTML != "")
-                        document.getElementById("APRLINECC").innerHTML = "";
+                    if (document.getElementById("APRLINE").innerHTML != "")
+                        document.getElementById("APRLINE").innerHTML = "";
 
                     var pAPRLINE = new ListView();      
                     pAPRLINE.SetID("pAPRLINE");
                     pAPRLINE.SetMulSelectable(false);    
-                    pAPRLINE.SetRowOnDblClick("AprlineDel_onclickCC");            
+                    pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");            
                     pAPRLINE.SetSelectFlag(false);
                     pAPRLINE.SetHeightFree(true);
                     pAPRLINE.DataSource(objXML);
-                    pAPRLINE.DataBind("APRLINECC");
+                    pAPRLINE.DataBind("APRLINE");
                 } else {
                     var objTr = pAPRLINE.NewAddRow(0, "pAPRLINE" + "_TR_" + eval(MaxID + 1));
                     pAPRLINE.AddDataRow(objTr, objXML);

@@ -893,6 +893,7 @@
 		                document.getElementById("Makedate").style.display = "none";
 		            } else {
 		            	document.getElementById("Makedate").style.display = "";
+		            	
 		                if (strEndDate != "") {
 		                    if (strEndDate.substring(0, 4) == "9999") {
 		                        $("#Sdatepicker2").datepicker({
@@ -909,9 +910,10 @@
 		                        $("#Sdatepicker2").datepicker('setDate', NowDate2);
 		                    }
 		                    else {
-		                        var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
-		                        NowDate.setMonth(NowDate.getMonth() - 1);
-		                        $("#Sdatepicker2").datepicker('setDate', NowDate);
+		                        //var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
+		                        //NowDate.setMonth(NowDate.getMonth() - 1);
+		                        //2017-12-01 영구게시가 아닐때 만료일자를 지정한 날짜가 그대로 나오도록 수정
+		                        $("#Sdatepicker2").datepicker('setDate', strEndDate);
 		                    }
 		                }
 		            }
@@ -1716,6 +1718,8 @@
 		    }
 		
 		    function backgroundimagechange() {
+		    	var editor = "${editor}";
+		    	
 		        for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
 		            if (document.getElementsByName("backradio")[i].checked) {
 		                var Table = document.createElement("TABLE");
@@ -1734,7 +1738,7 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                    Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + "\\')";
+	                		Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
 		                    
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
@@ -1771,6 +1775,7 @@
 		    }
 		    
 		    function BackImageUp_After(rtn) {
+		    	var editor = "${editor}";
 		        var xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
 
@@ -1799,9 +1804,9 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
-
-		        Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + imgSrc + "\\')";
-		        alert(Td.style.backgroundImage);
+				
+	        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+	        	
 		        Table.style.width = imgWidth + "px";
 		        Table.style.height = imgHeight + "px";
 

@@ -831,7 +831,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		//taskWork첨부파일목록조회
 		String taskAttachList = null;
-		if (taskInfoVO.getPersonAttach().equals("Y")) {
+		if (taskInfoVO.getHasAttach().equals("Y")) {
 			taskAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "1", tenantID);
 		}
 		

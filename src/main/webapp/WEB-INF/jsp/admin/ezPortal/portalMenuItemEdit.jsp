@@ -541,7 +541,7 @@
 					</li>
 				</ul>
 			</div>	
-			<table width="500" id="toggle_tbl1" class="content">
+			<table width="100%" id="toggle_tbl1" class="content">
 				<tr>
 					<th>
 						<spring:message code='ezPortal.t88'/>
@@ -566,13 +566,13 @@
 							<th>Normal image</th>
 							<td>
 								<table width="100%" border="0" cellspacing="0" cellpadding="0">
-									<tr>
+									<tr style="height:47px">
 										<c:choose>
 											<c:when test="${normalImagePath != null && normalImagePath != ''}">
-												<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${normalImagePath}"></td>
+												<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${normalImagePath}" width="106" height="42"></td>
 											</c:when>
 											<c:otherwise>
-												<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display: none"></td>
+												<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" style="display: none" width="106" height="42"></td>
 											</c:otherwise>
 										</c:choose>
 						
@@ -596,7 +596,7 @@
 							<th>Over image</th>
 							<td>
 								<table width="100%" border="0" cellspacing="0" cellpadding="0">
-									<tr>
+									<tr style="height:47px">
 										<c:choose>
 											<c:when test="${overImagePath != null && overImagePath != ''}">
 												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="${overImagePath}"></td>
@@ -649,8 +649,8 @@
 								<th>Normal image</th>
 								<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display: none"></td>
+										<tr style="height:47px">
+											<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" style="display: none" width="106" height="42"></td>
 											<td width="100%" align="center" nowrap>
 												<a class="imgbtn">
 													<span onclick="changeNormalImage()">
@@ -671,8 +671,8 @@
 								<th>Over image</th>
 								<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="" style="display: none"></td>
+										<tr style="height:47px">
+											<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="" style="display: none" width="106" height="42"></td>
 											<td width="100%" align="center" nowrap>
 												<a class="imgbtn">
 													<span onclick="changeOverImage()">

@@ -363,7 +363,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "rgb(233, 241, 244)";
+	        var m_strColorSelect = "rgb(233, 241, 255)";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1431,7 +1431,7 @@
 		        _RowObjectID = obj.id;
 		        _RowObjectName = $(obj).attr("name");
 
-		        obj.style.backgroundColor = "rgb(233, 241, 244)";
+		        obj.style.backgroundColor = "rgb(233, 241, 255)";
 		        
 		        $.ajax({
 		        	url : '/ezCircular/getcircularDeptName.do',
@@ -1470,7 +1470,7 @@
 		        _RowObject = obj;
 		        _RowObjectID = obj.id;
 		        _RowObjectName = $(obj).attr("name");
-		        obj.style.backgroundColor = "rgb(233, 241, 244)";
+		        obj.style.backgroundColor = "rgb(233, 241, 255)";
 		    }
 		    
 		    var Tab1_SelectID = "1tab1";
@@ -1522,7 +1522,7 @@
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px; padding:0px;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
@@ -1646,11 +1646,11 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 id="ToTitle" class="receiver_tltype01">
+	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezCircular.t34'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 520px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 516px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

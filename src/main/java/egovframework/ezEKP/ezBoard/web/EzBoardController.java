@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -2983,6 +2984,9 @@ public class EzBoardController extends EgovFileMngUtil{
         		} else {
         			boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         		}
+        		
+        		boardListVO.setWriteDate(commonUtil.getDateStringInUTC(boardListVO.getWriteDate(), userInfo.getOffset(), false));
+        		
         		if (mode.equals("reply")) {
         			boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));
         			boardListVO.setABSTRACT("");
@@ -3003,8 +3007,10 @@ public class EzBoardController extends EgovFileMngUtil{
         				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
         			}
         		} else {
-        			boardListVO.setEndDate(commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false));
-        			endDateTime = commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false).split(" ")[0];
+        			//boardListVO.setEndDate(commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false));
+        			//endDateTime = commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false).split(" ")[0];
+        			//2017-12-01 게시글 만료일을 지정하고, 그 만료일보다 더 늦은 날짜를 지정할 수 있게 하기 위해 수정
+        			endDateTime = "9999-12-31";
         		}
         		
         		startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
@@ -3484,7 +3490,9 @@ public class EzBoardController extends EgovFileMngUtil{
         pMode = request.getParameter("mode");
         
         String strXML = "";
-
+        if (pTitle != null) {
+        	pTitle = pTitle.replaceAll("[\\\\/:*?\"<>|]", "_");
+        }
         if (pMode != null && (pMode.equals("boardContent") || pMode.equals("boardAttach"))) {
         	strXML = getItemAttachmentXML_Retrans(pItemID, realPath, pMode, pConLocation, pTitle, userInfo.getTenantId());
         } else {
@@ -3910,8 +3918,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/myBoardmovecopy.do")
 	public String myBoardmovecopy(Model model, HttpServletRequest request) {
 		String selID = request.getParameter("selID");
-		
+		String nodeID = "";
+		if (request.getParameter("nodeID") != null) {
+			nodeID = request.getParameter("nodeID");
+		}
+	
 		model.addAttribute("selID", selID);
+		model.addAttribute("nodeID", nodeID);
 		
 		return "ezBoard/boardMyBoardMoveCopy";
 	}
@@ -6217,5 +6230,48 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("uploadBackImage ended");
+	}
+	
+	@RequestMapping(value="/ezBoard/boardAlertDialog.do")
+	public String boardAlertDialog(
+					@CookieValue("loginCookie") String loginCookie,
+					@RequestParam("CAPTION") String caption,
+					@RequestParam("MESSAGE") String message,
+					@RequestParam("BUTTONNAMES") String buttonNames,
+					HttpServletRequest request,
+					LoginVO userInfo,
+					Model model) throws Exception {
+		logger.debug("boardAlertDialog started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		caption = caption != null ? caption : "";
+		message = message != null ? message : "";
+		buttonNames = buttonNames != null ? buttonNames : "";
+		
+		String buttonName0 = "";
+		String buttonName1 = "";
+		String buttonName2 = "";
+		String[] buttonNamesArray = buttonNames.split(",");
+		
+		if (userInfo.getLang().equals("3")) {
+			buttonNamesArray = buttonNames.split("、");
+		}
+		
+		for (int i = 0; i < buttonNamesArray.length; i++) {
+			switch (i) {
+			case 0: buttonName0 = buttonNamesArray[i]; break;
+			case 1: buttonName1 = buttonNamesArray[i]; break;
+			case 2: buttonName2 = buttonNamesArray[i]; break;
+			}
+		}
+		logger.debug("caption : " + caption);
+		model.addAttribute("caption", caption);
+		model.addAttribute("message", message);
+		model.addAttribute("buttonNamesArray", buttonNamesArray);
+		model.addAttribute("buttonName0", buttonName0);
+		model.addAttribute("buttonName1", buttonName1);
+		model.addAttribute("buttonName2", buttonName2);
+		
+		return "ezBoard/boardAlertDialog";
 	}
 }

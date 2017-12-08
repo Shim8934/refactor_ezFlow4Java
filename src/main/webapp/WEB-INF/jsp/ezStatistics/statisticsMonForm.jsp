@@ -32,6 +32,8 @@
 	                document.getElementById("topmenu").style.cssFloat = "";
 	            else
 	                document.getElementById("topmenu").style.whiteSpace = "nowrap";
+	            
+	            companyID = document.getElementById("SCompID").value;
 	            makeoptionyear();
 	            getforminfo();
 	        }
@@ -340,14 +342,8 @@
 	              var headerData = createXmlDom();
 	              headerData = loadXMLString(forminfoxml.innerHTML.toUpperCase());
 	              if (text != "") {
-	                  if (CrossYN()) {
-	                      var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
-	                      var Node = headerData.importNode(xmlRtn, true);
-	                      headerData.documentElement.appendChild(Node);
-	                  } else {
-	                      var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
-	                      headerData.documentElement.appendChild(xmlRtn);
-	                  }
+                     var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+                     headerData.documentElement.appendChild(xmlRtn);
 	              }
 	              var pUserList = new ListView();
 	              pUserList.SetID("lvformlist");
@@ -356,6 +352,11 @@
 	              pUserList.SetHeightFree(true);
 	              pUserList.DataSource(headerData);
 	              pUserList.DataBind("formlist");
+	              pUserList.SetSelectedIndex(0);
+	              
+	              if (loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0].textContent != "") {
+		          	  getapprovalstatistics();
+	              }
 	        }
 	
 	        function search_press(e) {
@@ -391,15 +392,15 @@
 	                    &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002'/> : 
 	            	<select id="selyear" onchange="makeoptionyear(); getforminfo()"></select>
 	                    <spring:message code='ezStatistics.t55'/>
-	        &nbsp;&nbsp;<spring:message code='ezStatistics.t1032'/> : 
-	            <input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
+	       				 &nbsp;&nbsp;<spring:message code='ezStatistics.t1032'/> : 
+	            		<input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
 	                    <a class="imgbtn" style="vertical-align: middle"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>
 	                </span>
 	            </td>
 	            <td>
-	                <div id="mainmenu" style="float: right; height: 28px; width: 110px">
+	                <div id="mainmenu" style="float: right; height: 28px;">
 	                    <ul>
-	                        <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -446,7 +447,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/excelExportOut.do">
+	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsA.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
 	        <input type="hidden" id="userAgent" name="userAgent" value="">
 	    </form>

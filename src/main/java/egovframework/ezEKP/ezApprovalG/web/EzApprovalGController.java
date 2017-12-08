@@ -142,6 +142,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		boolean isSubTitle = false;
 		String userCont = "";
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", userInfo.getTenantId());
+		String hideSusin =  ezCommonService.getTenantConfig("hideSusin", userInfo.getTenantId());
 		
 		StringBuffer containers = new StringBuffer();
 		
@@ -213,6 +214,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("szRoleInfo", userInfo.getRollInfo());
 		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("hideSusin", hideSusin);
 		
         logger.debug("apprGLeft Value : listType=" + listType + "containers=" + containers.toString() + "viewLeftCount=" + viewLeftCount);       
         logger.debug("apprGLeft Ended");       
@@ -4526,6 +4528,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
 
 		String susinAdmin = "";
 		String hasOpinionYN = "";
@@ -4627,6 +4630,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("callBackType", callBackType);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		
 		logger.debug("aprDocView ended.");
 		

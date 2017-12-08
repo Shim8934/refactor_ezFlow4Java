@@ -10,6 +10,22 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<style type="text/css">
+			@MEDIA print {
+				#litrealInfo {
+					overflow: hidden;
+					height: 100%;
+				}
+				
+				#menu, #close{
+					display: none;
+				}
+				
+				#mainbody {
+					background-image: none;
+				}
+			}
+		</style>
 		
 		<script type="text/javascript">
 			window.onload = function () {
@@ -153,7 +169,7 @@
 					<tr>
 					  	<th><spring:message code='main.t85' /></th>
 						<td colspan="2">
-							<div style="WIDTH:100%;HEIGHT:80px;overflow:auto; line-height:18px">
+							<div id="litrealInfo" style="WIDTH:100%;HEIGHT:80px;overflow:auto; line-height:18px">
 					        	${LiteralInfo }
 					        </div>
 					    </td>

@@ -61,13 +61,25 @@
 	            treeView.DataSource(xmlTree);
 	            treeView.DataBind("TreeView");
 	        }
-	
+	        var selNodeParentId;
 	        function TreeViewNodeClick() {
 	            var nodeIdx = 1;
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var selnode = treeView.GetSelectNode();
+	            var selnodeId = treeView.GetSelectNodeID();
 	            DeptID = selnode.GetNodeData("CN");
+	            var selnodeLevel = selnode.GetNodeData("nodelevel");
+	            selNodeParentId = selnode.GetNodeData("CN");
+	            
+	            for (var i =0 ;i < selnodeLevel ; i++ ) {
+	     	      	if($("#" + selnodeId).parent().parent().attr("setnodeiconbyname")=="ICONCOMP"){
+	     	      		selNodeParentId = $("#" + selnodeId).parent().parent().attr("cn");
+	     	      		break;
+	     	      	}
+	     	      	selnodeId = $("#" + selnodeId).parent().parent().attr("id");
+	            }
+	            
 	            displayUserList(DeptID);
 	        }
 	
@@ -201,7 +213,7 @@
 					async : true,
 					url : "/ezStatistics/getStatisticsAprMon.do",
 					data : {
-							company : "",
+							company : selNodeParentId,
 							date : document.getElementById("selyear").value,
 							searchID : GetAttribute(pUserList.GetSelectedRows()[0],"DATA2"),
 							type : "USER"
@@ -454,7 +466,7 @@
 	        }
 	
 	        function searchdept() {
-	            if (keyword.value == "") {
+	            if (keyword.value.trim() == "") {
 	                alert("<spring:message code='ezStatistics.t1010'/>");
 	                keyword.focus();
 	                return;
@@ -631,9 +643,9 @@
 	                 </span>
 	             </td>
 	             <td>
-	                 <div id="mainmenu" style="float: right; height: 28px; width: 110px">
+	                 <div id="mainmenu" style="float: right; height: 28px;">
 	                     <ul>
-	                         <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                         <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                     </ul>
 	                 </div>
 	             </td>

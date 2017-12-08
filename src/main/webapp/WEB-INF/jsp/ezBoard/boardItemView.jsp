@@ -1153,7 +1153,7 @@
 			        <tr>
 			          <th><spring:message code='ezBoard.t323' /></th>
 			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5>
-			             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
+			             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
 			             </td>
 			        </tr>
 			      </table>

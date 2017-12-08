@@ -259,7 +259,7 @@ public class MEmailController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/mobile/ezEmail/mailGetList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public JSONObject getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, ModelMap modelMap) throws Exception {
+	public JSONObject getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap) throws Exception {
 		
 		String folderId = "INBOX";
 		String start = "0";
@@ -347,7 +347,7 @@ public class MEmailController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/mobile/ezEmail/mailMoveMessage.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailMoveMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+	public String mailMoveMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, 
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailMoveMessage started.");
 		
@@ -493,7 +493,7 @@ public class MEmailController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/mobile/ezEmail/mailDelete.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+	public String mailDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailDeleteMessage started.");
 		
@@ -528,7 +528,7 @@ public class MEmailController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/mobile/ezEmail/mailMailList.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+	public String mailMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, 
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailDeleteMessage started.");
 		
@@ -945,7 +945,7 @@ public class MEmailController extends EgovFileMngUtil {
 		}
 	
 	@RequestMapping(value="/mobile/ezEmail/mMailWrite.do")
-	public String mailWrite(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+	public String mailWrite(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/sign/users/rkd1395";
@@ -990,7 +990,7 @@ public class MEmailController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/mobile/ezEmail/mailSetStatus.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailSetReadStatus(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+	public String mailSetReadStatus(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,
 			Locale locale, Model model) throws Exception {
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		

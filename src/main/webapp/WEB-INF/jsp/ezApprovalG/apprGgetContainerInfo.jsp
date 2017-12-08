@@ -8,19 +8,21 @@
 	    <style>
 	        .pagetd {
 	            padding-top: 6px;
-	        }
-	
+	        }	
 	        .pcol {
 	            padding-top: 6px;
-	        }
-	
+	        }	
 	        .Right_Point01 {
 	            font: bold;
 	            color: #017bec;
 	        }
+	        #div_AprLine .mainlist tr th {
+				border-top:0px;
+			}
 	    </style>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -954,7 +956,20 @@
 		            var nowyear = new Date().getFullYear();
 		            var nowmonth = new Date().getMonth() + 1;
 		            var nowday = new Date().getDate();
-		            period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+		            
+		            if (nowmonth < 10)
+		                nowmonth = "0" + nowmonth;
+
+		            if (nowday < 10)
+		                nowday = "0" + nowday;
+		            
+	            	if (condition[5] != null && condition[5] != "") {
+			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
+	            	} else if (condition[3] != null && condition[3] != "") {
+			            period = condition[3].substring(0, 4) + strLang1028 + " " + condition[3].substring(5, 7) + strLang1029 + " " + condition[3].substring(8,10) + strLang1030 + " ~ " + condition[4].substring(0, 4) + strLang1028 + " " + condition[4].substring(5, 7) + strLang1029 + " " + condition[4].substring(8, 10) + strLang1030;
+	            	} else {
+		            	period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+	            	}
 		        }
 		        else {
 		            period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
@@ -1266,6 +1281,57 @@
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
+		    
+		    var Tab1_SelectID = "";
+		    function Tab1_MouserOver(obj) {
+		        obj.className = "tabover";
+		    }
+	
+		    function Tab1_MouserOut(obj) {
+		        if(Tab1_SelectID != obj.id)
+		            obj.className = "";
+		    }
+	
+		    function Tab1_MouseClick(obj) {		    	
+		        obj.className = "tabon";
+		        if (obj.id != Tab1_SelectID) {
+		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+		                document.getElementById(Tab1_SelectID).className = "";
+	
+		            obj.className = "tabon";
+		            Tab1_SelectID = obj.id;
+		            ChangeTab(obj);
+		        }
+		    }
+		    
+		    function ChangeTab(obj) {
+		        var pSelectTab = obj.id;
+
+		        switch (pSelectTab) {
+		            case "tagsub1": pDocInfoValue='1';Approval_onclick(); break;
+		            case "tagsub2": pDocInfoValue='2';Recipent_onclick(); break;
+		            case "tagsub3": pDocInfoValue='4';Attach_onclick(); break;
+		            case "tagsub4": pDocInfoValue='3';Opinion_onclick(); break;
+		            case "tagsub5": pDocInfoValue='5';Circulation_onclick(); break;
+		        }
+		    }
+		    
+		    function Tab1_NewTabIni(pTabNodeID) {
+		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+		            if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
+		                if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };
+
+		                    if (i == 1) {
+		                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).className = "tabon";
+		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).id;
+		                    }	
+		                }
+		            }
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1330,7 +1396,7 @@
 	    <br>
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
-	        <div id="tabnav" style="width: 100%">
+	        <%-- <div id="tabnav" style="width: 100%">
 	            <ul>
 	                <li id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()"><spring:message code='ezApprovalG.t1769'/></span></li>
 	                <li id="tagsub2"><span onclick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
@@ -1340,7 +1406,18 @@
 					    <li id="tagsub5"><span onClick="MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
 				    </c:if>
 	            </ul>
-	        </div>
+	        </div> --%>
+	        <div id="tabnav" class="portlet_tabpart01" style="width:100%">
+				<div class="portlet_tabpart01_top" id="tab1">
+				    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
+				    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
+				    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
+				    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
+				    <c:if test="${approvalFlag != 'G'}">
+					   	<p><span id="tagsub5"><spring:message code='ezApprovalG.hyj24'/></span></p>
+				    </c:if>
+			  	</div>	
+			</div>
 	
 	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
@@ -1349,9 +1426,9 @@
 	
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	        selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+	        //selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+	        Tab1_NewTabIni("tab1");
 	    </script>
-	
 	
 	    <iframe id="saveExcel" name="saveExcel" style="display: none" ></iframe>
 	</body>

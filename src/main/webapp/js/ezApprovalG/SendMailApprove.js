@@ -151,8 +151,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
 	    			Content : Content,
 	    			Subject : Subject,
 	    			to  : to,
-	    			from : from ,
-	    			SaveSendBoxFlag : SaveSendBoxFlag
+	    			from : from
 	    		},
 	    		url : "/ezApprovalG/mail_intersend.do",
 	    		success: function(xml){

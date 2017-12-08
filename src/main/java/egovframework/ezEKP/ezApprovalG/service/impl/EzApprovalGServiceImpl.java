@@ -1779,6 +1779,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("FORMCONNFLAG").item(k).getTextContent()) + "</DATA5>");
 					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA6>");
 					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMCONTID").item(k).getTextContent()) + "]]></DATA8>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -16633,7 +16634,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMKIND", kind);
 		map.put("v_LANGTYPE", strMultiData);
 		map.put("v_SEARCHTYPE", searchType);
-		map.put("v_SEARCHNAME", searchName);
+		if(globals.getProperty("Globals.DbType").equals("mysql")){
+			if (searchName.equals("_")) {
+				map.put("v_SEARCHNAME", "\"" + searchName);
+			} else {
+				map.put("v_SEARCHNAME", searchName);
+			}
+		} else { 
+			map.put("v_SEARCHNAME", searchName);
+		}
+		
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		
@@ -20710,6 +20720,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		
+		int hasSubCont = ezApprovalGDAO.getUserContSubCount(map);
+		
+		if (hasSubCont > 0) {
+			return "<RESULT>HASSUBCONT</RESULT>";
+		}
+		
 		int docCount = 0;
 		if (mode.toLowerCase().equals("check")) {
 			docCount = ezApprovalGDAO.delUserConutCnt(map);
@@ -21373,12 +21389,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTDEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
 		map.put("v_DOCSTATE", docState);
-		map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom, offSet, true));
-		map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto, offSet, true));
-		map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom, offSet, true));
-		map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto, offSet, true));
+		if (draftfrom != "") {
+			map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom + " 00:00:01" , offSet, true));
+		} else {
+			map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom , offSet, true));
+		}
+		
+		if (draftto != "") {
+			map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto + " 23:59:59", offSet, true));
+		} else {
+			map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto, offSet, true));
+		}
+		
+		if (apprfrom != "") {
+			map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom + " 00:00:01", offSet, true));
+		} else {
+			map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom, offSet, true));
+		}
+		
+		if (apprto != "") {
+			map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto + " 23:59:59", offSet, true));
+		} else {
+			map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto , offSet, true));
+			
+		}
 		map.put("v_MYPAPPRFROM", commonUtil.getDateStringInUTC(mypapprfrom, offSet, true));
 		map.put("v_MYPAPPRTO", commonUtil.getDateStringInUTC(mypapprto, offSet, true));
+		
 		map.put("v_SUBQUERY", subQuery);
 		map.put("v_PAPPROVUSER", pApprovUser);
 		map.put("companyID", companyID);
@@ -21467,18 +21504,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		if (draftfrom != null && !draftfrom.equals("")) {
-			whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftfrom + " 00:00:01", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		if (draftto != null && !draftto.equals("")) {
-			whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftto + " 23:59:59", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 
 		if (apprfrom != null && !apprfrom.equals("")) {
-			whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprfrom + " 00:00:01", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		
 		if (apprto != null && !apprto.equals("")) {
-			whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprto + " 23:59:59", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		
 		if (mypapprfrom != null && !mypapprfrom.equals("")) {

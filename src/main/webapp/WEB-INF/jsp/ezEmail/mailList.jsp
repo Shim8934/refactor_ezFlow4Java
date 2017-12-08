@@ -129,6 +129,12 @@
 		                document.getElementById("select").item(3).selected = true;
 		                break;
 		            case "draft":
+		                reply.style.display = 'none';
+		                p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
+		                p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
+		                p_Listoption = "2";
+		                document.getElementById("select").selectedIndex = 3;
+		                document.getElementById("select").item(3).selected = true;
 		                g_bdraft = true;
 		                break;
 		            case "delete":
@@ -426,7 +432,6 @@
 		    	// 웹소켓 연결
 	            webSocket= new WebSocket(host);
 		    	var encryptPw = "";
-	        	var stt = "";
 	            
 		    	if (typeof pwd != "undefined") {
 		    		encryptPw = pwd;
@@ -611,7 +616,19 @@
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
-
+				
+				if (result == "ABORT") { // marformd 에러  
+					alert("<spring:message code='ezEmail.kyj15' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
+				if (result == "ZEROEML") { // eml파일이 없을 경우
+					alert("<spring:message code='ezEmail.kyj16' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
 				if (result == "OK") {
 					document.importMailboxform.file1.value = "";
 					MailListRefresh(); 

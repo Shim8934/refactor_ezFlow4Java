@@ -343,6 +343,21 @@ public class EzEmailUtil {
             String[] rawHeaders = message.getHeader("subject");
             String rawHeader = rawHeaders[0].trim();
                         
+            // Subject: =?utf-8?q?=5b=46=65=64=45...=35=35 ?= 의 경우와 같이 
+            // ?= 앞에 공백 문자가 있어 제목이 디코딩 되지 않는 경우가 발견되어 추가함
+            if (rawHeader.startsWith("=?") && rawHeader.endsWith(" ?=")) {
+            	logger.debug("There is a space before ?=");
+            	
+            	int lastNonSpaceIndex = rawHeader.length() - 4;
+            	
+            	while (rawHeader.charAt(lastNonSpaceIndex) == ' ') {
+            		lastNonSpaceIndex--;
+            	}
+            	
+            	rawHeader = rawHeader.substring(0, lastNonSpaceIndex + 1) + "?=";
+            	subject = MimeUtility.decodeText(rawHeader);
+            }
+            
             // 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
             if (!isPureAscii(rawHeader)) {
                 byte[] rawBytes = rawHeader.getBytes("iso-8859-1");

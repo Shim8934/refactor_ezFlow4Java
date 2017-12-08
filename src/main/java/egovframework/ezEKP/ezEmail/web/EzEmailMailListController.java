@@ -1014,7 +1014,7 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/getPortletMailList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getPortletMailList(@CookieValue("loginCookie") String loginCookie,
-			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
+			Locale locale, Model model) throws Exception {
 		logger.debug("getPortletMailList started.");
 		
 		String returnData = "";

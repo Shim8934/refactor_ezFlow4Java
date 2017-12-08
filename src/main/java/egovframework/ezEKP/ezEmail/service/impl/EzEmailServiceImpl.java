@@ -1028,6 +1028,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Override
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception {
 		logger.debug("sendMail started.");
+		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1096,6 +1097,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	    			ia.createFolder(sentFolder.getFullName());
 	    		}
 	    		
+	    		message.setFlag(Flags.Flag.SEEN, true);
     			sentFolder.open(Folder.READ_WRITE);
     			sentFolder.appendMessages(new Message[]{message});
     			sentFolder.close(true);
@@ -1129,6 +1131,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Override
 	public void sendMailWithExplicitRecipients(InternetAddress[] recipients, String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception {
 		logger.debug("sendMailWithExplicitRecipients started. recipients=" + recipients);
+		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
