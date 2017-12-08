@@ -103,14 +103,9 @@
 			
 				//document.getElementById("searchInput").value = searchParam;
 				
-				$('#seeAll').click(function() {
-					var checkSeeAll = 0;
-					
-					if (this.checked) {						
-						checkSeeAll = 1;
-					}
-
-					var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&see=" + checkSeeAll;
+				$('#seeAll').click(function() {					
+					var _params = getParameters();	
+					var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + _params;
 					window.location.href = szUrl;
 				});	
 			}
@@ -135,7 +130,7 @@
 		    		search_str = document.getElementById("searchInput").value;
 		    	}
 		    	
-		        var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&search=" + search_str + "&see=" + checkSeeAll + "&mode=" + mode;
+		        var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&search=" + search_str + "&see=" + checkSeeAll + "&mode=" + mode + "&currPage=" + currentPage;
 		        window.location.href = szUrl;
 		    }
 		    
@@ -198,14 +193,28 @@
 		            return;
 		    	}
 		    	
+		    	var _params = getParameters();	
 		    	var checkedList = checkedArr[0];
 		    	
 	    		for (var i = 1; i < checkedArr.length; i++) {
 	    			checkedList = checkedList + "," + checkedArr[i];	    			
 	    		}
 	    		
-	    		var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&hide=" + checkedList;   		
+	    		var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&hide=" + checkedList + _params; 		
 	    		window.location.href = szUrl;
+		    }
+		    
+		    function getParameters() {
+		    	var checkSeeAll = 0;
+		    	var _searchPrm = document.getElementById("searchInput").value;
+		    	var mode1 = $("input[name=searchCheck]:checked").val();
+				
+		    	if (document.getElementById("seeAll").checked) {
+		    		checkSeeAll = 1;
+		    	}	
+		    	
+		    	return "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchParam + "&mode1=" + mode1 + "&searchN=" + _searchPrm;
+
 		    }
 		    
  		    function menu_Show() {
@@ -213,14 +222,14 @@
 		            alert('<spring:message code="ezPoll.t243"/>');
 		            return;
 		    	}	
-		    	
+		    	var _params = getParameters();
 		    	var checkedList = checkedArr[0];
 		    	
 	    		for (var i = 1; i < checkedArr.length; i++) {	    			
 	    			checkedList = checkedList + "," + checkedArr[i];	    			
 	    		}
 	    		
-	    		var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&listQst=" + checkedList;
+	    		var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&listQst=" + checkedList + _params;
 		    	window.location.href = szUrl;		    	
 		    } 
 		    
@@ -410,12 +419,11 @@
 		    }	    
 		    
 		    function search_Set(pPage) {
-		    	var _searchPrm = document.getElementById("searchInput").value;
-		    	var mode1 = $("input[name=searchCheck]:checked").val();
-		    	var g_BrdID = "6";
+		    	var g_BrdID = "6";		    	
+		    	var _params = getParameters();
 		    	
 				if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt(totalPages)) {
-					var szUrl = "/ezPoll/pollList.do?brdID=" + g_BrdID + "&currPage=" + pPage + "&mode=" + radioBttn + "&search=" + searchParam + "&mode1=" + mode1 + "&searchN=" + _searchPrm;			
+					var szUrl = "/ezPoll/pollList.do?brdID=" + g_BrdID + _params;			
 					window.location.href = szUrl;
 				}
 			}
