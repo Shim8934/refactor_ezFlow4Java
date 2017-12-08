@@ -347,14 +347,6 @@
 				        } else {
 				            localValue = tempValue;
 				        }
-				        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
-				        try {
-				            if (CrossYN())
-				                parent.frames["right"].document.getElementById("presentcell").textContent = tempValue;
-				            else
-				                parent.frames["right"].document.getElementById("presentcell").innerText = tempValue;
-				        }
-				        catch (e) { }		    	        
 		    	}
 		    } 
 		
