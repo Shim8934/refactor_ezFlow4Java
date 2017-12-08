@@ -508,7 +508,12 @@
 				
 				var tenantId = "<c:out value='${question.tenantId}'/>";
 				stompClient.send("/app/editVote", {}, JSON.stringify({'question': qstId, 'tenant': tenantId, 'user': curentUser}));
-				document.location.href = "/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify";				
+				
+				var params = "<c:out value='${params}'/>";
+				var searchStr = "<c:out value='${searchStr}'/>";
+				var searchN = "<c:out value='${searchN}'/>";
+				
+				document.location.href = "/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;				
 		    }		
 		    
 		    function menuDetailSeenUserInfo(pQstID) {		    	 

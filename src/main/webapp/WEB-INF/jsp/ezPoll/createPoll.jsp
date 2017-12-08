@@ -428,8 +428,19 @@
 		}
 		
 		function menuQst_List() {
-    		if (CrossYN()) {
-    			var szUrl = "/ezPoll/pollList.do?brdID=6";
+    		if (mode == "modify") {
+				var params = "<c:out value='${params}'/>";
+				var searchStr = "<c:out value='${searchStr}'/>";
+				var searchN = "<c:out value='${searchN}'/>";				
+				var paramArray = params.split(","); 
+				var currentPage = paramArray[0];
+				var checkSeeAll = paramArray[1];
+				var radioBttn = paramArray[2];
+				var mode1 = paramArray[3];
+				
+				console.log("currentPage: " + currentPage + " || checkSeeAll: " + checkSeeAll + " || radioBttn: " + radioBttn + " || mode1: " + mode1 + " || searchStr: " + searchStr + " || searchN: " + searchN);
+    			
+    			var szUrl = "/ezPoll/pollList.do?brdID=6" + "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchStr + "&mode1=" + mode1 + "&searchN=" + searchN;;
     		} 
     		else {
     			var szUrl = "/ezPoll/pollList.do?brdID=6";

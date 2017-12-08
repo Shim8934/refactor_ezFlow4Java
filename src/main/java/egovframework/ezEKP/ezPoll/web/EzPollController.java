@@ -99,6 +99,9 @@ public class EzPollController extends EgovFileMngUtil {
 		StringBuffer strXML = new StringBuffer();
 		StringBuffer strXMLRange = new StringBuffer();
 		strXMLRange.append("<RANGE>"); 
+		String params = (request.getParameter("params") != null) ? request.getParameter("params") : "";
+		String searchStr = (request.getParameter("search") != null) ? request.getParameter("search") : "";
+		String searchN = (request.getParameter("searchN") != null) ? request.getParameter("searchN") : "";
 		
 		if (request.getParameter("mode") != null) {
 			mode = request.getParameter("mode");
@@ -177,6 +180,9 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("content", content);
 		model.addAttribute("filePath", strXML.toString());
 		model.addAttribute("targetPath", strXMLRange.toString());		
+		model.addAttribute("params", params);
+		model.addAttribute("searchStr", searchStr);
+		model.addAttribute("searchN", searchN);	
 		
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";
@@ -457,6 +463,9 @@ public class EzPollController extends EgovFileMngUtil {
 		int numberOfCmt = -1;
 		String[] files = null;
 		String userPhoto = "";
+		String params = (request.getParameter("params") != null) ? request.getParameter("params") : "";
+		String searchStr = (request.getParameter("search") != null) ? request.getParameter("search") : "";
+		String searchN = (request.getParameter("searchN") != null) ? request.getParameter("searchN") : "";
 		
 		if (loginVO.getRollInfo().indexOf("c=1") == -1 && loginVO.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
@@ -703,7 +712,9 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("curentUserName", loginVO.getDisplayName());	
 		model.addAttribute("userPhoto", userPhoto);		
 		model.addAttribute("primary", loginVO.getPrimary());
-		
+		model.addAttribute("params", params);
+		model.addAttribute("searchStr", searchStr);
+		model.addAttribute("searchN", searchN);		
 		
 		logger.debug("Question vote finishes!");		
 		return "/ezPoll/questionVote";

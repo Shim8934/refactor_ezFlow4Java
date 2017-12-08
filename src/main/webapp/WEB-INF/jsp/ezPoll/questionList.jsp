@@ -275,11 +275,23 @@
 						var result = JSON.parse(data).result;					
 						
 						if (result == "Normal") {
-							document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve;
+							var list_params = "";
+							var checkSeeAll = 0;
+					    	var _searchPrm = document.getElementById("searchInput").value;
+					    	var mode1 = $("input[name=searchCheck]:checked").val();
+					    	
+					    	if (document.getElementById("seeAll").checked) {
+					    		checkSeeAll = 1;
+					    	}
+					    	
+					    	list_params += currentPage + "," + checkSeeAll + "," + radioBttn + "," + mode1;
+							
+							document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve + "&params=" + list_params + "&search=" + searchParam + "&searchN=" + _searchPrm;
 						}
 						else {
 							alert("<spring:message code = 'ezPoll.t233'/>");
-			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
+							var _params = getParameters();
+			            	document.location.href = "/ezPoll/pollList.do?brdID=6" + _params;
 						}
 			        },
 			        error: function(error) {
