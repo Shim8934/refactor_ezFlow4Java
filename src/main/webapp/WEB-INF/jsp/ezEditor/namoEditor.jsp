@@ -392,6 +392,11 @@
 	        	CrossEditor.params.DeleteCommand = ["image"];
 	        }
 	        
+	        if (type == "COMMUNITYPHOTO") {
+	        	//포토게시판 시 이미지 업로드 아이콘 제거
+	        	CrossEditor.params.DeleteCommand = ["image"];
+	        }
+	                
 	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;

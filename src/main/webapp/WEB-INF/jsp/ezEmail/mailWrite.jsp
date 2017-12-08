@@ -1045,7 +1045,7 @@
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
 	                        <th rowspan="2">
-	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('BCC')" style="width: 60px; text-align: center;">
+	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('BCC')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>

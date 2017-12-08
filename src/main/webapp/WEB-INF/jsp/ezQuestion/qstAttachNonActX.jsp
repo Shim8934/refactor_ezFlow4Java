@@ -291,14 +291,23 @@
 
 			        var imgPath = "";
 			        
+			        var input = document.getElementById("cmuds");
+			        
+			       	var fileMediaType = input.files[0].type.split("/").shift();
+			       	var acceptMediaType = input.accept.split("/").shift();
+			       	
+			       	if (!fileMediaType.startsWith(acceptMediaType)) {
+			       		input.value = "";
+			       		alert("<spring:message code='ezEmail.lhm34' />");
+			       		return;
+			       	}
+			        
 			        if (CrossYN()) {
-			        	var input = document.getElementById("cmuds");
 			            document.all("txt_AttachPath").value = input.value;
 			        } else {
 			        	thisObj.select();
 				        var selectionRange = document.selection.createRangeCollection()[0];
 			            imgPath = selectionRange.text.toString();
-			            var input = document.getElementById("cmuds");
 				        document.all("txt_AttachPath").value = imgPath;
 			        }
 			        

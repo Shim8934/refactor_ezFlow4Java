@@ -214,6 +214,7 @@
 		        var strCurrDate = initdate.substr(0, 10);
 		        var strStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var strEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        
 		        if (new Date(strCurrDate) > new Date(strStartDate)) {
 		            alert("<spring:message code='ezPersonal.t14'/>");
 		            return true;
@@ -221,6 +222,22 @@
 		        else if (new Date(strCurrDate) > new Date(strEndDate)) {
 		            alert("<spring:message code='ezPersonal.t15'/>");
 		            return true;
+		        }
+		        else if (strStartDate == strEndDate) {
+		        	if (gIsAppoint == '1') {
+		        		if (Number($("#Stimepicker").val().substring(0,2)) > Number($("#Etimepicker").val().substring(0,2))) {
+			        		alert("<spring:message code='ezPersonal.pjj2'/>");
+			        		return true;
+		        		} else if (Number($("#Stimepicker").val().substring(0,2)) == Number($("#Etimepicker").val().substring(0,2))) {
+		        			if (Number($("#Stimepicker").val().substring(3,5)) > Number($("#Etimepicker").val().substring(3,5))) {
+		        				alert("<spring:message code='ezPersonal.pjj2'/>");
+		        				return true;
+		        			}
+		        		} else {
+			        		alert("<spring:message code='ezPersonal.pjj1'/>");
+					        return true;
+		        		}
+		        	}
 		        }
 		        else
 		            return false;

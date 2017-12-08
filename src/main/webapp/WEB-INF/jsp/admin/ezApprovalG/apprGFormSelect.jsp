@@ -151,7 +151,12 @@
 		            alert("<spring:message code = 'ezApprovalG.t25002' />" + " " + "<spring:message code = 'ezApprovalG.t1392' />");
 		            return;
 		        }
-	
+	            
+		        if (selectedNode == "FromTreeView_0") {
+		        	alert("<spring:message code = 'ezApprovalG.pjj33' />");
+		        	return;
+		        }
+		        
 		        var xmlpara = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
 		        var objNode;

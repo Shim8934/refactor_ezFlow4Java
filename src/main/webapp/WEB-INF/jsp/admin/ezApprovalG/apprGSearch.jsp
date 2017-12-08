@@ -741,7 +741,7 @@
 	        <a class="imgbtn"><span onclick="return btnSearch_onclick()"><spring:message code ='ezApprovalG.t111' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnToDaySearch_onclick()"><spring:message code ='ezApprovalG.t1336' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnWeekSearch_onclick()"><spring:message code ='ezApprovalG.t1337' /></span></a>
-	        <a class="imgbtn"><span onclick="return btnMonthSearch_onclick()"><spring:message code ='ezApprovalG.t1338' /></span></a>
+	        <a class="imgbtn"><span onclick="return btnMonthSearch_onclick()"><spring:message code ='ezApprovalG.t1557' /></span></a>
 	        <a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code ='ezApprovalG.t119' /></span></a>
 	    </div>
 	</body>

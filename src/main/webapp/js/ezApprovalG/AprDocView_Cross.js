@@ -122,6 +122,10 @@ function setMenuBar(id, flag) {
 
 var ezaprhistory_cross_dialogArguments = new Array();
 function getHistory() {
+	//회람 변경내역 볼 시 원본 내역을 봐야 하기 때문에 변경
+	if (pDocState == strDocState15) {
+		pDocID = pOrgDocID;
+	}
     var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
 
     ezaprhistory_cross_dialogArguments[0] = "";

@@ -170,12 +170,12 @@ function MakeAddressList() {
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
             _TDCheckBox_Sub.style.margin = "0px";
-            _TDCheckBox_Sub.style.padding = "0px 3px";
+            _TDCheckBox_Sub.style.padding = "0px";
             _TDCheckBox_Sub.style.height = "13px";
             _TDCheckBox_Sub.style.width = "13px";
             _TDCheckBox_Sub.style.textAlign = "left";
             _TDCheckBox_Sub.onclick = function () { event_listCheckboxclick(this); };
-
+            
             _TDCheckBox_Sub.setAttribute("_SType", SType);
             _TDCheckBox_Sub.setAttribute("_AddressID", AddressID);
             _TDCheckBox_Sub.setAttribute("_Changekey", Changekey);

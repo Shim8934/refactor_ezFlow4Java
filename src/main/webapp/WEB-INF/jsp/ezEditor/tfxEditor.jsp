@@ -191,6 +191,10 @@
 	        	xfe.showToolbarItem(0, 10, false);
 	        }
 	        
+	        if (type == "COMMUNITYPHOTO") {
+	        	xfe.showToolbarItem(0, 10, false);
+	        }
+	        
 	        if (useHTMLMode == "NO") {
 	        	xfe.showTab(1, false);
 	        }

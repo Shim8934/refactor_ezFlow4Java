@@ -514,15 +514,15 @@
 	        <c:if test="${MyBoardTopFlag != 'NO'}">
 	        	<div class="fList" onclick="favoriteList()">
 	        		<h2>
-	        			<img alt="" src="/images/ImgIcon/icon-flag.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t00010" /></span>
+	        			<span><spring:message code="ezBoard.t00010" /></span><img style="margin-left: 7px;" alt="" src="/images/ImgIcon/icon-flag.gif" align="middle">
 	        			<!-- <h2 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"></span></h2> -->
 	        		</h2>	
 	        	</div>
 	        	<ul></ul>		        
 		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
-	<%-- 	            	<span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
-		            	<img alt="" src="/images/i_group.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t360"/></span>
+	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
+		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;" alt="" src="/images/i_group.gif" align="middle" />
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
@@ -552,15 +552,15 @@
 	        <c:if test="${MyBoardTopFlag == 'NO'}">
 		        <div class="fList" onclick="favoriteList()">
 	        		<h2>
-	        			<img alt="" src="/images/ImgIcon/icon-flag.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t00010" /></span>
+	        			<span><spring:message code="ezBoard.t00010" /></span><img style="margin-left: 7px;" alt="" src="/images/ImgIcon/icon-flag.gif" align="middle" />
 	        			<!-- <h2 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"></span></h2> -->
 	        		</h2>	
 	        	</div>
 	        	<ul></ul>
 		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
-	<%-- 	            	<span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
-		            	<img alt="" src="/images/i_group.gif" align="middle"><span style="margin-left: 5px;"><spring:message code="ezBoard.t360"/></span>
+	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
+		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;" alt="" src="/images/i_group.gif" align="middle" />
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">

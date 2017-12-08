@@ -1370,7 +1370,7 @@ function mfFormatTime(iMin) {
 
 //날짜에 마우스 오버시
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#eaf2f5";
+    pThis.style.backgroundColor = "rgb(233, 241, 255)";
 }
 
 //마우스 아웃시
@@ -1569,7 +1569,7 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     var _img = document.createElement("IMG");
     if (pApproveFlag == "1") {
         _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "middle";
+        _img.style.verticalAlign = "bottom";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
