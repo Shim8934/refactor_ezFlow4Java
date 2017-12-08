@@ -675,6 +675,16 @@ public class EzPollController extends EgovFileMngUtil {
 			userPhoto = "/images/poll/default_pic_vote.gif";
 		}
 		
+		//Get creator department
+		LoginVO pollCreator = loginService.selectReceiver(pollQuestionVO.getCreator(), tenantId);
+		
+		if (loginVO.getPrimary().equals("1")) {
+			model.addAttribute("creatorDept", pollCreator.getDeptName1());
+		}
+		else {
+			model.addAttribute("creatorDept", pollCreator.getDeptName2());
+		}
+		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);
 		model.addAttribute("listSelectedOptions", om.writeValueAsString(listSelectedOptionsOfUser));
@@ -693,6 +703,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("curentUserName", loginVO.getDisplayName());	
 		model.addAttribute("userPhoto", userPhoto);		
 		model.addAttribute("primary", loginVO.getPrimary());
+		
 		
 		logger.debug("Question vote finishes!");		
 		return "/ezPoll/questionVote";

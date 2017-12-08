@@ -2101,12 +2101,13 @@
 						<div id="textTest" style="display:inline-block;" class="voteTextTest">
 							<c:choose>
 								<c:when test="${primary == '1'}">
-									<span style="display:block; font-size:18px; color:#000;" class="questionFont"><c:out value='${question.creatorName1}'/></span>
+									<span style="display:block; font-size:16px; color:#000;" class="questionFont"><c:out value='${question.creatorName1}'/></span>
 								</c:when>
 								<c:otherwise>
-									<span style="display:block; font-size:18px; color:#000;" class="questionFont"><c:out value='${question.creatorName2}'/></span>
+									<span style="display:block; font-size:16px; color:#000;" class="questionFont"><c:out value='${question.creatorName2}'/></span>
 								</c:otherwise>
-							</c:choose>							
+							</c:choose>													
+							<span style="display:block; font-size:12px; max-width: 123px; color:#969595; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out value='${creatorDept}'/></span>	
 							<span style="display:block; font-size:12px; color:#969595;"><c:out value='${question.startDate}'/></span>
 						</div>
 				  </div>

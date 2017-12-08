@@ -26,7 +26,7 @@
 
 /* 20171115 */
 .voteInfo{width:203px; height:60px; background:#f4f9ff; border:1px solid #e1ebf7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif !important;}
-.voteTextTest{line-height:27px; margin:3px 8px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.voteTextTest{line-height:20px; margin:1px 8px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 
 .vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 .vote_listTd .graph01{background:#efa1a1; border:none;}
