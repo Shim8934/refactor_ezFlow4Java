@@ -183,7 +183,7 @@
 					var optionID = "optionContent" + _optId;					
  					document.getElementById(optionID).style.color = colors[i % 30];
 					
-					if (totalVotes > 0) {				
+					if (totalVotes > 0 && (seeResultBeforVote == 1 || _status == 0)) {				
  						var percent = votesArr[i][1]/totalVotes; 
  						
  						if (seeResultBeforVote == 1 || _status == 0 || hasVoted == 1) { 								
@@ -597,7 +597,7 @@
 	 	    			document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
 	 	    		}
 	 	    		
-	 	    		seeResultBeforVote = 1;
+	 	    		//seeResultBeforVote = 1;
 	 	    		numberOfSelected = numberOfSelected + 1;
 	 	    		obj.src = "/images/checked.png";
 		    		var voteId = obj.name;
@@ -636,7 +636,7 @@
 	 	    		var voteId = obj.name;
 	 	    		var optId = votesArr[voteId][0];
 	 	    		checkVoted();
-	 	    		seeResultBeforVote = 1;	 	    			 	    		
+	 	    		//seeResultBeforVote = 1;	 	    			 	    		
 	 	    		
 	 	    		//Update local information
 	 	    		numberOfSelected = numberOfSelected - 1;
@@ -2180,13 +2180,13 @@
 		        	<tr>
 		        	   <c:if test="${question.status == 1}">
 			               <td class="vote_listTd" style="width:54px; border:1px solid #DDD; background:#f9f9f9;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
-			               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 15px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
+			               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 15px; padding-top: 14px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
 			               </td>
 		               </c:if>
 		               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
 		               		<div id="optionContent<c:out value ="${_option.ansId}"/>" class="title01" style="display:block;">${_option.content}</div> 
-		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:20px;">
-		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:3px 0px 10px 0px;">
+		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:30px;">
+		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
 		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20" style="border:1px solid #000000;"></canvas>			               					               					
 		               				</div>	
 		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px;">0</div>		               				
