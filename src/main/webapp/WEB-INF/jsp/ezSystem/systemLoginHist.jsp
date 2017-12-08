@@ -262,7 +262,10 @@
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
 		$(function() {
-			
+			if ($('#searchKeyword').val().trim() == "") {
+				alert("<spring:message code='ezCircular.t189'/>");
+				return false;
+			}
 			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
 				alert(strLang5);
 				return false;
