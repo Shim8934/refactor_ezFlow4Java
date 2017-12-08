@@ -60,10 +60,10 @@
 			<br />
 		<table  class="content">
 			<tr>
-			  	<th><spring:message code='ezOrgan.yjks1' /></th>
+			  	<th><spring:message code='ezOrgan.kyj01' /></th>
 				<td>
 					<input type="radio" name="CheckUse" id="used" value="NO" /><spring:message code="ezOrgan.t161" />
-					<input type="radio" name="CheckUse" id="unused" value="YES" /><spring:message code="ezOrgan.yjks2" />
+					<input type="radio" name="CheckUse" id="unused" value="YES" /><spring:message code="ezOrgan.kyj02" />
 				</td>
 			</tr>
 		</table>

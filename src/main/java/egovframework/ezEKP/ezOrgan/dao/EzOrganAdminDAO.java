@@ -1548,8 +1548,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             updateDBData_userForLocal(vo);
             // AD에도 내용을 수정
             if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
-            	DirContext ctx = conn.setConnection();
-            	updateUserInAD(ctx, vo, "user");
+            	DirContext ctx = conn.setConnection();            	
+            	if (!vo.getCn().equalsIgnoreCase("MASTERADMIN")) {
+            		logger.debug("update Active Directory data....");
+            		updateUserInAD(ctx, vo, "user");
+            	}            	
             }
 	    }
 	}

@@ -665,7 +665,8 @@
 		            var titleName = document.getElementById("txt_TitleName").value.trim();
 		            
 					if (titleName == "") {
-						alert("<spring:message code='ezOrgan.kyj01' />");
+						document.getElementById("txt_TitleName").focus();
+						alert("<spring:message code='ezOrgan.kyj07' />");
 						return;
 					}
 						
