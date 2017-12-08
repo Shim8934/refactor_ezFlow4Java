@@ -981,10 +981,8 @@
 					    		div2Cmt.appendChild(innerDiv1);
 					    	}
 			    			else if (fileType == "images") {
-					    		imgForinnerDiv1.setAttribute("_type", "images");					    		
-						    	imgForinnerDiv1.setAttribute("height", "60");
-						    	imgForinnerDiv1.setAttribute("width", "60");	
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px;");
+					    		imgForinnerDiv1.setAttribute("_type", "images");				    			
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 					    		imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
@@ -1038,10 +1036,8 @@
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 			    				}
 			    				
-			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");					    		
-			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
-			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
-			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");				    		
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -1100,10 +1096,8 @@
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 		    				}
 		    				
-		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");					    		
-		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
-		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");	
-		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");				    		
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -1264,10 +1258,8 @@
 			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {	   			    		
 			    		if (fileType == "file") {				    		
 				    		imgForinnerDiv1.setAttribute("_type", "images");
-				    		fd.append("fileType", "file");
-					    	imgForinnerDiv1.setAttribute("height", "60");
-					    	imgForinnerDiv1.setAttribute("width", "60");	
-					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px;");
+				    		fd.append("fileType", "file");	
+					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 				    		imgForinnerDiv1.src = "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];	
 				    		imgForinnerDiv1.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);   
 				    		imgForinnerDiv1.onclick = function() { downloadFileInCmt(this); };
@@ -1814,19 +1806,20 @@
 			    		div2ForTd2.appendChild(innerDiv1);
                 	}
                 	else {
-				    	imgForinnerDiv1.setAttribute("height", "60");
-				    	imgForinnerDiv1.setAttribute("width", "60");	
-				    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px;");
 			    		imgForinnerDiv1.src = attach;	
 			    		innerDiv1.appendChild(imgForinnerDiv1);
 			    		div2ForTd2.appendChild(innerDiv1);
 			    		
 			    		if (name == "") {
+			    			imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 			    			imgForinnerDiv1.setAttribute("_fileInfo", attach);
 			    			imgForinnerDiv1.setAttribute("_type", "images"); 
 			    			imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
 			    		}
-			    		else {					    	
+			    		else {	
+					    	imgForinnerDiv1.setAttribute("height", "60");
+					    	imgForinnerDiv1.setAttribute("width", "60");	
+					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px;");
 					    	imgForinnerDiv1.setAttribute("_type", "file");
 			    			imgForinnerDiv1.setAttribute("_fileInfo", path); 
 			    			imgForinnerDiv1.setAttribute("_fileName", name);
@@ -1907,9 +1900,7 @@
 					    	}
 			    			else if (fileType == "images") {
 					    		imgForinnerDiv1.setAttribute("_type", "images");					    		
-						    	imgForinnerDiv1.setAttribute("height", "60");
-						    	imgForinnerDiv1.setAttribute("width", "60");	
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px;");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 					    		imgForinnerDiv1.src = attachFilePath;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", attachFilePath); 
 					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
@@ -1955,10 +1946,8 @@
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 			    				}
 			    				
-			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");					    		
-			    				div2Cmt.firstElementChild.children[0].setAttribute("height", "60");
-			    				div2Cmt.firstElementChild.children[0].setAttribute("width", "60");	
-			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");				    		
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -2010,10 +1999,8 @@
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 		    				}
 		    				
-		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");					    		
-		    				div2Cmt.lastElementChild.children[0].setAttribute("height", "60");
-		    				div2Cmt.lastElementChild.children[0].setAttribute("width", "60");	
-		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");				    		
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
 		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -2292,7 +2279,7 @@
 										</c:if>
 										<c:if test="${_comt.fileName == ''}">
 											<div style="padding-top: 5px;">
-												<img _type="images" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />" onclick="downloadFileInCmt(this);">
+												<img _type="images" vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer; max-width: 500px; max-heigth: 500px; width: auto; height: auto;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />" onclick="downloadFileInCmt(this);">
 											</div>
 										</c:if>
 									</c:if>
