@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
@@ -449,46 +450,59 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
-		logger.debug("strXML="+strXML);
-		String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
-		logger.debug("ezAclCheck="+result);
-		String returnXML = "";
+		logger.debug("strXML=" + strXML);
 		
+		String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
+		logger.debug("ezAclCheck=" + result);
+		
+		StringBuilder sb = new StringBuilder();
+		String langData = commonUtil.getLangData(userInfo.getPrimary());
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
-
-		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) { 
-			if(result.equals("1")){//전체관리자 일때만 edit모드로 변환 할수있도록 함 _ 2007-09-18 %>  
-			  returnXML += "<tr style=\"cursor:pointer\" onClick=\"setValue('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)\" onDblClick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">"; 
+		NodeList uidNodeList = xmlDom.getElementsByTagName("UID_");
+		NodeList useFlagNodeList = xmlDom.getElementsByTagName("USEFLAG");
+		NodeList langNodeList = xmlDom.getElementsByTagName("LANG");
+		NodeList displayNameNodeList = xmlDom.getElementsByTagName("DISPLAYNAME" + langData);
+		NodeList themeNMNodeList = xmlDom.getElementsByTagName("THEMENM" + langData);
+		
+		for (int i = 0; i < uidNodeList.getLength(); i++) { 
+			
+			if (result.equals("1")) { //2007-09-18 전체관리자 일때만 edit모드로 변환 할수있도록 함
+				sb.append("<tr style=\"cursor:pointer\" onClick=\"setValue('" + uidNodeList.item(i).getTextContent() + "', '" + useFlagNodeList.item(i).getTextContent() + "', this)\" onDblClick=\"selectItem('" + uidNodeList.item(i).getTextContent() + "', this)\">");
 			} else {
-			  returnXML += "<tr style=\"cursor:pointer\" onClick=\"setValue('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)\">";
+				sb.append("<tr style=\"cursor:pointer\" onClick=\"setValue('" + uidNodeList.item(i).getTextContent() + "', '" + useFlagNodeList.item(i).getTextContent() + "', this)\">");
 			}
-			returnXML += "<td width='60'>"+(i+1)+"</td>";
-			returnXML += "<td>"+xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>"; 
-			returnXML += "<td width='250'>"+xmlDom.getElementsByTagName("THEMENM" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>";
-			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().equals("Y")) {
-				returnXML += "<td width='150'>"+egovMessageSource.getMessage("ezPortal.t259", locale)+"</td>";
+			
+			sb.append("<td width='60'>" + (i + 1) + "</td>");
+			sb.append("<td>" + displayNameNodeList.item(i).getTextContent() + "</td>");
+			sb.append("<td width='250'>" + themeNMNodeList.item(i).getTextContent() + "</td>");
+			
+			if (useFlagNodeList.item(i).getTextContent().equals("Y")) {
+				sb.append("<td width='150'>" + egovMessageSource.getMessage("ezPortal.t259", locale) + "</td>");
 			} else {
-				returnXML += "<td width='150'></td>";
-			}
-			returnXML += "<td width='150'>";
-			
-			if (xmlDom.getElementsByTagName("LANG").item(i).getTextContent().trim().equals("1")) {
-				returnXML += egovMessageSource.getMessage("ezPortal.t403", locale);
-			} else if (xmlDom.getElementsByTagName("LANG").item(i).getTextContent().trim().equals("2")) {
-				returnXML += egovMessageSource.getMessage("ezPortal.t404", locale);
-			} else if (xmlDom.getElementsByTagName("LANG").item(i).getTextContent().trim().equals("3")) {
-				returnXML += egovMessageSource.getMessage("ezPortal.t4093", locale);
-			} else if (xmlDom.getElementsByTagName("LANG").item(i).getTextContent().trim().equals("4")) {
-				returnXML += egovMessageSource.getMessage("ezPortal.t4094", locale);
+				sb.append("<td width='150'></td>");
 			}
 			
-			returnXML += "</td></tr>";
+			sb.append("<td width='150'>");
 			
-		  } 
+			String lang = langNodeList.item(i).getTextContent().trim();
+			
+			if (lang.equals("1")) {
+				sb.append(egovMessageSource.getMessage("ezPortal.t403", locale));
+			} else if (lang.equals("2")) {
+				sb.append(egovMessageSource.getMessage("ezPortal.t404", locale));
+			} else if (lang.equals("3")) {
+				sb.append(egovMessageSource.getMessage("ezPortal.t4093", locale));
+			} else if (lang.equals("4")) {
+				sb.append(egovMessageSource.getMessage("ezPortal.t4094", locale));
+			}
+			
+			sb.append("</td></tr>");
+		}
 		    
 		model.addAttribute("result", result);
-		model.addAttribute("returnXML", returnXML);
+		model.addAttribute("returnXML", sb.toString());
 		model.addAttribute("host", userInfo.getServerName());
+		
 		logger.debug("topList ended");
 		return "/admin/ezPortal/portalTopList";
 	}
