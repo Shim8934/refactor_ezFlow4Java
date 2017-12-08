@@ -59,7 +59,7 @@
             iframeStyle += "UL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "OL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "LI   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "BODY 	    { MARGIN: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+            iframeStyle += "BODY 	    { MARGIN: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic; overflow-x: auto; overflow-y: hidden;}";
             iframeStyle += "TABLE TD    { text-indent: 0px }";
             iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
@@ -565,15 +565,18 @@
 		    
 		    function resizeFrame() {
 				var iFrame = document.getElementById("message_test");
+				var messTd = document.getElementById("messagetd");
 				iFrame.style.height = "10px";
 				newheight = iFrame.contentWindow.document.body.scrollHeight;
 				
-				if (newheight > 350) {
+				/*if (newheight > 350) {
 					iFrame.style.height = "350px";
 				}
 				else {
 					iFrame.style.height = (newheight + 10) + "px";
-				}				
+				}	 */			
+				iFrame.style.height = (newheight) + "px";
+				messTd.style.height = (newheight) + "px";
 		    }
 		    
 		    function change(obj) {
@@ -2138,7 +2141,7 @@
 				</div>
 				
 				<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block;" id="messagetd">
-	               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: auto;width: 100%; background-color: #FFF;"></iframe>   	                                 
+	               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
 	       	 	</div>				
 			</div>			
 
