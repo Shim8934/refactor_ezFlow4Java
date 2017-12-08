@@ -2634,11 +2634,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String toStr = null;
 			String toHiddenStr = null;
 			String toMobileStr = "";
+			String toList = "";
 			String ccStr = null;
 			String ccHiddenStr = null;
 			String ccMobileStr = "";
+			String ccList = "";
 			String bccStr = "";
 			String bccMobileStr = "";
+			String bccList = "";
 			String subject = null;
 			String dateStr = null;
 			String title = null;
@@ -2777,6 +2780,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							} else {
 								toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "&nbsp;,&nbsp;";
 							}
+							
+							// HTML 태그가 없는 To 정보
+							if (toList.equals("")) {
+								toList = name + " <" + ((InternetAddress)arrRecipientsTo[i]).getAddress() + ">";
+							} else {
+								toList += "," + name + " <" + ((InternetAddress)arrRecipientsTo[i]).getAddress() + ">";
+							}															
 						}
 					}
 					
@@ -2850,6 +2860,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							} else {
 								ccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "&nbsp;,&nbsp;";
 							}
+							
+							// HTML 태그가 없는 CC 정보
+							if (ccList.equals("")) {
+								ccList = name + " <" + ((InternetAddress)arrRecipientsCC[i]).getAddress() + ">";
+							} else {
+								ccList += "," + name + " <" + ((InternetAddress)arrRecipientsCC[i]).getAddress() + ">";
+							}																						
 						}
 					}
 	
@@ -2881,6 +2898,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							} else {
 								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress()) + "&nbsp;,&nbsp;";
 							}
+							
+							// HTML 태그가 없는 BCC 정보
+							if (bccList.equals("")) {
+								bccList = name + " <" + ((InternetAddress)arrRecipientsBCC[i]).getAddress() + ">";
+							} else {
+								bccList += "," + name + " <" + ((InternetAddress)arrRecipientsBCC[i]).getAddress() + ">";
+							}																													
 						}
 					}
 					
@@ -2976,11 +3000,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("toStr", toStr);
 			mail.put("toHiddenStr", toHiddenStr);
 			mail.put("toMobileStr", toMobileStr);
+			mail.put("toList", toList);
 			mail.put("ccStr", ccStr);
 			mail.put("ccHiddenStr", ccHiddenStr);
 			mail.put("ccMobileStr", ccMobileStr);
+			mail.put("ccList", ccList);
 			mail.put("bccStr", bccStr);
 			mail.put("bccMobileStr", bccMobileStr);
+			mail.put("bccList", bccList);
 			mail.put("dateStr", dateStr);
 			mail.put("subject", subject);
 			mail.put("title", title);
