@@ -3,9 +3,11 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1465,8 +1467,12 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest req) throws Exception {
 		logger.debug("wpNewVote is running!");
 		loginVO = commonUtil.userInfo(loginCookie);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		int qstId = -1;
 		String qstTitle = "";
+		int status = -1;
+		int seeResultBefore = -1;
+		int compareEnd = 0;
 		
 		//Get list of questions for user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
@@ -1492,7 +1498,19 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
 			qstTitle = question.getTitle();
-			qstId = question.getQstId();
+			qstId = question.getQstId();			
+			seeResultBefore = question.getResultFirst();
+			
+			Date endDate = formatter.parse(question.getEndDate());
+			Date nowTime = new Date();
+			compareEnd = endDate.compareTo(nowTime);
+			
+			if (compareEnd > 0) {
+				status = 1;
+			}
+			else {
+				status = 0;
+			}
 			
 			//Get list of Options		
 			List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());
@@ -1509,6 +1527,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("qstTitle", qstTitle);		
 		model.addAttribute("qstId", qstId);	
 		model.addAttribute("tenantId", loginVO.getTenantId());	
+		model.addAttribute("status", status);
+		model.addAttribute("seeResultBefore", seeResultBefore);
 		
 		logger.debug("wpNewVote finishes");
 		return "/ezPortal/portalWpNewVote";

@@ -13,12 +13,14 @@
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 		<script type="text/javascript">
-			var qstTitle = "${qstTitle}";
-		    var qstId = "${qstId}";
-		    var votesArr = [];
-		    var totalVotes = 0;
-		    var tenantId = "${tenantId}";
-		    var numberOptions = "<c:out value='${numberOfOptions}'/>";		   
+			var qstTitle 		= "${qstTitle}";
+		    var qstId 			= "${qstId}";
+		    var votesArr 		= [];
+		    var totalVotes 		= 0;
+		    var tenantId 		= "${tenantId}";
+		    var numberOptions   = "<c:out value='${numberOfOptions}'/>";
+		    var status 			= "${status}";
+		    var seeResultBefore = "${seeResultBefore}";
 		    
 		    window.onload = function() {
 		    	getConnect();
@@ -29,6 +31,15 @@
 			    var socket = new SockJS('/hello');
 			    stompClient = Stomp.over(socket);			
 			    stompClient.connect({}, function (frame) {
+			        stompClient.subscribe('/reply/finishVoteForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
+			        	var ret = JSON.parse(updatedInfo.body).result;
+			        	
+			            if (ret == "OK") {							
+			            	status = 0;
+			            	updateGraph();
+					    }
+				    });
+			        
 		        	stompClient.subscribe('/reply/getResultUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
 			        	var optId = JSON.parse(updatedInfo.body).optionId;			        	
 			        	var mode = JSON.parse(updatedInfo.body).mode;
@@ -100,10 +111,17 @@
 		    	} 		    	
 		    	
 				for (var i = 0; i < numberOptions; i++) {
-					var graph = document.getElementById("graph" + votesArr[i][0]);				
+					var graph = document.getElementById("graph" + votesArr[i][0]);	
+					var divGrap = document.getElementById("divGraph" + votesArr[i][0]);
 					var inforDiv = document.getElementById("info" + votesArr[i][0]);
 					
-					if (totalVotes > 0) {
+					if (totalVotes > 0 && (seeResultBefore == 1 || status == 0)) {
+						var spaceElmt = document.getElementById("space" + votesArr[i][0]);
+						
+						if (spaceElmt != null) {
+							spaceElmt.style.display = "none";
+						}
+						
 						var percent = votesArr[i][1]/totalVotes;												
 						inforDiv.innerHTML = "&nbsp(<strong>" + votesArr[i][1] + "</strong><spring:message code = 'ezPoll.t166'/>/"
 											 + "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
@@ -115,6 +133,7 @@
 						else {
 							graph.style.display = "none";
 						}
+						divGrap.style.display = "block";
 					}
 					else {
 						graph.style.display = "none";
@@ -140,11 +159,32 @@
 		               				<div style="display: inline-block; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
 		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
 		               					<div style="float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap;">${_option.content}</div>
-		               					<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
+		               					
+		               					<c:choose>
+		               						<c:when test="${seeResultBefore == 1 || status == 0}">
+		               							<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
+		               						</c:when>
+		               						<c:otherwise>
+		               							<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: none;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>		               							
+		               						</c:otherwise>
+		               					</c:choose>
+		               					
 		               				</div>
-		               				<div class="graphbar1">
-		               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11"></p>           					
-		               				</div>
+		               				
+	               					<c:choose>
+	               						<c:when test="${seeResultBefore == 1 || status == 0}">
+			               					<div class="graphbar1" id="divGraph<c:out value ="${_option.ansId}" />">
+				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>           					
+				               				</div>				               				
+	               						</c:when>
+	               						<c:otherwise>
+	               							<div class="graphbar1" style="display: none;" id="divGraph<c:out value ="${_option.ansId}" />">
+				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>           					
+				               				</div>
+		               						<div id="space<c:out value ="${_option.ansId}" />" style="display: inline-block;"></div>
+	               						</c:otherwise>
+	               					</c:choose>		               				
+
 		               				<script type="text/javascript">		               					
 			               					var voteNum = ${_option.votesNumber};
 			               					var optionID = ${_option.ansId};		               					
