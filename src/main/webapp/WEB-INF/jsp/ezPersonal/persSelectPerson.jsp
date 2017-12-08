@@ -183,12 +183,12 @@
 		        }
 		    }
 		    function search_click() {
-		    	if (specialChk(document.getElementById("keyword").value)) {
+		    	if (specialChk(document.getElementById("keyword").value.trim())) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
 		    	
-		        if (document.getElementById("keyword").value == "") {
+		        if (document.getElementById("keyword").value.trim() == "") {
 		            alert("<spring:message code='ezPersonal.t61'/>");
 		            document.getElementById("keyword").focus();
 		            return;
@@ -200,7 +200,7 @@
 		    		async : false,
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
-		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value,
+		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
 		    			cell   : "company;description;displayname;title;telephonenumber",
 		    			prop   : "department",
 		    			type   : "user"
