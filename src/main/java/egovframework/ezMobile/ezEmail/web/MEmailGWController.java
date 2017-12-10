@@ -1252,7 +1252,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String tempFolderName = "";
 			JSONArray fileArray = new JSONArray();
 			int cnt = 0;
-			int maxsize = 0;
+			int maxsize = 10*1024*1024; // 10MB
 			
 			if (jsonObject.get("tempFolderName") != null) {
 				tempFolderName = (String) jsonObject.get("tempFolderName");
