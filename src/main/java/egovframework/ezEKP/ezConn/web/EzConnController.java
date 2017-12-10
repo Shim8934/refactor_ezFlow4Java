@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezConn.web;
 
+import java.net.URLEncoder;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +46,7 @@ public class EzConnController {
 					HttpServletResponse response
 					) throws Exception {
 		logger.debug("mailMain started.");
-		String resultPage = "/user/login/login.do";
+		String resultPage = "";
 		
 		try {
 			id = ezConnUtil.decryptAES(id);
@@ -90,6 +92,26 @@ public class EzConnController {
 					String itemID = request.getParameter("itemID");
 					
 					resultPage = "/ezEmail/mailWrite.do?boardID=" + boardID + "&itemID=" + itemID + "&cmd=CommunityDotNet";
+				} else if (cmd != null && cmd.equals("mailWrite")) {
+					String emailAddress = request.getParameter("emailAddress") == null ? "" : request.getParameter("emailAddress");
+					String name = request.getParameter("name") == null ? "" : request.getParameter("name");
+					
+					if (!emailAddress.equals("")) {
+						name = name.equals("") ? emailAddress : name;
+						String msgTo = String.format("%s <%s>", name, emailAddress);
+						
+						logger.debug("msgTo=" + msgTo);
+						
+						resultPage = "/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8");
+					} else {
+						resultPage = "/ezEmail/mailWrite.do?cmd=NEW";
+					}					
+				} else if (cmd != null && cmd.equals("addressWrite")) {
+					resultPage = "/ezAddress/addressWrite.do";					
+				} else if (cmd != null && cmd.equals("mailRead")) {
+					String mailFullPath = request.getParameter("mailFullPath");
+					
+					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");					
 				} else {				
 					resultPage = "/ezEmail/mailMain.do";
 				}
