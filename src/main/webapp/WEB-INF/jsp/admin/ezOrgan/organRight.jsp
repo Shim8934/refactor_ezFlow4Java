@@ -1326,12 +1326,12 @@
 		    	var length = listview.GetSelectedRows().length;
 		    	
 		    	if (length == 0) {
-		    		alert("<spring:message code='ezOrgan.yjks5' />");
+		    		alert("<spring:message code='ezOrgan.kyj05' />");
 		    		return;
 		    	} 
 		    	
 		    	if (length > 1) {
-	    			alert("<spring:message code='ezOrgan.yjks6' />");
+	    			alert("<spring:message code='ezOrgan.kyj06' />");
 		    		return;
 	    		}
 
@@ -1377,13 +1377,13 @@
 		    			success: function(res) {
 		    				
 		    				if (res == "SUCCESS") {
-			    				alert("<spring:message code='ezOrgan.yjks3' />");
+			    				alert("<spring:message code='ezOrgan.kyj03' />");
 		    				} else {
-		    					alert("<spring:message code='ezOrgan.yjks4' />");
+		    					alert("<spring:message code='ezOrgan.kyj04' />");
 		    				}
 		    			},
 		    			error: function(){
-		    				alert("<spring:message code='ezOrgan.yjks4' />");
+		    				alert("<spring:message code='ezOrgan.kyj04' />");
 		    			}
 		 
 		    		});

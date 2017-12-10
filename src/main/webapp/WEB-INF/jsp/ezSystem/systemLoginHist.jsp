@@ -20,7 +20,7 @@
 	var strLang5 = "<spring:message code='ezSystem.x0035'/>";
 	var strLang6 = "<spring:message code='ezSystem.x0036'/>";
 	var strLang7 = "<spring:message code='main.t252'/>";
-	var strLang8 = "<spring:message code='ezSystem.yjks2'/>";
+	var strLang8 = "<spring:message code='ezSystem.kyj2'/>";
 	
 	var CurPage = "";
 	var totalPage = "";
@@ -262,7 +262,10 @@
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
 		$(function() {
-			
+			if ($('#searchKeyword').val().trim() == "") {
+				alert("<spring:message code='ezCircular.t189'/>");
+				return false;
+			}
 			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
 				alert(strLang5);
 				return false;
@@ -427,7 +430,7 @@
 	<table class="mainlist" style="width:100%;">
 		<thead>
 			<tr>
-				<th width="80px;"><spring:message code="ezSystem.yjks1"></spring:message></th>
+				<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
 				<th><spring:message code="ezSystem.x0022"></spring:message></th>
 				<th><spring:message code="ezSystem.x0023"></spring:message></th>
 				<th><spring:message code="ezSystem.x0024"></spring:message></th>

@@ -405,9 +405,16 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
-
+		map.put("initColor", "#FF1B1B");
+		map.put("initColor2", "#8DFF1B");
+		
 		TaskConfigVO result = ezTaskDAO.getOriginColor(map);
-
+		
+		if (result == null) {
+			ezTaskDAO.insertTaskGeneral(map);
+			result = ezTaskDAO.getOriginColor(map);
+		}
+		
 		logger.debug("getOriginColor ended.");
 		
 		return result;
@@ -1177,9 +1184,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
-
+		
 		TaskGeneralVO taskGeneralVO = ezTaskDAO.getTaskGeneral(map);
-
+		
 		logger.debug("getTaskGeneral ended.");
 		
 		return taskGeneralVO;

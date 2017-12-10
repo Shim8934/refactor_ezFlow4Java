@@ -31,7 +31,7 @@
 	    	}	
 	    
 	    	function save_info() {
-	    		if ($("#title").val() == "") {
+	    		if ($("#title").val().trim() == "") {
 					alert("<spring:message code='ezCircular.t52'/>");
 					return;
 				}

@@ -64,11 +64,11 @@ function putBansongSign() {
         var habyuidateID = phabyuidate + pAprMemberSN;
         var field = message.GetListItem(fields, habyuidateID);
         if (field) {
-        	setNodeText(field , s);
+        	setNodeText(field , RtnVal);
             signInfo[signCnt] = habyuidateID;
             SignType[signCnt] = "TEXT";
             SignName[signCnt] = habyuidateID;
-            SignContent[signCnt] = s;
+            SignContent[signCnt] = RtnVal;
             signCnt = signCnt + 1;
         }
     }
