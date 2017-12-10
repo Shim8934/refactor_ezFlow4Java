@@ -3913,6 +3913,59 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;				
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getQuotaInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo started.");
+		LOGGER.debug("userId=" + userId);
+			
+		JSONObject data = new JSONObject();
+		JSONObject result = new JSONObject();
+		
+		IMAPAccess ia = null;
+
+		try {			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+		
+			Locale locale = new Locale("ko");	
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+						
+			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+			
+			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+			
+			LOGGER.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+								
+			data.put("mailboxUsage", mailboxUsage);
+			data.put("mailboxQuota", mailboxQuota);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");			
+		} finally {
+			if (ia != null) {
+				ia.close();		
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo ended.");		
+		
+		return result;
+	}
+	
 	/**
 	 * 사원 Organ 정보 호출 함수
 	 */
