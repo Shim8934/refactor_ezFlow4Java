@@ -326,12 +326,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	@Override
 	public List<PortalTopSearchTopMenu2VO> topSearchTopMenu2(int endRow, String displayName, String useFlag, String companyID, int tenantID) throws Exception {
 		logger.debug("topSearchTopMenu2 started");
+		logger.debug("endRow=" + endRow + ",displayName=" + displayName + ",useFlag=" + useFlag + ",companyID=" + companyID + ",tenantID=" + tenantID);
 		
-		logger.debug("endRow="+endRow);
-		logger.debug("displayName="+displayName);
-		logger.debug("useFlag="+useFlag);
-		logger.debug("companyID="+companyID);
-		logger.debug("tenantID="+tenantID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pENDROW", endRow);
 		map.put("v_pDISPLAYNAME", displayName);
@@ -339,8 +335,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pCOMPANYID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("result="+ezPortalDAO.topSearchTopMenu2(map));
+		logger.debug("result=" + ezPortalDAO.topSearchTopMenu2(map));
 		logger.debug("topSearchTopMenu2 ended");
+		
 		return ezPortalDAO.topSearchTopMenu2(map);
 	}
 	
@@ -1337,6 +1334,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</ROW>");
 			}
 		}
+		
 		sb.append("</DATA>");
 		
 		return sb.toString();
@@ -1570,7 +1568,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
 		logger.debug("getUtilMenuHTML started");
 
-		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
+		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<article class='utmenu'>\n");
 		sb.append("<ul>\n");
