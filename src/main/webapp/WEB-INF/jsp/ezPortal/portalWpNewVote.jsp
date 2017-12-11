@@ -19,11 +19,24 @@
 		    var totalVotes 		= 0;
 		    var tenantId 		= "${tenantId}";
 		    var numberOptions   = "<c:out value='${numberOfOptions}'/>";		   
-		    var seeResultBefore = "${seeResultBefore}";
+		    var seeResultBefore = "${seeResultBefore}";		
+		    var totalVoteToday = parseInt("${totalVoteToday}");	
 		    
 		    window.onload = function() {
+		    	autoRun();
 		    	getConnect();
 		    	updateGraph();
+		    }
+		    
+		    function autoRun() {
+		        var now = new Date();
+		        var nextDay = new Date( now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+		        var msToMidnight = nextDay.getTime() - now.getTime();
+
+		        setTimeout(function() {
+		        	window.location.reload();              
+		            resetAtMidnight();    
+		        }, msToMidnight);
 		    }
 		    
 		    function getConnect(){
@@ -45,6 +58,8 @@
 			        	if (mode == 1) {
 			        		//In adding mode
 			        		totalVotes = totalVotes + 1;
+			        		totalVoteToday = totalVoteToday + 1;
+			        		document.getElementById("todayVotes").innerHTML = "(" + totalVoteToday + ")";
 			        		
 			        		for (var i = 0; i < numberOptions; i++) {
 			        			if (votesArr[i][0] == optId) {
@@ -58,6 +73,8 @@
 			        	else {
 			        		//In removing mode
 			        		totalVotes = totalVotes - 1;
+			        		totalVoteToday = totalVoteToday - 1;
+			        		document.getElementById("todayVotes").innerHTML = "(" + totalVoteToday + ")";
 			        		
 			        		for (var i = 0; i < numberOptions; i++) {
 			        			if (votesArr[i][0] == optId) {
@@ -145,7 +162,7 @@
 	<body>
 		<section class="body_bg1">
 			<article class="portletbox pollbox">
-   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2002' /></span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
+   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 13px; left: 72px; font-size: 13px; font-weight: bold;"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
   				<div class="pollcont" style="overflow-y: auto; overflow-x: hidden;">
  	 				<c:choose>
   						<c:when test="${qstId != -1}">

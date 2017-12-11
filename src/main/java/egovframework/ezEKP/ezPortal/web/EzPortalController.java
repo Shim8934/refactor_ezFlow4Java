@@ -50,6 +50,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
@@ -1471,7 +1472,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		int qstId = -1;
 		String qstTitle = "";
-		int status = -1;
+		int totalVoteToday = 0;
 		int seeResultBefore = -1;
 		int compareEnd = 0;
 		Date nowTime = new Date();
@@ -1523,6 +1524,30 @@ public class EzPortalController extends EgovFileMngUtil {
 		        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
 			});
 			
+			//Get list of voted answers
+			List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());	
+			
+	        Calendar cal = Calendar.getInstance();  
+	        cal.setTime(nowTime);  
+	        cal.set(Calendar.HOUR_OF_DAY, 0);  
+	        cal.set(Calendar.MINUTE, 0);  
+	        cal.set(Calendar.SECOND, 0);  
+	        cal.set(Calendar.MILLISECOND, 0);  
+	        Date today = cal.getTime();
+	        
+			for (Iterator<PollUserAnswerVO> iterator = listOfPollUserAndAnswer.iterator(); iterator.hasNext(); ) {
+				PollUserAnswerVO pollUserAnswerVO = iterator.next();
+				Date votedDate = formatter.parse(pollUserAnswerVO.getVoteDate());	
+				
+				int compareResult = votedDate.compareTo(today);
+				
+			    if (compareResult < 0) {
+			        iterator.remove();
+			    }			    
+			}
+			
+			totalVoteToday = listOfPollUserAndAnswer.size();
+			
 			model.addAttribute("listOptions", listOptions);
 			model.addAttribute("numberOfOptions", listOptions.size());
 		}
@@ -1531,6 +1556,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("qstId", qstId);	
 		model.addAttribute("tenantId", loginVO.getTenantId());			
 		model.addAttribute("seeResultBefore", seeResultBefore);
+		model.addAttribute("totalVoteToday", totalVoteToday);
 		
 		logger.debug("wpNewVote finishes");
 		return "/ezPortal/portalWpNewVote";
