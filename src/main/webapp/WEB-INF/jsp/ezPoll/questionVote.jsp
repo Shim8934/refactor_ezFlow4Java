@@ -814,6 +814,8 @@
 	    		var divSticker = document.getElementById("_stickerArea");
 	    		var cloneOfDivFile = divFile.cloneNode(true);
 	    		var cloneOfDivSticker = divSticker.cloneNode(true);
+	    		var childElemt = cloneOfDivSticker.firstElementChild; //baonk changed
+	    		childElemt.style.marginLeft = "-185px"; //baonk changed
 	    		cloneOfDivFile.setAttribute("style", "float:left; display:block; height:25px; width:25px; cursor: pointer; padding-left: 10px;");
 	    		cloneOfDivSticker.setAttribute("style", "float:left; display:block; padding: 0px;");
 	    		innInnerDiv2.appendChild(cloneOfDivFile);
@@ -2341,7 +2343,7 @@
 					<img id="_addFile" src="/images/poll/add_vote.png" style="float:left; display:block; height:25px; width:25px; cursor: pointer;" onclick="addFileComment();">
 				</div>
 				<div id ="_stickerArea" style="float:left; display:block; padding:18px 10px 10px 0px;">					
-					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-right: -400px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
+					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
 						<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
 							<div style="float:left; display:block;">
 								<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
