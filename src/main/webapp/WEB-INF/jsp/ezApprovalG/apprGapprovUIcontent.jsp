@@ -493,18 +493,22 @@
 	                    InputRows.item(i).outerHTML = InputRows.item(i).outerHTML.replace("input ", "input checked ");
 	            }
 	            var SelectRows = Div.getElementsByTagName("SELECT");
+	            var selectRow, optionRow, checkAttrValue;
 	            for (var i = 0; i < SelectRows.length; i++) {
-	                for (var j = 0; j < SelectRows.item(i).options.length; j++) {
-	                    if (SelectRows.item(i).options[j].nodeType == "1") {
-	                        if (SelectRows.item(i).options[j].getAttribute("check") == "2") {
+	            	selectRow = SelectRows.item(i);
+	                for (var j = 0; j < selectRow.options.length; j++) {
+	                	optionRow = selectRow.options[j];
+	                    if (optionRow.nodeType == "1") {
+	                    	var checkAttrValue = optionRow.getAttribute("check");
+	                        if (checkAttrValue == "2") {
 	                            //SelectRows.item(i).options[j].outerHTML = SelectRows.item(i).options[j].outerHTML.replace("option ", "option selected ");
-	                            SelectRows.item(i).options[j].setAttribute("selected", "selected");
-	                        } else {
+	                            optionRow.setAttribute("selected", "selected");
+	                        } else if(checkAttrValue == "1") {
 	                            //SelectRows.item(i).options[j].outerHTML = SelectRows.item(i).options[j].outerHTML.replace("selected=\".*\"", "");
-	                            SelectRows.item(i).options[j].removeAttribute("selected");
+	                            optionRow.removeAttribute("selected");
 	                        }
 	                        
-	                        SelectRows.item(i).options[j].removeAttribute("check");
+	                        optionRow.removeAttribute("check");
 	                    }
 	                }
 	            }
