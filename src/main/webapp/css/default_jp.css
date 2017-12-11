@@ -1789,6 +1789,10 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
     border: 1px solid #ffffff; */
 }
 
+.layerpopup iframe {
+	border-radius: 4px;	
+}
+
 .file-btn{
   position:relative;
   display:inline-block;

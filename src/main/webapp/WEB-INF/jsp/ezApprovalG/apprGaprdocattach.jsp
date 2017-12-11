@@ -8,6 +8,22 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <style>
+			.popup .btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 	    <script type="text/javascript" src="/js/ezApprovalG/aprDocAttach_Cross.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
@@ -179,11 +195,11 @@
 	            if (CrossYN() || pNoneActiveX == "YES") {
 	            	setsearchinfo_cross_dialogArguments[0] = "";
 	            	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
-	                DivPopUpShow(510, 350, url);
+	                DivPopUpShow(510, 370, url);
 	            }
 	            else {
-	                var feature = "dialogWidth:510px;dialogHeight:440px;status:no;scroll:no;edge:sunken"
-	                feature = feature + GetShowModalPosition(510, 440);
+	                var feature = "dialogWidth:510px;dialogHeight:460px;status:no;scroll:no;edge:sunken"
+	                feature = feature + GetShowModalPosition(510, 460);
 	                condition = window.showModalDialog(url, para, feature);
 	                if (condition) {
 	                    MakeSubCondition();
