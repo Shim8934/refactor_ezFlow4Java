@@ -183,7 +183,10 @@ public class EzPollController extends EgovFileMngUtil {
 		        	strXMLRange.append("</MEMBER>");
 		        }
 		        
-		        listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 2);		        
+		        if (listOfTarget.endsWith(",")) {
+		        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
+		        }
+		        
 				model.addAttribute("question", pollQuestionVO);
 			}
 			catch (Exception e) {
@@ -1708,7 +1711,8 @@ public class EzPollController extends EgovFileMngUtil {
 	public void editVote(JSONObject message) throws org.json.simple.parser.ParseException {
 		logger.debug("Edit vote is running!");		
 		int qstId = Integer.parseInt((String) message.get("question"));
-		int tenantId = Integer.parseInt((String)message.get("tenant"));		
+		int tenantId = Integer.parseInt((String)message.get("tenant"));	
+		String sessionId = (String)message.get("sessionid");
 		String userId = (String)message.get("user");
 		
 		//Update current modifying vote status
@@ -1725,7 +1729,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Inform all waiting users
-		String result = "{\"result\":\"CHANGED\", \"userId\":\"" + userId + "\"}";
+		String result = "{\"result\":\"CHANGED\", \"userId\":\"" + userId + "\", \"sessionid\":\"" + sessionId + "\"}";
 		JSONParser parser = new JSONParser(); 
 		JSONObject json = (JSONObject) parser.parse(result);
 		this.template.convertAndSend("/reply/editQst" + qstId + "+" + tenantId, json);		

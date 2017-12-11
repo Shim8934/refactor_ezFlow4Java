@@ -337,8 +337,10 @@
 			        stompClient.subscribe('/reply/editQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	var user = JSON.parse(updatedInfo.body).userId;	
+			        	var _sessionid = JSON.parse(updatedInfo.body).sessionid;
+			        	var sessionId = "<c:out value='${sessionID}'/>";
 			        	
-			            if (ret == "CHANGED" && user != curentUser) {			            
+			            if (ret == "CHANGED" && (user != curentUser || sessionId != _sessionid)) {			            
 							alert(user + "<spring:message code = 'ezPoll.t113'/>");
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
@@ -511,7 +513,8 @@
 				}
 				
 				var tenantId = "<c:out value='${question.tenantId}'/>";
-				stompClient.send("/app/editVote", {}, JSON.stringify({'question': qstId, 'tenant': tenantId, 'user': curentUser}));
+				var sessionId = "<c:out value='${sessionID}'/>";
+				stompClient.send("/app/editVote", {}, JSON.stringify({'question': qstId, 'tenant': tenantId, 'user': curentUser, 'sessionid': sessionId}));
 				
 				var params = "<c:out value='${params}'/>";
 				var searchStr = "<c:out value='${searchStr}'/>";
