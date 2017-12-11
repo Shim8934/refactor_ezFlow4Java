@@ -238,8 +238,15 @@
 	        		$("#set_Target").val("0").change();	        		
 	        	}
 	        	else {
+	        		var targList = "<c:out value='${listOfTarget}'/>";
+	        		
+	        		if (targList != "") {
+	        			document.getElementById("newTargetDiv").innerHTML = targList;
+	        	    	document.getElementById("newTargetDiv").style.display = "";	   
+	        		}
+	        		
 	        		$('#receiverBttn').show();
-	        		$("#set_Target").val("1").change();	
+	        		$("#set_Target").val("1").change();		
 	        		document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
 	        	}
 			}
@@ -278,7 +285,8 @@
 			    if ($(this).val() == '1') {
 			    	$('#receiverBttn').show();
 			    }
-			    else {
+			    else {			    	
+			    	document.getElementById("newTargetDiv").style.display = "none";	
 			    	$('#receiverBttn').hide();
 			    }
 			}); 
@@ -436,9 +444,7 @@
 				var currentPage = paramArray[0];
 				var checkSeeAll = paramArray[1];
 				var radioBttn = paramArray[2];
-				var mode1 = paramArray[3];
-				
-				console.log("currentPage: " + currentPage + " || checkSeeAll: " + checkSeeAll + " || radioBttn: " + radioBttn + " || mode1: " + mode1 + " || searchStr: " + searchStr + " || searchN: " + searchN);
+				var mode1 = paramArray[3];							
     			
     			var szUrl = "/ezPoll/pollList.do?brdID=6" + "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchStr + "&mode1=" + mode1 + "&searchN=" + searchN;;
     		} 
@@ -694,6 +700,11 @@
 	        }
 	    }
 	    
+	    function updateTarget(listOfTarget) {
+	    	document.getElementById("newTargetDiv").innerHTML = listOfTarget;
+	    	document.getElementById("newTargetDiv").style.display = "";	    	
+	    }
+	    
 	    function Editor_Complete() {
 	    	if (mode == "modify") {
 	    		message.SetEditorContent(sigBody.innerHTML);
@@ -708,7 +719,7 @@
 <xmp id="sigBody3" style="display: none;">${targetPath}</xmp>
 <xmp id="sigBody2" style="display: none;">${filePath}</xmp>
 <xmp id="sigBody" style="display: none;">${content}</xmp>
-<body class="mainbody" style="min-width: 750px;">
+<body class="mainbody" style="min-width: 1600px;">
 	<form id="frmCreate" method="post" action="/ezPoll/pollComplete.do" name="frmCreate"> 	
 		<h1><spring:message code="ezPoll.t206" /></h1>
 
@@ -816,13 +827,14 @@
 					<select id="eTimePicker"></select>						
 				</div>
 	
-				<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px;">
+				<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px; position: relative;">
 					<span style="margin-right: 3px;"><spring:message code="ezPoll.t162"/></span>
 					<select id="set_Target">
 						<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
 						<option value="1"><spring:message code="ezPoll.t238" /></option>
 					</select>	
-					<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>																		
+					<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
+					<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 1400px; white-space: nowrap;" id="newTargetDiv"></div>																		
 				</div>
 				<div style="display:none">
 					<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 

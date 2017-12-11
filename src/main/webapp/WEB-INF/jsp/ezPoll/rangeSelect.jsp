@@ -26,6 +26,7 @@
 			var bSearch = false;
         	var retArr = new Array();
         	var langData = "${langData}";
+        	var primary = "${primary}";
         	
         	window.onload = function () {
             	var InitData = "";
@@ -441,7 +442,37 @@
 	        var selList2 = new ListView();
     	    selList2.LoadFromID("MListView");
 	        var arrRows2 = selList2.GetDataRows();
-    	    if (arrRows.length + arrRows2.length > 0) {        	   
+    	    if (arrRows.length + arrRows2.length > 0) {      
+    	    	//baonk added
+    	    	var listOfTarget = ""; 
+    	    	
+    	    	for (var i = 0; i < arrRows.length; i++) {
+    	    		var deptName = "";
+    	    		
+    	    		if (primary == "1") {
+    	    			deptName = arrRows[i].getAttribute("DISPLAYNAME1");
+    	    		}
+    	    		else {
+    	    			deptName = arrRows[i].getAttribute("DISPLAYNAME2");
+    	    		}
+    	    		listOfTarget += deptName + ", "
+    	    	}
+    	    	
+    	    	for (var j = 0; j < arrRows2.length; j++) {
+    	    		var userName = "";
+    	    		
+    	    		if (primary == "1") {
+    	    			userName = arrRows2[j].getAttribute("DATA4");
+    	    		}
+    	    		else {
+    	    			userName = arrRows2[j].getAttribute("DATA5");
+    	    		}
+    	    		listOfTarget += userName + ", ";
+    	    	}
+    	    	
+    	    	listOfTarget = listOfTarget.slice(0, -2);
+    	    	window.opener.updateTarget(listOfTarget);
+    	    	
             	window.opener.updateParent("setTarget", 1, "selectedIndex");
             	window.opener.updateParent("hidTarget", "1", "value");
             	window.opener.updateParent("selectYN", "YES", "value");

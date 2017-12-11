@@ -94,6 +94,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String mode = "";
 		int qstId = -1;
 		String content = "";
+		String listOfTarget = "";
 		String [] filePath = null;
 		ObjectMapper om = new ObjectMapper();
 		List<PollAnswerVO> listOptions = null;
@@ -140,7 +141,7 @@ public class EzPollController extends EgovFileMngUtil {
 		        
 		        //Process target
 		        List<String> departIdList = ezPollService.getListOfUserIdForQst(qstId, loginVO.getTenantId(), "dept");
-		        List<String> userIdList = ezPollService.getListOfUserIdForQst(qstId, loginVO.getTenantId(), "user");		        
+		        List<String> userIdList = ezPollService.getListOfUserIdForQst(qstId, loginVO.getTenantId(), "user");			        
 		        
 		        if (departIdList.size() > 0) {
 		        	strXMLRange.append("<DEPT>"); 
@@ -149,6 +150,14 @@ public class EzPollController extends EgovFileMngUtil {
 			        	OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(deptID, loginVO.getPrimary(), loginVO.getTenantId());			        	
 			        	strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(organDeptVO.getCn()) + "\" nm=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName()) + 
 			        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
+			        	
+			        	if (loginVO.getPrimary().equals("1")) {
+			        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+			        	}
+			        	else {
+			        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+			        	}
+			        	
 			        }
 			        
 			        strXMLRange.append("</DEPT>"); 
@@ -161,11 +170,20 @@ public class EzPollController extends EgovFileMngUtil {
 		        		LoginVO user = loginService.selectReceiver(userID, loginVO.getTenantId());
 		        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
 			        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
-		        	}
+		        		
+			        	if (loginVO.getPrimary().equals("1")) {
+			        		listOfTarget += user.getDisplayName1() + ",";
+			        	}
+			        	else {
+			        		listOfTarget += user.getDisplayName2() + ",";
+			        	}
+		        		
+		        	}		        	
 		        	
 		        	strXMLRange.append("</MEMBER>");
 		        }
 		        
+		        listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 2);		        
 				model.addAttribute("question", pollQuestionVO);
 			}
 			catch (Exception e) {
@@ -186,6 +204,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);	
+		model.addAttribute("listOfTarget", listOfTarget);
 		
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";
@@ -1862,9 +1881,10 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("itemNo", itemID);
-		model.addAttribute("pCompanyID",pCompanyID);
+		model.addAttribute("pCompanyID", pCompanyID);
 		model.addAttribute("userInfoDeptCode", userInfoDeptCode);
-		model.addAttribute("langData",langData);
+		model.addAttribute("langData", langData);
+		model.addAttribute("primary", userInfo.getPrimary());
 		
 		logger.debug("qstRangeSelect ended");
 		return "/ezPoll/rangeSelect";
