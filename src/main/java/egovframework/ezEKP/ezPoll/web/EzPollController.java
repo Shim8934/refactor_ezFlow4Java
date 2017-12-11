@@ -1162,7 +1162,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/deleteComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String deleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String deleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session) throws Exception {
 		logger.debug("Delete comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String strXML = "";	
@@ -1183,7 +1183,7 @@ public class EzPollController extends EgovFileMngUtil {
 			ezPollService.deleteSpecificCmt(cmtId, qstId, loginVO.getTenantId());
 			
 			//Inform all waiting users
-			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\"}";
+			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + session.getId() + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/deleteCmtInQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -1418,7 +1418,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/adjustJoinedUsers.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String adjustJoinedUsersNumber(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req) throws Exception {
+	public String adjustJoinedUsersNumber(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, HttpSession session) throws Exception {
 		logger.debug("Adjust joined users is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);	
 		String strXML = "";
@@ -1458,7 +1458,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			if (check == -1) {
 				//Update number of unVoted users
-				String result = "{\"result\":\"ADD\", \"userId\":\"" + loginVO.getId() + "\"}";			
+				String result = "{\"result\":\"ADD\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + session.getId() + "\"}";
 				JSONParser parser = new JSONParser(); 
 				JSONObject json = (JSONObject) parser.parse(result);
 				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -1473,7 +1473,7 @@ public class EzPollController extends EgovFileMngUtil {
 			pollUserAnswer.setUserName1(loginVO.getDisplayName1());
 			pollUserAnswer.setUserName2(loginVO.getDisplayName2());
 			pollUserAnswer.setVoteDate(dateNow);
-			strXML = addUserAndAnswer(pollUserAnswer);		
+			strXML = addUserAndAnswer(pollUserAnswer, session.getId());		
 		}
 		else {						
 			//Delete entry in database
@@ -1484,7 +1484,7 @@ public class EzPollController extends EgovFileMngUtil {
 			pollUserAnswer.setTenantId(loginVO.getTenantId());
 			pollUserAnswer.setUserName1(loginVO.getDisplayName1());
 			pollUserAnswer.setUserName2(loginVO.getDisplayName2());
-			strXML = removeUserAndAnswer(pollUserAnswer);
+			strXML = removeUserAndAnswer(pollUserAnswer, session.getId());
 			
 			//Get all of voted users
 			List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());
@@ -1500,7 +1500,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			if (check == -1) {
 				//Update the number of not voted yet users
-				String result = "{\"result\":\"REMOVE\", \"userId\":\"" + loginVO.getId() + "\"}";		
+				String result = "{\"result\":\"REMOVE\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + session.getId() + "\"}";		
 				JSONParser parser = new JSONParser(); 
 				JSONObject json = (JSONObject) parser.parse(result);
 				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -1894,13 +1894,13 @@ public class EzPollController extends EgovFileMngUtil {
 		return "/ezPoll/rangeSelect";
 	}
 	
-	private String addUserAndAnswer(PollUserAnswerVO pollUserAnswer) {
+	private String addUserAndAnswer(PollUserAnswerVO pollUserAnswer, String sessionId) {
 		String strXML = "";
 		
 		try {
 			ezPollService.addAnswerAndUser(pollUserAnswer);
 			ezPollService.updateNumberOfVotesForAnswer(pollUserAnswer, 1);
-			getUpdateVotes(pollUserAnswer, 1);
+			getUpdateVotes(pollUserAnswer, 1, sessionId);
 			strXML = "<RESULT>ADD_OK</RESULT>";
 		}
 		catch (Exception e) {
@@ -1911,13 +1911,13 @@ public class EzPollController extends EgovFileMngUtil {
 		return strXML;
 	}
 	
-	private String removeUserAndAnswer(PollUserAnswerVO pollUserAnswer) {
+	private String removeUserAndAnswer(PollUserAnswerVO pollUserAnswer, String sessionId) {
 		String strXML = "";
 		
 		try {
 			ezPollService.removeAnswerAndUser(pollUserAnswer);	
 			ezPollService.updateNumberOfVotesForAnswer(pollUserAnswer, -1);
-			getUpdateVotes(pollUserAnswer, 0);
+			getUpdateVotes(pollUserAnswer, 0, sessionId);
 			strXML = "<RESULT>REMOVE_OK</RESULT>";
 		}
 		catch (Exception e) {
@@ -1928,7 +1928,7 @@ public class EzPollController extends EgovFileMngUtil {
 		return strXML;
 	}
 	
-	private void getUpdateVotes(PollUserAnswerVO pollUserAnswer, int mode) throws Exception {		
+	private void getUpdateVotes(PollUserAnswerVO pollUserAnswer, int mode, String sessionId) throws Exception {		
 		int optId = pollUserAnswer.getAnsId();
 		int qstId = pollUserAnswer.getQstId();
 		String userId = pollUserAnswer.getUserId();
@@ -1936,7 +1936,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String userName2 = pollUserAnswer.getUserName2();
 		int tenantId = pollUserAnswer.getTenantId();
 		
-		String result = "{\"optionId\":\"" + Integer.toString(optId) + "\", \"mode\":\"" + Integer.toString(mode) + "\", \"userId\":\"" + userId + "\",\"userName1\":\"" + userName1 + "\",\"userName2\":\"" + userName2 + "\"}";
+		String result = "{\"optionId\":\"" + Integer.toString(optId) + "\", \"mode\":\"" + Integer.toString(mode) + "\", \"userId\":\"" + userId + "\",\"userName1\":\"" + userName1 + "\",\"userName2\":\"" + userName2 + "\",\"sessionid\":\"" + sessionId + "\"}";
 		JSONParser parser = new JSONParser(); 
 		JSONObject json = (JSONObject) parser.parse(result);
 		this.template.convertAndSend("/reply/getResultUpdateForQst" + qstId + "+" + tenantId, json); 

@@ -308,13 +308,15 @@
 			        
 			        stompClient.subscribe('/reply/updateUnVotedUsersForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;	
-			        	var user = JSON.parse(updatedInfo.body).userId;	
+			        	var user = JSON.parse(updatedInfo.body).userId;
+			        	var _sessionid = JSON.parse(updatedInfo.body).sessionid;
+			        	var sessionId = "<c:out value='${sessionID}'/>";
 			        	
 			            if (ret == "ADD") {							
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;			            	
 			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
 			            	
-			            	if (user != curentUser) {
+			            	if (user != curentUser || sessionId != _sessionid) {
 				            	votedUsers = votedUsers + 1;
 				            	document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
 			            	}
@@ -323,7 +325,7 @@
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;			            	
 			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
 			            	
-			            	if (user != curentUser) {
+			            	if (user != curentUser || sessionId != _sessionid) {
 			            		votedUsers = votedUsers - 1;
 			            		document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
 			            	}			            	
@@ -410,8 +412,10 @@
 			        stompClient.subscribe('/reply/deleteCmtInQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var _cmdId = JSON.parse(updatedInfo.body).cmId;	
 			        	var _userId = JSON.parse(updatedInfo.body).userId;
+			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;
+			        	var sessionId = "<c:out value='${sessionID}'/>";
 
-			            if (_userId != curentUser) {			          		
+			            if (_userId != curentUser || _sessionId != sessionId) {			          		
 			            	if (_cmdId > commentIndex) {
 			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
@@ -429,6 +433,8 @@
 			        	var optId = JSON.parse(updatedInfo.body).optionId;			        	
 			        	var mode = JSON.parse(updatedInfo.body).mode;
 			        	var user = JSON.parse(updatedInfo.body).userId;
+			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;
+			        	var sessionId = "<c:out value='${sessionID}'/>";
 			        	var userName = "";
 			        	
 			        	if (_primary == 1) {
@@ -438,7 +444,7 @@
 			        		userName = JSON.parse(updatedInfo.body).userName2;
 			        	}
 			        	
-			        	if (user != curentUser) {
+			        	if (user != curentUser || _sessionId != sessionId) {
 			        		var voteId = -1;
 			        		
 				        	if (mode == 1) {
@@ -447,13 +453,17 @@
 				        		document.getElementById(showVotes).style.display = "none";				        		
 				        		totalVotes = totalVotes + 1;
 				        		
+				        		if (user == curentUser) {
+		        					document.getElementById("_imageCheckBox" + optId).src = "/images/checked.png";				        					
+		        				}
+				        		
 				        		for (var i = 0; i < numberOptions; i++) {
-				        			if (votesArr[i][0] == optId) {
+				        			if (votesArr[i][0] == optId) {		        								        				
 				        				votesArr[i][1] = votesArr[i][1] + 1;
-				        				voteId = i;
+				        				voteId = i;	
 				        				break;
 				        			}
-				        		}	
+				        		}						        		
 				        		
 				        		if (secretVote == 0) {
 									//Update the userName array
@@ -470,6 +480,10 @@
 				        	else {
 				        		//In removing mode
 				        		totalVotes = totalVotes - 1;
+				        		
+				        		if (user == curentUser) {
+		        					document.getElementById("_imageCheckBox" + optId).src = "/images/poll/unchecked_vote.png";				        					
+		        				}
 				        		
 				        		for (var i = 0; i < numberOptions; i++) {
 				        			if (votesArr[i][0] == optId) {
