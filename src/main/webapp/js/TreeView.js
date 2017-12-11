@@ -214,10 +214,10 @@ function TreeNode() {
         spnNode.className = TreeClasses["normal"];
         spnNode.style.display = "inline-block";
         if(CrossYN()) {
-            spnNode.style.paddingTop = "3px";        	
+            spnNode.style.paddingTop = "0px";        	
         }
         
-        spnNode.style.paddingLeft = "2px";
+        spnNode.style.paddingLeft = "1px";
 
         if (color != "" && color != "TREE" && color != "BOARD")
             spnNode.style.color = color;

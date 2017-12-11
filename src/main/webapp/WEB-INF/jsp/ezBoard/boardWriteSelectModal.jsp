@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<style>
 			.node_normal{
-				padding-top: 3px;
+				margin-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;
 				background-color : #ffffff;
@@ -20,7 +20,7 @@
 				cursor : hand;
 			}
 			.node_selected{
-				padding-top: 3px;
+				margin-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;
 				height : 15px;
@@ -28,7 +28,7 @@
 				cursor : hand;
 			}
 			.node_hover{
-				padding-top: 3px;
+				margin-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;
 				background-color : #F7FAE0;
