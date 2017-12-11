@@ -782,7 +782,7 @@
 		    	innerDiv1.setAttribute("style", "display: inline-block;");		    	
 		    	var innerDiv2 = document.createElement("div");	
 		    	innerDiv2.setAttribute("id", "descriptCmt" + id.slice(8));
-		    	innerDiv2.setAttribute("style", "display: none; float: left; padding-left: 10px; position: relative;");	
+		    	innerDiv2.setAttribute("style", "display: none; padding-left: 10px; position: relative;");	
 		    	var innerDiv3 = document.createElement("div");	
 		    	innerDiv3.setAttribute("style", "padding: 5px 0px 5px 20px; clear: both;");			    	
 		    	editDiv2Cmt.appendChild(innerDiv1);
@@ -791,7 +791,7 @@
 		    	//Create image element for stickers/files
 		    	var imgForInnerDiv2 = document.createElement("img"); 
 		    	imgForInnerDiv2.setAttribute("id", "editPreviewImg" + id.slice(8));
-		    	imgForInnerDiv2.setAttribute("style", "display: block; max-width: 500px; max-height: 500px; width: auto; height: auto; padding-left: 10px; padding-right: 5px;");	    	
+		    	//imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 60px; width: 60px;");	    	
 		    	innerDiv2.appendChild(imgForInnerDiv2);		    	
 		    	
 		    	//Copy text comment
@@ -836,7 +836,7 @@
 		    			//Add delete image in top rigt of sticker/files
 		    			var cancelImgForInnerDiv2 = document.createElement("img"); 
 		    			cancelImgForInnerDiv2.src = "/images/close.png";
-		    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0px; right: 5px;; position: absolute; cursor: pointer;");
+		    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0px; left: 20px; position: absolute; cursor: pointer;");
 		    			cancelImgForInnerDiv2.onclick = function () { deleteFileInCmt(); };
 		    			innerDiv2.appendChild(cancelImgForInnerDiv2);
 		    			
@@ -845,17 +845,20 @@
 		    			if (fileType == "file") {
 		    				imgForInnerDiv2.setAttribute("_fileInfo", div2Cmt.firstElementChild.firstElementChild.getAttribute("_fileInfo"));
 		    				imgForInnerDiv2.setAttribute("_type", "file");
+		    				imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 60px; width: 60px;");
 		    				var nameDiv = document.createElement("div");
 							nameDiv.innerHTML = div2Cmt.firstElementChild.lastElementChild.innerHTML;	
-							nameDiv.setAttribute("style", "padding-left: 6px;");
+							nameDiv.setAttribute("style", "padding-left: 10px;");
 							nameDiv.setAttribute("_fileInfo", div2Cmt.firstElementChild.firstElementChild.getAttribute("_fileInfo"));
 							innerDiv2.appendChild(nameDiv);
 		    			}
 		    			else if (fileType == "images") {
+		    				imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 		    				imgForInnerDiv2.setAttribute("_type", "images");
 		    			}
 		    			else {
-		    				imgForInnerDiv2.setAttribute("_type", "sticker");
+		    				imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 80px; width: 80px;");
+		    				imgForInnerDiv2.setAttribute("_type", "sticker");		    				
 		    			}
 		    		}
 		    	}
@@ -870,7 +873,7 @@
 	    			//Add delete image in top rigt of sticker/files
 	    			var cancelImgForInnerDiv2 = document.createElement("img"); 
 	    			cancelImgForInnerDiv2.src = "/images/close.png";
-	    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0px; right: 5px; position: absolute; cursor: pointer;");
+	    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0px; left: 20px; position: absolute; cursor: pointer;");
 	    			cancelImgForInnerDiv2.onclick = function () { deleteFileInCmt(); };
 	    			innerDiv2.appendChild(cancelImgForInnerDiv2);
 	    			
@@ -878,16 +881,19 @@
 	    			
 	    			if (fileType == "file") {
 	    				imgForInnerDiv2.setAttribute("_fileInfo", div2Cmt.lastElementChild.firstElementChild.getAttribute("_fileInfo"));
+	    				imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 60px; width: 60px;");
 	    				imgForInnerDiv2.setAttribute("_type", "file");
 	    				var nameDiv = document.createElement("div");
 						nameDiv.innerHTML = div2Cmt.lastElementChild.lastElementChild.innerHTML;	
-						nameDiv.setAttribute("style", "padding-left: 6px;");
+						nameDiv.setAttribute("style", "padding-left: 10px;");
 						innerDiv2.appendChild(nameDiv);
 	    			}
 	    			else if (fileType == "images") {
+	    				imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 	    				imgForInnerDiv2.setAttribute("_type", "images");
 	    			}
 	    			else {
+	    				imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 80px; width: 80px;");
 	    				imgForInnerDiv2.setAttribute("_type", "sticker");
 	    			}
 		    	}	
@@ -1458,22 +1464,24 @@
 		    			// Add cancel image in top right of files/sticker
 		    			var cancelImg = document.createElement("img"); 
 		    			cancelImg.src = "/images/close.png";
-		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 20px; position: absolute; cursor: pointer;");
 		    			cancelImg.onclick = function () { deleteFileInCmt(); };
 		    			imagePreview.parentElement.appendChild(cancelImg);
 						
 						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
 							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							imagePreview.setAttribute("_type", "file"); 
+							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 60px; width: 60px;");
 							var nameDiv = document.createElement("div");
 							nameDiv.innerHTML = orgFileName;
 							nameDiv.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							nameDiv.setAttribute("_orgName", orgFileName);
-							nameDiv.setAttribute("style", "padding-left: 6px;");
+							nameDiv.setAttribute("style", "padding-left: 10px;");
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
 						else {
 							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
+							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 							imagePreview.setAttribute("_type", "images"); 
 						}
 		    		}
@@ -1481,15 +1489,17 @@
 						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
 							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							imagePreview.setAttribute("_type", "file"); 
+							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 60px; width: 60px;");
 							var nameDiv = document.createElement("div");
 							nameDiv.innerHTML = orgFileName;	
 							nameDiv.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							nameDiv.setAttribute("_orgName", orgFileName);
-							nameDiv.setAttribute("style", "padding-left: 6px;");
+							nameDiv.setAttribute("style", "padding-left: 10px;");
 							imagePreview.parentElement.appendChild(nameDiv);							
 						}
 						else {
 							imagePreview.setAttribute("_type", "images"); 
+							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 							imagePreview.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
@@ -1497,13 +1507,15 @@
 						if (!(_ext == "jpg" || _ext == "png" || _ext == "bmp")) {
 							imagePreview.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							imagePreview.setAttribute("_type", "file"); 
+							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 60px; width: 60px;");
 							imagePreview.parentElement.lastElementChild.innerHTML = orgFileName;
 							imagePreview.parentElement.lastElementChild.setAttribute("_fileInfo", fileinfo.split("/")[0]);
 							imagePreview.parentElement.lastElementChild.setAttribute("_orgName", orgFileName);
-							imagePreview.parentElement.lastElementChild.setAttribute("style", "padding-left: 6px;");
+							imagePreview.parentElement.lastElementChild.setAttribute("style", "padding-left: 10px;");
 						}	
 						else {
 							imagePreview.setAttribute("_type", "images");
+							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 							imagePreview.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
@@ -1687,6 +1699,7 @@
 		    		//In editing situation
 		    		var editPreviewTag = document.getElementById("editPreviewImg" + currentEditingCmt);
 		    		editPreviewTag.setAttribute("_type", "sticker");
+		    		editPreviewTag.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 80px; width: 80px;");
 		    		editPreviewTag.src = actualUrl;
 		    		var childElmNumber = editPreviewTag.parentElement.childElementCount;
 		    		
