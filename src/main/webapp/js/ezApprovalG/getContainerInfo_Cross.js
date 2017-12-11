@@ -1227,7 +1227,11 @@ function check_presence2() {
                 var objNode;
                 var tr = selRow[i];
                 createNodeInsert(xmlpara, objNode, "PARAMETER");
-                createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
+                if (listType==10) {
+                	createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA2"));
+                } else {
+                	createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
+                }
                 createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);
                 createNodeAndInsertText(xmlpara, objNode, "Desc", "");
 
