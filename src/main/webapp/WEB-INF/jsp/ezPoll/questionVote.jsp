@@ -791,7 +791,7 @@
 		    	//Create image element for stickers/files
 		    	var imgForInnerDiv2 = document.createElement("img"); 
 		    	imgForInnerDiv2.setAttribute("id", "editPreviewImg" + id.slice(8));
-		    	imgForInnerDiv2.setAttribute("style", "display: block; max-width: 500px; max-heigth: 500px; width: auto; height: auto; padding-left: 10px; padding-right: 5px;");	    	
+		    	imgForInnerDiv2.setAttribute("style", "display: block; max-width: 500px; max-height: 500px; width: auto; height: auto; padding-left: 10px; padding-right: 5px;");	    	
 		    	innerDiv2.appendChild(imgForInnerDiv2);		    	
 		    	
 		    	//Copy text comment
@@ -988,7 +988,7 @@
 					    	}
 			    			else if (fileType == "images") {
 					    		imgForinnerDiv1.setAttribute("_type", "images");				    			
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 					    		imgForinnerDiv1.src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
@@ -1043,7 +1043,7 @@
 			    				}
 			    				
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");				    		
-			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 			    				div2Cmt.firstElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -1103,7 +1103,7 @@
 		    				}
 		    				
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");				    		
-		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 		    				div2Cmt.lastElementChild.children[0].src = document.getElementById("descriptCmt" + commentIndex).firstElementChild.src;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src); 
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -1265,7 +1265,7 @@
 			    		if (fileType == "file") {				    		
 				    		imgForinnerDiv1.setAttribute("_type", "images");
 				    		fd.append("fileType", "file");	
-					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+					    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 				    		imgForinnerDiv1.src = "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];	
 				    		imgForinnerDiv1.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);   
 				    		imgForinnerDiv1.onclick = function() { downloadFileInCmt(this); };
@@ -1447,6 +1447,7 @@
 			    	imagePreview.setAttribute("_fileInfo", fileinfo);	
 			    	document.getElementById("sendBttn").style.backgroundColor = "#004896";
 			    	document.getElementById("sendBttn").disabled = false;
+			    	imagePreview.setAttribute("_type", "file");	
 		    	}
 		    	else {
 		    		//In editing situation
@@ -1512,7 +1513,7 @@
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 		    	}
 		    	
-		    	imagePreview.setAttribute("_type", "file");	
+		    	//imagePreview.setAttribute("_type", "file");	
 		    	
 		    	if (_ext == "jpg" || _ext == "png" || _ext == "bmp") {		    	    	             
 		    		imagePreview.src = "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];
@@ -1818,7 +1819,7 @@
 			    		div2ForTd2.appendChild(innerDiv1);
 			    		
 			    		if (name == "") {
-			    			imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+			    			imgForinnerDiv1.setAttribute("style", "cursor: pointer;  padding-left: 10px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 			    			imgForinnerDiv1.setAttribute("_fileInfo", attach);
 			    			imgForinnerDiv1.setAttribute("_type", "images"); 
 			    			imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
@@ -1939,7 +1940,7 @@
 					    	}
 			    			else if (fileType == "images") {
 					    		imgForinnerDiv1.setAttribute("_type", "images");					    		
-						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+						    	imgForinnerDiv1.setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 					    		imgForinnerDiv1.src = attachFilePath;	
 					    		imgForinnerDiv1.setAttribute("_fileInfo", attachFilePath); 
 					    		imgForinnerDiv1.onclick = function () { downloadFileInCmt(this); };
@@ -1986,7 +1987,7 @@
 			    				}
 			    				
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_type", "images");				    		
-			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 			    				div2Cmt.firstElementChild.children[0].src = attachFilePath;	
 			    				div2Cmt.firstElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
 			    				div2Cmt.firstElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -2039,7 +2040,7 @@
 		    				}
 		    				
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");				    		
-		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-heigth: 500px; width: auto; height: auto;");
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
 		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;	
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
@@ -2318,7 +2319,7 @@
 										</c:if>
 										<c:if test="${_comt.fileName == ''}">
 											<div style="padding-top: 5px;">
-												<img _type="images" vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer; max-width: 500px; max-heigth: 500px; width: auto; height: auto;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />" onclick="downloadFileInCmt(this);">
+												<img _type="images" vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer; max-width: 500px; max-height: 500px; width: auto; height: auto;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />" onclick="downloadFileInCmt(this);">
 											</div>
 										</c:if>
 									</c:if>
