@@ -392,8 +392,10 @@
 			        	var _fileName = JSON.parse(updatedInfo.body).fileName;
 			        	var _filePath = JSON.parse(updatedInfo.body).filePath;
 			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
+			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;
+			        	var sessionId = "<c:out value='${sessionID}'/>";
 
-			            if (_userId != curentUser) {			          		
+			            if (_userId != curentUser || _sessionId != sessionId) {			          		
 			            	if (_cmdId > commentIndex) {
 			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;

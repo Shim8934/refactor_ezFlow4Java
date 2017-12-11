@@ -1028,7 +1028,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/editComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String editComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String editComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session) throws Exception {
 		logger.debug("Edit comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String strXML = "";		
@@ -1121,7 +1121,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
-							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\"}";
+							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\", \"sessionid\":\"" + session.getId() + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/editCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
