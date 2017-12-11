@@ -242,6 +242,7 @@
 	        		
 	        		if (targList != "") {
 	        			document.getElementById("newTargetDiv").innerHTML = targList;
+	        			document.getElementById("newTargetDiv").setAttribute("title", targList);
 	        	    	document.getElementById("newTargetDiv").style.display = "";	   
 	        		}
 	        		
@@ -701,8 +702,10 @@
 	    }
 	    
 	    function updateTarget(listOfTarget) {
-	    	document.getElementById("newTargetDiv").innerHTML = listOfTarget;
-	    	document.getElementById("newTargetDiv").style.display = "";	    	
+	    	var newTargetDiv = document.getElementById("newTargetDiv");
+	    	newTargetDiv.innerHTML = listOfTarget;
+	    	newTargetDiv.setAttribute("title", listOfTarget);
+	    	newTargetDiv.style.display = "";	    	
 	    }
 	    
 	    function Editor_Complete() {
