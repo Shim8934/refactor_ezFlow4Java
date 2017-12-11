@@ -1571,7 +1571,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
 		logger.debug("getUtilMenuHTML started");
 
-		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());		
+		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
 		StringBuilder sb = new StringBuilder();
 		sb.append("<article class='utmenu'>\n");
 		sb.append("<ul>\n");
