@@ -1358,7 +1358,7 @@
                 objTd3.appendChild(imagForTd3);
                 
                 var div1ForTd3 = document.createElement("div");
-                div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;");
+                div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;");
                 div1ForTd3.setAttribute("id", "editComt" + commentIndex);
                 div1ForTd3.setAttribute("tabindex", "0");        
                 var innerDiv1ForTd3 = document.createElement("div");
@@ -1883,7 +1883,7 @@
                     objTd3.appendChild(imagForTd3);
                     
                     var div1ForTd3 = document.createElement("div");
-                    div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;");
+                    div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;");
                     div1ForTd3.setAttribute("id", "editComt" + commentIndex);
                     div1ForTd3.setAttribute("tabindex", "0");        
                     var innerDiv1ForTd3 = document.createElement("div");
@@ -2343,7 +2343,7 @@
 								<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
 								<c:if test="${_comt.userId == curentUser}">								
 									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
-									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; width: 120px;" tabindex=0>							
+									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; width: 120px;" tabindex=0>							
 										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
 										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
 									</div>
