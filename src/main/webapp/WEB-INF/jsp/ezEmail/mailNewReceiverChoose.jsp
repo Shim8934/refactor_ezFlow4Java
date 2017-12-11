@@ -107,7 +107,6 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        window.onload = function () {
-	            window.resizeTo(990, 730);
 	            try {
 	                RetValue = parent.mail_newreceiverchoose_dialogArguments[0];
 	                ReturnFunction = parent.mail_newreceiverchoose_dialogArguments[1];
@@ -229,8 +228,6 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
-	                window.resizeTo(707, 730);
-	
 	            }
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
@@ -1481,12 +1478,18 @@
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
 		        document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes;
 		        totalPage2 = Math.ceil(new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) / 50));
-		        while (document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
-		            document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
+		        
+		        var tbody = document.getElementById("txtlist_table").getElementsByTagName("TBODY");
+		        
+		        while (tbody.item(0).childNodes.length > 1) {
+		        	tbody.item(0).removeChild(tbody.item(0).childNodes.item(1));
 		        }
-		        while (document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
-		            document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
+		        
+		        var searchTbody = document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY");
+		        while (searchTbody.item(0).childNodes.length > 1) {
+		        	searchTbody.item(0).removeChild(searchTbody.item(0).childNodes.item(1));
 		        }
+		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
@@ -1518,7 +1521,10 @@
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
-		        for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+		        
+		        var row = SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW");
+		        
+		        for (var i = 0; i < row.length; i++) {
 		            if (pListType == "IMG") {
 		                var MainTable = document.createElement("TABLE");
 		                MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");
@@ -1547,17 +1553,17 @@
 		                    M_TR.ondragend = function (event) { event_listdragend(event); };
 		                }
 		                if (CrossYN()) {
-		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
-		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
+		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+		                        if (row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+		                            M_TR.setAttribute("_" + row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+		                                              trim_Cross(row.item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
 		                        }
 		                    }
 		                }
 		                else {
-		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-		                        M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-		                                          SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
+		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+		                        M_TR.setAttribute("_" + row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+		                        		row.item(i).childNodes.item(0).childNodes.item(NodeCount).text);
 		                    }
 		                }
 		
@@ -1648,18 +1654,19 @@
 		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 		                    M_TR.ondragend = function (event) { event_listdragend(event); };
 		                }
+		                
 		                if (CrossYN()) {
-		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
-		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
+		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+		                        if (row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+		                            M_TR.setAttribute("_" + row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+		                                              trim_Cross(row.item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
 		                        }
 		                    }
 		                }
 		                else {
-		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-		                        M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-		                                          SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
+		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+		                        M_TR.setAttribute("_" + row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+		                                          row.item(i).childNodes.item(0).childNodes.item(NodeCount).text);
 		                    }
 		                }
 		
@@ -3063,7 +3070,7 @@
             }
 	    </script>
 	</head>
-	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
+	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<xml id="listviewheader" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>

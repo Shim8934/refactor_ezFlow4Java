@@ -884,7 +884,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskConfig started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("delayColor : " + configVO.getDelayColor() + " | completeColor : " + configVO.getCompleteColor() + " | originColor : " + configVO.getOriginColor() + " | originColor2 : " + configVO.getOriginColor2());

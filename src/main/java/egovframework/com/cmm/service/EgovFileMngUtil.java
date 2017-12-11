@@ -2,14 +2,18 @@ package egovframework.com.cmm.service;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -608,4 +612,38 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		}
 	}
 	
+	/**
+	 * 파일을 읽어 String으로 리턴
+	 * @param filePath 파일 경로
+	 * @return file text
+	 * @throws Exception
+	 */
+	public String readFile(String filePath) throws Exception {
+		File file = new File(filePath);
+		
+		if (!file.exists()) {
+			throw new NoSuchFileException(filePath);
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = null;
+		String strLine = null;
+		
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+			
+			while ((strLine = br.readLine()) != null) {
+				sb.append(strLine + "\n");
+			}
+			
+			br.close();
+			br = null;
+		} finally {
+			if (br != null) {
+				try {br.close();} catch(Exception e) {}
+			}
+		}
+		
+		return sb.toString();
+	}
 }

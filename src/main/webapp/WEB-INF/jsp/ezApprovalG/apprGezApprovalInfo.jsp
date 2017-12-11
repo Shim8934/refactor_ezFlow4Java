@@ -1487,7 +1487,7 @@
 	            	<spring:message code='ezApprovalG.t1204'/>
 	            </c:if>
 	            <c:if test="${approvalFlag eq 'S' }">
-	            	<spring:message code='ezApproval.t62'/>
+	            	<spring:message code='ezApprovalG.jjh03'/>
 	            </c:if></span></p>
 	            <c:if test="${approvalFlag eq 'S' }">
 		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
@@ -1617,16 +1617,16 @@
 	                                    </h2>
 	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
-	                                        <div class="border_gray" style="margin-top:4px">
-	                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
-	                                        </div>
-	                                        </div>
+		                                        <div class="border_gray" style="margin-top:7px">
+		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+		                                        </div>
+		                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
-	                                        <div class="border_gray" style="margin-top:6px; margin-left:4px;">
-	                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
-                                        	</div>
-                                        	</div>
+		                                        <div class="border_gray" style="margin-top:7px; margin-left:4px;">
+		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        	</div>
+	                                        	</div>
                                         	</c:if>
 	                                </td>
 	                            </tr>
@@ -1705,11 +1705,11 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                	<c:if test="${approvalFlag =='G' }">
-		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 524px; width: 358px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
+		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 524px; width: 358px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                    <c:if test="${approvalFlag == 'S' }">
-                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
+                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                </td>
@@ -1843,7 +1843,7 @@
 	                        <tr>
 	                            <td style="vertical-align: top;" colspan="2">
 	                                <h2 class="h2_dot"> <c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t253'/></c:if> <c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t220'/></c:if></h2>
-	                                <div class="border_gray" style="margin-top: 4px">
+	                                <div class="border_gray" style="margin-top: 7px">
 	                                <c:if test="${approvalFlag == 'G'}">
 	                                    <div id="RECEPTLIST" style="Width: 710px; Height: 500px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                    </div>
@@ -2288,7 +2288,7 @@
 			                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 			                	</div>
 			                </h2>
-			                <div class="border_gray" style="margin-top:6px; margin-left:4px;">
+			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">
                                 <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                               	</div>
                             </div>

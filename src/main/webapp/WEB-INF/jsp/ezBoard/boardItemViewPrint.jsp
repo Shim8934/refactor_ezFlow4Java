@@ -163,11 +163,11 @@
 		    <td>
 		        <table class="content" style="width:100%;">
 		            <tr>
-	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t223'/></th>
+	                  <th><spring:message code='ezBoard.t223'/></th>
 	                  <td id="WriteUserNM" style="width:20%; white-space:nowrap">&nbsp;<c:out value="${boardItem.writerName}"/></td>
-	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t224'/></th>
+	                  <th><spring:message code='ezBoard.t224'/></th>
 	                  <td id="PostDate" style="width:25%; white-space:nowrap">&nbsp;${boardItem.writeDate}</td>
-	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t288'/></th>
+	                  <th><spring:message code='ezBoard.t288'/></th>
 	                  <c:set var="t287" value="<spring:message code='ezBoard.t287'/>"/>
 	                  <c:choose>
 		                  <c:when test="${boardItem.endDate == t287}">
@@ -179,11 +179,11 @@
 	                  </c:choose>
 		            </tr>
 		            <tr>
-	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t289'/></th>
+	                  <th><spring:message code='ezBoard.t289'/></th>
 	                  <td id="User_DeptNM" style="width:20%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
-	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t290'/></th>
+	                  <th><spring:message code='ezBoard.t290'/></th>
 	                  <td id="User_JobTitle" style="width:25%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
-	                  <th style="width:10%; text-align:center;"><spring:message code='ezBoard.t38'/></th>
+	                  <th><spring:message code='ezBoard.t38'/></th>
 	                  <td id="Telephone" style="width:25%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
 		            </tr>
 		            <c:if test="${boardAttrCount > 0}">
@@ -221,7 +221,7 @@
 							</c:forEach>
 						</c:if>
 		            <tr>
-	                  <th style="text-align:center"><spring:message code='ezBoard.t291'/></th>
+	                  <th><spring:message code='ezBoard.t291'/></th>
 	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;${boardItem.title} </td>
 		            </tr>
 		      </table>

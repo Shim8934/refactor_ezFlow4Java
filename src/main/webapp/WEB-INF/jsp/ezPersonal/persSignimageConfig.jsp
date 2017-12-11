@@ -104,7 +104,7 @@
 		        else
 		            selName = DocList.GetSelectedRows()[0].innerText;
 		
-		        if (!confirm("'" + selName + "'" + "<spring:message code='ezPersonal.t3005'/>"))
+		        if (!confirm("'" + selName.replace( /(\s*)/g, "") + "'" + "<spring:message code='ezPersonal.t3005'/>"))
 			        return;
 		
 			    var DocList = new ListView();
@@ -179,6 +179,7 @@
 		        }
 		        else {
 		            alert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
+		            return;
 		        }
 		        
 		        var imagelist = "";

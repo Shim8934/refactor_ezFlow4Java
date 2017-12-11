@@ -1,5 +1,6 @@
 package egovframework.com.cmm.interceptor;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -185,12 +186,26 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 					
 					return false;
 				} else {
-					ModelAndView modelAndView = new ModelAndView("redirect:" + getRedirectUrl("common", ezOffice365ClientId, currentUri));
-					throw new ModelAndViewDefiningException(modelAndView);
+		        	logger.debug("No authentication data exists. Redirecting to Azure login page...");
+		        	
+					try {					
+						response.sendRedirect(getRedirectUrl("common", ezOffice365ClientId, currentUri));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					return false;					
 				}
 	        } else {
-				ModelAndView modelAndView = new ModelAndView("redirect:/user/login/login.do");
-				throw new ModelAndViewDefiningException(modelAndView);		
+	        	logger.debug("No login cookie exists. Redirecting to login page...");
+	        	
+				try {					
+					response.sendRedirect("/user/login/login.do");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				return false;
 	        }
 		}
 	}

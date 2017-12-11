@@ -343,6 +343,26 @@ public class EzEmailUtil {
             String[] rawHeaders = message.getHeader("subject");
             String rawHeader = rawHeaders[0].trim();
                         
+			// 제목이 줄바꿈없이 인코딩 경우가 있어 추가함.
+            // Subject: =?ISO-2022-JP?B?GyRCIVobKEIyMDE3LzEyLzA0GyRCJE5MZEJqIVsbKEJPSlQ=?=
+            //		 =?ISO-2022-JP?B?GyRCJEszOkV2JDkkayRiJE4kSCRPISkbKEI=?==?iso-2022-jp?B?GyRCIWMbKEJJVBskQiUtJWMlUSVBJWMhPCU4GyhCIA==?=
+            //		 =?iso-2022-jp?B?GyRCJVkhPCU3JUMlLyFkGyhC?=                        
+			int pos = rawHeader.indexOf("?==?");
+			
+			if (pos >= 0) {
+				StringBuilder sb = new StringBuilder();
+				
+				sb.append(rawHeader.substring(0, pos + 2));
+				sb.append("\r\n ");
+				sb.append(rawHeader.substring(pos + 2));
+										
+				rawHeader = sb.toString();
+				
+				logger.debug("line broken new subject=" + rawHeader);	
+				
+				subject = MimeUtility.decodeText(rawHeader);
+			}
+			
             // Subject: =?utf-8?q?=5b=46=65=64=45...=35=35 ?= 의 경우와 같이 
             // ?= 앞에 공백 문자가 있어 제목이 디코딩 되지 않는 경우가 발견되어 추가함
             if (rawHeader.startsWith("=?") && rawHeader.endsWith(" ?=")) {
@@ -556,7 +576,9 @@ public class EzEmailUtil {
             
             if (encodingHeaders != null && encodingHeaders.length > 0) {
                 String encodingName = encodingHeaders[0];
+                
                 logger.debug("Content-Transfer-Encoding=" + encodingName);
+                
                 if (encodingName.equalsIgnoreCase("base64")) {
                     // decrease the size because base64 increases the size to 4/3 times.
                     size = size / 138 * 101;
@@ -651,8 +673,13 @@ public class EzEmailUtil {
 			
 			if (attachedFileList != null) {
 				Map<String, String> attachedFileInfo = new HashMap<String, String>();
+				
 				attachedFileInfo.put("filename", filename);
 				attachedFileInfo.put("size", String.valueOf(size));
+				attachedFileInfo.put("folderPath", folderPath);
+				attachedFileInfo.put("uid", String.valueOf(uid));
+				attachedFileInfo.put("index", String.valueOf(bodyPartIndex));
+				
 				attachedFileList.add(attachedFileInfo);
 			}
 			
@@ -877,6 +904,7 @@ public class EzEmailUtil {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
 			Part p = null;
+			
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
 				
@@ -890,15 +918,18 @@ public class EzEmailUtil {
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-					if(tempList.get(4).equals("OK")){
+					
+					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
 					}
 				}
 			}
-			if(htmlBody.equals("")){
+			
+			if (htmlBody.equals("")) {
 				for (int i = 0; i < count; i++) {
 					p = mp.getBodyPart(i);
-					if(p.isMimeType("text/plain")){
+					
+					if (p.isMimeType("text/plain")) {
 						htmlBody += p.getContent().toString();
 					}
 				}
@@ -907,6 +938,7 @@ public class EzEmailUtil {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
 			Part p = null;
+			
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
 				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
@@ -914,24 +946,27 @@ public class EzEmailUtil {
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-				if(tempList.get(4).equals("OK")){
+				
+				if (tempList.get(4).equals("OK")) {
 					isAttach = "OK";
 				}
 			}
 		} else if (part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
+			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
-				if (!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
+				if (!p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-					if(tempList.get(4).equals("OK")){
+					
+					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
 					}
 				} else {
@@ -942,6 +977,7 @@ public class EzEmailUtil {
 		} else if (part.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
+			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
 				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
@@ -949,7 +985,8 @@ public class EzEmailUtil {
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-				if(tempList.get(4).equals("OK")){
+				
+				if (tempList.get(4).equals("OK")) {
 					isAttach = "OK";
 				}
 			}
@@ -961,8 +998,7 @@ public class EzEmailUtil {
 			
 			String filename = getSubject(nestedMessage);;
 			filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
-			
-			
+						
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
