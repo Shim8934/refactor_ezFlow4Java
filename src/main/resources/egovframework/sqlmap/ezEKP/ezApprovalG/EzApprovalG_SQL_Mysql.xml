@@ -21094,6 +21094,10 @@
    			USERCONTID = #v_CONTID#  
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
+   		AND
+   			TBL_USERCONTLIST.TENANT_ID = #v_TENANTID#
+   		AND
+   			TBL_USERCONTLIST.COMPANYID = #companyID#
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		 AND 
    		 	$v_PSUBQUERY$
@@ -21189,6 +21193,10 @@
    			USERCONTID = #v_CONTID#  
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
+   		AND
+   			TBL_USERCONTLIST.COMPANYID = #companyID#
+   		AND
+   			TBL_USERCONTLIST.TENANT_ID = #v_TENANTID#
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		 AND 
    		 	$v_PSUBQUERY$

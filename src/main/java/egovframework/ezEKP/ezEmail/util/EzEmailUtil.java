@@ -343,6 +343,26 @@ public class EzEmailUtil {
             String[] rawHeaders = message.getHeader("subject");
             String rawHeader = rawHeaders[0].trim();
                         
+			// 제목이 줄바꿈없이 인코딩 경우가 있어 추가함.
+            // Subject: =?ISO-2022-JP?B?GyRCIVobKEIyMDE3LzEyLzA0GyRCJE5MZEJqIVsbKEJPSlQ=?=
+            //		 =?ISO-2022-JP?B?GyRCJEszOkV2JDkkayRiJE4kSCRPISkbKEI=?==?iso-2022-jp?B?GyRCIWMbKEJJVBskQiUtJWMlUSVBJWMhPCU4GyhCIA==?=
+            //		 =?iso-2022-jp?B?GyRCJVkhPCU3JUMlLyFkGyhC?=                        
+			int pos = rawHeader.indexOf("?==?");
+			
+			if (pos >= 0) {
+				StringBuilder sb = new StringBuilder();
+				
+				sb.append(rawHeader.substring(0, pos + 2));
+				sb.append("\r\n ");
+				sb.append(rawHeader.substring(pos + 2));
+										
+				rawHeader = sb.toString();
+				
+				logger.debug("line broken new subject=" + rawHeader);	
+				
+				subject = MimeUtility.decodeText(rawHeader);
+			}
+			
             // Subject: =?utf-8?q?=5b=46=65=64=45...=35=35 ?= 의 경우와 같이 
             // ?= 앞에 공백 문자가 있어 제목이 디코딩 되지 않는 경우가 발견되어 추가함
             if (rawHeader.startsWith("=?") && rawHeader.endsWith(" ?=")) {

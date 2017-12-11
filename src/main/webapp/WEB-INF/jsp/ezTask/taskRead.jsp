@@ -269,7 +269,7 @@
 						html = result;
 						var doc = document.getElementById('message').contentWindow.document;
 						doc.open();
-						doc.write(html);
+						doc.write('<div>' + html + '</div>');
 						doc.close();
 
 						$("#message").contents().find("body").css("word-wrap", "break-word");
