@@ -363,7 +363,9 @@
 			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
 			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
 			        	var _userPhoto = JSON.parse(updatedInfo.body).userPhoto;
+			        	var _sessionID = JSON.parse(updatedInfo.body).sessionid;
 			        	var _userName = "";
+			        	var sessionId = "<c:out value='${sessionID}'/>";			        	
 			        	
 			        	if (_primary == 1) {
 			        		_userName = JSON.parse(updatedInfo.body).userName1;
@@ -372,7 +374,7 @@
 			        		_userName = JSON.parse(updatedInfo.body).userName2;
 			        	}
 			        	
-			            if (_userId != curentUser) {			          		
+			            if (_userId != curentUser || _sessionID != sessionId) {			          		
 			            	if (_cmdId <= commentIndex) {
 			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
@@ -1847,8 +1849,40 @@
                 var fistChildForTd3 = document.createElement("div");
                 fistChildForTd3.setAttribute("style", "position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;");     
                 fistChildForTd3.innerHTML = cmtTime;
+                objTd3.appendChild(fistChildForTd3); 
                 
-                objTd3.appendChild(fistChildForTd3);                                         
+                if (userId == curentUser) {
+                    var imagForTd3 = document.createElement("img");                
+                    imagForTd3.src = "/images/option3.png";
+                    imagForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);
+                    imagForTd3.setAttribute("_inner", "innerEditComment" + commentIndex);
+                    imagForTd3.setAttribute("height", "25");
+                    imagForTd3.setAttribute("width", "25");
+                    imagForTd3.setAttribute("vertical-align", "middle");
+                    imagForTd3.setAttribute("style", "margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;");
+                    imagForTd3.onclick = function (event) { event.stopPropagation(); showEditPanel(this); };
+                    objTd3.appendChild(imagForTd3);
+                    
+                    var div1ForTd3 = document.createElement("div");
+                    div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white;; margin-top: -14px; margin-right: 3px; width: 120px;");
+                    div1ForTd3.setAttribute("id", "editComt" + commentIndex);
+                    div1ForTd3.setAttribute("tabindex", "0");        
+                    var innerDiv1ForTd3 = document.createElement("div");
+                    innerDiv1ForTd3.setAttribute("id", "_eCmt" + commentIndex);
+                    innerDiv1ForTd3.innerHTML = "<spring:message code = 'ezPoll.t125'/>";
+                    innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
+                    innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;");
+                    innerDiv1ForTd3.onclick = function (event) { editComment(this); };
+                    var innerDiv2ForTd3 = document.createElement("div");                
+                    innerDiv2ForTd3.innerHTML = "<spring:message code = 'ezPoll.t126'/>";
+                    innerDiv2ForTd3.setAttribute("_comtIndex", commentIndex);  
+                    innerDiv2ForTd3.setAttribute("style", "text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;");         
+                    innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
+                    div1ForTd3.appendChild(innerDiv1ForTd3);
+                    div1ForTd3.appendChild(innerDiv2ForTd3);
+                    objTd3.appendChild(div1ForTd3);
+                }                
+                                                        
                 objTr.appendChild(objTd3);             
                 oTable.appendChild(objTr);  
 		    }

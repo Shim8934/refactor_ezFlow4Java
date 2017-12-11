@@ -472,7 +472,7 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezPoll/pollVote.do")
-	public String qstVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, RedirectAttributes redirectAttributes, ModelMap model) throws Exception {
+	public String qstVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, HttpSession session, RedirectAttributes redirectAttributes, ModelMap model) throws Exception {
 		logger.debug("question vote is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
@@ -739,6 +739,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("curentUserName", loginVO.getDisplayName());	
 		model.addAttribute("userPhoto", userPhoto);		
 		model.addAttribute("primary", loginVO.getPrimary());
+		model.addAttribute("sessionID", session.getId());		
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);		
@@ -899,7 +900,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/addComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String addComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session) throws Exception {
 		logger.debug("Add comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String strXML = "";
@@ -1008,7 +1009,7 @@ public class EzPollController extends EgovFileMngUtil {
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\"" + pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
 							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\","
-							+ " \"cmtTime\":\"" + cmtTime + "\"," + " \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\"}";
+							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + session.getId() + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/addCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
