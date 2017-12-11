@@ -782,16 +782,16 @@
 		    	innerDiv1.setAttribute("style", "display: inline-block;");		    	
 		    	var innerDiv2 = document.createElement("div");	
 		    	innerDiv2.setAttribute("id", "descriptCmt" + id.slice(8));
-		    	innerDiv2.setAttribute("style", "display: none;  padding-left: 10px; position: relative;");	
+		    	innerDiv2.setAttribute("style", "display: none; float: left; padding-left: 10px; position: relative;");	
 		    	var innerDiv3 = document.createElement("div");	
-		    	innerDiv3.setAttribute("style", "padding: 5px 0px 5px 20px;");			    	
+		    	innerDiv3.setAttribute("style", "padding: 5px 0px 5px 20px; clear: both;");			    	
 		    	editDiv2Cmt.appendChild(innerDiv1);
 		    	editDiv2Cmt.appendChild(innerDiv2);
 		    	
 		    	//Create image element for stickers/files
 		    	var imgForInnerDiv2 = document.createElement("img"); 
 		    	imgForInnerDiv2.setAttribute("id", "editPreviewImg" + id.slice(8));
-		    	imgForInnerDiv2.setAttribute("style", "display: block; height: 60px; width: 60px; padding-left: 10px; padding-right: 5px;");	    	
+		    	imgForInnerDiv2.setAttribute("style", "display: block; max-width: 500px; max-heigth: 500px; width: auto; height: auto; padding-left: 10px; padding-right: 5px;");	    	
 		    	innerDiv2.appendChild(imgForInnerDiv2);		    	
 		    	
 		    	//Copy text comment
@@ -830,13 +830,13 @@
 			    	}
 		    		else {		    			
 		    			innInnerDiv2.style.display = "none";		    			
-		    			imgForInnerDiv2.src = div2Cmt.firstElementChild.firstElementChild.src;
+		    			imgForInnerDiv2.src = div2Cmt.firstElementChild.firstElementChild.src;		    			
 		    			innerDiv2.style.display = "block";		    					    			
 		    			
 		    			//Add delete image in top rigt of sticker/files
 		    			var cancelImgForInnerDiv2 = document.createElement("img"); 
 		    			cancelImgForInnerDiv2.src = "/images/close.png";
-		    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+		    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0px; right: 5px;; position: absolute; cursor: pointer;");
 		    			cancelImgForInnerDiv2.onclick = function () { deleteFileInCmt(); };
 		    			innerDiv2.appendChild(cancelImgForInnerDiv2);
 		    			
@@ -870,7 +870,7 @@
 	    			//Add delete image in top rigt of sticker/files
 	    			var cancelImgForInnerDiv2 = document.createElement("img"); 
 	    			cancelImgForInnerDiv2.src = "/images/close.png";
-	    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+	    			cancelImgForInnerDiv2.setAttribute("style", "height: 20; width: 20px; top: 0px; right: 5px; position: absolute; cursor: pointer;");
 	    			cancelImgForInnerDiv2.onclick = function () { deleteFileInCmt(); };
 	    			innerDiv2.appendChild(cancelImgForInnerDiv2);
 	    			
@@ -1668,6 +1668,7 @@
 
 		    	//Close sticker picker
 		    	document.getElementById("emoticonPanel").style.display = "none";
+		    	document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
 		    	
 		    	if (document.getElementById("sendComment").style.display !== "none") {
 			    	//Add sticker in uploadFile element
