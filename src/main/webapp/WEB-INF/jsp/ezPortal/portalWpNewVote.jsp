@@ -18,8 +18,7 @@
 		    var votesArr 		= [];
 		    var totalVotes 		= 0;
 		    var tenantId 		= "${tenantId}";
-		    var numberOptions   = "<c:out value='${numberOfOptions}'/>";
-		    var status 			= "${status}";
+		    var numberOptions   = "<c:out value='${numberOfOptions}'/>";		   
 		    var seeResultBefore = "${seeResultBefore}";
 		    
 		    window.onload = function() {
@@ -35,8 +34,7 @@
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	
 			            if (ret == "OK") {							
-			            	status = 0;
-			            	updateGraph();
+			            	window.location.reload();
 					    }
 				    });
 			        
@@ -115,7 +113,7 @@
 					var divGrap = document.getElementById("divGraph" + votesArr[i][0]);
 					var inforDiv = document.getElementById("info" + votesArr[i][0]);
 					
-					if (totalVotes > 0 && (seeResultBefore == 1 || status == 0)) {
+					if (totalVotes > 0 && seeResultBefore == 1) {
 						var spaceElmt = document.getElementById("space" + votesArr[i][0]);
 						
 						if (spaceElmt != null) {
@@ -161,7 +159,7 @@
 		               					<div style="float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap;">${_option.content}</div>
 		               					
 		               					<c:choose>
-		               						<c:when test="${seeResultBefore == 1 || status == 0}">
+		               						<c:when test="${seeResultBefore == 1}">
 		               							<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
 		               						</c:when>
 		               						<c:otherwise>
@@ -172,7 +170,7 @@
 		               				</div>
 		               				
 	               					<c:choose>
-	               						<c:when test="${seeResultBefore == 1 || status == 0}">
+	               						<c:when test="${seeResultBefore == 1}">
 			               					<div class="graphbar1" id="divGraph<c:out value ="${_option.ansId}" />">
 				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>           					
 				               				</div>				               				

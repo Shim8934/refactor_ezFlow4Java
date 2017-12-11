@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1473,13 +1474,26 @@ public class EzPortalController extends EgovFileMngUtil {
 		int status = -1;
 		int seeResultBefore = -1;
 		int compareEnd = 0;
+		Date nowTime = new Date();
 		
 		//Get list of questions for user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
 		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, "", "");
 		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
 		
-		if (!setOfQuestions.isEmpty()) {
+		if (!listTotalQuestions.isEmpty()) {
+			//Get only processing poll
+			for (Iterator<PollQuestionVO> iterator = listTotalQuestions.iterator(); iterator.hasNext(); ) {
+				PollQuestionVO pollQstVO = iterator.next();
+				Date endDate = formatter.parse(pollQstVO.getEndDate());	
+				compareEnd = endDate.compareTo(nowTime);
+				
+			    if (compareEnd <= 0) {
+			        iterator.remove();
+			    }			    
+			}
+			
+			//Get list of modifying question
 			List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
 			
 			for (PollQuestionVO pollQstVO : listTotalQuestions) {
@@ -1499,18 +1513,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
 			qstTitle = question.getTitle();
 			qstId = question.getQstId();			
-			seeResultBefore = question.getResultFirst();
-			
-			Date endDate = formatter.parse(question.getEndDate());
-			Date nowTime = new Date();
-			compareEnd = endDate.compareTo(nowTime);
-			
-			if (compareEnd > 0) {
-				status = 1;
-			}
-			else {
-				status = 0;
-			}
+			seeResultBefore = question.getResultFirst();			
 			
 			//Get list of Options		
 			List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());
@@ -1526,8 +1529,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("qstTitle", qstTitle);		
 		model.addAttribute("qstId", qstId);	
-		model.addAttribute("tenantId", loginVO.getTenantId());	
-		model.addAttribute("status", status);
+		model.addAttribute("tenantId", loginVO.getTenantId());			
 		model.addAttribute("seeResultBefore", seeResultBefore);
 		
 		logger.debug("wpNewVote finishes");
