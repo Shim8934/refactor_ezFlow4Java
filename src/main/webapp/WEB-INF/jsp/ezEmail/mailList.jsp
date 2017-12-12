@@ -802,7 +802,7 @@
                 <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
                 </table>
             </div>
-            <div id="tblPageRayer"  style="width:450px; margin:6px auto;"></div>
+            <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
         </span>
         <span id="PreviewRayerH" style="border:0px solid red;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;">
             <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor:w-resize;display:inline-block;">
