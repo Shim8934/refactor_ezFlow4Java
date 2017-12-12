@@ -510,7 +510,7 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 	    <div id="left" style="overflow: auto">
-	        <div class="left_board" title="BOARD"></div>
+	        <div class="left_board" title="<spring:message code='ezBoard.t116'/>"></div>
 	        <c:if test="${MyBoardTopFlag != 'NO'}">
 	        	<div class="fList" onclick="favoriteList()">
 	        		<h2>

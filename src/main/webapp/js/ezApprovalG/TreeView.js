@@ -213,7 +213,7 @@ function TreeNode() {
         if (pNodeClick != "") {
             spnNode.style.cursor = "pointer";
             this.NodeName = this.NodeName.replace(/"/g, '\\"');
-            spnNode.setAttribute("onClick", "node_select(\"" + this.NodeID + "\", \"" + this.NodeName + "\", \"" + strTreeID + "\", " + pNodeClick + ");");
+            spnNode.setAttribute("onClick", "node_select(\"" + this.NodeID + "\", \"" + this.NodeName.replace(/\\/g, '\\\\') + "\", \"" + strTreeID + "\", " + pNodeClick + ");");
         }
 
         //노드 더블클릭 이벤트 Attach

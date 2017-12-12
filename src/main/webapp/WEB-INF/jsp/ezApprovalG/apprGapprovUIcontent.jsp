@@ -139,7 +139,7 @@
 	                return true;
 	        }
 	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.childNodes.length; i++) {
+	            for (var i = 0; i < obj.options.length; i++) {
 	                obj.options[i].setAttribute("check", "1");
 	            }
 	            obj.options[obj.selectedIndex].setAttribute("check", "2");
