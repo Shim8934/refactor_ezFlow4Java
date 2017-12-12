@@ -5,6 +5,22 @@
 		<title><spring:message code='ezBoard.t242'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<style>
+			.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
@@ -80,12 +96,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden;">
 		<h1><spring:message code='ezBoard.t244'/></h1>
-	    <div class="txt">
-	        <spring:message code='ezBoard.t245'/>
-	    </div>
-	    <br />
-	    <div>
-	        <input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%">
+	    <div class="txt" style="margin-top:15px">
+	        ▒&nbsp;<spring:message code='ezBoard.t245'/>
+	    </div>	    
+	    <div style="margin-top:10px">
+	        <input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc">
 	    </div>
 	    <div class="btnposition">
 	        <a name="btn_OpinionOK" id="btn_OpinionOK" class="imgbtn" onClick="return btn_OpinionOK_onclick()"  ><span><spring:message code='ezBoard.t14'/></span></a>

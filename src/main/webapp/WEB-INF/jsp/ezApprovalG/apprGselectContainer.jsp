@@ -13,6 +13,21 @@
 			.mainlist tr th {
 				border-top:0px;
 			}
+			
+			.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script> 

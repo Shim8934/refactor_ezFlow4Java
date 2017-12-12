@@ -7,6 +7,22 @@
 		<title><spring:message code='ezBoard.t484'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<style>
+			.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -126,18 +142,18 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezBoard.t484'/></h1>
-		<h2><spring:message code='ezBoard.t485'/></h2>
+		<h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t485'/></h2>
 		<span id="pMessageContent"></span>
 		<table class="content">
 		<c:if test="${oneLineReplyFlag == '1'}">
 			<tr>
 			    <th><input id='onl' name ='onl'  type='checkbox' /></th>
-			    <td><span id="ext1"><spring:message code='ezBoard.t486'/></span></td>
+			    <td><span id="ext1">&nbsp;<spring:message code='ezBoard.t486'/></span></td>
 			</tr>
 		</c:if>
 		<tr>
 		    <th ><input id='att' name='att'  type='checkbox' /></th>
-		    <td><span id="ext2"><spring:message code='ezBoard.t487'/></span></td>
+		    <td><span id="ext2">&nbsp;<spring:message code='ezBoard.t487'/></span></td>
 		</tr>
 		</table>
 		          

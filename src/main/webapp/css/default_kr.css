@@ -1216,7 +1216,7 @@ form{display:inline;margin:0}
 }
 
 .popup_noti {
-	width:330px; 
+	/* width:330px; */ 
 	margin:0px; 
 	padding:0px;
 }
