@@ -394,7 +394,7 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezPoll/pollComplete.do", method = RequestMethod.POST)
-	public String qstComplete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, PollAnswerVO pollAnswerVO, PollQuestionVO pollQuestionVO, ModelMap model) throws Exception {		
+	public String qstComplete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, PollAnswerVO pollAnswerVO, PollQuestionVO pollQuestionVO, ModelMap model, HttpServletResponse response) throws Exception {		
 		logger.debug("Question complete is running!");		
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantID = loginVO.getTenantId();
@@ -772,7 +772,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/checkPoll.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String checkPoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String checkPoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("check poll is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
@@ -922,7 +922,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/addComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session) throws Exception {
+	public String addComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
 		logger.debug("Add comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String strXML = "";
@@ -1050,7 +1050,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/editComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String editComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session) throws Exception {
+	public String editComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
 		logger.debug("Edit comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String strXML = "";		
@@ -1162,7 +1162,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/deleteComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String deleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session) throws Exception {
+	public String deleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
 		logger.debug("Delete comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String strXML = "";	
@@ -1202,7 +1202,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/undoModifyVote.do", method = RequestMethod.POST)
 	//@ResponseBody
-	public void undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public void undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Undo modify vote is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		//String strXML = "";
@@ -1259,7 +1259,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/deleteQuestion.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String deleteQuestion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception {
+	public String deleteQuestion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, HttpServletResponse response) throws Exception {
 		logger.debug("Delete question is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);					
 		String listQstIds = "";
@@ -1277,7 +1277,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezPoll/uploadCmtFile.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String uploadCmtFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String uploadCmtFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {
 		logger.debug("upload comment file is running!");
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload");		
@@ -1340,7 +1340,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezPoll/uploadFile.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {		
+	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {		
 		logger.debug("Upload file is running!");		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
@@ -1418,7 +1418,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/adjustJoinedUsers.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String adjustJoinedUsersNumber(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, HttpSession session) throws Exception {
+	public String adjustJoinedUsersNumber(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, HttpSession session, HttpServletResponse response) throws Exception {
 		logger.debug("Adjust joined users is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);	
 		String strXML = "";
@@ -1513,7 +1513,7 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/deleteCmtFile.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String deleteCmtFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String deleteCmtFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {
 		logger.debug("Delete comment file is running!");
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String fileName = "";
@@ -1549,7 +1549,7 @@ public class EzPollController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezPoll/deleteFile.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String deleteFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String deleteFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {
 		logger.debug("Delete file is running!");
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String fileName = "";

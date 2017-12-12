@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
@@ -649,5 +650,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		delete("EzBoardDAO.deleteReservedBoard", k);
 	}
 	
-    
+    //baonk added
+	public BoardPollConfigVO getPollConfig(Map<String, Object> map) throws Exception {
+		return (BoardPollConfigVO) select("EzBoardDAO.getPollConfig", map);
+	}
+
+	public void saveBoardPollConfig(Map<String, Object> map) throws Exception {		
+		insert("EzBoardDAO.saveBoardPollConfig", map);
+	}	
+	//end
+	
 }

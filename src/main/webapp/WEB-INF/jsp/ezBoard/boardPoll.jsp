@@ -16,20 +16,8 @@
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var g_windowReference = null;
-	 		$(document).ready(function() {	 		
-		 	var HListUser = $('#HListUser option:selected').val();
-		 	$("#HListUser").val("<c:out value="${boardListConfig.previewHList}"/>").attr("selected", "selected");
-		 
-		 	var WListUser = $('#WListUser option:selected').val();
-		 	$("#WListUser").val("<c:out value="${boardListConfig.previewWList}"/>").attr("selected", "selected");
-		 
-		 	var HPreUser = $('#HPreUser option:selected').val();
-		 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
-		 
-		 	var WPreUser = $('#WPreUser option:selected').val();
-		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	    
-		 		});
-	 		
+			var checkFlag 		  = "<c:out value='${hasConfig}'/>";
+			
          	document.onselectstart = function () { return false; };
          	
         	window.onload = function () {
@@ -40,65 +28,59 @@
 		                document.body.style.oUserSelect = 'none';
                 		document.body.style.UserSelect = 'none';
             		}	
+            		
+            		preProcess();
+        	}   
+        	
+        	function preProcess() {
+        		if (checkFlag == "1") {
+        			//Set target
+        			var listTarget = "<c:out value='${listOfTarget}'/>";
+        			if (listTarget != "") {
+        				var newTargetDiv = document.getElementById("newTargetDiv");
+            	    	newTargetDiv.innerHTML = listTarget;
+            	    	newTargetDiv.setAttribute("title", listTarget);
+            	    	newTargetDiv.style.display = "";	
+        			}
+        			
+        			document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
+        			
+        			//Set time
+        			var _sTime = "<c:out value='${startTime}'/>";
+        			var _eTime = "<c:out value='${endTime}'/>";
+        			
+        			_sTime = _sTime.replace(":", "");
+        			_eTime = _eTime.replace(":", "");
+
+    	        	$("#sTimePicker").val(_sTime).change();
+    	        	$("#eTimePicker").val(_eTime).change();            	 	
+        		}  
         	}
         	
-        	function PreviewOption(obj) {
-            	if (obj.value == "OFF") {
-                	document.getElementById("PreviewHSizeDiv").style.display = "none";
-                	document.getElementById("PreviewWSizeDiv").style.display = "none";
-            	}
-            	else if (obj.value == "H") {
-                	document.getElementById("PreviewHSizeDiv").style.display = "";
-                	document.getElementById("PreviewWSizeDiv").style.display = "none";
-            	}
-            	else {
-                	document.getElementById("PreviewHSizeDiv").style.display = "none";
-                	document.getElementById("PreviewWSizeDiv").style.display = "";
-            	}
-        	}
-        	function HChange(obj) {
-            	if (obj == document.getElementById("HListUser")) {
-                	document.getElementById("HPreUser").value = 100 - parseInt(obj.value);
-            	}
-            	else {
-                	document.getElementById("HListUser").value = 100 - parseInt(obj.value);
-            	}
-        	}
-        	function WChange(obj) {
-            	if (obj == document.getElementById("WListUser")) {
-                	document.getElementById("WPreUser").value = 100 - parseInt(obj.value);
-            	}
-            	else {
-                	document.getElementById("WListUser").value = 100 - parseInt(obj.value);
-            	}
-        	}
         	function Cancel_Click() {
-        		document.getElementById("listcount").value = "${boardListConfig.listCount}";
+/*         		document.getElementById("listcount").value = "${boardListConfig.listCount}";
         		document.getElementById("PreviewMode").value = "${boardListConfig.preview}";
         		if("${boardListConfig.preview}"=="OFF"){
         			document.getElementById("PreviewHSizeDiv").style.display = "none";
                   	document.getElementById("PreviewWSizeDiv").style.display = "none";
-        		}
+        		} */
+        		
         	}
-        	function Change_Click() {
-        		var listCount = document.getElementById("listcount").value;
-     			var PreviewMode = document.getElementById("PreviewMode").value;
-     			var PreviewWList = document.getElementById("WListUser").value;
-     			var PreviewWContent = document.getElementById("WPreUser").value;
-     			var PreviewHList = document.getElementById("HListUser").value;
-     			var PreviewHContent = document.getElementById("HPreUser").value;
+        	function Change_Click() {        		        		
+        		var rangeSelect = document.getElementById("RangeXMLStr").value;
+        		var sTimePickerElmt = document.getElementById("sTimePicker");        		
+     			var startTime = sTimePickerElmt.options[sTimePickerElmt.selectedIndex].text;     			
+        		var eTimePickerElmt = document.getElementById("eTimePicker");        		
+     			var endTime = eTimePickerElmt.options[eTimePickerElmt.selectedIndex].text;
      		
      			$.ajax({
-     				url : '/ezBoard/board_generallist_save.do',
+     				url : '/ezBoard/boardPollConfigSave.do',
      				method : 'POST',
      				dataType : 'text',
      				data : {
-	     				listCount : listCount ,
-    	 				preview : PreviewMode,
-     					previewWList : PreviewWList,
-     					previewWContent : PreviewWContent,
-     					previewHList : PreviewHList,
-     					previewHContent : PreviewHContent	
+     					rangeSelect : rangeSelect,
+     					startTime : startTime,
+     					endTime : endTime	
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
 	     				alert('<spring:message code="ezEmail.t42" />');
@@ -190,7 +172,7 @@
     	                    elementRef[0].selectedIndex = _value;
     	                    break;
     	                case "value":
-    	                    elementRef[0].value = _value;
+    	                    elementRef[0].value = _value;    	                    
     	                    break;
     	            }
     	        }
@@ -204,6 +186,7 @@
     	    }
     	</script>
 	</head>
+		<xmp id="sigBody" style="display: none;">${xmlRange}</xmp>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
     		<h2><spring:message code="ezBoard.t0006" /></h2>

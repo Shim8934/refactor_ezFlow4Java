@@ -58,6 +58,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
@@ -364,14 +365,135 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "ezBoard/boardFavorite";
 	}
 	
+	//baonk added
 	@RequestMapping(value="/ezBoard/boardPollSetting.do")
 	public String boardPollSetting(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie); 
+		String pUserID = userInfo.getId();
+		String listOfTarget = "";
+		String startTime = "";
+		String endTime = "";
+		StringBuffer strXMLRange = new StringBuffer();
+		strXMLRange.append("<RANGE>"); 
 		
-		model.addAttribute("userInfo", userInfo);
+		BoardPollConfigVO boardPollConfigVO = ezBoardService.getPollConfig(pUserID, userInfo.getTenantId());
+		if (boardPollConfigVO == null) {
+			model.addAttribute("hasConfig", 0);
+		}
+		else {
+			model.addAttribute("hasConfig", 1);
+			
+			//Process time
+			startTime = boardPollConfigVO.getDefaultStartTime();
+			endTime = boardPollConfigVO.getDefaultEndTime();
+			
+			//Process target
+	        String[] departIdList = boardPollConfigVO.getTargetDepts().split(",");
+	        String[] userIdList = boardPollConfigVO.getTargetUsers().split(",");
+	        
+	        if (departIdList.length > 0 && !departIdList[0].equals("")) {
+	        	strXMLRange.append("<DEPT>"); 
+	        	
+		        for (String deptID : departIdList) {
+		        	OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(deptID, userInfo.getPrimary(), userInfo.getTenantId());			        	
+		        	strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(organDeptVO.getCn()) + "\" nm=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName()) + 
+		        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
+		        	
+		        	if (userInfo.getPrimary().equals("1")) {
+		        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+		        	}
+		        	else {
+		        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+		        	}
+		        	
+		        }
+		        
+		        strXMLRange.append("</DEPT>"); 
+	        }
+	        
+	        if (userIdList.length > 0 && !userIdList[0].equals("")) {
+	        	strXMLRange.append("<MEMBER>"); 
+	        	
+	        	for (String userID : userIdList) {
+	        		LoginVO user = loginService.selectReceiver(userID, userInfo.getTenantId());
+	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
+		        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
+	        		
+		        	if (userInfo.getPrimary().equals("1")) {
+		        		listOfTarget += user.getDisplayName1() + ",";
+		        	}
+		        	else {
+		        		listOfTarget += user.getDisplayName2() + ",";
+		        	}
+	        		
+	        	}		        	
+	        	
+	        	strXMLRange.append("</MEMBER>");
+	        }
+	        
+	        if (listOfTarget.endsWith(",")) {
+	        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
+	        }				
+		}
+		strXMLRange.append("</RANGE>");
+		model.addAttribute("startTime", startTime);
+		model.addAttribute("endTime", endTime);
+		model.addAttribute("listOfTarget", listOfTarget);
+		model.addAttribute("xmlRange", strXMLRange.toString());
 		
 		return "ezBoard/boardPoll";
 	}
+	
+	@RequestMapping(value="/ezBoard/boardPollConfigSave.do", method = RequestMethod.POST)
+	public void boardPollConfigSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		int pDeptCnt = 0;
+		int pUserCnt = 0;
+		String targetDepts = "";
+		String targetUsers = "";
+		BoardPollConfigVO boardPollConfigVO = new BoardPollConfigVO();		
+		String range = request.getParameter("rangeSelect");
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
+		
+		Document doc = commonUtil.convertStringToDocument(range);
+		
+		if (doc.getElementsByTagName("DEPT").item(0) != null) {
+			pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
+		}				
+		
+		for (int j = 0; j < pDeptCnt; j++) {
+			String deptID = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(j).getAttributes().getNamedItem("id").getTextContent();
+			targetDepts += deptID + ",";
+		}	
+		
+		if (doc.getElementsByTagName("MEMBER").item(0) != null) {				
+			pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();			
+		}				
+		
+		for (int i = 0; i < pUserCnt; i++) {
+			String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+			targetUsers += userID + ",";
+		}
+		
+		if (targetDepts.endsWith(",")) {
+			targetDepts = targetDepts.substring(0, targetDepts.length() - 1);
+		}
+		
+		if (targetUsers.endsWith(",")) {
+			targetUsers = targetUsers.substring(0, targetUsers.length() - 1);
+		}
+				
+		boardPollConfigVO.setTenantId(userInfo.getTenantId());
+		boardPollConfigVO.setUserId(userInfo.getId());
+		boardPollConfigVO.setTargetDepts(targetDepts);
+		boardPollConfigVO.setTargetUsers(targetUsers);
+		boardPollConfigVO.setDefaultStartTime(startTime);
+		boardPollConfigVO.setDefaultEndTime(endTime);
+
+		ezBoardService.saveBoardPollConfig(boardPollConfigVO);
+	}
+	//end
 	
 	/**
 	 * 게시판 부모게시판명 표출 Method

@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
@@ -3209,5 +3210,29 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		return result;
 	}
+
+	//baonk added
+	@Override
+	public BoardPollConfigVO getPollConfig(String pUserID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", pUserID);		
+		map.put("tenant_id", tenantId);
+		
+		return ezBoardDAO.getPollConfig(map);
+	}	
+
+	@Override
+	public void saveBoardPollConfig(BoardPollConfigVO boardPollConfigVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", boardPollConfigVO.getUserId());		
+		map.put("start_time", boardPollConfigVO.getDefaultStartTime());	
+		map.put("end_time", boardPollConfigVO.getDefaultEndTime());	
+		map.put("target_depts", boardPollConfigVO.getTargetDepts());	
+		map.put("target_users", boardPollConfigVO.getTargetUsers());	
+		map.put("tenant_id", boardPollConfigVO.getTenantId());
+		
+		ezBoardDAO.saveBoardPollConfig(map);		
+	}	
+	//end
 	
 }
