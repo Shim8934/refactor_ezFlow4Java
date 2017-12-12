@@ -263,8 +263,7 @@
     function search() {
 		$(function() {
 			if ($('#searchKeyword').val().trim() == "") {
-				alert("<spring:message code='ezCircular.t189'/>");
-				return false;
+				$('#searchKeyword').val('');
 			}
 			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
 				alert(strLang5);
