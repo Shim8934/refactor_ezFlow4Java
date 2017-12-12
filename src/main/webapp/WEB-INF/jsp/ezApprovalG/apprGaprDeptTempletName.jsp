@@ -13,6 +13,22 @@
 	</c:if>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style>
+			.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -100,7 +116,7 @@
 		</h1>
 		<span>▒ <c:if test ="${approvalFlag =='G'}"><spring:message code='ezApprovalG.t311'/></c:if><c:if test ="${approvalFlag =='S'}"><spring:message code='ezApproval.t199'/></c:if></span>
 		<div class="nobox" style="margin-top:7px">
-		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%" maxlength="7">
+		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%;border:1px solid #ccc;height:25px" maxlength="7">
 		</div>
 		<div class="btnposition" >
 		<input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApprovalG.t20'/>" onClick="return btn_SaveAprDeptTempletName_onclick()">
