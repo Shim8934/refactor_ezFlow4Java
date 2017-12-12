@@ -10,6 +10,22 @@
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" type="text/css" href="/css/Tab.css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <style>	    
+			.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -1328,7 +1344,7 @@
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 550px; width: 388px; background-color: #FFFFFF; border: 1px solid #b6b6b6" id="TreeView"></div>
+	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #b6b6b6;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
 	                <div id="ReceptTemp" style="display: none; padding-left: 5px">

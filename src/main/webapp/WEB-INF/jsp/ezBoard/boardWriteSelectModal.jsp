@@ -11,30 +11,34 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<style>
-		.node_normal{
-			padding-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			background-color : #ffffff;
-			height : 15px;
-			cursor : hand;
-		}
-		.node_selected{
-			padding-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			height : 15px;
-			background-color : rgb(233, 241, 255);
-			cursor : hand;
-		}
-		.node_hover{
-			padding-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			background-color : #F7FAE0;
-			height : 15px;
-			cursor : hand;
-		}
+			.node_normal{
+				margin-top: 3px;
+				vertical-align:top;
+				font-size: 9pt;
+				background-color : #ffffff;
+				height : 15px;
+				cursor : hand;
+			}
+			.node_selected{
+				margin-top: 3px;
+				vertical-align:top;
+				font-size: 9pt;
+				height : 15px;
+				background-color : rgb(233, 241, 255);
+				cursor : hand;
+			}
+			.node_hover{
+				margin-top: 3px;
+				vertical-align:top;
+				font-size: 9pt;
+				background-color : #F7FAE0;
+				height : 15px;
+				cursor : hand;
+			}
+			
+			img {
+				padding-top:0px
+			}
 		</style>
 		
 		<script type="text/javascript">
@@ -211,8 +215,13 @@
 				{
 				    var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 				    tid= tid.substring(1,37);
-					strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl"+i.toString()+"\" ,\""+ tid + "\""+", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;'></DIV></td></tr>";
+				    
+				    if (i == 0) {
+				    	strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl"+i.toString()+"\" ,\""+ tid + "\""+", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";    	
+				    } else {
+						strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl"+i.toString()+"\" ,\""+ tid + "\""+", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+				    }
+					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;padding-top:10px;padding-bottom:10px'></DIV></td></tr>";
 				}
 				strHTML += "</table>";
 				

@@ -146,9 +146,9 @@
 	        function SelectOnchange(obj) {
 	            for (var i = 0; i < obj.options.length; i++) {
 	            	if (i == obj.selectedIndex) {
-	            		obj.childNodes.item(i).setAttribute("selected", "selected");
+	            		obj.options[i].setAttribute("selected", "selected");
 	            	} else {
-	            		obj.childNodes.item(i).removeAttribute("selected");
+	            		obj.options[i].removeAttribute("selected");
 	            	}
 	            }
 	        }

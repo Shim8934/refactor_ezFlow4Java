@@ -6,6 +6,22 @@
 		<title><spring:message code='ezApprovalG.t1744'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style>
+			.popup .btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
@@ -194,8 +210,8 @@
 	</head>
 	<body class="popup" >
 		<h1><spring:message code='ezApprovalG.t1745'/></h1>		
-		<h2><spring:message code='ezApprovalG.t1746'/></h2>
-		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>
+		<h2 style="font-weight: normal;margin-top:10px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
+		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition">
 		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick();"><span><spring:message code='ezApprovalG.t20'/></span></a>

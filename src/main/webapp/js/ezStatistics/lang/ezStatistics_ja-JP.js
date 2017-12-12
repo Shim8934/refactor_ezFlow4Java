@@ -24,4 +24,3 @@ var strLang22 = "総";
 var strLang23 = "件";
 var strLang24 = "以前";
 var strLang25 = "次";
-

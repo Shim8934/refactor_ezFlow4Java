@@ -303,7 +303,6 @@ var strLangKMS03 = "메일이 없습니다.";
 var strLangKMS04 = "수신자 수가 "; 
 var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다.\n개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
 
-
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

@@ -7,6 +7,22 @@
     <title>${Title}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	<style>
+		.btnposition{
+			margin: 0px 0px 0px -10px;
+			/* margin-top: 10px; */
+			background: none;
+			border: none;
+			border-top: 1px solid #ddd;
+			padding:10px 0px;
+			background-color: #f2f2f2;
+			text-align:center;
+			position: absolute;
+			text-align: center;
+			bottom: 0px;
+			width:100%;
+		}
+	</style>
 	<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     <script id="clientEventHandlersJS" type="text/javascript">
@@ -143,13 +159,10 @@
 </head>
 <body class="popup">
     <h1>${title}</h1>
-
-    <div class="txt"><spring:message code='ezApproval.t296'/></div>
-
-    <div class="nobox">
-        <input type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width: 100%" maxlength="50">
+    <div class="txt" style="margin-top:5px">▒&nbsp;<spring:message code='ezApproval.t296'/></div>
+    <div class="nobox" style="margin-top:5px">
+        <input type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width: 100%;height:25px;border:1px solid #ccc;margin-top:5px" maxlength="50">
     </div>
-
     <div class="btnposition">
         <input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApproval.t84'/>" onclick="return btn_SaveAprDeptTempletName_onclick()">
         <input type="submit" name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" value="<spring:message code='ezApproval.t85'/>" onclick="return btn_CancelAprDeptTempletName_onclick()">

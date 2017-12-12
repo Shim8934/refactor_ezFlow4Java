@@ -123,11 +123,11 @@
 	                inputnamedlg_cross_dialogArguments[0] = "";
 	                inputnamedlg_cross_dialogArguments[1] = add_onclick_Complete;
 	                inputnamedlg_cross_dialogArguments[2] = DivPopUpHidden;
-	                DivPopUpShow(330, 160, "/ezAddress/addressInputNameDlg.do");
+	                DivPopUpShow(330, 180, "/ezAddress/addressInputNameDlg.do");
 	            }
 	            else {
 	                var feature = "dialogHeight:200px; dialogwidth:330px; status:no; help:no; scroll:no; edge:sunken";
-	                feature = feature + GetShowModalPosition(330, 200);
+	                feature = feature + GetShowModalPosition(330, 220);
 	                var ArgObjet = new Array();
 	                ArgObjet[0] = window;
 	                ArgObjet[1] = szNames;
@@ -203,12 +203,12 @@
 	                inputnamedlg_cross_dialogArguments[0] = szNames;
 	                inputnamedlg_cross_dialogArguments[1] = modify_onclick_Complete;
 	                inputnamedlg_cross_dialogArguments[2] = DivPopUpHidden;
-	                DivPopUpShow(330, 160, "/ezAddress/addressInputNameDlg.do");
+	                DivPopUpShow(330, 180, "/ezAddress/addressInputNameDlg.do");
 	            }
 	            else {
 	                var ArgObjet = new Array();
 	                var feature = "dialogHeight:200px; dialogwidth:330px; status:no; help:no; scroll:no; edge:sunken";
-	                feature = feature + GetShowModalPosition(330, 200);
+	                feature = feature + GetShowModalPosition(330, 220);
 	                ArgObjet[0] = window;
 	                ArgObjet[1] = szNames;
 	                window.showModalDialog("/ezAddress/addressInputNameDlg.do", ArgObjet, feature);

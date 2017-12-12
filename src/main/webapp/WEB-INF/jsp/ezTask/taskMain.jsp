@@ -915,8 +915,8 @@
 	
 		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle"><spring:message code='ezTask.t118' /></label>
-		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle"><spring:message code='ezTask.t2005' /></label>
+		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
+		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label>
 				  &nbsp;
 				  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		          <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
