@@ -20590,7 +20590,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (dlength > 0) {
 			if (ParentContID.toUpperCase().equals("ROOT")) {
                 rtnXML.append("<NODE>");
-				rtnXML.append("<VALUE>" + makeXMLString(docXML.getElementsByTagName("USERCONTNAME").item(0).getTextContent()) + "</VALUE>");
+				rtnXML.append("<VALUE>" + makeXMLString(docXML.getElementsByTagName("USERCONTNAME").item(0).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
 				rtnXML.append("<DATA1>" + docXML.getElementsByTagName("USERCONTID").item(0).getTextContent() + "</DATA1>");
 				rtnXML.append("<DATA2>" + ParentContID + "</DATA2>"); 
 				rtnXML.append("<DATA3>" + makeXMLString(docXML.getElementsByTagName("DESCRIPTION").item(0).getTextContent())+ "</DATA3>");
@@ -20601,7 +20601,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				for (int j = 0; j < dlength; j++) {
                      rtnXML.append("<NODE>");
-					 rtnXML.append("<VALUE>" + makeXMLString(docXML.getElementsByTagName("USERCONTNAME").item(j).getTextContent()) + "</VALUE>");
+					 rtnXML.append("<VALUE>" + makeXMLString(docXML.getElementsByTagName("USERCONTNAME").item(j).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
 					 rtnXML.append("<DATA1>" + docXML.getElementsByTagName("USERCONTID").item(j).getTextContent() + "</DATA1>");
 					 rtnXML.append("<DATA2>" + ParentContID + "</DATA2>");
 					 rtnXML.append("<DATA3>" + makeXMLString(docXML.getElementsByTagName("DESCRIPTION").item(j).getTextContent()) + "</DATA3>");
