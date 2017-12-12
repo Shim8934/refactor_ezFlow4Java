@@ -315,6 +315,7 @@ public class EzSystemAdminController {
 		cell = row.createCell(5);
 		cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
 		
+		row = sheet.createRow(1);
 		cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0022", locale)); 
 		cell.setCellStyle(headerStyle);
 		cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0023", locale)); 
