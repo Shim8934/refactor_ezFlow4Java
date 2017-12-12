@@ -154,8 +154,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/folders-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailFolderList(HttpServletRequest request, @PathVariable String userId, @RequestParam(value="folderId", required=false) String folderId) {
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] started.");
-		
+		LOGGER.debug("MOBILE G/W MAIL mMailFolderList started.");		
 		LOGGER.debug("userId=" + userId + ",folderId=" + folderId);
 		
 		JSONObject result = new JSONObject();
@@ -182,14 +181,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			LOGGER.debug("locale : ," + locale.getDisplayLanguage());
 			
@@ -246,13 +237,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 		
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] ended.");
+		LOGGER.debug("MOBILE G/W MAIL mMailFolderList ended.");
 		
 		return result;
 	}
 	
 	/**
-	 * 모바일 G/W 이메일 [GET] (받은, 보낸,임시,지운,개인,기타) 편지함 메일 리스트
+	 * 모바일 G/W 이메일 [GET] (받은,보낸,임시,지운,개인,기타) 편지함 메일 리스트
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
@@ -262,7 +253,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			@RequestParam(value="search", required=false) String search,
 			@RequestParam(value="filter", required=false) String filter,
 			@RequestParam(value="endDate", required=false) String endDate) {
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mMailFolderMailList started.");
+		LOGGER.debug("folderId=" + folderId + ",userId=" + userId + ",start=" + start + ",end=" + end);
+		LOGGER.debug("search=" + search + ",filter=" + filter + ",endDate=" + endDate);
 
 		JSONObject result = new JSONObject();
         IMAPAccess ia = null;
@@ -296,14 +289,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
        
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 			String sendName = egovMessageSource.getMessage("ezEmail.t645", locale);
@@ -593,7 +578,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 		
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] ended.");		
+		LOGGER.debug("MOBILE G/W MAIL mMailFolderMailList ended.");		
 
 		return result;
 	}
@@ -603,13 +588,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 */
 	@RequestMapping(value="/mobile/ezemail/mail-write/option", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void mMailWriteOption(HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] started.");
+		LOGGER.debug("MOBILE G/W MAIL mMailWriteOption started.");
 //		String serverName = request.getHeader("x-user-host");
 //		MCommonVO info = mOptionService.commonInfo(serverName, userId);
 		
 //		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 //		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] ended.");		
+		LOGGER.debug("MOBILE G/W MAIL mMailWriteOption ended.");		
 	}
 	
 	/**
@@ -618,8 +603,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/write/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mMailWrite(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject){
-		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/write/users/{userId} started.");
-		LOGGER.debug("mMailWrite jsonObject=" + jsonObject);
+		LOGGER.debug("MOBILE G/W MAIL mMailWrite started.");
+		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
 		
 		JSONObject result = new JSONObject();
 		IMAPAccess ia = null;
@@ -678,14 +663,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			String msgto = "";
 			
@@ -1226,7 +1203,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 
-		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/write/users/{userId} ended.");	
+		LOGGER.debug("MOBILE G/W MAIL mMailWrite ended.");	
 		
 		return result;
 	}
@@ -1237,7 +1214,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/mails/attachs/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mMailFileUpload(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mMailFileUpload started.");
+		LOGGER.debug("userId=" + userId);
 
 //		LOGGER.debug("####" + jsonObject.toJSONString() +"####");
 		
@@ -1250,7 +1228,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String tempFolderName = "";
 			JSONArray fileArray = new JSONArray();
 			int cnt = 0;
-			int maxsize = 0;
+			int maxsize = 10*1024*1024; // 10MB
 			
 			if (jsonObject.get("tempFolderName") != null) {
 				tempFolderName = (String) jsonObject.get("tempFolderName");
@@ -1302,12 +1280,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				for (int i = 0; i < cnt; i++) {
 					_pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
 					
+					// 폴더 패스를 제외한 파일명을 구한다.
 					if (_pFileName.indexOf(commonUtil.separator) > 0) {
 						_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
 					}
 					
 					pFileName[i] = _pFileName;
 					
+					// 확장자를 구한다.
 					if (pFileName[i].lastIndexOf(".") > -1) {
 						sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
 						sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
@@ -1318,6 +1298,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					
 					if (((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
 						isEmpty = true;
+						break;
 					}
 				}
 				
@@ -1326,6 +1307,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 			}
 
+			// 각 파일마다 저장할 파일명으로 사용할 UUID를 할당하고 원 파일의 확장자를 붙인다.
 			for (int i = 0; i < cnt; i++) {
 				sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
 			}
@@ -1353,12 +1335,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					f.mkdirs();
 	            }
 	
+				// maxsize를 넘어가는 파일은 저장하지 않는다.
 				if (fileSize[i] > maxsize && maxsize != 0) {
 	                resultUpload[i] = "overflow";
 	            } else {
+	            	// 허용하는 확장자가 아닌 경우 저장하지 않는다.
 	                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
 	                    resultUpload[i] = "denied";
 	                } else {
+	                	// 업로드된 파일 데이터를 위에서 할당한 UUID를 이름으로 하는 파일로 저장한다.
 	                    mobileMailWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i], pDirTempPath);
 	                    
 	                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
@@ -1388,6 +1373,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				f.mkdirs();
 	        }
 
+	        // 클라이언트가 지정한 UUID인 tempFolderName을 이름으로 하는 첨부파일 목록 저장용 파일을 구한다.
 	        xmlPath += commonUtil.separator + tempFolderName + ".txt";
 	        
 	        LOGGER.debug("###" + xmlPath + "###");
@@ -1473,7 +1459,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", "");	
 		}
 		
-		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] ended.");
+		LOGGER.debug("mMailFileUpload result=" + result);
+		LOGGER.debug("MOBILE G/W MAIL mMailFileUpload ended.");
 			
 		return result;
 	}		
@@ -1482,7 +1469,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/mails/attachsmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Object mailInterAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/mails/attachs/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mailInterAttach started.");
+		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
 		
 		String returnValue = "";
 		String cmd = "";
@@ -1507,14 +1495,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);	
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-			
 			Document xmldom = commonUtil.convertStringToDocument(xmldomString);
 			cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
 			String uidStr = xmldom.getElementsByTagName("URL").item(0).getTextContent();
@@ -1523,7 +1503,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			boolean hasAttachFile = false;
 			
 			if (bigs != null) {
-				for (int i=0; i < bigs.getLength(); i++) {
+				for (int i = 0; i < bigs.getLength(); i++) {
 					if (bigs.item(i).getTextContent().equals("N")) {
 					    // 일반첨부파일이 있는 경우
 						hasAttachFile = true;
@@ -1533,6 +1513,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			long uid = 0;
+			
 			if (uidStr != null && !uidStr.equals("")) {
 				uid = Long.parseLong(uidStr);
 			}
@@ -1548,7 +1529,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Multipart multipart = null;
 			
 			try {
-				
+				// 일반 첨부 파일이 있는 경우
 				if (hasAttachFile) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 							userEmail, password);
@@ -1699,12 +1680,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					}
 		    		
 					// 처리가 완료된 일반첨부파일 원본 파일들을 삭제한다.				
-					for (int i=0; i<fileNodes.getLength(); i++) {
+					for (int i = 0; i < fileNodes.getLength(); i++) {
 						Node subNode = fileNodes.item(i);
 						NodeList childNodes = subNode.getChildNodes();
 						
 		                if (childNodes.item(2).getTextContent().equals("N")) {
 		                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
+		                	
 		                    if (file.exists()) {
 		                    	file.delete();
 		                    }
@@ -1716,11 +1698,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        folder.close(true);
 				}
 				
-				returnValue = commonUtil.convertDocumentToString(xmldom);
-				
+				returnValue = commonUtil.convertDocumentToString(xmldom);				
 			} catch (MessagingException e) {
 				returnValue = e.getMessage();
 				e.printStackTrace();
+				
 				result.put("status", "error");
 				result.put("code", 1);			
 				result.put("data", "");
@@ -1729,18 +1711,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					ia.close();
 				}
 			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", returnValue);
-			
+			result.put("data", returnValue);			
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("mailInterAttach ended.");
+		LOGGER.debug("mailInterAttach result=" + result);
+		LOGGER.debug("MOBILE G/W MAIL mailInterAttach ended.");
 		
 		return result;
 	}
@@ -1753,8 +1737,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/mails/deletesmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Object mailDelInterAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
-		LOGGER.debug("mailDelInterAttach started.");
-		LOGGER.debug("mailDelInterAttach jsonObject=" + jsonObject);
+		LOGGER.debug("MOBILE G/W MAIL mailDelInterAttach started.");
+		LOGGER.debug("mailDelInterAttach userId=" + userId + ",jsonObject=" + jsonObject);
 				
 		String returnValue = "";
 	    
@@ -1770,14 +1754,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			returnValue = "<DATA><![CDATA[";
 			
@@ -1892,7 +1868,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		}
 				
 		LOGGER.debug("mailDelInterAttach result=" + result);
-		LOGGER.debug("mailDelInterAttach ended.");
+		LOGGER.debug("MOBILE G/W MAIL mailDelInterAttach ended.");
 		
 		return result;
 	}
@@ -1903,18 +1879,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/mail-send/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mMailSend(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
-		LOGGER.debug("MOBILE G/W MAIL [POST /ezemail/mail-send/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mMailSend started.");
+		LOGGER.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			boolean retryFlag = false;
-			int retryCount = 1; //메일 발송 실패 시 재시도 횟수
+			int retryCount = 1; // 메일 발송 실패 시 재시도 횟수
 			long draftUID = 0;
 			long sentFolderMessageUID = 0;
 			boolean mailSendCompleted = false;
 			
-			LOGGER.debug(jsonObject.toJSONString());
+//			LOGGER.debug(jsonObject.toJSONString());
 			
 			String importance = "3";
 			
@@ -2005,8 +1982,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String realPath = commonUtil.getRealPath(request);
 	
-			LOGGER.debug("subject = " + subject + ", to = " + to + ", cc = " + cc + ", bcc = " + bcc + ", textBody = " 
-				+ textBody + ", from = " + from + ", charset = " + charset + ", htmlbody = " + htmlbody
+			LOGGER.debug("subject = " + subject + ", to = " + to + ", cc = " + cc + ", bcc = " + bcc 
+				+ ", from = " + from + ", charset = " + charset
 				+ ", displayName = " + displayName + ", stateName = " + stateName + ", url = " + url + ", cmd = " + cmd
 				+ ", orgFolderId = " + orgFolderId + ", orgMessageId = " + orgMessageId
 				+ ", mailcmd = " + mailcmd + ", replyReadTime = " + replyReadTime); 
@@ -2020,14 +1997,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 					userEmail, password);
@@ -2573,7 +2542,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", "");		
 		}
 		
-		LOGGER.debug("MOBILE G/W MAIL [POST /ezemail/mail-send/users/{userId}] ended.");
+		LOGGER.debug("mailInterSend ended. result=" + result);
+		LOGGER.debug("MOBILE G/W MAIL mMailSend ended.");
 		
 		return result;
 	}
@@ -2590,6 +2560,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		JSONObject result = new JSONObject();
 		JSONObject mail = new JSONObject();
 		IMAPAccess ia = null;
+		List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
 		
 		try {		
 			folderId = URLDecoder.decode(folderId, "UTF-8");
@@ -2604,14 +2575,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-	
 			String pAttachListHtmlSub = null;
 			
 			List<String> bodyInfoList = null;
@@ -2634,11 +2597,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String toStr = null;
 			String toHiddenStr = null;
 			String toMobileStr = "";
+			String toList = "";
 			String ccStr = null;
 			String ccHiddenStr = null;
 			String ccMobileStr = "";
+			String ccList = "";
 			String bccStr = "";
 			String bccMobileStr = "";
+			String bccList = "";
 			String subject = null;
 			String dateStr = null;
 			String title = null;
@@ -2777,6 +2743,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							} else {
 								toMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "&nbsp;,&nbsp;";
 							}
+							
+							// HTML 태그가 없는 To 정보
+							if (toList.equals("")) {
+								toList = name + " <" + ((InternetAddress)arrRecipientsTo[i]).getAddress() + ">";
+							} else {
+								toList += "," + name + " <" + ((InternetAddress)arrRecipientsTo[i]).getAddress() + ">";
+							}															
 						}
 					}
 					
@@ -2850,6 +2823,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							} else {
 								ccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "&nbsp;,&nbsp;";
 							}
+							
+							// HTML 태그가 없는 CC 정보
+							if (ccList.equals("")) {
+								ccList = name + " <" + ((InternetAddress)arrRecipientsCC[i]).getAddress() + ">";
+							} else {
+								ccList += "," + name + " <" + ((InternetAddress)arrRecipientsCC[i]).getAddress() + ">";
+							}																						
 						}
 					}
 	
@@ -2881,6 +2861,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							} else {
 								bccMobileStr +=  getMobileReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress()) + "&nbsp;,&nbsp;";
 							}
+							
+							// HTML 태그가 없는 BCC 정보
+							if (bccList.equals("")) {
+								bccList = name + " <" + ((InternetAddress)arrRecipientsBCC[i]).getAddress() + ">";
+							} else {
+								bccList += "," + name + " <" + ((InternetAddress)arrRecipientsBCC[i]).getAddress() + ">";
+							}																													
 						}
 					}
 					
@@ -2928,10 +2915,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						flagged = "1";
 					}
 					
-					mail.put("flag",flagged);
-
-					mail.put("folderName",f.getName());
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale, null, null);
+					mail.put("flag", flagged);
+					mail.put("folderName", f.getName());
+															
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, false, true, locale, null, null);
 
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
@@ -2976,11 +2963,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("toStr", toStr);
 			mail.put("toHiddenStr", toHiddenStr);
 			mail.put("toMobileStr", toMobileStr);
+			mail.put("toList", toList);
 			mail.put("ccStr", ccStr);
 			mail.put("ccHiddenStr", ccHiddenStr);
 			mail.put("ccMobileStr", ccMobileStr);
+			mail.put("ccList", ccList);
 			mail.put("bccStr", bccStr);
 			mail.put("bccMobileStr", bccMobileStr);
+			mail.put("bccList", bccList);
 			mail.put("dateStr", dateStr);
 			mail.put("subject", subject);
 			mail.put("title", title);
@@ -2999,6 +2989,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				mail.put("pAttachListHtml", bodyInfoList.get(1));
 				mail.put("isAttach", bodyInfoList.get(4));
 			}
+			
+			mail.put("attachedFileList", attachedFileList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -3029,7 +3021,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailFileDown(HttpServletRequest request,
 			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mMailFileDown started.");
+		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId + ",index=" + index);
 		
 		String filename = "";
 		
@@ -3048,14 +3041,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			// retrieve the passed in parameters
 			String folderPath = folderId;
@@ -3163,7 +3148,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 		
-		LOGGER.debug("downloadAttach ended.");
+		LOGGER.debug("MOBILE G/W MAIL mMailFileDown ended.");
 		
 		return result;
 	}
@@ -3175,7 +3160,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/inlineattach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object downloadInline(HttpServletRequest request,
 			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
-		LOGGER.debug("downloadInline started.");
+		LOGGER.debug("MOBILE G/W MAIL downloadInline started.");
+		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId + ",index=" + index);
 		
 		InputStream input = null;
 		IMAPAccess ia = null;
@@ -3193,14 +3179,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			// retrieve the passed in parameters
 			String folderPath = folderId;
@@ -3263,7 +3241,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 		
-		LOGGER.debug("downloadInline ended.");
+		LOGGER.debug("MOBILE G/W MAIL downloadInline ended.");
 		
 		return result;
 	}
@@ -3275,7 +3253,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailMove(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
 			@RequestBody JSONObject jsonobject) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [PUT /ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mMailMove started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -3308,13 +3286,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			if ( opt.getLang().equals("1") ) {
-				locale = new Locale("ko");	
-			} else if ( opt.getLang().equals("3") ) {
-				locale = new Locale("ja");
-			}
-			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 					
@@ -3332,8 +3303,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "success");
-			
+			result.put("data", "success");			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -3346,7 +3316,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 				
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId}] ended.");		
+		LOGGER.debug("MOBILE G/W MAIL mMailMove ended.");		
 		
 		return result;
 	}
@@ -3358,8 +3328,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailStatusChange(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
 			@RequestBody JSONObject jsonobject) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [PUT /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
-		// get user credentials
+		LOGGER.debug("MOBILE G/W MAIL mMailStatusChange started.");
+		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -3383,14 +3353,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			LOGGER.debug("userEmail=" + userEmail);
 		        
@@ -3431,9 +3393,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 			}	
 			
-			LOGGER.debug("mailSetReadChange ended.");
-				
-			LOGGER.debug("MOBILE G/W MAIL [PUT /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");		
+			LOGGER.debug("MOBILE G/W MAIL mMailStatusChange ended.");		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3448,7 +3408,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public Object mMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mMailDelete started.");
+		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
 			
 		JSONObject result = new JSONObject();
 		
@@ -3468,14 +3429,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
 				permanentlyDelete = true;
@@ -3524,7 +3477,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 		
-		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");		
+		LOGGER.debug("mMailDelete result=" + result);
+		LOGGER.debug("MOBILE G/W MAIL mMailDelete ended.");		
 		
 		return result;
 	}
@@ -3532,13 +3486,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/tempmail/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public Object mTempMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W MAIL mTempMailDelete started.");
+		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
 			
 		JSONObject result = new JSONObject();
 		
 		IMAPAccess ia = null;
-		// get user credentials
-		try{
+
+		try {
 			
 			folderId = URLDecoder.decode(folderId, "UTF-8");
 			
@@ -3552,15 +3507,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			if ( opt.getLang().equals("1") ) {
-				locale = new Locale("ko");	
-			} else if ( opt.getLang().equals("3") ) {
-				locale = new Locale("ja");
-			}
 			
-			if(folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))){
+			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
 				permanentlyDelete = true;
 			}
 			
@@ -3586,36 +3534,34 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (deleteMsgs != null) {
 				deleteMsgs.setFlag(Flags.Flag.DELETED, true);
             }
-			sourceFolder.close(true);
-		
+			
+			sourceFolder.close(true);		
 					
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "success");
-			
+			result.put("data", "success");			
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "fail");
-			
+			result.put("data", "fail");			
 		} finally {
 			if (ia != null) {
 				ia.close();		
 			}
 		}
 		
-		LOGGER.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");		
+		LOGGER.debug("MOBILE G/W MAIL mTempMailDelete ended.");		
 		
 		return result;
 	}
 	 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/write/checkname/users/{userId}", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
-	public Object mailNameCheck(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
-		
-		LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/write/checkname/users/{userId} started.");
-		LOGGER.debug("mailNameCheck jsonObject=" + jsonObject);
+	public Object mailNameCheck(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
+		LOGGER.debug("MOBILE G/W MAIL mailNameCheck started.");
+		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
 		
 		String organXML = "";
         String dlXML = "";
@@ -3659,13 +3605,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				pAddressFilter = (String) jsonObject.get("pAddressFilter");
 			}
 						
-	        organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info);
-	        dlXML = getOrganDLSearch(pDLSearchList, info);
-	        addressXML = getAddressSearch(pAddressFilter, info);
+			if (!pOrganSearchList.isEmpty()) {
+				organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info);
+			}
+			
+			if (!pDLSearchList.isEmpty()) {
+				dlXML = getOrganDLSearch(pDLSearchList, info);
+			}
+			
+			if (!pAddressFilter.isEmpty()) {
+				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info);
+			}
 	        
 	        data.put("organXML", organXML);
 	        data.put("dlXML", dlXML);
-	        data.put("addressXML",addressXML);
+	        data.put("addressXML", addressXML);
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -3678,9 +3632,62 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", "fail");			
 		}
         
-        LOGGER.debug("MOBILE G/W MAIL [POST /mobile/ezemail/write/checkname/users/{userId} ended.");
+        LOGGER.debug("MOBILE G/W MAIL mailNameCheck ended.");
         
         return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public Object searchAddressBook(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
+		LOGGER.debug("MOBILE G/W MAIL searchAddressBook started.");
+		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
+		
+        String addressXML = "";
+		
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+		
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+									
+			String searchTarget = "";
+			String filterName = "";
+			String filterValue = "";
+			
+			if (jsonObject.get("searchTarget") != null) {
+				searchTarget = (String)jsonObject.get("searchTarget");
+			}
+			
+			if (jsonObject.get("filterName") != null) {
+				filterName = (String)jsonObject.get("filterName");
+			}
+
+			if (jsonObject.get("filterValue") != null) {
+				filterValue = (String)jsonObject.get("filterValue");
+			}
+			
+			if (!searchTarget.isEmpty() && !filterName.isEmpty() && !filterValue.isEmpty()) {
+				addressXML = getAddressSearch(searchTarget, filterName, filterValue, info);
+			}
+			
+	        data.put("addressXML", addressXML);
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL searchAddressBook ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -3689,7 +3696,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mailSetFlag(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag] started.");
+		LOGGER.debug("MOBILE G/W MAIL mailSetFlag started.");
+		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
 
 		String returnData = "";
 		
@@ -3711,14 +3719,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String password = jspw;
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			LOGGER.debug("userEmail=" + userEmail);
 			
@@ -3788,9 +3788,62 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 		}
 		
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag] ended.");
+		LOGGER.debug("MOBILE G/W MAIL mailSetFlag ended.");
 		
 		return result;				
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getQuotaInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo started.");
+		LOGGER.debug("userId=" + userId);
+			
+		JSONObject data = new JSONObject();
+		JSONObject result = new JSONObject();
+		
+		IMAPAccess ia = null;
+
+		try {			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+		
+			Locale locale = new Locale("ko");	
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+						
+			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+			
+			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+			
+			LOGGER.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+								
+			data.put("mailboxUsage", mailboxUsage);
+			data.put("mailboxQuota", mailboxQuota);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");			
+		} finally {
+			if (ia != null) {
+				ia.close();		
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo ended.");		
+		
+		return result;
 	}
 	
 	/**
@@ -3846,11 +3899,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			sb.append("</ROWS></LISTVIEWDATA>");
 			
-			returnData = sb.toString();
-			
+			returnData = sb.toString();			
 		} catch (Exception e) {
-			returnData = "EXCEPTION";
 			e.printStackTrace();
+			
+			returnData = "EXCEPTION";
 		}
         
         return returnData;
@@ -3859,12 +3912,40 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 주소록 정보 호출 함수
 	 */
-	private String getAddressSearch(String pFilter, MCommonVO userInfo) {
+	private String getAddressSearch(String searchTarget, String filterName, String filterValue, MCommonVO userInfo) {
+		LOGGER.debug("getAddressSearch started");
+		LOGGER.debug("getAddressSearch searchTarget=" + searchTarget + ",filterName=" + filterName
+				+ ",filterValue=" + filterValue);
+		
         String returnValue = "";
         
         try {
-            String[] ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};
-            pFilter = "S_NAME," + pFilter;
+        	String[] ownerIds = null;
+        	List<String> ownerIdList = new ArrayList<>();
+        	
+        	if (searchTarget.equals("all")) {
+                ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};        		
+        	} else {
+	        	if (searchTarget.contains("company")) {
+	        		ownerIdList.add(userInfo.getCompanyId());
+	        	}
+	        	
+	        	if (searchTarget.contains("department")) {
+	        		ownerIdList.add(userInfo.getDeptId());
+	        	}
+	        	
+	        	if (searchTarget.contains("personal")) {
+	        		ownerIdList.add(userInfo.getUserId());
+	        	}
+	        	
+	        	ownerIds = ownerIdList.toArray(new String[0]);
+        	}
+            
+        	for (String ownerId : ownerIds) {
+        		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
+        	}
+        	
+            String pFilter = filterName + "," + filterValue;
             
             List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
             
@@ -3890,6 +3971,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         	returnValue = "EXCEPTION";
         }
         
+        LOGGER.debug("getAddressSearch ended");
+        
         return returnValue;
     }
 	
@@ -3900,70 +3983,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	private String getMobileReceiverHTML(String name, String address){
 		return "<span style='display:inline-block' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}
-	
-//	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName) {
-//		LOGGER.debug("processAutoMDN started.");
-//		
-//		try {		
-//			String fromEmailAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
-//			
-//			LOGGER.debug("myEmailAddress=" + myEmailAddress + ",fromEmailAddress=" + fromEmailAddress);
-//			
-//			int atSignIndex = fromEmailAddress.indexOf("@");
-//			
-//			if (fromEmailAddress.equals("") || atSignIndex == -1) {
-//				LOGGER.debug("invalid fromEmailAddress=" + fromEmailAddress);
-//				return;
-//			}
-//			
-//			String fromEmailDomain = fromEmailAddress.substring(atSignIndex + 1);
-//			String myEmailDomain = myEmailAddress.substring(myEmailAddress.indexOf("@") + 1);
-//			
-//			LOGGER.debug("fromEmailDomain=" + fromEmailDomain + ",myEmailDomain=" + myEmailDomain);
-//			
-//			if (!fromEmailDomain.equalsIgnoreCase(myEmailDomain)) {
-//				LOGGER.debug("different domain");
-//				LOGGER.debug("processAutoMDN ended.");
-//				return;
-//			}
-//									
-//			String[] messageIds = message.getHeader("Message-ID");
-//			String[] mdnHeaders = message.getHeader("Disposition-Notification-To");
-//			
-//			if (messageIds != null && mdnHeaders != null) {				
-//				LOGGER.debug("Sending an MDN...");
-//											
-//				Message replyMessage = message.reply(false);
-//				
-//        		// ANSWERED flag needs to be cleared since the above reply method sets it.
-//				message.setFlag(Flags.Flag.ANSWERED, false);
-//				
-//				InternetHeaders h = new InternetHeaders();
-//				
-//				h.addHeader("Reporting-UA", "JMocha Mail 1.0");
-//				h.addHeader("Final-Recipient", String.format("rfc822;%s", myEmailAddress));
-//				h.addHeader("Original-Message-ID", messageIds[0]);
-//				h.addHeader("Disposition", "automatic-action/MDN-sent-automatically; displayed");
-//				
-//				DispositionNotification dn = new DispositionNotification();
-//				dn.setNotifications(h);
-//				
-//				MultipartReport mpr = new MultipartReport("This is a Read Receipt.", dn);
-//				replyMessage.setContent(mpr);		
-//				replyMessage.setFrom(new InternetAddress(myEmailAddress, myName, "UTF-8"));
-//										
-//				sa.sendMessageWithNewTransport(replyMessage);
-//				
-//				ezEmailUtil.setMDNSentFlag(message, true);
-//			}
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		LOGGER.debug("processAutoMDN ended.");
-//	}
-	
+		
 	public class CountOutputStream extends OutputStream {
 	    int size;
 		

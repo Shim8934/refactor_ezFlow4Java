@@ -2466,7 +2466,7 @@ function openAaprDocAttachUI() {
             if(approvalFlag == "G") {
             	DivPopUpShow(820, 500, url);
             } else {
-            	DivPopUpShow(1050, 550, url);
+            	DivPopUpShow(1050, 560, url);
             }
         } else {
         	var feature;
@@ -3609,7 +3609,7 @@ function getSignDate() {
 }
 function getHistory() {
     var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
-    centerOpenWindow(URL, 730, 430);
+    centerOpenWindow(URL, 730, 450);
 }
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {

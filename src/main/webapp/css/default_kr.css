@@ -97,8 +97,8 @@ form{display:inline;margin:0}
 	white-space:nowrap;
 	padding-top: 4px;
 	height: 20px;
-	background-color:rgb(48, 77, 127);
-	border:1px solid rgb(40, 65, 109);
+	background-color:white;
+	border:1px solid #777;
 	border-radius: 4px;
 	font-family:'gulim','arial';
 	/* border-left:1px solid #c4d0dc;
@@ -106,9 +106,13 @@ form{display:inline;margin:0}
 	border-right:1px solid #7792ad;
 	border-bottom:1px solid #7792ad; */
 	cursor:pointer;
-	font-weight:bold;
-	color:#fff;
+	color:#333;
 }
+
+.btn, .btnposition input:focus {
+	outline: none;	
+}
+
 .imginput{
 	background-color:#fff3da;
 	border-style:solid;
@@ -1176,17 +1180,19 @@ form{display:inline;margin:0}
 	cursor:pointer;
 	border:1px solid #cfcfcf; 
 	height:19px;
-	margin:0px 2px;
+	margin:0px 3px;
 	padding:0px 6px 0px 5px;
 	text-align:center;
-	line-height:21px;
-	*line-height:19px;
-	font-weight:bold;
+	line-height:19px;
+	border-radius:3px;	
+	font-weight:normal;
 	color:#666;
+	font-family: arial;
+	vertical-align: top;
 }
 .pagenavi .btnimg { 
 	vertical-align:middle; 
-	padding:1px 0px 0px 0px;
+	padding:3px 0px 0px 0px;
 	border:0px solid #cfcfcf;
 	margin:0px;
 	width:16px;
@@ -1194,17 +1200,18 @@ form{display:inline;margin:0}
 .pagenavi .on {
 	border:1px solid #017bec; 
 	color:#017bec;
+	font-weight: bold;
 }
 .pagenavi .ptxt {
 	display:inline-block;
 	cursor:pointer;
-	border:0px solid #cfcfcf;
+	border:1px solid #bbb;
 	height:19px;
 	padding:0px 3px;
 	font-weight:normal;
 	white-space:nowrap;
 	width:auto;
-	line-height:18px;
+	line-height:21px;
 	
 }
 
@@ -1284,7 +1291,7 @@ form{display:inline;margin:0}
 	color:#fff;
 	font-size:12px;
 	font-weight:bold;
-	padding:15px 0px 0px 0px;
+	padding:16px 0px 0px 0px;
 	height:46px;
 	margin:0px;
 	border-radius: 4px;
@@ -1845,6 +1852,10 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
     border: 1px solid #ffffff; */
 }
 
+.layerpopup iframe {
+	border-radius: 4px;	
+}
+
 .file-btn{
   position:relative;
   display:inline-block;
@@ -1964,3 +1975,5 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .opinion_ul li:nth-child(odd){background:#FFF;}
 /* .opinion_ul li:nth-child(even){background:#eaf0f4;} */
 .opinion_ul li:nth-child(even){background:#fafafa;}
+
+div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;font-family: 'Gulim', 'arial', 'verdana';}

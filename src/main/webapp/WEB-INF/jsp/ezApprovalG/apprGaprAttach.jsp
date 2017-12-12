@@ -6,6 +6,20 @@
 		<title><spring:message code='ezApprovalG.t264'/></title>
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
+	    	.popup .btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=uft-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
