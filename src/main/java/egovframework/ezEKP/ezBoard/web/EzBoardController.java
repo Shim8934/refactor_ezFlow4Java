@@ -364,6 +364,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "ezBoard/boardFavorite";
 	}
 	
+	@RequestMapping(value="/ezBoard/boardPollSetting.do")
+	public String boardPollSetting(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezBoard/boardPoll";
+	}
+	
 	/**
 	 * 게시판 부모게시판명 표출 Method
 	 */
