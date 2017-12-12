@@ -67,7 +67,7 @@
 			    inputNameDlg_cross_dialogArguments[2] = "";
 			    inputNameDlg_cross_dialogArguments[3] = "";
 			    
-			    DivPopUpShow(330, 150, "/ezCircular/circularInputName.do");
+			    DivPopUpShow(330, 200, "/ezCircular/circularInputName.do");
 			}
             
 		    function modify_onclick() {
@@ -81,7 +81,7 @@
 		        inputNameDlg_cross_dialogArguments[2] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
 		        inputNameDlg_cross_dialogArguments[3] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
     
-		        DivPopUpShow(330, 150, "/ezCircular/circularInputName.do");
+		        DivPopUpShow(330, 200, "/ezCircular/circularInputName.do");
 		    }
 		    
 		    function onclick_Complete(szName) {
