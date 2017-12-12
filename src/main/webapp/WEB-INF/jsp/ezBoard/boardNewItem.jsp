@@ -1804,11 +1804,14 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
-				
+		        Td.style.width = imgWidth + "px";
+		        Td.style.height = imgHeight + "px";
+		        Td.style.backgroundSize = "cover";
+		        
 	        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
 	        	
-		        Table.style.width = imgWidth + "px";
-		        Table.style.height = imgHeight + "px";
+		        Table.style.width = "auto";
+		        Table.style.height = "auto";
 
 		        if (temp.length > 0) {
 		            for (var j = 0; j < temp.length; j++) {
