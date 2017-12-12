@@ -58,13 +58,39 @@
         	}
         	
         	function Cancel_Click() {
-/*         		document.getElementById("listcount").value = "${boardListConfig.listCount}";
-        		document.getElementById("PreviewMode").value = "${boardListConfig.preview}";
-        		if("${boardListConfig.preview}"=="OFF"){
-        			document.getElementById("PreviewHSizeDiv").style.display = "none";
-                  	document.getElementById("PreviewWSizeDiv").style.display = "none";
-        		} */
-        		
+        		if (checkFlag == "1") {
+	    			//Set target
+	    			var listTarget = "<c:out value='${listOfTarget}'/>";
+	    			if (listTarget != "") {
+	    				var newTargetDiv = document.getElementById("newTargetDiv");
+	        	    	newTargetDiv.innerHTML = listTarget;
+	        	    	newTargetDiv.setAttribute("title", listTarget);
+	        	    	newTargetDiv.style.display = "";	
+	    			}
+	    			
+	    			document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
+	        		
+	    			//Set time
+	    			var _sTime = "<c:out value='${startTime}'/>";
+	    			var _eTime = "<c:out value='${endTime}'/>";
+	    			
+	    			_sTime = _sTime.replace(":", "");
+	    			_eTime = _eTime.replace(":", "");
+	
+		        	$("#sTimePicker").val(_sTime).change();
+		        	$("#eTimePicker").val(_eTime).change(); 
+        		}
+        		else {
+        			//Set target
+        			var newTargetDiv = document.getElementById("newTargetDiv");
+	        	    newTargetDiv.innerHTML = "";
+	        	    newTargetDiv.setAttribute("title", "");
+	        	    newTargetDiv.style.display = "none";
+        			document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";
+        			//Set time
+		        	$("#sTimePicker").val("0000").change();
+		        	$("#eTimePicker").val("0000").change(); 
+        		}
         	}
         	function Change_Click() {        		        		
         		var rangeSelect = document.getElementById("RangeXMLStr").value;

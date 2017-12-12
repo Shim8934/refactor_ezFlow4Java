@@ -48,6 +48,8 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -81,6 +83,9 @@ public class EzPollController extends EgovFileMngUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
+	
 	@Autowired
 	private EzOrganService ezOrganService;
 	
@@ -103,7 +108,9 @@ public class EzPollController extends EgovFileMngUtil {
 		strXMLRange.append("<RANGE>"); 
 		String params = (request.getParameter("params") != null) ? request.getParameter("params") : "";
 		String searchStr = (request.getParameter("search") != null) ? request.getParameter("search") : "";
-		String searchN = (request.getParameter("searchN") != null) ? request.getParameter("searchN") : "";		
+		String searchN = (request.getParameter("searchN") != null) ? request.getParameter("searchN") : "";
+		String startTime = "";
+		String endTime = "";
 		
 		if (request.getParameter("mode") != null) {
 			mode = request.getParameter("mode");
@@ -194,7 +201,72 @@ public class EzPollController extends EgovFileMngUtil {
 			}		
 		
 			//Get list of options		
-			listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());					
+			listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());		
+			
+			model.addAttribute("hasConfig", 0);
+		}
+		else {
+			BoardPollConfigVO boardPollConfigVO = ezBoardService.getPollConfig(loginVO.getId(), loginVO.getTenantId());
+			
+			if (boardPollConfigVO == null) {
+				model.addAttribute("hasConfig", 0);
+			}
+			else {
+				model.addAttribute("hasConfig", 1);
+				
+				//Process time
+				startTime = boardPollConfigVO.getDefaultStartTime();
+				endTime = boardPollConfigVO.getDefaultEndTime();
+				
+				//Process target
+		        String[] departIdList = boardPollConfigVO.getTargetDepts().split(",");
+		        String[] userIdList = boardPollConfigVO.getTargetUsers().split(",");
+		        
+		        if (departIdList.length > 0 && !departIdList[0].equals("")) {
+		        	strXMLRange.append("<DEPT>"); 
+		        	
+			        for (String deptID : departIdList) {
+			        	OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(deptID, loginVO.getPrimary(), loginVO.getTenantId());			        	
+			        	strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(organDeptVO.getCn()) + "\" nm=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName()) + 
+			        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
+			        	
+			        	if (loginVO.getPrimary().equals("1")) {
+			        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+			        	}
+			        	else {
+			        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+			        	}
+			        	
+			        }
+			        
+			        strXMLRange.append("</DEPT>"); 
+		        }
+		        
+		        if (userIdList.length > 0 && !userIdList[0].equals("")) {
+		        	strXMLRange.append("<MEMBER>"); 
+		        	
+		        	for (String userID : userIdList) {
+		        		LoginVO user = loginService.selectReceiver(userID, loginVO.getTenantId());
+		        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
+			        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
+		        		
+			        	if (loginVO.getPrimary().equals("1")) {
+			        		listOfTarget += user.getDisplayName1() + ",";
+			        	}
+			        	else {
+			        		listOfTarget += user.getDisplayName2() + ",";
+			        	}
+		        		
+		        	}		        	
+		        	
+		        	strXMLRange.append("</MEMBER>");
+		        }
+		        
+		        if (listOfTarget.endsWith(",")) {
+		        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
+		        }				
+			}
+			
 		}
 		
 		strXMLRange.append("</RANGE>");		
@@ -208,6 +280,8 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);	
 		model.addAttribute("listOfTarget", listOfTarget);
+		model.addAttribute("configStartTime", startTime);
+		model.addAttribute("configEndTime", endTime);
 		
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";

@@ -35,6 +35,7 @@
 		var lstAttachLink 	  = document.getElementById("lstAttachLink");
 	    var isfileup 		  = false;
 	    var mode 			  = "<c:out value='${mode}'/>";
+	    var configFlag 		  = "<c:out value='${hasConfig}'/>";
 		var L_StartDate 	  = "";
 		var L_EndDate 		  = "";
 		var L_StartTime 	  = "";
@@ -91,6 +92,8 @@
         	var eHourMinute = null;	  
         	var EDate = null;
         	var SDate = null;
+        	var sConfigTime = null;
+        	var eConfigTime = null;
 			
 			if (mode == "modify") {
 				//Modify the vote
@@ -251,12 +254,33 @@
 	        		document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
 	        	}
 			}
-			else {				
+			else {		
+				document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
+				var listTarget = "<c:out value='${listOfTarget}'/>";
+    			if (listTarget != "") {
+    				var newTargetDiv = document.getElementById("newTargetDiv");
+        	    	newTargetDiv.innerHTML = listTarget;
+        	    	newTargetDiv.setAttribute("title", listTarget);
+        	    	newTargetDiv.style.display = "";
+        	    	$("#set_Target").val("1").change();
+        	    	$('#receiverBttn').show();
+    			}
+    			else {
+    				$('#receiverBttn').hide();
+    			}
+    			
+    			//Set time
+    			setDateTimeValue();	
+    			sConfigTime = "<c:out value='${configStartTime}'/>";
+    			eConfigTime = "<c:out value='${configEndTime}'/>";
+    			
+    			sConfigTime = sConfigTime.replace(":", "");
+    			eConfigTime = eConfigTime.replace(":", "");   
+    			
 				$('#anonymousVote').removeAttr('checked');	
 				$('#endDate').removeAttr('checked');			
 				$('#_dateTimePicker').hide();			
-				$('#receiverBttn').hide();
-				setDateTimeValue();
+				//$('#receiverBttn').hide();										
 			}
 			
 			$('#multipleCheck').click(function() {
@@ -274,7 +298,7 @@
 						showDateTimePicker2(SDate, EDate, sHourMinute, eHourMinute); 
 					}
 					else {
-						showDateTimePicker();
+						showDateTimePicker(sConfigTime, eConfigTime);
 					}					
 				}
 				else {
@@ -357,14 +381,29 @@
 		}
 		
 		
-		function showDateTimePicker() {
+		function showDateTimePicker(sConfigTime, eConfigTime) {
+			var NowDate = new Date(new Date().getTime());
+			var NextWeek = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
+			
+        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+        	$("#Sdatepicker").datepicker('setDate', NowDate); 
+        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+        	$("#Edatepicker").datepicker('setDate', NextWeek);
+
+			if (sConfigTime) {
+	        	$("#sTimePicker").val(sConfigTime).change();
+	        	$("#eTimePicker").val(eConfigTime).change();
+			}
+			else {
+				$("#sTimePicker option[value='0800']").attr('selected','selected');
+	        	$("#eTimePicker option[value='0800']").attr('selected','selected');
+			}
+			
 			$('#_dateTimePicker').show();
 			$('#Edatepicker').show();
 			$('#eTimePicker').show();
 			$('#Sdatepicker').show();
 			$('#sTimePicker').show();
-        	$("#sTimePicker option[value='0800']").attr('selected','selected');
-        	$("#eTimePicker option[value='0800']").attr('selected','selected');
 		}
 		
 		function setDateTimeValue() {
@@ -640,7 +679,7 @@
 	        
 	        if (document.getElementById("set_Target").selectedIndex == 1) {
 	            if (document.getElementById("select_YN").value != "YES") {
-	            	if (mode != "modify") {
+	            	if (mode != "modify" && configFlag!= "1") {
 		            	alert('<spring:message code="ezPoll.t235" />');
 		                return false;
 	            	}	            	
