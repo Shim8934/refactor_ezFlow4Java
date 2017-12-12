@@ -1889,7 +1889,7 @@
 	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
-				            <div class="portlet_tabpart03_top" id="tab1" style="border-left:1px solid #d3d2d2;">
+				            <div class="portlet_tabpart03_top" id="tab1" style="height:25px;border-bottom:0px">
 			    	           <table style="margin-top:5px;width:100%;">
 									<tr>
 			                       		<td>

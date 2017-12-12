@@ -97,8 +97,8 @@ form{display:inline;margin:0}
 	white-space:nowrap;
 	padding-top: 4px;
 	height: 20px;
-	background-color:rgb(48, 77, 127);
-	border:1px solid rgb(40, 65, 109);
+	background-color:white;
+	border:1px solid #777;
 	border-radius: 4px;
 	font-family:'gulim','arial';
 	/* border-left:1px solid #c4d0dc;
@@ -106,9 +106,13 @@ form{display:inline;margin:0}
 	border-right:1px solid #7792ad;
 	border-bottom:1px solid #7792ad; */
 	cursor:pointer;
-	font-weight:bold;
-	color:#fff;
+	color:#333;
 }
+
+.btn, .btnposition input:focus {
+	outline: none;	
+}
+
 .imginput{
 	background-color:#fff3da;
 	border-style:solid;
@@ -1212,7 +1216,7 @@ form{display:inline;margin:0}
 }
 
 .popup_noti {
-	width:330px; 
+	/* width:330px; */ 
 	margin:0px; 
 	padding:0px;
 }
@@ -1287,7 +1291,7 @@ form{display:inline;margin:0}
 	color:#fff;
 	font-size:12px;
 	font-weight:bold;
-	padding:15px 0px 0px 0px;
+	padding:16px 0px 0px 0px;
 	height:46px;
 	margin:0px;
 	border-radius: 4px;
@@ -1848,6 +1852,10 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
     border: 1px solid #ffffff; */
 }
 
+.layerpopup iframe {
+	border-radius: 4px;	
+}
+
 .file-btn{
   position:relative;
   display:inline-block;
@@ -1967,3 +1975,5 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .opinion_ul li:nth-child(odd){background:#FFF;}
 /* .opinion_ul li:nth-child(even){background:#eaf0f4;} */
 .opinion_ul li:nth-child(even){background:#fafafa;}
+
+div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;font-family: 'Gulim', 'arial', 'verdana';}

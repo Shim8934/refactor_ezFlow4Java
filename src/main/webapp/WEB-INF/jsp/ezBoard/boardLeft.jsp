@@ -582,7 +582,7 @@
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
 	    <c:if test="${applyFlag == 'OK'}">
-	        <h3>
+	        <h3 style="border-top:0px">
 	            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
 	        </h3>
 	    </c:if>

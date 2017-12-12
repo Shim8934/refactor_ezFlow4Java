@@ -182,14 +182,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-			
 			LOGGER.debug("locale : ," + locale.getDisplayLanguage());
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -297,14 +289,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
        
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 			String sendName = egovMessageSource.getMessage("ezEmail.t645", locale);
@@ -679,14 +663,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			String msgto = "";
 			
@@ -1519,14 +1495,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);	
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-			
 			Document xmldom = commonUtil.convertStringToDocument(xmldomString);
 			cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
 			String uidStr = xmldom.getElementsByTagName("URL").item(0).getTextContent();
@@ -1787,14 +1755,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-			
 			returnValue = "<DATA><![CDATA[";
 			
 			String xmldomString = "";
@@ -2037,14 +1997,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 					userEmail, password);
@@ -2623,14 +2575,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-	
 			String pAttachListHtmlSub = null;
 			
 			List<String> bodyInfoList = null;
@@ -3098,14 +3042,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-			
 			// retrieve the passed in parameters
 			String folderPath = folderId;
 			String strUid = messageId;
@@ -3244,14 +3180,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-			
 			// retrieve the passed in parameters
 			String folderPath = folderId;
 			String strUid = messageId;
@@ -3358,13 +3286,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			if ( opt.getLang().equals("1") ) {
-				locale = new Locale("ko");	
-			} else if ( opt.getLang().equals("3") ) {
-				locale = new Locale("ja");
-			}
-			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 					
@@ -3432,14 +3353,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			LOGGER.debug("userEmail=" + userEmail);
 		        
@@ -3516,14 +3429,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
 				permanentlyDelete = true;
@@ -3602,14 +3507,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
-
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
 			
 			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
 				permanentlyDelete = true;
@@ -3823,14 +3720,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-			
-			if (opt.getLang().equals("1")) {
-				locale = new Locale("ko");	
-			} else if (opt.getLang().equals("3")) {
-				locale = new Locale("ja");
-			}
-			
 			LOGGER.debug("userEmail=" + userEmail);
 			
 			String uniqueId = messageId;	
@@ -3902,6 +3791,59 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL mailSetFlag ended.");
 		
 		return result;				
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getQuotaInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo started.");
+		LOGGER.debug("userId=" + userId);
+			
+		JSONObject data = new JSONObject();
+		JSONObject result = new JSONObject();
+		
+		IMAPAccess ia = null;
+
+		try {			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+		
+			Locale locale = new Locale("ko");	
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+						
+			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+			
+			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+			
+			LOGGER.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+								
+			data.put("mailboxUsage", mailboxUsage);
+			data.put("mailboxQuota", mailboxQuota);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");			
+		} finally {
+			if (ia != null) {
+				ia.close();		
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo ended.");		
+		
+		return result;
 	}
 	
 	/**

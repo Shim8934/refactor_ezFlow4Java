@@ -133,10 +133,6 @@
                 	OpenAlertUI("<spring:message code='ezOrgan.t213'/>");
 					return;
 				}
-				if (DeptName.value.indexOf("(") != -1 || DeptName.value.indexOf(")") != -1){
-                	OpenAlertUI("<spring:message code='ezOrgan.t214' /><,>,_,-,& <spring:message code='ezOrgan.t215' />");
-					return 0;	
-				}
 												
 				var parentCn;
 				var extensionattribute8 = "0";

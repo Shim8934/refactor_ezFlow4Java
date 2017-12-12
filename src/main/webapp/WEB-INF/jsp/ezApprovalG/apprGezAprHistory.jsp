@@ -287,7 +287,7 @@
 		<h1><spring:message code='ezApprovalG.t373'/></h1>
 		<div id="close"><ul><li id="Table1" ><span onClick="close_Click()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
 		 
-		<div id="tabnav" style="width:700px;margin-top:-10px">
+		<div id="tabnav" style="width:700px;margin-top:10px">
 		  <ul>
 		    <li id="orgTabButton3"><span onClick="BtnChange('3')" ><spring:message code='ezApprovalG.t375'/></span></li>
 		    <li id="orgTabButton2"><span onClick="BtnChange('2')" ><spring:message code='ezApprovalG.t376'/></span></li>

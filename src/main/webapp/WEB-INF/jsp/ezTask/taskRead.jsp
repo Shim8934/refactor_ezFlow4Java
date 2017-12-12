@@ -269,7 +269,7 @@
 						html = result;
 						var doc = document.getElementById('message').contentWindow.document;
 						doc.open();
-						doc.write(html);
+						doc.write('<div>' + html + '</div>');
 						doc.close();
 
 						$("#message").contents().find("body").css("word-wrap", "break-word");
@@ -1132,8 +1132,9 @@
 			    document.getElementById("tablecomment").style.display = "";
 			    $("#updateStatus").show();
 			
-			    if (selecttab == "0") {
+/* 			    if (selecttab == "0") {
 			    	document.getElementById("taskInfo").style.display = "";
+			    	document.getElementById("taskDescription").style.display = "";
 			    	document.getElementById("normalScreen").style.display = "none";
 			        document.getElementById("tablework").style.display = "none";
 			        document.getElementById("tablecomment").style.display = "none";
@@ -1152,7 +1153,113 @@
 			        document.getElementById("normalScreen").style.display = "none";
 			        document.getElementById("tablework").style.display = "none";
 			        document.getElementById("tablecomment").style.display = "";
+			    } */
+			    
+			    //baonk added
+			    if (selecttab == "0") {
+		            document.getElementById("taskInfo").style.display = "";
+		            document.getElementById("normalScreen").style.display = "none";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "";			            
+		            
+		            
+		            if (creatorid == userid) {
+		            	document.getElementById("editTaskInfo").style.display = "";
+		            }
+		        	
+		        	document.getElementById("editTaskWork").style.display = "none";
+		        	document.getElementById("editTaskChisi").style.display = "none";
+			    } else if (selecttab == "1") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            document.getElementById("normalScreen").style.display = "";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "none";			            
+		            document.getElementById("editTaskWork").style.display = "none";
+		            
+		            if (creatorid == userid) {				        	
+			        	document.getElementById("editTaskChisi").style.display = "";	
+			        	document.getElementById("editTaskInfo").style.display = "none";
+			        } else {
+			        	document.getElementById("editTaskChisi").style.display = "none";				        	
+			        }
+			    } else if (selecttab == "2") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            
+		            if (tasktype == "1" || tasktype == "4") {
+		            	document.getElementById("normalScreen").style.display = "";
+		            	document.getElementById("tablework").style.display = "none";
+		            }
+		            else {
+		            	document.getElementById("normalScreen").style.display = "none";
+		            	document.getElementById("tablework").style.display = "";
+		            }	            
+		            		            
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "none";		            		            
+		            document.getElementById("editTaskChisi").style.display = "none";
+		            
+		            if (personid == userid) {			            	
+		            	if (tasktype == "1" || tasktype == "4") {	
+		            		document.getElementById("editTaskInfo").style.display = "none";
+	            			document.getElementById("editTaskWork").style.display = "none";
+	            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+	            			document.getElementById("editTaskChisi").style.display = "";			            					            			
+	            		}
+	            		else {
+	            			document.getElementById("editTaskWork").style.display = "";
+	            		}		
+			        } 
+		            else {
+		            	if(creatorid != userid) {
+		            		if (tasktype == "1" || tasktype == "4") {	
+		            			document.getElementById("editTaskWork").style.display = "none";
+		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+		            			document.getElementById("editTaskChisi").style.display = "";			            					            			
+		            		}
+		            		else {
+		            			document.getElementById("editTaskWork").style.display = "";
+		            		}			            		
+		            	}
+		            	else {
+		            		document.getElementById("editTaskWork").style.display = "none";
+		            		document.getElementById("editTaskInfo").style.display = "none";
+		            	}				        	
+			        }
+			    } else if (selecttab == "3") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            document.getElementById("normalScreen").style.display = "none";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "none";
+		            if (creatorid == userid) {
+		            	document.getElementById("editTaskInfo").style.display = "none";
+		            }
+		        	
+		        	document.getElementById("editTaskWork").style.display = "none";
+		        	document.getElementById("editTaskChisi").style.display = "none";
 			    }
+			    else if (selecttab == "4") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            document.getElementById("normalScreen").style.display = "none";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "";
+		            document.getElementById("taskDescription").style.display = "none";
+		            
+		            if (creatorid == userid) {
+		            	document.getElementById("editTaskInfo").style.display = "none";
+		            }
+		        	
+		        	document.getElementById("editTaskWork").style.display = "none";	
+		        	document.getElementById("editTaskChisi").style.display = "none";
+			    }
+			    //end
 			    
 			    //clean the place
 		    	$("#repTable").html("");

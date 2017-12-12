@@ -2839,7 +2839,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 660, "/ezApprovalG/aprDocAttach.do");
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
         }
     } catch (e) {
         alert(e.description);
@@ -3088,7 +3088,7 @@ function getHistory() {
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
 
-    DivPopUpShow(730, 430, URL);
+    DivPopUpShow(730, 450, URL);
 }
 
 function getHistory_Complete() {

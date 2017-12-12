@@ -2241,12 +2241,12 @@
 	                address_select_groupemaillist_dialogArguments[0] = rtnValue;
 	                address_select_groupemaillist_dialogArguments[1] = groupmember_click_Complete;
 	                address_select_groupemaillist_dialogArguments[2] = DivPopUpHidden;
-	                DivPopUpShow(501, 470, Url);
+	                DivPopUpShow(601, 470, Url);
 	            }
 	            else
 	            {
 	                var rtnValue = { "name": new Array(), "email": new Array() };
-	                var count = window.showModalDialog(Url, rtnValue, "dialogHeight:470px; dialogWidth:501px; status:no;scroll:auto; help:no; edge:sunken");
+	                var count = window.showModalDialog(Url, rtnValue, "dialogHeight:470px; dialogWidth:601px; status:no;scroll:auto; help:no; edge:sunken");
 	                for (var i = 0; i < count; i++) {
 	                    var targetList = new ListView();
 	                    targetList.LoadFromID("MsgToList");

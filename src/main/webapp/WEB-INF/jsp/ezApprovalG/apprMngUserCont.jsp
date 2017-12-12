@@ -3,12 +3,27 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title><spring:message code='ezApproval.t316'/></title>
-    
+    <title><spring:message code='ezApproval.t316'/></title>    
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
     <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+    <style>
+    	.btnposition{
+			margin: 0px 0px 0px -10px;
+			/* margin-top: 10px; */
+			background: none;
+			border: none;
+			border-top: 1px solid #ddd;
+			padding:10px 0px;
+			background-color: #f2f2f2;
+			text-align:center;
+			position: absolute;
+			text-align: center;
+			bottom: 0px;
+			width:100%;
+		}
+    </style>
 	<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
     <script type="text/javascript" src="/js/escapenew.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
