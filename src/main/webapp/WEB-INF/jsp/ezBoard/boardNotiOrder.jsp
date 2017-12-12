@@ -6,6 +6,26 @@
 		<title><spring:message code='ezBoard.t4000'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+		<style>
+			.mainlist tr th {
+				border-top:0px;
+			}
+						
+			.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -126,7 +146,7 @@
 	        <tr>
 	            <td>
 	                <div class="listview">
-	                    <div id="NotiList" style="BORDER: 0; HEIGHT: 340px; WIDTH: 250px; overflow:auto;"></div>
+	                    <div id="NotiList" style="BORDER: 0; HEIGHT: 340px; WIDTH: 300px; overflow:auto;"></div>
 	                </div>
 	            </td>
 	            <td>

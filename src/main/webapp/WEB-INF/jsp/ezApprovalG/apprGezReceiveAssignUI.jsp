@@ -7,6 +7,22 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <style>	    
+			.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -333,11 +349,11 @@
 	    <table style="margin-top: -15px;">
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <h2><spring:message code='ezApprovalG.t232'/></h2>
+	                <h2 style="margin-top:7px;"><spring:message code='ezApprovalG.t232'/></h2>
 	                <div class="box" style="overflow: auto; height: 242px; width: 200px" id="TreeView"></div>
 	            </td>
 	            <td style="vertical-align: top;padding-left:10px;">
-	                <h2><spring:message code='ezApprovalG.t233'/></h2>
+	                <h2 style="margin-top:7px"><spring:message code='ezApprovalG.t233'/></h2>
 	                <div class="listview">
 
 	                    <div id="OrganListView" style="border: 0; Width: 280px; Height: 218px; overflow: auto;"></div>
@@ -346,7 +362,7 @@
 	                <table style="width: 100%;">
 	                    <tr>
 	                        <td style="height: 30px; text-align: left;">
-	                        	<input type="text" id="textUser" name="textUser" style="width: 130px;" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn" style="margin-left:5px;vertical-align:middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+	                        	<input type="text" id="textUser" name="textUser" style="width: 130px;border:1px solid #aaa" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn" style="margin-left:5px;vertical-align:middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
 	                        </td>
 	                    </tr>
 	                </table>

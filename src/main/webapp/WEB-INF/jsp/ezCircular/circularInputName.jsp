@@ -8,6 +8,22 @@
 	    <title><spring:message code='ezCircular.t105'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
+	    <style>
+	    	.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+	    </style>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -109,9 +125,9 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1><spring:message code='ezCircular.t105' /></h1>
-	    <div class="txt"><spring:message code='ezCircular.t106' /></div>
-	    <div class="nobox">
-	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%" maxlength="8">
+	    <div class="txt">▒&nbsp;<spring:message code='ezCircular.t106' /></div>
+	    <div class="nobox" style="margin-top:10px">
+	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;height:25px;border:1px solid #ccc" maxlength="8">
 	    </div>
 	    <div class="btnposition">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezCircular.t65' /></span></a>

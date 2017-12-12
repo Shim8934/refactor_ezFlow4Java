@@ -65,7 +65,9 @@ function MailPreviewEnd(e) {
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
-
+            if($("#PreH_CCMain").css("display") != "none") {
+            	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+            }
         }
         else if (PreviewW_Move) {
             var newPos_W = parseInt(document.getElementById("ResizeBarW").style.top) - 90;
@@ -82,9 +84,12 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
             document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             pMailListDiv = (pMailListHeightW / CurrentHeight) * 100;
             pMailPreVDiv = (pMailPreHeightW / CurrentHeight) * 100;
+            if($("#PreW_CCMain").css("display") != "none") {
+            	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
+            }
         }
         PreviewH_Move = false;
         PreviewW_Move = false;
@@ -741,7 +746,7 @@ function event_xmlhttp_mailPreview_Complete() {
             var pCcSubHtml = "";
             var pCcDetailHtml = "";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             if (pCc != "") {
                 var pMailCc = pCc;
                 var pCcArray = pMailCc.split(";");
@@ -984,7 +989,7 @@ function PreviewRayerChange(pGubun) {
             else
                 document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -1107,7 +1112,7 @@ function Window_resize() {
                 else
                     document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
                 document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
                 if($("#PreW_CCMain").css("display") != "none") {

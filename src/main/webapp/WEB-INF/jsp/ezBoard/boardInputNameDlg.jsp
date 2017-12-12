@@ -6,6 +6,22 @@
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+	    <style>
+	    	.btnposition{
+				margin: 0px 0px 0px -10px;
+				/* margin-top: 10px; */
+				background: none;
+				border: none;
+				border-top: 1px solid #ddd;
+				padding:10px 0px;
+				background-color: #f2f2f2;
+				text-align:center;
+				position: absolute;
+				text-align: center;
+				bottom: 0px;
+				width:100%;
+			}
+	    </style>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
@@ -95,9 +111,9 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1><spring:message code='ezBoard.t275'/>/<spring:message code='ezBoard.t316'/></h1>
-	    <div class="txt"><spring:message code='ezBoard.t144'/></div>
-	    <div class="nobox">
-	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%" maxlength="8">
+	    <div class="txt" style="margin-top:15px">▒&nbsp;<spring:message code='ezBoard.t144'/></div>
+	    <div class="nobox" style="margin-top:10px">
+	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;height:25px;border:1px solid #ccc" maxlength="8">
 	    </div>
 	    <div class="btnposition">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezBoard.t14'/></span></a>

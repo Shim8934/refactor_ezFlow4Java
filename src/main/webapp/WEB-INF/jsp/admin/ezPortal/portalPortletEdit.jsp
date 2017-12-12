@@ -112,6 +112,7 @@
 			
 			function toggle_menu(pIndex) {
 				if (pmode == "new" && g_bSaved == false) {
+					/* 포틀릿 탭 수정 */
 					if (pIndex.toString() != "1")
 					{						
 						alert("<spring:message code='ezPortal.t83'/>");						

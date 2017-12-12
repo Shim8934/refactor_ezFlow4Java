@@ -1216,7 +1216,7 @@ form{display:inline;margin:0}
 }
 
 .popup_noti {
-	width:330px; 
+	/* width:330px; */ 
 	margin:0px; 
 	padding:0px;
 }
@@ -1291,7 +1291,7 @@ form{display:inline;margin:0}
 	color:#fff;
 	font-size:12px;
 	font-weight:bold;
-	padding:15px 0px 0px 0px;
+	padding:16px 0px 0px 0px;
 	height:46px;
 	margin:0px;
 	border-radius: 4px;
@@ -1850,6 +1850,10 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
     /* border: 1px solid black; */
     /* padding: 2px 2px;
     border: 1px solid #ffffff; */
+}
+
+.layerpopup iframe {
+	border-radius: 4px;	
 }
 
 .file-btn{
