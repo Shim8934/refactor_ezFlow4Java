@@ -3090,7 +3090,6 @@ function HabyuiResultOpinion() {
     }
 }
 function setDocNumFormat(pPrefix) {
-	alert(444);
     var Arr_Header = new Array();
     var Header, Tail;
     var i;

@@ -2296,7 +2296,6 @@ function SaveDraftDocInfo()
     //문서번호 포멧 설정
     function setDocNumFormat(pPrefix)
     {
-    	alert(333);
         var fields = message.GetFieldsList();//CKEDITOR-추가
         var Arr_Header = new Array();
         var Header, Tail;

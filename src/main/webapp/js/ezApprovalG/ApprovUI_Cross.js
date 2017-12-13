@@ -3530,7 +3530,6 @@ function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
 }
 
 function setDocNumFormat(pPrefix) {
-	alert(666);
     var Arr_Header = new Array();
     var Header, Tail;
     var i;

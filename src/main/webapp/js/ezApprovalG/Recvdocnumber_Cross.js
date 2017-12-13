@@ -1,6 +1,5 @@
 ﻿var fractionsymbol;
 function setDocNumFormat() {
-	alert(10);
     var Arr_Header = new Array();
     var Header, Tail;
     var i;
