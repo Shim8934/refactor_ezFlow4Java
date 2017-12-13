@@ -1704,6 +1704,10 @@ public class EzPollController extends EgovFileMngUtil {
 			else {
 				userAnswer.setUserImage("/images/poll/default_pic_vote.gif");
 			}
+			
+			//Add user's phone
+			LoginVO user = loginService.selectReceiver(userAnswer.getUserId(), tenantId);
+			userAnswer.setPhone(user.getPhone());
 		}
 
 		model.addAttribute("totalVotes", totalVotes);

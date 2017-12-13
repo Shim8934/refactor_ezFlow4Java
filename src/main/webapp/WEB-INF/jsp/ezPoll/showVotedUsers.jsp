@@ -41,9 +41,9 @@
 				<table border=1 style="width : 100%; border-color: grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
-							<td >
+							<td style="border-right:none; max-width: 200px; width: 190px;">
 								<img src="${list.userImage}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">								
-								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px; overflow: hidden; text-overflow: ellipsis; max-width:180px;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
+								<a style="cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
 									<c:choose>
 										<c:when test="${primaryLang == '1'}">
 											<c:out value ="${list.userName1}"/>
@@ -54,6 +54,8 @@
 									</c:choose>											
 								</a>
 							</td>
+							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list.phone}"/></td>
+							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick=""></td>		
 						</tr>
 					</c:forEach>
 				</table>				

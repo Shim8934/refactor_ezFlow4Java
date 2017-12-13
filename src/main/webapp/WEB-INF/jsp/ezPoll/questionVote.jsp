@@ -728,7 +728,7 @@
  		    		window_open3.close();
 		    	}
 		    	
-		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=438px,width=350px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=438px,width=390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 		    
 		    function finishVote() {	    	

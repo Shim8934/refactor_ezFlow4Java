@@ -10,6 +10,7 @@ public class PollUserAnswerVO {
 	private String userName2;
 	private String voteDate;
 	private String userImage;
+	private String phone;
 	
 	public int getAnsId() {
 		return ansId;
@@ -73,6 +74,14 @@ public class PollUserAnswerVO {
 
 	public void setUserImage(String userImage) {
 		this.userImage = userImage;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}	
 	
 }	
