@@ -718,7 +718,7 @@
 		    
 		    function displayDetail(pQstID) {		    	
 		    	 var feature = GetOpenPosition(420, 438);
-		    	 window_open2 = window.open("/ezPoll/showUnJoinedUsersInfo.do?qstId=" + pQstID, "", "height=438px,width=350px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    	 window_open2 = window.open("/ezPoll/showUnJoinedUsersInfo.do?qstId=" + pQstID, "", "height=438px,width=395px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 		    
 		    function displayVotedUser(pQstID, pOptId) {		    		    
