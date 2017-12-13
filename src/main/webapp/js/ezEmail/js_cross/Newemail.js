@@ -588,7 +588,7 @@ function reject_onclick() {
     }
     denial_cross_dialogArguments[0] = params;
     denial_cross_dialogArguments[1] = reject_onclick_Complete;
-    var OpenWin = window.open("/ezEmail/mailDenial.do", "denial_cross", GetOpenWindowfeature(335, 314));
+    var OpenWin = window.open("/ezEmail/mailDenial.do", "denial_cross", GetOpenWindowfeature(450, 314));
     try { OpenWin.focus(); } catch (e) { }
 }
 function reject_onclick_Complete(retVal)
