@@ -832,7 +832,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultString = getCode2Name(code1, code2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		}
 		
-		logger.debug("getOptionInfo Value: resultString= " +resultString);
 		logger.debug("getOptionInfo ended.");
 
 		return resultString;
@@ -1495,8 +1494,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String docList = getReceiptInfo(docID, mode, orderOption1, companyID, tenantID, isUsed);
 		
-		logger.debug("docList = " + docList);
-		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
@@ -1515,8 +1512,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (fieldName.equals("RECEIPTPOINTNAME") || fieldName.equals("RECEIPTMEMBERNAME") || fieldName.equals("PROCESSDEPTNAME") || fieldName.equals("APRMEMBERTITLE") || fieldName.equals("DRAFTERNAME") || fieldName.equals("CREATEORGANNAME")) {
 					fieldName = fieldName + langData;
 				}
-				
-				logger.debug("fieldName = " + fieldName);
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
@@ -3126,10 +3121,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append(deptXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "</EMAIL>");
             rtnXML.append("<DISPLAYNAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + langData).item(0).getTextContent()) + "</DISPLAYNAME>");
             rtnXML.append("<JOBTITLE></JOBTITLE><JOBTITLE2></JOBTITLE2></ROW>");
-            logger.debug("<<<in FOR rtnXML : " + rtnXML.toString());
         }
-        logger.debug("<<<getFormRecvApr rtnXML : " + rtnXML.toString());
-        logger.debug("<<<getFormRecvApr rtnXML.trim() : " + rtnXML.toString().trim());
         if (rtnXML.toString().trim().equals("<ROWS>") && !userID.trim().equals("")) {
         	String isUse = getCode2Name("A44", "002", companyID, lang, tenantID);
 			
@@ -6031,8 +6023,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSql = updateSignInfo(resultXML, companyID, "SET", userInfo.getTenantId());
 			signSaveFlag = true;
 		}
-		
-		logger.debug("strSql = " + strSql);
 		
 		if (strSql.toUpperCase().equals("FALSE") || strSql.toUpperCase().equals("<RESULT>FALSE</RESULT>")) {
 			if (signSaveFlag) {
@@ -11319,7 +11309,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
 		}
 		sb.append("</DATA>");
-		logger.debug("<<<apprGAprLineVOList : " + sb.toString());
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
 		String curAprMemberSN = "";
@@ -11794,7 +11783,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal) {
-			logger.debug("doApprove return = " + strSQL.toString() );
 			logger.debug("doApprove ended");
 			return "TRUE";
 		} else {
@@ -13372,7 +13360,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb1.append("</DATA>");
 			
 			Document tempXML = commonUtil.convertStringToDocument(sb1.toString());
-			logger.debug("<<<tempXML : " + tempXML.toString());
 			if (tempXML.getElementsByTagName("ORGDOCID").getLength() > 0) {
 				tempOrgDocID = makeListField(tempXML.getElementsByTagName("ORGDOCID").item(0).getTextContent());
 				String tempDocState = makeListField(tempXML.getElementsByTagName("DOCSTATE").item(0).getTextContent());
@@ -13433,7 +13420,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					receiptXML = commonUtil.convertStringToDocument(sb2.toString());
 
-					logger.debug("<<<receiptXML : " + receiptXML.toString());
 					// '수신처그룹'이 존재하는 경우
 
 					if (receiptXML.getElementsByTagName("ROW").getLength() > 0) {
@@ -16205,7 +16191,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docList = getSearchDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, alFlag, commonUtil.getMultiData(lang, tenantID), approvUser, companyID, tenantID, offset, approvalFlag, locale);
 		
-		logger.debug("docList = " + docList);
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -16220,8 +16205,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
-				
-				logger.debug("fieldName = " + fieldName);
 				
 				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME")) {
 					fieldName = fieldName + langData;
@@ -16260,7 +16243,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
 		
-		logger.debug("resultXML : " + resultXML.toString());
 		
 		return resultXML.toString();
 	}
@@ -17424,7 +17406,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
 		sb.append("</DATA>");
 		
-		logger.debug("getAprLineInfoDB ended. result = " + sb.toString());
+		logger.debug("getAprLineInfoDB ended.");
 		
 		return sb.toString();
 	}
@@ -21610,7 +21592,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb.append(commonUtil.getQueryResult(searchDocList.get(j)));
 		}
 		sb.append("</DATA>");
-		logger.debug("getSearchDocList = " + sb.toString());
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		String FieldName = "";
