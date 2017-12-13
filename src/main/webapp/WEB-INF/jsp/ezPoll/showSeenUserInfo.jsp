@@ -35,13 +35,13 @@
 			<div style="height:359px; overflow: auto;">
 				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey" class="voteSeenTbl">
 					<tr> 
-						<th> <a id="seenUser_" style="color:#FFF;"><spring:message code='ezPoll.t136'/> (<c:out value='${numberOfSeenUsers}'/>)</a></th> 
+						<th colspan="3"> <a id="seenUser_" style="color:#FFF;"><spring:message code='ezPoll.t136'/> (<c:out value='${numberOfSeenUsers}'/>)</a></th> 
 					</tr>
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
 						<tr id="${list1.id}" class="white" style="border: 1px solid #DDD;">
-							<td>
+							<td style="border-right:none; max-width: 180px;  width: 160px;">
 								<img src="${list1.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
-								<a style="cursor:pointer; display:inline-block; float:left; width:111px; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
+								<a style="cursor:pointer; display:inline-block; float:left; width:80px; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
 									<c:choose>
 										<c:when test="${list1.primary == '1'}">
 											<c:out value ="${list1.displayName1}"/>
@@ -50,20 +50,22 @@
 											<c:out value ="${list1.displayName2}"/>
 										</c:otherwise>	
 									</c:choose>									
-								</a>
-							</td>
+								</a>								
+							</td>	
+							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list1.phone}"/></td>	
+							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick=""></td>					
 						</tr>
 					</c:forEach>
 				</table>
 				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;" class="voteUnseenTbl">
 					<tr> 
-						<th> <a id="unseenUser_" style="color:#000;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a></th> 
+						<th colspan="3"> <a id="unseenUser_" style="color:#000;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a></th> 
 					</tr>
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
 						<tr id="${list2.id}" class="white" style="border: 1px solid #DDD;">
-						   <td>
+						   <td style="border-right:none; max-width: 180px; width: 160px;">
 							<img src="${list2.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list2.id}')">
-								<a style="cursor:pointer; display:inline-block; float:left; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width: 111px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
+								<a style="cursor:pointer; display:inline-block; float:left; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width: 80px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
 									<c:choose>
 										<c:when test="${primaryLang == '1'}">
 											<c:out value ="${list2.displayName1}"/>
@@ -72,8 +74,10 @@
 											<c:out value ="${list2.displayName2}"/>
 										</c:otherwise>	
 									</c:choose>									
-								</a>
-							</td>
+								</a>								
+							</td>	
+							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list2.phone}"/></td>
+							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick=""></td>											
 						</tr>
 					</c:forEach>
 				</table>

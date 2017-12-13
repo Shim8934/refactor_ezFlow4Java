@@ -539,7 +539,7 @@
 		    
 		    function menuDetailSeenUserInfo(pQstID) {		    	 
 		    	 var feature = GetOpenPosition(420, 438);
-		    	 window_open1 = window.open("/ezPoll/showSeenUserInfo.do?qstId=" + pQstID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    	 window_open1 = window.open("/ezPoll/showSeenUserInfo.do?qstId=" + pQstID, "", "height=438px,width=733px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 		    
 		    function AttachDetail_view(obj) {
