@@ -15974,7 +15974,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			sbVal = "NO/NO";
 		}
-		logger.debug("<<<sbVal : " + sbVal);
 		return sbVal;
 	}
 
@@ -16125,8 +16124,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				listString = getListHeader("S006", companyID, lang, tenantID);
 			} 
 		}
-		
-		logger.debug("listString = " + listString);
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 
@@ -16836,7 +16833,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet) throws Exception {
 		logger.debug("aprDocList started.");
-		logger.debug("<<<dueryData : " + commonUtil.convertDocumentToString(dueryData));
 
 		String orderOption1 = "";
 		String orderOption2 = "";
