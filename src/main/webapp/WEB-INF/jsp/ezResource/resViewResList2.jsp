@@ -139,6 +139,7 @@
 	                	document.getElementById("Weekbtn").style.display = "none";
 	                	document.getElementById("TR_Line2").style.display = "none";
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
+	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
 	        	}
 	        	catch (e) {
@@ -275,7 +276,7 @@
             	<td style="vertical-align:top;">
                 	<div id="mainlistlayout" style="width:100%;height:780px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;margin-top:10px;">
-                    		<tr>
+                    		<tr id="weeklyline">
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f8f8f8;">
                 					<div style="border:1px solid #ddd;border-bottom:0px;padding-top:9px;padding-bottom:7px;height:19px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
