@@ -415,9 +415,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailAutoForwardDelete.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
-	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
 		logger.debug("mailAutoForwardDelete started.");		
-		logger.debug("bodyData=" + bodyData);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		

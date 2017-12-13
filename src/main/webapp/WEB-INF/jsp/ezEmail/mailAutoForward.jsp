@@ -134,6 +134,7 @@
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezEmail/mailAutoForwardDelete.do", false);
 		        xmlhttp.send();
+		        
 		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		        	var ret = "";
 		            
