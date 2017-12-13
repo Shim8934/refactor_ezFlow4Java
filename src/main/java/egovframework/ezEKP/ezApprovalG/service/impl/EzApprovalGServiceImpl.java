@@ -12427,6 +12427,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	 * */
 	public String updateHabyuiResult(String docID, String companyID, String orgDocID, String orgCompanyID, String deptID, String deptName, String deptName2, String mode, String lang, LoginVO userInfo) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
+		boolean isHesong = false;
 		String subSQL = "";
 		
 		subSQL = setLastOpinionToOrgDoc(docID, orgDocID, companyID, orgCompanyID, "QUERY", lang, userInfo.getTenantId());
@@ -12479,6 +12480,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				aprSN = k + 1;
 				break;
 			}
+			
+			if (apprGAprLineVOList.get(k).getAprMemberDeptID().toLowerCase().equals(deptID.toLowerCase()) && apprGAprLineVOList.get(k).getAprMemberIsDeptYN().toUpperCase().equals("Y") && apprGAprLineVOList.get(k).getAprState().equals("015")) {
+				aprSN = k + 1;
+				isHesong = true;
+				break;
+			}
 		}
 		
 		//원본문서 합의란에 서명기입
@@ -12496,7 +12503,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
 		
-		doc.getElementById(susinSN + "habyuipositon" + aprSN).html(signTitle);
+		if (isHesong) {
+			doc.getElementById(susinSN + "habyuipositon" + aprSN).html(userInfo.getTitle());
+		} else {
+			doc.getElementById(susinSN + "habyuipositon" + aprSN).html(signTitle);
+		}
 		
 		if (signType.equals("IMAGE")) {
 			String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
