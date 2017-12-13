@@ -1710,6 +1710,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("totalVotesForOption", totalVotesForOption);
 		model.addAttribute("content", content);
 		model.addAttribute("listOfVotedUsers", listOfVotedUsersForAnswer);
+		model.addAttribute("primaryLang", loginVO.getPrimary());
 		
 		logger.debug("Show voted user info finishes!");
 		return "/ezPoll/showVotedUsers";
@@ -1776,6 +1777,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		model.addAttribute("numberOfUnVotedUsers", numberOfUnVotedUsers);
 		model.addAttribute("listOfUnvotedUsers", listOfUnvotedUsers);
+		model.addAttribute("primaryLang", loginVO.getPrimary());
 		
 		logger.debug("Show un joined user info finishes!");
 		return "/ezPoll/showNotJoinedUsers";
@@ -1929,6 +1931,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("listOfUnSeenUsers", listofUnseenUsers);
 		model.addAttribute("numberOfSeenUsers", numberOfSeenUsers);
 		model.addAttribute("numberOfUnseenUsers", numberOfUnseenUsers);
+		model.addAttribute("primaryLang", loginVO.getPrimary());
 		
 		logger.debug("Show seen users info finishes!");
 		return "/ezPoll/showSeenUserInfo";

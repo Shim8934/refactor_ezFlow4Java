@@ -65,7 +65,7 @@
 							<img src="${list2.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list2.id}')">
 								<a style="cursor:pointer; display:inline-block; float:left; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width: 111px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
 									<c:choose>
-										<c:when test="${list2.primary == '1'}">
+										<c:when test="${primaryLang == '1'}">
 											<c:out value ="${list2.displayName1}"/>
 										</c:when>
 										<c:otherwise>

@@ -40,7 +40,7 @@
 								<img src="${list.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.id}')">
 								<a style="cursor:pointer; display:inline-block; padding: 0px 20px 0px 42px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:180px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.id}')">	
 									<c:choose>
-										<c:when test="${list.primary == '1'}">
+										<c:when test="${primaryLang == '1'}">
 											<c:out value ="${list.displayName1}"/>
 										</c:when>
 										<c:otherwise>

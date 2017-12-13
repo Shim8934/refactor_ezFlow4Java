@@ -42,9 +42,16 @@
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
 							<td >
-								<img src="${list.userImage}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">
+								<img src="${list.userImage}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">								
 								<a style="cursor:pointer; display:inline-block; padding-top: 17px; padding-left: 42px; overflow: hidden; text-overflow: ellipsis; max-width:180px;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
-									<c:out value ="${list.userName}"/>
+									<c:choose>
+										<c:when test="${primaryLang == '1'}">
+											<c:out value ="${list.userName1}"/>
+										</c:when>
+										<c:otherwise>
+											<c:out value ="${list.userName2}"/>
+										</c:otherwise>	
+									</c:choose>											
 								</a>
 							</td>
 						</tr>
