@@ -306,7 +306,7 @@
 		</table>
 		<h2><spring:message code='ezEmail.t368' /></h2>
 		<table style="width:100%;" class="content">
-		  <tr>
+		  <tr style="display:none">
 		    <td><input type="checkbox" name="responseSend" value="checkbox" onClick="" id = "responseSendid">
 		     <span style="vertical-align:middle;"> <spring:message code='ezEmail.t369' /></span></td>
 		  </tr>
