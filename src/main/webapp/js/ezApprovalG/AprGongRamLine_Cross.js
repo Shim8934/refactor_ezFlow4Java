@@ -673,14 +673,182 @@ function UpdateLineHistory(_DOCID) {
  * 결재->회람(공람)-> 부서추가
  * */
 function btn_addDepartment() {
-	var listView = new ListView();
-	listView.LoadFromID("DivUserList");
-
-	var listObj = listView.GetDataRows();
-	
-	for (var i = listObj.length-1; i >= 0; i --) {
-		var test = listObj[i];
-		APRLINEATTENDADDFunction(listObj[i], "PERSON");
+	// 포함할 경우 하위부서 정보를 전부 가져와서 처리
+	if (confirm(strLangPJG02)) {
+		var treeView = new TreeView();
+		treeView.LoadFromID("FromTreeView");
+		var selnode = treeView.GetSelectNode();
+		var deptID = selnode.GetNodeData("CN");
+		var jsonInfo;
 		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			url : "/ezOrgan/getAllDeptID",
+			async : false,
+			data : {
+				deptID : deptID
+			},
+			success : function(result) {
+				jsonInfo = JSON.parse(result);
+				
+				for (var i=jsonInfo.length-1; i>=0; i--) {
+					getUserInDept(jsonInfo[i].cn);
+				}
+			}
+		});
+	} else {
+		var listView = new ListView();
+		listView.LoadFromID("DivUserList");
+	
+		var listObj = listView.GetDataRows();
+		
+		for (var i = listObj.length-1; i >= 0; i --) {
+			APRLINEATTENDADDFunction(listObj[i], "PERSON");
+		}
 	}
+
+}
+// 부서원 정보를 가져온다.
+function getUserInDept(dept) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+			deptID : dept,
+			cell 	 : "displayName;description;title;telephoneNumber",
+			prop     : "department;extensionAttribute4;displayName;description;title",
+			type 	 : "user"
+		},
+		success: function(xml) {
+			//console.log("row xml : " + xml);
+			xml = loadXMLString(xml);
+			aprLineAddDeptUser("PERSON", xml);
+		}		
+	});
+}
+
+function aprLineAddDeptUser(mode, xmlData) {
+	
+	try {
+		var pparsingXML;
+        var objXML = createXmlDom();
+
+        var pAPRLINE = new ListView();      
+        pAPRLINE.LoadFromID("pAPRLINE");
+        
+        var pCurSelRow = pAPRLINE.GetDataRows();
+
+        if (pCurSelRow[0] != undefined && pCurSelRow[0].id == "pAPRLINE_TR_noItems") {
+            pAPRLINE.DeleteRow("pAPRLINE_TR_noItems")
+        }
+        
+        
+        AprLineAddIndex = pAPRLINE.GetDataRows().length;
+        AprLineAddIndex = AprLineAddIndex + 1;      
+        
+		var getRow = GetElementsByTagName(xmlData, "ROW");
+	
+		for(var i = getRow.length-1; i >= 0; i --) {
+			
+	        var DuplicateFlag = false;
+	        for (var j = 0; j < pCurSelRow.length; j++) {
+	            if (GetAttribute(pCurSelRow[j], "DATA4").toLowerCase() == getNodeText(GetElementsByTagName(xmlData, "DATA2")[i]).toLowerCase()) {
+	                DuplicateFlag = true;
+	                console.log("1st : " + GetAttribute(pCurSelRow[j], "DATA4").toLowerCase());
+	                console.log("2nd : " + getNodeText(GetElementsByTagName(xmlData, "DATA2")[i]).toLowerCase());
+	            }
+	        }
+	        if (DuplicateFlag) {
+	            var pAlertContent = strLangS824;
+	            OpenAlertUI(pAlertContent);
+	            continue;
+	        }
+		
+            pparsingXML = "<LISTVIEWDATA><HEADERS>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
+            pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
+            pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
+            pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
+            pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
+            pparsingXML = pparsingXML + "<DATA4>" + getNodeText(GetElementsByTagName(xmlData, "DATA2")[i]) + "</DATA4>";
+            pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
+            pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetElementsByTagName(xmlData, "DATA3")[i]) + "</DATA6>";
+            pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
+            pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
+            pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
+            pparsingXML = pparsingXML + "<DATA10>" + companyID + "</DATA10>";
+            //회람 docstate
+            pparsingXML = pparsingXML + "<DATA11>015</DATA11>";
+            pparsingXML = pparsingXML + "<DATA12>001</DATA12>";
+            pparsingXML = pparsingXML + "<DATA13><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA8")[i]) + "]]></DATA13>";
+            pparsingXML = pparsingXML + "<DATA14><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA9")[i]) + "]]></DATA14>";
+            pparsingXML = pparsingXML + "<DATA15><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA10")[i]) + "]]></DATA15>";
+            pparsingXML = pparsingXML + "<DATA16><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA11")[i]) + "]]></DATA16>";
+            pparsingXML = pparsingXML + "<DATA17><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA12")[i]) + "]]></DATA17>";
+            pparsingXML = pparsingXML + "<DATA18><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "]]></DATA18>";
+            
+            pparsingXML = pparsingXML + "</CELL><CELL>";
+            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA5")[i]) + "</VALUE>";
+            pparsingXML = pparsingXML + "</CELL><CELL>";
+            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA7")[i]) + "</VALUE>";
+            pparsingXML = pparsingXML + "</CELL><CELL>";
+            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA6")[i]) + "</VALUE>";
+            pparsingXML = pparsingXML + "</CELL><CELL>";
+            pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+            pparsingXML = pparsingXML + "</CELL><CELL>";
+            pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
+            pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";	
+
+            objXML = loadXMLString(pparsingXML);
+
+            var tr = pAPRLINE.GetSelectedRows();
+            var InitTr = pAPRLINE.GetDataRows();
+            var MaxID = 0;
+
+            for (var j = 0  ; j < InitTr.length  ; j++) {
+                var curnum = Number(pAPRLINE.GetSelectedRowID(j).substring(pAPRLINE.GetSelectedRowID(j).lastIndexOf('_') + 1), pAPRLINE.GetSelectedRowID(j).length);
+                if (MaxID < curnum)
+                    MaxID = curnum;
+            }
+
+            if (tr.length == 0) {
+                if (InitTr.length == 0) {
+                    if (document.getElementById("APRLINE").innerHTML != "")
+                        document.getElementById("APRLINE").innerHTML = "";
+
+                    var pAPRLINE = new ListView();      
+                    pAPRLINE.SetID("pAPRLINE");
+                    pAPRLINE.SetMulSelectable(false);    
+                    pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");            
+                    pAPRLINE.SetSelectFlag(false);
+                    pAPRLINE.SetHeightFree(true);
+                    pAPRLINE.DataSource(objXML);
+                    pAPRLINE.DataBind("APRLINE");
+                } else {
+                    var objTr = pAPRLINE.NewAddRow(0, "pAPRLINE" + "_TR_" + eval(MaxID + 1));
+                    pAPRLINE.AddDataRow(objTr, objXML);
+                }
+            }
+            else {
+                var objTr = pAPRLINE.NewAddRow(0, "pAPRLINE" + "_TR_" + eval(MaxID + 1));
+                pAPRLINE.AddDataRow(objTr, objXML);
+            }
+
+            AprLineAddIndex = AprLineAddIndex + 1;      
+		}//end FOR
+	
+	} catch (e){
+		alert("aprLineAddDeptUser :: " + e.description);
+	}
+
 }

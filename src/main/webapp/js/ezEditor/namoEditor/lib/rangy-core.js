@@ -2920,7 +2920,7 @@
         if (util.areHostMethods(testSelection, ["addRange", "getRangeAt", "removeAllRanges"]) &&
                 typeof testSelection.rangeCount == NUMBER && features.implementsDomRange) {
 
-            (function() {
+            /*(function() {
                 // Previously an iframe was used but this caused problems in some circumstances in IE, so tests are
                 // performed on the current document's selection. See issue 109.
 
@@ -2990,7 +2990,7 @@
                         }
                     }
                 }
-            })();
+            })();*/
         }
 
         features.selectionSupportsMultipleRanges = selectionSupportsMultipleRanges;

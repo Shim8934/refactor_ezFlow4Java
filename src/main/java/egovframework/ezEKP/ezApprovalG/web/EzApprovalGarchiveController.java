@@ -38,6 +38,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -71,6 +72,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
 	
 	@Autowired
 	private EgovMessageSource messageSource;
@@ -1389,7 +1393,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String to[] = request.getParameter("to").split(",");
 		String Subject = request.getParameter("Subject");
 		String Content = request.getParameter("Content");
-		String SaveSendBoxFlag = request.getParameter("SaveSendBoxFlag");
         boolean flag;
 		StringBuilder bodyContent = new StringBuilder();
         
@@ -1404,11 +1407,17 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     	to1.setPersonal(to[0], "UTF-8");
     	to1.setAddress(to[1]);
     	
-    	if (SaveSendBoxFlag.equals("Y")) {
+    	String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
+    	Document doc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
+		String saveSendBoxFlag = doc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
+		logger.debug("saveSendBoxFlag=" + saveSendBoxFlag);
+		
+    	if (saveSendBoxFlag.equals("Y")) {
     		flag = true;
     	} else {
     		flag = false;
     	}
+    	
     	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, bodyContent.toString(),flag);
     	
     	logger.debug("mail_intersend ended");
@@ -1675,10 +1684,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                     }
                 }
                 if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s') ";
                 }
                 if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s')";
                 }
                 if (TempQuery.indexOf("ENDDATEAF;") != -1) {
                     ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
@@ -2079,7 +2088,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	/** 문서유통 암호화여부 팝업*/
 	@RequestMapping(value = "/ezApprovalG/selectEnc.do", produces = "text/xml;charset=utf-8")
-	public String selectEnc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+	public String selectEnc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("selectEnc started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);

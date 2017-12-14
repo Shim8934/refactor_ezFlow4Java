@@ -65,7 +65,9 @@ function MailPreviewEnd(e) {
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
-
+            if($("#PreH_CCMain").css("display") != "none") {
+            	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+            }
         }
         else if (PreviewW_Move) {
             var newPos_W = parseInt(document.getElementById("ResizeBarW").style.top) - 90;
@@ -82,9 +84,12 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
             document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             pMailListDiv = (pMailListHeightW / CurrentHeight) * 100;
             pMailPreVDiv = (pMailPreHeightW / CurrentHeight) * 100;
+            if($("#PreW_CCMain").css("display") != "none") {
+            	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
+            }
         }
         PreviewH_Move = false;
         PreviewW_Move = false;
@@ -154,6 +159,7 @@ function MailPreviewResize(e) {
             }
             document.getElementById("ResizeBarW").style.top = newPos_W + "px";
         }
+        setTimeout(function () { isScrollMailList(); }, 500);
     }
 }
 function new_mail_onclick() {
@@ -582,7 +588,7 @@ function reject_onclick() {
     }
     denial_cross_dialogArguments[0] = params;
     denial_cross_dialogArguments[1] = reject_onclick_Complete;
-    var OpenWin = window.open("/ezEmail/mailDenial.do", "denial_cross", GetOpenWindowfeature(335, 314));
+    var OpenWin = window.open("/ezEmail/mailDenial.do", "denial_cross", GetOpenWindowfeature(450, 314));
     try { OpenWin.focus(); } catch (e) { }
 }
 function reject_onclick_Complete(retVal)
@@ -610,14 +616,7 @@ function reject_onclick_Complete(retVal)
     result = replaceAll(result, "<DATA><![CDATA[", "");
     result = replaceAll(result, "]]></DATA>", "");
 
-    if (result == 'OK') {
-        alert(strLang61);
-    }
-    else if (result == "DOMAINERROR")
-        alert(strLang352);
-    else {
-        alert(strLang138);
-    }
+    return result;
 }
 function replaceAll(pStrContent, pStrOrg, pStrRep) {
     return pStrContent.split(pStrOrg).join(pStrRep);
@@ -646,7 +645,6 @@ function prevShow() {
         }
         //if (Old_Preview_Href == Preview_Href)
         //    return;
-
         Old_Preview_Href = Preview_Href;
         var strQuery = "<URL>" + Preview_Href + "</URL>";
         xmlhttp_mailPreview = createXMLHttpRequest();
@@ -699,7 +697,11 @@ function event_xmlhttp_mailPreview_Complete() {
                     var Pos2 = pReceiver_.indexOf(">");
                     var pReceiver_Name = TrimText(pReceiver_.substring(0, Pos1));
                     var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
-
+                    
+                    if (pReceiver_Address == "a@a.com") {
+                    	pReceiver_Address = "";
+                    }
+                    
                     if (Cnt == 0) {
                         pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + ConvertStringForHTML(pReceiver_Name) + "\"</span>";
                         
@@ -743,6 +745,8 @@ function event_xmlhttp_mailPreview_Complete() {
             var pCcHtml = "";
             var pCcSubHtml = "";
             var pCcDetailHtml = "";
+            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             if (pCc != "") {
                 var pMailCc = pCc;
                 var pCcArray = pMailCc.split(";");
@@ -756,7 +760,11 @@ function event_xmlhttp_mailPreview_Complete() {
                         var Pos2 = pCc_.indexOf(">");
                         var pCc_Name = TrimText(pCc_.substring(0, Pos1));
                         var pCc_Address = TrimText(pCc_.substring(Pos1 + 1, Pos2));
-
+                        
+                        if (pCc_Address == "a@a.com") {
+                        	pCc_Address = "";
+                        }
+                        
                         if (Cnt == 0) {
                             pCcHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + ConvertStringForHTML(pCc_Name) + "\"</span>";
 
@@ -797,9 +805,15 @@ function event_xmlhttp_mailPreview_Complete() {
                 else {
                     document.getElementById("PreW_CCMain").style.display = "";
                 }
+                $("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+                $("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
             }
             
             ///
+
+            if (pFromemail=="a@a.com") {
+            	pFromemail = "";
+            }
             
             var pOCS = "";
             if (USE_OCS == "YES") {
@@ -975,7 +989,7 @@ function PreviewRayerChange(pGubun) {
             else
                 document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -1047,6 +1061,7 @@ function PreviewRayerChange(pGubun) {
                 }
             }
         }
+    	isScrollMailList();
         MailOptionHidden();
         PreviewMode_ChangeBtn();
         isPreviewChange = false;
@@ -1059,6 +1074,10 @@ function PreviewRayerChange(pGubun) {
 }
 function Window_resize() {
     try {
+
+    	document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
+        document.getElementById("layer_popup").style.top = "100px";
+
         if (!isPreviewChange) {
 
             if (parseInt(document.documentElement.clientWidth) < 1000) {
@@ -1093,9 +1112,12 @@ function Window_resize() {
                 else
                     document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
                 document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
+                if($("#PreW_CCMain").css("display") != "none") {
+                	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
+                }
             }
             else if (pPreviewShow_HOW == "H") {
                 if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -1129,6 +1151,9 @@ function Window_resize() {
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+                if($("#PreH_CCMain").css("display") != "none") {
+                	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+                }                
             }
             else if (pPreviewShow_HOW == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";
@@ -1212,7 +1237,7 @@ function callMsgDlg(szContentClass, Href) {
 
 var PcSaveArrayList = new Array();
 
-function mail_export() {
+function mail_export(pwd) {
 	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang42);
         return;
@@ -1234,39 +1259,59 @@ function mail_export() {
         AttachDownFrame.target = "_blank";
         
     } else { // 여러개의 메일을 다운로드 할 경우
-    	var folderIdAndMessageIdList = new Object();
-    	for (var i = 0; i < PcSaveArrayList.length; i++) {
-    		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
-    		
-    		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
-    			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
-    		} else {
-    			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
-    		}
+    	var type = "MAIL";
+    	
+    	if (useEncryptZipForEmail == "YES") { // 암호화 config 인 경우
+    		mailExportOption_onClick(type);
+    	} else { // 암호 적용 안할 경우
+    		mailExport_start();
     	}
-    	
-    	ShowMailProgress();
-    	
-        $.ajax({
-			type : "POST",
-			dataType : "text",
-			async : true,
-			url : "/ezEmail/mailExportZip.do",
-			data : folderIdAndMessageIdList,
-			complete: function(){
-				HiddenMailProgress();
-			},
-			success: function(result){
-				if (result != "") {
-			    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result;
-			    	AttachDownFrame.location.href = fullpath;
-			        AttachDownFrame.target = "_blank";
-				} else {
-					alert(strLang104);
-				}
-			}
-		});
     }
+    
+}
+
+function mailExport_start(pwd){
+	
+	var encryptPw = "";
+	
+	if (typeof pwd != "undefined") {
+		encryptPw = pwd;
+	}
+	
+	var folderIdAndMessageIdList = new Object();
+	
+	for (var i = 0; i < PcSaveArrayList.length; i++) {
+		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
+		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
+			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
+		} else {
+			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
+		}
+	}
+	
+	ShowMailProgress();
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezEmail/mailExportZip.do",
+		data : folderIdAndMessageIdList,
+		complete: function(){
+			HiddenMailProgress();
+		},
+		success: function(result){
+			if (result != "") {
+		    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" 
+		    		+ result + "&encryptPw=" + encryptPw;
+		    	AttachDownFrame.location.href = fullpath;
+		        AttachDownFrame.target = "_blank";
+			} else {
+				alert(strLang104);
+			}
+		}
+	});
+	
 }
 
 function HiddenContextMenu() {

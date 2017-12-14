@@ -240,16 +240,17 @@
 
             var line1 = new Array();
             var line2 = new Array();
-            
+
             for (var i = 0; i < 10 ; i++) {
             	line1.push(new Array((i + '<br/>≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
 	            line2.push(new Array((i + '<br/>≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
             }
-            
+
             for (var i = 10; i < 24 ; i++) {
             	line1.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
 	            line2.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
             }
+
 
             plot2 = $.jqplot('statisticschart', [line1, line2], {
                 animate: false,
@@ -314,9 +315,9 @@
                 </span>
             </td>
             <td>
-                <div id="mainmenu" style="height: 28px; width: 110px">
+                <div id="mainmenu" style="height: 28px;">
                     <ul>
-                        <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
                     </ul>
                 </div>
             </td>

@@ -24,6 +24,7 @@
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 	<typeAlias alias="CommunityBoardDeleteItemVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardDeleteItemVO"/>
+	<typeAlias alias="OrganUserVO"						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -1122,14 +1123,14 @@
 				A.attachments,
 				A.importance,
 				B.boardid,
-				CASE WHEN #primary# = '1' THEN B.boardname ELSE B.boardname2 END AS boardname,
+				B.boardname,
 				A.abstract
 			FROM
 				TBL_COMM_ITEM A
 			INNER JOIN
 				(SELECT
 					boardid,
-					CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END,
+					CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END AS boardname,
 					tenant_id
 				FROM
 					TBL_COMM_BOARDINFO
@@ -4790,6 +4791,7 @@
 				itemexpires,
 				attachsizelimit,
 				boardno,
+				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -4801,6 +4803,7 @@
 				-1,
 				#v_ATTACHSIZELIMIT#,
 				#v_BOARDNO#,
+				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5540,6 +5543,7 @@
 				boardname2,
 				parentboardid,
 				boardno,
+				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -5548,6 +5552,7 @@
 				#v_BOARDGROUPNAME2#,
 				'top',
 				#v_BOARDNO#,
+				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5633,6 +5638,7 @@
 				itemexpires,
 				attachsizelimit,
 				boardno,
+				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -5644,6 +5650,7 @@
 				-1,
 				#v_COMATT#,
 				#v_BOARDNO#,
+				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -6320,7 +6327,29 @@
 	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="MAP"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
-				*
+				c_clubno,
+				boardid,
+				boardname,
+				boardname2,
+				treevieworder,
+				boardlevel,
+				parentboardid,
+				boarddescription,
+				itemexpires,
+				attachsizelimit,
+				IFNULL(replynotify, 0) AS replynotify,
+				boardgroupid,
+				alertpostitem,
+				gubun,
+				url,
+				deleteafter,
+				boardcolor,
+				boardno,
+				versionuse,
+				checkuse,
+				showposition,
+				sn,
+				tenant_id
 			FROM
 	        	TBL_COMM_BOARDINFO
 			WHERE
@@ -6677,7 +6706,46 @@
        			ITEMID = #itemID#
 		]]>
 	</select>
-  
+	
+	<select id="EzCommunityDAO.sendPostNoticeMailGet1" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				c_clubno
+			FROM
+				TBL_COMM_BOARDINFO
+			WHERE
+				boardID = #boardID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.sendReplyNoticeMail" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				writerID AS cn,
+				IFNULL((SELECT
+							mail
+						FROM
+							TBL_USERMASTER A
+						JOIN
+							TBL_COMM_ITEM B
+						ON
+							A.cn = B.writerID
+						WHERE
+							A.tenant_ID = #tenantID#
+						AND
+							B.itemID = #itemID#), '') AS mail,
+				writerName AS displayName
+			FROM
+				TBL_COMM_ITEM
+			WHERE
+				tenant_ID = #tenantID#
+			AND
+				boardID = #boardID#
+			AND
+				itemID = #itemID#
+		]]>
+	</select>
+	  
   	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
   		<![CDATA[
   			DELETE FROM TBL_COMM_DELETERESERVEDITEM

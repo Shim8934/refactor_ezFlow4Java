@@ -1052,7 +1052,7 @@
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 315) / 2;
 		        
-		        GetOpenWindow("/ezBoard/boardNotiOrder.do?boardID=" + pBoardID, "MyBoardConfig", 320, 450);
+		        GetOpenWindow("/ezBoard/boardNotiOrder.do?boardID=" + pBoardID, "MyBoardConfig", 370, 450);
 		
 		    }
 		    function SetBoardAcl() {
@@ -1088,8 +1088,8 @@
 			<c:when test="${boardInfo.adminType != 'y'}">
 				<h1>${boardName}<span id="mailBoxInfo"></span>
 					<span style="float:right;font-weight:normal;color:black;">
-			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208' />
-					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t223' />
+			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t208' />
+					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t223' />
 					  &nbsp;
 					  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 			          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
@@ -1098,11 +1098,11 @@
 			</c:when>
 			<c:otherwise>
 			    <script type="text/javascript">
-			        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
+			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 			    </script>
 			    <span style="display:none; float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208' />
-				  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t223' />
+		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t208' />
+				  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t223' />
 				  &nbsp;
 				  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
@@ -1268,9 +1268,9 @@
 		       <tr>
 		            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 		           <td>
-		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center">
+		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 		                ~
-		               <input type="text" id="Edatepicker" style="width:80px;text-align:center"> 
+		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
 		           </td>
 		  </tr>
 		    </table>

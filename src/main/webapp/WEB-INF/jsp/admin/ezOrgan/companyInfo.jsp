@@ -83,22 +83,22 @@
 
 			function OK_Click(){
 				if (CompanyID.value == ""){
-					alert("<spring:message code='ezOrgan.t113' />");
+					OpenAlertUI("<spring:message code='ezOrgan.t113'/>");
 					return;
 				}
 				
 				if (CompanyID.value.length < 3){
-					alert("<spring:message code='ezOrgan.t114' />");
+					OpenAlertUI("<spring:message code='ezOrgan.t114'/>");
 					return;
 				}
 				
 				if (!Check_ID(CompanyID.value)){
-					alert("<spring:message code='ezOrgan.t115' />");
+					OpenAlertUI("<spring:message code='ezOrgan.t115'/>");
 					return;
 				}
 							
 				if (CompanyName.value == ""){
-					alert("<spring:message code='ezOrgan.t116' />");
+					OpenAlertUI("<spring:message code='ezOrgan.t116'/>");
 					return;
 				}
 				
@@ -110,17 +110,17 @@
 			    } else {
 			        if (CompanyID.value == "Top") {
    						if (ParentID.value == ""){
-   							alert("<spring:message code='ezOrgan.x0007' />");
+   							OpenAlertUI("<spring:message code='ezOrgan.x0007'/>");
    							return;
    						}
    					
    						if (ParentID.value.length < 3){
-   							alert("<spring:message code='ezOrgan.x0008' />");
+   							OpenAlertUI("<spring:message code='ezOrgan.x0008'/>");
    							return;
    						}
    					
    						if (!Check_ID(ParentID.value)){
-   							alert("<spring:message code='ezOrgan.x0009' />");
+   							OpenAlertUI("<spring:message code='ezOrgan.x0009'/>");
    							return;
    						}				
    						
@@ -138,9 +138,9 @@
 		        		 var retVal = result;
 		        		 
 		        		 if (retVal == "PRE"){
-		        			 alert("<spring:message code='ezOrgan.t119' />");
+		        			 OpenAlertUI("<spring:message code='ezOrgan.t119'/>");
 		        		 }else if (retVal == "EMAIL_ERROR"){
-		        			 alert("<spring:message code='ezOrgan.t118' />");
+		        			 OpenAlertUI("<spring:message code='ezOrgan.t118'/>");
 		        		 }else{
 		        			 if(ReturnFunction != null){
 		 			            ReturnFunction(CompanyID.value);
@@ -151,7 +151,7 @@
 		        		 }
 		        	},
 		        	error : function(error){
-		        		alert("<spring:message code='ezOrgan.t118' />");
+	        			 OpenAlertUI("<spring:message code='ezOrgan.t118'/>");
 		        	}
 				});
 			}
@@ -183,6 +183,25 @@
 		            }
 		        };
 		    }		
+			
+			var ezapralert_cross_dialogArguments = new Array();
+		    function OpenAlertUI(pAlertContent, CompleteFunction) {
+		        var parameter = pAlertContent;
+		        var url = "/ezApprovalG/ezAprAlert.do";
+
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = parameter;
+		            if (CompleteFunction != undefined)
+		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+		            else
+		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            DivPopUpShow(300, 205, url);
+		        }
+		    }
+		    function OpenAlertUI_Complete() {
+		        DivPopUpHidden();
+		    }
+		    
 	    </script>
 	</head>
 	<body class="popup">
@@ -215,6 +234,10 @@
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
 		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
+		</div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

@@ -6,12 +6,11 @@
 <html>
 	<head>
 		<c:if test="${type !=''}">
-		<title><spring:message code='ezApprovalG.t6000'/></title>
+			<title><spring:message code='ezApprovalG.t6000'/></title>
 		</c:if>
 		<c:if test="${type ==''}">
-		<title><spring:message code='ezApprovalG.t384'/></title>
-		</c:if>
-		
+			<title><spring:message code='ezApprovalG.t384'/></title>
+		</c:if>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -87,6 +86,14 @@
 		            window.returnValue = "cancel";
 		
 		        document.getElementById("TxtAprLineTempletName").focus();
+		        
+		        // 한글 입력시 maxlength + 1이 입력되는 현상 제어
+			    $("#TxtAprLineTempletName").keyup( function(e){
+			    	var maxlength = $(this).prop("maxlength");
+			    	if ($(this).val().length >= maxlength) {
+			    		$(this).val($(this).val().substr(0, maxlength));
+			    	}
+			    });
 		    };
 		
 		    function KeEventControl(obj) {
@@ -124,10 +131,10 @@
 			</c:if>
 		</c:if>
 		<div class="nobox" style="margin-top:10px">
-		<input type="text" class="text" style="width:100%" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
+		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
 		</div>		
 			
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		<input type="submit" value="<spring:message code='ezApprovalG.t20'/>" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName" onClick="return btn_SaveAprLineTempletName_onclick()">
 		<input type="submit" value="<spring:message code='ezApprovalG.t119'/>" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName" onClick="return btn_CancelAprLineTempletName_onclick()">
 		</div>

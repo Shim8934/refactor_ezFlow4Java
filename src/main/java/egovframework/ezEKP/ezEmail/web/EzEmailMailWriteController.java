@@ -712,8 +712,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
-			            
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
 			            String offset = loginInfo.getOffset();
@@ -724,10 +723,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
-			            
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
-			            
+			            //to-do
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
+
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 						if (orgMessageSubject != null && !orgMessageSubject.equals("")) {
 							rawHeaders = orgMessage.getHeader("subject");
@@ -925,6 +924,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
+		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -994,6 +995,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
@@ -2441,6 +2443,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                }
 		            // 임시 보관함에 저장하는 경우
 		            } else {
+		            	//임시보관함에 저장할 경우에는 style 빼도록 수정
+		            	htmlBody = htmlBody.replace("<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> ", "");
+		            	
 		            	message.setContent(htmlBody, "text/html; charset=utf-8");
 		            	content.setContent(htmlBody, "text/html; charset=utf-8");
 		            }
@@ -3523,18 +3528,43 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						Multipart mp = (Multipart)oldMessage.getContent();
 						int count = mp.getCount();
 						BodyPart p = null;
-						
+						boolean containBody = false; 
 						for (int i = 0; i < count; i++) {
 							p = mp.getBodyPart(i);
-							
+//							logger.debug("p.getDisposition : " + p.getDisposition());
+							//임시보관함에서 연 메일, 전달 하는 메일의 경우에는 이미 본문이 첫 번째 bodyPart를 차지하므로 getDisposition이 null이다.
+							if (p.getDisposition() == null) {
+								containBody = true;
+							}
 							int length = rows.getLength();
 							boolean isRemoved = false;
-							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-								for (int j = 0; j < length; j++) {
-									String mailFileName = MimeUtility.decodeText(p.getFileName());
-									if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
-										isRemoved = true;
-										break;
+							//파일의 index가 한칸씩 뒤로 밀렸으므로 i-1과 비교하여 파일을 삭제한다. 
+							if (containBody) {
+								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+									for (int j = 0; j < length; j++) {
+//										String mailFileName = MimeUtility.decodeText(p.getFileName());
+//										logger.debug("mailFileName : " + mailFileName + ", index i : " + (i-1));
+//										logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
+//										logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
+//										if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
+										if (rows.item(j).getChildNodes().item(1).getTextContent().equals((i-1)+"")) {
+											isRemoved = true;
+											break;
+										}
+									}
+								}
+							} else {
+								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+									for (int j = 0; j < length; j++) {
+//										String mailFileName = MimeUtility.decodeText(p.getFileName());
+//										logger.debug("mailFileName : " + mailFileName + ", index i : " + i);
+//										logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
+//										logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
+//										if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
+										if (rows.item(j).getChildNodes().item(1).getTextContent().equals(i+"")) {
+											isRemoved = true;
+											break;
+										}
 									}
 								}
 							}
@@ -3734,7 +3764,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				pAddressFilter = tempNode.getTextContent();
 			}
 		}
-
+        
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
@@ -3766,7 +3796,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
-		
+		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId());
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		boolean outMailReadCheck = false;
 		
@@ -3774,6 +3804,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("individualMailUser", individualMailUser);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		return "ezEmail/mailLetterOption";
 	}
@@ -3781,12 +3812,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 설정화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSecureOption.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSecureOption.do")
 	public String mailSecureOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
-			Model model, 
-			@RequestBody String bodyData) throws Exception{
+			Model model) throws Exception{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());

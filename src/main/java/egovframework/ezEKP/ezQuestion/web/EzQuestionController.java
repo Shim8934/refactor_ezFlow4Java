@@ -1083,7 +1083,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		if(req.getParameter("DataXML") != null) {
 			pMode = "EDIT";
-			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
+			pDataXML = req.getParameter("DataXML").trim();
 			logger.debug("pDataXML="+pDataXML);
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
 			pQstTitle = commonUtil.cleanValue(doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent());
@@ -3333,160 +3333,148 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("resultTotalSave started");
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String brforeQuestionNo="", questionNo = "", qUser="", comma="";
-		String answer="", answerStr="";
-		String itemNo="", headerInfo="";
-		int maxNum=0, sNo=0;
+		String brforeQuestionNo = "";
+		String questionNo = "";
+		String qUser = "";
+		String comma = "";
+		String answer = "";
+		String answerStr = "";
+		String itemNo = "";
+		String headerInfo = "";
+		int maxNum = 0;
+		int sNo = 0;
 		String qNum = "0";
 		String RID = "";
-		String strData = "", strKey = "";
-		
+		String strData = "";
+		String strKey = "";
+
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("report");
-		
-		HSSFCellStyle headerStyle= workbook.createCellStyle();
+
+		HSSFCellStyle headerStyle = workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		
+		HSSFCellStyle bodyStyle = workbook.createCellStyle();
+
 		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
+
 		Row row;
 		Cell cell;
 		
 		itemNo = request.getParameter("itemNo");
 		
-		if(!itemNo.equals("")){
+		if (!itemNo.equals("")) {
 			row = sheet.createRow(0);
 			headerInfo = ";" + egovMessageSource.getMessage("ezQuestion.t552", locale) + "\r\n";
 			cell = row.createCell(0);
 			cell.setCellValue(headerInfo);
-			
+
 			headerInfo = egovMessageSource.getMessage("ezQuestion.t553", locale);
-			
-			/** EZSP_GETQUESTIONNOCNT*/
-			String strMaxNum = ezQuestionService.getQuestionNoCnt(itemNo, loginVO.getTenantId());
-			
-			if(strMaxNum==null){
+
+			/** EZSP_GETQUESTIONNOCNT */
+			String strMaxNum = ezQuestionService.getQuestionNoCnt(itemNo,
+					loginVO.getTenantId());
+
+			if (strMaxNum == null) {
 				maxNum = 0;
-			}else{
+			} else {
 				maxNum = Integer.parseInt(strMaxNum);
 			}
-			
-			if(maxNum != 0){
-				for(int i=1; i<maxNum+1; i++){
+
+			if (maxNum != 0) {
+				for (int i = 1; i < maxNum + 1; i++) {
 					headerInfo = headerInfo + "," + i;
 				}
-				
+
 				headerInfo = headerInfo + "\r\n";
-				
+
 				List<QstResponseVO> qstResponseVOList = ezQuestionService.getRespersonForResultTotalSave(Integer.parseInt(itemNo), loginVO.getTenantId());
-				
+
 				Hashtable<String, Object> tbl = new Hashtable<String, Object>();
-				
-				for(QstResponseVO qstResponseVO : qstResponseVOList){
-					brforeQuestionNo = Integer.toString(qstResponseVO.getQuestionNo()); 
-					answer="";
-					questionNo="";
-					qUser=qstResponseVO.getResponseUserName();
-					strKey=qstResponseVO.getResponseUserID()+","+qUser+","+qstResponseVO.getResponseUserPosition()+","+qstResponseVO.getResponseUserDeptName();
-					
-					if(qstResponseVO.getQuestionNo() != Integer.parseInt(qNum) || RID != qstResponseVO.getResponseUserID()){
+
+				for (QstResponseVO qstResponseVO : qstResponseVOList) {
+					brforeQuestionNo = Integer.toString(qstResponseVO
+							.getQuestionNo());
+					answer = "";
+					questionNo = "";
+					qUser = qstResponseVO.getResponseUserName();
+					strKey = qstResponseVO.getResponseUserID() + "," + qUser+ "," + qstResponseVO.getResponseUserPosition() + "," + qstResponseVO.getResponseUserDeptName();
+
+					if (qstResponseVO.getQuestionNo() != Integer.parseInt(qNum) || !RID.equals(qstResponseVO.getResponseUserID())) {
 						comma = ",";
-					}else{
+					} else {
 						comma = "- -";
 					}
-					
+
 					RID = qstResponseVO.getResponseUserID();
-					
-					if (qstResponseVO.getAnswerObjectivity() == 0){
-						answer = comma + qstResponseVO.getAnswerSubjectivity().replace("," , "，");
+
+					if (qstResponseVO.getAnswerObjectivity() == 0) {
+						answer = comma + qstResponseVO.getAnswerSubjectivity().replace(",", "，");
 						answer = answer.replace(";", "；");
 						answer = answer.replace("\"", " &quout;");
 						answer = answer.replace("\n", " ");
 						answer = answer.replace("\r", " ");
-					}else{
+					} else {
 						answer = comma + qstResponseVO.getAnswerObjectivity();
 					}
-					if(tbl.isEmpty()){
+					if (tbl.isEmpty()) {
 						strData = answer;
 						tbl.put(strKey, strData);
-					}else{
-						if(tbl.get(strKey) == null){
+					} else {
+						if (tbl.get(strKey) == null) {
 							strData = answer;
-							tbl.put(strKey,  strData);
-						}else{
+							tbl.put(strKey, strData);
+						} else {
 							strData = (String) tbl.get(strKey);
 							strData = strData + answer;
 							tbl.remove(strKey);
 							tbl.put(strKey, strData);
 						}
 					}
-					
+
 					qNum = Integer.toString(qstResponseVO.getQuestionNo());
 				}
 				
 				String[] header = headerInfo.split(",");
 				row = sheet.createRow(1);
-				
-				for(int i=0; i<header.length; i++){
+
+				for (int i = 0; i < header.length; i++) {
 					cell = row.createCell(i);
 					cell.setCellValue(header[i]);
 					cell.setCellStyle(headerStyle);
 				}
 				
-				if(!qUser.equals("")){
-					for(String key : tbl.keySet()){
-						sNo=sNo+1;
-						answerStr = answerStr + sNo + "," + key + tbl.get(key) + "\r\n";
-						row = sheet.createRow(sNo+1);
-						cell = row.createCell(0);
-						cell.setCellValue(sNo);
-						cell.setCellStyle(bodyStyle);
-						int i =1;
-						
-						for(String keySplit : key.split(",")){
-							cell = row.createCell(i);
-							cell.setCellValue(keySplit);
-							cell.setCellStyle(bodyStyle);
-							i++;
-						}
-						
-						cell = row.createCell(i);
-						cell.setCellValue(((String)tbl.get(key)).substring(1));
-						cell.setCellStyle(bodyStyle);
+				
+				for (String key : tbl.keySet()) {
+					sNo = sNo + 1;
+
+					if (qUser.equals("")) {
+						answerStr = ",,," + tbl.get(key);
+					} else {
+						answerStr = key + tbl.get(key);
 					}
-				}else{
-					for(String key : tbl.keySet()){
-						sNo=sNo+1;
-						answerStr = answerStr + sNo + ",,,," + tbl.get(key) + "\r\n";
-						row = sheet.createRow(sNo+1);
-						cell = row.createCell(0);
-						cell.setCellValue(sNo);
+
+					row = sheet.createRow(sNo + 1);
+					cell = row.createCell(0);
+					cell.setCellValue(sNo);
+					cell.setCellStyle(bodyStyle);
+					int i = 1;
+
+					for (String valueSplit : answerStr.split(",")) {
+						cell = row.createCell(i);
+						cell.setCellValue(valueSplit);
 						cell.setCellStyle(bodyStyle);
-						int i =1;
-						
-						for(String keySplit : key.split(",")){
-							cell = row.createCell(i);
-							cell.setCellValue(keySplit);
-							cell.setCellStyle(bodyStyle);
-							i++;
-						}
-						for(String valueSplit : ((String)tbl.get(key)).substring(1).split(",")){
-							cell = row.createCell(i);
-							cell.setCellValue(valueSplit);
-							cell.setCellStyle(bodyStyle);
-							i++;
-						}
+						i++;
 					}
 				}
+				
 				tbl.clear();
 				tbl = null;
 			}
@@ -4033,15 +4021,29 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstAttachVO.setQuestionNo(Integer.parseInt(arrLine[0]));
 					qstAttachVO.setAnswerNo(0);
 					
-					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
+//					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
+//					
+//					Document xmlTemp = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+//					
+//					if(qstAttach.size() > 0) {
+//						for(int k=0; k<qstAttach.size(); k++) {
+//							String rtv = commonUtil.getQueryResult(qstAttach.get(k));
+//							xmlTemp = commonUtil.convertStringToDocument(rtv);
+//						}
+//					}
+					
+					List<QstAttachVO> qstAttachList =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
 					
 					Document xmlTemp = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+					StringBuilder xmlBuilder = new StringBuilder("<DATA>");
 					
-					if(qstAttach.size() > 0) {
-						for(int k=0; k<qstAttach.size(); k++) {
-							String rtv = commonUtil.getQueryResult(qstAttach.get(k));
-							xmlTemp = commonUtil.convertStringToDocument(rtv);
+					if(!qstAttachList.isEmpty()) {
+						for(QstAttachVO qstAttach : qstAttachList) {
+							xmlBuilder.append(commonUtil.getQueryResult(qstAttach));
 						}
+						xmlBuilder.append("</DATA>");
+						
+						xmlTemp = commonUtil.convertStringToDocument(xmlBuilder.toString());
 					}
 					
 					if(xmlTemp.getElementsByTagName("ATTACHNO").getLength() > 0) {

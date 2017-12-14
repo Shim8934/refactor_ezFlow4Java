@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code='ezCircular.t36' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />		
 		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -31,7 +31,7 @@
 	    	}	
 	    
 	    	function save_info() {
-	    		if ($("#title").val() == "") {
+	    		if ($("#title").val().trim() == "") {
 					alert("<spring:message code='ezCircular.t52'/>");
 					return;
 				}
@@ -101,7 +101,7 @@
 	        	</td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="save_info()" ><spring:message code='ezCircular.t25' /></span></a>
 	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezCircular.t26' /></span></a>      
 	    </div>

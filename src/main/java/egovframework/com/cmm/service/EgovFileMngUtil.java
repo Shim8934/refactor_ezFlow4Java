@@ -2,14 +2,18 @@ package egovframework.com.cmm.service;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,8 +32,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
-
-
 
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -405,14 +407,15 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		if (!file.isFile()) {
 		    throw new FileNotFoundException(downFileName);
 		}
-	
+		
 		//byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
 		int fSize = (int)file.length();
 		if (fSize > 0) {
 		    BufferedInputStream in = null;
 	
 		    try {
-		    	in = new BufferedInputStream(new FileInputStream(file));	
+		    	in = new BufferedInputStream(new FileInputStream(file));
+		    	
 	    	    String mimetype = "application/octet-stream"; //"application/x-msdownload"	
 	    	    
 	    	    // dhlee : 파일 크기가 큰 경우 메모리가 작은 시스템에서는 문제가 발생하여 BUFF_SIZE 만큼의 버퍼를 할당하도록 수정함.	    	    
@@ -542,7 +545,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				path = dir.getPath().substring(0, dir.getName().length()) + fileName;
 			}
 			
-			zos = new ZipOutputStream(new FileOutputStream(path + ".zip"));
+			zos = new ZipOutputStream(new FileOutputStream(path + ".zip"), Charset.forName("UTF-8"));
 			
 			for (File file : fileList) {
 				if (!file.isDirectory()) {
@@ -568,6 +571,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			
 			fis = null;
 			
+			zos.close();
+			zos = null;
 		} catch (Exception e) {
 			throw e;
 			
@@ -577,6 +582,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			}
 			
 			if (zos != null) {
+				try { zos.closeEntry(); } catch (Exception e) {}
 				try { zos.close(); } catch (Exception e) {}
 			}
 			
@@ -606,4 +612,38 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		}
 	}
 	
+	/**
+	 * 파일을 읽어 String으로 리턴
+	 * @param filePath 파일 경로
+	 * @return file text
+	 * @throws Exception
+	 */
+	public String readFile(String filePath) throws Exception {
+		File file = new File(filePath);
+		
+		if (!file.exists()) {
+			throw new NoSuchFileException(filePath);
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = null;
+		String strLine = null;
+		
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+			
+			while ((strLine = br.readLine()) != null) {
+				sb.append(strLine + "\n");
+			}
+			
+			br.close();
+			br = null;
+		} finally {
+			if (br != null) {
+				try {br.close();} catch(Exception e) {}
+			}
+		}
+		
+		return sb.toString();
+	}
 }

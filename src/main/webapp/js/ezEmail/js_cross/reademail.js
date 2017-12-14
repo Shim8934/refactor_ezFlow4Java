@@ -493,9 +493,11 @@ function func_reject() {
 
     denial_cross_dialogArguments[0] = params;
     denial_cross_dialogArguments[1] = func_reject_Complete;
-    DivPopUpShow(337, 316, "/ezEmail/mailDenial.do");
+    DivPopUpShow(450, 314, "/ezEmail/mailDenial.do");
 }
 function func_reject_Complete(retVal) {
+	var result = "";
+	
     try {
         DivPopUpHidden();
         if (typeof (retVal) == "string") {
@@ -525,17 +527,11 @@ function func_reject_Complete(retVal) {
 
         result = replaceAll(result, "<DATA><![CDATA[", "");
         result = replaceAll(result, "]]></DATA>", "");
-
-        if (result == 'OK') {
-            alert(strLang61);
-        }
-        else if (result == "DOMAINERROR")
-            alert(strLang352);
-        else {
-            alert(strLang138);
-        }
+        
         xmlHTTP = null;
     } catch (e) {}
+    
+    return result;
 }
 function replaceAll(pStrContent, pStrOrg, pStrRep) {
     return pStrContent.split(pStrOrg).join(pStrRep);
@@ -922,7 +918,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
 // 20060724 준호추가
 // 커뮤니티 게시판에서 넘어온 경우 처리
 // 게시 보기(새거)
-function Item_View_New_Community(pBoardID, pItemID, pCommunityID) {
+function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     var pheigth = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
     pheigth = parseInt(pheigth) / 2;
@@ -931,9 +927,9 @@ function Item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     pwidth = pwidth - 359;
 
     if (CrossYN())
-        window.open("/myoffice/ezCommunity/BoardItemView_cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
     else
-        window.open("/myoffice/ezCommunity/BoardItemView.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
 }
 
 // 결재 보기

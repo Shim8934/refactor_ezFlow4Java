@@ -180,12 +180,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 전자결재 결재환경설정 호출 Method
 	 */
 	@RequestMapping(value = "/ezPersonal/ezApprovalConfig.do")
-	public String ezApprovalConfig(Model model) throws Exception{
+	public String ezApprovalConfig(Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
 		logger.debug("ezApprovalConfig started");
-
-		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
-		
-		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
 
 		logger.debug("ezApprovalConfig ended");
 		return "ezPersonal/persEzApprovalConfig";
@@ -228,11 +224,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPersonal/confirmPassword.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String confirmPassword(HttpServletRequest request) throws Exception{
+	public String confirmPassword(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("confirmPassword started");
-
+		userInfo = commonUtil.userInfo(loginCookie);
 		String result = "";
-		String oldPass = request.getParameter("oldPassword");
+
+        String oldPass = request.getParameter("oldPassword");
+		String loginPass = ezOrganService.getEncPassword(userInfo.getId(), userInfo.getTenantId());
 		String newPass = request.getParameter("newPassword");
 		String userID = request.getParameter("userID");
 		
@@ -244,7 +242,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPass);
 		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userID);
 		
-		if (oldPass.trim().equals(newPassword)) {
+		//결재 암호 나 로그인 암호가 같으면 인증되게--이사님이...
+		if (loginPass.trim().equals(newPassword) || oldPass.trim().equals(newPassword)) {
 			result = "OK";
 		} else {
 			result = "FAIL";
@@ -272,8 +271,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String flag = request.getParameter("flag");
 		String newPWD = request.getParameter("newPWD");
 		String pwdType = request.getParameter("pwdType");
-		String newTempPass = EgovFileScrty.decryptRsa(pk, newPWD);
-		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userInfo.getId());
+		String newPassword = "";
+		if (newPWD.isEmpty()) {
+			newPassword = ezOrganService.getEncPassword(userInfo.getId(), userInfo.getTenantId());
+		} else {
+			String newTempPass = EgovFileScrty.decryptRsa(pk, newPWD);
+			newPassword = EgovFileScrty.encryptPassword(newTempPass, userInfo.getId());
+		}
+		
 		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType, userInfo.getTenantId(), userInfo.getCompanyID());
 
 		logger.debug("saveConfig ended");
@@ -460,12 +465,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String signPath = "APPROVALSIGN";
+		String signPath = "APPROVALGSIGN";
 		String signImageSize = "4";
-		
-		if (config.getProperty("config.UserInfo_ApprovalG").equals("YES")) {
-			signPath = "APPROVALGSIGN";
-		}
 		
 		signImageSize = ezCommonService.getTenantConfig("SignImageSizeLimit", userInfo.getTenantId());
 		
@@ -731,12 +732,12 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("personSearch started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useOCS = config.getProperty("config.USE_OCS");
+		
 		String searchString = "";
 		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
 			searchString = req.getParameter("searchString");
 		}
-		model.addAttribute("useOCS", useOCS);
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("searchString", searchString);
 
@@ -752,9 +753,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("personSearchPrint started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useOCS = config.getProperty("config.USE_OCS");
 		
-		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("personSearchPrint ended");
@@ -773,7 +772,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String funCode = "";
 		String ezInfoSSL = "";
 		String SSL = "";
-		String usePortal = "";
 		
 		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
 			funCode = req.getParameter("funCode");
@@ -785,18 +783,34 @@ public class EzPersonalController extends EgovFileMngUtil {
 		SSL = req.getRequestURL().toString();
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
-		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		//초기화면 메일만 사용하고 싶을 때 YES
+		String	firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		//회람판 사용여부
+		String	useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", userInfo.getTenantId());
+		//마이포탈설정 0:보이게,1:마이포탈페이지만,2:초기화면설정만
+		String portalEnv = ezCommonService.getTenantConfig("portalEnv", userInfo.getTenantId());
+		
+		if (portalEnv == null || portalEnv.equals("")) {
+			portalEnv = "0";
+		}
+		if (firstScreen_Mail == null || firstScreen_Mail.equals("")) {
+			firstScreen_Mail = "NO";
+		}
+		if (useCircular == null || useCircular.equals("")) {
+			useCircular = "NO";
+		}
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
-		model.addAttribute("use_approvalG", use_approvalG);
-
-        String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-        
+		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
+		model.addAttribute("USE_CIRCULAR", useCircular);
         model.addAttribute("packageType", packageType);
-		
+        model.addAttribute("portalEnv", portalEnv);
+        
 		logger.debug("leftEnvironment ended");
 		return "/ezPersonal/persLeftEnvirionment";
 	}

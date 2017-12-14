@@ -25,7 +25,8 @@ function btn_AprDeptTempletDelCC_onclick() {
         }
         temp_CheckAprDeptTempletSN;
         temp_CheckAprDeptTempletSN = p_CheckAprDeptTempletSN;
-        var pInformationContent = linealt16;
+//        var pInformationContent = linealt16;
+        var pInformationContent = strLangPJG01;
         var Ans = OpenInformationUI(pInformationContent, btn_AprDeptTempletDelCC_onclick_Complete);
         if (!CrossYN() && Ans) {
             DelAprDeptTempletListCC(pUserID, pFormIDCC, p_CheckAprDeptTempletSN);
@@ -495,13 +496,60 @@ function APRDeptXMLParsingCC(APRDEPT, pDocID) {
  * 회람 정보 -> 부서추가 기능
  */
 function btn_addDepartment() {
-	var listView = new ListView();
-	listView.LoadFromID("DivUserList");
-
-	var listObj = listView.GetDataRows();
+	// 포함할 경우 하위부서 정보를 전부 가져와서 처리
+	if (confirm(strLangPJG02)) {
+		
+		var treeView = new TreeView();
+		treeView.LoadFromID("FromTreeViewCC");
+		var selnode = treeView.GetSelectNode();
+		var deptID = selnode.GetNodeData("CN");
+		var jsonInfo;
+		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			url : "/ezOrgan/getAllDeptID",
+			async : false,
+			data : {
+				deptID : deptID
+			},
+			success : function(result) {
+				jsonInfo = JSON.parse(result);
+				
+				for (var i=jsonInfo.length-1; i>=0; i--) {
+					getUserInDept(jsonInfo[i].cn);
+				}
+			}
+		});
+	} else {
+		var listView = new ListView();
+		listView.LoadFromID("DivUserList");
 	
-	for (var i = listObj.length-1; i >= 0; i --) {
-		var test = listObj[i];
-		APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
+		var listObj = listView.GetDataRows();
+		
+		for (var i = listObj.length-1; i >= 0; i --) {
+			APRLINEATTENDADDFunctionCC(listObj[i], "PERSON");
+		}
 	}
+
+}
+// 부서원 정보를 가져온다.
+function getUserInDept(dept) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+			deptID : dept,
+			cell 	 : "displayName;description;title;telephoneNumber",
+			prop     : "department;extensionAttribute4;displayName;description;title",
+			type 	 : "user"
+		},
+		success: function(xml) {
+			//console.log("row xml : " + xml);
+			xml = loadXMLString(xml);
+			aprLineAddDeptUser("PERSON", xml);
+		}		
+	});
 }

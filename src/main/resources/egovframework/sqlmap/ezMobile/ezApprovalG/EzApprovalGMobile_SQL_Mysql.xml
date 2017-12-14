@@ -155,7 +155,7 @@
 			INNER JOIN
 				TBL_EXPENDAPRDOCINFO C
 			ON
-		   		A.DOCID = B.DOCID
+		   		A.DOCID = C.DOCID
 		   	AND
 		   		A.TENANT_ID = C.TENANT_ID
 		   	AND
@@ -176,15 +176,7 @@
 			    AND 
 				 	A.TENANT_ID = F.TENANT_ID
                 AND 
-                 	A.COMPANYID = F.COMPANYID 
-                LEFT OUTER JOIN  
-              		TBL_ENDRECEIPTPOINTINFO G 
-              	ON 
-              		A.DOCID = G.DocID 
-			    AND 
-			  		A.TENANT_ID = G.TENANT_ID
-                AND 
-                	A.COMPANYID = G.COMPANYID              
+                 	A.COMPANYID = F.COMPANYID
 		   	</isEqual>
 		   	<isEqual property="approvalFlag" compareValue="G">
 		   		INNER JOIN

@@ -29,7 +29,7 @@
 			{
 				g_UID = pUID;
 							            
-				pObj.style.backgroundColor = "rgb(233, 241, 244)";
+				pObj.style.backgroundColor = "rgb(233, 241, 255)";
 				logo_URL = GetAttribute(pObj, "imageurl");
 	
 				if (g_SelectedObj != null) {
@@ -41,7 +41,7 @@
 			
 			// 수정
 			function selectItem(pUID, pObj){
-			    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=201", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
+			    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=201", "", "height = 320px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
 			}
 			
 			// 추가
@@ -59,7 +59,7 @@
 					return;
 				}
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=new&parentUID=201", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
+			    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=new&parentUID=201", "", "height = 320px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
 			}
 			
 			// 미리보기

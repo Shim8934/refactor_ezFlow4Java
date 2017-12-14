@@ -101,14 +101,14 @@
 	                <table width="100%">
 	                    <tr class="primary">
 	                        <td>
-	                            <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;box-sizing: border-box;" maxlength="8">
+	                            <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;box-sizing: border-box;" maxlength="20">
 	                        </td>
 	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" onclick="return btn_ok_onclick()"><span><spring:message code='ezAddress.t25' /></span></a>
 	        <a class="imgbtn" onclick="return btn_cancel_onclick()"><span><spring:message code='ezAddress.t11' /></span></a>
 	    </div>

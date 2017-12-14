@@ -448,6 +448,16 @@
 	        function Email_Menu_Click() {
 	            PostTreeView.select(1);
 	        }
+	        
+	        function showProgress() {
+			    document.getElementById("progressPanel").style.display = "block";
+			    document.getElementById("progressPanel").style.opacity = 0.5;
+			    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
+			}
+	        
+	        function hideProgress() {
+	        	document.getElementById("progressPanel").style.display = "none";
+	        }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: hidden;">
@@ -459,7 +469,9 @@
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
 	            <li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
 	            <li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
+		        <c:if test="${useOnlyInnerMail != 'YES'}">
 	            <li><span onclick="check_pop3()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t490" /></span></li>
+	            </c:if>
 	            <li id="mailexport"><span style="width: 100%; display: inline-block;" onclick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
 	            <li id="mailexportall" style="display: none;"><span style="width: 100%; display: inline-block;" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span></li>
 	            <li id="mailimport"><span onclick="mail_import()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000015" /></span></li>
@@ -485,5 +497,6 @@
 	    <xml id="AddressFolderXML" style="display: none;">
 	    ${rootAddressXML}
 	    </xml>
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	</body>
 </html>

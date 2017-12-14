@@ -14,7 +14,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "rgb(233, 241, 244)";
+var m_strColorSelect = "rgb(233, 241, 255)";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -335,6 +335,7 @@ function ListView() {
 
             oTable.setAttribute("multiselectable", _isMultiSelectable);
             oTable.setAttribute("useocs", _useOcs);
+            oTable.style.minWidth = GetTableMinWidth() + "px";
 
             if (_rowonclick != null)
                 oTable.setAttribute("rowonclick", _rowonclick);
@@ -445,6 +446,25 @@ function ListView() {
         oList = null;
     }
 
+    //테이블 min-width 결정
+    function GetTableMinWidth() {
+    	var oHeaders = _dataSource.getElementsByTagName("HEADER");
+    	var oHeaderMinWidth = 0;
+    	
+    	for (var i = 0; i < oHeaders.length; i++) {
+    		var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
+    		
+    		if(strColName == 'TITLE') {
+    			continue;
+    		}
+    		
+            var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
+            oHeaderMinWidth += parseInt(strWidth);
+    	}
+    	
+    	return oHeaderMinWidth + 200;
+    }
+    
     //리스트뷰 헤더 생성
     function GetTableHeaderObj() {
         var objTr = document.createElement("TR");
@@ -679,10 +699,12 @@ function ListView() {
 
                     var NewCell = document.createElement("TD");
                     NewCell.setAttribute("style", "text-align:left; border-bottom:0px;");
-                   
-                    var NewElement = document.createElement("IMG");
-                    NewElement.src = "/images/i_new.gif";
-                    NewCell.appendChild(NewElement);
+                    
+                    if (getNodeText(oDatas[3]) == "Y") {
+                    	 var NewElement = document.createElement("IMG");
+                         NewElement.src = "/images/i_new.gif";
+                         NewCell.appendChild(NewElement);
+                    }
                     
                     var ImgElement = document.createElement("IMG");
                     //ImgElement.src = "/Upload_BoardSTD/" + getNodeText(oDatas[4]);

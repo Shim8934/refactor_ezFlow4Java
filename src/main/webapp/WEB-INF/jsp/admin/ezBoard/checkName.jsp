@@ -103,10 +103,10 @@
 	    		selectedItemCount = selRow.length;
 	    		
 	    		if (selectedItemCount == 0){
-	    			alert("<spring:message code='ezBoard.t339'/>");
+	    			alert("<spring:message code='ezApprovalG.t1177'/>");
 	    			return;
 	    		}else if (selectedItemCount > 1){
-	    			alert("<spring:message code='ezBoard.t340'/>");
+	    			alert("<spring:message code='ezBoard.t34'/>");
 	    			return;
 	    		}
 	    		

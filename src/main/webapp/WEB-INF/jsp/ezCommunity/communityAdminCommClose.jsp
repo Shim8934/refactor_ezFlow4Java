@@ -131,7 +131,7 @@
 		    	<th colspan="2"><spring:message code = 'ezCommunity.t71' /></th>
 		  	</tr>
 		  	<tr>
-		    	<td colspan="2"><textarea name="textarea" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;height:80px;resize:none" id="closereason"></textarea>
+		    	<td colspan="2"><textarea name="textarea" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;height:180px;resize:none" id="closereason"></textarea>
 		    	</td>
 		  	</tr>
 		</table>

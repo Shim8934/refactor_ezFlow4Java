@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -485,9 +486,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             if (npos > 0) {
                 nposStart = strTempHtml.indexOf(" background-image:", npos + 5);
                 if (nposStart > 0) {
-                    nposEnd = strTempHtml.indexOf("\"", nposStart + 24);
-                    if ((nposEnd - nposStart - 24) > 0) {
-                        strImgsrc = strHtml[0].substring(nposStart + 24, nposEnd - 3);
+                	nposStart = strTempHtml.indexOf("url", nposStart) + 3;
+                	
+                	//에디터별로 url 내용이 달라서 url을 찾아내자
+                	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
+                		nposStart += 1;
+                	}
+                	
+                    nposEnd = strTempHtml.indexOf(");", nposStart);
+                    
+                    while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
+                    	nposEnd -= 1;
+                	}
+                    
+                    if ((nposEnd - nposStart) > 0) {
+                        strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
                     } else {
@@ -509,11 +522,23 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         		if (npos > 0) {
         			nposStart = strTempHtml.indexOf(" background-image:", npos + 6);
         			if (nposStart > 0) {
-        				nposEnd = strTempHtml.indexOf("\"", nposStart + 24);
-                        if ((nposEnd - nposStart - 24) > 0) {
-                            strImgsrc = strHtml[0].substring(nposStart + 24, nposEnd - 3);
-        					L_BackImage.add(strImgsrc);
-        					npos = nposEnd;
+                    	nposStart = strTempHtml.indexOf("url", nposStart) + 3;
+                    	
+                    	//에디터별로 url 내용이 달라서 url을 찾아내자
+                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
+                    		nposStart += 1;
+                    	}
+                    	
+                        nposEnd = strTempHtml.indexOf(");", nposStart);
+                        
+                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
+                        	nposEnd -= 1;
+                    	}
+                        
+                        if ((nposEnd - nposStart) > 0) {
+                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
+                            L_BackImage.add(strImgsrc);
+                            npos = nposEnd;
         				} else {
         					npos = npos + 6;
         				}
@@ -536,11 +561,23 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         		if (npos > 0) {
         			nposStart = strTempHtml.indexOf(" background-image:", npos + 3);
         			if (nposStart > 0) {
-        				nposEnd = strTempHtml.indexOf("\"", nposStart + 24);
-                        if ((nposEnd - nposStart - 24) > 0) {
-                            strImgsrc = strHtml[0].substring(nposStart + 24, nposEnd - 3);
-        					L_BackImage.add(strImgsrc);
-        					npos = nposEnd;
+                    	nposStart = strTempHtml.indexOf("url", nposStart) + 3;
+                    	
+                    	//에디터별로 url 내용이 달라서 url을 찾아내자
+                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
+                    		nposStart += 1;
+                    	}
+                    	
+                        nposEnd = strTempHtml.indexOf(");", nposStart);
+                        
+                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
+                        	nposEnd -= 1;
+                    	}
+                        
+                        if ((nposEnd - nposStart) > 0) {
+                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
+                            L_BackImage.add(strImgsrc);
+                            npos = nposEnd;
         				} else {
         					npos = npos + 3;
         				}
@@ -720,6 +757,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             	while ((len = in.read(buf)) != -1) {
             		byteOutStream.write(buf, 0, len);
             	}
+            	
             	//URL 안쓰지만 훗날 쓰일지도 몰라서
 //            	URL url = new URL(m_BackImageList[i]);
 //            	in = url.openStream();
@@ -729,6 +767,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 //                while ((len = in.read(buf)) != -1) {
 //                	byteOutStream.write(buf, 0, len);
 //                }
+            	
             } else {
             	File file = new File(realPath + m_BackImageList[i]);
             	in = new FileInputStream(file);
@@ -774,6 +813,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
         } else if (type.equals("SCHEDULECONTENT")) {
         	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;        	
+        } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {
+        	url = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + itemID;
         }
         
         String m_strMHT = "";

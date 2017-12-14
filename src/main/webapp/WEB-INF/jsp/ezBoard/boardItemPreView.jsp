@@ -167,7 +167,7 @@
 		        document.getElementById('txtContent').style.fontSize = fontSize[curFontSize];
 		    }
 		    function ResizeDiv() {
-		        document.getElementById("ItemOverflow").style.width = document.body.clientWidth - 45 + "px";
+// 		        document.getElementById("ItemOverflow").style.width = document.body.clientWidth - 45 + "px";
 		    }
 		</script>
 	</head>

@@ -142,6 +142,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		boolean isSubTitle = false;
 		String userCont = "";
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", userInfo.getTenantId());
+		String hideSusin =  ezCommonService.getTenantConfig("hideSusin", userInfo.getTenantId());
 		
 		StringBuffer containers = new StringBuffer();
 		
@@ -213,6 +214,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("szRoleInfo", userInfo.getRollInfo());
 		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("hideSusin", hideSusin);
 		
         logger.debug("apprGLeft Value : listType=" + listType + "containers=" + containers.toString() + "viewLeftCount=" + viewLeftCount);       
         logger.debug("apprGLeft Ended");       
@@ -764,6 +766,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+		String reuseTitleYN = ezCommonService.getTenantConfig("reuseTitleYN", userInfo.getTenantId());
 		
 		String docSN = "";
 		String beforeUrl = "";
@@ -884,7 +887,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
-
+		model.addAttribute("reuseTitleYN", reuseTitleYN);
+		
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
@@ -4526,6 +4530,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
 
 		String susinAdmin = "";
 		String hasOpinionYN = "";
@@ -4627,6 +4632,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("callBackType", callBackType);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		
 		logger.debug("aprDocView ended.");
 		
@@ -6181,7 +6187,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String result = ezApprovalGService.getAprDocList(pListType, pUserID, pUserDeptID, pPageSize, pPageNum, orderCell, orderOption, companyID, searchQuery, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-		
+
 		logger.debug("getPortletAprDocList ended");
 
 		return result;
@@ -7313,17 +7319,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/setHeSongHapyuiDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setHeSongHapyuiDocInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String xmlPara) throws Exception {
-		logger.debug("checkResend started");
+		logger.debug("setHeSongHapyuiDocInfo started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		userInfo.setRealPath(commonUtil.getRealPath(request));
 
 		String result = ezApprovalGService.doHabyuiHesong(doc, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo);
 		
 		logger.debug("result=" + result);
-		logger.debug("checkResend ended");
+		logger.debug("setHeSongHapyuiDocInfo ended");
 		
 		return result;
 	}

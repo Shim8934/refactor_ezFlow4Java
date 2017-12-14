@@ -104,7 +104,7 @@
 					listXML += "<TD>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
-						listXML += "<TD align=center><img src='/images/i_save01.gif'></TD>";
+						listXML += "<TD><img src='/images/i_save01.gif'></TD>";
 					} else {
 						listXML += "<TD></TD>";
 					}
@@ -562,7 +562,7 @@
     			var left = (width - wWeight) / 2;
     			var top = (heigth - wHeight) / 2;
     			
-    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=340, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
     		}
     		
     		function SetRead_onclick() {

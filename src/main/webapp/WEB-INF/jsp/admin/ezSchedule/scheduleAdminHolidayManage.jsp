@@ -58,7 +58,7 @@
 		                if (CrossYN()) {
 		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
 		                        var _Value;
-		                        _html += "<tr id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].textContent
+		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].textContent
 		                              + "'holidayname = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent
 		                              + "'holidayname2 = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent
 		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10)
@@ -114,7 +114,7 @@
 		                } else {
 		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
 		                        var _Value;
-		                        _html += "<tr id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].text
+		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].text
 		                              + "'holidayname = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text
 		                              + "'holidayname2 = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text
 		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10)
@@ -209,13 +209,13 @@
 		        }
 	
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 244)";
-		        obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 244)";
-		        obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 244)";
-		        obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 244)";
-		        obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 244)";
-		        obj.childNodes.item(5).style.backgroundColor = "rgb(233, 241, 244)";
-		        obj.childNodes.item(6).style.backgroundColor = "rgb(233, 241, 244)";
+		        obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.childNodes.item(5).style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.childNodes.item(6).style.backgroundColor = "rgb(233, 241, 255)";
 		    }
 	
 	

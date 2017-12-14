@@ -31,7 +31,7 @@ function putBansongSign() {
     var CurrentDate = RtnVal.split(".");
     var s = CurrentDate[1] + "." + CurrentDate[2];
     // aprType 9(개인병렬협조), 11(부서순차협조), 12(부서병렬협조)
-    if (pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+    if (pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
         var phabyuijikwee;
@@ -64,11 +64,11 @@ function putBansongSign() {
         var habyuidateID = phabyuidate + pAprMemberSN;
         var field = message.GetListItem(fields, habyuidateID);
         if (field) {
-        	setNodeText(field , s);
+        	setNodeText(field , RtnVal);
             signInfo[signCnt] = habyuidateID;
             SignType[signCnt] = "TEXT";
             SignName[signCnt] = habyuidateID;
-            SignContent[signCnt] = s;
+            SignContent[signCnt] = RtnVal;
             signCnt = signCnt + 1;
         }
     }
@@ -988,13 +988,7 @@ function chkBtn(pBtnflag, approvalFlag) {
     setMenuBar("btnSetTaskCode", pBtnflag);
     setMenuBar("btnAddSepAttach", pBtnflag);
     setMenuBar("btnhistory", pBtnflag);
-    
-    if (approvalFlag == 'S') {
-    	
-    } else {
-    	setMenuBar("tbtnTotalSave", pBtnflag);
-    }
-    
+    setMenuBar("tbtnTotalSave", pBtnflag);
     setMenuBar("btntotaldocinfo", pBtnflag);
 
     if (trim(pDraftFlag) == "GONGRAM" || trim(pDraftFlag) == "CHAMJO") {
@@ -1383,6 +1377,9 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
+	 if (pAprLineType == "009") {
+		   SignCheck();
+	  }
     SaveFile();
     SignSave();
 
@@ -2637,7 +2634,8 @@ function getLastTotalSignSN(pNodes) {
 
     var pCurrentAprType = getNodeText(dataNodes[11]);
     
-    if (pCurrentAprType == "001") {
+    //최종결재가 결재거나 참조일 경우 채번되도록
+    if (pCurrentAprType == "001" || pCurrentAprType == "007" ) {
     	lastHabYuiSN = 1;
     }
 
@@ -2841,7 +2839,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 550, "/ezApprovalG/aprDocAttach.do");
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
         }
     } catch (e) {
         alert(e.description);
@@ -2908,10 +2906,8 @@ function SignCheck() {
 
     var rtnVal = putSignXML(SignXML);
 
-    if (rtnVal) {
-        SaveFile();
-    }
 }
+
 function putSignXML(SignXML) {
     var retVal = false;
     
@@ -2931,11 +2927,15 @@ function putSignXML(SignXML) {
                 }
                 
                 var field = message.GetListItem(fields, SignName);
+                var field2 = message.GetListItem(fields, SignName.replace("habyuisign", "habyuija"));
                 
                 if (field) {
                     retVal = true;
                     if (SignType == "TEXT" || SignType == "HTML") {
                         field.innerHTML = SignCont;
+                        if (field2) {
+                        	field2.textContent = SignCont.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+                        }
                     }
                     else {
                     	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
@@ -3088,7 +3088,7 @@ function getHistory() {
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
 
-    DivPopUpShow(730, 430, URL);
+    DivPopUpShow(730, 450, URL);
 }
 
 function getHistory_Complete() {

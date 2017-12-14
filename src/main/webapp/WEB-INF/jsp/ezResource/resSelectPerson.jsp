@@ -156,7 +156,10 @@
 		    }
 		    var issearch = false;
 		    function search_click(type) {
-		        if (document.getElementById("keyword").value == "") {
+		    	
+		    	var keywordLen = document.getElementById("keyword").value.trim().length;
+		    	
+		        if (keywordLen == 0) {
 		            alert("<spring:message code="ezResource.t129"/>");
 		            keyword.focus();
 		            return;
@@ -210,7 +213,10 @@
 			
 		    var checkdeptname_cross_dialogArguments = new Array();
 		    function deptsearch_click() {
-		        if (document.getElementById("deptkeyword").value == "") {
+		    	
+		    	var deptKeyworLen = document.getElementById("deptkeyword").value.trim().length;
+		    	
+		        if (deptKeyworLen == 0) {
 		            alert("<spring:message code="ezResource.t129"/>");
 		            document.getElementById("deptkeyword").focus();
 		            return;
@@ -582,7 +588,7 @@
 		            }
 		        }
 		    }
-		    var m_strColorSelect = "rgb(233, 241, 244)";
+		    var m_strColorSelect = "rgb(233, 241, 255)";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;

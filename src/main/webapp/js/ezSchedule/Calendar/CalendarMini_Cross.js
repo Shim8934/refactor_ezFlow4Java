@@ -233,14 +233,8 @@ function GetTableMiniBodyObj() {
 
 // 선택한 월의 날짜 입력 시작
 function MonthMiniData(oThisDate) {
-
     var objTd = document.createElement("TD");
-
     var divID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
-
-    console.log(divID);
-    console.log(nowDay);
-    
     
     var className = "";
     if (divID == nowDay) {
@@ -288,7 +282,7 @@ function DayOnMouseClick(event) {
         if (typeCal == 0) { // 월보기
         }
         else if (typeCal == 1) { // 주보기
-            document.getElementById(event.parentNode.parentNode.getAttribute("id")).style.backgroundColor = "rgb(233, 241, 244)";
+            document.getElementById(event.parentNode.parentNode.getAttribute("id")).style.backgroundColor = "rgb(233, 241, 255)";
             g_selTRID = event.parentNode.parentNode.getAttribute("id");
             g_selTDID = event.getAttribute("id");
 
@@ -299,7 +293,7 @@ function DayOnMouseClick(event) {
         }
         else if (typeCal == 2) { // 일보기
 
-            document.getElementById(event.getAttribute("id")).style.backgroundColor = "rgb(233, 241, 244)";
+            document.getElementById(event.getAttribute("id")).style.backgroundColor = "rgb(233, 241, 255)";
             g_selTRID = event.parentNode.parentNode.getAttribute("id");
             g_selTDID = event.getAttribute("id");
 
@@ -308,13 +302,13 @@ function DayOnMouseClick(event) {
             parent.frames["right"].CalendarView("Calendar");
         }
     }
-    else if (_funCode == 3) {
-        document.getElementById(event.getAttribute("id")).style.backgroundColor = "rgb(233, 241, 244)";
+    /*else if (_funCode == 3) {
+        document.getElementById(event.getAttribute("id")).style.backgroundColor = "rgb(233, 241, 255)";
         g_selTRID = event.parentNode.parentNode.getAttribute("id");
         g_selTDID = event.getAttribute("id");
 
         parent.frames["right"].DateChange(event.getAttribute("id").substring(7, 17), event.getAttribute("id").substring(7, 17));
-    }
+    }*/
 }
 
 var MiniHttp;
@@ -324,12 +318,16 @@ function CalendarMiniDataSource(XmlNode) {
 
     if (XmlNode != undefined) {
 	    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-	    	var hDay = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10);    	
-	    	var hDayCal = document.getElementById("TDMINI_" + hDay + "_Day");
-	
-	        if (hDayCal) {
-	        	hDayCal.style.color = "red"        
-	        }
+	    	var hDay = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10);
+	    	var isHoriday =	GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent;
+	    	
+	    	if (isHoriday == 1) {
+		    	var hDayCal = document.getElementById("TDMINI_" + hDay + "_Day");
+		
+		        if (hDayCal) {
+		        	hDayCal.style.color = "red"
+		        }
+	    	}
 	    }
     }
     
@@ -510,9 +508,9 @@ function preMonth() {
     CalendarMiniView("CalendarMini");
     CalendarMiniDataSource();
 
-    if (_funCode == 3) {
+    /*if (_funCode == 3) {
         parent.frames["right"].DateChange(sStartDate, sEndDate)
-    }
+    }*/
 }
 
 //다음월 이동
@@ -540,9 +538,9 @@ function nextMonth() {
     CalendarMiniView("CalendarMini");
     CalendarMiniDataSource();
 
-    if (_funCode == 3) {
+    /*if (_funCode == 3) {
         parent.frames["right"].DateChange(sStartDate, sEndDate)
-    }
+    }*/
 }
 
 //이전년도 이동
@@ -564,9 +562,9 @@ function preYear() {
     CalendarMiniView("CalendarMini");
     CalendarMiniDataSource();
 
-    if (_funCode == 3) {
+    /*if (_funCode == 3) {
         parent.frames["right"].DateChange(sStartDate, sEndDate)
-    }
+    }*/
 }
 
 //다음년도 이동
@@ -586,9 +584,9 @@ function nextYear() {
     CalendarMiniView("CalendarMini");
     CalendarMiniDataSource();
 
-    if (_funCode == 3) {
+    /*if (_funCode == 3) {
         parent.frames["right"].DateChange(sStartDate, sEndDate)
-    }
+    }*/
 }
 
 //선택한 년도 이동
@@ -608,9 +606,9 @@ function changeYear() {
     CalendarMiniView("CalendarMini");
     CalendarMiniDataSource();
 
-    if (_funCode == 3) {
+    /*if (_funCode == 3) {
         parent.frames["right"].DateChange(sStartDate, sEndDate)
-    }
+    }*/
 
 }
 
@@ -630,9 +628,9 @@ function changeMonth() {
     CalendarMiniView("CalendarMini");
     CalendarMiniDataSource();
 
-    if (_funCode == 3) {
+    /*if (_funCode == 3) {
         parent.frames["right"].DateChange(sStartDate, sEndDate)
-    }
+    }*/
 }
 
 function preWeek() {

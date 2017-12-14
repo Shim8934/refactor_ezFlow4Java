@@ -47,6 +47,7 @@
 			        else
 			            window.returnValue = rtnVal;
 		        } else {
+		        	flag = true;
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;
@@ -194,13 +195,13 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1745'/></h1>
-		<div class="txt"><spring:message code='ezApprovalG.t9999'/><br /><br /><spring:message code='ezApprovalG.t1746'/></div>
+		<div class="txt"><p style="margin:6px">▒&nbsp;<spring:message code='ezApprovalG.t9999'/></p><p style="margin:6px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></p></div>
 		<div class="nobox">
-		  <INPUT type="password" class="textarea" id="inpPassword" name="inpPassword" style="width:100%" >
+			<INPUT type="password" class="textarea" id="inpPassword" name="inpPassword" style="width:100%;height:25px;border:1px solid #ccc;margin-top:6px">
 		</div>
-		<div class="btnposition">
-		  <input type="submit" value="<spring:message code='ezApprovalG.t20'/>" name="btn_OpinionOK" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()" >
-		  <input type="submit" value="<spring:message code='ezApprovalG.t119'/>" name="btn_OpinionCANCEL" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick()" >
+		<div class="btnposition btnpositionNew">
+			<input type="submit" value="<spring:message code='ezApprovalG.t20'/>" name="btn_OpinionOK" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()" >
+			<input type="submit" value="<spring:message code='ezApprovalG.t119'/>" name="btn_OpinionCANCEL" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick()" >
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>

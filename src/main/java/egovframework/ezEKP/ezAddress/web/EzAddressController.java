@@ -579,7 +579,10 @@ public class EzAddressController{
 		dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false);
 		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
 		addressInfo.setModifyDate(dateInUserTimeZone);
-				
+		
+		String replaceMemo = addressInfo.getsMemo();
+		replaceMemo = addressInfo.getsMemo().replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&lt;br&gt;").replaceAll("/", "\\\\/");
+		
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -591,7 +594,7 @@ public class EzAddressController{
 		model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
-		model.addAttribute("getsMemo", addressInfo.getsMemo().replace("\n", "<br/>"));
+		model.addAttribute("getsMemo", replaceMemo);
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
@@ -767,14 +770,17 @@ public class EzAddressController{
 		StringBuilder listMember = new StringBuilder();
 		
 		int listMemberSize = 0;
+		
         if (address != null && !address.trim().equals("")) {
-        	String[] addrList = address.split(";");
-        	listMemberSize = addrList.length;
+	        	String[] addrList = address.split(";");
+	        	listMemberSize = addrList.length;
         	
-        	for (String addr : addrList) {
-        		addr = EgovStringUtil.getSpclStrCnvr(addr);
-        		listMember.append("<option>" + addr + "</option>");
-        	}
+	        	for (String addr : addrList) {
+	        		logger.debug("addr Before=" + addr);
+	        		addr = EgovStringUtil.getSpclStrCnvr(addr).replaceAll("\"", "");
+	        		addr = "<option title='"+ addr +"'>" + addr + "</option>";
+	        		listMember.append(addr);
+	        	}
         }
         
 		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);

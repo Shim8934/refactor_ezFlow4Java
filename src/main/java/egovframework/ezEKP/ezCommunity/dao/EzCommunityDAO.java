@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -1129,6 +1130,14 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public LoginVO joinOkSendMailGet2(Map<String, Object> map) throws Exception {
 		return (LoginVO) select("EzCommunityDAO.joinOkSendMailGet2", map);
+	}
+
+	public OrganUserVO sendReplyNoticeMail(Map<String, Object> map) throws Exception {
+		return (OrganUserVO) select("EzCommunityDAO.sendReplyNoticeMail", map);
+	}
+
+	public String sendPostNoticeMailGet1(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.sendPostNoticeMailGet1", map);
 	}
 
 }

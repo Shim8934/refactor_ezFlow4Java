@@ -21,9 +21,22 @@
 			var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
+		    var ret = new Array();
+		    var ReturnFunction;
+		    
 			window.onload = function () {
 				window.resizeTo(370,560);
+				
+				try {
+					ReturnFunction = parent.address_group_edit_dialogArguments[0];
+			    } catch (e) {
+			        try {
+			        	ReturnFunction = opener.address_group_edit_dialogArguments[0];
+			        } catch (e) {
+			        }
+			    }
 			}
+			
 			function show_personinfo(whoto) {
 			    var userid = "";
 			    if (whoto == 0)
@@ -44,9 +57,15 @@
 					}
 				}
 				
-			    location.replace("/ezAddress/addressWriteGroup.do?addressid=" + encodeURIComponent(addressid) + "&foldertype=" + foldertype, "",
-		        "height = 655px, width = 970px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
-		
+				ret[0] = addressid;
+				ret[1] = foldertype;
+				
+				if (ReturnFunction != null)
+				    ReturnFunction(ret);
+				else
+				    window.returnValue = ret;
+				
+				window.close();
 			}
 		    function write_letter() {
 		        var xmlHTTP = createXMLHttpRequest();
@@ -133,8 +152,8 @@
 		        <td><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
 		      </tr>
 		    </table>
-		    <div class="nobox" style="margin-top:10px">
-		    	<select id="ListMember" name="ListMember" style="width:100%;height:258px" size="4">${listMember}</select>
+		    <div class="nobox" style="margin-top:10px;">
+		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px" size="4">${listMember}</select>
 		  	</div>
 		  </div>
 		  <div id="printScreen" style="DISPLAY: none">

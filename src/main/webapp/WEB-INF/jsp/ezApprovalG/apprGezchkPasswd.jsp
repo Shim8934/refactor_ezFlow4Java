@@ -50,6 +50,7 @@
 				            window.close();
 				        }
 					} else {
+							flag = true;
 				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 				            OpenAlertUI(pAlertContent);
 				            return;
@@ -193,10 +194,10 @@
 	</head>
 	<body class="popup" >
 		<h1><spring:message code='ezApprovalG.t1745'/></h1>		
-		<h2><spring:message code='ezApprovalG.t1746'/></h2>
-		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>
+		<h2 style="font-weight: normal;margin-top:10px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
+		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc" onkeypress="password_OnKeyPress(event)"></div>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick();"><span><spring:message code='ezApprovalG.t20'/></span></a>
 		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>

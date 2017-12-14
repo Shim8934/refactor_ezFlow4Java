@@ -6,6 +6,7 @@
 	<head>
 		<title>TopMenu</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
 				<link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
@@ -1244,15 +1245,20 @@
 			    if (document.getElementById("menu_" + obj.name) != null) {
 			        subPath = "menu_" + obj.name;
 			        menuName = obj.name;
-			        document.getElementById("menu_" + obj.name).style.left = 0;
+			        document.getElementById("menu_" + obj.name).style.left = 0;			        
 			        document.getElementById("menu_" + obj.name).style.display = "";
-			        var LeftMargin = parseInt(document.getElementsByName(menuName)[0].offsetLeft);
+			        var LeftMargin = parseInt(document.getElementsByName(menuName)[0].offsetLeft) - 50;
+			        
+			        /* $("#menu_" + obj.name).css("padding-left", LeftMargin + "px");
+			        $("#menu_" + obj.name).css("width", "100%"); */
+
 			        if (window.document.documentElement.clientWidth < document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth) {
 			            LeftMargin = LeftMargin - (document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth - window.document.documentElement.clientWidth);
 			            LeftMargin = LeftMargin - 30;
-			        }
+			        }			        
 			        document.getElementById("menu_" + obj.name).style.left = LeftMargin + "px";
 			    }
+			    
 			    else {
 			        menuName = obj.name;
 			        subPath = "";
@@ -1547,6 +1553,17 @@
 				}
 				window.open(url, location, option);
 			}
+			
+		    
+		    function showProgress() {
+			    document.getElementById("progressPanel").style.display = "block";
+			    document.getElementById("progressPanel").style.opacity = 0.5;
+			    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
+			}
+	        
+	        function hideProgress() {
+	        	document.getElementById("progressPanel").style.display = "none";
+	        }
 		</script>
 	</head>
 		<c:choose>
@@ -1629,5 +1646,6 @@
 			<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
 		</c:if>
 		<iframe id=ifmpopup style="display:none" src=""></iframe>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	</body>
 </html>

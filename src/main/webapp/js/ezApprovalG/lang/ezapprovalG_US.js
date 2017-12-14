@@ -282,7 +282,7 @@ var strLang434 = "Request Failed!"
 var strLang435 = "No connection with the document center. Request can not be completed."
 var strLang436 = "Unit working Code"
 // ezCabinet\Mana
-var strLang437 ="Choose unit business!"
+var strLang437 ="Choose unit business."
 var strLang438 ="Company ID"
 // ezCabinet\Man
 var strLang439 = "Unit working list"
@@ -993,3 +993,6 @@ var strLangjjh01 = "첨부파일은 총 ";
 var strLangjjh02 = "MB까지 업로드 가능합니다.";
 var strLangjjh03 = "Adding attachment.";
 
+//2017-11-28 박종균 추가
+var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?";
+var strLangPJG02 = "하위 부서를 모두 포함하시겠습니까?";

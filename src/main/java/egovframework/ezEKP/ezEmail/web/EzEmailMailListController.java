@@ -52,7 +52,6 @@ import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -114,6 +113,16 @@ public class EzEmailMailListController {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
+		
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+		
+		if (useMailBoxBackUp.equals("")) {
+			useMailBoxBackUp = "NO";
+		}
 		
 		if (dispname != null) {
 			folderName = dispname;
@@ -153,10 +162,13 @@ public class EzEmailMailListController {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("importanceColor", importanceColor);
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
-				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor);
+				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -408,24 +420,6 @@ public class EzEmailMailListController {
 				else {
 					addresses = message.getRecipients(Message.RecipientType.TO);
 					if (addresses != null) {
-						boolean splitFlag = false;
-						for(int j=0; j<addresses.length; j++){
-							if(((InternetAddress)addresses[j]).getAddress().contains(";") && addresses.length == 1){
-								splitFlag = true;
-								break;
-							}
-						}
-						if (splitFlag == true) {
-							String mailStrArry[] = ((InternetAddress)addresses[0]).getAddress().split(";");
-							addresses = new InternetAddress[mailStrArry.length];
-							for (int j = 0; j < mailStrArry.length; j++) {
-								InternetAddress address = new InternetAddress();
-								address.setAddress(mailStrArry[j]);
-								address.setPersonal(mailStrArry[j]);
-								addresses[j] = address;
-							}
-						}
-						
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
 						
@@ -433,11 +427,7 @@ public class EzEmailMailListController {
 						for (Address address : addresses) {
 							addressStr = ((InternetAddress)address).getPersonal(); // name part
 							if (addressStr == null) {
-								//아주저축은행 보낸 편지함 받는 사람 관련 추가. 
 								addressStr = ((InternetAddress)address).getAddress(); // email address part
-								if (addressStr != null && !addressStr.contains("@") && addressStr.startsWith("=?")) {									
-									addressStr = MimeUtility.decodeText(toHeader);
-								}
 							}
 							else {
 								if (!isAscii) {
@@ -455,9 +445,6 @@ public class EzEmailMailListController {
 						}
 						addressStr = addressBuilder.toString();
 						addressStr = addressStr.substring(0, addressStr.length() - 2);
-						if (addressStr.endsWith(":")) {
-							addressStr = addressStr.substring(0, addressStr.length() - 1);
-						}
 					}								
 				}			
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
@@ -1027,7 +1014,7 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/getPortletMailList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getPortletMailList(@CookieValue("loginCookie") String loginCookie,
-			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
+			Locale locale, Model model) throws Exception {
 		logger.debug("getPortletMailList started.");
 		
 		String returnData = "";

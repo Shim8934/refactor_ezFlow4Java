@@ -51,6 +51,9 @@
 		    var SubContCount = "${subContCount}";
 		    var tmpValue = "";
 		    var nodeIdx;
+		    var localValue = "";
+		    var hideSusin = "${hideSusin}";
+		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
 		      		if(hideCabinet == "0") {
@@ -165,6 +168,12 @@
 			                setPresentValue("<spring:message code='ezApprovalG.t912'/>");
 			                DocManageMain("m02");
 			            }
+			            if (pListTypeValue == "99") {
+			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
+			                document.getElementById('APPROVAL99').parentElement.onclick();
+			                document.getElementById('APPROVAL99').onclick();
+			            }
+			            
 		        }
 			        getAprCount();
 		    };
@@ -261,12 +270,15 @@
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:NOT");
 		                    break;
 		                case "MYDEPTCONT":
+		                		document.getElementById('myDeptCont0').onclick();
 		                    break;
 		                case "ITEMCONT":
+		                	document.getElementById('itemList0').onclick();
 		                    break;
 		                case "DEPTCONT":
 		                    break;
 		                case "USERCONT":
+		                	document.getElementById('spn_UserContTree_0').onclick();
 		                    break;
 		                case "m01":
 		                    DocManageMain(pthis.id);
@@ -310,7 +322,6 @@
 		        catch (e) { }
 		    }
 		
-		    var localValue = "";
  		    function setPresentValue(tempValue) {
 		    	if(approvalFlag == 'G') {
 			        if (tempValue == "") {
@@ -321,9 +332,9 @@
 			        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
 			        try {
 			            if (CrossYN())
-			                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+			                parent.frames["right"].document.getElementById("presentcell").textContent = tempValue;
 			            else
-			                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+			                parent.frames["right"].document.getElementById("presentcell").innerText = tempValue;
 			        }
 			        catch (e) { }
 		    	} else {
@@ -336,12 +347,13 @@
 				        } else {
 				            localValue = tempValue;
 				        }
+		    	        
 				        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
 				        try {
-				            if (CrossYN())
-				                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+				       		if (CrossYN())
+				        		parent.frames["right"].document.getElementById("presentcell").textContent = tempValue;
 				            else
-				                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+				        		parent.frames["right"].document.getElementById("presentcell").innerText = tempValue;
 				        }
 				        catch (e) { }		    	        
 		    	}
@@ -906,8 +918,9 @@
 				<c:if test="${approvalFlag == 'S'}">
 				<li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.hyj04'/><span id="count99"></span></span></li>
 				</c:if>
+				<c:if test="${hideSusin != 'N'}">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
-
+				</c:if>
 	            <c:if test="${userInfoEnforce == '2'}">
 	            	<li>
 	            		<span style="width: 100%; display: inline-block;" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')">
@@ -946,7 +959,7 @@
 			<c:if test="${approvalFlag == 'G'}">
 			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1554'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1554'/></span><ul></ul></h2>
 			</c:if>
-			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
+			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1755'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
 			<ul>
 				<c:choose>
 					<c:when test="${fn:length(apprGLeftVOList) > 0}">
@@ -970,10 +983,10 @@
 				</c:if>
 			</ul>
 			<c:if test="${approvalFlag == 'S'}">
-			<h2><span id="ITEMCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
+			<h2><span id="ITEMCONT" onclick="setPresentValue('<spring:message code='ezApproval.t844'/>');Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 			<ul>
           	<c:forEach var="itemList" items="${itemList}" varStatus="status">
-          	    <li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}<spring:message code='ezApprovalG.t456'/>) </span></li>
+          	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}<spring:message code='ezApprovalG.t456'/>) </span></li>
           	</c:forEach>
         	</ul>
 

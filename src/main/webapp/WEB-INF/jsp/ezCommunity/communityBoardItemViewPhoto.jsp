@@ -157,11 +157,11 @@
 		    }
 	
 		    function btn_Delete_Onclick() {
-		        if (CheckIfHasReplies()) {
+		        /* if (CheckIfHasReplies()) {
 		            alert("<spring:message code = 'ezCommunity.t425' />");
 		            
 		            return;
-	            }
+	            } */
 
 	            if (Delete_FG != "true") {
 	                alert("<spring:message code = 'ezCommunity.t901' />");
@@ -763,7 +763,7 @@
 			
 			<c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 				<tr>
-		    		<td style="height:20px">
+		    		<td style="height:20px; padding-top: 10px;">
 		    			<table class="content">
 		        			<tr>
 		          				<th><spring:message code = 'ezCommunity.t192' /></th>

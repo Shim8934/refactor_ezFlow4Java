@@ -6,6 +6,11 @@
 	    <title><spring:message code='ezApprovalG.t55'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <style>
+	    	.mainlist tr th {
+	    		border-top:0px;
+	    	}	    	
+	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
@@ -132,7 +137,7 @@
 	
 	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="width: 498px; Height: 150px;" onfocus="return txt_OpinionContent_onfocus()" onchange="return txt_OpinionContent_onchange()"></textarea>
 	
-	  	<div class="btnposition">
+	  	<div class="btnposition btnpositionNew">
 	      <a class="imgbtn" id="bbtn_OpinionAdd" ><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
 	      <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
 	      <a class="imgbtn" id="bbtn_OpinionCancel"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t64'/></span></a>

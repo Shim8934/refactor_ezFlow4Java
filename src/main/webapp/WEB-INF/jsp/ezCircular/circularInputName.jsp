@@ -109,11 +109,11 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1><spring:message code='ezCircular.t105' /></h1>
-	    <div class="txt"><spring:message code='ezCircular.t106' /></div>
-	    <div class="nobox">
-	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%" maxlength="8">
+	    <div class="txt">▒&nbsp;<spring:message code='ezCircular.t106' /></div>
+	    <div class="nobox" style="margin-top:10px">
+	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;height:25px;border:1px solid #ccc" maxlength="8">
 	    </div>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezCircular.t65' /></span></a>
 	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezCircular.t26' /></span></a>
 	    </div>

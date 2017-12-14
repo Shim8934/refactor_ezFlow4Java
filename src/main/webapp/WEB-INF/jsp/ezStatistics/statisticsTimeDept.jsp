@@ -64,12 +64,26 @@
 	        }
 	
 	        var selDeptID;
+	        var selNodeParentId;
 	        function TreeViewNodeClick() {
 	            var nodeIdx = 1;
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var selnode = treeView.GetSelectNode();
+	            var selnodeId = treeView.GetSelectNodeID();
+	            var selnodeLevel = selnode.GetNodeData("nodelevel");
 	            selDeptID = selnode.GetNodeData("CN");
+	            
+	            selNodeParentId = selnode.GetNodeData("CN");
+	            
+	            for (var i =0 ;i < selnodeLevel ; i++ ) {
+	     	      	if($("#" + selnodeId).parent().parent().attr("setnodeiconbyname")=="ICONCOMP"){
+	     	      		selNodeParentId = $("#" + selnodeId).parent().parent().attr("cn");
+	     	      		break;
+	     	      	}
+	     	      	selnodeId = $("#" + selnodeId).parent().parent().attr("id");
+	            }
+	            
 	            getapprovalstatistics();
 	        }
 	
@@ -158,7 +172,7 @@
 					async : true,
 					url : "/ezStatistics/getStatisticsAprTime.do",
 					data : {
-							company : "",
+							company : selNodeParentId,
 							date : document.getElementById("selyear").value,
 							searchID : selDeptID,
 							type : "DEPT"
@@ -417,17 +431,17 @@
 	        <tr>
 	            <td style="width: 99%">
 	                <span id="topmenu" style="float: left; width: 500px"><spring:message code='ezStatistics.t1002'/> : 
-	            <select id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
+	            	<select id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
 	                    <spring:message code='ezStatistics.t55'/>
-	       &nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
-	             <input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
+	       				&nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
+	             		<input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
 	                    <a class="imgbtn" style="vertical-align: middle"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>
 	                </span>
 	            </td>
 	            <td>
-	                <div id="mainmenu" style="float: right; height: 28px; width: 110px">
+	                <div id="mainmenu" style="float: right; height: 28px;">
 	                    <ul>
-	                        <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -447,7 +461,7 @@
 	                 <div id="colorbox" class="statistics_addition" style="display: none">
 	                     <dl>
 	                         <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
-	                         <dd class="additiontext"><spring:message code='ezStatistics.t1035'/>(<spring:message code='ezStatistics.t57'/>)</dd>
+	                         <dd class="additiontext"><spring:message code='ezStatistics.t1035'/></dd>
 	                     </dl>
 	                 </div>
 	                    <div id="chartdiv" style="width: 100%; text-align: center;">
@@ -465,7 +479,7 @@
 	          </td>
 	      </tr>
 	  </table>
-	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/excelExportOut.do">
+	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsApprovalTime.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
 	        <input type="hidden" id="userAgent" name="userAgent" value="">
 	    </form>

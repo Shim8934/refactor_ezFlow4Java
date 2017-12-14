@@ -152,7 +152,7 @@ function CalendarView(pTagetID) {
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_prev";
             var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "/images/calendar/btn_calendar_prev.gif");
+            mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
             mImg.setAttribute("border", "0");
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "parent.frames[\"left\"].preMonth()");
@@ -168,7 +168,7 @@ function CalendarView(pTagetID) {
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_next";
             var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
+            mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
             mImg.setAttribute("border", "0");
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "parent.frames[\"left\"].nextMonth()");
@@ -531,8 +531,7 @@ function MonthData(oThisDate, TDIndex) {
     subTable.className = "td_list";
     subTable.setAttribute("cellpadding", "0");
     subTable.setAttribute("cellspacing", "0");
-    subTable.setAttribute("border", "0");
-    subTable.style.overflowX = "auto";    
+    subTable.setAttribute("border", "0"); 
     subSpan.appendChild(subTable);
     objTd.appendChild(subSpan);
 
@@ -561,7 +560,7 @@ function MultiSelectItems(obj, event) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "rgb(233, 241, 244)";
+                document.getElementById("index_" + i).style.backgroundColor = "rgb(233, 241, 255)";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -576,7 +575,7 @@ function MultiSelectEnd(obj, event) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "rgb(233, 241, 244)";
+    obj.style.backgroundColor = "rgb(233, 241, 255)";
     Write();
 }
 function Write() {
@@ -704,7 +703,7 @@ function GetWeekBodyObj() {
     var mSpan = document.createElement("SPAN");
     mSpan.className = "btn_prev";
     var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "/images/calendar/btn_calendar_prev.gif");
+    mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
     mImg.setAttribute("border", "0");
     mImg.setAttribute("onclick", "parent.frames[\"left\"].preWeek()");
     mSpan.appendChild(mImg);
@@ -715,7 +714,7 @@ function GetWeekBodyObj() {
     var mSpan = document.createElement("SPAN");
     mSpan.className = "btn_next";
     var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
+    mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
     mImg.setAttribute("border", "0");
     mImg.setAttribute("onclick", "parent.frames[\"left\"].nextWeek()");
     mSpan.appendChild(mImg);

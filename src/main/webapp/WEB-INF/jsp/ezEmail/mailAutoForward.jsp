@@ -134,6 +134,7 @@
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezEmail/mailAutoForwardDelete.do", false);
 		        xmlhttp.send();
+		        
 		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		        	var ret = "";
 		            
@@ -173,7 +174,7 @@
 	            receiverData["window"] = this;
 	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
+	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 630));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	

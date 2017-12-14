@@ -10,8 +10,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-	    <script type="text/javascript">
-	
+	    <script type="text/javascript">	
 	        var pDocID = "${docID}";
 	        var pType = "${type}";
 	        var ReturnFunction;
@@ -153,7 +152,7 @@
 	        {
 	            document.getElementById('cbx_all').checked = false;
 	            if (obj.checked) {
-	                obj.parentElement.parentElement.style.backgroundColor = "rgb(233, 241, 244)";
+	                obj.parentElement.parentElement.style.backgroundColor = "rgb(233, 241, 255)";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
 	                strFileName = strFileName + GetAttribute(obj, "data2") + "|||";
@@ -175,10 +174,10 @@
 	
 	                    document.getElementById('chk_' + i).checked = true;
 	                    if (CrossYN())
-	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "rgb(233, 241, 244)";
+	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "rgb(233, 241, 255)";
 	                    else {
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "rgb(233, 241, 244)";
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "rgb(233, 241, 244)";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "rgb(233, 241, 255)";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "rgb(233, 241, 255)";
 	                    }
 	
 	                    strPathInfo += document.getElementById('chk_' + i).value + "|||";
@@ -224,7 +223,7 @@
 	        </table>
 	    </div>
 	    <br />
-	     <div align="center">
+	     <div class="btnposition btnpositionNew" align="center">
 	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="window_close()"><spring:message code='ezApprovalG.t1761'/></span></a>
 	    </div>

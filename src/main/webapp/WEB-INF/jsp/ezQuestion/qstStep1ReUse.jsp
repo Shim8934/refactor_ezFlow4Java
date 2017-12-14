@@ -346,11 +346,6 @@
 		    return document.getElementById("RangeXMLStr").value;
 		}
 		</script>
-		<style type = "text/css">
-			html #mainmenu li span, #mainmenu li span.off{
-			padding-top:4px;
-		}
-		</style>
 	</head>
 	<body class="mainbody"> 
 	<form id="frmCreate" method="post" action="/ezQuestion/qstStep2ReUse.do" name="frmCreate"> 
@@ -466,7 +461,7 @@
 	            </tr> 
 	            <tr> 
 	                <th><spring:message code="ezQuestion.t257" /></th> 
-	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%" rows="10" cols=""><c:out value='${qstReuseQuestionVO.content}'/></textarea> </td> 
+	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%" rows="10" cols="" maxlength="127"><c:out value='${qstReuseQuestionVO.content}'/></textarea> </td> 
 	            </tr>
 	        </table> 
 	        <div class="btnposition">

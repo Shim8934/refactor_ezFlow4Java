@@ -57,6 +57,13 @@
 			            tr_TypeValueE.style.display = "";
 			            tr_AddList.style.display = "";
 			        }
+			        
+			        fileValueClear();
+			    }
+			    
+			    function fileValueClear() {
+			    	document.all("txt_AttachPath").value = "";
+		        	document.all.AttachPath.value = "";
 			    }
 			    
 			    function AttachFile_Onclick() {
@@ -291,14 +298,27 @@
 
 			        var imgPath = "";
 			        
+			        var input = document.getElementById("cmuds");
+			        
+			        if(input.files.length <= 0) {
+			        	return;
+			        }
+			        
+			       	var fileMediaType = input.files[0].type.split("/").shift();
+			       	var acceptMediaType = input.accept.split("/").shift();
+			       	
+			       	if (!fileMediaType.indexOf(acceptMediaType) == 0) {
+			       		fileValueClear();
+			       		alert("<spring:message code='ezEmail.lhm34' />");
+			       		return;
+			       	}
+			        
 			        if (CrossYN()) {
-			        	var input = document.getElementById("cmuds");
 			            document.all("txt_AttachPath").value = input.value;
 			        } else {
 			        	thisObj.select();
 				        var selectionRange = document.selection.createRangeCollection()[0];
 			            imgPath = selectionRange.text.toString();
-			            var input = document.getElementById("cmuds");
 				        document.all("txt_AttachPath").value = imgPath;
 			        }
 			        

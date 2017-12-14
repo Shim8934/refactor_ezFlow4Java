@@ -135,6 +135,12 @@
                 pUserList.SetHeightFree(true);
                 pUserList.DataSource(headerData);
                 pUserList.DataBind("formlist");
+                
+                pUserList.SetSelectedIndex(0);
+	              
+            	 if (loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0].textContent != "") {
+	          	  	getapprovalstatistics();
+             	 }
 	        }
 	
 	        function getapprovalstatistics() {
@@ -193,7 +199,7 @@
                 _Tr.appendChild(_Th);
                 
                 _Th = document.createElement("TH");
-                _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>" + "(" + "<spring:message code='ezStatistics.t57'/>" + ")";
+                _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>";
                 _Tr.appendChild(_Th);
 
                 _Table.appendChild(_Tr);
@@ -327,20 +333,20 @@
 	             <td style="width: 99%">
 	                 <span id="topmenu" style="float: left; width: 500px">
 	                     <spring:message code='ezStatistics.t195'/> :
-	        <select id="SCompID" name="SCompID" onchange="return getforminfo()">${companySel}</select>
+	       		 <select id="SCompID" name="SCompID" onchange="return getforminfo()">${companySel}</select>
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1002'/> : 
 	             <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
 	                     ~ 
 	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1032'/> : 
-	        <input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
+	        			<input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
 	                     <a class="imgbtn" style="vertical-align: middle"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>
 	                 </span>
 	             </td>
 	             <td>
-	                 <div id="mainmenu" style="float: right; height: 28px; width: 110px">
+	                 <div id="mainmenu" style="float: right; height: 28px;">
 	                     <ul>
-	                         <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                         <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                     </ul>
 	                 </div>
 	             </td>
@@ -369,7 +375,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/excelExportOut.do">
+	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsApproval.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
 	        <input type="hidden" id="userAgent" name="userAgent" value="">
 	    </form>

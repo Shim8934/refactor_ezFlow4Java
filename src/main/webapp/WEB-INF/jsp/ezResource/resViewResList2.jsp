@@ -7,10 +7,28 @@
 		<title><spring:message code="ezResource.t403" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<style>
+			#resourceDataTable tr td {
+				border : 1px solid #ccc;				
+			}
+						
+			#resourceDataTable tr td{
+				padding-left : 7px;
+			}
+			
+			#resourceDataTable tr th{
+				font-weight: normal;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Calendar_Action_cross.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
+		<script type="text/javascript" src="/js/ezResource/CalendarView_Cross.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
@@ -32,6 +50,12 @@
 			.calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
 			.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
+			.table_layout th {
+				color:#666;
+			}
+			#divViewHeader {
+				color:#666
+			}
 		</style>
 		<script type="text/javascript">
 			var pBrdid = "${brdID}";
@@ -48,10 +72,59 @@
 	    	var pChildBrd = "${childBrd}";
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
-		    var pStartday = "${startDay}";
+		    var pStartday = "${startDay}";		    
+		    select_memorialDays("${lang}");
 		    
 	    	document.onselectstart = function () { return false; };
+	    	
+	    	//baonk added
+	    	var xmlhttp2 = createXMLHttpRequest();
+		    function schedule_get_holiday() {
+		        xmlhttp2 = createXMLHttpRequest();
+		        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
+		        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
+		        xmlhttp2.send();
+		    }
+	
+		    function event_schedule_get_holiday() {
+		        if (xmlhttp2 == null || xmlhttp2.readyState != 4)
+		            return;
+		        if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
+		            XmlNodeText = xmlhttp2.responseText;
+		            XmlNode = loadXMLString(XmlNodeText);
+		            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+		                if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1") {
+		                    var issolar;
+		                    var holiday;
+		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0]) == "1")
+		                        issolar = "1";
+		                    else
+		                        issolar = "2";
+		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0]) == "1")
+		                        holiday = true;
+		                    else
+		                        holiday = false;
+		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0]) == "1") {
+		                        memorialDays.push(new memorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
+		                    }
+		                    else {
+		                        yearmemorialDays.push(new yearmemorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(0, 4),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
+		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
+		                    }
+		                }
+		            }
+		            xmlhttp2 = null;		            
+		        }
+		    }
+	    	//end
+	
 	    	window.onload = function () {
+	    		schedule_get_holiday(); //baonk added
+	    		
 	    		if (pStartday == 1) {
 		            DefaultView = 1;
 	    		} else {
@@ -82,6 +155,7 @@
 	                	document.getElementById("Weekbtn").style.display = "none";
 	                	document.getElementById("TR_Line2").style.display = "none";
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
+	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
 	        	}
 	        	catch (e) {
@@ -184,10 +258,50 @@
 	        	window.parent.left.location.href = "/ezResource/leftResource.do?flag=SELECT_NO";
 	        	window.parent.right.location.reload();
 	    	}
+	    	
+	    	function showRes(val01) {
+	    		$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezResource/scheduleResourceData.do",
+					data : { 
+						resourceId   : val01						
+					},
+					success: function(result){
+						if (result.primary == "1") {						
+							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
+							$("#ownerDept").html(result.resBrd.ownDeptNm);
+							$("#brdNm").html("▒ " +result.resBrd.brdNm);
+						} else {
+							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
+							$("#ownerDept").html(result.resBrd.ownDeptNm2);
+							$("#brdNm").html("▒ " +result.resBrd.brdNm2);
+						}
+						
+						$("#ownerCall").html(result.resBrd.ownerCall);
+						$("#resLocation").html(result.resBrd.resLocation);						
+						
+						var approveFlag = result.resBrd.approveFlag;
+						
+						if (approveFlag == "1") {
+							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
+						} else {
+							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+						}						
+						$("#brdExplain").html(result.resBrd.brdExplain);
+						
+						$("#ResourceInfo").modal();
+					}, 
+					error: function() {
+						
+					}
+				});	        	
+	        }
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;">
-		<h1><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
+		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
@@ -197,7 +311,7 @@
     			</c:if>
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
-      			<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+      			<li style="background:none;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
 				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
   			</ul>
 		</div>
@@ -212,40 +326,43 @@
             	<div id="TD_CaseOfMonthView"></div>
         	</tr>
         	<tr id="TR_Line2" style="text-align:center;vertical-align:middle;height:30px;font-weight:bold;margin-top:10px;">
-            	<td>
-                	<img src="/images/page_previous.gif"  style="cursor:pointer;width:15px;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-                	<span id="divViewHeader" style="color: #404040; text-align:center"></span>
-                	<img src="/images/page_next.gif" style=" cursor:pointer;width:15px;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
-            	</td>
+            	
         	</tr>
-
         	<tr>
             	<td style="vertical-align:top;">
                 	<div id="mainlistlayout" style="width:100%;height:780px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;margin-top:10px;">
-                    		<tr style="display:none;" id="approval">
-                        		<td colspan="2" style="font-weight:bold;padding-left:5px;vertical-align:top;"><h2 class="h2_dot">&nbsp;<spring:message code="ezResource.t401" /></h2></td>
-                    		</tr>
+                    		<tr id="weeklyline">
+                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f8f8f8;">
+                					<div style="border:1px solid #ddd;border-bottom:0px;padding-top:9px;padding-bottom:7px;height:19px">
+					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
+					                	&nbsp;<span id="divViewHeader" style="color: #666; text-align:center;vertical-align: middle;"></span>&nbsp;
+					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
+				                	</div>
+				            	</td>
+				            </tr>
                     		<tr>
-                      			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
-                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div>
-                        			<div id="tdDateCalendarViewer" style="padding-bottom:20px;padding-top:10px;height:100%; text-align:center" > </div>
+                      			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->
+                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div> 
+                        			<div id="tdDateCalendarViewer" style="padding-bottom:5px;height:100%; text-align:center" > </div>
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
-                        		<td colspan="2" style="font-weight:bold;padding-bottom:10px;padding-left:5px;vertical-align:top;" ><h2 class="h2_dot">&nbsp;<spring:message code="ezResource.t402" /></h2></td>
+                        		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
                     		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
                         			<div id="idCalendarViewer2" style='height:100%; text-align:center'> </div>
                         		</td>
                     		</tr>
+                    		<tr style="display:none;" id="approval">
+                        		<td colspan="2" style="font-weight:normal;vertical-align:top;text-align:right"><%-- <h2 style="font-weight:normal;">※&nbsp;<spring:message code="ezResource.t401" /></h2> --%></td>
+                    		</tr>
                 		</table>
                 	</div>
             	</td>
           	</tr>
-		</table>
-		
+		</table>		
     	<div id="EmptyMsg" style="display:none;">
         	<div class="warningbox01" style="margin-top:100px;">
           		<div class="warningbox02">
@@ -260,6 +377,39 @@
 	        		</div>
 	        	</div>
         	</div>
+        </div>
+        <!-- layer 팝업 -->
+        <div id="ResourceInfo" style="display: none">
+        	<div style="margin-top:5px;font-size: 14px;font-weight: bold" id="brdNm"></div>
+        	<table id="resourceDataTable" style="width:100%; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
+				<tr>
+					<th colspan="2" height="35px" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white"><img src="/images/icon/check.gif" hspace="1" align="absmiddle"> <spring:message code='ezResource.t271'/></th>
+				</tr>
+				<tr>
+					<th width="22%" style="height:24px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+					<td style="height:35px"><span id="ownerNm"></span></td>
+				</tr>
+				<tr>
+					<th style="height:35;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
+					<td style="height:35px"><span id="ownerDept"></span></td>
+				</tr>
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
+					<td style="height:35px"><span id="ownerCall"></span></td>
+				</tr>
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
+					<td style="word-break:break-all; height:20px" id="resLocation"><%-- ${resLocation} --%></td>
+				</tr>							
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
+					<td style="height:35px" id="approveFlag"></td>
+				</tr>
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+					<td style="height:200px"><pre><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></pre></td>
+				</tr>
+         	</table>
         </div>
 	</body>
 </html>

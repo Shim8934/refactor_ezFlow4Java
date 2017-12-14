@@ -3,8 +3,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title><spring:message code='ezApproval.t316'/></title>
-    
+    <title><spring:message code='ezApproval.t316'/></title>    
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
@@ -138,7 +137,7 @@
                 treeNode.LoadFromID(nodeIdx);
 
                 var ContID = treeNode.GetNodeData("DATA1");
-                var ContName = getContName(treeNode.GetNodeData("VALUE"));
+                var ContName = valData;
                 if (ContName != "cancel") {
                     getContName_Complete(ContName, "MOD");
                 }
@@ -160,6 +159,8 @@
             }
 
             var ContName = treeNode.GetNodeData("VALUE");
+            ContName = ContName.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+            
             var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t307'/>";
 
             if (CrossYN()){
@@ -189,14 +190,21 @@
                     var pAlertContent = "<spring:message code='ezApproval.t309'/>";
                     OpenAlertUI(pAlertContent);
                     TreeViewRefresh();
+                    opener.TreeViewRefresh();
+                    return;
+                } else if (rvalue == "HASSUBCONT") {
+                	var pAlertContent = "<spring:message code='ezApprovalG.pjj34'/>";
+                    OpenAlertUI(pAlertContent);
                     return;
                 }
                 else {
+                	ContName = ContName.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
                     var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t310'/>" + rvalue + "]<spring:message code='ezApproval.t311'/>"
                     OpenInformationUI(OpinionContent, Del_Complete_MUST);
                 }
             } else {
-            	self.close();
+            	//self.close();
+            	DivPopUpHidden();
             }
         }
 
@@ -222,7 +230,7 @@
         
         var getcontname_dialogArgument = new Array();
         function getContName(tempName, type) {
-            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + encodeURIComponent(tempName);
+            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + escape(encodeURIComponent(tempName));
             if (CrossYN()) {
                 var para = new Array();
                 para[0] = type;
@@ -266,6 +274,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t300'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {
@@ -295,6 +304,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t303'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
+    	                        opener.TreeViewRefresh();
     	                        return;
     	                    }
     		            } else {
@@ -335,7 +345,7 @@
 <body class="popup">
     <h1><spring:message code='ezApproval.t317'/></h1>
     <div class="box" style="WIDTH: 440px; HEIGHT: 240px; overflow: auto; BACKGROUND-COLOR: #FFFFFF; padding: 4px 6px 6px 4px" id="divUserContTree"></div>
-    <div class="btnposition">
+    <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnIns_onclick()"><span><spring:message code='ezApproval.t313'/></span></a>
         <a class="imgbtn" onclick="return btnEdit_onclick()"><span><spring:message code='ezApproval.t314'/></span></a>
         <a class="imgbtn" onclick="return btnDel_onclick()"><span><spring:message code='ezApproval.t315'/></span></a>

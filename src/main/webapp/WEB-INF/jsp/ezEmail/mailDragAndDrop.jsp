@@ -346,6 +346,8 @@
 		                var is_newfile;
 		                var pNewNodeName = "";
 		                var Rtnval;
+		                var length = $('#filelist tr').length;
+		                
 		                window.parent.DelAttachFileAtList(document.getElementById("filelist").childNodes[i]);
 		                
 		                var delfilesize = GetAttribute(document.getElementById("filelist").childNodes[i], "_filesize");
@@ -359,6 +361,11 @@
 		                } else {
 		                    filesize -= delfilesize;
 		                    file.splice(i - 1, 1);
+		                    for (var j = 0; j <length; j++) {
+			                	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
+				                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
+			                	}
+			                }
 		                }                
 		                
 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
@@ -389,7 +396,7 @@
 		        for (var i = 0; i < filelist.length; i++) {
 					var fnl = filelist[i].name.length;
 		        	
-		        	if (fnl > 54) {
+		        	if (fnl > 104) {
 		        		alert("<spring:message code='main.jjh08' />");
 		        		isfileup = false;
 		        		return;

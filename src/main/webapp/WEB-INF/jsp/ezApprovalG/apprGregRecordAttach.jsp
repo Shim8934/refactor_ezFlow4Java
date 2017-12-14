@@ -161,7 +161,7 @@
     var g_progresswin;
     function btn_AttachAdd_onclick() {
         if (document.form.file1.value != "") {
-        	if (document.form.file1.files[0].name.length > 54) {
+        	if (document.form.file1.files[0].name.length > 104) {
 				alert("<spring:message code='main.jjh08' />");
 				document.form.file1.value = "";
 				return;

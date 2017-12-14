@@ -231,7 +231,7 @@
 		        for (var i = 0; i < file.length; i++) {
 		        	var fnl = file[i].name.length;
 		        	
-		        	if (fnl > 54) {
+		        	if (fnl > 104) {
 		        		alert("<spring:message code='main.jjh08' />");
 		        		isfileup = false;
 		        		document.getElementById("file").value = "";

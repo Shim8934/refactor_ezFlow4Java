@@ -333,11 +333,11 @@
 	    <table style="margin-top: -15px;">
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <h2><spring:message code='ezApprovalG.t232'/></h2>
+	                <h2 style="margin-top:7px;"><spring:message code='ezApprovalG.t232'/></h2>
 	                <div class="box" style="overflow: auto; height: 242px; width: 200px" id="TreeView"></div>
 	            </td>
 	            <td style="vertical-align: top;padding-left:10px;">
-	                <h2><spring:message code='ezApprovalG.t233'/></h2>
+	                <h2 style="margin-top:7px"><spring:message code='ezApprovalG.t233'/></h2>
 	                <div class="listview">
 
 	                    <div id="OrganListView" style="border: 0; Width: 280px; Height: 218px; overflow: auto;"></div>
@@ -346,14 +346,14 @@
 	                <table style="width: 100%;">
 	                    <tr>
 	                        <td style="height: 30px; text-align: left;">
-	                        	<input type="text" id="textUser" name="textUser" style="width: 130px;" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn" style="margin-left:5px;vertical-align:middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+	                        	<input type="text" id="textUser" name="textUser" style="width: 130px;border:1px solid #aaa" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn" style="margin-left:5px;vertical-align:middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
 	                        </td>
 	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 	        <a class="imgbtn"><span onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>

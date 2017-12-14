@@ -40,10 +40,10 @@
 							
 							if (vo.memberNameCount == 0) {
 								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "</td>";
-								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t92' />]</a></td>";
+								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							} else {
 								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "&nbsp;<spring:message code='ezCircular.t50' />" + vo.memberNameCount + "<spring:message code='ezCircular.t51' /></td>"
-								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t92' />]</a></td>";
+								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							}
 								
 							circularDeptList += "</tr>";
@@ -72,7 +72,7 @@
 						$(obj).css("backgroundColor", "#FFFFFF");
 					} else {
 						$(obj).find("input").prop("checked", true);
-						$(obj).css("backgroundColor", "rgb(233, 241, 244)");
+						$(obj).css("backgroundColor", "rgb(233, 241, 255)");
 					}
 				} else {
 					if (_RowObject != null) {
@@ -82,7 +82,7 @@
 
 					_RowObject = obj;
 					$(obj).find("input").prop("checked", true);
-					$(obj).css("backgroundColor", "rgb(233, 241, 244)");
+					$(obj).css("backgroundColor", "rgb(233, 241, 255)");
 				}
         	}
 
@@ -165,7 +165,7 @@
 				// 전체 체크박스 선택, 해제
 				if ($("#checkboxAll").prop("checked") == true) {
 					$(".myCheckbox").prop("checked", true);
-					$("#circularDeptList tr").css("background", "rgb(233, 241, 244)");
+					$("#circularDeptList tr").css("background", "rgb(233, 241, 255)");
 				} else {
 					$(".myCheckbox").prop("checked", false);
 					$("#circularDeptList tr").css("background", "#FFFFFF");
@@ -179,7 +179,7 @@
 					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "rgb(233, 241, 244)");
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "rgb(233, 241, 255)");
 				}
 
 				event.stopPropagation();

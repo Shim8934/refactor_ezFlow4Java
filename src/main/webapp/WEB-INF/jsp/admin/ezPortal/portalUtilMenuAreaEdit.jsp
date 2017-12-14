@@ -37,7 +37,7 @@
 					return;
 				}
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 350px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 350));
 			    //else
 			    //   window.open("MenuItem_Edit.aspx?pageid=" + pageid + "&mode=new&parentuid=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 			}
@@ -55,10 +55,10 @@
 				
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null ) {
-				    pObj.style.backgroundColor = "rgb(233, 241, 244)";
+				    pObj.style.backgroundColor = "rgb(233, 241, 255)";
 					g_SelectedObj = pObj;
 				} else {
-				    pObj.style.backgroundColor = "rgb(233, 241, 244)";
+				    pObj.style.backgroundColor = "rgb(233, 241, 255)";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;

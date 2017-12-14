@@ -12,10 +12,20 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		 window.onload = function () {
-		        if ("${funCode}" == "1" || "${packageType}" == "basic") {
+			 	if ("${portalEnv}" == "1") {
+		            document.getElementById("Portal_sub1").parentNode.onclick()
+		            document.getElementById("Portal_sub1").onclick();
+		        } else if ("${portalEnv}" == "2") {
+		        	document.getElementById("Portal_sub4").parentNode.onclick()
+		            document.getElementById("Portal_sub4").onclick();
+		        }	
+			 
+			 
+		        if ("${funCode}" == "1" || "${packageType}" == "basic" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
 		            document.getElementById("UserInfo").parentNode.onclick()
 		            document.getElementById("UserInfo").onclick();
 		        }
+		        
 		    }
 			function Open_Func(pthis) {
 				switch (pthis.id) {
@@ -161,23 +171,46 @@
 	<body  class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
 			<div class="left_env"></div>
-			<c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
-				<h2><span  id="Portal" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
-				<ul>
-					<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>
-					<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
-				</ul>
+			<c:if test="${packageType != 'basic'}">
+				<c:if test="${firstScreen_Mail != 'YES'}">
+					<c:choose>
+						<c:when test="${portalEnv == '0'}">
+							<h2><span  id="Portal" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
+							<ul>
+								<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>
+								<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
+							</ul>
+						</c:when>
+						<c:when test="${portalEnv == '1'}">
+							<h2><span  id="Portal_sub1" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
+							<ul>
+								<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>
+							</ul>
+						</c:when>
+						<c:when test="${portalEnv == '2'}">
+							<h2><span  id="Portal_sub4" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
+							<ul>
+								<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
+							</ul>
+						</c:when>
+						<c:otherwise>
+						</c:otherwise>
+					</c:choose>
+				</c:if>
             </c:if>
 			
 			<h2><span id="UserInfo" name="UserInfo" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t172' /></span><ul></ul></h2>
 			<h2><span  id="MailEnv" name="MailEnv" onClick="mail_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900006' /></span></h2><ul></ul>
-            <c:if test="${IsJMochaStandAlone != 'YES'}">
-			<h2><span  id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()" style="width:100%;display:inline-block" ><spring:message code='ezPersonal.t999900007' /></span></h2><ul></ul>
-            <c:if test="${use_approvalG == 'YES' && packageType != 'basic'}">
-			<h2><span id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900008' /></span></h2><ul></ul>
-            </c:if>
-    		<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
-    		<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
+            
+            <c:if test="${firstScreen_Mail != 'YES'}">
+            	<h2><span  id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()" style="width:100%;display:inline-block" ><spring:message code='ezPersonal.t999900007' /></span></h2><ul></ul>
+	            <c:if test="${packageType != 'basic'}">
+					<h2><span id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900008' /></span></h2><ul></ul>
+	            </c:if>
+	    		<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
+	    		<c:if test="${USE_CIRCULAR == 'YES'}">
+	    			<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
+	    		</c:if>
             </c:if>
 			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900010' /></span><ul></ul></h2>
 		</div>

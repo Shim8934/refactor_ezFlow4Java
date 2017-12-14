@@ -15,40 +15,47 @@
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/composeappt.js"></script>
+		<!-- data picker-->
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<!-- time picker-->
+		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<style>
-		#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-		}
-		#layer_Viewpopup .popupwrap1 {
-			border:1px solid #555a64;
-			padding:0px;
-			margin:0px;
+			#layer_Viewpopup { 
+				z-index:1000; 
+				margin:0px; 
+				padding:0px;
+			}
+			#layer_Viewpopup .popupwrap1 {
+				border:1px solid #555a64;
+				padding:0px;
+				margin:0px;
+				
+			}
+			#layer_Viewpopup .shadow {
+				height:2px;
+				background:#d7d7d7;
+				
+			}
+			#layer_Viewpopup .popupwrap2 {
+				border:2px solid #e5e5e5;
+				padding:10px;
+				
+			}
+			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 			
-		}
-		#layer_Viewpopup .shadow {
-			height:2px;
-			background:#d7d7d7;
-			
-		}
-		#layer_Viewpopup .popupwrap2 {
-			border:2px solid #e5e5e5;
-			padding:10px;
-			
-		}
-		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-		
-		#layer_Viewpopup .popupwrap3 {
-			position:relative;
-			padding:10px;
-			background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-		}
-		#layer_Viewpopup .popupwrap3 h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
+			#layer_Viewpopup .popupwrap3 {
+				position:relative;
+				padding:10px;
+				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+			}
+			#layer_Viewpopup .popupwrap3 h1 {
+				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			}
 		</style>
 	    <script type="text/javascript">
 	        var ShowAdjacent = "";
@@ -111,7 +118,7 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	            initdatepicker();
+	            
 	            var height = parseInt(document.documentElement.clientHeight - 180);
 	            document.getElementById("divList").style.height = height + "px";
 	            window_onunload_Event = true;
@@ -162,33 +169,59 @@
 	                Save_unloadSave = true;
 	            }
 	        }
-	
-	        function initdatepicker() {
-	            var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
-	            idDatepicker.attachEvent('datechange', onStartDateChanged);
-	            idDatepicker.attachEvent('enddatechange', onEndDateChanged);
-	            idDatepicker.elemDateButtons = "img_StartCalDisp;img_EndCalDisp";
-	            idDatepicker.elemDateInputs = "idDatepicker;_D2";
-	            idDatepicker.elemTimeButtons = "img_StartTime;img_EndTime";
-	            idDatepicker.elemTimeInputs = "_T1;_T2";
-	            idDatepicker.popupType = "both";
-	            idDatepicker.pickerDateFormat = "[yyyy]" +"<spring:message code='ezBoard.t211'/>"+ "[MM]"+ "<spring:message code='ezBoard.t10000'/>";
-	            idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
-	            idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
-	            idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
-	            idDatepicker.firstDayOfWeek = "0";
-	            idDatepicker.textAM = "<spring:message code='ezBoard.t212'/>";
-	            idDatepicker.textPM = "<spring:message code='ezBoard.t213'/>";
-	            idDatepicker.textDecimal = ".";
-	            idDatepicker.textHoursAbbrev = "<spring:message code='ezBoard.t214'/>";
-	            idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezBoard.t215'/>";
-	            idDatepicker.daynameLetters = "<spring:message code='ezBoard.t216'/>";
-	            idDatepicker.daynamesShort = "<spring:message code='ezBoard.t216'/>";
-	            idDatepicker.daynamesLong = "<spring:message code='ezBoard.t217'/>";
-	            idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
-	            idDatepicker.monthnamesLong = "<spring:message code='ezBoard.t218'/>";
-	            idDatepicker.ready();
-	        }
+	        
+		    $(function () {
+		        $("#Sdatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+		        $("#Edatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+		
+		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Sdatepicker").datepicker('setDate', "");
+		
+		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Edatepicker").datepicker('setDate', "");
+		     });
+		    
+		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
+	        
 	        function SortPage(strHeaderName) {
 	            if (strHeaderName != "CHECK") {
 	                if (OrderCell == strHeaderName) {
@@ -833,8 +866,10 @@
 	            }
 	        }
 	        function btn_PostDate_Clear() {
-	            document.getElementById("idDatepicker").value = "";
-	            document.getElementById("_D2").value = "";
+	            /* document.getElementById("idDatepicker").value = "";
+	            document.getElementById("_D2").value = ""; */
+	        	$("#Sdatepicker").datepicker('setDate', "");
+		        $("#Edatepicker").datepicker('setDate', "");
 	        }
 	        function BoardSearchOptionHidden() {
 	            document.getElementById("layer_popup").style.display = "none";
@@ -843,23 +878,23 @@
 	        function search(type) {
 	            if (type == "basic") {
 	
-	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
+	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                    alert("<spring:message code='ezBoard.t192'/>");
 	                    return;
 	                }
 	
-	                if (document.getElementById("idDatepicker").value != "" && document.getElementById("_D2").value == "") {
+	                if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                    alert("<spring:message code='ezBoard.t189'/>");
 	                    return;
 	                }
-	                if (document.getElementById("idDatepicker").value == "" && document.getElementById("_D2").value != "") {
+	                if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
 	                    alert("<spring:message code='ezBoard.t189'/>");
 	                    return;
 	                }
-	                if (Number(ReplaceText(document.getElementById("idDatepicker").value.substring(0, 10), "-", "")) > Number(ReplaceText(document.getElementById("_D2").value.substring(0, 10), "-", ""))) {
-	                    alert("<spring:message code='ezBoard.t191'/>");
-	                    return;
-	                }
+	                if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+		                alert("<spring:message code='ezBoard.t191' />");
+		                return;
+		            }
 	            }
 	            else if (type == "quick") {
 	                if (document.getElementById("txt_keyword").value == "") {
@@ -900,17 +935,17 @@
 	                    DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
 	                }
 	
-	                if (document.getElementById("idDatepicker").value != "")		// StartDate
-	                {
-	                    TYPE += "STARTDATE;";
-	                    DATA += "<STARTDATE>" + document.getElementById("idDatepicker").value.substring(0, 10) + "</STARTDATE>";
-	                }
+	                if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
+		            {
+		                TYPE += "STARTDATE;";
+		                DATA += "<STARTDATE>" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</STARTDATE>";
+		            }
 	
-	                if (document.getElementById("_D2").value != "")		// EndDate
-	                {
-	                    TYPE += "ENDDATE;";
-	                    DATA += "<ENDDATE>" + document.getElementById("_D2").value.substring(0, 10) + "</ENDDATE>";
-	                }
+	                if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// EndDate
+		            {
+		                TYPE += "ENDDATE;";
+		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
+		            }
 	            }
 	            SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 	        }
@@ -983,8 +1018,8 @@
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezBoard.t10032'/><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-	          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208'/>
-			  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t223'/>
+	          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t208'/>
+			  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t223'/>
 			  &nbsp;
 			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
@@ -1123,7 +1158,7 @@
 	        </tr>    
 	       <tr>
 	            <th style="text-align:center"><spring:message code='ezBoard.t210'/></th>
-	           <td><input	readonly type='text'
+	           <!-- <td><input	readonly type='text'
 						class='datepicker' 
 						id='idDatepicker'
 						style="width:95px"
@@ -1138,8 +1173,13 @@
 	      <input type="text" id='_D2' class='datepicker_date' name="txtPermanence" readonly style="width:95px">
 	      <img id=img_EndCalDisp src="../../images/i_scheduler.gif" width="19" height="15" style="CURSOR: pointer; POSITION:  relative; z-index:15; vertical-align:middle"  tabindex=0 popupLocation='bottomright'>
 	      <input id='_T2'  type = hidden class='datepicker_time' readonly="true" style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 100px" name="hidden" >
-	      <img border=0 height=20 id=img_EndTime src="../../images/i_time.gif" style="CURSOR: pointer; POSITION:  relative; z-index:15; display:none" width=20 popupLocation='bottomright'> </td>
-	  </tr>
+	      <img border=0 height=20 id=img_EndTime src="../../images/i_time.gif" style="CURSOR: pointer; POSITION:  relative; z-index:15; display:none" width=20 popupLocation='bottomright'> </td> -->
+				<td>
+		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+		            ~
+		            <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
+		        </td>
+	  		</tr>
 	    </table>
 	    <br />
 	    <table style="width:100%">

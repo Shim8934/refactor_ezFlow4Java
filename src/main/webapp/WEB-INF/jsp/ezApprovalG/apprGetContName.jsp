@@ -143,14 +143,11 @@
 </head>
 <body class="popup">
     <h1>${title}</h1>
-
-    <div class="txt"><spring:message code='ezApproval.t296'/></div>
-
-    <div class="nobox">
-        <input type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width: 100%" maxlength="50">
+    <div class="txt" style="margin-top:5px">▒&nbsp;<spring:message code='ezApproval.t296'/></div>
+    <div class="nobox" style="margin-top:5px">
+        <input type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width: 100%;height:25px;border:1px solid #ccc;margin-top:5px" maxlength="50">
     </div>
-
-    <div class="btnposition">
+    <div class="btnposition btnpositionNew">
         <input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApproval.t84'/>" onclick="return btn_SaveAprDeptTempletName_onclick()">
         <input type="submit" name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" value="<spring:message code='ezApproval.t85'/>" onclick="return btn_CancelAprDeptTempletName_onclick()">
     </div>

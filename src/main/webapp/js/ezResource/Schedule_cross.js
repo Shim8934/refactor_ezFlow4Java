@@ -1304,6 +1304,8 @@ function onbeforeprint() {
     }
 
     setNodeText(document.getElementById("printTitle"),title.value + " ");		// 제목 인쇄하는 부분
+    
+    setNodeText(document.getElementById("printItem"),getNodeText(document.getElementById("itemList")));		// 자원명을 인쇄하는 부분
 
 }
 

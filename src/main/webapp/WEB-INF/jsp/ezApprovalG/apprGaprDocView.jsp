@@ -65,6 +65,7 @@
 		    var pMailEditor = "${crossEditor}";
 		    var signImageType = "${signImageType}";
 		    var pMode = "${mode}";
+		    var forceCallBackYN = "${forceCallBackYN}";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -252,43 +253,45 @@
 		    	});
 		    }
 		    function cancelYN_after(xml) {
-		        var RtnVal =  getNodeText(GetChildNodes(xml)[0]);
-		        if (RtnVal == "CANCEL" || RtnVal == "CALLBACK") {
-		            document.getElementById("tbtncallback").style.display = "";
-		         if (callBackType == "CALLBACK") {
-		        	 btncallback_onclick();
-		         }
-		        }
-		        else {
-		        	var result = "";
-		        	
-		        	$.ajax({
-		        		type : "POST",
-		        		dataType : "text",
-		        		async : false,
-		        		url : "/ezApprovalG/doForceCancelYN.do",
-		        		data : {
-		        			docID : temppDocID,
-		        			userID : pUserID
-		        		},
-		        		success: function(xml){
-		        			
-		        			ForcecancelYN_after(loadXMLString(xml));
-		        		}
-		        	});
+		    	var RtnVal =  getNodeText(GetChildNodes(xml)[0]);
+		    	
+		    	if (RtnVal == "CANCEL" || RtnVal == "CALLBACK") {
+		    		document.getElementById("tbtncallback").style.display = "";
+		    		
+			    	if (callBackType == "CALLBACK") {
+			    		btncallback_onclick();
+			    	}
+		    	} else {
+		        	if (forceCallBackYN == "YES") {
+						var result = "";
+
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezApprovalG/doForceCancelYN.do",
+							data : {
+								docID : temppDocID,
+								userID : pUserID
+							},
+							success : function(xml) {
+								ForcecancelYN_after(loadXMLString(xml));
+							}
+						});
+					}
 		        }
 		    }
 		    
-		      function ForcecancelYN_after(xml) {
-			        var RtnVal =  getNodeText(GetChildNodes(xml)[0]);
-		            if (RtnVal == "TRUE") {
-		                document.getElementById("tbtnforcecallback").style.display = "";
+	      	function ForcecancelYN_after(xml) {
+		        var RtnVal =  getNodeText(GetChildNodes(xml)[0]);
+	            if (RtnVal == "TRUE") {
+	                document.getElementById("tbtnforcecallback").style.display = "";
 
-		                if (callBackType == "FORCECALLBACK") {
-		                    btncallback_onclick();
-		                }
-		            }
-		        }
+	                if (callBackType == "FORCECALLBACK") {
+	                    btncallback_onclick();
+	                }
+	            }
+	        }
 		    
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {

@@ -22,6 +22,14 @@
 					   ev.data.preventDefault(true);
 					});
 			    }
+			    
+			    if (type == "COMMUNITYPHOTO") {
+			    	// prevent image drop
+					ev.editor.document.on('drop', function (ev) {
+					   ev.data.preventDefault(true);
+					});
+			    }
+			    
 		    });
 		    
 		    // Setdata 후 실행 함수.
@@ -220,6 +228,8 @@
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">CKEDITOR.replace( 'editor1', {fullPage : false} );</script>
 		<script type="text/javascript">
+			var useHTMLMode = "${useHTMLMode}";
+			
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 	            
@@ -231,9 +241,17 @@
 	        	CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUploadMail.do";
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
-	        } else {
+	        } else if (type == "COMMUNITYPHOTO") {
+	            CKEDITOR.config.removePlugins = '_Insert_Image';
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
+	            
+	        } else {
+	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 	        }
+			
+			if (useHTMLMode == "NO") {
+				CKEDITOR.config.removePlugins = "sourcearea";
+			}
 			
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
 			

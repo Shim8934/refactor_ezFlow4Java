@@ -212,7 +212,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");
-		String groupID = request.getParameter("GROUPID");
+		String groupID = request.getParameter("GROUPID");		
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		//일정관리 데이터 호출 함수
@@ -410,6 +410,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	           		break;
             }
         } else {
+        	defaultTitle = msg.getMessage("ezSchedule.t142", locale);
             defaultView	= 2;
             startDay	= 7;
             startTime	= 540 / 60;

@@ -548,7 +548,7 @@
 	</head>
 	<body class="leftbody" id="body">
 	    <div id="left">
-	        <div class="left_cop" title="Community"></div>
+	        <div class="left_cop" title="<spring:message code='main.t1006' />"></div>
 	        <!-- mylist -->
 	        <h2 class="community_lt">
 	        	<span><img src="/images/kr/left/icon_dialog.gif"></span>

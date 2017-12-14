@@ -60,7 +60,6 @@ public class MSampleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/mobile/sample/sampleList.do")
 	public String sampleList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("sampleList Start");
-System.out.println(req.getParameter("type"));		
 		
 		String type = req.getParameter("type");
 		String title = "";
@@ -84,7 +83,6 @@ System.out.println(req.getParameter("type"));
 	@RequestMapping(value = "/mobile/sample/sampleDetail.do")
 	public String sampleDetail(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("sampleDetail Start");
-System.out.println(req.getParameter("type"));		
 		
 		String type = req.getParameter("type");
 		String title = "";

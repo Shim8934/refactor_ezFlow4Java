@@ -300,10 +300,12 @@
 	            var arrRows = selList.GetSelectedRows();
 	            var strName = "";
 	            for (var i = 0; i < arrRows.length; i++) {
-	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
+	        
 	        var nodeIdx;
+	        var listContentArry = new Array();
+	        
 	        function TreeViewNodeClick() {
 	            issearch = false;
 	            CurPage = "1";
@@ -341,6 +343,9 @@
  							search_click("search"); 
  							strSearch = "";
  		              	}
+ 		                
+ 		               listContentArry = new Array();
+ 		                
   					},
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert(error);
@@ -358,7 +363,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "rgb(233, 241, 244)";
+	        var m_strColorSelect = "rgb(233, 241, 255)";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -427,7 +432,6 @@
 	            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=450px,width=420px,  top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	        }
 	        
-	        var listContentArry = new Array();
 	        var listSubContentArry = new Array();
 	        var listEventCheckbox = false;
 	        var listSubEventCheckbox = false;

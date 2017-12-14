@@ -280,7 +280,7 @@ function tableListControl_Week()
         var weekStartDatename = datanameweek(weekStartDate.getFullYear(), weekStartDate.getMonth() + 1, weekStartDate.getDate(), "HEARDER");
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
-        document.getElementById("divViewHeader").setAttribute("style", "color:black;");
+        document.getElementById("divViewHeader").setAttribute("style", "color:#666;");
         setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
@@ -337,8 +337,54 @@ function tableListControl_Week()
                 _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
-                _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");
-                _mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");               
+                
+                //baonk added    	
+                var bnk_Date = D_nowdateTitle.split("/")[1];
+                var bnk_Month = D_nowdateTitle.split("/")[0]               
+                
+                if (sz_Year > 1800 && sz_Year <= 2101) {                	
+                    var oThisDate2 = new Date(sz_Year, bnk_Month - 1, bnk_Date);                                      
+                    var month = oThisDate2.getMonth() + 1;
+                    
+                    LunarDate = lunarCalc(oThisDate2.getFullYear(), month, oThisDate2.getDate(), 1);
+                    
+                    var memorial = memorialDayCheck(oThisDate2, LunarDate);                                    
+                    var yearmemorial = yearmemorialDayCheck(oThisDate2, LunarDate);                   
+
+                    var isholiday = false;
+                    var holidayName = "";
+                    var holidayName2 = "";
+                    for (var k = 0; k < memorial.length; k++) {                    	
+                        if (memorial[k].holiday) {
+                            isholiday = true;
+                            holidayName = memorial[k].name;
+                        }
+                    }
+                    for (var k = 0; k < yearmemorial.length; k++) {
+                        if (yearmemorial[k].holiday) {
+                            isholiday = true;
+                            holidayName2 = yearmemorial[k].name;
+                        }
+                    }
+                    if (isholiday) {
+                        if (holidayName != "" && holidayName2 != "") {
+                        	holidayName = holidayName + ", " + holidayName2;
+                        }
+                        else if (holidayName == "" && holidayName2 != "") {
+                        	holidayName = holidayName2;                	
+                        }
+                    	
+                        _mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
+                    	_mth.style.color = "#ee1c25";
+                    }
+                    else {
+                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    }
+                }                
+                //end
+                
+                //_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
                 _mtr.appendChild(_mth);
 
                 //생성된 날짜를 배열에 저장
@@ -378,7 +424,54 @@ function tableListControl_Week()
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
                 _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");
-                _mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                
+                //baonk added    	
+                var bnk_Date = D_nowdateTitle.split("/")[1];
+                var bnk_Month = D_nowdateTitle.split("/")[0]                
+                
+
+                if (sz_Year > 1800 && sz_Year <= 2101) {                	
+                    var oThisDate2 = new Date(sz_Year, bnk_Month - 1, bnk_Date);                                      
+                    var month = oThisDate2.getMonth() + 1;
+                    
+                    LunarDate = lunarCalc(oThisDate2.getFullYear(), month, oThisDate2.getDate(), 1);
+                    
+                    var memorial = memorialDayCheck(oThisDate2, LunarDate);                                    
+                    var yearmemorial = yearmemorialDayCheck(oThisDate2, LunarDate);                   
+
+                    var isholiday = false;
+                    var holidayName = "";
+                    var holidayName2 = "";
+                    for (var k = 0; k < memorial.length; k++) {                    	
+                        if (memorial[k].holiday) {
+                            isholiday = true;
+                            holidayName = memorial[k].name;
+                        }
+                    }
+                    for (var k = 0; k < yearmemorial.length; k++) {
+                        if (yearmemorial[k].holiday) {
+                            isholiday = true;
+                            holidayName2 = yearmemorial[k].name;
+                        }
+                    }
+                    if (isholiday) {
+                        if (holidayName != "" && holidayName2 != "") {
+                        	holidayName = holidayName + ", " + holidayName2;
+                        }
+                        else if (holidayName == "" && holidayName2 != "") {
+                        	holidayName = holidayName2;                	
+                        }
+                    	
+                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
+                    	_mth.style.color = "#ee1c25";
+                    }
+                    else {
+                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    }
+                }                
+                //end
+                
+                //_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
                 _mtr.appendChild(_mth);
 
                 //생성된 날짜 배열 저장
@@ -414,9 +507,9 @@ function tableListControl_Week()
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;margin-right:5px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
             else
-                _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;margin-right:3px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -790,6 +883,32 @@ function tableListControl_today() {
         else
             document.getElementById("divViewHeader").style.color = "";
 
+       //baonk added    
+        if (current_day.getFullYear() > 1800 && current_day.getFullYear() <= 2101) {               	                                             
+            var month = current_day.getMonth() + 1;
+            
+            LunarDate = lunarCalc(current_day.getFullYear(), month, current_day.getDate(), 1);
+            
+            var memorial = memorialDayCheck(current_day, LunarDate);                                    
+            var yearmemorial = yearmemorialDayCheck(current_day, LunarDate);                   
+
+            var isholiday = false;
+            for (var k = 0; k < memorial.length; k++) {                    	
+                if (memorial[k].holiday) {
+                    isholiday = true;                    
+                }
+            }
+            for (var k = 0; k < yearmemorial.length; k++) {
+                if (yearmemorial[k].holiday) {
+                    isholiday = true;                    
+                }
+            }
+            if (isholiday) {            	
+            	document.getElementById("divViewHeader").style.color = "#ee1c25";
+            }
+        }                
+        //end
+        
 
         setNodeText(document.getElementById("divViewHeader"),datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER"));
         var _Table = document.createElement("TABLE");
@@ -831,9 +950,9 @@ function tableListControl_today() {
             _TD.onselectstart = function () { return false; };
 
             if (title_name[k].split("/")[2] == "1")
-                _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;margin-right:5px'>" + title_name[k].split("/")[1];
+                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
             else
-                _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;margin-right:3px'>" + title_name[k].split("/")[1];
+                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
@@ -1007,9 +1126,9 @@ function tableListControl_today() {
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:middle;margin-right:5px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;margin-right:3px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
@@ -1315,13 +1434,13 @@ function showTooltip_MouseOver(obj, e) {
     var _img = document.createElement("IMG");
     if (GetAttribute(obj,"approveFlag") == "1") {
         _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "middle";
+        _img.style.verticalAlign = "bottom";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
     } else {
         _img.src = "/images/calendar/icon_resource_no.png"
-        _img.style.verticalAlign = "middle";
+        _img.style.verticalAlign = "bottm";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang308;

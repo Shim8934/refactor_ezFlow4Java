@@ -295,7 +295,6 @@ function ItemPreviewRead(obj) {
             xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + pboardid + "&itemID=" + pitemid + "&mode=" + pMode + "&location=TEMP", true);
         else
             xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + pboardid + "&itemID=" + pitemid + "&mode=" + pMode + "&location=GENERAL", true);
-
         xmlhttp.onreadystatechange = event_ItemPreviewRead_photo;
         xmlhttp.send();
     }

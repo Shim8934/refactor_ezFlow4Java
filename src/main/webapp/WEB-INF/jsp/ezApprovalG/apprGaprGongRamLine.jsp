@@ -16,6 +16,11 @@
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <style>
+	    	.mainlist_free tr th {
+	    		border-top:0px;
+	    	}
+	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
    		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -1024,7 +1029,7 @@
 	    <div class="portlet_tabpart02">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine">
-	            	<span divname="Lineinfo" id="1tab1">
+	            	<span divname="Lineinfo" id="1tab1" style="background-color: rgb(0, 72, 148);color:white">
 	            		<c:if test="${approvalFlag == 'G'}">
 		            		<spring:message code='ezApprovalG.t1214'/>
 				    	</c:if>
@@ -1050,7 +1055,7 @@
 	                        <div style="overflow: auto; height: 306px; width: 387px;" id="TreeView"></div>
 	                	</div>
 	                	<div class="listview" style="margin-top: 1px">
-	                        <div id="UserList" style="overflow: auto; Width: 387px; Height: 239px; border: 0; margin: 1px 1px 1px 1px;"></div>
+	                        <div id="UserList" style="overflow: auto; Width: 387px; Height: 237px; border: 0; margin: 1px 1px 1px 1px;"></div>
 	                	</div>
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
@@ -1089,7 +1094,7 @@
 	                        <tr>
 	                            <td style="vertical-align: top;">
 	                                <div class="border_gray">
-	                                    <div id="RecSaveDetail" style="Width: 386px; Height: 240px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RecSaveDetail" style="Width: 386px; Height: 238px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                    </div>
 	                                </div>
 	                        	</td>
@@ -1123,7 +1128,7 @@
 	                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 	                	</div>
 	                </h2>
-	                <div class="listview" style="margin-top: 4px; margin-left: 1px">
+	                <div class="listview" style="margin-top: 7px; margin-left: 1px">
 	                <c:if test="${approvalFlag == 'S'}">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 710px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>

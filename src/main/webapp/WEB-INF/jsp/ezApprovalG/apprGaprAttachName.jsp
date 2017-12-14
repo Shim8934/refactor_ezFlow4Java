@@ -101,7 +101,7 @@
 		        }
 		
 		        txtPageNum.value = RetValue[0];
-		        txtDisplayName.value = RetValue[1];
+		        txtDisplayName.value = ReplaceText(RetValue[1], "&amp;", "&");
 		        ret[0] = "cancel";
 		        ret[1] = txtPageNum.value;
 		        ret[2] = txtDisplayName.value;
@@ -144,7 +144,7 @@
 		      	</td>
 		  	</tr>
 		</table>		
-		<div class="btnposition" style="margin-top:25px"> 
+		<div class="btnposition btnpositionNew" style="margin-top:25px"> 
 			<a class="imgbtn" id="btn_SaveAprDeptTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
 			<a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>		
