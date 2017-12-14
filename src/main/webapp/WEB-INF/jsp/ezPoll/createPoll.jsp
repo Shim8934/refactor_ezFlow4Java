@@ -410,8 +410,8 @@
 	        	$("#eTimePicker").val(eConfigTime).change();
 			}
 			else {
-				$("#sTimePicker option[value='0800']").attr('selected','selected');
-	        	$("#eTimePicker option[value='0800']").attr('selected','selected');
+				$("#sTimePicker option[value='0900']").attr('selected','selected');
+	        	$("#eTimePicker option[value='1800']").attr('selected','selected');
 			}
 			
 			$('#_dateTimePicker').show();
