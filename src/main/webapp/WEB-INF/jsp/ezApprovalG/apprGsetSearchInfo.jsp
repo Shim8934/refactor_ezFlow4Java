@@ -7,22 +7,6 @@
 		<title><spring:message code='ezApprovalG.t1325'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<style>
-			.popup .btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -88,7 +72,7 @@
 		            document.getElementById("displayTR1").style.display = "none";
 		            document.getElementById("displayTR2").style.display = "none";
 		            //window.resizeBy(0, -60);
-		            window.resizeTo(510, 355);
+		            window.resizeTo(510, 375);
 		        }
 		
 		        reset_onclick();
@@ -933,7 +917,7 @@
 		      </tr>
 		</table>
 		
-		<div class="btnposition" >
+		<div class="btnposition btnpositionNew">
 		<a class="imgbtn"><span onClick="return btnSearch_onclick()" style="width:40px;" id="Submit3"><spring:message code='ezApprovalG.t111'/></span></a>
 		<a class="imgbtn"><span onClick="return btnToDaySearch_onclick()" style="width:70px;" id="Submit0"><spring:message code='ezApprovalG.t1336'/></span></a>
 		<a class="imgbtn"><span onClick="return btnWeekSearch_onclick()" style="width:70px;" id="Submit1"><spring:message code='ezApprovalG.t1337'/></span></a>

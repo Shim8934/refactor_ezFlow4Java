@@ -136,11 +136,10 @@
 					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<spring:message code='ezCircular.t85' /></th>
 					<th style="text-align:right;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
 						<input type="radio" name='searchType' class='searchType' value='userID' checked="checked" /><spring:message code='ezCircular.t34' />
-						<input type="radio" name='searchType' class='searchType' value='content' /><spring:message code='ezCircular.t188' />
+						<input type="radio" name='searchType' class='searchType' value='content' /><spring:message code='ezCircular.t188' />&nbsp;
 						<input type='text' id='searchValue' />
-						&nbsp;
-						<a class='imgbtn'><span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
-						<a class='imgbtn'><span onclick="commentRefresh()"><spring:message code='ezCircular.t173' /></span>&nbsp;</a>
+						<a class='imgbtn' style="vertical-align: middle"><span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span></a>
+						<a class='imgbtn' style="vertical-align: middle"><span onclick="commentRefresh()"><spring:message code='ezCircular.t173' /></span></a>
 					</th>
 				</tr>
 			</table>

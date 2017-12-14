@@ -5,22 +5,6 @@
 		<title><spring:message code='ezBoard.t242'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<style>
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
@@ -102,7 +86,7 @@
 	    <div style="margin-top:10px">
 	        <input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc">
 	    </div>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a name="btn_OpinionOK" id="btn_OpinionOK" class="imgbtn" onClick="return btn_OpinionOK_onclick()"  ><span><spring:message code='ezBoard.t14'/></span></a>
 	        <a name="btn_OpinionCANCEL" id="btn_OpinionCANCEL" class="imgbtn" onClick="return btn_OpinionCANCEL_onclick()" ><span><spring:message code='ezBoard.t15'/></span></a>
 	    </div>

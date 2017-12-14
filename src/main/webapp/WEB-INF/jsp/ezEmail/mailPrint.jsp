@@ -82,7 +82,7 @@
 	        </table>
 	        <div style="height:100%; margin:5px; word-wrap:break-word; word-break:normal; display:block">
 	            <div style="height:100%; border:1px solid #b6b6b6;vertical-align:top;">
-	               <div style="padding:10px; overflow:auto;">
+	               <div style="padding:10px">
 	                    ${pBody}
 	                </div>
 	            </div>

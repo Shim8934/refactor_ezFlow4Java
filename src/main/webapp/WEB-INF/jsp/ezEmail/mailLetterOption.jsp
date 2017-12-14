@@ -41,6 +41,19 @@
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', utcDate2(offsetMin));
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        
+		     	// 현재 시간을 비교해 다음시간으로 선택.
+		        if (NowDate.getMinutes() < 30) {
+		        	NowDate.setMinutes(30);
+		        } 
+		        
+		        if (NowDate.getMinutes() > 30) {
+		        	var hour = NowDate.getHours();
+		        	NowDate.setHours(hour + 1);
+		        	NowDate.setMinutes(0);
+		        }
+		        
+		      	$('#Stimepicker').timepicker('setTime', NowDate);
 		    });
 		    
 		    $(function () {
@@ -289,67 +302,78 @@
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.t353' /></h1>
 		<table style="width:100%;" class="content">
-		  <tr style="display:none;">
-		    <th><spring:message code='ezEmail.t363' /></th>
-		    <td><select name="postType" style="Width:100px;" onChange="" id="postTypeid">
-		        <option 1><spring:message code='ezEmail.t361' /></option>
-		        <option><spring:message code='ezEmail.t364' /></option>
-		        <option><spring:message code='ezEmail.t365' /></option>
-		        <option><spring:message code='ezEmail.t366' /></option>
-		      </select>
-		    </td>
-		  </tr>
-		  <tr style="display:none;">
-		    <th><spring:message code='ezEmail.t749' /></th>
-		    <td colspan="3"><input type="checkbox" name="SecurityMail" value="checkbox" onClick="SecurityMail_onClick()"><spring:message code='ezEmail.t750' /></td>
-		  </tr>
+			<tr style="display:none;">
+				<th><spring:message code='ezEmail.t363' /></th>
+				<td>
+					<select name="postType" style="Width:100px;" onChange="" id="postTypeid">
+						<option 1><spring:message code='ezEmail.t361' /></option>
+						<option><spring:message code='ezEmail.t364' /></option>
+						<option><spring:message code='ezEmail.t365' /></option>
+						<option><spring:message code='ezEmail.t366' /></option>
+					</select>
+				</td>
+			</tr>
+			<tr style="display:none;">
+				<th><spring:message code='ezEmail.t749' /></th>
+				<td colspan="3">
+					<input type="checkbox" name="SecurityMail" value="checkbox" onClick="SecurityMail_onClick()"><spring:message code='ezEmail.t750' />
+				</td>
+			</tr>
 		</table>
 		<h2><spring:message code='ezEmail.t368' /></h2>
 		<table style="width:100%;" class="content">
-		  <tr style="display:none">
-		    <td><input type="checkbox" name="responseSend" value="checkbox" onClick="" id = "responseSendid">
-		     <span style="vertical-align:middle;"> <spring:message code='ezEmail.t369' /></span></td>
-		  </tr>
-		  <tr>
-		    <td><input type="checkbox" name="responseRead" value="checkbox" onClick="" id = "responseReadid">
-		      <span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
-		      <c:choose>
-		      	<c:when test="${outMailReadCheck}">
-					<select id="responseReadType" onChange="">
-		      			<option value="1" selected><spring:message code='ezEmail.t371' /></option>
-		      			<option value="2"><spring:message code='ezEmail.t372' /></option>
-		      		</select>
-				</c:when>
-		      	<c:otherwise>
-		      		<select id="responseReadType" onChange="" disabled>
-		      			<option value="1" selected><spring:message code='ezEmail.t371' /></option>
-		      		</select>
-		      	</c:otherwise>
-		      </c:choose>
-		    </td>
-		  </tr>
+			<tr style="display:none">
+				<td>
+					<input type="checkbox" name="responseSend" value="checkbox" onClick="" id = "responseSendid">
+					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t369' /></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="checkbox" name="responseRead" value="checkbox" onClick="" id = "responseReadid">
+					<span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
+					<c:choose>
+						<c:when test="${outMailReadCheck}">
+							<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if> id="responseReadType" onChange="">
+								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
+								<option value="2"><spring:message code='ezEmail.t372' /></option>
+							</select>
+						</c:when>
+						<c:otherwise>
+							<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if> id="responseReadType" onChange="" disabled>
+								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
+							</select>
+						</c:otherwise>
+					</c:choose>
+				</td>
+			</tr>
 		</table>
 		<br>
 		<h2> <spring:message code='ezEmail.t373' /></h2>
 		<table class="content" style="border-top:none;width:100%;">
-		  <tr>
-		    <td><input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
-		      <spring:message code='ezEmail.t374' />
-		      <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-		  </tr>
+			<tr>
+				<td>
+					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
+					<spring:message code='ezEmail.t374' />
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center">
+					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+				</td>
+			</tr>
 		</table>
-        <c:if test="${individualMailUser != '0'}">
-        <br>
-        <h2 id="etcLang"><spring:message code='ezEmail.t748' /></h2>
-        <table width="100%" class="content">
-          <tr>
-            <td><input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox"><spring:message code='ezEmail.t748' /></td>
-          </tr>
-        </table>  
-        </c:if>
+		<c:if test="${individualMailUser != '0'}">
+			<br>
+			<h2 id="etcLang"><spring:message code='ezEmail.t748' /></h2>
+			<table width="100%" class="content">
+				<tr>
+					<td>
+						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox"><spring:message code='ezEmail.t748' />
+					</td>
+				</tr>
+			</table>  
+		</c:if>
 		<div class="btnposition">
-		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
-		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
+			<a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
+			<a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 	</body>
 </html>
