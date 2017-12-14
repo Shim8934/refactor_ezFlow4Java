@@ -256,7 +256,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			model.addAttribute("credentialForBizmekaSpambox", credentialForBizmekaSpambox);
 		}
 		
-		model.addAttribute("noUsePOP3", ezCommonService.getTenantConfig("noUsePOP3", loginInfo.getTenantId()));
+		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId()));
 		
 		logger.debug("showMailLeft ended.");
 		
