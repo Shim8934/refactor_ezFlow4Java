@@ -456,32 +456,34 @@ public class EzBoardController extends EgovFileMngUtil{
 		String startTime = request.getParameter("startTime");
 		String endTime = request.getParameter("endTime");
 		
-		Document doc = commonUtil.convertStringToDocument(range);
-		
-		if (doc.getElementsByTagName("DEPT").item(0) != null) {
-			pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
-		}				
-		
-		for (int j = 0; j < pDeptCnt; j++) {
-			String deptID = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(j).getAttributes().getNamedItem("id").getTextContent();
-			targetDepts += deptID + ",";
-		}	
-		
-		if (doc.getElementsByTagName("MEMBER").item(0) != null) {				
-			pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();			
-		}				
-		
-		for (int i = 0; i < pUserCnt; i++) {
-			String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
-			targetUsers += userID + ",";
-		}
-		
-		if (targetDepts.endsWith(",")) {
-			targetDepts = targetDepts.substring(0, targetDepts.length() - 1);
-		}
-		
-		if (targetUsers.endsWith(",")) {
-			targetUsers = targetUsers.substring(0, targetUsers.length() - 1);
+		if (range != null && !range.equals("") && !range.equals("<RANGE></RANGE>")) {
+			Document doc = commonUtil.convertStringToDocument(range);
+			
+			if (doc.getElementsByTagName("DEPT").item(0) != null) {
+				pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
+			}				
+			
+			for (int j = 0; j < pDeptCnt; j++) {
+				String deptID = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(j).getAttributes().getNamedItem("id").getTextContent();
+				targetDepts += deptID + ",";
+			}	
+			
+			if (doc.getElementsByTagName("MEMBER").item(0) != null) {				
+				pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();			
+			}				
+			
+			for (int i = 0; i < pUserCnt; i++) {
+				String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+				targetUsers += userID + ",";
+			}
+			
+			if (targetDepts.endsWith(",")) {
+				targetDepts = targetDepts.substring(0, targetDepts.length() - 1);
+			}
+			
+			if (targetUsers.endsWith(",")) {
+				targetUsers = targetUsers.substring(0, targetUsers.length() - 1);
+			}
 		}
 				
 		boardPollConfigVO.setTenantId(userInfo.getTenantId());

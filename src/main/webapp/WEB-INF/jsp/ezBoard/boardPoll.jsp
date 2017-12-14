@@ -9,8 +9,8 @@
     	<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     	<style type="text/css">
-    		.pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:20px; vertical-align:top; cursor:pointer; margin-top: 0px;}
-			.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:20px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:20px;}
+    		.pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:17px; vertical-align:top; cursor:pointer; margin-top: 0px;}
+			.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:16px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:17px;}
     	</style>    	
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -20,29 +20,21 @@
 			
          	document.onselectstart = function () { return false; };
          	
-        	window.onload = function () {
-            		if (navigator.userAgent.indexOf('Firefox') != -1) {
-                		document.body.style.MozUserSelect = 'none';
-		                document.body.style.WebkitUserSelect = 'none';
-        		        document.body.style.khtmlUserSelect = 'none';
-		                document.body.style.oUserSelect = 'none';
-                		document.body.style.UserSelect = 'none';
-            		}	
-            		
-            		preProcess();
+        	window.onload = function () {        		
+           		if (navigator.userAgent.indexOf('Firefox') != -1) {
+               		document.body.style.MozUserSelect = 'none';
+	                document.body.style.WebkitUserSelect = 'none';
+       		        document.body.style.khtmlUserSelect = 'none';
+	                document.body.style.oUserSelect = 'none';
+               		document.body.style.UserSelect = 'none';
+           		}	
+           		
+           		preProcess();
         	}   
         	
         	function preProcess() {
         		if (checkFlag == "1") {
         			//Set target
-        			var listTarget = "<c:out value='${listOfTarget}'/>";
-        			if (listTarget != "") {
-        				var newTargetDiv = document.getElementById("newTargetDiv");
-            	    	newTargetDiv.innerHTML = listTarget;
-            	    	newTargetDiv.setAttribute("title", listTarget);
-            	    	newTargetDiv.style.display = "";	
-        			}
-        			
         			document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
         			
         			//Set time
@@ -54,7 +46,30 @@
 
     	        	$("#sTimePicker").val(_sTime).change();
     	        	$("#eTimePicker").val(_eTime).change();            	 	
-        		}  
+        		} 
+        		
+        		$('#set_Target').on('change', function(e) {					
+    			    if ($(this).val() == '1') {    			    	
+    			    	var listTarget = "<c:out value='${listOfTarget}'/>";
+    			    	
+   			    		if (listTarget != "") {
+    			    		document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
+    			    		
+            				var newTargetDiv = document.getElementById("newTargetDiv");
+                	    	newTargetDiv.innerHTML = listTarget;
+                	    	newTargetDiv.setAttribute("title", listTarget);
+                	    	newTargetDiv.style.display = "";
+   			    		}
+   			    		
+    			    	$('#receiverBttn').show();
+    			    }
+    			    else {			    	
+    			    	document.getElementById("newTargetDiv").style.display = "none";	
+    			    	$('#receiverBttn').hide();
+    			    	
+			    		document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";			    
+    			    }
+    			}); 
         	}
         	
         	function Cancel_Click() {
@@ -62,13 +77,20 @@
 	    			//Set target
 	    			var listTarget = "<c:out value='${listOfTarget}'/>";
 	    			if (listTarget != "") {
+	    				$("#set_Target").val("1").change();
+	    				$("#receiverBttn").show();
+	    				
 	    				var newTargetDiv = document.getElementById("newTargetDiv");
 	        	    	newTargetDiv.innerHTML = listTarget;
 	        	    	newTargetDiv.setAttribute("title", listTarget);
-	        	    	newTargetDiv.style.display = "";	
+	        	    	newTargetDiv.style.display = "";    
+	        	    	document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
 	    			}
-	    			
-	    			document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
+	    			else {	    				
+	    				$("#receiverBttn").hide();
+	    				document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";
+	    				$("#set_Target").val("0").change();
+	    			}	
 	        		
 	    			//Set time
 	    			var _sTime = "<c:out value='${startTime}'/>";
@@ -86,10 +108,13 @@
 	        	    newTargetDiv.innerHTML = "";
 	        	    newTargetDiv.setAttribute("title", "");
 	        	    newTargetDiv.style.display = "none";
-        			document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";
+        			document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";     			
+        			$("#set_Target").val("0").change();
+        			$("#receiverBttn").hide();
+        			
         			//Set time
-		        	$("#sTimePicker").val("0000").change();
-		        	$("#eTimePicker").val("0000").change(); 
+		        	$("#sTimePicker").val("0900").change();
+		        	$("#eTimePicker").val("1800").change(); 
         		}
         	}
         	function Change_Click() {        		        		
@@ -98,6 +123,13 @@
      			var startTime = sTimePickerElmt.options[sTimePickerElmt.selectedIndex].text;     			
         		var eTimePickerElmt = document.getElementById("eTimePicker");        		
      			var endTime = eTimePickerElmt.options[eTimePickerElmt.selectedIndex].text;
+     			
+     			if ($("#set_Target").val() == "1") {
+     				if (rangeSelect == null || rangeSelect == "" || rangeSelect == "<RANGE></RANGE>") {
+     					alert('<spring:message code="ezPoll.t248"/>');
+         				return;
+     				}
+     			}
      		
      			$.ajax({
      				url : '/ezBoard/boardPollConfigSave.do',
@@ -110,6 +142,7 @@
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
 	     				alert('<spring:message code="ezEmail.t42" />');
+	     				window.location.reload();
      				},
      				error : function(jqXHR, textStatus, errorThrown) {
                 	    alert('Error : ' + jqXHR.status + ", " + textStatus);
@@ -224,7 +257,7 @@
             	<tr>
                 	<th><spring:message code="ezBoard.t00073" /></th>
                 	<td>               
-						<span style="padding-left: 10px;"><spring:message code="ezPoll.t246"/></span> 
+						<span style="padding-left: 5px;"><spring:message code="ezPoll.t246"/></span> 
 						<select id="sTimePicker">
 							<option value="0000">00:00</option>
 							<option value="0030">00:30</option>
@@ -244,7 +277,9 @@
 							<option value="0730">07:30</option>
 							<option value="0800">08:00</option>
 							<option value="0830">08:30</option>
-							<option value="0900">09:00</option>
+							<c:if test="${hasConfig != '1'}">
+								<option value="0900" selected="selected">09:00</option>
+							</c:if>
 							<option value="0930">09:30</option>
 							<option value="1000">10:00</option>
 							<option value="1030">10:30</option>
@@ -275,7 +310,7 @@
 							<option value="2300">23:00</option>
 							<option value="2330">23:30</option>
 						</select>
-						<span style="padding-left: 10px;"><spring:message code="ezPoll.t247"/></span> 
+						<span style="padding-left: 5px;"><spring:message code="ezPoll.t247"/></span> 
 						<select id="eTimePicker">
 							<option value="0000">00:00</option>
 							<option value="0030">00:30</option>
@@ -313,7 +348,9 @@
 							<option value="1630">16:30</option>
 							<option value="1700">17:00</option>
 							<option value="1730">17:30</option>
-							<option value="1800">18:00</option>
+							<c:if test="${hasConfig != '1'}">
+								<option value="1800" selected="selected">18:00</option>
+							</c:if>
 							<option value="1830">18:30</option>
 							<option value="1900">19:00</option>
 							<option value="1930">19:30</option>
@@ -331,8 +368,25 @@
             	<tr>
                 	<th><spring:message code="ezBoard.t00074" /></th>
                 	<td style="position: relative;">
-                    		<a class="pollImgbtn1" id="receiverBttn"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
-							<div style="display:none; position: absolute; left: 70px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 435px; white-space: nowrap;" id="newTargetDiv"></div>
+               			<span style="padding-left: 5px;"><spring:message code="ezPoll.t162"/></span>
+               			<c:choose>
+               				<c:when test="${hasConfig == '1' && listOfTarget != ''}">
+               					<select id="set_Target">							
+									<option value="0"><spring:message code="ezPoll.t237" /></option>
+									<option value="1" selected="selected"><spring:message code="ezPoll.t238" /></option>							
+								</select>
+								<a class="pollImgbtn1" id="receiverBttn" style=""><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
+								<div style="position: absolute; left: 180px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 320px; white-space: nowrap;" id="newTargetDiv" title="<c:out value='${listOfTarget}'/>" ><c:out value='${listOfTarget}'/></div>
+               				</c:when>
+							<c:otherwise>
+								<select id="set_Target">
+									<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
+									<option value="1"><spring:message code="ezPoll.t238" /></option>
+								</select>
+								<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
+								<div style="display:none; position: absolute; left: 180px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 320px; white-space: nowrap;" id="newTargetDiv" ></div>
+							</c:otherwise>
+               			</c:choose>
                 	</td>
             	</tr>
         	</table>       
