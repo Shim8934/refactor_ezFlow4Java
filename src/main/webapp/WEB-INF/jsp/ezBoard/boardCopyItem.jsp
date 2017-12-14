@@ -274,27 +274,13 @@
 			background-color : #F7FAE0;
 			height : 15px;
 			cursor : hand;
-		}		
-		.btnposition{
-			margin: 0px 0px 0px -10px;
-			/* margin-top: 10px; */
-			background: none;
-			border: none;
-			border-top: 1px solid #ddd;
-			padding:10px 0px;
-			background-color: #f2f2f2;
-			text-align:center;
-			position: absolute;
-			text-align: center;
-			bottom: 0px;
-			width:100%;
 		}
 		</style>
 	</head>
 	<body class="popup"> 
 	<h1><spring:message code='ezBoard.t135'/></h1>
 	<div class="box" style="width:320px;height:520px;overflow:auto;" id="TopBoardsList"></div>
-	<div class="btnposition">
+	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
 	    <a class="imgbtn" onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
 	</div>

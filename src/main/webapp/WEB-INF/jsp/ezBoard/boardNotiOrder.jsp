@@ -10,21 +10,6 @@
 			.mainlist tr th {
 				border-top:0px;
 			}
-						
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
 		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -158,7 +143,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	<div class="btnposition">
+	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="save_order()" name="Submit"><span><spring:message code='ezBoard.t14'/></span></a>
 	    <a class="imgbtn" onClick="window.close()" name="Submit"><span><spring:message code='ezBoard.t15'/></span></a>
 	</div>

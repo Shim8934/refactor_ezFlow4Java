@@ -6,22 +6,6 @@
 		<title><spring:message code='ezCircular.t192'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
-		<style>
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
@@ -180,7 +164,7 @@
 				<td><span id="ext2">&nbsp;<spring:message code='ezCircular.t175' /></span></td>
 			</tr>
 		</table>
-		<div class="btnposition" style="margin-top:15px">
+		<div class="btnposition btnpositionNew" style="margin-top:15px">
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezCircular.t177' /></span></a>
 		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span><spring:message code='ezCircular.t178' /></span></a>
 		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezCircular.t179' /></span></a>

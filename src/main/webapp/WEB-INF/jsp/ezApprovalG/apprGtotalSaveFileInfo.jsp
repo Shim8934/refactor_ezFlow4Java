@@ -6,22 +6,6 @@
 		<title><spring:message code='ezApprovalG.t00008'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <style>
-			.popup .btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -239,7 +223,7 @@
 	        </table>
 	    </div>
 	    <br />
-	     <div class="btnposition" align="center">
+	     <div class="btnposition btnpositionNew" align="center">
 	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="window_close()"><spring:message code='ezApprovalG.t1761'/></span></a>
 	    </div>
