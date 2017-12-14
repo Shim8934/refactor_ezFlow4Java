@@ -233,7 +233,7 @@
 			function btn_AttachAdd_onclick() 
 			{
 			    if (document.form.file1.value != "") {
-					if (document.form.file1.files[0].name.length > 54) {
+					if (document.form.file1.files[0].name.length > 104) {
 						alert("<spring:message code='main.jjh08' />");
 						document.form.file1.value = "";
 						return;
@@ -758,7 +758,7 @@
 		        for (var i = 0; i < file.length; i++) {
 					var fnl = file[i].name.length;
 		        	
-		        	if (fnl > 54) {
+		        	if (fnl > 104) {
 		        		alert("<spring:message code='main.jjh08' />");
 		        		isfileup = false;
 		        		
