@@ -8,22 +8,6 @@
 		<meta name="CODE_LANGUAGE" Content="C#">
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
         <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-        <style>
-        	.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-        </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script>
@@ -101,7 +85,7 @@
 					</c:forEach>
 				</table>
 			</div>
-			<div class="btnposition">
+			<div class="btnposition btnpositionNew">
 				<a class="imgbtn" onClick="add_personal()" id="cmd_ok"><span><spring:message code='ezAddress.t25' /></span></a>
 				<a class="imgbtn" onClick="Window_Close()"><span><spring:message code='ezAddress.t11' /></span></a>
 			</div>

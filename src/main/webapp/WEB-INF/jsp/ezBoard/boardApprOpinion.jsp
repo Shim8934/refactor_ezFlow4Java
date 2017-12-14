@@ -6,22 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
     <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-    <style>
-    	.btnposition{
-			margin: 0px 0px 0px -10px;
-			/* margin-top: 10px; */
-			background: none;
-			border: none;
-			border-top: 1px solid #ddd;
-			padding:10px 0px;
-			background-color: #f2f2f2;
-			text-align:center;
-			position: absolute;
-			text-align: center;
-			bottom: 0px;
-			width:100%;
-		}
-    </style>
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     <script type="text/javascript">
@@ -69,7 +53,7 @@
     <h1><spring:message code='ezBoard.t999010'/></h1>
     <h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t999011'/></h2>
     <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="Width: 100%; Height: 150px; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
-    <div class="btnposition">
+    <div class="btnposition btnpositionNew">
         <a class="imgbtn" ><span onclick="btn_OK()"><spring:message code='ezBoard.t14'/></span></a>
         <a class="imgbtn" ><span onclick="btn_close()"><spring:message code='ezBoard.t12'/></span></a>
     </div>

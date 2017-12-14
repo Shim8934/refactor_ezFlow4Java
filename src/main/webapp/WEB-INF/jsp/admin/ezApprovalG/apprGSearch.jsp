@@ -8,23 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-		<style>
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -753,7 +737,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnSearch_onclick()"><spring:message code ='ezApprovalG.t111' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnToDaySearch_onclick()"><spring:message code ='ezApprovalG.t1336' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnWeekSearch_onclick()"><spring:message code ='ezApprovalG.t1337' /></span></a>
