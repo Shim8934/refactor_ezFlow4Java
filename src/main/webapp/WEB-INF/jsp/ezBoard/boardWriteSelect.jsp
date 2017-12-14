@@ -28,21 +28,6 @@
 				background-color : #F7FAE0;				
 				cursor : hand;
 			}
-			
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
 		</style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -320,7 +305,7 @@
 	<body class="popup" onload="javascript:window_onload()">
 		<h1><spring:message code='ezBoard.t135'/></h1>
 		<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
     		<a class="imgbtn"><span onClick="Select()"><spring:message code='ezBoard.t47'/></span></a>
 		</div>
 	</body>

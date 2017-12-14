@@ -23,6 +23,15 @@ public class CommunityCComCloseVO {
 	String userName;
 	/** 사용자ID(다국어)*/
 	String userName2;
+	
+	String b_ClubName;
+	
+	public String getB_ClubName() {
+		return b_ClubName;
+	}
+	public void setB_ClubName(String b_ClubName) {
+		this.b_ClubName = b_ClubName;
+	}
 	public String getC_ClubNo() {
 		return c_ClubNo;
 	}

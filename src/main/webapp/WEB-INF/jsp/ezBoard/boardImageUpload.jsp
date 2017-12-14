@@ -6,22 +6,6 @@
 		<title><spring:message code='ezBoard.t5000'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<style>
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
@@ -192,7 +176,7 @@
 	            <td>&nbsp;<input type="text" id="imageheight" />&nbsp;px</td>
 	        </tr>
 		</table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code='ezBoard.t98'/></span></a>
 	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code='ezBoard.t15'/></span></a>
 	    </div>

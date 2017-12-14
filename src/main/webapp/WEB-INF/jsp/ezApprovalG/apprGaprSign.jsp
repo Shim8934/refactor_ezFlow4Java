@@ -6,22 +6,6 @@
 		<title><spring:message code='ezApprovalG.t435'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<style>
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
@@ -181,7 +165,7 @@
 		  </tr> 
 		</table> 
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		        <a class="imgbtn" id="btn_ImageSave" onClick="return btn_ImageSave_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
 		        <a class="imgbtn" id="btn_Save" onClick="return btn_Save_onclick()"><span><spring:message code='ezApprovalG.t438'/></span></a>
 		        <a class="imgbtn" id="ImageCancel" onClick="return btn_ImageCancel_onclick()"><span><spring:message code='ezApprovalG.t414'/></span></a>
