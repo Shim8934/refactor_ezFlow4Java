@@ -480,6 +480,8 @@
             	window.opener.updateParent("itemNo", L_ITEMNO, "value");
             	window.opener.closeWindow();
         	} else {
+        		window.opener.updateTarget("");
+        		
             	window.opener.updateParent("setTarget", 0, "selectedIndex");
             	window.opener.updateParent("hidTarget", "0", "value");
             	window.opener.updateParent("selectYN", "NO", "value");

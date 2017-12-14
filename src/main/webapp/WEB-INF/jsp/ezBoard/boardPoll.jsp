@@ -126,7 +126,7 @@
      			
      			if ($("#set_Target").val() == "1") {
      				if (rangeSelect == null || rangeSelect == "" || rangeSelect == "<RANGE></RANGE>") {
-     					alert('<spring:message code="ezPoll.t248"/>');
+     					alert('<spring:message code="ezPoll.t235"/>');
          				return;
      				}
      			}
@@ -276,9 +276,12 @@
 							<option value="0700">07:00</option>
 							<option value="0730">07:30</option>
 							<option value="0800">08:00</option>
-							<option value="0830">08:30</option>
+							<option value="0830">08:30</option>							
 							<c:if test="${hasConfig != '1'}">
 								<option value="0900" selected="selected">09:00</option>
+							</c:if>
+							<c:if test="${hasConfig == '1'}">
+								<option value="0900">09:00</option>
 							</c:if>
 							<option value="0930">09:30</option>
 							<option value="1000">10:00</option>
@@ -350,6 +353,9 @@
 							<option value="1730">17:30</option>
 							<c:if test="${hasConfig != '1'}">
 								<option value="1800" selected="selected">18:00</option>
+							</c:if>
+							<c:if test="${hasConfig == '1'}">
+								<option value="1800">18:00</option>
 							</c:if>
 							<option value="1830">18:30</option>
 							<option value="1900">19:00</option>

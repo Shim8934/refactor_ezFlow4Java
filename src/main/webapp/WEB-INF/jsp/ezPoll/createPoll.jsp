@@ -255,7 +255,7 @@
 	        	}
 			}
 			else {		
-				document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
+/* 				document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
 				var listTarget = "<c:out value='${listOfTarget}'/>";
     			if (listTarget != "") {
     				var newTargetDiv = document.getElementById("newTargetDiv");
@@ -267,7 +267,7 @@
     			}
     			else {
     				$('#receiverBttn').hide();
-    			}
+    			} */
     			
     			//Set time
     			setDateTimeValue();	
@@ -280,7 +280,7 @@
 				$('#anonymousVote').removeAttr('checked');	
 				$('#endDate').removeAttr('checked');			
 				$('#_dateTimePicker').hide();			
-				//$('#receiverBttn').hide();										
+				$('#receiverBttn').hide();										
 			}
 			
 			$('#multipleCheck').click(function() {
@@ -308,10 +308,22 @@
 			
 			$('#set_Target').on('change', function(e) {					
 			    if ($(this).val() == '1') {
+			    	var listTarget = "<c:out value='${listOfTarget}'/>";
+			    	
+		    		if (listTarget != "") {
+			    		document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
+
+	    				var newTargetDiv = document.getElementById("newTargetDiv");
+	        	    	newTargetDiv.innerHTML = listTarget;
+	        	    	newTargetDiv.setAttribute("title", listTarget);
+	        	    	newTargetDiv.style.display = "";
+		    		}			    		
+			    	
 			    	$('#receiverBttn').show();
 			    }
 			    else {			    	
 			    	document.getElementById("newTargetDiv").style.display = "none";	
+			    	document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";
 			    	$('#receiverBttn').hide();
 			    }
 			}); 
@@ -678,13 +690,21 @@
 	        }
 	        
 	        if (document.getElementById("set_Target").selectedIndex == 1) {
-	            if (document.getElementById("select_YN").value != "YES") {
-	            	if (mode != "modify" && configFlag!= "1") {
+	        	var rangeSelect = document.getElementById("RangeXMLStr").value;
+	        	
+	        	if (rangeSelect == null || rangeSelect == "" || rangeSelect == "<RANGE></RANGE>") {
+ 					alert('<spring:message code="ezPoll.t235"/>');
+     				return false;
+ 				}
+	        	
+/* 	            if (document.getElementById("select_YN").value != "YES") {
+	            	if (mode != "modify" && configFlag != "1") {
 		            	alert('<spring:message code="ezPoll.t235" />');
 		                return false;
 	            	}	            	
 	            	document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
-	            }
+	            } */
+	            
 	        }
 	       /*  && mode != "modify" */
 	        if (checkOption() <= 0) {	        	
@@ -740,7 +760,7 @@
 	        }
 	    }
 	    
-	    function updateTarget(listOfTarget) {
+	    function updateTarget(listOfTarget) {	    	    	
 	    	var newTargetDiv = document.getElementById("newTargetDiv");
 	    	newTargetDiv.innerHTML = listOfTarget;
 	    	newTargetDiv.setAttribute("title", listOfTarget);

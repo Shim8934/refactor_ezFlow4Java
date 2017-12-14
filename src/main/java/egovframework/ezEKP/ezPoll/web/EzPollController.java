@@ -526,7 +526,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		pollQuestionVO.setTenantId(tenantID);		
 		
-		if (range == null || range.equals("")) {
+		if (range == null || range.equals("") || range.equals("<RANGE></RANGE>")) {
 			pollQuestionVO.setTarget(0);			
 		}
 		else {
