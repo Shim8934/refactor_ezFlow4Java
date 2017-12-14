@@ -22,14 +22,35 @@
 		    	 var feature = GetOpenPosition(420, 438);
 		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
+		    
+		    function sendMail(pUserID) {	
+		    	var feature = GetOpenPosition(890, 840);
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        window.open("/ezPoll/mailWrite.do?type=one&userId=" + pUserID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		    }
+		    
+		    function sendMailAll(pQstID) {
+		    	var feature = GetOpenPosition(890, 840);
+		    	var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        window.open("/ezPoll/mailWrite.do?type=group&state=notjoin&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		    }
 		</script>
 	</head>
 	
 	<body class = "popup" id = "mainbody">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
-			    <div id="menu1" style="float: left; display: block; padding-left: 25%;">
-			        	<h1><spring:message code='ezPoll.t134'/> <c:out value='${numberOfUnVotedUsers}'/></h1>
+			    <div id="menu1" style="posittion: relative;">
+			        	<h1 style="posittion: absolute; left: 20px; top: 0px;"><spring:message code='ezPoll.t134'/> <c:out value='${numberOfUnVotedUsers}'/></h1>			        	
+			        	<img style="position: fixed; right: 20px; top: 3px; cursor: pointer; height: 40px; width: 40px;" src="/images/poll/sendEmailGroup.png" onClick="sendMailAll('${qstID}')">			        	
 			    </div>					
 			</div>
 			<div style="height:359px; overflow: auto;">
@@ -50,7 +71,7 @@
 								</a>
 							</td>
 							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list.phone}"/></td>
-							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick=""></td>		
+							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick="sendMail('${list.id}')"></td>		
 						</tr>
 					</c:forEach>
 				</table>				

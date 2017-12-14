@@ -3486,3 +3486,32 @@ function mailImportOption_onClick(tempId, userkey) {
 }
 function mailImportOption_onClick_Complete(m_rgParams4PostOption) { }
 
+//baonk added
+function getEmailAddressList2(ReceiverList, pollSendType) {
+    var retVal = {
+        "type": new Array(),
+        "name": new Array(),
+        "email": new Array(),
+        "href": new Array()
+    };
+    
+    var jsonReceiverList = JSON.parse(ReceiverList);
+    
+    if (pollSendType == "one") {
+         retVal["name"][0] = jsonReceiverList["userName"];
+         retVal["type"][0] = "email";
+         retVal["email"][0] = jsonReceiverList["email"];
+         retVal["href"][0] = "";
+    }
+    else {
+    	for (var i = 0; i < jsonReceiverList.length; i++) {
+            retVal["name"][i] = jsonReceiverList[i]["userName"];
+            retVal["type"][i] = "email";
+            retVal["email"][i] = jsonReceiverList[i]["email"];
+            retVal["href"][i] = "";
+    	}
+    }
+
+    return retVal;
+}
+//end
