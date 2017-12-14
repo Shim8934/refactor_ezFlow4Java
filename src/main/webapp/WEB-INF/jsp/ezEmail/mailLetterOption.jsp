@@ -348,8 +348,7 @@
 				</td>
 			</tr>
 		</table>
-		<br>
-		<h2> <spring:message code='ezEmail.t373' /></h2>
+		<h2 style="margin-top:10px"><spring:message code='ezEmail.t373' /></h2>
 		<table class="content" style="border-top:none;width:100%;">
 			<tr>
 				<td>
@@ -360,18 +359,17 @@
 				</td>
 			</tr>
 		</table>
-		<c:if test="${individualMailUser != '0'}">
-			<br>
-			<h2 id="etcLang"><spring:message code='ezEmail.t748' /></h2>
+		<c:if test="${individualMailUser != '0'}">			
+			<h2 style="margin-top:10px" id="etcLang"><spring:message code='ezEmail.t748' /></h2>
 			<table width="100%" class="content">
 				<tr>
 					<td>
-						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox"><spring:message code='ezEmail.t748' />
+						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">&nbsp;<spring:message code='ezEmail.t748' />
 					</td>
 				</tr>
 			</table>  
 		</c:if>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
 			<a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>

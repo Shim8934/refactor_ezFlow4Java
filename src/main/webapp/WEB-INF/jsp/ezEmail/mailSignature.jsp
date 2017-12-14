@@ -260,16 +260,16 @@
 		<br />
 		<span>▒ <spring:message code='ezEmail.t284' /></span><br/>
 		<span>▒ <spring:message code='ezEmail.t99000062' /> :
-		    <span style="padding-left:3px;"><input style="margin:0px;padding:0px;" <c:if test="${signState == '0'}">checked</c:if> type="radio" name="SigState" value="0" onclick="pSigState = 0" id="SigState0"><spring:message code='ezEmail.t99000063' /></span>
-		    <span style="padding-left:3px;"><input style="margin:0px;padding:0px;" <c:if test="${signState == '1'}">checked</c:if> type="radio" name="SigState" value="1" onclick="pSigState = 1" id="SigState1"><spring:message code='ezEmail.t826' /></span>
-		    <span style="padding-left:3px;"> <input style="margin:0px;padding:0px;" <c:if test="${signState == '2'}">checked</c:if> type="radio" name="SigState" value="2" onclick="pSigState = 2"  id="SigState2"><spring:message code='ezEmail.t827' /></span>
-		    <span style="padding-left:3px;"> <input style="margin:0px;padding:0px;" <c:if test="${signState == '3'}">checked</c:if> type="radio" name="SigState" value="3"  onclick="pSigState = 3" id="SigState3"><spring:message code='ezEmail.t828' /></span>
+		    <span style="padding-left:3px;"><input style="margin:0px;padding:0px;" <c:if test="${signState == '0'}">checked</c:if> type="radio" name="SigState" value="0" onclick="pSigState = 0" id="SigState0">&nbsp;<spring:message code='ezEmail.t99000063' /></span>
+		    <span style="padding-left:3px;"><input style="margin:0px;padding:0px;" <c:if test="${signState == '1'}">checked</c:if> type="radio" name="SigState" value="1" onclick="pSigState = 1" id="SigState1">&nbsp;<spring:message code='ezEmail.t826' /></span>
+		    <span style="padding-left:3px;"> <input style="margin:0px;padding:0px;" <c:if test="${signState == '2'}">checked</c:if> type="radio" name="SigState" value="2" onclick="pSigState = 2"  id="SigState2">&nbsp;<spring:message code='ezEmail.t827' /></span>
+		    <span style="padding-left:3px;"> <input style="margin:0px;padding:0px;" <c:if test="${signState == '3'}">checked</c:if> type="radio" name="SigState" value="3"  onclick="pSigState = 3" id="SigState3">&nbsp;<spring:message code='ezEmail.t828' /></span>
 		</span> 
 	    <div class="portlet_tabpart01" style="width:820px;margin-top:15px">
 		    <div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px">
-	                <p id = "MailEnv_sub6"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t826' /></span></p>
-	                <p id = "MailEnv_sub7"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t827' /></span></p>
-	                <p id = "MailEnv_sub8"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t828' /></span></p>
+				<p id = "MailEnv_sub6"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t826' /></span></p>
+	            <p id = "MailEnv_sub7"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t827' /></span></p>
+	            <p id = "MailEnv_sub8"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t828' /></span></p>
 		    </div>
 	    </div>
 		<table id="signtable1" class="content" style="width:780px;height:510px;border:0;"> 

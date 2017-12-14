@@ -217,7 +217,6 @@
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
-	
 	    <h1><spring:message code='ezEmail.t400' /></h1>
 	    <table class="popuplist">
 	        <tr>
@@ -229,7 +228,7 @@
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>
 	            <td>
-	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; border: 1px solid #b6b6b6;"></div>
+	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px"></div>
 	            </td>
 	            <td><a class="imgbtn"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>

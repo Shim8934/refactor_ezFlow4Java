@@ -8,6 +8,11 @@
 	    <title><spring:message code='ezEmail.t572' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;	    		
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
@@ -3211,8 +3216,8 @@
 	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 100px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
@@ -3226,7 +3231,7 @@
 	                                            </table>
 	                                        </div>
 	                                        <div style="vertical-align: top; text-align: center; height: 410px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer2"  style="text-align:center;border-top:1px solid #B6B6B6"></div>
+	                                        <div id="tblPageRayer2"  style="text-align:center;"></div>
 	                                	</td>
 	                                </tr>
 	                            </table>
@@ -3285,9 +3290,9 @@
 	                                <span id="addressFolderName" style="font-weight: bold;"></span>
 	                                -[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
 	                            </div>
-	                            <div style="width: 441px; height: 417px; overflow: auto; background-color: #ffffff;" id="AddressListView" class="border_gray">
+	                            <div style="width: 441px; height: 417px; overflow: auto; background-color: #ffffff; border-bottom:0px" id="AddressListView" class="border_gray">
 	                            </div>
-	                            <div id="tblPageRayer"  style="left: 445px; vertical-align: middle; border: 1px solid #bdbdbd; border-top: 0px; height: 30px;"></div>
+	                            <div id="tblPageRayer" style="left: 445px; vertical-align: middle; border: 1px solid #bdbdbd; border-top: 0px; height: 30px;"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 445px; border: 1px solid #bdbdbd; border-top: 0px; height: 27px;">
 	                                <spring:message code='ezEmail.t588' /><span style="color: #017BEC; font-weight: bold;" id="totalcount"></span>
 	                                <spring:message code='ezEmail.t589' /><span id="td_Previous" onclick="pagemove(-1)"><img src="/images/kr/cm/btn_prev.gif"
@@ -3408,7 +3413,7 @@
 	    </table>
 	    <table style="width: 100%; text-align: center;">
 	        <tr>
-	            <td class="btnposition" style="width: 250px; text-align: center;">
+	            <td class="btnposition btnpositionNew" style="text-align: center;">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
 	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>

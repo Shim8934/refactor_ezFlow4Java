@@ -258,7 +258,7 @@
 		  </tr>
 		</table>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
