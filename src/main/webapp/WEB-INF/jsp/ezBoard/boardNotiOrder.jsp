@@ -6,6 +6,11 @@
 		<title><spring:message code='ezBoard.t4000'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+		<style>
+			.mainlist tr th {
+				border-top:0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -126,7 +131,7 @@
 	        <tr>
 	            <td>
 	                <div class="listview">
-	                    <div id="NotiList" style="BORDER: 0; HEIGHT: 340px; WIDTH: 250px; overflow:auto;"></div>
+	                    <div id="NotiList" style="BORDER: 0; HEIGHT: 340px; WIDTH: 300px; overflow:auto;"></div>
 	                </div>
 	            </td>
 	            <td>
@@ -138,7 +143,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	<div class="btnposition">
+	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="save_order()" name="Submit"><span><spring:message code='ezBoard.t14'/></span></a>
 	    <a class="imgbtn" onClick="window.close()" name="Submit"><span><spring:message code='ezBoard.t15'/></span></a>
 	</div>

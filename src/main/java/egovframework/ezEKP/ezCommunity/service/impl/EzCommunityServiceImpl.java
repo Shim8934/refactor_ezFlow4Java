@@ -819,7 +819,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				pFileName = pFileName.split(commonUtil.separator)[pFileName.split(commonUtil.separator).length - 1];
 			}
 
-			pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
+			//pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
 			int fileSize = (int) file.getSize();
 			
 			if (fileSize > pMaxSize) {

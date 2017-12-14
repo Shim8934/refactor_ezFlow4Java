@@ -252,6 +252,10 @@
 	                            } else {
 	                            	Document_Ptag[i].style.fontFamily = "Gulim";
 	                            }
+	                            
+	                            if(Document_Ptag[i].innerHTML == "&nbsp;") {
+	                            	Document_Ptag[i].innerHTML = "<br/>";
+	                            }
 	                        }
 	                    }
 	                    

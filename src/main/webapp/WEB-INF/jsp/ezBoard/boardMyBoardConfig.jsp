@@ -397,7 +397,7 @@
 	            <li><span onclick="window.close()"><spring:message code='ezBoard.t12'/></span></li>
 	        </ul>
 	    </div>
-	    <div style="margin-bottom:5px;">
+	    <div style="margin-bottom:5px;margin-top:3px">
 	        <a  class="imgbtn"><span onClick="add_onclick('U')"><spring:message code='ezBoard.t10045'/></span></a>
 	        <a  class="imgbtn"><span onClick="add_onclick('C')"><spring:message code='ezBoard.t10046'/></span></a>
 	        <a  class="imgbtn"><span onClick="modify_onclick()"><spring:message code='ezBoard.t316'/></span></a>

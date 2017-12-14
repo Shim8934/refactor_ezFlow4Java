@@ -10,22 +10,6 @@
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" type="text/css" href="/css/Tab.css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-	    <style>	    
-			.btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -1406,7 +1390,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 	        <a class="imgbtn"><span onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>

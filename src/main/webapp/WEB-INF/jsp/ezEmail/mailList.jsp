@@ -155,13 +155,15 @@
 		        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code="ezEmail.t99000002" />";
 		        if (pPreviewMode != "OFF") {
 		            g_bPrevShow = true;
+		            /* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지
 		            if (parseInt(document.documentElement.clientWidth) < 1000) {
 		                document.getElementById("PreViewleft").style.display = "none";
 		                pPreviewShow_HOW = "W";
 		            }
 		            else {
 		                document.getElementById("PreViewleft").style.display = "";
-		            }
+		            }*/
+
 		            if (pPreviewShow_HOW == "W") {
 		
 		                if (pMailListDiv == 0 || pMailPreVDiv == 0) {
@@ -452,11 +454,14 @@
 							url : "/ezEmail/mailboxExportZip.do",
 							data : { folderPath : '${url}', userkey : userkey},
 							success : function(result) {
-								
 								if (result == "") {
 									alert("<spring:message code='ezEmail.lhm33' />");
+									webSocket.close();
+					            	HiddenMailProgressNew();
 								} else if (result == "CANCEL") {
 									console.log('User Cancel');
+									webSocket.close();
+					            	HiddenMailProgressNew();
 								} else {
 									
 									if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
@@ -802,7 +807,7 @@
                 <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
                 </table>
             </div>
-            <div id="tblPageRayer"  style="width:450px; margin:6px auto;"></div>
+            <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
         </span>
         <span id="PreviewRayerH" style="border:0px solid red;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;">
             <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor:w-resize;display:inline-block;">
@@ -810,7 +815,7 @@
             </span>
             <span id="PreContent_RayerH" style="position:absolute; border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">            
-	                <span class="previewmail_info" style="display:block;width:100%;">
+	                <span class="previewmail_info" style="display:block;width:59.2vw;">
                         <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width:100%;display:none;">
 		                    <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span>
@@ -834,7 +839,9 @@
 		                    </dl>
                         </div>
 	                </span>
-                    <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;"></iframe>
+					<span style="width: 100%;">
+						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:59.2vw;height:100%;border:solid 0px green;display:inline-block;"></iframe>
+					</span>
                 </span>
             </span>
         </span>        
@@ -844,7 +851,7 @@
             </span>
             <span id="PreContent_RayerW" style="display:block;border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">
-	                <span class="previewmail_info" style="display:block;width:100%;">
+	                <span class="previewmail_info" style="display:block;width:59.2vw;">
                         <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display:none;">
 		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreW_date" ><span id="PreW_sub_date"></span></span></span>
@@ -868,8 +875,7 @@
 		                    </dl>
                         </div>
 	                </span>
-                    <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width:100%;height:100%;border:0px solid black;z-index:0;">
-                    </iframe>
+                    <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width:59.2vw;height:100%;border:0px solid black;z-index:0;"></iframe>
                 </span>
             </span>
         </span>   

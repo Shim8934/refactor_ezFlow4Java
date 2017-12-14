@@ -507,9 +507,9 @@ function tableListControl_Week()
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
             else
-                _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -950,9 +950,9 @@ function tableListControl_today() {
             _TD.onselectstart = function () { return false; };
 
             if (title_name[k].split("/")[2] == "1")
-                _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
             else
-                _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);

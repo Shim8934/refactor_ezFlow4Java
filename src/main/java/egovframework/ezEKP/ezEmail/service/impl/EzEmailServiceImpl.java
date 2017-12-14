@@ -1083,6 +1083,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        // set User-Agent header
 	        message.setHeader("User-Agent", "JMocha Mail 1.0");
 	        
+	        // set X-JMocha-Noti header
+	        message.setHeader("X-JMocha-Noti", "true");
+	        
 	        Transport.send(message);
 	        logger.debug("Mail send success.");
 	        
@@ -1185,6 +1188,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        
 	        // set User-Agent header
 	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+	        
+	        // set X-JMocha-Noti header
+	        message.setHeader("X-JMocha-Noti", "true");
 	        
 	        Transport.send(message, recipients);
 	        logger.debug("Mail send success.");

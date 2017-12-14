@@ -153,8 +153,8 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-	    <h1><spring:message code='ezBoard.t5000'/></h1>
-	    <table style="width:500px" id="toggle_tbl1" class="content">
+	    <h1 style="margin-bottom:5px"><spring:message code='ezBoard.t5000'/></h1>
+	    <table style="width:100%" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
 					<a class="imgbtn"><span onclick="SliderImage()"><spring:message code='ezBoard.t5001'/></span></a>
@@ -171,12 +171,12 @@
 			</tr>
 	        <tr>
 	            <th><spring:message code='ezBoard.t5002'/></th>
-	            <td><input type="text" id="imagewidth" />px</td>
+	            <td>&nbsp;<input type="text" id="imagewidth" />&nbsp;px</td>
 	            <th><spring:message code='ezBoard.t5003'/></th>
-	            <td><input type="text" id="imageheight" />px</td>
+	            <td>&nbsp;<input type="text" id="imageheight" />&nbsp;px</td>
 	        </tr>
 		</table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code='ezBoard.t98'/></span></a>
 	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code='ezBoard.t15'/></span></a>
 	    </div>

@@ -38,7 +38,7 @@
 			var pUserNM2 = "<c:out value='${userInfo.displayName2}'/>"; 
 			var strContentLocation ="";
 			var g_progresswin;
-			var pTitle = "<c:out value='${cBoard.title}'/>";
+			var pTitle = ${cBoard.title};
 			var wDate = "<c:out value='${cBoard.writeDay}'/>";
 			var fileName = "<c:out value='${fileName}'/>";
 			var writerFakeName = "<c:out value='${writerFakeName}'/>";

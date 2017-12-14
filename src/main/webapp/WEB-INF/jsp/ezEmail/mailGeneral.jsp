@@ -379,7 +379,7 @@
 		        </select>
 		    <spring:message code='ezEmail.t182' /></td>
 		  </tr>
-		  <tr>
+		  <tr <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if>>
 		      <th><spring:message code='ezEmail.t99000032' /></th>
 		      <td>
 		          <select style="width:300px;height:20px;" id="ExtSenderNM">${mailSendObject}</select>

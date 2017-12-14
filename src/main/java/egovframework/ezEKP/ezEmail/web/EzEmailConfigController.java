@@ -130,7 +130,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("userIE11Browser", userIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("noUsePOP3", ezCommonService.getTenantConfig("noUsePOP3", userInfo.getTenantId()));
+		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
@@ -176,9 +176,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			}
 		}
 		
+		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId());
+		
 		logger.debug("listCount=" + listCount + ",previewMode=" + previewMode  + ",previewHListSize=" + previewHListSize
 				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
-				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject);
+				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject
+				 + ",useOnlyInnerMail=" + useOnlyInnerMail);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -189,6 +192,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("refreshInterval", refreshInterval);
 		model.addAttribute("keepDeleteLength", keepDeleteLength);
 		model.addAttribute("mailSendObject", mailSendObject);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		logger.debug("mailGeneral ended.");
 		
@@ -415,9 +419,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailAutoForwardDelete.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
-	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
 		logger.debug("mailAutoForwardDelete started.");		
-		logger.debug("bodyData=" + bodyData);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		

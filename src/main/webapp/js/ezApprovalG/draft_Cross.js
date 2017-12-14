@@ -3028,7 +3028,16 @@ function getDocInfo() {
         pOrgDocID = SelectSingleNodeValueNew(result, "DATA/ORGDOCID");
         if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O")
             pHasOpinionYN = "Y";
-
+       
+        var fields = message.GetFieldsList();
+        var field;
+        if (isUsed == "reuse") {
+        	if (reuseTitleYN == "YES") {
+        		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
+        		message.GetListItem(fields, "doctitle").textContent = doctitle;
+        	}
+        }
+        
         tempSecurity = SelectSingleNodeValueNew(result, "DATA/SECURITYCODE");
         tempKeep = SelectSingleNodeValueNew(result, "DATA/STORAGEPERIOD");
         tempUrgent = SelectSingleNodeValueNew(result, "DATA/URGENTAPPROVAL");

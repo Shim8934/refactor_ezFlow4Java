@@ -857,7 +857,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 		String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
-		String deptName2 = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+		String deptName2 = xmlDom2.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
 		String displayName = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 		String displayName2 = xmlDom2.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		String title = xmlDom2.getElementsByTagName("TITLE1").item(0).getTextContent();
@@ -932,7 +932,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 		String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
-		String deptName2 = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+		String deptName2 = xmlDom2.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
 		String displayName = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 		String displayName2 = xmlDom2.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		String title = xmlDom2.getElementsByTagName("TITLE1").item(0).getTextContent();
@@ -991,6 +991,23 @@ public class EzResourceController extends EgovFileMngUtil {
 	public String checkDeptName() throws Exception {
 		return "/ezResource/resCheckDeptName";
 	}
+	
+	/**
+	 * 자원관리 메인화면 자원정보 레이어팝업 2017-12-13 장진혁
+	 */
+	@RequestMapping(value = "/ezResource/scheduleResourceData.do")
+	public String scheduleResourceData(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String resID = req.getParameter("resourceId");
+
+		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+System.out.println(resBrd.getOwnDeptNm2());		
+		model.addAttribute("primary", userInfo.getPrimary());
+		model.addAttribute("resBrd", resBrd);
+
+		return "json";
+	}	
 	
 	/**
 	 * 자원관리 자원 일정 메인 화면 호출 함수

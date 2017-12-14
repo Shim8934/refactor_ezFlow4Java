@@ -358,7 +358,7 @@
           					<li><span onClick="btn_Close()"><spring:message code="ezCircular.t84"/></span></li>
         				</ul>
       				</div>
-      				<table class="content" style="width:100%;">
+      				<table class="content" style="width:100%;border-bottom:0px">
         				<tr>
           					<th style="width:200px;"><spring:message code="ezCircular.t32"/></th>
           					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:100%"></td>
@@ -414,13 +414,13 @@
 	         				</td>
 	        			</tr>
 						<tr>
-	           				<th rowspan="2"><spring:message code="ezCircular.t34"/></th>
+	           				<th rowspan="2" style="border-bottom:0px"><spring:message code="ezCircular.t34"/></th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code="ezCircular.t39"/></span></a>
 	           				</td>
 						</tr>
 						<tr>
-	         				<td colspan="3" id ="itemList">
+	         				<td colspan="3" id ="itemList" style="border-bottom:0px">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;"></div>
 	         					<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
@@ -432,7 +432,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-		  			<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+		  			<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 100%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>

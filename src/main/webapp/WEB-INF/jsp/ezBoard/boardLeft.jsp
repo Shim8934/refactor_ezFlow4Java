@@ -510,11 +510,11 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 	    <div id="left" style="overflow: auto">
-	        <div class="left_board" title="BOARD"></div>
+	        <div class="left_board" title="<spring:message code='ezBoard.t116'/>"></div>
 	        <c:if test="${MyBoardTopFlag != 'NO'}">
 	        	<div class="fList" onclick="favoriteList()">
 	        		<h2>
-	        			<span><spring:message code="ezBoard.t00010" /></span><img style="margin-left: 7px;" alt="" src="/images/ImgIcon/icon-flag.gif" align="middle">
+	        			<span><spring:message code="ezBoard.t00010" /></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/ImgIcon/icon-flag.gif" />
 	        			<!-- <h2 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"></span></h2> -->
 	        		</h2>	
 	        	</div>
@@ -522,7 +522,7 @@
 		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
-		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;" alt="" src="/images/i_group.gif" align="middle" />
+		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group.gif" />
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
@@ -552,7 +552,7 @@
 	        <c:if test="${MyBoardTopFlag == 'NO'}">
 		        <div class="fList" onclick="favoriteList()">
 	        		<h2>
-	        			<span><spring:message code="ezBoard.t00010" /></span><img style="margin-left: 7px;" alt="" src="/images/ImgIcon/icon-flag.gif" align="middle" />
+	        			<span><spring:message code="ezBoard.t00010" /></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/ImgIcon/icon-flag.gif" />
 	        			<!-- <h2 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"></span></h2> -->
 	        		</h2>	
 	        	</div>
@@ -560,7 +560,7 @@
 		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
-		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;" alt="" src="/images/i_group.gif" align="middle" />
+		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group.gif" align="middle" />
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
@@ -582,7 +582,7 @@
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
 	    <c:if test="${applyFlag == 'OK'}">
-	        <h3>
+	        <h3 style="border-top:0px">
 	            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
 	        </h3>
 	    </c:if>

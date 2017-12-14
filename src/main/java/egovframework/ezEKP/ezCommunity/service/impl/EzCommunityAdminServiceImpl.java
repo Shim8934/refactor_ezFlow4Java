@@ -123,7 +123,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				process = egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale());
 			} else {
 				sb.append("<a href=\"javascript:open_info('" + cComClose.getC_ClubNo().trim() + "')\">");
-				sb.append(commonUtil.cleanValue(cComClose.getC_ClubName().trim()));
+				sb.append(commonUtil.cleanValue(cComClose.getB_ClubName().trim()));
 				sb.append("</a>");
 				process = egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale());
 			}

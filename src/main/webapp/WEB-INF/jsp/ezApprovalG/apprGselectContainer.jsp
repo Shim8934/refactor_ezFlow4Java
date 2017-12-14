@@ -300,7 +300,7 @@
 				</td> 
 		  	</tr> 
 		</table> 
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
     		<a class="imgbtn" onClick="return cmdOK_onclick()" ><span><spring:message code='ezApprovalG.t1760'/></span></a>
     		<a class="imgbtn" onClick="return cmdcancel_onclick()" ><span><spring:message code='ezApprovalG.t1761'/></span></a>
 		</div>

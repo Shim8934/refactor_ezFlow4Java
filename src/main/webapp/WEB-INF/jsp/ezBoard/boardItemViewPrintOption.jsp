@@ -126,22 +126,22 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezBoard.t484'/></h1>
-		<h2><spring:message code='ezBoard.t485'/></h2>
+		<h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t485'/></h2>
 		<span id="pMessageContent"></span>
 		<table class="content">
 		<c:if test="${oneLineReplyFlag == '1'}">
 			<tr>
 			    <th><input id='onl' name ='onl'  type='checkbox' /></th>
-			    <td><span id="ext1"><spring:message code='ezBoard.t486'/></span></td>
+			    <td><span id="ext1">&nbsp;<spring:message code='ezBoard.t486'/></span></td>
 			</tr>
 		</c:if>
 		<tr>
 		    <th ><input id='att' name='att'  type='checkbox' /></th>
-		    <td><span id="ext2"><spring:message code='ezBoard.t487'/></span></td>
+		    <td><span id="ext2">&nbsp;<spring:message code='ezBoard.t487'/></span></td>
 		</tr>
 		</table>
 		          
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="Submit1" onClick="all_click()" ><span><spring:message code='ezBoard.t488'/></span></a>
 		    <a class="imgbtn" id="Submit2" onClick="select_click()" ><span><spring:message code='ezBoard.t489'/></span></a>
 		    <a class="imgbtn" id="Submit3" onClick="only_click()" ><span><spring:message code='ezBoard.t490'/></span></a>

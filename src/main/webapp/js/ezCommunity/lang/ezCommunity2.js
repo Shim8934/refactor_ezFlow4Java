@@ -42,4 +42,4 @@ var strLang535 = "No data found.";
 var strLang5351 = "People";
 
 /* 2017-11-01 장진혁 */
-var strLang84 = "파일명은 50자를 넘을 수 없습니다.";
+var strLang84 = "파일명은 100자를 넘을 수 없습니다.";

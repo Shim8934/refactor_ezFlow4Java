@@ -95,6 +95,11 @@ function getAprOpinionXML(pOpContent) {
 
         var pTotalRows = OpinionList.GetDataRows();
         var pOpinionLen = OpinionList.GetRowCount();
+        
+        if (pOpinionLen == 1 && OpinionList.GetDataRows()[0].id.indexOf("noItems") > -1) {
+        	pOpinionLen = 0;
+        }
+        
         var pAddIndex = pOpinionLen + 1;
 
         var LISTVIEW;

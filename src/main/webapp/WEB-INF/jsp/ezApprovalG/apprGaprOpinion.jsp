@@ -6,22 +6,6 @@
 		<title><spring:message code='ezApprovalG.t55'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<style>
-	    	.popup .btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-		</style>	
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -267,7 +251,7 @@
 	            <spring:message code='ezApprovalG.t422'/>
 	        </span>
 	    </h1>
-	    <div class="listview" style="width: 100%; height: 190px; overflow: AUTO;">
+	    <div class="listview" style="width: 100%; height: 190px; overflow-x:hidden; overflow-y: AUTO;">
 	        <div id="OPINION" style="margin:1px 1px 1px 1px;">
 	        </div>
 	    </div>
@@ -277,7 +261,7 @@
 	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="width: 100%;
 	        height: 150px; box-sizing:border-box;-moz-box-sizing:border-box;"  onfocus="return txt_OpinionContent_onfocus()"
 	        onchange="return txt_OpinionContent_onchange()"></textarea>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	    <a class="imgbtn" id="bbtn_OpinionAdd" ><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
 	    <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
 	    <a class="imgbtn" id="bbtn_OpinionCancel"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>

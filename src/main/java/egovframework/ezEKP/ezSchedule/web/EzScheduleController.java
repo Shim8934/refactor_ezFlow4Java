@@ -410,6 +410,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	           		break;
             }
         } else {
+        	defaultTitle = msg.getMessage("ezSchedule.t142", locale);
             defaultView	= 2;
             startDay	= 7;
             startTime	= 540 / 60;

@@ -924,6 +924,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
+		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -993,6 +995,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
@@ -3793,7 +3796,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
-		
+		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId());
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		boolean outMailReadCheck = false;
 		
@@ -3801,6 +3804,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("individualMailUser", individualMailUser);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		return "ezEmail/mailLetterOption";
 	}
