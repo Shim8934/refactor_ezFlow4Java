@@ -17,7 +17,7 @@
 				//메인화면 포탈로 설정 2016-10-04 지정석
 					window.open("/admin/ezPortal/portalMain.do", "bottom");
 				</c:if>
-				<c:if test="${use_portal == 'NO'}">
+				<c:if test="${use_portal != 'YES'}">
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
 				</c:if>
 			}
