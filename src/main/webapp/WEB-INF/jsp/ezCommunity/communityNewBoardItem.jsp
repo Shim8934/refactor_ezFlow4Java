@@ -575,6 +575,7 @@
 	                str = ReplaceText(str, "&lt;", "<");
 	                str = ReplaceText(str, "&gt;", ">");
 	                str = ReplaceText(str, "&quot;", "\"");
+	                str = ReplaceText(str, "&#034;", "\"");
 	                return str;
 	            }
 		
