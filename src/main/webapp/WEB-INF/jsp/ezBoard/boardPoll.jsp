@@ -373,24 +373,23 @@
             	</tr>
             	<tr>
                 	<th><spring:message code="ezBoard.t00074" /></th>
-                	<td style="position: relative;">
-               			<span style="padding-left: 5px;"><spring:message code="ezPoll.t162"/></span>
+                	<td style="position: relative;">               			
                			<c:choose>
                				<c:when test="${hasConfig == '1' && listOfTarget != ''}">
-               					<select id="set_Target">							
+               					<select id="set_Target" style="margin-left: 5px;">							
 									<option value="0"><spring:message code="ezPoll.t237" /></option>
 									<option value="1" selected="selected"><spring:message code="ezPoll.t238" /></option>							
 								</select>
 								<a class="pollImgbtn1" id="receiverBttn" style=""><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
-								<div style="position: absolute; left: 180px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 320px; white-space: nowrap;" id="newTargetDiv" title="<c:out value='${listOfTarget}'/>" ><c:out value='${listOfTarget}'/></div>
+								<div style="position: absolute; left: 125px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 380px; white-space: nowrap;" id="newTargetDiv" title="<c:out value='${listOfTarget}'/>" ><c:out value='${listOfTarget}'/></div>
                				</c:when>
 							<c:otherwise>
-								<select id="set_Target">
+								<select id="set_Target" style="margin-left: 5px;">
 									<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
 									<option value="1"><spring:message code="ezPoll.t238" /></option>
 								</select>
 								<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
-								<div style="display:none; position: absolute; left: 180px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 320px; white-space: nowrap;" id="newTargetDiv" ></div>
+								<div style="display:none; position: absolute; left: 125px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 380px; white-space: nowrap;" id="newTargetDiv" ></div>
 							</c:otherwise>
                			</c:choose>
                 	</td>

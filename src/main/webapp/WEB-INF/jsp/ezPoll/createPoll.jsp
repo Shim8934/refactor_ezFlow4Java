@@ -254,20 +254,23 @@
 	        		document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
 	        	}
 			}
-			else {		
-/* 				document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
+			else {						
 				var listTarget = "<c:out value='${listOfTarget}'/>";
     			if (listTarget != "") {
     				var newTargetDiv = document.getElementById("newTargetDiv");
         	    	newTargetDiv.innerHTML = listTarget;
         	    	newTargetDiv.setAttribute("title", listTarget);
         	    	newTargetDiv.style.display = "";
+        	    	
         	    	$("#set_Target").val("1").change();
         	    	$('#receiverBttn').show();
+        	    	document.getElementById("RangeXMLStr").value = sigBody3.innerHTML;
     			}
     			else {
+    				document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";
+    				$("#set_Target").val("0").change();
     				$('#receiverBttn').hide();
-    			} */
+    			}
     			
     			//Set time
     			setDateTimeValue();	
@@ -280,7 +283,7 @@
 				$('#anonymousVote').removeAttr('checked');	
 				$('#endDate').removeAttr('checked');			
 				$('#_dateTimePicker').hide();			
-				$('#receiverBttn').hide();										
+				//$('#receiverBttn').hide();										
 			}
 			
 			$('#multipleCheck').click(function() {
