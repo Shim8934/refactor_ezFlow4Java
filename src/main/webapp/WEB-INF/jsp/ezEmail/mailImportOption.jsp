@@ -115,18 +115,15 @@ function keycheck(event) {
 <body style="overflow: hidden;" class="popup">
 	<form name="optionForm">
 		<h1><spring:message code="ezEmail.kyj05"/></h1>
-		<span>▒ <spring:message code="ezEmail.kyj07"/> <spring:message code="ezEmail.kyj14" /></span><br>
-		<br>
-		
+		<span>▒ <spring:message code="ezEmail.kyj07"/> <spring:message code="ezEmail.kyj14" /></span><br/>
+		<br/>		
 		<table style="width:100%;" class="content">
-		  <tr>
-		    <th><spring:message code="ezEmail.lhm64" /></th> 
-		    <td><input type="password" id="securePassword" maxlength="50" onkeypress="keycheck(event)"/>
-		    </td>
-		  </tr>
-		</table>
-		
-		<div class="btnposition">
+			<tr>
+		    	<th><spring:message code="ezEmail.lhm64" /></th> 
+		    	<td><input type="password" id="securePassword" style="width:98%;margin-left:3px" maxlength="50" onkeypress="keycheck(event)"/></td>
+		  	</tr>
+		</table>		
+		<div class="btnposition btnpositionNew">
 		   <a class="imgbtn" onClick="javascript:confirm();" ><span><spring:message code='ezEmail.t38' /></span></a>
 		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>

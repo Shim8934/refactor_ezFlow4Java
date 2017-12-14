@@ -272,11 +272,11 @@
 						if (result.primary == "1") {						
 							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html("▒ " +result.resBrd.brdNm);
+							$("#brdNm").html(result.resBrd.brdNm);
 						} else {
 							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html("▒ " +result.resBrd.brdNm2);
+							$("#brdNm").html(result.resBrd.brdNm2);
 						}
 						
 						$("#ownerCall").html(result.resBrd.ownerCall);
@@ -380,10 +380,9 @@
         </div>
         <!-- layer 팝업 -->
         <div id="ResourceInfo" style="display: none">
-        	<div style="margin-top:5px;font-size: 14px;font-weight: bold" id="brdNm"></div>
         	<table id="resourceDataTable" style="width:100%; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
 				<tr>
-					<th colspan="2" height="35px" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white"><img src="/images/icon/check.gif" hspace="1" align="absmiddle"> <spring:message code='ezResource.t271'/></th>
+					<th colspan="2" height="35px" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white;font-weight: bold" id="brdNm"></th>
 				</tr>
 				<tr>
 					<th width="22%" style="height:24px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>

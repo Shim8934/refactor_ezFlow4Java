@@ -676,12 +676,14 @@
 		            if (obj[i].className == "FIELD")
 		                obj[i].removeAttribute('className');
 		        }
-		        if (pDocID != "")
-		            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-		        
+
 		        setTimeout(JSleep, 1000);
 
 		        var strBody = message.GetEditorContent();
+		        
+		        if (pDocID != "") {
+		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        }
 		        
 				strBody = strBody.replace(/&quot;/gi, "\'");
       
