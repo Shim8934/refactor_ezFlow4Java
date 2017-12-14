@@ -10,15 +10,18 @@
 		<script>
 			function window_onload(){
 			    <c:if test="${packageType == 'basic' || firstScreen_Mail == 'YES'}">
-			    window.open("/admin/ezOrgan/organMain.do", "bottom");
+			    	window.open("/admin/ezOrgan/organMain.do", "bottom");
 			    </c:if>
 			    <c:if test="${packageType != 'basic' && firstScreen_Mail == 'NO'}">
 				//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
 				//메인화면 포탈로 설정 2016-10-04 지정석
-				window.open("/admin/ezPortal/portalMain.do", "bottom");
+					window.open("/admin/ezPortal/portalMain.do", "bottom");
 				</c:if>
-				
+				<c:if test="${use_portal == 'NO'}">
+					window.open("/admin/ezPersonal/personalMain.do", "bottom");
+				</c:if>
 			}
+			
 			function menu_change(width, e){
 		        var menuname = e.target.id;
 
