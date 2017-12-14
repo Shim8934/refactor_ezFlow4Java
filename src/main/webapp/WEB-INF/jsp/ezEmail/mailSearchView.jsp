@@ -512,12 +512,14 @@
 				if (count == 0) {
 					alert('<spring:message code="ezEmail.t640" />');
 					return;
-				} else if (count == 1) { // 하나의 메일을 다운로드 할 경우
-					var parameters = "url=" + encodeURIComponent(selcheck[0].parentElement.parentElement.getAttribute("targetURL"));
-			    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
-			    	AttachDownFrame.location.href = fullpath;
-			        AttachDownFrame.target = "_blank";
-				} else { // 여러개의 메일을 다운로드 할 경우
+ 				} 
+				// 특수문자 현상 때문에 임시로 닫아놓음.
+				//else if (count == 1) { // 하나의 메일을 다운로드 할 경우
+// 					var parameters = "url=" + encodeURIComponent(selcheck[0].parentElement.parentElement.getAttribute("targetURL"));
+// 			    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
+// 			    	AttachDownFrame.location.href = fullpath;
+// 			        AttachDownFrame.target = "_blank";
+// 				} else { // 여러개의 메일을 다운로드 할 경우
 					var folderIdAndMessageIdList = new Object();
 			    	for (var i = 0; i < count; i++) {
 			    		var folderIdAndMessageId = selcheck[i].parentElement.parentElement.getAttribute("targetURL").split("/");
@@ -551,7 +553,7 @@
 						}
 					});
 				}
-			}
+// 			}
 		
 			function window_onbeforeprint()
 			{
