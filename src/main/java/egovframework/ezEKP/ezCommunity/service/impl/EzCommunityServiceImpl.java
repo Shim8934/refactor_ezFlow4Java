@@ -695,6 +695,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String startDateTime = "";
 		logger.debug("newBoardItem started.");
 		logger.debug("pMode = " + pMode);
+		logger.debug("item.getItemLevel() = " + item.getItemLevel());
 		
 		if (!pUrl.equals("")) {
 			startDateTime = item.getStartDate();
@@ -760,6 +761,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			startDateTime = getTime.format(formatter);
 			startDateTime = startDateTime + ":30:00"; 
 		}
+		
+		logger.debug("item.getItemLevel() = " + item.getItemLevel());
 		
 		model.addAttribute("item", item);
 		model.addAttribute("startDateTime", startDateTime);

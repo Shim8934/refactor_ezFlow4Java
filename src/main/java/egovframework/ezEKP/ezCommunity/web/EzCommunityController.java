@@ -817,7 +817,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
-		model.addAttribute("item", item);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -833,7 +832,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlData = commonUtil.convertStringToDocument(xmlStr);
 		String pMode = request.getParameter("mode");
-
+		
+		logger.debug("xmlStr: " + xmlStr);
+		
 		String ret = ezCommunityService.newItem(xmlData, pMode, commonUtil.getRealPath(request), userInfo);
 		
 		return ret;
