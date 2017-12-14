@@ -5,21 +5,7 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t264'/></title>
 		<style> 
-			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
-	    	.popup .btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
+			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }	    	
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=uft-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
@@ -817,7 +803,7 @@
 		</table>
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
-		    <div class="btnposition">       
+		    <div class="btnposition btnpositionNew">       
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>

@@ -9,22 +9,6 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
     <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-    <style>
-	    .btnposition{
-			margin: 0px 0px 0px -10px;
-			/* margin-top: 10px; */
-			background: none;
-			border: none;
-			border-top: 1px solid #ddd;
-			padding:10px 0px;
-			background-color: #f2f2f2;
-			text-align:center;
-			position: absolute;
-			text-align: center;
-			bottom: 0px;
-			width:100%;
-		}    
-	</style>
 	<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
     <script type="text/javascript" id="clientEventHandlersJS">
@@ -124,7 +108,7 @@
 
     <h1><spring:message code='ezApproval.t323'/></h1>
     <div class="box" style="WIDTH: 315px; HEIGHT: 300px; BACKGROUND-COLOR: #fff; overflow: auto;" id="divUserContTree"></div>
-    <div class="btnposition">
+    <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnOK_onclick()"><span><spring:message code='ezApprovalG.t105'/></span></a>
         <a class="imgbtn" onclick="return btnCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
     </div>

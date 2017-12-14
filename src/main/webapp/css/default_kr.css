@@ -130,6 +130,20 @@ form{display:inline;margin:0}
 	padding:5px 0px 0px 0px;
 	text-align:center;
 }
+.btnpositionNew{
+	margin: 0px 0px 0px -10px;
+	/* margin-top: 10px; */
+	background: none;
+	border: none;
+	border-top: 1px solid #ddd;
+	padding:10px 0px;
+	background-color: #f2f2f2;
+	text-align:center;
+	position: fixed;
+	text-align: center;
+	bottom: 0px;
+	width:100%;
+}
 .msgbody input{
 	background-color:#6aa4de;
 	color:#fff;
