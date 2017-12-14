@@ -220,19 +220,19 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			 *               OR
 			 * config에 서버 정보를 저장하지 않은 경우(자신에 대한 작업만 하면 됨)
 			 * */
-			if (curServer.equalsIgnoreCase(address) || getServerList.get(0).equalsIgnoreCase("EMPTY")) {
-				serverList.add(EzSystemUtil.getSysInfo(ip));					
+			if (curServer == null || curServer.equalsIgnoreCase(address) || address.equalsIgnoreCase("EMPTY")) {
+ 				serverList.add(EzSystemUtil.getSysInfo(ip));					
 			} else {					
 				String sysInfoUrl = address + "/ezSystem/util/getSysInfo";
 				HttpEntity<?> entity = new HttpEntity<>(headers);
 				try {
 					ResponseEntity<String> sysInfo = rest.postForEntity(sysInfoUrl, entity, String.class);
 					serverList.add(sysInfo.getBody());
-					logger.debug("<<<sysInfo : " + sysInfo.getBody());
+					logger.debug("sysInfo : " + sysInfo.getBody());
 				} catch(ResourceAccessException e) {
 					String errorMsg = "{\"getSysInfo\":[{\"hostname\":\""+ address +" is Down\",\"memory\":\"NULL\",\"os\":\"NULL\",\"cpu\":\"NULL\",\"version\":\"NULL\"}]}";
 					serverList.add(errorMsg);
-					logger.debug("<<<sysInfo : " + errorMsg);
+					logger.debug("sysInfo : " + errorMsg);
 				}
 			}
 		}			
