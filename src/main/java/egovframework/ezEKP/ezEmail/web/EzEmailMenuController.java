@@ -1034,6 +1034,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String guid = UUID.randomUUID().toString();
 		String tempFileUploadPath = pDirPath + commonUtil.separator + "tempFileUpload";
 		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		String useEucKr = ezCommonService.getTenantConfig("UseMailZipEucKr", userInfo.getTenantId());
+		String charSet = "utf-8";
+		
+		if (useEucKr.equals("YES")) {
+			charSet = "euc-kr";
+		}
+		
+		logger.debug("Use encoding charSet=" + charSet);
 		
 		IMAPAccess ia = null;
 		ZipOutputStream zos = null;
@@ -1055,7 +1063,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			boolean isRead = false;
-			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("UTF-8"));
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName(charSet));
 			
 			for (String folderPath : folderList) {
 				String uids = urlMap.get(folderPath)[0];
@@ -1188,6 +1196,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		String guid = UUID.randomUUID().toString();
 		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		String useEucKr = ezCommonService.getTenantConfig("UseMailZipEucKr", userInfo.getTenantId());
+		String charSet = "utf-8";
+		
+		if (useEucKr.equals("YES")) {
+			charSet = "euc-kr";
+		}
+		
+		logger.debug("Use encoding charSet=" + charSet);
 		
 		IMAPAccess ia = null;
 		ZipOutputStream zos = null;
@@ -1212,7 +1228,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				tempFile.delete();
 			}
 			
-			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("UTF-8"));
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName(charSet));
 			Folder folder = ia.getFolder(folderPath);
 			
 			if (folder == null || !folder.exists()) {
