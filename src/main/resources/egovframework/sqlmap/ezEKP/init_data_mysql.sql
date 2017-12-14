@@ -111,6 +111,8 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_CIRCULAR','YES','회람판 모듈 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_HTMLMODE','YES','에디터 HTML 모드 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'portalEnv','0','0 : 마이포탈설정 전부 보임, 1:마이포탈페이지만 보임, 2:초기화면설정만 보임, 3:전부 안보임');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'noUsePOP3','NO','외부메일확인 사용유무. YES일 경우 사용안함.');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseMailZipEucKr','NO','메일 내보내기 zip 인코딩타입 (기본:utf-8) (YES 이면 EUC-KR 사용)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseOnlyInnerMail','NO','YES이면 내부메일만 사용');
 
 

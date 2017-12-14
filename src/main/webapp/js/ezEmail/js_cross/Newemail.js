@@ -1079,7 +1079,7 @@ function Window_resize() {
         document.getElementById("layer_popup").style.top = "100px";
 
         if (!isPreviewChange) {
-
+        	/* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지 
             if (parseInt(document.documentElement.clientWidth) < 1000) {
                 document.getElementById("PreViewleft").style.display = "none";
                 if(pPreviewShow_HOW == "H")
@@ -1088,8 +1088,8 @@ function Window_resize() {
             }
             else {
                 document.getElementById("PreViewleft").style.display = "";
-            }
-
+            }*/
+        	
             if (pPreviewShow_HOW == "W") {
                 if (pMailListDiv == 0 || pMailPreVDiv == 0) {
                     pMailListDiv = 50; pMailPreVDiv = 50;
@@ -1153,7 +1153,7 @@ function Window_resize() {
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
                 if($("#PreH_CCMain").css("display") != "none") {
                 	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
-                }                
+                }
             }
             else if (pPreviewShow_HOW == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";
