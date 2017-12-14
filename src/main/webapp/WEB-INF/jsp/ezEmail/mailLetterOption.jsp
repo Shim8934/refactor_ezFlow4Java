@@ -41,6 +41,19 @@
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', utcDate2(offsetMin));
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        
+		     	// 현재 시간을 비교해 다음시간으로 선택.
+		        if (NowDate.getMinutes() < 30) {
+		        	NowDate.setMinutes(30);
+		        } 
+		        
+		        if (NowDate.getMinutes() > 30) {
+		        	var hour = NowDate.getHours();
+		        	NowDate.setHours(hour + 1);
+		        	NowDate.setMinutes(0);
+		        }
+		        
+		      	$('#Stimepicker').timepicker('setTime', NowDate);
 		    });
 		    
 		    $(function () {
