@@ -815,7 +815,7 @@
             </span>
             <span id="PreContent_RayerH" style="position:absolute; border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">            
-	                <span class="previewmail_info" style="display:block;width:59.2vw;">
+	                <span class="previewmail_info" style="display:block;width:100%;">
                         <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width:100%;display:none;">
 		                    <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span>
@@ -840,7 +840,7 @@
                         </div>
 	                </span>
 					<span style="width: 100%;">
-						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:59.2vw;height:100%;border:solid 0px green;display:inline-block;"></iframe>
+						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;"></iframe>
 					</span>
                 </span>
             </span>
@@ -851,7 +851,7 @@
             </span>
             <span id="PreContent_RayerW" style="display:block;border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">
-	                <span class="previewmail_info" style="display:block;width:59.2vw;">
+	                <span class="previewmail_info" style="display:block;width:100%;">
                         <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display:none;">
 		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreW_date" ><span id="PreW_sub_date"></span></span></span>
@@ -875,7 +875,7 @@
 		                    </dl>
                         </div>
 	                </span>
-                    <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width:59.2vw;height:100%;border:0px solid black;z-index:0;"></iframe>
+                    <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width:100%;height:100%;border:0px solid black;z-index:0;"></iframe>
                 </span>
             </span>
         </span>   
