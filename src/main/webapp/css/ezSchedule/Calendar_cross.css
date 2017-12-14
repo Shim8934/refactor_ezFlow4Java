@@ -159,12 +159,12 @@
 .calendar_mini_title .btn_next{width:21px; height:30px; padding:0px 0px;cursor:pointer;}
 .calendar_mini_title .btn_nnext{width:21px; height:30px; padding:0px 0px;cursor:pointer;}
 .calendar_mini_title span{display:inline-block;}
-.calendar_mini{table-layout:fixed; border:1px solid #a6a6a6; border-top:0 none;}
-.calendar_mini th{width:14.2%; height:20px;  background:rgb(241,241,241); margin:0; padding:0;  border-top:1px solid #a7a6a6;  border-right:0 none; border-bottom:1px solid #a7a6a6; border-left:0 none; font-size:11px;}
-.calendar_mini th.sun{color:#ee1c25;} /* 흰색으로 수정 원본-> .calendar_mini th.sun{color:#ee1c25;} */
-.calendar_mini th.sat{color:#0032cf;} /* 흰색으로 수정 원본-> .calendar_mini th.sat{color:#0032cf;} */
-.calendar_mini td{width:14.2%; height:22px; text-align:center; cursor:pointer;}
-.calendar_mini td div{height:22px; line-height:22px; cursor:pointer;}
+.calendar_mini{table-layout:fixed; border:1px solid #ccc; border-right:0 none;}
+.calendar_mini th{font-weight:normal; color:white;width:14.2%; height:23px; background:rgb(0, 72, 149); margin:0; padding:0;  border:1px solid rgb(0, 72, 149); font-size:12px;}
+.calendar_mini th.sun{color:white;} /* 흰색으로 수정 원본-> .calendar_mini th.sun{color:#ee1c25;} */
+.calendar_mini th.sat{color:white;} /* 흰색으로 수정 원본-> .calendar_mini th.sat{color:#0032cf;} */
+.calendar_mini td{width:14.2%; height:27px; text-align:center; cursor:pointer;font-size:12px}
+.calendar_mini td div{height:27px; line-height:27px; cursor:pointer;font-family: sans-serif;}
 .calendar_mini td.sun{color:#ee1c25;}
 .calendar_mini td.sat{color:#0032cf;}
 .calendar_mini td.gray{color:#aaa;}
