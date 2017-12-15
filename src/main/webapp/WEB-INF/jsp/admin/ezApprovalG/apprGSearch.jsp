@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -737,11 +737,11 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnSearch_onclick()"><spring:message code ='ezApprovalG.t111' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnToDaySearch_onclick()"><spring:message code ='ezApprovalG.t1336' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnWeekSearch_onclick()"><spring:message code ='ezApprovalG.t1337' /></span></a>
-	        <a class="imgbtn"><span onclick="return btnMonthSearch_onclick()"><spring:message code ='ezApprovalG.t1338' /></span></a>
+	        <a class="imgbtn"><span onclick="return btnMonthSearch_onclick()"><spring:message code ='ezApprovalG.t1557' /></span></a>
 	        <a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code ='ezApprovalG.t119' /></span></a>
 	    </div>
 	</body>

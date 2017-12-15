@@ -117,7 +117,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "rgb(233, 241, 244)";
+		        elem.style.backgroundColor = "rgb(233, 241, 255)";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strListInfo 값 셋팅
@@ -400,7 +400,7 @@
 	
 			            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-				            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
+				            tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; max-width: 500px; overflow: hidden; text-overflow: ellipsis; display: block;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>" + "<div style='display: block;'><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>";
 				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
 				        } else {
 				        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
@@ -509,13 +509,17 @@
 					var notRep = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t204' /></td>";
 
 					var rep = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t200912' /></td>";
+					
+					var toSend = "<td colspan='11' style='padding-top:4px;height:24px'><spring:message code='ezTask.t200915' /></td>";
 
 			    	$('#tr_ing').empty();
 					
 		            if ($(".tabon").attr("divname") == "taskrepetition") {
 		            	$('#tr_ing').append(rep);	
+		            } else if ($(".tabon").attr("divname") == "taskdictate") {
+		            	$('#tr_ing').append(toSend);
 		            } else {
-		            	$('#tr_ing').append(notRep);
+		            	$('#tr_ing').append(notRep);	
 		            }
 		            
 		            document.getElementById("tr_ing").style.display = "";
@@ -881,7 +885,7 @@
 					strListInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "rgb(233, 241, 244)");
+					$(".row_body").css("background", "rgb(233, 241, 255)");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
@@ -911,8 +915,8 @@
 	
 		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle"><spring:message code='ezTask.t118' /></label>
-		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle"><spring:message code='ezTask.t2005' /></label>
+		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
+		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label>
 				  &nbsp;
 				  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		          <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
@@ -1018,6 +1022,9 @@
 						</tr>
 						<tr id="tr_rep" style="text-align:center;display:none;">
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t200912' /></td>
+						</tr>
+						<tr id="tr_send" style="text-align:center;display:none;">
+							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t200915' /></td>
 						</tr>
 				    </table>
 

@@ -138,14 +138,11 @@ var strLang130 = "グループスケジュール";
 var strLang253 = "選択した設備がありません。"
 var strLang254 = "選択した設備は削除できません。"
 var strLang255 = "設備予約に失敗しました。"
-
 var strLang256 = "人";
 var strLang257 = "検索結果";
-
 var strLang258 = "添付ファイルを追加中です。";
 var strLang259 = "ファイルサイズ"
 var strLang260 = "ファイル名"
-
 var StrLang261 = "接続テストが正常的に完了しました。";
 var StrLang262 = "エラーが発生しました。ＩＤとパスワードを確認してください。";
 var strLang263 = "データが存在しません。";

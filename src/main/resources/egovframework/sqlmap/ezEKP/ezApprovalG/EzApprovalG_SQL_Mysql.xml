@@ -5413,7 +5413,7 @@
 		AND
 			TBL_APROPINIONINFO.COMPANYID = #companyID#
 		ORDER BY 
-			TBL_APRLINEINFO.AprMemberSN DESC 
+			TBL_APROPINIONINFO.OPINIONSN DESC
 		 LIMIT 1
 			]]>
 	</select>
@@ -5655,27 +5655,38 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO">
 		SELECT 
-			DISTINCT A.aprsn,
-			A.signtype,
-			A.signname,
-			A.content,
-			CASE #primary# WHEN '1' THEN B.aprmembername WHEN '2' THEN B.aprmembername2 END AS aprmembername
+			*
 		FROM 
 			TBL_SIGNINFO A
-        JOIN
-        	TBL_APRLINEINFO B
-        ON
-        	A.tenant_id = B.tenant_id
-        AND
-        	A.docid = B.docid
-        AND
-        	B.aprtype not in ('011', '012', '008', '009')
 		WHERE
 			A.docid = #v_DOCID#
 		AND
 			A.tenant_id = #v_TENANTID#
 		AND
 			A.companyid = #companyID#
+			
+<!-- 			SELECT  -->
+<!-- 			DISTINCT A.aprsn, -->
+<!-- 			A.signtype, -->
+<!-- 			A.signname, -->
+<!-- 			A.content, -->
+<!-- 			CASE #primary# WHEN '1' THEN B.aprmembername WHEN '2' THEN B.aprmembername2 END AS aprmembername -->
+<!-- 		FROM  -->
+<!-- 			TBL_SIGNINFO A -->
+<!--         JOIN -->
+<!--         	TBL_APRLINEINFO B -->
+<!--         ON -->
+<!--         	A.tenant_id = B.tenant_id -->
+<!--         AND -->
+<!--         	A.docid = B.docid -->
+<!--         AND -->
+<!--         	B.aprtype not in ('011', '012', '008', '009') -->
+<!-- 		WHERE -->
+<!-- 			A.docid = #v_DOCID# -->
+<!-- 		AND -->
+<!-- 			A.tenant_id = #v_TENANTID# -->
+<!-- 		AND -->
+<!-- 			A.companyid = #companyID# -->
 	</select>
 <!-- 	<procedure id="EzApprovalG.getCallBackYNLineList" parameterClass="Map" resultClass="ApprGLineTempletVO"> -->
 <!-- 		{CALL EZSP_GETCALLBACKYN_LINELIST(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -21083,6 +21094,10 @@
    			USERCONTID = #v_CONTID#  
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
+   		AND
+   			TBL_USERCONTLIST.TENANT_ID = #v_TENANTID#
+   		AND
+   			TBL_USERCONTLIST.COMPANYID = #companyID#
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		 AND 
    		 	$v_PSUBQUERY$
@@ -21178,6 +21193,10 @@
    			USERCONTID = #v_CONTID#  
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
+   		AND
+   			TBL_USERCONTLIST.COMPANYID = #companyID#
+   		AND
+   			TBL_USERCONTLIST.TENANT_ID = #v_TENANTID#
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		 AND 
    		 	$v_PSUBQUERY$
@@ -23036,5 +23055,18 @@
 	  		TENANT_ID AS tenantId
 	  	FROM
 	  		TBL_TENANT
+	  </select>
+	  
+	  <select id="EzApprovalG.getUserContSubCount" parameterClass="Map" resultClass="int">
+	  		SELECT
+	  			COUNT(*)
+	  		FROM
+	  			TBL_USERCONT
+	  		WHERE 
+	  			PARENTCONTID = #v_PCONTID#
+	  		AND
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
 	  </select>
 </sqlMap>

@@ -282,7 +282,7 @@ var strLang434 = "신청에 실패하였습니다!"
 var strLang435 = "자료관과의 연결이 없습니다. 신청을 완료할 수 없습니다."
 var strLang436 = "단위업무 코드"
 // ezCabinet\Manage\TaskCodeManage.js
-var strLang437 = "选择工作单位!"
+var strLang437 = "选择工作单位."
 var strLang438 = "회사아이디"
 // ezCabinet\Manage\TaskManage.js
 var strLang439 = "단위업무 리스트"
@@ -995,4 +995,4 @@ var strLangjjh03 = "正在添加附件。"
 
 //2017-11-28 박종균 추가
 var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?";
-var strLangPJG02 = "하위 부서를 모두 포함하시겠습니까?";
+var strLangPJG02 = "하위 부서원을 모두 포함하시겠습니까?";

@@ -493,9 +493,11 @@ function func_reject() {
 
     denial_cross_dialogArguments[0] = params;
     denial_cross_dialogArguments[1] = func_reject_Complete;
-    DivPopUpShow(337, 316, "/ezEmail/mailDenial.do");
+    DivPopUpShow(450, 314, "/ezEmail/mailDenial.do");
 }
 function func_reject_Complete(retVal) {
+	var result = "";
+	
     try {
         DivPopUpHidden();
         if (typeof (retVal) == "string") {
@@ -525,17 +527,11 @@ function func_reject_Complete(retVal) {
 
         result = replaceAll(result, "<DATA><![CDATA[", "");
         result = replaceAll(result, "]]></DATA>", "");
-
-        if (result == 'OK') {
-            alert(strLang61);
-        }
-        else if (result == "DOMAINERROR")
-            alert(strLang352);
-        else {
-            alert(strLang138);
-        }
+        
         xmlHTTP = null;
     } catch (e) {}
+    
+    return result;
 }
 function replaceAll(pStrContent, pStrOrg, pStrRep) {
     return pStrContent.split(pStrOrg).join(pStrRep);

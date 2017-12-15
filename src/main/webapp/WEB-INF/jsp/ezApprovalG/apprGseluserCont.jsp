@@ -4,8 +4,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title><spring:message code='ezApproval.t322'/></title>
-    
+    <title><spring:message code='ezApproval.t322'/></title>    
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
@@ -109,7 +108,7 @@
 
     <h1><spring:message code='ezApproval.t323'/></h1>
     <div class="box" style="WIDTH: 315px; HEIGHT: 300px; BACKGROUND-COLOR: #fff; overflow: auto;" id="divUserContTree"></div>
-    <div class="btnposition">
+    <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnOK_onclick()"><span><spring:message code='ezApprovalG.t105'/></span></a>
         <a class="imgbtn" onclick="return btnCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
     </div>

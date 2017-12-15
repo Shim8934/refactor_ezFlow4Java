@@ -179,11 +179,11 @@
 	            if (CrossYN() || pNoneActiveX == "YES") {
 	            	setsearchinfo_cross_dialogArguments[0] = "";
 	            	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
-	                DivPopUpShow(510, 350, url);
+	                DivPopUpShow(510, 375, url);
 	            }
 	            else {
-	                var feature = "dialogWidth:510px;dialogHeight:440px;status:no;scroll:no;edge:sunken"
-	                feature = feature + GetShowModalPosition(510, 440);
+	                var feature = "dialogWidth:510px;dialogHeight:465px;status:no;scroll:no;edge:sunken"
+	                feature = feature + GetShowModalPosition(510, 465);
 	                condition = window.showModalDialog(url, para, feature);
 	                if (condition) {
 	                    MakeSubCondition();
@@ -253,7 +253,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition" style="margin-top:20px">
+	    <div class="btnposition btnpositionNew" style="margin-top:20px">
 	        <a class="imgbtn" onclick="return bt_OK_onclick()"><span><spring:message code='ezApprovalG.t1760'/></span></a>
 	        <a class="imgbtn" onclick="return bt_Cancel_onclick()"><span><spring:message code='ezApprovalG.t1761'/></span></a>
 	    </div>

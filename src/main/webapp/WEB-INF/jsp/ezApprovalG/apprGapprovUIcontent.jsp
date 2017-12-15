@@ -139,10 +139,10 @@
 	                return true;
 	        }
 	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.childNodes.length; i++) {
-	                obj.childNodes.item(i).setAttribute("check", "1");
+	            for (var i = 0; i < obj.options.length; i++) {
+	                obj.options[i].setAttribute("check", "1");
 	            }
-	            obj.childNodes.item(obj.selectedIndex).setAttribute("check", "2");
+	            obj.options[obj.selectedIndex].setAttribute("check", "2");
 	        }
 	        function CheckBoxOnclick(obj) {
 	            obj.removeAttribute("checked");
@@ -493,14 +493,22 @@
 	                    InputRows.item(i).outerHTML = InputRows.item(i).outerHTML.replace("input ", "input checked ");
 	            }
 	            var SelectRows = Div.getElementsByTagName("SELECT");
+	            var selectRow, optionRow, checkAttrValue;
 	            for (var i = 0; i < SelectRows.length; i++) {
-	                for (var j = 0; j < SelectRows.item(i).childNodes.length; j++) {
-	                    if (SelectRows.item(i).childNodes.item(j).nodeType == "1") {
-	                        if (SelectRows.item(i).childNodes.item(j).getAttribute("check") == "2")
-	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("option ", "option selected ");
-	                        else {
-	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("selected=\"\"", "");
+	            	selectRow = SelectRows.item(i);
+	                for (var j = 0; j < selectRow.options.length; j++) {
+	                	optionRow = selectRow.options[j];
+	                    if (optionRow.nodeType == "1") {
+	                    	var checkAttrValue = optionRow.getAttribute("check");
+	                        if (checkAttrValue == "2") {
+	                            //SelectRows.item(i).options[j].outerHTML = SelectRows.item(i).options[j].outerHTML.replace("option ", "option selected ");
+	                            optionRow.setAttribute("selected", "selected");
+	                        } else if(checkAttrValue == "1") {
+	                            //SelectRows.item(i).options[j].outerHTML = SelectRows.item(i).options[j].outerHTML.replace("selected=\".*\"", "");
+	                            optionRow.removeAttribute("selected");
 	                        }
+	                        
+	                        optionRow.removeAttribute("check");
 	                    }
 	                }
 	            }

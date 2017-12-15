@@ -129,6 +129,12 @@
 		                document.getElementById("select").item(3).selected = true;
 		                break;
 		            case "draft":
+		                reply.style.display = 'none';
+		                p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
+		                p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
+		                p_Listoption = "2";
+		                document.getElementById("select").selectedIndex = 3;
+		                document.getElementById("select").item(3).selected = true;
 		                g_bdraft = true;
 		                break;
 		            case "delete":
@@ -149,13 +155,15 @@
 		        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code="ezEmail.t99000002" />";
 		        if (pPreviewMode != "OFF") {
 		            g_bPrevShow = true;
+		            /* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지
 		            if (parseInt(document.documentElement.clientWidth) < 1000) {
 		                document.getElementById("PreViewleft").style.display = "none";
 		                pPreviewShow_HOW = "W";
 		            }
 		            else {
 		                document.getElementById("PreViewleft").style.display = "";
-		            }
+		            }*/
+
 		            if (pPreviewShow_HOW == "W") {
 		
 		                if (pMailListDiv == 0 || pMailPreVDiv == 0) {
@@ -426,7 +434,6 @@
 		    	// 웹소켓 연결
 	            webSocket= new WebSocket(host);
 		    	var encryptPw = "";
-	        	var stt = "";
 	            
 		    	if (typeof pwd != "undefined") {
 		    		encryptPw = pwd;
@@ -447,11 +454,14 @@
 							url : "/ezEmail/mailboxExportZip.do",
 							data : { folderPath : '${url}', userkey : userkey},
 							success : function(result) {
-								
 								if (result == "") {
 									alert("<spring:message code='ezEmail.lhm33' />");
+									webSocket.close();
+					            	HiddenMailProgressNew();
 								} else if (result == "CANCEL") {
 									console.log('User Cancel');
+									webSocket.close();
+					            	HiddenMailProgressNew();
 								} else {
 									
 									if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
@@ -611,7 +621,19 @@
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
-
+				
+				if (result == "ABORT") { // marformd 에러  
+					alert("<spring:message code='ezEmail.kyj15' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
+				if (result == "ZEROEML") { // eml파일이 없을 경우
+					alert("<spring:message code='ezEmail.kyj16' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
 				if (result == "OK") {
 					document.importMailboxform.file1.value = "";
 					MailListRefresh(); 
@@ -682,12 +704,12 @@
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span style="float:right;font-weight:normal;color:black;">
-	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;"><spring:message code="ezEmail.t98" />
+	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t98" />
 	          <c:if test="${isSentItems == true}">
-	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;"><spring:message code="ezEmail.t66" />
+	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t66" />
 	          </c:if>
 	          <c:if test="${isSentItems != true}">
-			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;"><spring:message code="ezEmail.t161" />
+			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t161" />
 			  </c:if>
 			  &nbsp;
 			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
@@ -785,7 +807,7 @@
                 <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
                 </table>
             </div>
-            <div id="tblPageRayer"  style="width:450px; margin:6px auto;"></div>
+            <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
         </span>
         <span id="PreviewRayerH" style="border:0px solid red;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;">
             <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor:w-resize;display:inline-block;">
@@ -817,7 +839,9 @@
 		                    </dl>
                         </div>
 	                </span>
-                    <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;"></iframe>
+					<span style="width: 100%;">
+						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;"></iframe>
+					</span>
                 </span>
             </span>
         </span>        
@@ -851,8 +875,7 @@
 		                    </dl>
                         </div>
 	                </span>
-                    <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width:100%;height:100%;border:0px solid black;z-index:0;">
-                    </iframe>
+                    <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width:100%;height:100%;border:0px solid black;z-index:0;"></iframe>
                 </span>
             </span>
         </span>   

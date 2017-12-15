@@ -165,7 +165,7 @@
 		  </tr> 
 		</table> 
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		        <a class="imgbtn" id="btn_ImageSave" onClick="return btn_ImageSave_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
 		        <a class="imgbtn" id="btn_Save" onClick="return btn_Save_onclick()"><span><spring:message code='ezApprovalG.t438'/></span></a>
 		        <a class="imgbtn" id="ImageCancel" onClick="return btn_ImageCancel_onclick()"><span><spring:message code='ezApprovalG.t414'/></span></a>

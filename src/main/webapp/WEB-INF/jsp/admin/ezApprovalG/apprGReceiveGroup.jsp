@@ -91,8 +91,8 @@
 		            getAdminReceivItem(selRow[0].getAttribute("DATA1"));
 		            p_groupid = selRow[0].getAttribute("DATA1");
 		            //pGroupID.innerText = selRow[0].getAttribute("DATA1");
-		            pGroupName2.innerText = selRow[0].cells[0].innerHTML;
-		            pGroupName.value = selRow[0].cells[0].innerHTML;
+		            pGroupName2.innerText = ConvertEntityReferenceToChar(selRow[0].cells[0].innerHTML);
+		            pGroupName.value = ConvertEntityReferenceToChar(selRow[0].cells[0].innerHTML);
 		        }
 		    }
 		    

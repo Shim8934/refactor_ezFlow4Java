@@ -364,13 +364,13 @@
 			        	pAttachListXml = parser.parseFromString(pAttachListXml, "text/xml");
 			            parser = null;
 			            
-			            newID += "{" + GetGUID().toUpperCase() + "};";
+			            newID += "{" + GetGUID().toUpperCase() + "}";
 	            	</c:if>
 		        } else {
 		        	var xmldomNodes = SelectNodes(pAttachListXml,"LISTVIEWDATA/ROWS/ROW");
             		
     		        for(var i=xmldomNodes.length; i>0; i--) {
-    		            newID += "{" + GetGUID().toUpperCase() + "};";
+    		            newID += "{" + GetGUID().toUpperCase() + "}";
     		        }
 		        }
 		        
@@ -993,7 +993,7 @@
 			</tr>
 			<tr>
     			<td style="height:100%" id="EdtorSize">
-	    			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
+	    			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do?type=COMMUNITYPHOTO" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
     			</td>
   			</tr>
   			<tr id="docTR" style="display:none">
@@ -1008,7 +1008,7 @@
 		<div id="txtAttachList"></div>
    		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommunity/upload.do" target="ifrm" >
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px; display:none" multiple="true" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px; display:none" />
 			<input type="hidden" name="boardID" id="boardID" />
 			<input type="hidden" name="maxSize" id="maxSize" />
 			<input type="hidden" name="mode" id="mode" />

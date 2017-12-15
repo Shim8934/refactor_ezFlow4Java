@@ -43,7 +43,6 @@ var strLang62	=	"반려";
 
 
 //2016 추가
-
 var strLang171 = "리스트의 ID가 지정되지 않았습니다.";
 var strLang172 = "데이터가 지정되지 않았습니다.";
 var strLang173 = "권한이 없습니다";

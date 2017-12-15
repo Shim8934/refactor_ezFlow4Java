@@ -8,6 +8,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<style>
+			.mainlist_free tr th {
+				border-top:0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -15,7 +20,6 @@
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
-		
 		<script type="text/javascript">
 			var OrderCell = "";
 			var companyID = "";
@@ -364,7 +368,8 @@
 	
 		            var url = "";
 		            var HWP = "&type=HWP";
-		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA8")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+		            
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
 		                if (isIE) {
 							url = "/admin/ezApprovalG/formMainOther.do";
@@ -560,7 +565,7 @@
 		    }
 
 
-		    var getformcont_cross_dialogArguments = new Array();
+		    var formContMain_dialogArguments = new Array();
 		    function MoveForm() {
 		        var para = new Array();
 		        var treeView = new TreeView();
@@ -581,8 +586,8 @@
 
 		            
 					if(CrossYN()){
-						getformcont_cross_dialogArguments[0] = para;
-						getformcont_cross_dialogArguments[1] = moveForm_onclick_Complete;
+						formContMain_dialogArguments[0] = para;
+						formContMain_dialogArguments[1] = moveForm_onclick_Complete;
 		
 			            var moveForm_Cross = window.open(url, "SelectTaskCategory", GetOpenWindowfeature(430, 590));
 			            try { SelectTaskCategory_Cross.focus(); } catch (e) { }

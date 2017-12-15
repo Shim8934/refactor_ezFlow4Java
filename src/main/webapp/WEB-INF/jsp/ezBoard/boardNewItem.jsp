@@ -676,12 +676,14 @@
 		            if (obj[i].className == "FIELD")
 		                obj[i].removeAttribute('className');
 		        }
-		        if (pDocID != "")
-		            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-		        
+
 		        setTimeout(JSleep, 1000);
 
 		        var strBody = message.GetEditorContent();
+		        
+		        if (pDocID != "") {
+		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        }
 		        
 				strBody = strBody.replace(/&quot;/gi, "\'");
       
@@ -893,6 +895,7 @@
 		                document.getElementById("Makedate").style.display = "none";
 		            } else {
 		            	document.getElementById("Makedate").style.display = "";
+		            	
 		                if (strEndDate != "") {
 		                    if (strEndDate.substring(0, 4) == "9999") {
 		                        $("#Sdatepicker2").datepicker({
@@ -909,9 +912,10 @@
 		                        $("#Sdatepicker2").datepicker('setDate', NowDate2);
 		                    }
 		                    else {
-		                        var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
-		                        NowDate.setMonth(NowDate.getMonth() - 1);
-		                        $("#Sdatepicker2").datepicker('setDate', NowDate);
+		                        //var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
+		                        //NowDate.setMonth(NowDate.getMonth() - 1);
+		                        //2017-12-01 영구게시가 아닐때 만료일자를 지정한 날짜가 그대로 나오도록 수정
+		                        $("#Sdatepicker2").datepicker('setDate', strEndDate);
 		                    }
 		                }
 		            }
@@ -1716,6 +1720,8 @@
 		    }
 		
 		    function backgroundimagechange() {
+		    	var editor = "${editor}";
+		    	
 		        for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
 		            if (document.getElementsByName("backradio")[i].checked) {
 		                var Table = document.createElement("TABLE");
@@ -1734,7 +1740,7 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                    Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + "\\')";
+	                		Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
 		                    
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
@@ -1771,6 +1777,7 @@
 		    }
 		    
 		    function BackImageUp_After(rtn) {
+		    	var editor = "${editor}";
 		        var xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
 
@@ -1799,11 +1806,14 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
-
-		        Td.style.backgroundImage = "URL(\\'" + document.location.protocol + "//" + document.location.hostname + imgSrc + "\\')";
-		        alert(Td.style.backgroundImage);
-		        Table.style.width = imgWidth + "px";
-		        Table.style.height = imgHeight + "px";
+		        Td.style.width = imgWidth + "px";
+		        Td.style.height = imgHeight + "px";
+		        Td.style.backgroundSize = "cover";
+		        
+	        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+	        	
+		        Table.style.width = "auto";
+		        Table.style.height = "auto";
 
 		        if (temp.length > 0) {
 		            for (var j = 0; j < temp.length; j++) {
@@ -1927,7 +1937,7 @@
         		<c:when test="${boardInfo.guBun != '3'}">
 	        <tr style="height: 20px">
 	            <td>
-	                <div class="portlet_tabpart03">
+	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
 	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.t321' /></span></p>
 	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.t60' /></span></p>
@@ -2113,14 +2123,13 @@
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t209' /></th>
 	                        <td>
-	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100"></td>
+	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100">
+							</td>
 	                    </tr>
-	                     
-	                    <tr id="pUseBackGroundTR" style="display:none;" height="80px">
-	                      <th><spring:message code='ezBoard.t5011' /></th>
-	                      <td colspan="3" id="backgroundtd" style="padding-top:5px"></td>
+	                    <tr id="pUseBackGroundTR" style="display:none;" height="60px">
+	                    	<th><spring:message code='ezBoard.t5011' /></th>
+	                    	<td colspan="3" id="backgroundtd"></td>
 	                    </tr>
-	                    
 	                </table>
 	            </td>
 	            </c:when>

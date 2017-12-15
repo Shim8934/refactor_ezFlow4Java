@@ -55,6 +55,7 @@
 	        var SelectedBoardID = "";
 	        var SelectedBoardName = "";
 	        var selectedBoardtype = "";
+	        var selectedNodeID = "";
 	        var selNewBoard = false;
 	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
 	            var treeNode = new TreeNode();
@@ -62,6 +63,7 @@
 	            SelectedBoardID = treeNode.GetNodeData("DATA1");
 	            selectedBoardtype = treeNode.GetNodeData("DATA4");
 	            SelectedBoardName = treeNode.GetNodeData("VALUE");
+	            selectedNodeID = treeNode.GetNodeData("id");
 	            if (treeNode.GetNodeData("DATA3") == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
 	                selNewBoard = true;
 	        }
@@ -137,6 +139,7 @@
 	                        SelectedBoardID = "";
 	                        SelectedBoardName = "";
 	                        selectedBoardtype = "";
+	                        selectedNodeID = "";
 	                    }
 	                }
 	            }
@@ -173,6 +176,7 @@
 	                    SelectedBoardID = "";
 	                    SelectedBoardName = "";
 	                    selectedBoardtype = "";
+	                    selectedNodeID = "";
 	                }
 	            }
 	        }
@@ -223,6 +227,7 @@
 	                        SelectedBoardID = "";
 	                        SelectedBoardName = "";
 	                        selectedBoardtype = "";
+	                        selectedNodeID = "";
 	                    }
 	                }
 	            }
@@ -254,6 +259,7 @@
 	                    SelectedBoardID = "";
 	                    SelectedBoardName = "";
 	                    selectedBoardtype = "";
+	                    selectedNodeID = "";
 	                }
 	            }
 	        }
@@ -292,6 +298,10 @@
 	                    alert("<spring:message code='ezBoard.t268'/>");
 	                    makeTreeList();
 	                }
+	                SelectedBoardID = "";
+                    SelectedBoardName = "";
+                    selectedBoardtype = "";
+                    selectedNodeID = "";
 	            }
 	        }
 	        function add_MyBoard() {
@@ -343,7 +353,7 @@
 	            if (CrossYN()) {
 	                myboard_movecopy_dialogArguments[0] = "";
 	                myboard_movecopy_dialogArguments[1] = move_onclick_Complete;
-	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID);
+	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID + "&nodeID=" + selectedNodeID);
 	            }
 	            else {
 	                var feature = "dialogWidth:320px; dialogHeight:375px; status:no; help:no; scroll:no; edge:sunken";
@@ -387,7 +397,7 @@
 	            <li><span onclick="window.close()"><spring:message code='ezBoard.t12'/></span></li>
 	        </ul>
 	    </div>
-	    <div style="margin-bottom:5px;">
+	    <div style="margin-bottom:5px;margin-top:3px">
 	        <a  class="imgbtn"><span onClick="add_onclick('U')"><spring:message code='ezBoard.t10045'/></span></a>
 	        <a  class="imgbtn"><span onClick="add_onclick('C')"><spring:message code='ezBoard.t10046'/></span></a>
 	        <a  class="imgbtn"><span onClick="modify_onclick()"><spring:message code='ezBoard.t316'/></span></a>

@@ -152,6 +152,7 @@ public class EzTalkGateController {
 	    }
 		
 		model.addAttribute("boardItemList", boardItemList);
+		model.addAttribute("noticeBoardID", ezTalkGateNoticeBoardId);
 		
 		logger.debug("noticeBoard ended.");
 		
@@ -187,6 +188,7 @@ public class EzTalkGateController {
 	    }
 		
 		model.addAttribute("boardItemList", boardItemList);
+		model.addAttribute("noticeBoardID", ezTalkGateNoticeBoardId2);
 		
 		logger.debug("noticeBoard2 ended.");
 		

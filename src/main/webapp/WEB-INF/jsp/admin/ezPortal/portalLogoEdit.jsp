@@ -1,6 +1,7 @@
-<%@page import="org.jasypt.commons.CommonUtils"%>
+<%@ page import="org.jasypt.commons.CommonUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -37,6 +38,12 @@
 				if (pIndex.toString() != "1")
 				{
 					alert("<spring:message code='ezPortal.t83'/>");
+					
+					setTimeout(function() {
+						$("#tabnav ul li").attr("class","off");
+						$("#tabnav ul li:first").attr("class","on");							
+					}, 1);
+					
 					return;
 				}
 			}
@@ -353,10 +360,15 @@
 						<tr> 
 							<c:choose>
 								<c:when test="${imagePath != '' && imagePath ne null}">
-									<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=106 height=42 ></td>
+									<c:if test="${fn:length(imagePath) < 5}">
+										<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" width=106 height=42 style='display:none'></td>
+									</c:if>
+									<c:if test="${fn:length(imagePath) >= 5}">
+										<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=106 height=42 ></td>
+									</c:if>	
 								</c:when>
 								<c:otherwise>
-									<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display:none" width=106 height=42 ></td>
+									<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" style="display:none" width=106 height=42 ></td>
 								</c:otherwise>
 							</c:choose>
 		
@@ -440,13 +452,15 @@
 				<th><spring:message code='ezPortal.t93'/></th>
 				<td colspan="2">
 					<input type="radio" name="SelectEditRight" value="1" checked> <spring:message code='ezPortal.t97'/>
-					<input type="radio" name="SelectEditRight" value="2"> <spring:message code='ezPortal.t95'/>			</td>
+					<input type="radio" name="SelectEditRight" value="2"> <spring:message code='ezPortal.t95'/>			
+				</td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPortal.t94'/></th>
 				<td colspan="2">
 					<input type="radio" name="SelectViewRight" value="1" checked> <spring:message code='ezPortal.t97'/>
-					<input type="radio" name="SelectViewRight" value="2"> <spring:message code='ezPortal.t95'/>			</td>
+					<input type="radio" name="SelectViewRight" value="2"> <spring:message code='ezPortal.t95'/>			
+				</td>
 			</tr>
 		</table>
 		<div class="btnposition" id="toggle_tbl3_3" style="display:none">

@@ -344,15 +344,15 @@
     		<table class="content" width="100%" style="margin-top:10px;"> 
         		<tr>
             		<th><spring:message code='ezPersonal.t177'/></th>
-            		<td width="230"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}"></td>
+            		<td width="230"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}" maxlength="20"></td>
             		<th><spring:message code='ezPersonal.t178'/></th>
-            		<td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}"> </td> 
+            		<td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}" maxlength="20"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t70'/></th> 
-            		<td> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}"> </td> 
+            		<td> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}" maxlength="20"> </td> 
             		<th><spring:message code='ezPersonal.t179'/></th> 
-            		<td> <input type="text" id="txtFax" size="22" value="${txtFax}"> </td> 
+            		<td> <input type="text" id="txtFax" size="22" value="${txtFax}" maxlength="20"> </td> 
         		</tr> 
         		<tr> 
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 

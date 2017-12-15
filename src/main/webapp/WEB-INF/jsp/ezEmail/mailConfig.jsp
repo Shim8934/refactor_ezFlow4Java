@@ -110,7 +110,9 @@
 		        <div class="portlet_tabpart01_top" id="tab1">
 	                    <p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t177' /></span></p>
 	                    <p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t99000041' /></span></p>
+	                    <c:if test="${useOnlyInnerMail != 'YES'}">
 	                    <p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t238' /></span></p>
+	                    </c:if>
 	                    <p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezEmail.t137' /></span></p>
 	                    <p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab5"><spring:message code='ezEmail.t146' /></span></p>
 	                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>

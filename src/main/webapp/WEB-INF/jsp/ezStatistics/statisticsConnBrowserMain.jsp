@@ -253,11 +253,11 @@
         </span>
             </td>
             <td>
-        <div id="mainmenu" style="height: 28px;width:110px">
-            <ul>
-                <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
-            </ul>
-        </div>
+        		<div id="mainmenu" style="height: 28px;">
+		            <ul>
+		                <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+		            </ul>
+		        </div>
             </td>
         </tr>
     </table>

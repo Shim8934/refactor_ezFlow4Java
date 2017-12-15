@@ -21,29 +21,42 @@
 		    var rtnVal = "";
 		    var ReturnFunction = "";
 		    
+		    var board_alertArguments = new Array();
+		    
 		    function Select() {
+		    	board_alertArguments[1] = DivPopUpHidden;
 		        if (selectedBoard == "") {
-		            alert("<spring:message code='ezBoard.t179'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t179' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t179'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t179'/>");
 		            return;
 		        }
 
 		        if (BoardID.indexOf(selectedBoard) != -1) {
-		            alert("<spring:message code='ezBoard.t351'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t351'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t351'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t351'/>");
 		            return;
 		        }
 
 		        if (oldguBun > 0) {
 			    	if (oldguBun != newguBun) {
-			        	alert("<spring:message code='ezBoard.jsh02'/>");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, pUrl);
+// 			        	alert("<spring:message code='ezBoard.jsh02'/>");
 			            return;
 			        }
 			    	if (oldguBun == "3" && newguBun == "3") {
-			        	alert("<spring:message code='ezBoard.jsh02'/>");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, pUrl);
+// 			        	alert("<spring:message code='ezBoard.jsh02'/>");
 			            return;
 			        }
 		    	} else {
 		    		if (newguBun != "0") {
-			        	alert("<spring:message code='ezBoard.jsh02'/>");
+		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, pUrl);
+// 			        	alert("<spring:message code='ezBoard.jsh02'/>");
 			            return;
 			        }
 		    	}
@@ -55,36 +68,47 @@
 		    }
 		    function CopyItem(pDestBoardID) {
 		        if (CheckIfAnonyBoard(pDestBoardID) == "1") {
-		            alert("<spring:message code='ezBoard.jsh02'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.jsh02'/>");
 		            return;
 		        }
 		
 		        if (CheckIfAnonyBoard(pDestBoardID) == "2") {
-		            alert("<spring:message code='ezBoard.t999069'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t999069'/>");
 		            return;
 		        }
 		
 		        if (CheckIfCanWrite(pDestBoardID) == false) {
-		            alert("<spring:message code='ezBoard.t354'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t354'/>");
 		            return;
 		        }
 		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardID + "&destBoardID=" + pDestBoardID, false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
-		            alert("<spring:message code='ezBoard.t355'/>");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t355'/>");
+					board_alertArguments[1] = window.close;
 		            window.returnValue = "OK";
 		            rtnVal = "OK";
-		            
 		            try {
 				        window.opener.leftCountRf();
 					} catch (e) {
 					}
-		            window.close();
+// 		            window.close();
 		        } else {
 		            window.returnValue = "ERROR";
 		            rtnVal = "ERROR";
-		            window.close();
-		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
+		            board_alertArguments[1] = window.close;
+// 		            window.close();
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t181' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t181'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
 		        }
 		    }
 		    function CheckIfCanWrite(pBoardID) {
@@ -195,8 +219,13 @@
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 		            tid = tid.substring(1, 37);
-		            strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-		            strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;'></DIV></td></tr>";
+		            
+		            if (i == 0) {
+		            	strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+		            } else {
+		            	strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+		            }
+		            strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;padding-top:10px;padding-bottom:10px'></DIV></td></tr>";
 		        }
 		        strHTML += "</table>";
 		        xmldomNodes = null;
@@ -223,7 +252,7 @@
 		</script>
 		<style>
 		.node_normal{
-			padding-top: 3px;
+			margin-top: 3px;
 			vertical-align:top;
 			font-size: 9pt;
 			background-color : #ffffff;
@@ -231,15 +260,15 @@
 			cursor : hand;
 		}
 		.node_selected{
-			padding-top: 3px;
+			margin-top: 3px;
 			vertical-align:top;
 			font-size: 9pt;
 			height : 15px;
-			background-color : rgb(233, 241, 244);
+			background-color : rgb(233, 241, 255);
 			cursor : hand;
 		}
 		.node_hover{
-			padding-top: 3px;
+			margin-top: 3px;
 			vertical-align:top;
 			font-size: 9pt;
 			background-color : #F7FAE0;
@@ -250,12 +279,14 @@
 	</head>
 	<body class="popup"> 
 	<h1><spring:message code='ezBoard.t135'/></h1>
-	<div class="box" style="width:320px;height:490px;overflow:auto" id="TopBoardsList"> 
-	     
-	</div>
-	<div class="btnposition">
+	<div class="box" style="width:320px;height:520px;overflow:auto;" id="TopBoardsList"></div>
+	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
 	    <a class="imgbtn" onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
+	</div>
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 	</body>
 </html>

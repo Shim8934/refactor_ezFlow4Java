@@ -224,11 +224,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPersonal/confirmPassword.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String confirmPassword(HttpServletRequest request) throws Exception{
+	public String confirmPassword(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("confirmPassword started");
-
+		userInfo = commonUtil.userInfo(loginCookie);
 		String result = "";
-		String oldPass = request.getParameter("oldPassword");
+
+        String oldPass = request.getParameter("oldPassword");
+		String loginPass = ezOrganService.getEncPassword(userInfo.getId(), userInfo.getTenantId());
 		String newPass = request.getParameter("newPassword");
 		String userID = request.getParameter("userID");
 		
@@ -240,7 +242,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPass);
 		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userID);
 		
-		if (oldPass.trim().equals(newPassword)) {
+		//결재 암호 나 로그인 암호가 같으면 인증되게--이사님이...
+		if (loginPass.trim().equals(newPassword) || oldPass.trim().equals(newPassword)) {
 			result = "OK";
 		} else {
 			result = "FAIL";
@@ -268,8 +271,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String flag = request.getParameter("flag");
 		String newPWD = request.getParameter("newPWD");
 		String pwdType = request.getParameter("pwdType");
-		String newTempPass = EgovFileScrty.decryptRsa(pk, newPWD);
-		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userInfo.getId());
+		String newPassword = "";
+		if (newPWD.isEmpty()) {
+			newPassword = ezOrganService.getEncPassword(userInfo.getId(), userInfo.getTenantId());
+		} else {
+			String newTempPass = EgovFileScrty.decryptRsa(pk, newPWD);
+			newPassword = EgovFileScrty.encryptPassword(newTempPass, userInfo.getId());
+		}
+		
 		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType, userInfo.getTenantId(), userInfo.getCompanyID());
 
 		logger.debug("saveConfig ended");

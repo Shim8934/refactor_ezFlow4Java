@@ -1373,10 +1373,12 @@ var CompletBccisEnd = false;
 var CompletCancelBtn = false;
 function ToTalCompletEmailAddress() {
     var formName, validDIV, iType;
+    
     if (!CompletCancelBtn) {
         if (document.getElementById("MsgTo").value != "" && !CompletToisEnd) {
             formName = ReplaceText(document.getElementById("MsgTo").value, ",", ";");
             var mailArr = String(formName).split(";");
+            
             if (mailArr.length > 0) {
                 CompleteEmailAddress(MsgTo, MsgToGot, 0);
                 document.getElementById("MsgTo").value = "";
@@ -1437,7 +1439,6 @@ function ToTalCompletEmailAddress() {
 function CompleteEmailAddress(formName, validDIV, iType) {
     if (TrimText(formName.value) == "")
         return true;
-
     formName.value = ReplaceText(formName.value, ",", ";");
     var mailArr = String(formName.value).split(";");
     var userAddr;
@@ -2644,9 +2645,9 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
     
     if (individualmailuser != "0") {
-        DivPopUpShow(410, 355, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 325, "/ezEmail/letterOption.do");
     } else {
-        DivPopUpShow(410, 280, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 250, "/ezEmail/letterOption.do");
     }
 }
 
@@ -2923,6 +2924,7 @@ function GetGroupEmail(pAddressId) {
 function PrepareMailTag(iWhich, type, name, email, href) {
     var TopSpan = document.createElement("span");
     var newElem = document.createElement("span");
+    
     if (type == "mailgroup")
         newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
     else
@@ -3005,14 +3007,17 @@ function addReceiverOneListView(iWhich, pListView) {
 function addReceiverFromList(iWhich, receiverlist) {
     var szReceiver;
     var recvName, recvAddr;
-
     var newElem;
-
-    if (iWhich < 0 || iWhich > 2) return;
-    if (typeof (receiverlist) == "undefined") return;
+    
+    if (iWhich < 0 || iWhich > 2) {
+    	return;
+    }
+    
+    if (typeof (receiverlist) == "undefined") {
+    	return;
+    }
 
     for (var nCnt1 = 0; nCnt1 < receiverlist["name"].length; nCnt1++) {
-
         recvType = receiverlist["type"][nCnt1];
         recvName = receiverlist["name"][nCnt1];
         recvEmail = receiverlist["email"][nCnt1];
@@ -3021,7 +3026,7 @@ function addReceiverFromList(iWhich, receiverlist) {
         if ( recvEmail == "a@a.com" ) {
         	continue;
         }
-        
+
         newElem = PrepareMailTag(iWhich, recvType, recvName, recvEmail, recvHref);
 
         switch (iWhich) {

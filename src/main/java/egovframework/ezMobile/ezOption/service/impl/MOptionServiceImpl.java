@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.dao.MOptionDAO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -33,6 +34,9 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
 
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+	
 	@Override
 	public MCommonVO commonInfo(String serverName, String userId) throws Exception {
 		LOGGER.debug("commonInfo started");
@@ -43,6 +47,13 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		MCommonVO info = mOptionDAO.commonInfo(map);
 				
+		// 사용자의 언어가 설정되어 있지 않을 때는 시스템의 Primary Lang을 사용하도록 한다.
+		if (info != null && info.getLang() == null) {
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			
+			info.setLang(primaryLang);
+		}
+		
 		LOGGER.debug("commonInfo ended");
 		
 		return info;

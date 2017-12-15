@@ -326,12 +326,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	@Override
 	public List<PortalTopSearchTopMenu2VO> topSearchTopMenu2(int endRow, String displayName, String useFlag, String companyID, int tenantID) throws Exception {
 		logger.debug("topSearchTopMenu2 started");
+		logger.debug("endRow=" + endRow + ",displayName=" + displayName + ",useFlag=" + useFlag + ",companyID=" + companyID + ",tenantID=" + tenantID);
 		
-		logger.debug("endRow="+endRow);
-		logger.debug("displayName="+displayName);
-		logger.debug("useFlag="+useFlag);
-		logger.debug("companyID="+companyID);
-		logger.debug("tenantID="+tenantID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pENDROW", endRow);
 		map.put("v_pDISPLAYNAME", displayName);
@@ -339,8 +335,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pCOMPANYID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("result="+ezPortalDAO.topSearchTopMenu2(map));
+		logger.debug("result=" + ezPortalDAO.topSearchTopMenu2(map));
 		logger.debug("topSearchTopMenu2 ended");
+		
 		return ezPortalDAO.topSearchTopMenu2(map);
 	}
 	
@@ -1319,24 +1316,28 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String searchTopMenu (String pDisplayName, String pUseFlag, int pStartRow, int pEndRow, String pAccessIDList, String pCompanyID, int tenantID) throws Exception {
 		List<PortalTopSearchTopMenu2VO> resultList = topSearchTopMenu2(pEndRow, pDisplayName, pUseFlag, pCompanyID, tenantID);
 		
+		PortalTopSearchTopMenu2VO vo = null;
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		
 		for (int i=0; i<resultList.size(); i++) {
 			if (i >= pStartRow - 1) {
+				vo = resultList.get(i);
+				
 				sb.append("<ROW>");
-				sb.append("<UID_>" + commonUtil.cleanValue(resultList.get(i).getuID()) + "</UID_>");
-				sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(resultList.get(i).getDisplayName()) + "</DISPLAYNAME>");
-                sb.append("<DISPLAYNAME2>" + commonUtil.cleanValue(resultList.get(i).getDisplayName2()) + "</DISPLAYNAME2>");
-				sb.append("<USEFLAG>" + commonUtil.cleanValue(resultList.get(i).getUseFlag()) + "</USEFLAG>");
-				sb.append("<LANG>" + commonUtil.cleanValue(resultList.get(i).getLang()) + "</LANG>");
-				sb.append("<THEMENM>" + commonUtil.cleanValue(resultList.get(i).getThemeNm()) + "</THEMENM>");
-				sb.append("<THEMENM2>" + commonUtil.cleanValue(resultList.get(i).getThemeNm2()) + "</THEMENM2>");
-				sb.append("<THEMENM3>" + commonUtil.cleanValue(resultList.get(i).getThemeNm3()) + "</THEMENM3>");
-				sb.append("<THEMENM4>" + commonUtil.cleanValue(resultList.get(i).getThemeNm4()) + "</THEMENM4>");
+				sb.append("<UID_>" + commonUtil.cleanValue(vo.getuID()) + "</UID_>");
+				sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + commonUtil.cleanValue(vo.getDisplayName2()) + "</DISPLAYNAME2>");
+				sb.append("<USEFLAG>" + commonUtil.cleanValue(vo.getUseFlag()) + "</USEFLAG>");
+				sb.append("<LANG>" + commonUtil.cleanValue(vo.getLang()) + "</LANG>");
+				sb.append("<THEMENM>" + commonUtil.cleanValue(vo.getThemeNm()) + "</THEMENM>");
+				sb.append("<THEMENM2>" + commonUtil.cleanValue(vo.getThemeNm2()) + "</THEMENM2>");
+				sb.append("<THEMENM3>" + commonUtil.cleanValue(vo.getThemeNm3()) + "</THEMENM3>");
+				sb.append("<THEMENM4>" + commonUtil.cleanValue(vo.getThemeNm4()) + "</THEMENM4>");
 				sb.append("</ROW>");
 			}
 		}
+		
 		sb.append("</DATA>");
 		
 		return sb.toString();

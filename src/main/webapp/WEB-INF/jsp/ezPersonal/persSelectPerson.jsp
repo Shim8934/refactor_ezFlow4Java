@@ -183,12 +183,12 @@
 		        }
 		    }
 		    function search_click() {
-		    	if (specialChk(document.getElementById("keyword").value)) {
+		    	if (specialChk(document.getElementById("keyword").value.trim())) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
 		    	
-		        if (document.getElementById("keyword").value == "") {
+		        if (document.getElementById("keyword").value.trim() == "") {
 		            alert("<spring:message code='ezPersonal.t61'/>");
 		            document.getElementById("keyword").focus();
 		            return;
@@ -200,7 +200,7 @@
 		    		async : false,
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
-		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value,
+		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
 		    			cell   : "company;description;displayname;title;telephonenumber",
 		    			prop   : "department",
 		    			type   : "user"
@@ -218,7 +218,7 @@
 			    	return;
 			    }
 		    	
-		        if (deptkeyword.value == "") {
+		        if (deptkeyword.value.trim() == "") {
 		            alert("<spring:message code='ezPersonal.t61'/>");
 		            deptkeyword.focus();
 		            return;
@@ -231,7 +231,7 @@
 		    		async : false,
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
-		    			search : "displayname::" + deptkeyword.value,
+		    			search : "displayname::" + deptkeyword.value.trim(),
 		    			cell   : "extensionAttribute3;displayname;extensionAttribute9;",
 		    			prop   : "",
 		    			type   : "group"
@@ -458,7 +458,7 @@
 				</td>
 		  	</tr>
 		</table>
-		<div class="btnposition" style="margin-top:15px">
+		<div class="btnposition btnpositionNew" style="margin-top:15px">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>
 		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezPersonal.t13'/></span></a>
 		</div>

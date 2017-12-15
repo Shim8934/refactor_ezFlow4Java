@@ -64,14 +64,14 @@
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup" onload="javascript:window_onload()">
-		<form id="Form1" method="post" runat="server">
+		<form id="Form1" method="post">
 			<h1><spring:message code='ezAddress.t320' /></h1>
 			
-			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:323px;" class="box">
-				<table style="width:100%;" class="popuplist" > 
+			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; border:0px; HEIGHT:323px;" class="box">
+				<table style="width:100%;table-layout: fixed;" class="popuplist" > 
 					<tr> 
 						<th style="width:28px;vertical-align:middle;"><spring:message code='ezAddress.t321' /></th>
-						<th style="width:200px;white-space:nowrap;"><spring:message code='ezAddress.t124' /></th>
+						<th style="width:230px;white-space:nowrap;"><spring:message code='ezAddress.t124' /></th>
 						<th style="white-space:nowrap;" ><spring:message code='ezAddress.t322' /></th>
 					</tr>
 					<c:forEach var="item" items="${list}">
@@ -79,13 +79,13 @@
 							<td style="text-align:center">
 								<input type='checkbox' value="1" checked name="goruplistinput" _name="${item.personal}" _email="${item.address}">
 							</td>
-							<td style="white-space:nowrap" >${item.personal}</td>
-							<td style="white-space:nowrap" >${item.address}</td>
+							<td>${item.personal}</td>
+							<td>${item.address}</td>
 						</tr>
 					</c:forEach>
 				</table>
 			</div>
-			<div class="btnposition">
+			<div class="btnposition btnpositionNew">
 				<a class="imgbtn" onClick="add_personal()" id="cmd_ok"><span><spring:message code='ezAddress.t25' /></span></a>
 				<a class="imgbtn" onClick="Window_Close()"><span><spring:message code='ezAddress.t11' /></span></a>
 			</div>

@@ -3,8 +3,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title><spring:message code='ezApproval.t316'/></title>
-    
+    <title><spring:message code='ezApproval.t316'/></title>    
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
@@ -160,6 +159,8 @@
             }
 
             var ContName = treeNode.GetNodeData("VALUE");
+            ContName = ContName.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+            
             var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t307'/>";
 
             if (CrossYN()){
@@ -191,8 +192,13 @@
                     TreeViewRefresh();
                     opener.TreeViewRefresh();
                     return;
+                } else if (rvalue == "HASSUBCONT") {
+                	var pAlertContent = "<spring:message code='ezApprovalG.pjj34'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
                 }
                 else {
+                	ContName = ContName.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
                     var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t310'/>" + rvalue + "]<spring:message code='ezApproval.t311'/>"
                     OpenInformationUI(OpinionContent, Del_Complete_MUST);
                 }
@@ -339,7 +345,7 @@
 <body class="popup">
     <h1><spring:message code='ezApproval.t317'/></h1>
     <div class="box" style="WIDTH: 440px; HEIGHT: 240px; overflow: auto; BACKGROUND-COLOR: #FFFFFF; padding: 4px 6px 6px 4px" id="divUserContTree"></div>
-    <div class="btnposition">
+    <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnIns_onclick()"><span><spring:message code='ezApproval.t313'/></span></a>
         <a class="imgbtn" onclick="return btnEdit_onclick()"><span><spring:message code='ezApproval.t314'/></span></a>
         <a class="imgbtn" onclick="return btnDel_onclick()"><span><spring:message code='ezApproval.t315'/></span></a>

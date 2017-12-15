@@ -75,7 +75,7 @@
 	<body style="overflow:hidden;" class="popup">
 		<form method="post">
 			<h1 id="h1"><spring:message code='ezEmail.t659' /></h1>
-			<div class="box" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:320px">
+			<div class="box" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:320px;border:0px">
 			  <table style="width:100%;" class="popuplist" style="TABLE-LAYOUT:fixed" id="checkboxtable">
 			    <tr>
 			      <th style="width:50px;text-align:center;"><spring:message code='ezEmail.t488' /></th>
@@ -99,7 +99,7 @@
 			    
 			  </table>
 			</div>
-		  <div class="btnposition">
+		  <div class="btnposition btnpositionNew">
 		    <a class="imgbtn" onClick="add_personal()" id="cmd_ok"><span><spring:message code='ezEmail.t38' /></span></a>
 		    <a class="imgbtn" onClick="Window_Close()"><span><spring:message code='ezEmail.t39' /></span></a>
 		  </div>

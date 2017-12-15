@@ -831,7 +831,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		//taskWork첨부파일목록조회
 		String taskAttachList = null;
-		if (taskInfoVO.getPersonAttach().equals("Y")) {
+		if (taskInfoVO.getHasAttach().equals("Y")) {
 			taskAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "1", tenantID);
 		}
 		
@@ -884,7 +884,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskConfig started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("delayColor : " + configVO.getDelayColor() + " | completeColor : " + configVO.getCompleteColor() + " | originColor : " + configVO.getOriginColor() + " | originColor2 : " + configVO.getOriginColor2());

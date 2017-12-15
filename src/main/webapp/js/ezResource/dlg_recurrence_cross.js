@@ -527,6 +527,9 @@ function event_btnOk_onclick()
             rtvString = strLang126 + ", ";
             
             m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+            m_objStartTime.setHours(0);
+            m_objStartTime.setMinutes(0);
+            
             m_objEndTime = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
             m_objEndTime.setHours(23);
             m_objEndTime.setMinutes(59);

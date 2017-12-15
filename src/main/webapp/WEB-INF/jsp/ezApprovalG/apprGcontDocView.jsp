@@ -353,11 +353,11 @@
 		            window.open("/myoffice/ezBoardSTD/NewBoardItem_CK.aspx?Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pDocHref, '', 'height=870,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 870));
 		    }
 		    var ezaprhistory_cross_dialogArguments = new Array();
-		    function btnhistory_onclick() {
+		    function btnhistory_onclick() {		    	
 		        ezaprhistory_cross_dialogArguments[0] = "";
 		        ezaprhistory_cross_dialogArguments[1] = btnhistory_onclick_Complete;
 		
-		        DivPopUpShow(730, 430, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
+		        DivPopUpShow(730, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
 		    }
 		   
 		    function btnhistory_onclick_Complete() {

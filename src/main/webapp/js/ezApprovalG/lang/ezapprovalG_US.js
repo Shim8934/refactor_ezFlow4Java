@@ -282,7 +282,7 @@ var strLang434 = "Request Failed!"
 var strLang435 = "No connection with the document center. Request can not be completed."
 var strLang436 = "Unit working Code"
 // ezCabinet\Mana
-var strLang437 ="Choose unit business!"
+var strLang437 ="Choose unit business."
 var strLang438 ="Company ID"
 // ezCabinet\Man
 var strLang439 = "Unit working list"

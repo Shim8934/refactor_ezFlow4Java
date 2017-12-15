@@ -543,7 +543,7 @@
 		            </td>
 		        </tr>
 		    </table>
-		<div class="btnposition" >
+		<div class="btnposition btnpositionNew" >
 <%-- 		  <input type="button" name="LocalloadHwp" id="LocalloadHwp" value="<spring:message code='ezApprovalG.t1544'/>" onClick="return Localload_onclick('HWP')" style="width:210px;"> --%>
 <%-- 		  <input type="button" name="LocalloadMht" id="LocalloadMht" value="<spring:message code='ezApprovalG.t1545'/>" onClick="return Localload_onclick('MHT')" style="width:210px;"> --%>
 		

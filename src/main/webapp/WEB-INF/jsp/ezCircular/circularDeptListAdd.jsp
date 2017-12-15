@@ -38,7 +38,7 @@
 		    	}
 
 		        _RowObject = obj;
-		        obj.style.backgroundColor = "rgb(233, 241, 244)";
+		        obj.style.backgroundColor = "rgb(233, 241, 255)";
 		    }
 		    
 		    function memberList() {

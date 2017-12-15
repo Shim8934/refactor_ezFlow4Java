@@ -113,7 +113,7 @@
                 (SELECT SAVEMAILFLAG 
                  FROM TBL_PS_APPROVNOTIMAILCONF
                  WHERE UserID = #currentID# 
-                 AND TENANT_ID = '0') AS SAVEMAILFLAG 
+                 AND TENANT_ID = #tenantID#) AS SAVEMAILFLAG 
            	FROM
 				TBL_PS_APPROVNOTIMAILCONF 
           	WHERE

@@ -809,7 +809,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(600, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
+		        DivPopUpShow(510, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
 		    }
 		
 		    function btnAssign_onclick_Complete(ret) {
@@ -1373,7 +1373,7 @@
 		</td>
 		  </tr>
 		  <tr>
-		    <td style="padding-bottom:10px;height:100%;">
+		    <td style="padding-bottom:10px;height:90%;">
 		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="recevEndContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		    </td>
 		  </tr>

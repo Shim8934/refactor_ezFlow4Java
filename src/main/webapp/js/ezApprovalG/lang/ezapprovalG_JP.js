@@ -282,7 +282,7 @@ var strLang434 = "신청에 실패하였습니다!"
 var strLang435 = "자료관과의 연결이 없습니다. 신청을 완료할 수 없습니다."
 var strLang436 = "단위업무 코드"
 // ezCabinet\Manage\TaskCodeManage.js
-var strLang437 = "単位業務を選択してください!"//G
+var strLang437 = "単位業務を選択してください."//G
 var strLang438 = "회사아이디"
 // ezCabinet\Manage\TaskManage.js
 var strLang439 = "단위업무 리스트"
@@ -653,7 +653,7 @@ var strLang943 = "件"
 var strLang944 = "検索結果がありません。";
 var strLang945 = "起案者は削除することができません。"
 // TreeViewCtrl.js
-var strLang1001 ="選択した項目がないです。文書だけ印刷しますか?";
+var strLang1001 ="選択した項目がないです。<br>文書だけ印刷しますか?";
 var strLang1002 ="外部の受信者は、保存できません。";
 var strLang1003 ="お気に入りに追加しました。";
 var strLang1004 ="お気に入りから削除されました。";
@@ -995,4 +995,4 @@ var strLangjjh03 = "添付ファイルを追加中です。";
 
 //2017-11-28 박종균 추가
 var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?";
-var strLangPJG02 = "하위 부서를 모두 포함하시겠습니까?";
+var strLangPJG02 = "하위 부서원을 모두 포함하시겠습니까?";

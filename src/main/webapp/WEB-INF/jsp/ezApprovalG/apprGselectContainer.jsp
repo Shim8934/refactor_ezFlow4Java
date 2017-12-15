@@ -9,6 +9,11 @@
 		<title><spring:message code='ezApprovalG.t1187'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style>
+			.mainlist tr th {
+				border-top:0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script> 
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
@@ -283,7 +288,7 @@
 			    	    <div id="divlvtCont" style="border:0; Width:260px; Height:300px; font-size:9pt" > </div>
 			    	</div>
 				</td> 
-		    	<td style="width:30px">
+		    	<td style="width:30px;text-align: center">
 		        	<img src="/images/arr_right.gif" style="cursor:pointer" width="16" height="16" onClick="return insertCont_onclick()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image191','','images/arrow_add1.gif',1)" />
 			    	<img src="/images/arr_left.gif"style="cursor:pointer"  width="16" height="16" onClick="return deleteCont_onclick()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image201','','images/arrow_delete1.gif',1)" />
 				</td> 
@@ -295,7 +300,7 @@
 				</td> 
 		  	</tr> 
 		</table> 
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
     		<a class="imgbtn" onClick="return cmdOK_onclick()" ><span><spring:message code='ezApprovalG.t1760'/></span></a>
     		<a class="imgbtn" onClick="return cmdcancel_onclick()" ><span><spring:message code='ezApprovalG.t1761'/></span></a>
 		</div>

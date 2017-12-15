@@ -120,5 +120,5 @@
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
-	</script>	
+	</script>
 </html>

@@ -1496,7 +1496,21 @@ function makePageSelPage() {
         var nowyear = new Date().getFullYear();
         var nowmonth = new Date().getMonth() + 1;
         var nowday = new Date().getDate();
-        period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        
+        if (nowmonth < 10)
+            nowmonth = "0" + nowmonth;
+
+        if (nowday < 10)
+            nowday = "0" + nowday;
+
+        
+        	if (SearchCond[5] != null && SearchCond[5] != "" ) {
+        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
+        	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
+        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + SearchCond[3].substring(5, 7) + strLang1029 + " " + SearchCond[3].substring(8, 10) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + SearchCond[4].substring(5, 7) + strLang1029 + " " + SearchCond[4].substring(8, 10) + strLang1030;
+        	} else {
+        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+            }
     }
     else {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
@@ -2279,7 +2293,7 @@ function cancelYN_after(xml) {
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
     else {
-    	if (forceCallBackYN != "NO") {
+    	if (forceCallBackYN == "YES") {
     	var result = "";
     	
     	$.ajax({

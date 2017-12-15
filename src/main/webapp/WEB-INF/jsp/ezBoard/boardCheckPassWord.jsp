@@ -80,14 +80,13 @@
 	</head>
 	<body class="popup" style="overflow:hidden;">
 		<h1><spring:message code='ezBoard.t244'/></h1>
-	    <div class="txt">
-	        <spring:message code='ezBoard.t245'/>
+	    <div class="txt" style="margin-top:15px">
+	        ▒&nbsp;<spring:message code='ezBoard.t245'/>
+	    </div>	    
+	    <div style="margin-top:10px">
+	        <input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc">
 	    </div>
-	    <br />
-	    <div>
-	        <input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%">
-	    </div>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a name="btn_OpinionOK" id="btn_OpinionOK" class="imgbtn" onClick="return btn_OpinionOK_onclick()"  ><span><spring:message code='ezBoard.t14'/></span></a>
 	        <a name="btn_OpinionCANCEL" id="btn_OpinionCANCEL" class="imgbtn" onClick="return btn_OpinionCANCEL_onclick()" ><span><spring:message code='ezBoard.t15'/></span></a>
 	    </div>

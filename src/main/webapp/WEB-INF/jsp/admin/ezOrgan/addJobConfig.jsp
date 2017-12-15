@@ -8,6 +8,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <style>
+	    	.box {
+	    		border-right:0px;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
@@ -198,7 +203,7 @@
 		        });
 		    }
 		    
-		    var m_strColorSelect = "rgb(233, 241, 244)";
+		    var m_strColorSelect = "rgb(233, 241, 255)";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -656,7 +661,15 @@
 		                alert("<spring:message code='ezOrgan.t249' />");
 		                return;
 		            }
-
+		            
+		            var titleName = document.getElementById("txt_TitleName").value.trim();
+		            
+					if (titleName == "") {
+						document.getElementById("txt_TitleName").focus();
+						alert("<spring:message code='ezOrgan.kyj07' />");
+						return;
+					}
+						
 		            var listview = new ListView();
 		            listview.LoadFromID("lvUserList");
 		            var UserAddjoblistview = new ListView();
@@ -991,7 +1004,7 @@
 	                        <table style="margin-top: 3px; width: 100%;">
 	                            <tr>
 	                                <td>
-                                        <div style="padding-left:60px">
+                                        <div style="padding-left:3px">
                                         <input type="text" name="Input" id="deptkeyword" style="WIDTH: 110px; margin: 0px;" onkeypress="deptsearch_press()">
                                         <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
                                         </div>
@@ -1011,7 +1024,7 @@
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
 	                                        </select>
 	                                        <input type="text" id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
-	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101' /></span></a>
+	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101' /></span></a>&nbsp;
 	                                    </div>
 	                                </td>    
 	                                <td></td>

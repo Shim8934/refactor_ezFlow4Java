@@ -618,7 +618,11 @@
       					<tr style="height:25px"> 
 	        				<th style="padding-left:10px"><spring:message code="ezResource.t197"/></th> 
         					<td style="padding-left:10px"> <div id="printDate"></div></td> 
-      					</tr> 
+      					</tr>
+      					<tr>
+		            		<th style="padding-left:10px"><spring:message code='ezResource.t374' /></th>
+		            		<td style="padding-left:10px;"> <div id="printItem"></div></td>
+		        		</tr>  
       					<tr style="height:25px"> 
 	        				<th style="padding-left:10px"><spring:message code="ezResource.t224"/></th> 
         					<td style="padding-left:10px"> <div id="printTitle"></div></td> 

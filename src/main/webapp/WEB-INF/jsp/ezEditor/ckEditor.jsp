@@ -22,6 +22,14 @@
 					   ev.data.preventDefault(true);
 					});
 			    }
+			    
+			    if (type == "COMMUNITYPHOTO") {
+			    	// prevent image drop
+					ev.editor.document.on('drop', function (ev) {
+					   ev.data.preventDefault(true);
+					});
+			    }
+			    
 		    });
 		    
 		    // Setdata 후 실행 함수.
@@ -231,6 +239,10 @@
 	            
 	        } else if (type == "MAILSIGNATURE") {
 	        	CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUploadMail.do";
+	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
+	            
+	        } else if (type == "COMMUNITYPHOTO") {
+	            CKEDITOR.config.removePlugins = '_Insert_Image';
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
 	        } else {

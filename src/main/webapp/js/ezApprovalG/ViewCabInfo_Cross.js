@@ -83,10 +83,11 @@ function InitExtraInfo() {
     InsValueIntoTD(tdNumOfElec, SelectSingleNodeValue(g_EInfoXml, "NUMOFFILE"));
     InsYNIntoTD(tdModifyFlag, SelectSingleNodeValue(g_EInfoXml, "MODIFYFLAG"))
 
-    if (SelectSingleNodeValue(g_EInfoXml, "OLDFLAG") == "1")
-        InsValueIntoTD(tdOldFlag, "N");
-    else
-        InsValueIntoTD(tdOldFlag, "Y");
+    if (SelectSingleNodeValue(g_EInfoXml, "OLDFLAG") == "1") {
+    	InsValueIntoTD(tdOldFlag, "N");
+    } else {
+    	InsValueIntoTD(tdOldFlag, "Y");
+    }
 
     InsValueIntoTD(tdOldDept, SelectSingleNodeValue(g_EInfoXml, "OLDCREATEORGAN"));
     InsValueIntoTD(tdOldClassNo, SelectSingleNodeValue(g_EInfoXml, "OLDCLASSNO"));

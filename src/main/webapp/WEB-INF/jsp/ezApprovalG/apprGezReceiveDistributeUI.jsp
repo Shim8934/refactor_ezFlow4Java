@@ -1328,7 +1328,7 @@
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 550px; width: 388px; background-color: #FFFFFF; border: 1px solid #b6b6b6" id="TreeView"></div>
+	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #b6b6b6;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
 	                <div id="ReceptTemp" style="display: none; padding-left: 5px">
@@ -1390,7 +1390,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 	        <a class="imgbtn"><span onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>

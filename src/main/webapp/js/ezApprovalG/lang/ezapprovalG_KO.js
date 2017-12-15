@@ -282,7 +282,7 @@ var strLang434 = "신청에 실패하였습니다!"
 var strLang435 = "자료관과의 연결이 없습니다. 신청을 완료할 수 없습니다."
 var strLang436 = "단위업무 코드"
 // ezCabinet\Manage\TaskCodeManage.js
-var strLang437 = "단위업무를 선택하세요!"
+var strLang437 = "단위업무를 선택하세요."
 var strLang438 = "회사아이디"
 // ezCabinet\Manage\TaskManage.js
 var strLang439 = "단위업무 리스트"
@@ -653,7 +653,7 @@ var strLang943 = "개"
 var strLang944 = "데이터가 없습니다.";
 var strLang945 = "기안자는 삭제가 될 수 없습니다."
 // TreeViewCtrl.js
-var strLang1001 = "선택하신 항목이 없습니다. 문서만 인쇄하시겠습니까?";
+var strLang1001 = "선택하신 항목이 없습니다.<br>문서만 인쇄하시겠습니까?";
 var strLang1002 = "외부 수신자는 저장할 수 없습니다.";
 var strLang1003 = "즐겨찾기에 등록되었습니다.";
 var strLang1004 = "즐겨찾기에서 삭제되었습니다.";
@@ -995,4 +995,4 @@ var strLangjjh03 = "첨부파일을 추가하는중입니다.";
 
 //2017-11-28 박종균 추가
 var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?";
-var strLangPJG02 = "하위 부서를 모두 포함하시겠습니까?";
+var strLangPJG02 = "하위 부서원을 모두 포함하시겠습니까?";

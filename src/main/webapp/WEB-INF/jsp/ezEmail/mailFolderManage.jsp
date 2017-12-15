@@ -437,7 +437,21 @@
 					success: function(result) {
 						if (result == "OK") {
 							PostTreeView.putvalue(sIdx, "subscribe", subscribe);
-							PostTreeView.update();
+// 							PostTreeView.update();
+							var subscribeImg = '/images/ImgIcon/subscribe.png';
+// 				            var subscribe = GetAttribute(childNode, 'subscribe');
+				            if (subscribe != null && subscribe == "1") {
+				        		var IMG_TAG2 = document.createElement("IMG");
+				            	IMG_TAG2.setAttribute("src", subscribeImg);
+				            	$("#PostTreeView_node_"+sIdx).parent().append(IMG_TAG2);
+				            }
+				            if (subscribe != null && subscribe == "0") {
+				            	if ($("#PostTreeView_node_"+sIdx).parent().children("img[src='/images/ImgIcon/subscribe.png']").length == 1) {
+				            		$("#PostTreeView_node_"+sIdx).parent().children("img[src='/images/ImgIcon/subscribe.png']").remove();
+				            	} 
+				            	var IMG_TAG2 = document.createElement("IMG");
+				            	IMG_TAG2.setAttribute("src", subscribeImg);
+				            }
 							EventCheck = true;
 						} else {
 							alert("<spring:message code='ezEmail.lhm72' />");

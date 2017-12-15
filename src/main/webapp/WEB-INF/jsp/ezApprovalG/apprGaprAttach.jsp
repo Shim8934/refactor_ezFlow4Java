@@ -5,7 +5,7 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t264'/></title>
 		<style> 
-			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
+			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }	    	
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=uft-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
@@ -219,7 +219,7 @@
 			function btn_AttachAdd_onclick() 
 			{
 			    if (document.form.file1.value != "") {
-					if (document.form.file1.files[0].name.length > 54) {
+					if (document.form.file1.files[0].name.length > 104) {
 						alert("<spring:message code='main.jjh08' />");
 						document.form.file1.value = "";
 						return;
@@ -744,7 +744,7 @@
 		        for (var i = 0; i < file.length; i++) {
 					var fnl = file[i].name.length;
 		        	
-		        	if (fnl > 54) {
+		        	if (fnl > 104) {
 		        		alert("<spring:message code='main.jjh08' />");
 		        		isfileup = false;
 		        		
@@ -803,7 +803,7 @@
 		</table>
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
-		    <div class="btnposition">       
+		    <div class="btnposition btnpositionNew">       
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>

@@ -63,20 +63,31 @@ function check_time() {
 }
 
 var SaveScheduleId = "";
+var saveCheck = false;
 function save_schedule()
 {
+	if(saveCheck) {
+		return;
+	} else {
+		saveCheck = true;
+	}
+	
     if (scheduleid == "") {
     	if (useAnyoneEdit != "YES") {
 	        var selectValue = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value.split(';;')[1];
 	        if (selectValue == companyID) {
 	            if (pCompanyAdmin != "Y") {
 	                alert(strLang1000);
+	                saveCheck = false;
+	                
 	                return;
 	            }
 	        }
 	        else if (selectValue == deptID) {
 	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
 	                alert(strLang1001);
+	                saveCheck = false;
+	                
 	                return;
 	            }
 	        }
@@ -85,11 +96,15 @@ function save_schedule()
     if(!check_time())
     {
         alert(timecheckstring);
+        saveCheck = false;
+        
         return;
     }
     
     if (CheckPreviously()) {
         alert(strLang272);
+        saveCheck = false;
+        
         return;
     }
     
@@ -100,11 +115,21 @@ function save_schedule()
 	    alert(strLang9);
 	    Tab1_MouseClick(document.getElementById("1tab1"));
 		document.getElementById("TextTitle").focus();
+		saveCheck = false;
+		
 		return;
 	}
 
-	if (!check_length(document.getElementById("TextTitle").value, 250, strLang10)) return;
-	if (!check_length(document.getElementById("TextLocation").value, 50, strLang11)) return;
+	if (!check_length(document.getElementById("TextTitle").value, 250, strLang10)) {
+		saveCheck = false;
+		
+		return;
+	}
+	if (!check_length(document.getElementById("TextLocation").value, 50, strLang11)) {
+		saveCheck = false;
+		
+		return;
+	}
 	
 	var resDate = "";
 	if (tmpReFlag == "0" && $.trim(repetition) != "") {
@@ -133,6 +158,8 @@ function save_schedule()
 		resDate = getFirstDateInfo(sdate, edate);
 		
 		if (resDate == "") {
+			saveCheck = false;
+			
 			return;
 		}
 	}
@@ -142,8 +169,11 @@ function save_schedule()
 	    if (document.getElementById("resourcelist")) {	    	
 	        if (trim(document.getElementById("resourcelist").innerHTML) != "") {
 	            ResourceSaveResult = resource_Check(resDate);
-	            if (!ResourceSaveResult)
+	            if (!ResourceSaveResult) {
+	            	saveCheck = false;
+	            	
 	                return;
+	            }
 	        }
 	    }
 	}
@@ -333,8 +363,11 @@ function save_schedule()
 	
 	xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
 	xmlHTTP.send(xmlDom);
-
+	
 	if (xmlHTTP.status != 200) {
+		
+		saveCheck = false;
+		
 	    if (xmlHTTP.responseText.indexOf("OK") == -1) {
 	        if (xmlHTTP.responseText == "XSS")
 	            alert(strLang116);
@@ -343,7 +376,10 @@ function save_schedule()
 	    }
 	}
 	else {		
-	    if (ResourceSaveResult) {	    	
+	    if (ResourceSaveResult) {
+	    	
+	    	saveCheck = false;
+	    	
 	        SaveScheduleId = trim(xmlHTTP.responseText);	        
 	        if (SaveScheduleId != "") {
 	            var rntVal = resource_save(resDate);

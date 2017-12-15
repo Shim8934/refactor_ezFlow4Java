@@ -9,6 +9,11 @@
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;	    		
+	    	}
+	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
@@ -59,7 +64,7 @@
 	                //document.getElementById("txtlist_Layer").style.height = "455px";
 	            }
 	            document.getElementById("AddressListView").hotTrackColor = "#F7FAE0";
-	            document.getElementById("AddressListView").selectColor = "rgb(233, 241, 244)";
+	            document.getElementById("AddressListView").selectColor = "rgb(233, 241, 255)";
 	            document.getElementById("AddressListView").dataSource = listviewheader;
 	            AddressTreeView = new window['treeview.htc'].TreeView('AddressTreeView', 'AddressTreeView');
 	            AddressTreeView.attachEvent('requestdata', address_requestdata);
@@ -349,11 +354,20 @@
 	        }
 	
 	        function add() {
-	        		var pTextName = document.getElementById("TextName").value.trim();
-	            if ( pTextName == "") {
+	        	
+	        	var pTextName = document.getElementById("TextName").value.trim();
+	            
+	        	if ( pTextName == "") {
+	        		document.getElementById("TextName").focus();
 	                alert("<spring:message code='ezAddress.t346' />");
 	                return;
 	            }
+	        	
+	        	if (pTextName.indexOf('<') != -1 || pTextName.indexOf('>') != -1 || pTextName.indexOf(';') != -1) {
+	        		document.getElementById("TextName").focus();
+		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
+		        	return;
+		        }
 	
                 var xmlHTTP = createXMLHttpRequest();
                 var xmlDom = createXmlDom();
@@ -921,23 +935,31 @@
 	    }
 	
 	    function inputAddress() {
-	        if (document.getElementById("emailname").value == "") {
-	            document.getElementById("emailname").focus();
+
+	    	var emailname = document.getElementById("emailname").value;
+	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
+	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	    	
+	        if (emailname == "") {
 	            alert("<spring:message code='ezAddress.t349' />");
+	        	document.getElementById("emailname").focus();
 	            return;
 	        } else if (document.getElementById("emailaddr").value == "") {
-	            document.getElementById("emailaddr").focus();
                 alert("<spring:message code='ezAddress.t350' />");
+	        	document.getElementById("emailaddr").focus();
                 return;
 	        } 
 	        
-	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	        if (emailname.indexOf('<') != -1 || emailname.indexOf('>') != -1 || emailname.indexOf(';') != -1) {
+	        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
+	        	document.getElementById("emailname").focus();
+	        	return;
+	        }
 	        
 	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 	            alert("<spring:message code='ezAddress.t1100' />");
-	            document.getElementById("emailaddr").value = pTextEmail;
 	            document.getElementById("emailaddr").focus();
+	            document.getElementById("emailaddr").value = pTextEmail;
 	            return;
 	        }
 	        
@@ -1364,7 +1386,7 @@
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t352' />";
 	            document.getElementById("emailname").focus();
 	        }
-	        var m_strColorSelect = "rgb(233, 241, 244)";
+	        var m_strColorSelect = "rgb(233, 241, 255)";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1816,10 +1838,10 @@
 	            <tr>
 	                <th><spring:message code='ezAddress.t360' /></th>
 	                <td>
-	                    <input type="text" id="TextName" name="TextName" style="width:100%" MaxLength="24" class="txtClass"></td>
+	                    <input type="text" id="TextName" name="TextName" style="width:99%;margin-left:3px" MaxLength="24" class="txtClass"></td>
 	            </tr>
 	        </table>
-	        <table style="margin-top: 10px">
+	        <table style="margin-top: 7px">
 	            <tr>
 	                <td>
 	                    <table style="width: 100%">
@@ -1857,13 +1879,13 @@
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
 	                                <td>
-	                                    <input type="text" id="emailname" style="WIDTH: 98%" maxlength="24">
+	                                    <input type="text" id="emailname" style="WIDTH: 98%;margin-left:3px" maxlength="24">
 	                                </td>
 	                            </tr>
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t224' /></th>
 	                                <td>
-	                                    <input type="text" id="emailaddr" style="WIDTH: 98%" maxlength="100" onkeypress="return on_keydown(event)">
+	                                    <input type="text" id="emailaddr" style="WIDTH: 98%;margin-left:3px" maxlength="100" onkeypress="return on_keydown(event)">
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -1872,11 +1894,11 @@
 	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
-				            <div class="portlet_tabpart03_top" id="tab1" style="border-left:1px solid #d3d2d2;">
-			    	           <table style="margin-top:5px;width:100%;">
+				            <div class="portlet_tabpart03_top" id="tab1" style="height:25px;border:1px solid #ccc;background-color: #e9e9e9">
+			    	           <table style="padding-top:5px;width:100%;">
 									<tr>
 			                       		<td>
-			                           		<div style="margin-left:5px;">
+			                           		<div style="margin-left:5px;margin-top:3px">
 			                            		<select id="search_type">
 			                            			<option selected value="displayname" usedefault="1"><spring:message code='ezAddress.t124'/></option>
 			                            			<option value="description" usedefault="1"><spring:message code='ezAddress.t54'/></option>
@@ -1917,8 +1939,8 @@
 	                                    <div style="vertical-align: top; height: 433px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                        <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                            <tr>
-	                                                <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t124' /></td>
-	                                                <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t359' /></td>
+	                                                <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t124' /></td>
+	                                                <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t359' /></td>
 	                                                <td class="td_gray" style="font-weight: bold;"><spring:message code='ezAddress.t192' /></td>
 	                                            </tr>
 	                                        </table>
@@ -1932,7 +1954,7 @@
 	                                        </table>
 	                                    </div>
                                         <div style="vertical-align: top; text-align: center; height: 433px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>                                     
-	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6;"></div>	                                    
+	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6;border-top:0px"></div>	                                    
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -1950,7 +1972,7 @@
 	                                    	-[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
 	                            		</div>
 	                                    <div id="AddressListView" style="BORDER: #b6b6b6 1px solid; OVERFLOW: auto; WIDTH: 442px; HEIGHT: 440px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
-	                                    <div id="tblPageRayer"  style="width:442px;border:#b6b6b6 1px solid;height:35px"></div>
+	                                    <div id="tblPageRayer"  style="width:442px;border:#b6b6b6 1px solid;height:35px;border-top:0px;"></div>
 	                                </td>
 	                            </tr>
 	                        </table>
