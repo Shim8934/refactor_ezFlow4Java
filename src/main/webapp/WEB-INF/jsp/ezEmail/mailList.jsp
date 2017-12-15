@@ -118,6 +118,7 @@
 		        
 		        CurrentHeight = document.body.clientHeight;
 		        CurrenWidth = document.body.clientWidth;
+		        
 		        switch (g_foldertype) {
 		            case "sent":
 		                receivecheck.style.display = "";
@@ -142,6 +143,7 @@
 		                deleteall.style.display = '';
 		                break;
 		        }
+		        
 		        if (g_foldertype != "sent" && g_foldertype != "draft")
 		            btnReject.style.display = "";
 		
@@ -153,8 +155,10 @@
 		        pPreviewShow_HOW = pPreviewMode;
 		        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code="ezEmail.t99000002" />";
 		        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code="ezEmail.t99000002" />";
+		        
 		        if (pPreviewMode != "OFF") {
 		            g_bPrevShow = true;
+		            
 		            /* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지
 		            if (parseInt(document.documentElement.clientWidth) < 1000) {
 		                document.getElementById("PreViewleft").style.display = "none";
@@ -169,6 +173,7 @@
 		                if (pMailListDiv == 0 || pMailPreVDiv == 0) {
 		                    pMailListDiv = 50; pMailPreVDiv = 50;
 		                }
+		                
 		                document.getElementById("MailListRayer").style.display = "inline-block";
 		                document.getElementById("PreviewRayerW").style.display = "block";
 		
@@ -186,11 +191,13 @@
 		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
 		                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
 		                pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
-		            }
-		            else {
+		                
+		            } else {
+		            	
 		                if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
 		                    pMailListDiv_H = 50; pMailPreVDiv_H = 50;
 		                }
+		                
 		                document.getElementById("MailListRayer").style.display = "inline-block";
 		                document.getElementById("PreviewRayerH").style.display = "inline-block";
 		
@@ -209,6 +216,7 @@
 		                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
 		                pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
 		                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+		                
 		                if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
 		                    if (g_foldertype != "sent") {
 		                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
@@ -216,9 +224,10 @@
 		                        OldSmallSizeList = true;
 		                    }
 		                }
+		                
 		            }
-		        }
-		        else {
+		            
+		        } else {
 		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
@@ -319,6 +328,7 @@
 		    
 		    function mailGeneralSave() {
 	            var _pPreview;
+	            
 	            if (g_bPrevShow)
 	                _pPreview = pPreviewShow_HOW;
 	            else
@@ -326,6 +336,7 @@
 	
 	            if (parseInt(pMailListDiv) + parseInt(pMailPreVDiv) != 100)
 	                pMailPreVDiv = 100 - parseInt(pMailListDiv);
+	            
 	            if (parseInt(pMailListDiv_H) + parseInt(pMailPreVDiv_H) != 100)
 	                pMailPreVDiv_H = 100 - parseInt(pMailListDiv_H);
 	
@@ -355,15 +366,18 @@
 		            Save_unloadSave = true;
 		        }
 		    }
+		    
 		    function keyword_Clear() {
 		        document.getElementsByName('keyword').item(0).value = "";
 		    }
+		    
 		    function onkeydown_start_search(evt) {
 		        var curevent = (typeof event == 'undefined' ? evt : event)
 		        if (curevent.keyCode == "13") {
 		            start_search();
 		        }
 		    }
+		    
 		    function start_search() {
 		        searchMode = true;
 		        var inputkeyword = document.getElementsByName('keyword').item(0);
@@ -382,6 +396,7 @@
 		        goToPageByNum("1");
 		
 		    }
+		    
 		    function MakeSQL(key) {
 		        var radiosearch = document.getElementsByName('searchCheck');
 		        

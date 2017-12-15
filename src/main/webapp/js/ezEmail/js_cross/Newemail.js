@@ -15,7 +15,7 @@ function PreviewH_onMouserDown(e) {
     document.getElementById("ResizeBarH").style.display = "";
     document.getElementById("mailPanel").style.display = "";
     PreviewH_Move = true;
-    
+
     // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
     document.onselectstart = function () { return false; };
 }
@@ -42,6 +42,7 @@ function PreviewW_onMouserDown(e) {
     document.onselectstart = function () { return false; };
 }
 function MailPreviewEnd(e) {
+	
     if (PreviewW_Move || PreviewH_Move) {
         document.getElementById("ResizeBarH").style.display = "none";
         document.getElementById("ResizeBarW").style.display = "none";
@@ -1072,26 +1073,27 @@ function PreviewRayerChange(pGubun) {
             prevShow();
     } catch (e) { }
 }
+
+
 function Window_resize() {
     try {
-
     	document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
         document.getElementById("layer_popup").style.top = "100px";
 
         if (!isPreviewChange) {
+        	
         	/* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지 
             if (parseInt(document.documentElement.clientWidth) < 1000) {
-                document.getElementById("PreViewleft").style.display = "none";
-                if(pPreviewShow_HOW == "H")
-                    pPreviewShow_HOW = "W";
-                PreviewMode_ChangeBtn();
+            	document.getElementById("PreViewleft").style.display = "none";
+            	pPreviewShow_HOW = "W";
             }
             else {
                 document.getElementById("PreViewleft").style.display = "";
-            }*/
+            } */
         	
             if (pPreviewShow_HOW == "W") {
-                if (pMailListDiv == 0 || pMailPreVDiv == 0) {
+                
+            	if (pMailListDiv == 0 || pMailPreVDiv == 0) {
                     pMailListDiv = 50; pMailPreVDiv = 50;
                 }
                 document.getElementById("MailListRayer").style.display = "inline-block";
@@ -1107,6 +1109,7 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.width = "100%";
                 document.getElementById("PreviewRayerW").style.width = "100%";
                 document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
+                
                 if (navigator.userAgent.indexOf('Firefox') != -1)
                     document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
                 else
@@ -1115,14 +1118,17 @@ function Window_resize() {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
+                
                 if($("#PreW_CCMain").css("display") != "none") {
                 	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
                 }
             }
             else if (pPreviewShow_HOW == "H") {
-                if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
+            	// 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지 
+            	//if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
                     pMailListDiv_H = 50; pMailPreVDiv_H = 50;
-                }
+                //}
+            	
                 document.getElementById("MailListRayer").style.display = "inline-block";
                 document.getElementById("PreviewRayerW").style.display = "none";
                 document.getElementById("PreviewRayerH").style.display = "inline-block";
@@ -1137,23 +1143,28 @@ function Window_resize() {
                     pMailListWidthH = parseInt(CurrenWidth * 0.40);
                     pMailPreWidthH = pMailPreWidthH - ChangeListWidthDiv;
                 }
+                
                 document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
                 document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
                 document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+                
                 if (navigator.userAgent.indexOf('Firefox') != -1)
                     document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
                 else
                     document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                
                 document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
                 document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+                
                 if($("#PreH_CCMain").css("display") != "none") {
                 	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
                 }
+                
             }
             else if (pPreviewShow_HOW == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";
@@ -1161,6 +1172,7 @@ function Window_resize() {
                 CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
                 document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = "100%";
+                
                 if (navigator.userAgent.indexOf('Firefox') != -1)
                     document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
                 else
