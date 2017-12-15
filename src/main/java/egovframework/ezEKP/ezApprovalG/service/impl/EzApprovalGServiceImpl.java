@@ -20579,10 +20579,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (dlength > 0) {
 			if (ParentContID.toUpperCase().equals("ROOT")) {
                 rtnXML.append("<NODE>");
-				rtnXML.append("<VALUE>" + makeXMLString(docXML.getElementsByTagName("USERCONTNAME").item(0).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
+				rtnXML.append("<VALUE>" + commonUtil.cleanValue(docXML.getElementsByTagName("USERCONTNAME").item(0).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
 				rtnXML.append("<DATA1>" + docXML.getElementsByTagName("USERCONTID").item(0).getTextContent() + "</DATA1>");
 				rtnXML.append("<DATA2>" + ParentContID + "</DATA2>"); 
-				rtnXML.append("<DATA3>" + makeXMLString(docXML.getElementsByTagName("DESCRIPTION").item(0).getTextContent())+ "</DATA3>");
+				rtnXML.append("<DATA3>" + commonUtil.cleanValue(docXML.getElementsByTagName("DESCRIPTION").item(0).getTextContent())+ "</DATA3>");
                 rtnXML.append("<DATA4>" + OwnUserID + "</DATA4><ISLEAF>" + getUserContTreeLeaf(docXML.getElementsByTagName("USERCONTID").item(0).getTextContent(), companyID, tenantID) + "</ISLEAF><EXPANDED>FALSE</EXPANDED>");
 				// 표준모듈 (2007.05.07) : 다국어
 				rtnXML.append(getUserContTree(OwnUserID, docXML.getElementsByTagName("USERCONTID").item(0).getTextContent(), "", companyID, lang, tenantID, locale));
@@ -20590,10 +20590,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				for (int j = 0; j < dlength; j++) {
                      rtnXML.append("<NODE>");
-					 rtnXML.append("<VALUE>" + makeXMLString(docXML.getElementsByTagName("USERCONTNAME").item(j).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
+					 rtnXML.append("<VALUE>" + commonUtil.cleanValue(docXML.getElementsByTagName("USERCONTNAME").item(j).getTextContent()).replace("\\", "&#92;") + "</VALUE>");
 					 rtnXML.append("<DATA1>" + docXML.getElementsByTagName("USERCONTID").item(j).getTextContent() + "</DATA1>");
 					 rtnXML.append("<DATA2>" + ParentContID + "</DATA2>");
-					 rtnXML.append("<DATA3>" + makeXMLString(docXML.getElementsByTagName("DESCRIPTION").item(j).getTextContent()) + "</DATA3>");
+					 rtnXML.append("<DATA3>" + commonUtil.cleanValue(docXML.getElementsByTagName("DESCRIPTION").item(j).getTextContent()) + "</DATA3>");
                      rtnXML.append("<DATA4>" + OwnUserID + "</DATA4><ISLEAF>" + getUserContTreeLeaf(docXML.getElementsByTagName("USERCONTID").item(j).getTextContent(), companyID, tenantID) + "</ISLEAF><EXPANDED>FALSE</EXPANDED></NODE>");
 				}
 			}
