@@ -1037,6 +1037,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String useEucKr = ezCommonService.getTenantConfig("UseMailZipEucKr", userInfo.getTenantId());
 		String charSet = "utf-8";
 		
+		// utf-8로 압축했을 경우 윈도우 기본 프로그램으로 압축을 풀면 실패하여 euc-kr로 압축할 수 있도록 옵션처리했다.
+		// UseMailZipEucKr이 YES일 경우 euc-kr로 압축한다.
+		// 윈도우 기본 프로그램으로 압축을 풀기 위해 추가적으로 new ZipEntry("/" + fileName) 에서 "/"를 제거했다. 
 		if (useEucKr.equals("YES")) {
 			charSet = "euc-kr";
 		}
@@ -1120,7 +1123,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							fileName += ".eml";
 //							logger.debug("fileName=" + fileName);
 							
-							ZipEntry zipEntry = new ZipEntry("/" + fileName);
+							ZipEntry zipEntry = new ZipEntry(fileName);
 							zos.putNextEntry(zipEntry);
 							
 							// message.writeTo 시 읽은 메일이 되므로 읽지 않은 메일이면 읽지않음으로 다시 설정한다.
@@ -1199,6 +1202,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String useEucKr = ezCommonService.getTenantConfig("UseMailZipEucKr", userInfo.getTenantId());
 		String charSet = "utf-8";
 		
+		// utf-8로 압축했을 경우 윈도우 기본 프로그램으로 압축을 풀면 실패하여 euc-kr로 압축할 수 있도록 옵션처리했다.
+		// UseMailZipEucKr이 YES일 경우 euc-kr로 압축한다.
+		// 윈도우 기본 프로그램으로 압축을 풀기 위해 추가적으로 new ZipEntry("/" + fileName) 에서 "/"를 제거했다. 
 		if (useEucKr.equals("YES")) {
 			charSet = "euc-kr";
 		}
@@ -1281,7 +1287,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					fileName += ".eml";
 //					logger.debug("fileName=" + fileName);
 					
-					ZipEntry zipEntry = new ZipEntry("/" + fileName);
+					ZipEntry zipEntry = new ZipEntry(fileName);
 					zos.putNextEntry(zipEntry);
 					
 					// message.writeTo 시 읽은 메일이 되므로 읽지 않은 메일이면 읽지않음으로 다시 설정한다.
