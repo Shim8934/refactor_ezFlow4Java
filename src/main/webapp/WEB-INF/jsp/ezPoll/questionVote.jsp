@@ -110,15 +110,17 @@
 			
 			function fillCanvas(id, value, canv) {
 				var ctx = canv.getContext("2d");
-				ctx.shadowOffsetX = 2;
+				/* ctx.shadowOffsetX = 2;
 				ctx.shadowOffsetY = 2;
 				ctx.shadowBlur = 2;
 				ctx.shadowColor = "#999";
 				var gradient = ctx.createLinearGradient(0, 0, value, 0);
 				gradient.addColorStop(1, colors[id % 30]);
-				gradient.addColorStop(0, "#ffffff");
-				ctx.fillStyle = gradient;
-				ctx.fillRect(0, 0 , value, 20);
+				gradient.addColorStop(0, "#ffffff"); */
+				ctx.fillStyle = colors[id % 30];
+				ctx.fillRect(0, 0, value, 20);
+				ctx.strokeStyle = colors[id % 20];
+				ctx.strokeRect(0, 0, value, 20);				
 			}			
 					
 			function commentCheck() {
@@ -2172,32 +2174,30 @@
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 3px">
 				  <div style="float: left; display: block;" class="voteInfo">
-				  		<img src="${question.creatorImage}" style="display:inline-block;float:left; height:60px;width:60px; padding-bottom: 1px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')">
+				  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block;float:left;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 						<div id="textTest" style="display:inline-block;" class="voteTextTest">
 							<c:choose>
 								<c:when test="${primary == '1'}">
-									<span style="display:block; font-size:16px; color:#000;" class="questionFont"><c:out value='${question.creatorName1}'/></span>
+									<span class="questionFont"><c:out value='${question.creatorName1}'/></span>
 								</c:when>
 								<c:otherwise>
-									<span style="display:block; font-size:16px; color:#000;" class="questionFont"><c:out value='${question.creatorName2}'/></span>
+									<span class="questionFont"><c:out value='${question.creatorName2}'/></span>
 								</c:otherwise>
 							</c:choose>													
-							<span style="display:block; font-size:12px; max-width: 123px; color:#969595; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out value='${creatorDept}'/></span>	
-							<span style="display:block; font-size:12px; color:#969595;"><c:out value='${question.startDate}'/></span>
+							<span><c:out value='${creatorDept}'/></span>	
+							<span class="questionFontS"><c:out value='${question.startDate}'/></span>
 						</div>
 				  </div>
-				  <div class="questionFont" style="float: left; display: block; width:137px; height:60px; line-height:60px; background:#eaeaea; border:1px solid #d0d0d0; color:##004896; border-radius:5px; margin:0px 0px 0px 10px; text-align:center; color:#000; font-size:18px;">
+				  <div class="questionFont02">
 				  	<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/> <span style="color:#004896;" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
 				  </div>
 				  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-					  <div style="float: right; display: block;" id="_editVote">
-					  		<img src="/images/poll/edit1600_vote.png" style="display:inline-block;float:left; width:60px; height:60px; cursor: pointer;" onclick="voteEdit()">
-					  </div>
+					  <div id="_editVote" onclick="voteEdit()"><span>수정</span></div>
 				  </c:if>
 			</div>
-			<div id="titleAndContent" style="border: 1px solid #004896; background: #FFF; overflow: hidden;">				
+			<div id="titleAndContent">				
 				<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
-					<div style="height: 40px; max-width:50em; font-size: 18px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; float:left; padding:0px 30px 0px 0px;" class="baonkTest" title='${question.title}'><c:out value='${question.title}'/></div>
+					<div class="baonkTest" title='${question.title}'><c:out value='${question.title}'/></div>
 					<div style="height: 40px; float:left;">
 						<span id="status" style="font-weight: bold; color: #FFF;">
 						<c:choose>
@@ -2262,7 +2262,7 @@
 		               		<div id="optionContent<c:out value ="${_option.ansId}"/>" class="title01" style="display:block;">${_option.content}</div> 
 		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:30px;">
 		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
-		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20" style="border:1px solid #000000;"></canvas>			               					               					
+		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20"></canvas>			               					               					
 		               				</div>	
 		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px;">0</div>		               				
 		               				<script type="text/javascript">
@@ -2306,18 +2306,20 @@
 		            </tr>
 				</c:forEach>
 				<tr>
-					<td class="voteTdBg" style="width:100%; border:1px solid #DDD;" colspan="3" >
-						<div class="voteBtn" style="overflow: hidden;display:inline-block;">
-							<div onclick="javascript:displayDetail('${question.qstId}')" style="float:left; display:block; line-height:43px; cursor:pointer;"><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber"><c:out value='${numberOfUnvotedUsers}'/></span></div>
-							<%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
-							<!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
-						</div>
-                        <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-                            <div id="_finish" style="width:85px; height:45px; position:absolute; top:10px; left:50%; margin:0px 0px 0px 0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 13px; text-align:center; cursor: pointer;" onclick="finishVote();">
-                                <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
-                                <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
-                            </div> 
-                        </c:if>
+					<td class="voteTdBg" colspan="3" >
+						<div class="voteTdBg_layout">
+                            <div class="voteBtn">
+                                <div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber"><c:out value='${numberOfUnvotedUsers}'/></span></div>
+                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
+                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
+                            </div>
+                            <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
+                                <div id="_finish" onclick="finishVote();">
+                                    <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
+                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
+                                </div> 
+                            </c:if>
+                    	</div>        
 					</td>					
 				</tr>
 			</table>		
@@ -2384,8 +2386,8 @@
 				</table>
 			</div>
 			<div id="sendComment" class="voteComment" style="width:100%; position:relative;">
-				<div style="float:left; display:block; padding:18px 3px 10px 10px;">
-					<img id="_addFile" src="/images/poll/add_vote.png" style="float:left; display:block; height:25px; width:25px; cursor: pointer;" onclick="addFileComment();">
+				<div style="float:left; display:block; padding:18px 3px 10px 20px;">
+					<img id="_addFile" src="/images/poll/add_vote.png" style="float:left; display:block; height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
 				</div>
 				<div id ="_stickerArea" style="float:left; display:block; padding:18px 10px 10px 0px;">					
 					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
@@ -2638,7 +2640,7 @@
 							</div>
 						</div>
 					</div>					
-					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:25px; width:25px; padding-left: 10px; cursor: pointer;" onclick="addSticker()">
+					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
 				</div >				
 				<div style="float:left; display:block; min-width:1300px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
 					<textarea cols="20" rows="1" id="comment_input"  style="display: inline-block; overflow: hidden; height:17px; line-height:15px; padding:16px 0px; outline: none; border:none; resize:none;" oninput="auto_grow(this)"></textarea>
