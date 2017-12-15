@@ -129,7 +129,7 @@
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
 			        strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-			        strHTML += "<tr id='TreeArea' ><td style='background-color:rgb(229, 229, 229)'><div class='tree' id='TreeCtrl" + i.toString() + "' style='display:none;width:300px;overflow-x:hidden;'></div></td></tr>";
+			        strHTML += "<tr id='TreeArea' ><td><div class='tree' id='TreeCtrl" + i.toString() + "' style='display:none;width:300px;overflow-x:hidden;'></div></td></tr>";
 			    }
 			    strHTML += "</table>";
 
