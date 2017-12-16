@@ -574,7 +574,7 @@
 				<a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
-	    <div id="mainmenu">
+	    <div id="mainmenu" style="margin-bottom:8px">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t198'/></span></li>

@@ -667,7 +667,7 @@ form{display:inline;margin:0}
 	line-height:26px;
 	cursor:pointer;
 	border:1px solid #c0bfbf;
-	border-bottom:1px solid #ddd;
+	border-bottom:1px solid #41506e;
 }
 #tabnav li span, #tabnav li span.off,#tabnav2 li span, #tabnav2 li span.off{
 	display:block;
@@ -690,7 +690,7 @@ form{display:inline;margin:0}
 	z-index:5;
 	border:1px solid #41506e;
 	border-bottom:0px;
-	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;	 
+	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;
 }
 #tabnav li.on span, #tabnav2 li.on span{
 	display:block;	

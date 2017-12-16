@@ -3034,8 +3034,20 @@ function getDocInfo() {
         if (isUsed == "reuse") {
         	if (reuseTitleYN == "YES") {
         		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
-        		message.GetListItem(fields, "doctitle").textContent = doctitle;
-        	}
+        		var Div_ = document.createElement("p");
+                Div_.setAttribute("id", "frame_doctitle");
+                Div_.setAttribute("name", "frame_doctitle");
+                Div_.style.width = "99%";
+                Div_.style.marginLeft = "2px";
+                Div_.style.overflow = "hidden";
+                Div_.setAttribute("contentEditable", true);
+                Div_.style.textAlign = "left";
+                Div_.innerHTML = doctitle;
+                message.GetListItem(fields, "doctitle").appendChild(Div_);
+//        		message.GetListItem(fields, "doctitle").textContent = doctitle;
+//       		message.GetListItem(fields, "doctitle").setAttribute("contentEditable", true);
+//       		message.GetListItem(fields, "doctitle").removeAttribute("free"); 
+        }
         }
         
         tempSecurity = SelectSingleNodeValueNew(result, "DATA/SECURITYCODE");

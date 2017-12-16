@@ -232,6 +232,9 @@
 		        			if (Number($("#Stimepicker").val().substring(3,5)) > Number($("#Etimepicker").val().substring(3,5))) {
 		        				alert("<spring:message code='ezPersonal.pjj2'/>");
 		        				return true;
+		        			} else if  (Number($("#Stimepicker").val().substring(3,5)) == Number($("#Etimepicker").val().substring(3,5))) {
+		        				alert("<spring:message code='ezPersonal.pjj1'/>");
+		        				return true;
 		        			}
 		        		} else if ($("#Stimepicker").val() == $("#Etimepicker").val()) {
 		        			alert("<spring:message code='ezPersonal.pjj1'/>");

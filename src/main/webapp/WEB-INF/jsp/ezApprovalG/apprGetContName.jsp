@@ -30,7 +30,6 @@
             }
             catch (e)
             { }
-            document.getElementById('TxtAprDeptTempletName').value = "${titleText}";
             document.getElementById('TxtAprDeptTempletName').focus();
 
             try {
@@ -145,7 +144,7 @@
     <h1>${title}</h1>
     <div class="txt" style="margin-top:5px">▒&nbsp;<spring:message code='ezApproval.t296'/></div>
     <div class="nobox" style="margin-top:5px">
-        <input type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width: 100%;height:25px;border:1px solid #ccc;margin-top:5px" maxlength="50">
+        <input type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width: 100%;height:25px;border:1px solid #ccc;margin-top:5px" maxlength="50" value="<c:out value ='${titleText}'/>">
     </div>
     <div class="btnposition btnpositionNew">
         <input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApproval.t84'/>" onclick="return btn_SaveAprDeptTempletName_onclick()">

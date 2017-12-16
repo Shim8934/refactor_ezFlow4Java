@@ -38,7 +38,7 @@
 			var pUserNM2 = "<c:out value='${userInfo.displayName2}'/>"; 
 			var strContentLocation ="";
 			var g_progresswin;
-			var pTitle = ${cBoard.title};
+			var pTitle = "<c:out value='${cBoard.title}'/>";
 			var wDate = "<c:out value='${cBoard.writeDay}'/>";
 			var fileName = "<c:out value='${fileName}'/>";
 			var writerFakeName = "<c:out value='${writerFakeName}'/>";
@@ -222,6 +222,8 @@
                 str = ReplaceText(str, "&lt;", "<");
                 str = ReplaceText(str, "&gt;", ">");
                 str = ReplaceText(str, "&quot;", "\"");
+                str = ReplaceText(str, "&#034;", "\"");
+                str = ReplaceText(str, "&#039;", "\'");
                 return str;
             }
 		</script>
