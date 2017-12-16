@@ -15327,7 +15327,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String accountLastMonth = getCode2Name("A30", "003", companyID, langType, tenantID);
 		
 		/// 사립대나 특정회사에서는 회계년도를 1월~12월이 아닌 3월~익년2월인 경우가 있어서 회계년도를 반환
-		if (!accountLastMonth.equals("0") || !accountLastMonth.equals("")) {
+		if (accountLastMonth != null && !accountLastMonth.equals("0")) {
 			accountLastMonth = "-" + accountLastMonth;
 			month = Integer.parseInt(accountLastMonth);
 		}
