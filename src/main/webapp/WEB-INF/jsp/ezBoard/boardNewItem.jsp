@@ -211,7 +211,7 @@
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
 			        document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
-				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
+				    document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value='${boardListVO.ABSTRACT}'/>");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
 				    }
@@ -1270,6 +1270,7 @@
 		        str = ReplaceText(str, "&#39;", "'");
 		        str = ReplaceText(str, "&#039;", "'");
 		        str = ReplaceText(str, "&#034;", "\'");
+		        str = ReplaceText(str, "&#92;", "\\");
 		        return str;
 		    }
 		    function GetSmallUrl() {
