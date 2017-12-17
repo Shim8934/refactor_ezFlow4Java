@@ -60,8 +60,15 @@
 				    border: 1px solid #b6b6b6;
 				    height: 29px;
 				    word-break: break-all;
-			   }	   
-		    
+			   }	  
+			   
+			   #printDocument p, #printDocument2 p {
+			   		MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;
+			   }
+			   
+			   #printDocument div, #printDocument2 div {
+			   		MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;
+		       }
 		</style>
 		
 		<script type="text/javascript">
@@ -1045,13 +1052,26 @@
 			    //$("#printComment").html($("#taskCommentList").html());
 			    //$("#printComment img").remove();
 			    
-			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
+			    //baonk added
+			    var content1 = message.document.body.innerHTML;
+			    content1 = content1.replace(/P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} /g, "");
+			    document.getElementById("printDocument").innerHTML = content1;
+			    //end
+			    
+			    //document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
 			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			
 			    if (tasktype != "1" && tasktype != "4") {
 			    	$("#printTaskWork").show();
 			    	$("#printTaskWorkContent").show();
-			        document.getElementById("printDocument2").innerHTML = message2.document.body.innerHTML;
+			    	
+					//baonk added
+				    var content2 = message2.document.body.innerHTML;
+				    content2 = content2.replace(/P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} /g, "");
+				    document.getElementById("printDocument2").innerHTML = content2;
+				    //end
+			    	
+			        //document.getElementById("printDocument2").innerHTML = message2.document.body.innerHTML;
 			        document.getElementById("printAttach2").innerHTML = document.getElementById("attachedfileDIV2").innerHTML;
 			    }
 			
@@ -1132,8 +1152,9 @@
 			    document.getElementById("tablecomment").style.display = "";
 			    $("#updateStatus").show();
 			
-			    if (selecttab == "0") {
+/* 			    if (selecttab == "0") {
 			    	document.getElementById("taskInfo").style.display = "";
+			    	document.getElementById("taskDescription").style.display = "";
 			    	document.getElementById("normalScreen").style.display = "none";
 			        document.getElementById("tablework").style.display = "none";
 			        document.getElementById("tablecomment").style.display = "none";
@@ -1152,7 +1173,113 @@
 			        document.getElementById("normalScreen").style.display = "none";
 			        document.getElementById("tablework").style.display = "none";
 			        document.getElementById("tablecomment").style.display = "";
+			    } */
+			    
+			    //baonk added
+			    if (selecttab == "0") {
+		            document.getElementById("taskInfo").style.display = "";
+		            document.getElementById("normalScreen").style.display = "none";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "";			            
+		            
+		            
+		            if (creatorid == userid) {
+		            	document.getElementById("editTaskInfo").style.display = "";
+		            }
+		        	
+		        	document.getElementById("editTaskWork").style.display = "none";
+		        	document.getElementById("editTaskChisi").style.display = "none";
+			    } else if (selecttab == "1") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            document.getElementById("normalScreen").style.display = "";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "none";			            
+		            document.getElementById("editTaskWork").style.display = "none";
+		            
+		            if (creatorid == userid) {				        	
+			        	document.getElementById("editTaskChisi").style.display = "";	
+			        	document.getElementById("editTaskInfo").style.display = "none";
+			        } else {
+			        	document.getElementById("editTaskChisi").style.display = "none";				        	
+			        }
+			    } else if (selecttab == "2") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            
+		            if (tasktype == "1" || tasktype == "4") {
+		            	document.getElementById("normalScreen").style.display = "";
+		            	document.getElementById("tablework").style.display = "none";
+		            }
+		            else {
+		            	document.getElementById("normalScreen").style.display = "none";
+		            	document.getElementById("tablework").style.display = "";
+		            }	            
+		            		            
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "none";		            		            
+		            document.getElementById("editTaskChisi").style.display = "none";
+		            
+		            if (personid == userid) {			            	
+		            	if (tasktype == "1" || tasktype == "4") {	
+		            		document.getElementById("editTaskInfo").style.display = "none";
+	            			document.getElementById("editTaskWork").style.display = "none";
+	            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+	            			document.getElementById("editTaskChisi").style.display = "";			            					            			
+	            		}
+	            		else {
+	            			document.getElementById("editTaskWork").style.display = "";
+	            		}		
+			        } 
+		            else {
+		            	if(creatorid != userid) {
+		            		if (tasktype == "1" || tasktype == "4") {	
+		            			document.getElementById("editTaskWork").style.display = "none";
+		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+		            			document.getElementById("editTaskChisi").style.display = "";			            					            			
+		            		}
+		            		else {
+		            			document.getElementById("editTaskWork").style.display = "";
+		            		}			            		
+		            	}
+		            	else {
+		            		document.getElementById("editTaskWork").style.display = "none";
+		            		document.getElementById("editTaskInfo").style.display = "none";
+		            	}				        	
+			        }
+			    } else if (selecttab == "3") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            document.getElementById("normalScreen").style.display = "none";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "";
+		            document.getElementById("taskRep").style.display = "none";
+		            document.getElementById("taskDescription").style.display = "none";
+		            if (creatorid == userid) {
+		            	document.getElementById("editTaskInfo").style.display = "none";
+		            }
+		        	
+		        	document.getElementById("editTaskWork").style.display = "none";
+		        	document.getElementById("editTaskChisi").style.display = "none";
 			    }
+			    else if (selecttab == "4") {
+			    	document.getElementById("taskInfo").style.display = "none";
+		            document.getElementById("normalScreen").style.display = "none";
+		            document.getElementById("tablework").style.display = "none";
+		            document.getElementById("tablecomment").style.display = "none";
+		            document.getElementById("taskRep").style.display = "";
+		            document.getElementById("taskDescription").style.display = "none";
+		            
+		            if (creatorid == userid) {
+		            	document.getElementById("editTaskInfo").style.display = "none";
+		            }
+		        	
+		        	document.getElementById("editTaskWork").style.display = "none";	
+		        	document.getElementById("editTaskChisi").style.display = "none";
+			    }
+			    //end
 			    
 			    //clean the place
 		    	$("#repTable").html("");

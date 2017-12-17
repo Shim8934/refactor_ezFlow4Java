@@ -157,14 +157,14 @@
 		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><input id='opi' name ='opi'  type='checkbox' ></th>
-				<td><span id="ext1"><spring:message code='ezCircular.t176' /></span></td>
+				<td><span id="ext1">&nbsp;<spring:message code='ezCircular.t176' /></span></td>
 			</tr>
 			<tr>
 				<th><input id='att' name='att'  type='checkbox' ></th>
-				<td><span id="ext2"><spring:message code='ezCircular.t175' /></span></td>
+				<td><span id="ext2">&nbsp;<spring:message code='ezCircular.t175' /></span></td>
 			</tr>
 		</table>
-		<div class="btnposition" style="margin-top:15px">
+		<div class="btnposition btnpositionNew" style="margin-top:15px">
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezCircular.t177' /></span></a>
 		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span><spring:message code='ezCircular.t178' /></span></a>
 		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezCircular.t179' /></span></a>

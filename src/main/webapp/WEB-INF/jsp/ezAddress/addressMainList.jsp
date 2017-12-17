@@ -824,32 +824,32 @@
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>		
-		<div id="addpopup" class="popupwrap1" style="display:none">
+		<div id="addpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px">
 			<div class="popupwrap3">
-				<div style="height:20px;font-size:13px;font-weight:bold;margin-top:3px;">
-					▒ <spring:message code='ezAddress.t2003' />
-				</div>				
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
-					<tr>
-			  			<th style="width:90px"><spring:message code='ezAddress.t124' /></th>
-						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="24"></td>
+			    	<tr>
+						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:25px" colspan="2"><spring:message code='ezAddress.t2003' /></th>
 					</tr>
 					<tr>
-			  			<th style="width:90px"><spring:message code='ezAddress.t51' /></th>
-						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="24"></td>
+			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t124' /></th>
+						<td><input type="text" id="qname" name="qname" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px" ><spring:message code='ezAddress.t222' /></th>
-						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20"></td>
+			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t51' /></th>
+						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
 					</tr>
 					<tr>
-						<th style="width:90px"><spring:message code='ezAddress.t223' /></th>
-						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20"></td>
+			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t222' /></th>
+						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
 					</tr>
 					<tr>
-						<th><spring:message code='ezAddress.t264' /></th>
-						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"></td>
+						<th style="width:90px;height:30px"><spring:message code='ezAddress.t223' /></th>
+						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
+					</tr>
+					<tr>
+						<th style="height:30px"><spring:message code='ezAddress.t264' /></th>
+						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td>
 					</tr>
 				</table>
 				<!-- /내용 -->
@@ -860,22 +860,22 @@
 			    </div>
 			</div>
 		</div>
-		<div id="srarchpopup" class="popupwrap1" style="display:none">
+		<div id="srarchpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
 			<div class="popupwrap3">
-				<div style="height:20px;font-size:13px;font-weight:bold;margin-top:3px">
-					▒ <spring:message code='ezAddress.t312' />
-				</div>
 				<table class="content" style="margin-top:10px;">  
 					<tr>
-						<th style="text-align:center"><spring:message code='ezAddress.t314' /></th>
-						<td style="text-align:left">
+						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:25px" colspan="2"><spring:message code='ezAddress.t312' /></th>
+					</tr>
+					<tr>
+						<th style="text-align:center;height:30px"><spring:message code='ezAddress.t314' /></th>
+						<td style="text-align:left;height:30px">
 							<input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;"><spring:message code='ezAddress.t145' /></span>
 							<input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span>
 							<input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>
 						</td>
 					</tr>
 					<tr>
-						<th style="text-align:center">
+						<th style="text-align:center;height:30px">
 							<select name="search_case" id="search_case">
 								<option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
 								<option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
@@ -891,8 +891,8 @@
 								<option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 							</select>
 						</th>
-						<td style="text-align:left">
-							<input type="text" name="search_text" id="search_text" class="textarea" style="width:100%" onkeypress="return search_keypress()" >
+						<td style="text-align:left;height:30px">
+							<input type="text" name="search_text" id="search_text" class="textarea" style="width:98%;margin-left:3px" onkeypress="return search_keypress()" >
 						</td>
 					</tr>
 				</table>

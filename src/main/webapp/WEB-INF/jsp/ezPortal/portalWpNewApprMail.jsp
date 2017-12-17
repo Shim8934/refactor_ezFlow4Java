@@ -713,13 +713,29 @@
 
 	        if (window.screen.width > 800) {
 	            var pleftpos;
-	            pleftpos = parseInt(width) - 967;
+	            pleftpos = parseInt(width) - 1150;
 	            height = parseInt(height) - 30;
+	            
+	            if (CrossYN())
+	            	height = parseInt(height) - 25;
+
+	            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+	            	height = parseInt(height) - 40;
+
 	            width = parseInt(width) - pleftpos;
+	            
 	            left = pleftpos / 2;
 	        }
 	        else {
-	            heigth = parseInt(height) - 30;
+	        	height = parseInt(height) - 30;
+	            
+	            if (CrossYN())
+	            	height = parseInt(height) - 25;
+
+	            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+	            	height = parseInt(height) - 40;
+
+	            
 	            width = parseInt(width) - 10;
 	        }
 	        window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);

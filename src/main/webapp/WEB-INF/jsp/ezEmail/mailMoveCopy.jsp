@@ -61,7 +61,7 @@
                 treeconfig = xmlHTTP.responseXML;
 
             PostTreeView.config(treeconfig);
-            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, isFolderManager) + "</nodes></tree>");
+            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, isFolderManager) + "</nodes></tree>");
             PostTreeView.update();
             if (PostTreeView.selectedIndex() == -1) {
                 PostTreeView.select(1);
@@ -173,7 +173,7 @@
             if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
                 nodeIdx = arguments[0].nodeIdx;
             }
-            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, isFolderManager)
+            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, isFolderManager)
             PostTreeView.putchildxml(nodeIdx, childxml);
         }
     </script>

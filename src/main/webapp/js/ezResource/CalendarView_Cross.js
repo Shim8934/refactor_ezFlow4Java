@@ -561,7 +561,7 @@ function MultiSelectEnd(obj) {
     obj.style.backgroundColor = "rgb(233, 241, 255)";
     Write();
 }
-function Write() {
+function Write() {	
     var StartIdex = parseInt(DragStartItemID.replace("index_", ""));
     var Endidex = parseInt(DragEndItemID.replace("index_", ""));
 

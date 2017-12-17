@@ -1484,8 +1484,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			title = messageSource.getMessage("ezApproval.t297", userInfo.getLocale());
 		}
 		
-		logger.debug("titleText="+titleText);
-		
+		logger.debug("titleText= " + titleText);
+
 		model.addAttribute("titleText", titleText);
 		model.addAttribute("title", title);
 		 

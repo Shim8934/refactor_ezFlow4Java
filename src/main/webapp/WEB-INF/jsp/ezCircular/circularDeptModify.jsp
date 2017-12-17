@@ -123,7 +123,7 @@
 	        	</td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="save_info()" ><spring:message code='ezCircular.t25' /></span></a>
 	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezCircular.t26' /></span></a>      
 	    </div>

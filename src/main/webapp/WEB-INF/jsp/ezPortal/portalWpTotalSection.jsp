@@ -26,7 +26,7 @@
     				<div class="bottom"></div>
     			</div>
     			<div class="personal_content">
-					<a id="NewMail" onClick="btnSumming_click(this)" href="#">
+					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal01.gif" alt="<spring:message code="main.t00017" />" /></li>
 							<li class="count">
@@ -47,10 +47,10 @@
 					
 					<c:choose>
 						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')" href="#">
+							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')">
 						</c:when>
 						<c:otherwise>
-							<a id="AprSign" onClick="btnSumming_click(this)" href="#">
+							<a id="AprSign" onClick="btnSumming_click(this)">
 						</c:otherwise>
 					</c:choose>
 						<ul>
@@ -70,7 +70,7 @@
                     		</c:choose>
 						</ul>
 					</a>
-					<a id="Schedule" onClick="btnSumming_click(this)" href="#">
+					<a id="Schedule" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal03.gif" alt="<spring:message code="main.t00019" />" /></li>
 							<li class="count">
@@ -88,7 +88,7 @@
                     		</c:choose>
 						</ul>
 					</a>
-					<a id="Poll" onClick="btnSumming_click(this)" href="#">
+					<a id="Poll" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal04.gif" alt="<spring:message code="main.t00020" />" /></li>
 							<li class="count">

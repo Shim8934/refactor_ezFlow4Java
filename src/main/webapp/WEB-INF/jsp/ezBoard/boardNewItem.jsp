@@ -211,7 +211,7 @@
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
 			        document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
-				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
+				    document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value='${boardListVO.ABSTRACT}'/>");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
 				    }
@@ -676,12 +676,14 @@
 		            if (obj[i].className == "FIELD")
 		                obj[i].removeAttribute('className');
 		        }
-		        if (pDocID != "")
-		            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-		        
+
 		        setTimeout(JSleep, 1000);
 
 		        var strBody = message.GetEditorContent();
+		        
+		        if (pDocID != "") {
+		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        }
 		        
 				strBody = strBody.replace(/&quot;/gi, "\'");
       
@@ -1268,6 +1270,7 @@
 		        str = ReplaceText(str, "&#39;", "'");
 		        str = ReplaceText(str, "&#039;", "'");
 		        str = ReplaceText(str, "&#034;", "\'");
+		        str = ReplaceText(str, "&#92;", "\\");
 		        return str;
 		    }
 		    function GetSmallUrl() {
@@ -1804,11 +1807,14 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
-				
+		        Td.style.width = imgWidth + "px";
+		        Td.style.height = imgHeight + "px";
+		        Td.style.backgroundSize = "cover";
+		        
 	        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
 	        	
-		        Table.style.width = imgWidth + "px";
-		        Table.style.height = imgHeight + "px";
+		        Table.style.width = "auto";
+		        Table.style.height = "auto";
 
 		        if (temp.length > 0) {
 		            for (var j = 0; j < temp.length; j++) {
@@ -1932,7 +1938,7 @@
         		<c:when test="${boardInfo.guBun != '3'}">
 	        <tr style="height: 20px">
 	            <td>
-	                <div class="portlet_tabpart03">
+	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
 	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.t321' /></span></p>
 	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.t60' /></span></p>
@@ -2118,14 +2124,13 @@
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t209' /></th>
 	                        <td>
-	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100"></td>
+	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100">
+							</td>
 	                    </tr>
-	                     
-	                    <tr id="pUseBackGroundTR" style="display:none;" height="80px">
-	                      <th><spring:message code='ezBoard.t5011' /></th>
-	                      <td colspan="3" id="backgroundtd" style="padding-top:5px"></td>
+	                    <tr id="pUseBackGroundTR" style="display:none;" height="60px">
+	                    	<th><spring:message code='ezBoard.t5011' /></th>
+	                    	<td colspan="3" id="backgroundtd"></td>
 	                    </tr>
-	                    
 	                </table>
 	            </td>
 	            </c:when>

@@ -590,8 +590,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		sb.append("</ROWS></LISTVIEWDATA>");
 		
-		logger.debug("result = " + sb.toString());
-		
 		return sb.toString();
 	}
 
@@ -764,7 +762,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID, approvalFlag, userFlag);
 		
-		logger.debug("getTaskInSubCategoryForManage ended. sb = " + sb.toString());
+		logger.debug("getTaskInSubCategoryForManage ended.");
 		
 		return result;
 	}
@@ -1377,7 +1375,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</ROWS></LISTVIEWDATA>");
 		
 		logger.debug("getTaskHistory ended.");
-		logger.debug("result=" + sb.toString());
 		
 		return sb.toString();
 	}
@@ -2373,7 +2370,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				fw.append(formMhtInfo);
 				fw.close();
 			} catch (Exception e) {
-				logger.debug(e.getMessage());
 				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
 			}
 		}

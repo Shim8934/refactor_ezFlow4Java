@@ -150,6 +150,7 @@
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 			var totalMemSN = "0";
+			var reuseTitleYN = "${reuseTitleYN}";
 			
 		    window.onload = function ()
 		    {

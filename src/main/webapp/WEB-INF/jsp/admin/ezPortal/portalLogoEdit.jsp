@@ -361,7 +361,7 @@
 							<c:choose>
 								<c:when test="${imagePath != '' && imagePath ne null}">
 									<c:if test="${fn:length(imagePath) < 5}">
-										<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" width=106 height=42 ></td>
+										<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" width=106 height=42 style='display:none'></td>
 									</c:if>
 									<c:if test="${fn:length(imagePath) >= 5}">
 										<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=106 height=42 ></td>
@@ -452,13 +452,15 @@
 				<th><spring:message code='ezPortal.t93'/></th>
 				<td colspan="2">
 					<input type="radio" name="SelectEditRight" value="1" checked> <spring:message code='ezPortal.t97'/>
-					<input type="radio" name="SelectEditRight" value="2"> <spring:message code='ezPortal.t95'/>			</td>
+					<input type="radio" name="SelectEditRight" value="2"> <spring:message code='ezPortal.t95'/>			
+				</td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPortal.t94'/></th>
 				<td colspan="2">
 					<input type="radio" name="SelectViewRight" value="1" checked> <spring:message code='ezPortal.t97'/>
-					<input type="radio" name="SelectViewRight" value="2"> <spring:message code='ezPortal.t95'/>			</td>
+					<input type="radio" name="SelectViewRight" value="2"> <spring:message code='ezPortal.t95'/>			
+				</td>
 			</tr>
 		</table>
 		<div class="btnposition" id="toggle_tbl3_3" style="display:none">

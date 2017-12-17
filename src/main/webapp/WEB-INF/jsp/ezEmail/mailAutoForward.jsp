@@ -1,5 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -134,6 +133,7 @@
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezEmail/mailAutoForwardDelete.do", false);
 		        xmlhttp.send();
+		        
 		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		        	var ret = "";
 		            
@@ -185,18 +185,18 @@
 	<body style="margin-left:10px;margin-right:10px;">
 		<form id="form1">
 			<br/>
-			<span>▒ <spring:message code='ezEmail.t138' /></span>			
+			<span>▒ <spring:message code='ezEmail.t138' /></span>
 			<table class="content" style="width:490px;margin-top:5px">
 				<tr>
 			    	<th><spring:message code='ezEmail.t139' /></th>
-			    	<td>
-			        	<input type="text" id="ForwardAddress" value="${forwardAddress}" class="textarea" style="WIDTH:77%" NAME="ForwardAddress" onkeyup="onkeydown_SaveKeyEvent(event);">
+			    	<td style="height:32px">
+			        	<input type="text" id="ForwardAddress" value="${forwardAddress}" class="textarea" style="WIDTH:80%;margin-left:2px" NAME="ForwardAddress" onkeyup="onkeydown_SaveKeyEvent(event);">
 			        	<a id="ReceiverSelect" class="imgbtn" onClick="SelectReceiver_onClick()"><span><spring:message code='ezEmail.t488' /></span></a>
 			        </td>
 			  	</tr>
 			</table>
 			<div class="btnposition"></div>
-			<div style="text-align:center;width:410px;">
+			<div style="text-align:center;width:490px;">
 			    <a class="imgbtn" id="ForwardDel" onClick="ButtonSaveAutoForward_Click()"><span><spring:message code='ezEmail.t95' /></span></a>
 			    <a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='ezEmail.t48' /></span></a>
 			    <a class="imgbtn" onClick="window.location.href='/ezEmail/mailAutoForward.do'"><span><spring:message code='ezEmail.t39' /></span></a>			    

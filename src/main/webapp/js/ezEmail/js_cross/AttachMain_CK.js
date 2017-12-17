@@ -244,10 +244,10 @@ function AppendFileAttachInfo(ret) {
                                 fileSize = parseInt(fileSize / 1024) + "KB";
                             }
                             else if (fileSize.indexOf("B") > -1) {
-                                fileSize = fileSize;
+                                fileSize = parseInt(fileSize);
                             }
                             else {
-                                fileSize = fileSize + "B";
+                                fileSize = parseInt(fileSize) + "B";
                             }
                         }
 
@@ -301,10 +301,10 @@ function AppendFileAttachInfo(ret) {
                                     fileSize = parseInt(fileSize / 1024) + "KB";
                                 }
                                 else if (fileSize.indexOf("B") > -1) {
-                                    fileSize = fileSize;
+                                    fileSize = parseInt(fileSize);
                                 }
                                 else {
-                                    fileSize = fileSize + "B";
+                                    fileSize = parseInt(fileSize) + "B";
                                 }
                             }
 

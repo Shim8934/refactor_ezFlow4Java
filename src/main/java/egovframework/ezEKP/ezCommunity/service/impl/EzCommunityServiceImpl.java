@@ -695,6 +695,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String startDateTime = "";
 		logger.debug("newBoardItem started.");
 		logger.debug("pMode = " + pMode);
+		logger.debug("item.getItemLevel() = " + item.getItemLevel());
 		
 		if (!pUrl.equals("")) {
 			startDateTime = item.getStartDate();
@@ -761,6 +762,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			startDateTime = startDateTime + ":30:00"; 
 		}
 		
+		logger.debug("item.getItemLevel() = " + item.getItemLevel());
+		
 		model.addAttribute("item", item);
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("strWriterFakeName", strWriterFakeName);
@@ -819,7 +822,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				pFileName = pFileName.split(commonUtil.separator)[pFileName.split(commonUtil.separator).length - 1];
 			}
 
-			pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
+			//pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
 			int fileSize = (int) file.getSize();
 			
 			if (fileSize > pMaxSize) {
@@ -2885,7 +2888,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setWriterCompanyName2(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
 		item.setWriteDate(dateStr);
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
-		item.setTitle(URLDecoder.decode(xmlData.getElementsByTagName("TITLE").item(0).getTextContent(), "utf-8").trim());
+		item.setTitle(URLDecoder.decode(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
 
 		if (pMode.equals("copy")) {
 			pContentLocation = xmlData.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent();

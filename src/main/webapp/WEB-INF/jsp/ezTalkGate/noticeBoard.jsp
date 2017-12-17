@@ -22,32 +22,57 @@
 }
 </style>
 <script>
-
-var Count = 5; //공지사항 게시게수 
-
-function ItemRead_onclick(itemseq) {  
-    if (itemseq == "0") {
-      return;     
-    }
-     
-    var pheigth = window.screen.availHeight;
-    var pwidth = window.screen.availWidth;
-    pheigth = parseInt(pheigth) / 2;
-    pwidth = parseInt(pwidth) / 2;
-    pheigth = pheigth - 300;
-    pwidth = pwidth - 330;
-      
-    // window.open("/myoffice/ezMsn/shownotice.aspx?itemid=" + itemseq, "", "height=657,width=720px, status=no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,""); 
-
-    var pURL = "/ezTalkGate/showNoticeBoardItem.do?itemId=" + itemseq
-    window.showModalDialog(pURL, null, "dialogHeight:604px; dialogWidth:773px; status:no; scroll:no; help:no; edge:sunken; resizable=yes; center:yes"); 
-}
-  
+	
+	window.onload = function() {
+		document.getElementById('noticeMoreBtn').addEventListener("click", moreView);	
+	}
+	
+	var Count = 5; //공지사항 게시게수 
+	var SelectBoardID = "${noticeBoardID}";
+	var gubun = "0";
+	
+	function ItemRead_onclick(itemseq) {  
+	    
+		if (itemseq == "0") {
+	      return;     
+	    }
+	     
+	    var pheigth = window.screen.availHeight;
+	    var pwidth = window.screen.availWidth;
+	    pheigth = parseInt(pheigth) / 2;
+	    pwidth = parseInt(pwidth) / 2;
+	    pheigth = pheigth - 300;
+	    pwidth = pwidth - 330;
+	      
+	    // window.open("/myoffice/ezMsn/shownotice.aspx?itemid=" + itemseq, "", "height=657,width=720px, status=no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,""); 
+	    var pURL = "/ezTalkGate/showNoticeBoardItem.do?itemId=" + itemseq
+	    window.showModalDialog(pURL, null, "dialogHeight:604px; dialogWidth:773px; status:no; scroll:no; help:no; edge:sunken; resizable=yes; center:yes"); 
+	}
+	
+		
+	/**
+	 * 공지사항 더보기
+	 */
+	function moreView(){
+		window.open("/ezBoard/boardItemList.do?boardID=" + SelectBoardID + "&boardType=" + gubun, "_blank", "width=1152, height=790, resizable=yes, toolbar=yes");
+	}
+		
 </script>
 </head>
 <body scroll="no" width="365" height="165">
 <table width="100%" height="165" border="0" cellspacing="0" cellpadding="0" style="background:#f7f7f7;">
   <tr> 
+    <td height="10">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td style="text-align: right; padding-right: 10px;">
+          	<img src="/images/kr/main/btn_more02.gif" style="cursor: pointer;vertical-align:text-bottom;" alt='<spring:message code="main.t1008"/>' id="noticeMoreBtn"/>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
     <td>
       <table width="100%" border="0" cellspacing="0" cellpadding="0" height="" >
         <tr>

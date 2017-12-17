@@ -7,26 +7,6 @@
 	    <title><spring:message code='ezAddress.t21' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <style>
-	    	.popup .btnposition{
-				margin: 0px 0px 0px -10px;
-				/* margin-top: 10px; */
-				background: none;
-				border: none;
-				border-top: 1px solid #ddd;
-				padding:10px 0px;
-				background-color: #f2f2f2;
-				text-align:center;
-				position: absolute;
-				text-align: center;
-				bottom: 0px;
-				width:100%;
-			}
-			
-			.popup .primary td, .mainbody .primary td {
-				border-bottom : 0px
-			}
-	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/string_component.js"></script>
@@ -128,7 +108,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" onclick="return btn_ok_onclick()"><span><spring:message code='ezAddress.t25' /></span></a>
 	        <a class="imgbtn" onclick="return btn_cancel_onclick()"><span><spring:message code='ezAddress.t11' /></span></a>
 	    </div>

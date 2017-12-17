@@ -6,6 +6,11 @@
 	<head>
 		<title><spring:message code='ezEmail.t331' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<style>
+			.mainlist tr th {
+				border-top : 0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
@@ -328,7 +333,7 @@
 	  <br><br>
 	  ▒&nbsp;<spring:message code='ezEmail.t337' /><span class="point" id="unresolveName" style="padding-left:5px"><spring:message code='ezEmail.t338' /></span></div>
 	<div class="listview" style="height:200px;overflow:auto;margin-top:5px"><div id="ListViewid" STYLE="border:0px;"></div></div>
-	<div class="btnposition">
+	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="delete_onClick()" ><span><spring:message code='ezEmail.t95' /></span></a>
 	    <a class="imgbtn" onClick="change_onClick()" ><span><spring:message code='ezEmail.t38' /></span></a>
 	    <a class="imgbtn" onClick="cancel_onClick()" ><span><spring:message code='ezEmail.t39' /></span></a>

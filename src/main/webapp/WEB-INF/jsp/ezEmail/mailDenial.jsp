@@ -123,7 +123,7 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezEmail.t270' /></h1>
-	    <div style="overflow: auto; width: 315px; height: 220px;">
+	    <div style="overflow: auto; width: 430px; height: 220px;">
 	    	<table class="popuplist" id="msg" style="overflow: auto; width: 100%; height: 220px; word-break: break-all;"></table>
 	    </div>
 	    <div style="text-align: center; margin-top: 5px;">

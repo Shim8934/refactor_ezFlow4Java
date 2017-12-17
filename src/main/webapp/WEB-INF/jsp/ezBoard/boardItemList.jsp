@@ -1052,7 +1052,7 @@
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 315) / 2;
 		        
-		        GetOpenWindow("/ezBoard/boardNotiOrder.do?boardID=" + pBoardID, "MyBoardConfig", 320, 450);
+		        GetOpenWindow("/ezBoard/boardNotiOrder.do?boardID=" + pBoardID, "MyBoardConfig", 370, 450);
 		
 		    }
 		    function SetBoardAcl() {

@@ -2645,9 +2645,9 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
     
     if (individualmailuser != "0") {
-        DivPopUpShow(410, 355, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 325, "/ezEmail/letterOption.do");
     } else {
-        DivPopUpShow(410, 280, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 250, "/ezEmail/letterOption.do");
     }
 }
 

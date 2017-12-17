@@ -7,12 +7,28 @@
 		<title><spring:message code="ezResource.t403" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<style>
+			#resourceDataTable tr td {
+				border : 1px solid #ccc;				
+			}
+						
+			#resourceDataTable tr td{
+				padding-left : 7px;
+			}
+			
+			#resourceDataTable tr th{
+				font-weight: normal;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Calendar_Action_cross.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
 		<script type="text/javascript" src="/js/ezResource/CalendarView_Cross.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
@@ -139,6 +155,7 @@
 	                	document.getElementById("Weekbtn").style.display = "none";
 	                	document.getElementById("TR_Line2").style.display = "none";
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
+	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
 	        	}
 	        	catch (e) {
@@ -241,6 +258,46 @@
 	        	window.parent.left.location.href = "/ezResource/leftResource.do?flag=SELECT_NO";
 	        	window.parent.right.location.reload();
 	    	}
+	    	
+	    	function showRes(val01) {
+	    		$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezResource/scheduleResourceData.do",
+					data : { 
+						resourceId   : val01						
+					},
+					success: function(result){
+						if (result.primary == "1") {						
+							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
+							$("#ownerDept").html(result.resBrd.ownDeptNm);
+							$("#brdNm").html(result.resBrd.brdNm);
+						} else {
+							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
+							$("#ownerDept").html(result.resBrd.ownDeptNm2);
+							$("#brdNm").html(result.resBrd.brdNm2);
+						}
+						
+						$("#ownerCall").html(result.resBrd.ownerCall);
+						$("#resLocation").html(result.resBrd.resLocation);						
+						
+						var approveFlag = result.resBrd.approveFlag;
+						
+						if (approveFlag == "1") {
+							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
+						} else {
+							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+						}						
+						$("#brdExplain").html(result.resBrd.brdExplain);
+						
+						$("#ResourceInfo").modal();
+					}, 
+					error: function() {
+						
+					}
+				});	        	
+	        }
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;">
@@ -275,7 +332,7 @@
             	<td style="vertical-align:top;">
                 	<div id="mainlistlayout" style="width:100%;height:780px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;margin-top:10px;">
-                    		<tr>
+                    		<tr id="weeklyline">
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f8f8f8;">
                 					<div style="border:1px solid #ddd;border-bottom:0px;padding-top:9px;padding-bottom:7px;height:19px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
@@ -305,8 +362,7 @@
                 	</div>
             	</td>
           	</tr>
-		</table>
-		
+		</table>		
     	<div id="EmptyMsg" style="display:none;">
         	<div class="warningbox01" style="margin-top:100px;">
           		<div class="warningbox02">
@@ -321,6 +377,38 @@
 	        		</div>
 	        	</div>
         	</div>
+        </div>
+        <!-- layer 팝업 -->
+        <div id="ResourceInfo" style="display: none">
+        	<table id="resourceDataTable" style="width:100%; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
+				<tr>
+					<th colspan="2" height="35px" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white;font-weight: bold" id="brdNm"></th>
+				</tr>
+				<tr>
+					<th width="22%" style="height:24px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+					<td style="height:35px"><span id="ownerNm"></span></td>
+				</tr>
+				<tr>
+					<th style="height:35;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
+					<td style="height:35px"><span id="ownerDept"></span></td>
+				</tr>
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
+					<td style="height:35px"><span id="ownerCall"></span></td>
+				</tr>
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
+					<td style="word-break:break-all; height:20px" id="resLocation"><%-- ${resLocation} --%></td>
+				</tr>							
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
+					<td style="height:35px" id="approveFlag"></td>
+				</tr>
+				<tr>
+					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+					<td style="height:200px"><pre><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></pre></td>
+				</tr>
+         	</table>
         </div>
 	</body>
 </html>
