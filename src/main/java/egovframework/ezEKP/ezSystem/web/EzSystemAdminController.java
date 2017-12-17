@@ -211,8 +211,8 @@ public class EzSystemAdminController {
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		if (!userInfo.getLang().equals(sysLang))  {
-			sysLang = userInfo.getLang();
-		}
+			sysLang = "2";
+		} 
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate);
@@ -269,7 +269,7 @@ public class EzSystemAdminController {
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		if (!userInfo.getLang().equals(sysLang))  {
-			sysLang = userInfo.getLang();
+			sysLang = "2";
 		}
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 

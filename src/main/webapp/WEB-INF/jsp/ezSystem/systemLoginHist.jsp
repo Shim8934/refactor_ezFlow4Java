@@ -343,7 +343,7 @@
 		   							html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
 		   						} else {
 		   							var j = ((pageNum - 1) * 20) + 1 ;
-		   							
+			   						
 				    				if (res.lang == 1) {
 				    					res.loginHistList.forEach(function(i,v){
 				    						html += "<tr>";
