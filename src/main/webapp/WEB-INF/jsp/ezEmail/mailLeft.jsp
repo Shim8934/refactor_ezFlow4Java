@@ -458,6 +458,64 @@
 	        function hideProgress() {
 	        	document.getElementById("progressPanel").style.display = "none";
 	        }
+	        
+		    function goPage(idx) {
+				var url = "";
+				
+				switch (idx) {
+				    case 1:
+				        url = "/admin/ezOrgan/organRight.do";
+						break;
+				    case 2:
+				        url = "/admin/ezEmail/mailDistributionList.do";
+						break;
+					case 3:
+						url = "/admin/ezEmail/mailDefaultQuota.do" ;
+						break;
+					case 4:
+						url = "/myoffice/ezEmail/Admin/mail_spamfilter_category.aspx"  ;
+						break;
+					case 5:
+						if (!CrossYN()) {
+							url = "/myoffice/ezEmail/Admin/FormMaker.aspx";
+						} else {
+							url = "/myoffice/ezEmail/Admin/FormMaker_Cross.aspx";
+						}
+						break;
+					case 6:
+						url = "/myoffice/ezEmail/Admin/mail_approve_category.aspx";
+						break;
+					case 7:
+						url = "/myoffice/ezEmail/Admin/Right_DLSendManage.aspx" ;
+						break;
+					case 8:
+						url = "/myoffice/ezEmail/Admin/Right_DLSentItems.aspx";
+						break;
+					case 9:
+						url = "/admin/ezEmail/mailConfigColor.do";
+						break;
+					case 10:
+						url = "/admin/ezOrgan/retireUserManage.do";
+						break;
+					case 11:
+						url = "/myoffice/ezEmail/Admin/Right_LargeSizeMailManage.aspx";
+						break;
+				    case 12:
+				        url = "/admin/ezOrgan/permissionsList.do";
+				        break;
+				    case 13:
+				        url = "/admin/ezOrgan/addJobList.do";
+				        break;
+		            case 20:
+		                url = "/myoffice/ezEmail/Admin/mail_DLMailConfig.aspx";
+		                break;
+		            case 21:
+		                url = "/myoffice/ezEmail/DLmail_list.aspx";
+		                break;
+				}
+				
+				window.open(url, "right");
+			}	        
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: hidden;">
@@ -487,6 +545,28 @@
 	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>
 	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
+	        <c:if test="${isAdmin == true}">
+  			<h2>
+  				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
+    			<ul></ul>  				
+  			</h2>  
+  			<h2>
+  				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
+    			<ul></ul>    			
+  			</h2>  
+  			<h2>
+  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+    			<ul></ul>
+  			</h2>  			
+			<h2>
+				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
+			    <ul></ul>
+			</h2>
+			<h2>
+				<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
+			    <ul></ul>
+			</h2>		
+			</c:if>		        
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

@@ -155,6 +155,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
 		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		
 		return "admin/ezOrgan/organRight";
 	}
 	
@@ -2112,6 +2115,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+   		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
    		
    		logger.debug("retireUserManage ended");
    		
