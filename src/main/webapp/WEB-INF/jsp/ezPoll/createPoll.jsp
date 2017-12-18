@@ -784,148 +784,147 @@
 <xmp id="sigBody3" style="display: none;">${targetPath}</xmp>
 <xmp id="sigBody2" style="display: none;">${filePath}</xmp>
 <xmp id="sigBody" style="display: none;">${content}</xmp>
-<body class="mainbody" style="min-width: 1600px;">
+<body class="mainbody">
 	<form id="frmCreate" method="post" action="/ezPoll/pollComplete.do" name="frmCreate"> 	
 		<h1><spring:message code="ezPoll.t206" /></h1>
-
-		<table class="content content_poll" style="width: 100%;"> 
-			<tr>    <!------------Question title----------------> 
-				<%-- <th>Question</th>			--%>
-				<td style="width: 100%;" class="pollTd01">							
-					<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150">
-				</td>
-
-			</tr>
-			<tr>
-				<td style="width:100%;height:350px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
-	               <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%;overflow:auto; border-top:0px" ></iframe>
-           		</td>
-			</tr>		
-			
-			<tr>
-				<td class="pollTd01">					
-					<div style="width:100%;white-space:nowrap;display:none;height:22px">
-						<div id="progdiv" class="progarea" style="display: none">
-							<p class="prog_bar">
-								<span id="prog_bar" style="width: 0%"></span>
-							</p>
-							<span class="prog_num"><strong id="prog_num">0</strong>%</span>
-						</div>
-						<div style="clear: both"></div>
-					</div>
-					<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #b6b6b6;overflow: auto; margin:8px 0px 0px 0px;">
-						<div id="addFile" class="pollAddFile">
-							<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px; cursor: pointer;" onclick="uploadbtn()">
-							<spring:message code="ezPoll.t151"/>
-						</div>
-					</div> 
-					<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px;" /> 
-					<input type="hidden" onclick="fileupload()"/>
-				</td>
-			</tr>
-			
-		</table> 
-		
-			    <!------------Answer option---------------->
-		<table class="content" style="width: 100%; margin:0px 0px 10px 0px; border-bottom:none;"> 
-			<tr>
-				<td style="padding: 0px; border-bottom: none;" class="pollTd01">
-					<ul id="columnsbnk" >
-						<li class="myBorder">
-							<span>1</span>
-							<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();">
-							<img src="/images/sortIcon.png" class="drag_drop">
-						</li>
-						<li class="myBorder">
-							<span>2</span>
-							<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();">
-							<img src="/images/sortIcon.png" class="drag_drop">
-						</li>
-						<li class="myBorder">
-							<span>3</span>
-							<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();">
-							<img src="/images/sortIcon.png" class="drag_drop">
-						</li>
-					</ul>
-				</td>
-			</tr>
-		</table>
-
-		<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;"><spring:message code="ezPoll.t153"/></button>
-
-		<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
-			<tr>    <!------------Question setting---------------->
-				<td>
-				<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px dotted #DDD; margin:0px; padding:0px 5px;">
-					<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
-				</div>
-				<div id="numberOfMultiSelect" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-					<span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span>
-					<select id="myList">
-						<option value="1"><spring:message code="ezPoll.t156"/></option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-					</select>
-				</div>
-				<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-					<input id="seeResultFirst" type="checkbox" checked> 
-					<span><spring:message code="ezPoll.t157"/></span>
-				</div>
-					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-					<input id="anonymousVote" type="checkbox">
-					<span><spring:message code="ezPoll.t158"/></span>
-				</div>
-				
-				<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-					<input id="endDate" type="checkbox">
-					<span><spring:message code="ezPoll.t159"/></span>
-				</div>	
-				
-				<div id="_dateTimePicker" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px; display: none;">		
-					<span><spring:message code="ezPoll.t160"/></span>			
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
-					<select id="sTimePicker"></select>
-					<span><spring:message code="ezPoll.t161"/></span>
-					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
-					<select id="eTimePicker"></select>						
-				</div>
+		<div>
+			<table class="content content_poll" style="width: 100%;"> 
+				<tr>    <!------------Question title----------------> 
+					<%-- <th>Question</th>			--%>
+					<td style="width: 100%;" class="pollTd01">							
+						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150">
+					</td>
 	
-				<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px; position: relative;">
-					<span style="margin-right: 3px;"><spring:message code="ezPoll.t162"/></span>
-					<select id="set_Target">
-						<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
-						<option value="1"><spring:message code="ezPoll.t238" /></option>
-					</select>	
-					<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
-					<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 1400px; white-space: nowrap;" id="newTargetDiv"></div>																		
-				</div>
-				<div style="display:none">
-					<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
-                    <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
-                    <input type="text" name="selectYN" id="select_YN" style="display:none">	
-                    <input type="text" name="itemNo" id="item_no" style="display:none"> 
-					<input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
-					<input type="text" name="numberOfOptions" id="numberOfOptions" style="display:none">
-					<input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
-					<input type="text" name="multiSelectNumber" id="multiSelectNumber" value="0" style="display:none"> 
-					<input type="text" name="hidSecreteVote" id="hidSecreteVote" value="" style="display:none"> 
-					<input type="text" name="hidResultFirst" id="hidResultFirst" value="" style="display:none"> 
-					<input type="text" name="hidModifyInfo" id="hidModifyInfo" value="" style="display:none"> 
-					<textarea name="hidContent" id="hidContent" style="display:none"></textarea>
-					<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
-					<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">				
-				</div>
-				</td>
-			</tr>						
-		</table> 
-		
-		<div class="button pollButton02" style="padding-top: 20px;">				
-			<a class="imgbtn pollButton03" onclick="fun_OK()"><span><spring:message code="ezPoll.t145" /></span></a>				
-			<a class="imgbtn pollButton04" onclick="fun_Cancel()" style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><span style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><spring:message code="ezPoll.t139" /></span></a>				
-		</div>
+				</tr>
+				<tr>
+					<td style="width:100%;height:350px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
+		               <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%;overflow:auto; border-top:0px" ></iframe>
+	           		</td>
+				</tr>		
+				
+				<tr>
+					<td class="pollTd01">					
+						<div style="width:100%;white-space:nowrap;display:none;height:22px">
+							<div id="progdiv" class="progarea" style="display: none">
+								<p class="prog_bar">
+									<span id="prog_bar" style="width: 0%"></span>
+								</p>
+								<span class="prog_num"><strong id="prog_num">0</strong>%</span>
+							</div>
+							<div style="clear: both"></div>
+						</div>
+						<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #b6b6b6;overflow: auto; margin:8px 0px 0px 0px;">
+							<div id="addFile" class="pollAddFile">
+								<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px; cursor: pointer;" onclick="uploadbtn()">
+								<spring:message code="ezPoll.t151"/>
+							</div>
+						</div> 
+						<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display:none" /> 
+						<input type="hidden" onclick="fileupload()"/>
+					</td>
+				</tr>
+				
+			</table> 
 			
+				    <!------------Answer option---------------->
+			<table class="content" style="width: 100%; margin:10px 0px 10px 2px; border-bottom:none;"> 
+				<tr>
+					<td style="padding: 0px; border-bottom: none;" class="pollTd01">
+						<ul id="columnsbnk" >
+							<li class="myBorder">
+								<span>1</span>
+								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();">
+								<img src="/images/sortIcon.png" class="drag_drop">
+							</li>
+							<li class="myBorder">
+								<span>2</span>
+								<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();">
+								<img src="/images/sortIcon.png" class="drag_drop">
+							</li>
+							<li class="myBorder">
+								<span>3</span>
+								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();">
+								<img src="/images/sortIcon.png" class="drag_drop">
+							</li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+	
+			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;"><spring:message code="ezPoll.t153"/></button>
+	
+			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
+				<tr>    <!------------Question setting---------------->
+					<td>
+					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px dotted #DDD; margin:0px; padding:0px 5px;">
+						<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
+					</div>
+					<div id="numberOfMultiSelect" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+						<span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span>
+						<select id="myList">
+							<option value="1"><spring:message code="ezPoll.t156"/></option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+						</select>
+					</div>
+					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+						<input id="seeResultFirst" type="checkbox" checked> 
+						<span><spring:message code="ezPoll.t157"/></span>
+					</div>
+						<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+						<input id="anonymousVote" type="checkbox">
+						<span><spring:message code="ezPoll.t158"/></span>
+					</div>
+					
+					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+						<input id="endDate" type="checkbox">
+						<span><spring:message code="ezPoll.t159"/></span>
+					</div>	
+					
+					<div id="_dateTimePicker" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px; display: none;">		
+						<span><spring:message code="ezPoll.t160"/></span>			
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
+						<select id="sTimePicker"></select>
+						<span><spring:message code="ezPoll.t161"/></span>
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
+						<select id="eTimePicker"></select>						
+					</div>
+		
+					<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px; position: relative;">
+						<span style="margin-right: 3px;"><spring:message code="ezPoll.t162"/></span>
+						<select id="set_Target">
+							<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
+							<option value="1"><spring:message code="ezPoll.t238" /></option>
+						</select>	
+						<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
+						<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 1400px; white-space: nowrap;" id="newTargetDiv"></div>																		
+					</div>
+					<div style="display:none">
+						<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
+	                    <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
+	                    <input type="text" name="selectYN" id="select_YN" style="display:none">	
+	                    <input type="text" name="itemNo" id="item_no" style="display:none"> 
+						<input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
+						<input type="text" name="numberOfOptions" id="numberOfOptions" style="display:none">
+						<input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
+						<input type="text" name="multiSelectNumber" id="multiSelectNumber" value="0" style="display:none"> 
+						<input type="text" name="hidSecreteVote" id="hidSecreteVote" value="" style="display:none"> 
+						<input type="text" name="hidResultFirst" id="hidResultFirst" value="" style="display:none"> 
+						<input type="text" name="hidModifyInfo" id="hidModifyInfo" value="" style="display:none"> 
+						<textarea name="hidContent" id="hidContent" style="display:none"></textarea>
+						<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
+						<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">				
+					</div>
+					</td>
+				</tr>						
+			</table>			
+			<div class="button pollButton02" style="padding-top: 20px;margin-bottom:30px">				
+				<a class="imgbtn pollButton03" onclick="fun_OK()"><span><spring:message code="ezPoll.t145" /></span></a>				
+				<a class="imgbtn pollButton04" onclick="fun_Cancel()" style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><span style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><spring:message code="ezPoll.t139" /></span></a>				
+			</div>
+		</div>	
 	</form>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;"	id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"	style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">

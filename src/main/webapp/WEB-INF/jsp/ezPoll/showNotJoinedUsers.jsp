@@ -29,7 +29,7 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; width:100%; text-align:center;">
-			        	<h1><spring:message code='ezPoll.t134'/> <c:out value='${numberOfUnVotedUsers}'/></h1>
+					<h1><spring:message code='ezPoll.t123'/>&nbsp;(<c:out value='${numberOfUnVotedUsers}'/>)</h1>
 			    </div>					
 			</div>
 			<div style="height:359px; overflow: auto;">
@@ -53,6 +53,11 @@
 							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick=""></td>		
 						</tr>
 					</c:forEach>
+					<c:if test="${empty listOfUnvotedUsers}">
+						<tr class="white" style="border: 1px solid #DDD;">
+							<td style="height:51px;text-align: center"><spring:message code='ezPoll.t248'/></td>
+						</tr>
+					</c:if>
 				</table>				
 			</div>
 		</form>

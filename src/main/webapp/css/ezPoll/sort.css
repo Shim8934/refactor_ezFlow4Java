@@ -188,6 +188,5 @@ input[type=text]::-ms-clear{ display:none;}
 
 /* 20171129 showSeenUserInfo */
 .voteSeenTbl th{height:40px; background:#edf5ff; color:#304d7f; border:1px solid #c4d3e6;}
-.voteSeenTbl td{background:#fff;}
 #seenUser_{ color:#304d7f;}
 .voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd;}

@@ -236,7 +236,7 @@
 	       								listDivs[j].innerHTML = Object.keys(userNameArr[i][j]).map(function(key){return userNameArr[i][j][key];})[0] + ",&nbsp;";
 	       							} 
 	       							else {
-	       								listDivs[j].innerHTML = Object.keys(userNameArr[i][j]).map(function(key){return userNameArr[i][j][key];})[0];
+	       								listDivs[j].innerHTML = Object.keys(userNameArr[i][j]).map(function(key){return userNameArr[i][j][key];})[0] + "<img src='/images/poll/sendMailSmall.png' style='vertical-align:middle;margin-left:5px' />";
 	       							}	       							       							
 	       						}   
 	       						
@@ -1250,7 +1250,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUserName;
-                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
+                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:16px; padding:5px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (currentText.length > 0) {
@@ -1829,7 +1829,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userName;
-                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;");       
+                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:16px; padding:5px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (txtContent.length > 0) {
@@ -2169,493 +2169,495 @@
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
-	<body class="mainbody"  id="mainbodytag" style="min-width: 1600px;">
+	<body class="mainbody"  id="mainbodytag">
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
-			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 0px">
-				  <div style="float: left; display: block;" class="voteInfo">
-				  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block;float:left;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
-						<div id="textTest" style="display:inline-block;" class="voteTextTest">
-							<c:choose>
-								<c:when test="${primary == '1'}">
-									<span class="questionFont"><c:out value='${question.creatorName1}'/></span>
-								</c:when>
-								<c:otherwise>
-									<span class="questionFont"><c:out value='${question.creatorName2}'/></span>
-								</c:otherwise>
-							</c:choose>													
-							<span><c:out value='${creatorDept}'/></span>	
-							<span class="questionFontS"><c:out value='${question.startDate}'/></span>
-						</div>
-				  </div>
-				  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-					  <div id="_editVote" onclick="voteEdit()"><span>수정</span></div>
-				  </c:if>
-                  <div class="voteBtn">
-                                <div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
-                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
-                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
-                            </div>
-                  <div class="questionFont02">
-				  	<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/> <span style="color:#004896;" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
-				  </div>
-			</div>
-			<div id="titleAndContent">				
-				<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
-					<div class="baonkTest" title='${question.title}'><c:out value='${question.title}'/></div>
-					<div style="height: 40px; float:left;">
-						<span id="status" style="font-weight: bold; color: #FFF;">
-						<c:choose>
-							<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
-							<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
-						</c:choose>
-						</span>
-						<span id="votedUsers" style="font-weight: bold;">					
-							&#40;<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>&#41;
-						</span>
-						 <c:if test="${question.status == 1}">
-							<span id="daysRemain" style="font-weight: bold;">
-								- <c:out value='${timeRemain}'/>
-							</span> 			
-						</c:if>
-					</div>			
-				</div>
-				
-				<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block;" id="messagetd">
-	               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
-	       	 	</div>				
-			</div>			
-
-	        <c:if test="${numOfFile != 0}">
-	        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7; margin:0px 0px 20px 0px;">
-	        		<img src="/images/poll/attach_file_vote.png" class="attach_img" style="float: left;display:block;" >
-	        		<div class="txt" style="float: left;display:block; width:100%;">
-	        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> 개(<c:out value='${totalFilesSize}'/>)
-	        		</div>
-	        		<div class="all_save" style="display:block;">
-	        			<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);" style="display:inline-block;"></span> 
-	        			<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='padding-top: 5px;cursor: pointer;display:inline-block;' onclick="AttachAllDownload();"><spring:message
-									code='ezEmail.t99000004' /></span>
-	        		</div>
-	        		<div id="fileList" class="vote_fileList" style="width: 100%;">	        		
-	  					<c:forEach var="list" items="${fileNames}" varStatus="status">
-							<table class="content" style="width: 100%; height:32px; line-height:30px; border:none; border-bottom:1px solid #e1ebf7;">
-								<tr>
-									<td class="vote_listTd" style="border:none;">
-										<span name="file_path" _file="${list}" _path="${filePaths[status.index]}" onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer; width:16px; height:16px; margin:0px; padding:0px 5px;">
-											<img src="/images/poll/icon_adddownload_vote.gif" width="16" height="16" style="padding-left: 5px; vertical-align:middle; margin:-3px 0px 0px 0px;">											
-										</span>
-										<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">	
-											<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);">${list} (${fileSizes[status.index]})</span>								
-										</span>									
-									</td>
-								</tr>
-							</table>   			
-		        		</c:forEach>
-					</div>  
-			</div>
-	        </c:if>	
-			<table class="content" style="width:100%; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
-				<c:forEach var="_option" items="${listOptions}" varStatus="loop">
-		        	<tr>
-		        	   <c:if test="${question.status == 1}">
-			               <td class="vote_listTd" style="width:54px; border:1px solid #DDD; background:#f9f9f9;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
-			               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 15px; padding-top: 14px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
-			               </td>
-		               </c:if>
-		               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
-		               		<div id="optionContent<c:out value ="${_option.ansId}"/>" class="title01" style="display:block;">${_option.content}</div> 
-		               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:30px;">
-		               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
-		               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20"></canvas>			               					               					
-		               				</div>	
-		               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px;">0</div>		               				
-		               				<script type="text/javascript">
-		               					var loopIdx = ${loop.index};
-		               					userNameArr[loopIdx] = [];
-		               					var listUserAnswer = ${listOfUserAnswer};
-		               					var voteNum = ${_option.votesNumber};
-		               					var optionID = ${_option.ansId};
-		               					// voteArr = [[opt1Id, opt1_value], [opt2Id, opt2_value],...]
-		               					votesArr.push([optionID, voteNum]);		         
-		               					for(var i = 0; i < listUserAnswer.length; i ++){
-		               						if (listUserAnswer[i].ansId == optionID) {
-												var tempObj = new Object();
-												if (_primary == "1") {
-													tempObj[listUserAnswer[i].userId] = listUserAnswer[i].userName1;
-												}
-												else {
-													tempObj[listUserAnswer[i].userId] = listUserAnswer[i].userName2;
-												}												
-		               							userNameArr[loopIdx].push(tempObj);
-		               						}
-		               					}
-		               				</script>      					               			
-		               		</div>
-		               		<div id="voterNumber2<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
-		               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">	              
-		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-		               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
-		               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;"><spring:message code = 'ezPoll.t122'/></div>
-		               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
-		               			</div>
-		               		</div>          		
-		               </td>		               
-			          <td style="width:80px; border:1px solid #DDD; border-left:none;">	   	               		
-			               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" style="padding-bottom: 3px;padding-left: 20px;"></div>           		
-			          </td>		               
-		            </tr>
-				</c:forEach>
-				<tr>
-					<td class="voteTdBg" colspan="3" >
-						<div class="voteTdBg_layout">
-                            <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-                                <div id="_finish" onclick="finishVote();">
-                                    <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
-                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
-                                </div> 
-                            </c:if>
-                    	</div>        
-					</td>					
-				</tr>
-			</table>		
-			<!--<c:if test="${curentUser == question.creator || adminPrivilege == 1}">
-				<div id="_finish" style="border:1px solid #b6b6b6; margin-right: auto; margin-left: auto; width:120px; height:40px; margin-top: 15px; cursor: pointer;" onclick="finishVote();">
-					<img src="/images/verified.png" style="height:15px; width:15px; float:left; display:block; padding-top: 14px;padding-left: 5px; cursor: pointer;">				
-					<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
-				</div> 
-			</c:if>-->
-			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; border-bottom: none;">
-				<table style="width: 100%;" id="commentListView">
-					<c:forEach var="_comt" items="${listComments}">
-						<tr style="border-bottom: 1px dotted #b6b6b6;">
-							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<img src="${_comt.userImage}" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
-							</td>
-							<td>
+			<div>
+				<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 0px">
+					  <div style="float: left; display: block;" class="voteInfo">
+					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block;float:left;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
+							<div id="textTest" style="display:inline-block;" class="voteTextTest">
 								<c:choose>
 									<c:when test="${primary == '1'}">
-										<div class="userName">${_comt.userName1}</div>
+										<span class="questionFont"><c:out value='${question.creatorName1}'/></span>
 									</c:when>
 									<c:otherwise>
-										<div class="userName">${_comt.userName2}</div>
+										<span class="questionFont"><c:out value='${question.creatorName2}'/></span>
 									</c:otherwise>
-								</c:choose>								
-								
-								<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
-									<c:if test="${_comt.textContent != ''}">
-										<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
-									</c:if>
-									<c:if test="${_comt.imageAttach != ''}">
-										<div style="padding-top: 5px;">
-											<img _type="sticker" height=80 width=80 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px;" src="<c:out value ="${_comt.imageAttach}" />">
-										</div>										
-									</c:if>
-									<c:if test="${_comt.fileAttach != ''}">
-										<c:if test="${_comt.fileName != ''}">
-											<div style="padding-top: 5px;">
-												<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.filePath}"/>" onclick="downloadFileInCmt(this);">									
-												<div style="cursor: pointer; padding-left: 15px;" _fileInfo="<c:out value ="${_comt.filePath}" />" _fileName="<c:out value ="${_comt.fileName}" />" onclick="downloadFileInCmt(this);"><c:out value ="${_comt.fileName}" /></div>						
-											</div>					
+								</c:choose>													
+								<span><c:out value='${creatorDept}'/></span>	
+								<span class="questionFontS"><c:out value='${question.startDate}'/></span>
+							</div>
+					  </div>
+					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
+						  <div id="_editVote" onclick="voteEdit()"><span>수정</span></div>
+					  </c:if>
+	                  <div class="voteBtn">
+	                                <div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
+	                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
+	                            </div>
+	                  <div class="questionFont02">
+					  	<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+					  </div>
+				</div>
+				<div id="titleAndContent">				
+					<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
+						<div class="baonkTest" title='${question.title}'><c:out value='${question.title}'/></div>
+						<div style="height: 40px; float:left;">
+							<span id="status" style="font-weight: bold; color: #FFF;">
+							<c:choose>
+								<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
+								<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
+							</c:choose>
+							</span>
+							<span id="votedUsers" style="font-weight: bold;">					
+								&#40;<c:out value='${votedUsers}'/><spring:message code = 'ezPoll.t110'/>&#41;
+							</span>
+							 <c:if test="${question.status == 1}">
+								<span id="daysRemain" style="font-weight: bold;">
+									- <c:out value='${timeRemain}'/>
+								</span> 			
+							</c:if>
+						</div>			
+					</div>
+					
+					<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block;" id="messagetd">
+		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
+		       	 	</div>				
+				</div>			
+	
+		        <c:if test="${numOfFile != 0}">
+		        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7; margin:0px 0px 20px 0px;">
+		        		<img src="/images/poll/attach_file_vote.png" class="attach_img" style="float: left;display:block;" >
+		        		<div class="txt" style="float: left;display:block; width:100%;">
+		        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> 개(<c:out value='${totalFilesSize}'/>)
+		        		</div>
+		        		<div class="all_save" style="display:block;">
+		        			<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);" style="display:inline-block;"></span> 
+		        			<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='padding-top: 5px;cursor: pointer;display:inline-block;' onclick="AttachAllDownload();"><spring:message
+										code='ezEmail.t99000004' /></span>
+		        		</div>
+		        		<div id="fileList" class="vote_fileList" style="width: 100%;">	        		
+		  					<c:forEach var="list" items="${fileNames}" varStatus="status">
+								<table class="content" style="width: 100%; height:32px; line-height:30px; border:none; border-bottom:1px solid #e1ebf7;">
+									<tr>
+										<td class="vote_listTd" style="border:none;">
+											<span name="file_path" _file="${list}" _path="${filePaths[status.index]}" onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer; width:16px; height:16px; margin:0px; padding:0px 5px;">
+												<img src="/images/poll/icon_adddownload_vote.gif" width="16" height="16" style="padding-left: 5px; vertical-align:middle; margin:-3px 0px 0px 0px;">											
+											</span>
+											<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">	
+												<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);">${list} (${fileSizes[status.index]})</span>								
+											</span>									
+										</td>
+									</tr>
+								</table>   			
+			        		</c:forEach>
+						</div>  
+				</div>
+		        </c:if>	
+				<table class="content" style="width:100%; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
+					<c:forEach var="_option" items="${listOptions}" varStatus="loop">
+			        	<tr>
+			        	   <c:if test="${question.status == 1}">
+				               <td class="vote_listTd" style="width:54px; border:1px solid #DDD; background:#f9f9f9;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
+				               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 15px; padding-top: 14px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
+				               </td>
+			               </c:if>
+			               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
+			               		<div id="optionContent<c:out value ="${_option.ansId}"/>" class="title01" style="display:block;">${_option.content}</div> 
+			               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:30px;">
+			               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
+			               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20"></canvas>			               					               					
+			               				</div>	
+			               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px;">0</div>		               				
+			               				<script type="text/javascript">
+			               					var loopIdx = ${loop.index};
+			               					userNameArr[loopIdx] = [];
+			               					var listUserAnswer = ${listOfUserAnswer};
+			               					var voteNum = ${_option.votesNumber};
+			               					var optionID = ${_option.ansId};
+			               					// voteArr = [[opt1Id, opt1_value], [opt2Id, opt2_value],...]
+			               					votesArr.push([optionID, voteNum]);		         
+			               					for(var i = 0; i < listUserAnswer.length; i ++){
+			               						if (listUserAnswer[i].ansId == optionID) {
+													var tempObj = new Object();
+													if (_primary == "1") {
+														tempObj[listUserAnswer[i].userId] = listUserAnswer[i].userName1;
+													}
+													else {
+														tempObj[listUserAnswer[i].userId] = listUserAnswer[i].userName2;
+													}												
+			               							userNameArr[loopIdx].push(tempObj);
+			               						}
+			               					}
+			               				</script>      					               			
+			               		</div>
+			               		<div id="voterNumber2<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
+			               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">	              
+			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
+			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;"><spring:message code = 'ezPoll.t122'/></div>
+			               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
+			               			</div>
+			               		</div>          		
+			               </td>		               
+				          <td style="width:80px; border:1px solid #DDD; border-left:none;">	   	               		
+				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" style="padding-bottom: 3px;padding-left: 20px;"></div>           		
+				          </td>		               
+			            </tr>
+					</c:forEach>
+					<tr>
+						<td class="voteTdBg" colspan="3" >
+							<div class="voteTdBg_layout">
+	                            <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
+	                                <div id="_finish" onclick="finishVote();">
+	                                    <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
+	                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
+	                                </div> 
+	                            </c:if>
+	                    	</div>        
+						</td>					
+					</tr>
+				</table>		
+				<!--<c:if test="${curentUser == question.creator || adminPrivilege == 1}">
+					<div id="_finish" style="border:1px solid #b6b6b6; margin-right: auto; margin-left: auto; width:120px; height:40px; margin-top: 15px; cursor: pointer;" onclick="finishVote();">
+						<img src="/images/verified.png" style="height:15px; width:15px; float:left; display:block; padding-top: 14px;padding-left: 5px; cursor: pointer;">				
+						<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
+					</div> 
+				</c:if>-->
+				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; border-bottom: none;">
+					<table style="width: 100%;" id="commentListView">
+						<c:forEach var="_comt" items="${listComments}">
+							<tr style="border-bottom: 1px dotted #b6b6b6;">
+								<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
+									<img src="${_comt.userImage}" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
+								</td>
+								<td>
+									<c:choose>
+										<c:when test="${primary == '1'}">
+											<div class="userName">${_comt.userName1}</div>
+										</c:when>
+										<c:otherwise>
+											<div class="userName">${_comt.userName2}</div>
+										</c:otherwise>
+									</c:choose>								
+									
+									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
+										<c:if test="${_comt.textContent != ''}">
+											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; ">${_comt.textContent}</p>
 										</c:if>
-										<c:if test="${_comt.fileName == ''}">
+										<c:if test="${_comt.imageAttach != ''}">
 											<div style="padding-top: 5px;">
-												<img _type="images" vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer; max-width: 500px; max-height: 500px; width: auto; height: auto;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />" onclick="downloadFileInCmt(this);">
-											</div>
+												<img _type="sticker" height=80 width=80 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px;" src="<c:out value ="${_comt.imageAttach}" />">
+											</div>										
 										</c:if>
-									</c:if>
-								</div>
-								<div id="editCmtDiv<c:out value ="${_comt.cmtId}" />" style="display: none;"></div>
-							</td>
-							<td style="width: 145px; position:relative;">
-								<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
-								<c:if test="${_comt.userId == curentUser}">								
-									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
-									<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; width: 120px;" tabindex=0>							
-										<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
-										<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
+										<c:if test="${_comt.fileAttach != ''}">
+											<c:if test="${_comt.fileName != ''}">
+												<div style="padding-top: 5px;">
+													<img _type="file" height=60 width=60 vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.filePath}"/>" onclick="downloadFileInCmt(this);">									
+													<div style="cursor: pointer; padding-left: 15px;" _fileInfo="<c:out value ="${_comt.filePath}" />" _fileName="<c:out value ="${_comt.fileName}" />" onclick="downloadFileInCmt(this);"><c:out value ="${_comt.fileName}" /></div>						
+												</div>					
+											</c:if>
+											<c:if test="${_comt.fileName == ''}">
+												<div style="padding-top: 5px;">
+													<img _type="images" vertical-align="middle" style="display: block; padding-left: 10px; padding-right: 5px; cursor: pointer; max-width: 500px; max-height: 500px; width: auto; height: auto;" src="<c:out value ="${_comt.fileAttach}" />" _fileName="<c:out value ="${_comt.fileName}" />" _fileInfo="<c:out value ="${_comt.fileAttach}" />" onclick="downloadFileInCmt(this);">
+												</div>
+											</c:if>
+										</c:if>
 									</div>
-								</c:if>
-							</td>
-						</tr>
-					</c:forEach>					
-				</table>
-			</div>
-			<div id="sendComment" class="voteComment" style="width:100%;">
-            	<div class="sendComment_layout">
-				<div class="send_attach">
-					<img id="_addFile" src="/images/poll/add_vote.png" style="height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
+									<div id="editCmtDiv<c:out value ="${_comt.cmtId}" />" style="display: none;"></div>
+								</td>
+								<td style="width: 145px; position:relative;">
+									<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
+									<c:if test="${_comt.userId == curentUser}">								
+										<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+										<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; width: 120px;" tabindex=0>							
+											<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
+											<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
+										</div>
+									</c:if>
+								</td>
+							</tr>
+						</c:forEach>					
+					</table>
 				</div>
-				<div id ="_stickerArea">					
-					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
-						<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
-							<div style="float:left; display:block;">
-								<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
+				<div id="sendComment" class="voteComment" style="width:100%;">
+	            	<div class="sendComment_layout">
+					<div class="send_attach">
+						<img id="_addFile" src="/images/poll/add_vote.png" style="height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
+					</div>
+					<div id ="_stickerArea">					
+						<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
+							<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
+								<div style="float:left; display:block;">
+									<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
+								</div>
+								<div id="_ePresentors" style="float:left; display:block; ">
+									<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group5" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+							   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
+								</div>
+								<div style="float: right; display:block;">
+									<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
+								</div>
+							</div>						
+							<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+								<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
+									<table id="_listG1Table">
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/45.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/65.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/75.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/85.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/95.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/105.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/118.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/119.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/125.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/135.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/145.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/155.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/165.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/172.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/182.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/192.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/202.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/215.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/216.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/222.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/232.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/242.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/252.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/262.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/272.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/282.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/292.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/302.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/314.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/315.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/322.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/332.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/341.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/351.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/361.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/371.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/381.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/391.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/401.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/431.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+									</table>
+								</div>
+								<div id="_listG2" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
+									<table id="_listG2Table">
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/2.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/3.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/4.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/5.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/6.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/7.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/8.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/9.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/10.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/11.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/12.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/13.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/14.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/15.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/16.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/17.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/18.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/19.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/20.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/21.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/22.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/23.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/24.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/25.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/26.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/27.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/28.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/29.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/30.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/31.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/32.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/33.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+									</table>
+								</div>
+								<div id="_listG3" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
+									<table id="_listG3Table">
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/1.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/2.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/3.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/4.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/5.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/6.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/7.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/8.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/9.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/10.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/11.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/12.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/13.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/14.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/15.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/16.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/17.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/18.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/19.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/20.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/21.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/22.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/23.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/24.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+									</table>
+								</div>
+								<div id="_listG4" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
+									<table id="_listG4Table">
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/1.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/2.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/3.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/4.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/5.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/6.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/7.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/8.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/9.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/10.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/11.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/12.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/13.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/14.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/15.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/16.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/17.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/18.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/19.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/20.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/21.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/22.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/23.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/24.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/25.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/26.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/27.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/28.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/29.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/30.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/31.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/32.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/33.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/34.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/35.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/36.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/37.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/38.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/39.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/40.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+										<tr style="width:100%; height:45px;">
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/41.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/42.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/43.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/44.png);" onclick="displaySticker(this);"></div></td>
+										</tr>
+									</table>
+								</div>
 							</div>
-							<div id="_ePresentors" style="float:left; display:block; ">
-								<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group5" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-						   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-								<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
-							</div>
-							<div style="float: right; display:block;">
-								<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
-							</div>
-						</div>						
-						<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
-							<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
-								<table id="_listG1Table">
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/45.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/65.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/75.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/85.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/95.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/105.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/118.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/119.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/125.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/135.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/145.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/155.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/165.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/172.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/182.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/192.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/202.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/215.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/216.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/222.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/232.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/242.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/252.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/262.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/272.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/282.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/292.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/302.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/314.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/315.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/322.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/332.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/341.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/351.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/361.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/371.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/381.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/391.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/401.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/431.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-								</table>
-							</div>
-							<div id="_listG2" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
-								<table id="_listG2Table">
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/2.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/3.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/4.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/5.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/6.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/7.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/8.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/9.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/10.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/11.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/12.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/13.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/14.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/15.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/16.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/17.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/18.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/19.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/20.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/21.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/22.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/23.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/24.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/25.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/26.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/27.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/28.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/29.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/30.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/31.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/32.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/33.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-								</table>
-							</div>
-							<div id="_listG3" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
-								<table id="_listG3Table">
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/1.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/2.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/3.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/4.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/5.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/6.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/7.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/8.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/9.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/10.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/11.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/12.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/13.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/14.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/15.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/16.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/17.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/18.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/19.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/20.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/21.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/22.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/23.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/24.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-								</table>
-							</div>
-							<div id="_listG4" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
-								<table id="_listG4Table">
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/1.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/2.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/3.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/4.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/5.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/6.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/7.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/8.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/9.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/10.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/11.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/12.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/13.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/14.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/15.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/16.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/17.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/18.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/19.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/20.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/21.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/22.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/23.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/24.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/25.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/26.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/27.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/28.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/29.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/30.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/31.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/32.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/33.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/34.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/35.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/36.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/37.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/38.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/39.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/40.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-									<tr style="width:100%; height:45px;">
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/41.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/42.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/43.png);" onclick="displaySticker(this);"></div></td>
-										<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/44.png);" onclick="displaySticker(this);"></div></td>
-									</tr>
-								</table>
-							</div>
-						</div>
-					</div>					
-					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
-				</div >				
-				<div class="comment_input_layout">
-					<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)"></textarea>
+						</div>					
+						<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
+					</div >				
+					<div class="comment_input_layout">
+						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)"></textarea>
+					</div>
+					<div class="commentBtn">
+						<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
+							<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
+							<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
+						</div>	
+						<button id="sendBttn" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
+					</div>
+					</div>
 				</div>
-				<div class="commentBtn">
-					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
-						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
-						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
-					</div>	
-					<button id="sendBttn" style="display:inline-block; width: 96px; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
-				</div>
-				</div>
-			</div>
-			<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 0px; height: 0px" /> 
+				<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 0px; height: 0px" />
+			</div>	
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
 	</body>

@@ -460,24 +460,24 @@
 					<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onclick="menu_Search()"></a>
 			</span>
 		</h1>
-		<div id="mainmenu1">
+		<div id="mainmenu">
 			<ul>
 <%-- 				<li>
 					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" >
 					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t227"/></span></a>
 				</li> --%>
-				<li id="btnDel"><a class="pollImgbtn" onClick="menu_Delete()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t202"/></span></a></li>
-				<li id="btnHid"><a class="pollImgbtn" onClick="menu_Hide()"   style="margin-top: 3px;"><span ><spring:message code="ezPoll.t203"/></span></a></li>
-				<li><a class="pollImgbtn" onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
-				<li><input id="seeAll" type="checkbox" style="float:left; margin:10px 4px 0px 5px;"><span><spring:message code="ezPoll.t205" /></span></li>
+				<li id="btnDel"><a onClick="menu_Delete()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t202"/></span></a></li>
+				<li id="btnHid"><a onClick="menu_Hide()"   style="margin-top: 3px;"><span><spring:message code="ezPoll.t203"/></span></a></li>
+				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
+				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li>
 			</ul>
 		</div>
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu1"), "ul", "li", "0");
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>	
 			 
 		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
-			<table id="QstList" class="mainlist1" style="width:100%"> 
+			<table id="QstList" class="mainlist" style="width:100%;margin-top:5px"> 
 			    <tr> 
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">

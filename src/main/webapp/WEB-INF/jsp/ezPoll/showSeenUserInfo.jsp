@@ -52,10 +52,15 @@
 									</c:choose>									
 								</a>								
 							</td>	
-							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list1.phone}"/></td>	
-							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick=""></td>					
+							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list1.phone}"/>&nbsp;</td>	
+							<td style="border-left:none; position: relative;border-bottom:1px solid #ddd"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;"></td>					
 						</tr>
 					</c:forEach>
+					<c:if test="${empty listOfSeenUsers}">
+						<tr class="white" style="border: 1px solid #DDD;">
+							<td style="height:51px;text-align: center">-</td>
+						</tr>
+					</c:if>
 				</table>
 				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;" class="voteUnseenTbl">
 					<tr> 
@@ -80,6 +85,11 @@
 							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick=""></td>											
 						</tr>
 					</c:forEach>
+					<c:if test="${empty listOfUnSeenUsers}">
+						<tr class="white" style="border: 1px solid #DDD;">
+							<td style="height:51px;text-align: center">-</td>
+						</tr>
+					</c:if>
 				</table>
 			</div>
 		</form>
