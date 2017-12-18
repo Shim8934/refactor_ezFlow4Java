@@ -34,7 +34,7 @@
 
 
 
-.voteComment{width:100%; height:65px; background:#f9f9f9; border:1px solid #DDD; border-top:0px; margin:0px 0px 0px 0px; padding:0px;}
+
 
 
 
@@ -49,10 +49,10 @@
 
 
 /* 20171214 */
-.questionFont02{float: left; display: block; padding:0px 10px; height:65px; line-height:63px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; margin:0px 0px 0px 10px; text-align:center; color:#000; font-size:18px;}
-.questionFont02 a{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; height:65px;}
-.questionFont02 a:hover{ color:#004896;}
-.questionFont02 a span{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:18px;}
+.questionFont02{float: right; display: block; padding:0px 10px; height:43px; line-height:41px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; margin:10px 5px 0px 0px; text-align:center; color:#000; font-size:16px;}
+.questionFont02 a{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; height:45px;}
+.questionFont02 a:hover{ color:#000;}
+.questionFont02 a span{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:16px;}
 
 .voteInfoP{ margin:8px 0px 0px 10px;border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px; padding:0px; float:left;}
 .voteInfoP img{ border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px;}
@@ -69,7 +69,17 @@
 #_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; font-size:15px;}
 
 .voteTdBg{background:#f9f9f9 !important; margin:0px !important; padding:0px !important; height:68px !important; position:relative !important; border:1px solid #dddddd !important;}
-.voteTdBg .voteTdBg_layout{ width:299px; margin:0 auto;}
-.voteTdBg .voteBtn{height:43px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 29px; margin:0px 15px 0px 0px; line-height:43px; font-size:16px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; display:inline-block;}
-.voteTdBg .voteBtn #_unVotedNumber{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:16px; color:#004896;}
+.voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
+.voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:16px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; display:inline-block; cursor:pointer;}
+.voteBtn #_unVotedNumber{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:16px; color:#004896;}
 #_finish{height:45px; margin:0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:16px;font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; display:inline-block;}
+
+.userName{display: block; color:#004896; font-size:16px; padding:5px 0px 0px 20px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif;}
+
+.voteComment{width:100%; height:79px !important; background:#f9f9f9; border:1px solid #DDD; border-top:0px; margin:0px 0px 0px 0px; padding:0px; overflow:hidden;}
+.sendComment_layout{ height:58px; overflow:hidden; margin:10px; background:#fff; border:1px solid #ddd;}
+.send_attach{ float:left; overflow:hidden; margin:0px 0px 0px 0px; padding:15px 0px 0px 15px;}
+#_stickerArea{ float:left; overflow:hidden; margin:0px; padding:15px 15px 0px 0px;}
+
+.comment_input_layout{float:left; display:block; min-width:1300px; border-left:1px solid #DDD; margin:16px 0px; padding:0px 0px; height:27px;}
+#comment_input{ height:27px !important; line-height:27px; padding:0px 0px 0px 10px; outline: none; border:none; resize:none; overflow:hidden; font-size:12px;}

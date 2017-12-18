@@ -49,9 +49,9 @@
 			var currentGroupSticker 	= -1;
 			var flagEvent 				= -1;
 			var currentEditingCmt 		= -1;
-			var colors 					= ["#efa1a1", "#fbcf9f", "#d4e69f", "#7fd9e3", "#e9c9ff", "#ffe56e", "#53cead", "#2c8aff", "#74a27b", "#f783fb",
-			             				   "#e17474", "#ff9522", "#b9de4d", "#37bccb", "#c592e8", "#ffc000", "#26a986", "#1e67c2", "#437b4c", "#d849dd",
-			              				   "#ff694c", "#db7200", "#91be0d", "#108895", "#9456bf", "#d29e00", "#167c61", "#0a448d", "#285830", "#ad04b3"];
+			var colors 					= ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",		
+											"#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",     
+			           						"#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
             var iframeStyle 			= "<style>";            
             iframeStyle += "P    	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "DIV  	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -1234,7 +1234,7 @@
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
                 image_tag.src = "${userPhoto}";
-                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; cursor: pointer; "); 
+                image_tag.setAttribute("style", "padding-top: 10px; height: 38px; width:38px; cursor: pointer; "); 
                 image_tag.onclick = function () { menuQst_DetailUserInfo(curentUser); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);                          
@@ -1813,7 +1813,7 @@
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
                 var image_tag = document.createElement("img");                
                 image_tag.src = userPhoto;
-                image_tag.setAttribute("style", "padding-top: 10px; height: 50px; width:50px; cursor: pointer; "); 
+                image_tag.setAttribute("style", "padding-top: 10px; height: 38px; width:38px; cursor: pointer; "); 
                 image_tag.onclick = function () { menuQst_DetailUserInfo(userId); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);
@@ -2188,12 +2188,17 @@
 							<span class="questionFontS"><c:out value='${question.startDate}'/></span>
 						</div>
 				  </div>
-				  <div class="questionFont02">
-				  	<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/> <span style="color:#004896;" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
-				  </div>
 				  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
 					  <div id="_editVote" onclick="voteEdit()"><span>수정</span></div>
 				  </c:if>
+                  <div class="voteBtn">
+                                <div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
+                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
+                            </div>
+                  <div class="questionFont02">
+				  	<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/> <span style="color:#004896;" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+				  </div>
 			</div>
 			<div id="titleAndContent">				
 				<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
@@ -2308,11 +2313,6 @@
 				<tr>
 					<td class="voteTdBg" colspan="3" >
 						<div class="voteTdBg_layout">
-                            <div class="voteBtn">
-                                <div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber"><c:out value='${numberOfUnvotedUsers}'/></span></div>
-                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
-                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
-                            </div>
                             <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
                                 <div id="_finish" onclick="finishVote();">
                                     <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
@@ -2334,15 +2334,15 @@
 					<c:forEach var="_comt" items="${listComments}">
 						<tr style="border-bottom: 1px dotted #b6b6b6;">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<img src="${_comt.userImage}" style="padding-top: 10px; height: 50px; width:50px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
+								<img src="${_comt.userImage}" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>
 							<td>
 								<c:choose>
 									<c:when test="${primary == '1'}">
-										<div style="display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;">${_comt.userName1}</div>
+										<div class="userName">${_comt.userName1}</div>
 									</c:when>
 									<c:otherwise>
-										<div style="display: block; color:#004896; font-size:18px; padding:5px 0px 0px 20px;">${_comt.userName2}</div>
+										<div class="userName">${_comt.userName2}</div>
 									</c:otherwise>
 								</c:choose>								
 								
@@ -2386,10 +2386,11 @@
 				</table>
 			</div>
 			<div id="sendComment" class="voteComment" style="width:100%; position:relative;">
-				<div style="float:left; display:block; padding:18px 3px 10px 20px;">
-					<img id="_addFile" src="/images/poll/add_vote.png" style="float:left; display:block; height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
+            	<div class="sendComment_layout">
+				<div class="send_attach">
+					<img id="_addFile" src="/images/poll/add_vote.png" style="height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
 				</div>
-				<div id ="_stickerArea" style="float:left; display:block; padding:18px 10px 10px 0px;">					
+				<div id ="_stickerArea">					
 					<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
 						<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
 							<div style="float:left; display:block;">
@@ -2642,17 +2643,17 @@
 					</div>					
 					<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
 				</div >				
-				<div style="float:left; display:block; min-width:1300px; border-left:1px solid #DDD; margin:8px; padding:0px 15px;">
-					<textarea cols="20" rows="1" id="comment_input"  style="display: inline-block; overflow: hidden; height:17px; line-height:15px; padding:16px 0px; outline: none; border:none; resize:none;" oninput="auto_grow(this)"></textarea>
+				<div class="comment_input_layout">
+					<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)"></textarea>
 				</div>
-				<div style="position:absolute; top:9px; right:10px; display:block; width: 96px; height:45px; border:none; margin:0px">
+				<div style="position:absolute; top:18px; right:18px; display:block; width: 96px; height:45px; border:none; margin:0px">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
 						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
 					</div>	
 					<button id="sendBttn" style="display:inline-block; width: 96px; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
 				</div>
-				
+				</div>
 			</div>
 			<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 0px; height: 0px" /> 
 		</form>
