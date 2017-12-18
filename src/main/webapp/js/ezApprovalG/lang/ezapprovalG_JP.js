@@ -997,3 +997,9 @@ var strLangjjh03 = "添付ファイルを追加中です。";
 var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?";
 var strLangPJG02 = "하위 부서원을 모두 포함하시겠습니까?";
 var strLangPJG03 = "이미 반송된 문서입니다.";
+
+var strLangSpjj28 = "기안자나 최종결재자는 '후결'일 수 없습니다.";
+var strLangSpjj29 = "동일인이 '후결'로 2번이상 지정될 수 없습니다."
+var strLangSpjj30 =	"후결을 승인하시겠습니까?"
+var strLangSpjj31 =	"후결을 승인하였습니다.";
+var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."

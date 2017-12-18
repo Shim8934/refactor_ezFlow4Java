@@ -1084,6 +1084,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.setLastOpinionToOrgDocOpinionSN", map1);
 	}
 	
+	public int getWhoKyulCount(Map<String, Object> map) throws Exception {
+		return (int)select("EzApprovalG.getWhoKyulCount", map);
+	}
+	
 	public String spGetSerialNo(Map<String, Object> map) throws Exception{
 		return (String)select("EzApprovalG.spGetSerialNo", map);
 	}
@@ -1259,6 +1263,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int changeCabSpeacialCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.changeCabSpeacialCount", map);
+	}
+	
+	public int getWhoKyulMaxReceivSN(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getWhoKyulMaxReceivSN", map);
+	}
+	
+	public int getWhoKyulSingInfoCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getWhoKyulSingInfoCnt", map);
 	}
 	
 	public int signCheckCount(Map<String, Object> map) throws Exception{
@@ -2893,5 +2905,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void updateHasOpinionYN(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateHasOpinionYN", map);
+	}
+	
+	public void updateWhoKyulAprLine(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateWhoKyulAprLine", map);
+	}
+	
+	public void doWhoKyulComplete(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.doWhoKyulComplete", map);
+	}
+	
+	public String getWhoKyulYN(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getWhoKyulYN", map);
 	}
 }

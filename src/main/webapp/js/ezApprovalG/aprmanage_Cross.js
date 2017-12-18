@@ -625,7 +625,7 @@ function getAprovSub_after(xml) {
     var AprLine = new ListView();
     AprLine.SetID("AprLine");
     AprLine.SetMulSelectable(false);
-    AprLine.SetTitleIdx(arrySubTab[1]);
+//    AprLine.SetTitleIdx(arrySubTab[1]);
     AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
     AprLine.SetRowOnClick("lvAprLine_SelChange");
     AprLine.DataSource(xmlDoc);
@@ -1329,7 +1329,7 @@ function getAprDocAproveInfo(tr) {
     var AprLine = new ListView();                           
     AprLine.SetID("AprLine");                               
     AprLine.SetMulSelectable(false);                        
-    AprLine.SetTitleIdx(arrySubTab[pDocInfoValue]);
+//    AprLine.SetTitleIdx(arrySubTab[pDocInfoValue]);
     AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");      
     AprLine.DataSource(loadXMLString(RtnVal));                             
     AprLine.DataBind("lvAprLine");

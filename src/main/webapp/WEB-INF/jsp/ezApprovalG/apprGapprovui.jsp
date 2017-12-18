@@ -154,14 +154,8 @@
 		        }
 		        
 		    	if(approvalFlag == "G") {
-		      		if(hideCabinet == "0") {
-		        		$(".approvalG").css("display","");
-		        		$(".approval").css("display","none");
-		      		}
-	        	} else{
-	        		$(".approvalG").css("display","none");
-	        		$(".approval").css("display","");
-	        	}
+	        		$("#btnAddSepAttach").css("display","");
+	        	} 
 		    };
 		    
 		    function getNextDocList()
@@ -1562,7 +1556,7 @@
 		                  <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"  ><spring:message code='ezApprovalG.t55'/></span></li>
 		                  <li id="btnFileAttach"><span onClick="return btnFileAttach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>
 		                  <li id="btnAprDocAttach"><span onClick="return btnAprDocAttach_onclick()" ><spring:message code='ezApprovalG.t57'/></span></li>
-			              <li id="btnAddSepAttach" class ="approvalG"><span onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
+			              <li id="btnAddSepAttach" style="display:none"><span onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
 		                  <li id="btnSave" style="display:none"><span onClick="return btnSave_onclick()"  ><spring:message code='ezApprovalG.t1767'/></span></li>
 		                  <li id="btnPrint"><span onClick="return btnPrint_onclick()"  ><spring:message code='ezApprovalG.t60'/></span></li>
 		                  <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>

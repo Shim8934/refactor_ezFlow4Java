@@ -366,10 +366,12 @@ function AttachFileList() {
         for (i = 0; i < xmldomNodes.length; i++) {
             filepath = getNodeText(xmldomNodes[i]);
             if (filepath.indexOf(pBoardID) != -1) {
-                strRet += filepath + ";";
+                //strRet += filepath + ";";
+            	strRet += filepath + "|"; //baonk added
             } else {
                 //strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";"
-                strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
+                //strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+            	strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + "|"; //baonk added
             }
         }
     }
@@ -547,10 +549,12 @@ function AttachFileList_Photo()
 	{
 	    filepath = getNodeText(xmldomNodes[i]);
 		if(filepath.indexOf(pBoardID) != -1) {
-		    strRet += filepath + ";";
+		    //strRet += filepath + ";";
+			strRet += filepath + "|"; //baonk added
 		} else {
 		    //strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) +";";
-		    strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
+		    //strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
+			strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + "|"; //baonk added
 		}
 	}
 	

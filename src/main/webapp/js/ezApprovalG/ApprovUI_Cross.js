@@ -2583,7 +2583,7 @@ function getLastSignSN(pNodes) {
 
         var pCurrentAprType = getNodeText(dataNodes[11]);
         
-        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 ) {
+        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType40 ) {
                 if (pCurrentAprType == strAprType4) junkyulflag = true;
 
                 switch (pCurrentAprType) {
@@ -2608,6 +2608,10 @@ function getLastSignSN(pNodes) {
                         break;
 
                     case strAprType3:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
+                    //후결
+                    case strAprType40:
                         lastaprlineSN = lastaprlineSN + 1;
                         break;
                 }
