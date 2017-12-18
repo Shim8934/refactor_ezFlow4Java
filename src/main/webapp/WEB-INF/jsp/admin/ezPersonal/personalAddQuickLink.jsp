@@ -218,6 +218,7 @@
 	            listview.SetSelectFlag(false);
 	            listview.SetMulSelectable(true);
 	            listview.DataSource(document.getElementById("listviewheader"));
+	            listview.SetHeightFree(true);
 	            listview.DataBind("AccessList");
 	            var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
 	            
