@@ -996,3 +996,4 @@ var strLangjjh03 = "첨부파일을 추가하는중입니다.";
 //2017-11-28 박종균 추가
 var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?";
 var strLangPJG02 = "하위 부서원을 모두 포함하시겠습니까?";
+var strLangPJG03 = "이미 반송된 문서입니다.";

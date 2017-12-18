@@ -9009,6 +9009,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("</SIGNINFO>");
 		}
 		
+		// 개인병렬합의/협조 관련 추가 작업		
+		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", tenantID);
+		
+		if (agreeReturnType != null && agreeReturnType.equalsIgnoreCase("2")) {
+			boolean chkBansong = false;
+			map.put("v_FLAG", "1");
+			List<ApprGAprLineVO> vo = ezApprovalGDAO.getAprLineInfo(map);
+			
+			for (int i = 0; i < vo.size(); i++) {
+				if(vo.get(i).getAprType().equalsIgnoreCase(staATByungRyulHyubJo) && vo.get(i).getAprState().equalsIgnoreCase(staASBanSong)) {
+					chkBansong = true;
+				}
+			}
+			
+			resultXML.append("<CHKBANSONG>");
+			
+			if (chkBansong) {
+				resultXML.append("TRUE");
+			} else {
+				resultXML.append("FALSE");
+			}
+			
+			resultXML.append("</CHKBANSONG>");
+		}		
+		
 		resultXML.append("</SIGNINFOS>");
 		
 		return resultXML.toString();
@@ -11114,6 +11139,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String agreeReturnType = "";
 		
 		if (approvalFlag.equals("G")) {
 			map.put("companyID", companyID);
@@ -11142,6 +11168,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	            sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
 			}
 		} else {
+			// 개인병렬합의/협조 관련 반송타입
+			agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
+			
 			map.put("companyID", companyID);
 			map.put("v_DOCID", docID);
 			map.put("v_TENANTID", userInfo.getTenantId());
@@ -11151,7 +11180,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprTypeS(map);
 			
-			if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+			//String returnResult = "false";
+			boolean resultStr = false;
+			int jinhangCnt = 0;
+			
+			// 개인병렬협조의 타입 값에 따른 조건문 변경.
+			if (agreeReturnType.equalsIgnoreCase("") || agreeReturnType == null || agreeReturnType.equalsIgnoreCase("1")) {
+				
+				if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+					//returnResult = "true";
+					resultStr = true;
+				}
+				
+			} else if (agreeReturnType.equalsIgnoreCase("2")) {
+				// 개인병렬합의/협조에서 한 명이라도 반송을 한 경우
+				// 남은 병렬 합의/협조자의 상태값을 대기로 변경(리스트에 미출력 && 결재 등의 행위 금지를 위함)				
+				map.put("v_FLAG", "1");
+				
+				if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+					map.put("v_APRSTATE", staASDaeGi);
+					map.put("v_APRTYPE", staATByungRyulHyubJo);
+					ezApprovalGDAO.updatePersonalAgreeLineInfo(map);					
+				}
+//				
+			}
+			
+			if (resultStr) {
+			//if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
 				doApprove(docID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo);
 				sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
 				
@@ -11293,6 +11348,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID.trim());
@@ -11363,8 +11419,38 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			logger.debug("doApproveLineCnt ended");
 			
+			// 마지막 합의자가 아닌 경우
 			if (subCount >= 1) {
 				return strSQL.toString();
+			}
+			
+			
+			// 개인병렬합의/협조의 반송타입이 2인 경우
+			if (approvalFlag.equalsIgnoreCase("S") && agreeReturnType.equalsIgnoreCase("2")) {
+				/**
+				 * 지난 합의자의 정보 중 한 명이라도 반송 (aprstate == 004)인 경우
+				 * 원기안자에게 반송
+				 * */
+				if (subCount == 0) {
+					int bansongCnt = 0;
+					map1.put("v_FLAG", "1");
+					List<ApprGAprLineVO> vo = ezApprovalGDAO.getAprLineInfo(map1);
+					
+					for (int i = 0; i < vo.size(); i++) {
+						if (vo.get(i).getAprType().equalsIgnoreCase(staATByungRyulHyubJo) && vo.get(i).getAprState().equalsIgnoreCase(staASBanSong)) {
+							bansongCnt ++;
+						}
+					}
+
+					if (bansongCnt >= 1) {
+						// docinfo의 값을 바꾸고
+						// 문서를 원기안자에게 보내기.
+						map1.put("v_APRSTATE", staASBanSong);
+						ezApprovalGDAO.updateDocInfoAprstate(map1);
+						doBansong(docID, proxyUserID, "004", dirPath, deptID, companyID, lang, userInfo);
+						return strSQL.toString();
+					}	
+				}				
 			}
 			
 		}
