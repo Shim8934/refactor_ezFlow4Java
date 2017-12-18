@@ -2538,4 +2538,57 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("sendAckforReSend ended");
 		return result;
 	}
+	
+	/** 전자결재 후결 승인*/
+	@RequestMapping(value = "/ezApprovalG/setWhoKyulUpdate.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setWhoKyulUpdate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setWhoKyulUpdate started");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+
+		String result = ezApprovalGService.doWhoKyulComplete(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+		
+		logger.debug("result = " + result);
+		logger.debug("setWhoKyulUpdate ended");
+	return result;
+	}
+	
+	/** 전자결재 후결 승인*/
+	@RequestMapping(value = "/ezApprovalG/getWhoKyulSignInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getWhoKyulSignInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getWhoKyulSignInfo started");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+
+		String result = ezApprovalGService.returnWhoKyulSingInfo(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+		
+		logger.debug("result = " + result);
+		logger.debug("getWhoKyulSignInfo ended");
+	return result;
+	}
+	
+	/** 전자결재 후결 왼쪽 카운트*/
+	@RequestMapping(value = "/ezApprovalG/getContDocCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getContDocCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getContDocCount started");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String contID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+        String subQuery = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        
+		String result = ezApprovalGService.getContDocListS(contID, userInfo.getId(), subQuery, "1", "0", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+
+		xmlDom = commonUtil.convertStringToDocument(result);
+		logger.debug("result = " + result);
+		logger.debug("getContDocCount ended");
+	return "<RESULT>" + xmlDom.getElementsByTagName("TOTALCNT").item(0).getTextContent() + "</RESULT>";
+	}
 }

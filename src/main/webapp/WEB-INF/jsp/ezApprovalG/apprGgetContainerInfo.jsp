@@ -96,6 +96,12 @@
 	                }
 	            });
 	
+	            $("#who_year").selectmenu({
+	                change: function (event, data) {
+	                    onSelect_Year(data.item.value);
+	                }
+	            });
+	            
 	            $("#number")
 	              .selectmenu()
 	              .selectmenu("menuWidget")
@@ -143,6 +149,9 @@
 	                DeptID = arr_userinfo[4];
 	                jobState = "APPROVAL";
 	
+	                document.getElementById("menuapr").style.display = "none";
+	                document.getElementById("menuend").style.display = "";
+	                
 	                var nowyear = new Date().getFullYear();
 	                var nowmonth = new Date().getMonth() + 1;
 	                var nowday = new Date().getDate();
@@ -238,6 +247,8 @@
 	                             condition[15] = "<ENDAPRTYPE>" + pEndAprType + "</ENDAPRTYPE>";
 	                             condition[16] = "EAPRSTATE;";
 	                             condition[17] = "<ENDAPRSTATE>" + pEndAprState + "</ENDAPRSTATE>";
+	                             document.getElementById("menuapr").style.display = "";
+	                             document.getElementById("menuend").style.display = "none";
 	                         }
 
 	                         ContainerID = LoadContID;
@@ -972,7 +983,12 @@
 	            	}
 		        }
 		        else {
-		            period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+		        	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
+		                if (GetSelectVal("sel_year") != "ALL")
+				            period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+		                else
+				            period = document.getElementById("who_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("who_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+		            }		        
 		        }
 		
 		        document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943 + " - " + period + "]";
@@ -1346,7 +1362,7 @@
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
-	        <ul>
+	        <ul id="menuend">
 	        	<c:if test ="${approvalFlag == 'S'}">
 	        	<c:if test ="${tmpValue !='' && contID !=''}">
 	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
@@ -1381,10 +1397,21 @@
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            </c:if>
+	             <img src="/images/i_bar.gif">
 	            <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  
 	        </ul>
+	        <!-- 	        후결 문서함 -->
+	    	<ul id="menuapr">
+		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li> 
+		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
+		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		        <img src="/images/i_bar.gif">
+		        <select id="who_year" name="who_year" style="width:92px;" onchange="onSelect_Year(this);">
+		            <option value="ALL">ALL</option>
+		        </select>   
+      		</ul>
 	    </div>
 	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
