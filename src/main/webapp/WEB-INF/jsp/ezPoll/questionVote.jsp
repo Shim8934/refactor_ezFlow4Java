@@ -2172,7 +2172,7 @@
 	<body class="mainbody"  id="mainbodytag" style="min-width: 1600px;">
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
-			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 3px">
+			<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 0px">
 				  <div style="float: left; display: block;" class="voteInfo">
 				  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block;float:left;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 						<div id="textTest" style="display:inline-block;" class="voteTextTest">
@@ -2385,7 +2385,7 @@
 					</c:forEach>					
 				</table>
 			</div>
-			<div id="sendComment" class="voteComment" style="width:100%; position:relative;">
+			<div id="sendComment" class="voteComment" style="width:100%;">
             	<div class="sendComment_layout">
 				<div class="send_attach">
 					<img id="_addFile" src="/images/poll/add_vote.png" style="height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
@@ -2646,7 +2646,7 @@
 				<div class="comment_input_layout">
 					<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)"></textarea>
 				</div>
-				<div style="position:absolute; top:18px; right:18px; display:block; width: 96px; height:45px; border:none; margin:0px">
+				<div class="commentBtn">
 					<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
 						<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 						<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>

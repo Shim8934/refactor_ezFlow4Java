@@ -62,13 +62,13 @@
 .voteTextTest span.questionFontS{color:#aaa9a9; padding:3px 0px 0px 0px;}
 
 #titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif;}
-#titleAndContent .baonkTest{ font-size:22px; color:#004896;}
+#titleAndContent .baonkTest{ font-size:20px; color:#004896;}
 .questionTitle{display:inline-block;float:left; width:100%; height:49px; line-height:49px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:14px;}
 
 #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
 #_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; font-size:15px;}
 
-.voteTdBg{background:#f9f9f9 !important; margin:0px !important; padding:0px !important; height:68px !important; position:relative !important; border:1px solid #dddddd !important;}
+.voteTdBg{background:#f9f9f9 !important; margin:0px !important; padding:0px !important; height:68px !important; border:1px solid #dddddd !important;}
 .voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
 .voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:16px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; display:inline-block; cursor:pointer;}
 .voteBtn #_unVotedNumber{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:16px; color:#004896;}
@@ -83,3 +83,4 @@
 
 .comment_input_layout{float:left; display:block; min-width:1300px; border-left:1px solid #DDD; margin:16px 0px; padding:0px 0px; height:27px;}
 #comment_input{ height:27px !important; line-height:27px; padding:0px 0px 0px 10px; outline: none; border:none; resize:none; overflow:hidden; font-size:12px;}
+.commentBtn{ float:right; display:block; width: 96px; height:45px; border:none; margin:0px; padding:6px 6px 0px 0px;}
