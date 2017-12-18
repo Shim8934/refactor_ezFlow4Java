@@ -1359,12 +1359,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 											mailAddr, password, egovMessageSource, locale);
 									
 									for (int i = 0; i < mailboxList.size(); i++) {
-										Folder mailbox = ia.getFolder(mailboxList.get(i));
-										
-										if (!mailbox.exists()) {
-											mailbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-											logger.debug(mailbox.getFullName() + " created.");
-										}
+										ia.createFolder(mailboxList.get(i));
 									}
 								} finally {
 									if (ia != null) {
