@@ -393,9 +393,9 @@
   			<tr>
     			<th style="padding:0px; width:30px"><input type="checkbox" name="checkbox" onClick="reverse(this.checked)" id="Checkbox1"></th>
     			<th> <spring:message code='ezResource.t39' /></th>
-    			<th style="width:100px"> <spring:message code='ezResource.t366' /></th>
-    			<th style="width:80px"> <spring:message code='ezResource.t106' /></th>
-    			<th style="width:60px"> <spring:message code='ezResource.t37' /></th>
+    			<th style="width:120px"> <spring:message code='ezResource.t366' /></th>
+    			<th style="width:100px"> <spring:message code='ezResource.t106' /></th>
+    			<th style="width:100px"> <spring:message code='ezResource.t37' /></th>
     			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
     			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>
   			</tr>
@@ -412,7 +412,7 @@
 					</tr> 
 				</c:forEach>
 			</c:if>
-		</table>
+		</table><br/>
     	<div id="tblPageRayer"></div>
 		<form name="frmRefresh" action="/ezResource/viewResList.do" method="post">
   			<input type="hidden" name="brdID">

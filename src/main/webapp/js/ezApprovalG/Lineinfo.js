@@ -3160,13 +3160,13 @@ function SCheckLineUser() {
 //    if (!pChkFlag)
 //        pAlertContent = pAlertContent + " '" + strLangS236 + "'" + strLangS298 + "<br>"
 //
-//    var pChkFlag = ChkWhoKyulDuplicate(AprLineRow)
-//    if (!pChkFlag)
-//        pAlertContent = pAlertContent + " " + strLangS299 + "'" + strLangS275 + "'" + strLangS300 + "<br>"
-//
-//    var pChkFlag = ChkWhoKyulLast(AprLineRow)
-//    if (!pChkFlag)
-//        pAlertContent = pAlertContent + " " + strLangS301 + "'" + strLangS275 + "'" + strLangS302 + "<br>"
+    var pChkFlag = ChkWhoKyulDuplicate(AprLineRow)
+    if (!pChkFlag)
+        pAlertContent = pAlertContent + " " + strLangS299 + "'" + strLangS275 + "'" + strLangS300 + "<br>"
+
+    var pChkFlag = ChkWhoKyulLast(AprLineRow)
+    if (!pChkFlag)
+        pAlertContent = pAlertContent + " " + strLangS301 + "'" + strLangS275 + "'" + strLangS302 + "<br>"
 
 //    var pChkString = CheckWorkFlowXML(AprLineRow)
 //    if (pChkString != "")

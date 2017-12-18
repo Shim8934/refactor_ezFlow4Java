@@ -59,7 +59,7 @@ function OpenAlertUILong(pAlertContent) {
 function OpenAlertUILong_Complete() {
     DivPopUpHidden();
 //    btnSetAprLine_onclick();
-    btnApprovalInfo()
+    btnApprovalInfo();
 }
 
 function OpenAlertUILong_Complete2() {

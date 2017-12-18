@@ -737,7 +737,7 @@ function getdoclistSub_after(xml) {
         var DocList = new ListView();      
         DocList.SetID("SubDocList");                               
         DocList.SetMulSelectable(false);                     
-        DocList.SetTitleIdx(arrySubTab[pDocInfoValue]);
+//        DocList.SetTitleIdx(arrySubTab[pDocInfoValue]);
         DocList.SetRowOnDblClick("lvtDetail_onSel_DBclick");      
         DocList.DataSource(Resultxml);
         DocList.DataBind("lvtDetail");
