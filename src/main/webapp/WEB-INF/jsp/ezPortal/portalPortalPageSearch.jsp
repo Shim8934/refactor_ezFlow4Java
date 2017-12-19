@@ -9,52 +9,48 @@
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<link rel="stylesheet" href="/css/style.css" type="text/css" />
 		<script type="text/javascript">
-		var selectedID = "";
-		var selectedDisplayName = "";
-		var selectedDepth = 1;
-		var mode = "${mode}";
-	    
-		function CheckBoxClick()
-		{
-			if (!event.srcElement.checked) return;
-			for (var i=0; i<document.all.tags("input").length; i++)
-			{
-				if (document.all.tags("input").item(i).type == "checkbox") document.all.tags("input").item(i).checked = false;
+			var selectedID = "";
+			var selectedDisplayName = "";
+			var selectedDepth = 1;
+			var mode = "${mode}";
+		    
+			function CheckBoxClick() {
+				if (!event.srcElement.checked) return;
+				
+				for (var i=0; i<document.all.tags("input").length; i++) {
+					if (document.all.tags("input").item(i).type == "checkbox") document.all.tags("input").item(i).checked = false;
+				}
+				
+				event.srcElement.checked = true;	
+				selectedID = event.srcElement.parentElement.nextSibling.uid;
+				selectedDepth = event.srcElement.parentElement.nextSibling.depth;
+				selectedDisplayName = event.srcElement.parentElement.nextSibling.innerText;
 			}
-			event.srcElement.checked = true;	
-			selectedID = event.srcElement.parentElement.nextSibling.uid;
-			selectedDepth = event.srcElement.parentElement.nextSibling.depth;
-			selectedDisplayName = event.srcElement.parentElement.nextSibling.innerText;
-		}
-	    
-		function RadioClick(pContentsID, pContentsName, pDepth)
-		{
- 			selectedID = pContentsID;
- 			selectedDisplayName = pContentsName;
- 			selectedDepth = parseInt(pDepth, 10);
-		}
-	    
-		function Save()
-		{
-			if (selectedID == "")
-			{
-				alert("<spring:message code='ezPortal.t279'/>");
-				return;
+		    
+			function RadioClick(pContentsID, pContentsName, pDepth) {
+	 			selectedID = pContentsID;
+	 			selectedDisplayName = pContentsName;
+	 			selectedDepth = parseInt(pDepth, 10);
 			}
-			
-			if (mode == "inherit" && selectedDepth > 3)
-			{
-				alert("<spring:message code='ezPortal.t338'/>");
-				return;
+		    
+			function Save() {
+				if (selectedID == "") {
+					alert("<spring:message code='ezPortal.t279'/>");
+					return;
+				}
+				
+				if (mode == "inherit" && selectedDepth > 3) {
+					alert("<spring:message code='ezPortal.t338'/>");
+					return;
+				}
+				
+				var ret = new Array();
+				ret[0] = selectedID;
+				ret[1] = selectedDisplayName;
+				window.returnValue = ret;
+				
+				window.close();
 			}
-			
-			var ret = new Array();
-			ret[0] = selectedID;
-			ret[1] = selectedDisplayName;
-			window.returnValue = ret;
-			
-			window.close();
-		}
     	</script>
     </head>	
     <body class="pbody" scroll="no">
@@ -69,7 +65,7 @@
 			<tr> 
 				<td class="pstitle"><spring:message code='ezPortal.t340'/></td> 
 			</tr>
-			${strHTML }
+			${strHTML}
 		</table>
 		<table width="270" border="0" cellspacing="0" cellpadding="0"> 
 			<tr>
