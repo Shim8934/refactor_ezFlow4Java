@@ -14,12 +14,6 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/admin/ModApprovalDoc.js"></script>
-<!-- 	<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script> -->
-<!-- 	<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script> -->
-<!-- 	<script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script> -->
-<!-- 	<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrlS_Cross.js"></script> -->
-<!-- 	<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script> -->
-<!-- 	<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>	 -->
 	<script type="text/javascript">
 	var companyID = "${companyID}";
 	var filePath = "${url}";
@@ -46,8 +40,7 @@
         htmlData = doc_ContentHtml.outerHTML;
 	});
 	
-    function Editor_Complete() {   
-		console.log(filePath);        
+    function Editor_Complete() {        
         message.SetEditorContent(htmlData);
     }	
 	
@@ -77,7 +70,7 @@
         </div>		
         <div id="ApvForm_content2" style="width:100%; padding-top:10px;">
 			<div id="editor_content" style="padding-top:5px;">
-				<table id="TForm" style="height:770px; width:1030px;">
+				<table id="TForm" style="height:770px; width:100%;">
 					<tbody>
 						<tr>
 							<td style="height:770px; vertical-align:top">

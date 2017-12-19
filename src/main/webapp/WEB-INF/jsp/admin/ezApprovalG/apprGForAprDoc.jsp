@@ -857,7 +857,7 @@
 					pURL = tr.getAttribute("DATA3");
 				
 					var param = "?docID=" + docID + "&url=" + encodeURIComponent(pURL) + "&companyID=" + pCompanyID;
-					GetOpenWindow(url + param, "", 900, 870, "no");
+					GetOpenWindow(url + param, "", 825, 850, "no");
 				}
 		    }		    
 		</script>

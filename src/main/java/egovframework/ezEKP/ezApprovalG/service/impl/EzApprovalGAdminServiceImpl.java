@@ -2656,7 +2656,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	// 관리자 편집창
 	public String editApprovalDoc(String docID, String companyID, String formMHT, String formHTML, String realPath, LoginVO userInfo, String filePath, String htmlData) throws Exception {
 		logger.debug("editApprovalDoc started.");
-		//String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		
 		filePath = filePath.replace("/" + docID + ".mht", "").trim();
 		logger.debug("filePath : " + filePath);
@@ -2692,8 +2691,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_COMPANYID", userInfo.getCompanyID());
 			map.put("v_BEFOREHTML", htmlData);
 			map.put("v_AFTERHTML", formHTML);
-			//map.put("v_BEFOREHTML", "111");
-			//map.put("v_AFTERHTML", "222");
 			map.put("v_MODIFYDATE", commonUtil.getTodayUTCTime(""));
 			ezApprovalGAdminDAO.insertEditApproDoc(map);
 		} catch (Exception e) {
