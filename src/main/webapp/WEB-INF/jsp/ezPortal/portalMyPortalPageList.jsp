@@ -19,7 +19,9 @@
         	var g_PortalGubun = "${portalGubun}";
         	var g_intPage = "${intPage}";
         	var g_totalPage = "${totalPage}";
+        	
         	document.onselectstart = function () { return false; };
+        	
         	window.onload = function () {
 	            try {
     	            pUID = SelectedItems;
@@ -34,6 +36,7 @@
         	function setValue(pUID, pUseFG, pObj) {
 	            g_UID = pUID;
             	g_UseFlag = pUseFG;
+            	
             	if (g_SelectedObj == null) {
 	                pObj.style.backgroundColor = "rgb(233, 241, 255)";
     	            g_SelectedObj = pObj;
@@ -44,9 +47,11 @@
                 	g_SelectedObj = pObj;
             	}
         	}
+        	
         	function setValueNew(pUID, pUseFG, pObj) {
 	            g_UID = pUID;
     	        g_UseFlag = pUseFG;
+    	        
             	if (g_SelectedObj == null) {
 	                pObj.setAttribute("class", "on");
     	            g_SelectedObj = pObj;
@@ -56,6 +61,7 @@
                 	g_SelectedObj = pObj;
             	}
         	}
+        	
         	function selectItem(pUID, pObj) {
 	            //return;
             	if (CrossYN())
@@ -63,6 +69,7 @@
     	        else
         	        location.href = "/ezPortal/myPortalPage.do?mode=edit&pageID=" + pUID;
         	}
+        	
         	function preview() {
 	            if (g_UID == "") {
     	            alert("<spring:message code='ezPortal.t60'/>");
@@ -70,9 +77,11 @@
             	}
             	window.open("/ezPortal/portalPage.do?mode=view&viewMode=preview&pageID=" + g_UID);
         	}
+        	
         	function btnSearch_onClick() {
 	            var pSearchString = TrimText(ReplaceText(SearchString.value, "'", ""));
             	var pSearchGubun = "";
+            	
             	if (PortalGubun.value == "") {
 	                for (var i = 0; i < PortalGubun.length; i++) {
                     	if (PortalGubun[i].value != "") {
@@ -88,10 +97,12 @@
 
 	            window.location.href = "portalpage_list.aspx?pSearchString=" + escape(pSearchString) + "&PortalGubun=" + escape(pSearchGubun);
     	    }
+        	
 	        function entercheck() {
             	if (window.event.keyCode == 13)
 	                btnSearch_onClick();
     	    }
+	        
 	        function goToPage(r_value) {
             	if (r_value == "page") {
 	                var movenum = txt_PageInputNum.value;
@@ -123,6 +134,7 @@
         	function pageChange(p_intPage) {
             	window.location.href = "/ezPortal/myPortalPageList.do?&intPage=" + p_intPage;
         	}
+        	
         	function usepage() {
 	            if (g_UID == "") {
     	            alert("<spring:message code='ezPortal.t240'/>");
@@ -133,11 +145,13 @@
                 	alert("<spring:message code='ezPortal.t241'/>");
                 	return;
             	}
+            	
             	if (confirm("<spring:message code='ezPortal.t242'/>")) {
                 	var xmlhttp = createXMLHttpRequest();
                 	xmlhttp.open("POST", "/ezPortal/useMyPortalPage.do?uID=" + g_UID, false);
                 	xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
                 	xmlhttp.send();
+                	
                 	if (xmlhttp.responseText == "OK") {
                     	window.parent.parent.location = window.parent.parent.location.href;
                 	} else {

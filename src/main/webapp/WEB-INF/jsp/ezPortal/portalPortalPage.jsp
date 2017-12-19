@@ -68,6 +68,7 @@
 			    }
 	
 				if (editmode == "new_inherit") bInherit = true;
+				
 				if (mode == "edit") {
 					AttachEvents(main_table);
 					SetOptionPortlet(main_table);
@@ -76,8 +77,7 @@
 				if (mode != "view") {
 					// 포탈페이지 카테고리 정보
 					var PortalPageCategoryXML = "${portalPageCategoryXML}";
-					if (PortalPageCategoryXML != "")
-					{
+					if (PortalPageCategoryXML != "") {
 					    var xmldom = createXmlDom();
 					    xmldom = loadXMLString(PortalPageCategoryXML);
 						
@@ -113,6 +113,7 @@
 								}
 								
 								var checkFlag = gubunFlag + "c";
+								
 								for (var i=0; i<document.getElementById("portal_gubun").length; i++) {
 								    if (document.getElementById("portal_gubun").options[i].value == checkFlag) {
 								        document.getElementById("portal_gubun").options[i].selected = true;
@@ -154,21 +155,18 @@
 						}
 						
 						// 부문포탈
-						if (g_ClassID != "")
-						{
+						if (g_ClassID != "") {
 							td_mainframe.style.height = "470";
 							main_div.style.height = "470";
 						}
 						// 마이포탈
-						else
-						{
+						else {
 							td_mainframe.style.height = "360";
 							main_div.style.height = "360";
 						}
 					}
 				}
 			}
-            
 
 		    function QuickLinkCheck() {
 		        var xmlpara = createXmlDom();
@@ -186,17 +184,18 @@
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
 		            if (xmlhttp.statusText == "OK") {
 		                var xmldomNode = SelectNodes(xmlhttp.responseXML, "DATA/ROW");
+		                
 		                for (i = 0; i < xmldomNode.length; i++) {
-
 		                    var URL = SelectSingleNodeValue(xmldomNode[i], "URL");
 		                    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE_");
 
-
 		                    var _li = document.createElement("li");
 		                    _li.style.display = "none";
+		                    
 		                    if (trim_Cross(URL) != "") {
 		                        _li.onclick = new Function("openURL('" + URL + "', '"+ SIZE +"');");
 		                    }
+		                    
 		                    var _span1 = document.createElement("span");
 		                    _span1.className = "icon";
 
@@ -207,38 +206,37 @@
 		                    var _span2 = document.createElement("span");
 		                    _span2.className = "txt";
 		                    var QuickLang = lang == "1" ? "" : lang;
-                             if(CrossYN())
+		                    
+                            if(CrossYN())
                                 _span2.textContent = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang);
 		                    else
                                 _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang); 
+                            
 		                    _li.appendChild(_span1);
 		                    _li.appendChild(_span2);
+		                    
 		                    document.getElementById("QuickUl").appendChild(_li);
-
 
 		                    if (i < QuickBlockNum) {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'block';
-		                    }
-		                    else {
+		                    } else {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'none';
 		                    }
 		                }
-
-		                
 		            }
 		        }
 		    }
 		    
 		    function QuickMove(value) {
 		        var totalcnt = document.getElementById('QuickUl').getElementsByTagName('li').length;
+		        
 		        if (value == "DOWN") {
 		            if (totalcnt > QuickcurNum + QuickBlockNum) {
 		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum].style.display = "none";
 		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum + QuickBlockNum].style.display = "block";
 		                QuickcurNum++;
 		            }
-		        }
-		        else {
+		        } else {
 		            if (QuickcurNum > 0) {
 		                QuickcurNum--;
 		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum].style.display = "block";
@@ -264,10 +262,10 @@
 
 		                left = pleftpos / 2;
 		            } else {
-
 		                heigth = parseInt(heigth) - 30;
 		                width = parseInt(width) - 10;
 		            }
+		            
 		            if(SIZE == "FULL")
 		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=1,resizable=1,height=" + screen.height + ",width=" + screen.width + ",top=0,left=0");
 		            else
@@ -284,6 +282,7 @@
 
 		    function ltrim(parm_str) {
 		        str_temp = parm_str;
+		        
 		        while (str_temp.length != 0) {
 		            if (str_temp.substring(0, 1) == " ") {
 		                str_temp = str_temp.substring(1, str_temp.length);
@@ -296,37 +295,34 @@
 
 		    function rtrim(parm_str) {
 		        str_temp = parm_str;
+		        
 		        while (str_temp.length != 0) {
 		            int_last_blnk_pos = str_temp.lastIndexOf(" ");
+		            
 		            if ((str_temp.length - 1) == int_last_blnk_pos) {
 		                str_temp = str_temp.substring(0, str_temp.length - 1);
 		            } else {
 		                return str_temp;
 		            }
 		        }
+		        
 		        return str_temp;
 		    }
 		    
 			function SetOptionPortlet(pObject) {
-				if (parentpageid.toLowerCase() != "top")
-				{
-					for (var i=0; i<pObject.all.tags("td").length; i++)
-					{
+				if (parentpageid.toLowerCase() != "top") {
+					for (var i=0; i<pObject.all.tags("td").length; i++) {
 						if (pObject.all.tags("td").item(i).id == "") continue;
 	
-						if (pObject.all.tags("td").item(i).id.indexOf("sub") > -1)
-						{			
+						if (pObject.all.tags("td").item(i).id.indexOf("sub") > -1) {			
 							// 상속받은 포틀릿중 필수포틀릿은 링크표시가 나타나지 않도록 한다.
-							if (typeof(pObject.all.tags("td").item(i).ownerpageuid) != "undefined" && typeof(pObject.all.tags("td").item(i).mandatory) != "undefined")
-							{
+							if (typeof(pObject.all.tags("td").item(i).ownerpageuid) != "undefined" && typeof(pObject.all.tags("td").item(i).mandatory) != "undefined") {
 								// 옵션 포틀릿인 경우
-								if (pObject.all.tags("td").item(i).mandatory == "2")
-								{
+								if (pObject.all.tags("td").item(i).mandatory == "2") {
 									var cell = pObject.all.tags("td").item(i);
 	
 									// 상속페이지에서 Root페이지의 옵션 포틀릿인 경우 삭제대상 정보를 저장
-									if (cell.ownerpageuid != pageid && cell.mandatory == "2")
-									{
+									if (cell.ownerpageuid != pageid && cell.mandatory == "2") {
 									    g_XML += "<ROW>" + "<UID>" + cell.uid + "</UID>" + "<PAGEUID>" + cell.pageuid + "</PAGEUID>" +
 											"<OWNERPAGEUID>" + cell.ownerpageuid + "</OWNERPAGEUID>" +
 											"<USERPAGEUID>" + pageid + "</USERPAGEUID>" +
@@ -343,6 +339,7 @@
 
 			function load() {
 				var ret = window.showModalDialog("/ezPortal/portalPageSearch.do?mode=load");
+				
 				if (typeof(ret) == "undefined") return;
 				
 				document.location.href = "/ezPortal/portalPage.do?pageID=" + ret[0];
@@ -351,6 +348,7 @@
 			// 상속
 			function inherit() {
 				var ret = window.showModalDialog("/ezPortal/portalPageSearch.do?mode=inherit", "", "dialogHeight:300px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken");
+				
 				if (typeof(ret) == "undefined") return;
 				
 				document.location.href = "/ezPortal/portalPage.do?parentPageID=" + ret[0];
@@ -364,7 +362,6 @@
 			}
 		
 			function savesub(pObject, pPageID, pParentPageID, pDisplayName, pDisplayName2) {
-	console.log("savesub Start");
 				var pUserID = g_UserID;
 				var pUserName = g_UserName;
 	
@@ -383,32 +380,28 @@
 				strXML += "<GUBUNFLAG>1</GUBUNFLAG>";
 				strXML += "<USERID>" + pUserID + "</USERID>";
 				strXML += "<USERNAME>" + pUserName + "</USERNAME>";
-	
 				
 				// 대상테이블의 최상위td count
 				for (var i=0; i<pObject.children.item(0).children.item(0).children.length; i++) {
 					if (pObject.children.item(0).children.item(0).children.item(i).id == "") continue;
 					
 					// 최상위td
-					if (pObject.children.item(0).children.item(0).children.item(i).id.substr(0, 2) == "td")
-					{
+					if (pObject.children.item(0).children.item(0).children.item(i).id.substr(0, 2) == "td") {
 						strXML += "<CELL>";
 						var td_item = pObject.children.item(0).children.item(0).children.item(i);			
 						
 						// 메인테이블이 수정되는 경우를 고려 - .replace("100%", "") 추가
 						if (td_item.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML == "*") {
 						    strXML += "<WIDTH>9999</WIDTH>";
-						}
-						else {
+						} else {
 						    strXML += "<WIDTH>" + td_item.style.width.toString().replace("px", "").replace("100%", "") + "</WIDTH>";
 						}
 						
 						// 해당td내의 tr의 카운트 (TABLE/TBODY/TR)
-						for (var j=0; j<td_item.children.item(0).children.item(0).children.length; j++)
-						{
+						for (var j=0; j<td_item.children.item(0).children.item(0).children.length; j++) {
 							// 해당 tr내의 td
 							var tdsub_item = td_item.children.item(0).children.item(0).children.item(j).children.item(0);
-	console.log("tdsub_item="+tdsub_item);
+	
 							// 2017-02-10 try {
 								if (tdsub_item.id == "") continue;
 							// 2017-02-10} catch(e) { continue; }
@@ -420,7 +413,6 @@
 							*/
 							
 						    // td안에 컨텐츠가 존재하는 경우
-							
 							if (tdsub_item.children.length > 0 && tdsub_item.children.item(0).id.toLowerCase().substr(0, 4) != "main") {
 								strXML += "<ROW>";
 								strXML += "<TYPE>0</TYPE>";
@@ -429,7 +421,6 @@
 								//strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
 								strXML += "<PORTLETHEIGHT>" + tdsub_item.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
 								strXML += "<PORTLETDISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</PORTLETDISPLAYNAME>";
-	console.log("portletDisplayName="+ReplaceValidString(tdsub_item.firstChild.innerHTML));
 								strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 								strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 								strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";				
@@ -440,9 +431,6 @@
 							}
 							// td안에 테이블이 존재하는 경우
 							else {
-	console.log("td안에 테이블이 존재하는 경우");
-	console.log("portletHeight1="+tdsub_item.parentElement.style.height.toString());
-	console.log("portletHeight2="+tdsub_item.parentElement.style.width.toString());
 								strXML += "<ROW>";
 								strXML += "<TYPE>1</TYPE>";
 								strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
@@ -459,7 +447,6 @@
 								
 								// 하위테이블의 정보를 저장
 								savesub(tdsub_item.children.item(0), tdsub_item.getAttribute("uid"), "top", tdsub_item.getAttribute("uid"), "");
-	console.log("tdsub_item.uid="+tdsub_item.uid);
 								prevPageID = tdsub_item.uid;
 								//prevPageID = tdsub_item.getAttribute("uid");
 							}
@@ -479,7 +466,6 @@
 			}
 
 			function save() {
-	//console.log("save Start");
 				if (document.getElementById("txtDisplayName").value == "") {
 					alert("<spring:message code='ezPortal.t289' />");
 					document.getElementById("txtDisplayName").focus();
@@ -526,29 +512,24 @@
 			}
 
 			function CheckDuplicate(pUID) {
-			    for (var i=0; i<main_table.getElementsByTagName("td").length; i++)
-				{
+			    for (var i=0; i<main_table.getElementsByTagName("td").length; i++) {
 			        if (main_table.getElementsByTagName("td").item(i).getAttribute("uid") == pUID) return true;
 				}
 				return false;
 			}
 
 			function AttachEvents(pObject, pPageID) {
-	//console.log("AttachEvents Start");
 				var prevpageid = "";
 				var count = 0;
-				for (var i=0; i<pObject.getElementsByTagName("td").length; i++)
-				{
+				for (var i=0; i<pObject.getElementsByTagName("td").length; i++) {
 				    if (pObject.getElementsByTagName("td").item(i).id == "") continue;
 	
-				    if (pObject.getElementsByTagName("td").item(i).id.indexOf("sub") > -1)
-					{
+				    if (pObject.getElementsByTagName("td").item(i).id.indexOf("sub") > -1) {
 				        if (prevpageid != pObject.getElementsByTagName("td").item(i).pageuid) count++;
 				        //2016-11-04
 				        //prevpageid = pObject.getElementsByTagName("td").item(i).getAttribute("pageuid");
 	
 				        prevpageid = GetAttribute(pObject.getElementsByTagName("td").item(i), "pageuid");
-	console.log("prevpageid="+prevpageid);
 						// 상속받은 포틀릿중 필수포틀릿은 링크표시가 나타나지 않도록 한다.
 				        if (typeof(pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid")) != "undefined" && typeof(pObject.getElementsByTagName("td").item(i).getAttribute("mandatory")) != "undefined") {
 							// Root페이지 이거나 옵션 포틀릿인 경우
@@ -571,8 +552,7 @@
 								}
 							}
 						}
-					}
-					else {
+					} else {
 				        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 				        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
 				        //pObject.getElementsByTagName("td").item(i).onclick = function() {selectcell(evnet);};
@@ -596,25 +576,23 @@
 
 			function dblclicksubcell() {
 				var obj = null;
+				
 				if (event.srcElement.id == "") obj = event.srcElement.parentElement;
 				else obj = event.srcElement;
 				
 				// 영역 더블클릭시 처리, pageuid
-				if (typeof(obj.ownerpageuid) == "undefined" || typeof(obj.pageuid) == "undefined" || typeof(obj.mandatory) == "undefined")
-				{
+				if (typeof(obj.ownerpageuid) == "undefined" || typeof(obj.pageuid) == "undefined" || typeof(obj.mandatory) == "undefined") {
 					event.cancelBubble = true;
 					return;
 				}
 				
-				if (obj.ownerpageuid != pageid && obj.mandatory == "1")
-				{
+				if (obj.ownerpageuid != pageid && obj.mandatory == "1") {
 					alert("<spring:message code='ezPortal.t290' />");
 					event.cancelBubble = true;
 					return;
 				}
 				
-				if (typeof(obj.uid) != "undefined" && obj.uid != "") 
-				{
+				if (typeof(obj.uid) != "undefined" && obj.uid != "") {
 					event.cancelBubble = true;	
 					OpenEditWindow(obj.uid, obj.pageuid);					
 				}
@@ -627,71 +605,76 @@
 
 			// 영역 선택시 처리selectcell
 			function selectcell(e) {
-				    var Event = e ? e : window.event;
-				    var Element = Event.target ? Event.target : Event.srcElement;
-				    if (Element.getAttribute("id") == "") return;
-				    if (Element.getAttribute("id").indexOf("sub") > -1) return;
-				    //selectedCell = Element.getAttribute("id");
-				    selectedCell = GetAttribute(Element, "id");
-					if (previousCell != null) previousCell.style.backgroundColor = "white";
-					previousCell = Element.children.item(0).children.item(0).children.item(0).children.item(0);
-					previousCell.style.backgroundColor = "lightblue";
+			    var Event = e ? e : window.event;
+			    var Element = Event.target ? Event.target : Event.srcElement;
+			    
+			    if (Element.getAttribute("id") == "") return;
+			    
+			    if (Element.getAttribute("id").indexOf("sub") > -1) return;
+			    
+			    //selectedCell = Element.getAttribute("id");
+			    selectedCell = GetAttribute(Element, "id");
+			    
+				if (previousCell != null) previousCell.style.backgroundColor = "white";
+				
+				previousCell = Element.children.item(0).children.item(0).children.item(0).children.item(0);
+				previousCell.style.backgroundColor = "lightblue";
+				
+				// 현재 선택된 cell (id='tdXXX')
+				var cell = eval(selectedCell);
+				
+				// 선택된 cell의 table
+				var tblObject = eval(GetMainTable(eval(selectedCell)));
+				
+				if (typeof(tblObject) == "undefined")
+					return;
+				
+				var maxHeight = 0;
+				var compareHeight = 0;
+				
+				if (tblObject.getAttribute("height") != "") {
+				    maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
+				}
+				
+				// 해당 table의 height를 구한다.
+				for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++) {
+					compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
 					
-					
-					// 현재 선택된 cell (id='tdXXX')
-					var cell = eval(selectedCell);
-					
-					// 선택된 cell의 table
-					var tblObject = eval(GetMainTable(eval(selectedCell)));
-					
-					if (typeof(tblObject) == "undefined")
-						return;
-					
-					var maxHeight = 0;
-					var compareHeight = 0;
-					
-					if (tblObject.getAttribute("height") != "") {
-					    maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
-					}
-					
-					// 해당 table의 height를 구한다.
-					for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++) {
-						compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
-						if (compareHeight != "") {
-							if (parseInt(compareHeight, 10) > maxHeight) {
-								maxHeight = parseInt(compareHeight, 10);
-							}
+					if (compareHeight != "") {
+						if (parseInt(compareHeight, 10) > maxHeight) {
+							maxHeight = parseInt(compareHeight, 10);
 						}
 					}
+				}
+				
+				document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
+				document.getElementById("txtHeight").value = maxHeight;
+				
+				bCanModify = true;
+				document.getElementById("txtWidth").disabled = false;
+				document.getElementById("txtHeight").disabled = false;
+				
+				// 메인테이블이 수정되는 경우를 고려
+				if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%") {
+					document.getElementById("txtWidth").value = "*";
 					
-					document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
-					document.getElementById("txtHeight").value = maxHeight;
-					
-					bCanModify = true;
-					document.getElementById("txtWidth").disabled = false;
-					document.getElementById("txtHeight").disabled = false;
-					
-					// 메인테이블이 수정되는 경우를 고려
-					if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%") {
-						document.getElementById("txtWidth").value = "*";
-						
-						// 메인테이블을 제외하고 테이블 너비 조정불가
-						if (tblObject.id != "main_table") {
-							document.getElementById("txtWidth").disabled = true;
-						}
+					// 메인테이블을 제외하고 테이블 너비 조정불가
+					if (tblObject.id != "main_table") {
+						document.getElementById("txtWidth").disabled = true;
 					}
-					
-					// 상속받은 페이지인 경우 테이블 사이즈 조정 불가
-					if (parentpageid.toLowerCase() != "top") {
-						if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid) {
-							document.getElementById("txtWidth").disabled = true;
-							document.getElementById("txtHeight").disabled = true;
-							bCanModify = false;
-						}
+				}
+				
+				// 상속받은 페이지인 경우 테이블 사이즈 조정 불가
+				if (parentpageid.toLowerCase() != "top") {
+					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid) {
+						document.getElementById("txtWidth").disabled = true;
+						document.getElementById("txtHeight").disabled = true;
+						bCanModify = false;
 					}
-					
-					// 선택한 개체의 종류
-					selObjClass = "TABLE";
+				}
+				
+				// 선택한 개체의 종류
+				selObjClass = "TABLE";
 			}
 	
 			function selectcellTitle(e) {
@@ -707,77 +690,75 @@
 			}
 		
 			function selectcell2(obj) {
-			        if (obj.getAttribute("id") == "") return;
-			        if (obj.getAttribute("id").indexOf("sub") > -1) return;
-			        selectedCell = obj.getAttribute("id");
-			        //selectedCell = GetAttribute(obj, "id");
-			        if (previousCell != null) previousCell.style.backgroundColor = "white";
-			        previousCell = obj.children.item(0).children.item(0).children.item(0).children.item(0);
-			        previousCell.style.backgroundColor = "lightblue";
+		        if (obj.getAttribute("id") == "") return;
+		        
+		        if (obj.getAttribute("id").indexOf("sub") > -1) return;
+		        
+		        selectedCell = obj.getAttribute("id");
+		        //selectedCell = GetAttribute(obj, "id");
+		        if (previousCell != null) previousCell.style.backgroundColor = "white";
+		        
+		        previousCell = obj.children.item(0).children.item(0).children.item(0).children.item(0);
+		        previousCell.style.backgroundColor = "lightblue";
+				
+		        // 현재 선택된 cell (id='tdXXX')
+		        var cell = eval(selectedCell);
+				
+		        // 선택된 cell의 table
+		        var tblObject = eval(GetMainTable(eval(selectedCell)));
+				
+		        if (typeof(tblObject) == "undefined")
+		            return;
+				
+		        var maxHeight = 0;
+		        var compareHeight = 0;
+				
+		        if (tblObject.getAttribute("height") != "")
+		            maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
+				
+		        // 해당 table의 height를 구한다.
+		        for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++) {
+	                compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
 					
+	                if (compareHeight != "") {
+	                    if (parseInt(compareHeight, 10) > maxHeight) {
+	                        maxHeight = parseInt(compareHeight, 10);
+	                    }
+	                }
+		        }
+				
+		        // 2017-02-10 document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
+		        if (getNodeText(cell.children.item(0).children.item(0).children.item(0).children.item(0)) == "*")
+		            document.getElementById("txtWidth").value = "*";
+		        else
+		            document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
+		        
+		        document.getElementById("txtHeight").value = maxHeight;
+				
+		        bCanModify = true;
+		        document.getElementById("txtWidth").disabled = false;
+		        document.getElementById("txtHeight").disabled = false;
+				
+		        // 메인테이블이 수정되는 경우를 고려
+		        if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%") {
+		            document.getElementById("txtWidth").value = "*";
 					
-			        // 현재 선택된 cell (id='tdXXX')
-			        var cell = eval(selectedCell);
-					
-			        // 선택된 cell의 table
-			        var tblObject = eval(GetMainTable(eval(selectedCell)));
-					
-			        if (typeof(tblObject) == "undefined")
-			            return;
-					
-			        var maxHeight = 0;
-			        var compareHeight = 0;
-					
-			        if (tblObject.getAttribute("height") != "")
-			            maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
-					
-			        // 해당 table의 height를 구한다.
-			        for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++) {
-			                compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
-							
-			                if (compareHeight != "") {
-			                    if (parseInt(compareHeight, 10) > maxHeight) {
-			                        maxHeight = parseInt(compareHeight, 10);
-			                    }
-			                }
-			        }
-					
-			        // 2017-02-10 document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
-			        if (getNodeText(cell.children.item(0).children.item(0).children.item(0).children.item(0)) == "*")
-			            document.getElementById("txtWidth").value = "*";
-			        else
-			            document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
-			        
-			        
-			        document.getElementById("txtHeight").value = maxHeight;
-					
-			        bCanModify = true;
-			        document.getElementById("txtWidth").disabled = false;
-			        document.getElementById("txtHeight").disabled = false;
-					
-			        // 메인테이블이 수정되는 경우를 고려
-			        if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%")
-			        {
-			            document.getElementById("txtWidth").value = "*";
-						
-			            // 메인테이블을 제외하고 테이블 너비 조정불가
-			            if (tblObject.id != "main_table")
-			                document.getElementById("txtWidth").disabled = true;
-			        }
-					
-			        // 상속받은 페이지인 경우 테이블 사이즈 조정 불가
-			        if (parentpageid.toLowerCase() != "top")
-			        {
-			            if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid)
-			            {
-			                document.getElementById("txtWidth").disabled = true;
-			                document.getElementById("txtHeight").disabled = true;
-			                bCanModify = false;
-			            }
-			        }
-					
-			        // 선택한 개체의 종류
-			        selObjClass = "TABLE";
+		            // 메인테이블을 제외하고 테이블 너비 조정불가
+		            if (tblObject.id != "main_table")
+		                document.getElementById("txtWidth").disabled = true;
+		        }
+				
+		        // 상속받은 페이지인 경우 테이블 사이즈 조정 불가
+		        if (parentpageid.toLowerCase() != "top") {
+		            if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid) {
+		                document.getElementById("txtWidth").disabled = true;
+		                document.getElementById("txtHeight").disabled = true;
+		                bCanModify = false;
+		            }
+		        }
+				
+		        // 선택한 개체의 종류
+		        selObjClass = "TABLE";
 	        }
 
 			function selectsubcell(e) {
@@ -791,7 +772,7 @@
 				}
 				
 				selectedSubCell = eventItem.getAttribute("id");
-	console.log("selectedSubCell="+selectedSubCell);
+	
 				if (previousSubCell != null) previousSubCell.parentElement.style.backgroundColor = "white";
 				
 				if (selectedSubCell.substr(0,2).toLowerCase() != "su") {
@@ -816,8 +797,7 @@
 				document.getElementById("txtWidth").disabled = true;
 				
 				// 상속받은 페이지인 경우 테이블 사이즈 조정 불가
-				if (cell.getAttribute("ownerpageuid") != pageid)
-				{
+				if (cell.getAttribute("ownerpageuid") != pageid) {
 					document.getElementById("txtHeight").disabled = true;
 					bCanModify = false;
 				}
@@ -875,6 +855,7 @@
 
 			// 포틀릿 추가
 			var portlet_search_dialogArguments = new Array();
+			
 			function insertrow() {
 				var pGubunFlag = "";
 				
@@ -889,7 +870,7 @@
 					alert("<spring:message code='ezPortal.t362'/>");
 					return;
 				}
-	//alert("length="+eval(selectedCell).children.item(0).children.item(0).children.length);
+	
 				if (eval(selectedCell).children.item(0).children.item(0).children.length > 9) {
 					alert("<spring:message code='ezPortal.t292'/>");
 					return;
@@ -957,46 +938,43 @@
 			   	}
 			}
 		
-		   function insertrow_Complete(ret) {
-		        if (typeof (ret) == "undefined") return;
+			function insertrow_Complete(ret) {
+				if (typeof (ret) == "undefined") return;
 
-		        if (CheckDuplicate(ret[0])) {
-		            alert("<spring:message code='ezPortal.t293'/>");
-		            return;
-		        }
-               var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
-               newrow.style.width = "100%";
-               newrow.style.height = ret[2];
-               var subtdGetid = "subtd" + GetGUID().substr(0, 4);
-               var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%; height:"+ret[2]+"px\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
-               newrow.innerHTML = strInnerHTML;
-               var pageuid = "";
-               if (GetPageID(document.getElementById(subtdGetid)) == null)
-                   pageuid = pageid;
-               else
-                   pageuid = GetPageID(document.getElementById(subtdGetid));
-
-               document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
-               document.getElementById(subtdGetid).focus();
-
+     			if (CheckDuplicate(ret[0])) {
+         			alert("<spring:message code='ezPortal.t293'/>");
+         			return;
+     			}
+     			
+				var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+				newrow.style.width = "100%";
+				newrow.style.height = ret[2];
+				var subtdGetid = "subtd" + GetGUID().substr(0, 4);
+				var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%; height:"+ret[2]+"px\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
+				newrow.innerHTML = strInnerHTML;
+				var pageuid = "";
+				if (GetPageID(document.getElementById(subtdGetid)) == null)
+				    pageuid = pageid;
+				else
+				    pageuid = GetPageID(document.getElementById(subtdGetid));
+				
+				document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
+				document.getElementById(subtdGetid).focus();
 		    }
 		
 			// 열추가
 			function insertcell() {
-				if (!bCanModify)
-				{
+				if (!bCanModify) {
 					alert("<spring:message code='ezPortal.t294' />");
 					return;
 				}
 				
-				if (bInherit)
-				{
+				if (bInherit) {
 					alert("<spring:message code='ezPortal.t294' />");
 					return;
 				}
 				
-				if (selectedCell == "")
-				{
+				if (selectedCell == "") {
 					alert("<spring:message code='ezPortal.t295' />");
 					return;
 				}
@@ -1008,10 +986,8 @@
 					return;
 				
 				// 상속받은 페이지인 경우 열을 추가할 수 없도록 체크
-				if (parentpageid.toLowerCase() != "top")
-				{
-					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid)
-					{
+				if (parentpageid.toLowerCase() != "top") {
+					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid) {
 						alert("<spring:message code='ezPortal.t294' />");
 						return;
 					}
@@ -1032,16 +1008,13 @@
 				selectedSubCell = "";
 			}
 	
-			function removecell(type)
-			{
-				if (!bCanModify)
-				{
+			function removecell(type) {
+				if (!bCanModify) {
 					alert("<spring:message code='ezPortal.t296' />");
 					return;
 				}
 				
-				if (bInherit)
-				{
+				if (bInherit) {
 					alert("<spring:message code='ezPortal.t296' />");
 					return;
 				}
@@ -1061,10 +1034,8 @@
 					return;
 				
 				// 상속받은 페이지인 경우 열을 삭제할 수 없도록 체크
-				if (parentpageid.toLowerCase() != "top")
-				{
-					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid)
-					{
+				if (parentpageid.toLowerCase() != "top") {
+					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid) {
 						alert("<spring:message code='ezPortal.t296' />");
 						return;
 					}
@@ -1072,10 +1043,8 @@
 				
 				if (selectedCell == "td0") return;
 				
-				if (selectedCell.substr(0,3) == "td0")
-				{
-					if (confirm("<spring:message code='ezPortal.t298' />"))
-					{
+				if (selectedCell.substr(0,3) == "td0") {
+					if (confirm("<spring:message code='ezPortal.t298' />")) {
 						eval(selectedCell).parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.removeChild(eval(selectedCell).parentElement.parentElement.parentElement.parentElement.parentElement);
 						selectedCell = "";
 						selectedSubCell = "";
@@ -1085,10 +1054,8 @@
 				
 				var row = eval(selectedCell).parentElement;
 				
-				for (var i=0; i<row.children.length; i++)
-				{
-					if (row.children.item(i).id == selectedCell)
-					{
+				for (var i=0; i<row.children.length; i++) {
+					if (row.children.item(i).id == selectedCell) {
 						row.removeChild(row.children.item(i));
 						break;
 					}
@@ -1131,25 +1098,21 @@
 				selectedCell = "";
 			}
 	
-			function swaprow(pDirection)
-			{
-				if (selectedSubCell == "")
-				{	
+			function swaprow(pDirection) {
+				if (selectedSubCell == "") {	
 					alert("<spring:message code='ezPortal.t302' />");
 					event.cancelBubble = true;
 					return;
 				}
 	
 				var cell = eval(selectedSubCell);
-				if (cell.getAttribute("canreplace") != 1)
-				{
+				if (cell.getAttribute("canreplace") != 1) {
 					alert("<spring:message code='ezPortal.t303' />");
 					return;
 				}
 	
 				// 상속페이지는 위치변경 불가능
-			    if (cell.getAttribute("ownerpageuid") != pageid)
-				{
+			    if (cell.getAttribute("ownerpageuid") != pageid) {
 					
 					// 상속페이지에서 Root페이지의 옵션 포틀릿인 경우 삭제대상 정보를 저장
 			        if (parentpageid.toLowerCase() != "top" && cell.getAttribute("ownerpageuid") != pageid && cell.getAttribute("mandatory") == "2") {
@@ -1163,10 +1126,8 @@
 				
 				var obj = null;
 				
-				if (pDirection == "up")
-				{
-				    if (getPreviousSibling(cell.parentElement.previousSibling) == null || getPreviousSibling(cell.parentElement.previousSibling).children.item(0).getAttribute("id") == "") 
-					{
+				if (pDirection == "up") {
+				    if (getPreviousSibling(cell.parentElement.previousSibling) == null || getPreviousSibling(cell.parentElement.previousSibling).children.item(0).getAttribute("id") == "") {
 						if (cell.pageuid == pageid) return;
 				        try {
 				                //2013-01-21
@@ -1174,8 +1135,7 @@
 	//							obj.children.item(0).getAttribute("pageuid") = GetPageID(obj.children.item(0));
 						} catch(e) { return; }
 					} else {
-				        if (getPreviousSibling(cell.parentElement.previousSibling).outerHTML.toLowerCase().indexOf("table") > -1)
-						{
+				        if (getPreviousSibling(cell.parentElement.previousSibling).outerHTML.toLowerCase().indexOf("table") > -1) {
 							try {
 							    obj = getPreviousSibling(cell.parentElement.previousSibling).children.item(0).children.item(0).children.item(0).children.item(0).lastChild.children.item(0).children.item(0).insertAdjacentElement("beforeEnd", cell.parentElement);
 	//						    obj.children.item(0).getAttribute("pageuid") = GetPageID(obj.children.item(0));
@@ -1186,16 +1146,14 @@
 						}
 					}
 				} else if (pDirection == "down") {
-				    if (getNextSibling(cell.parentElement.nextSibling) == null || getNextSibling(cell.parentElement.nextSibling).children.item(0).getAttribute("id") == "")
-					{
+				    if (getNextSibling(cell.parentElement.nextSibling) == null || getNextSibling(cell.parentElement.nextSibling).children.item(0).getAttribute("id") == "") {
 						if (cell.pageuid == pageid) return;
 				        try {
 	                            //2013-01-21
 								obj = cell.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.insertAdjacentElement("afterEnd", cell.parentElement);
 	//							obj.children.item(0).getAttribute("pageuid") = GetPageID(obj.children.item(0));
 						} catch(e) { return; }
-					}
-					else {
+					} else {
 				        if (getNextSibling(cell.parentElement.nextSibling).outerHTML.toLowerCase().indexOf("table") > -1) {
 							try {
 							    obj = getNextSibling(cell.parentElement.nextSibling).children.item(0).children.item(0).children.item(0).children.item(0).firstChild.children.item(0).children.item(0).firstChild.insertAdjacentElement("afterEnd", cell.parentElement);
@@ -1207,24 +1165,18 @@
 						}
 	
 					}
-				}
-				else if (pDirection == "left")
-				{
+				} else if (pDirection == "left") {
 				    if (getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling) == null) return;
 					
-				    if (getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).children.length > 9)
-					{
+				    if (getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).children.length > 9) {
 						alert("<spring:message code='ezPortal.t292' />");
 						return;
 					}
 				    getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).appendChild(cell.parentElement);
-				}
-				else if (pDirection == "right")
-				{
+				} else if (pDirection == "right") {
 				    if (getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling) == null) return;
 				
-				    if (getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling).children.item(0).children.item(0).children.length > 9)
-					{
+				    if (getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling).children.item(0).children.item(0).children.length > 9) {
 						alert("<spring:message code='ezPortal.t292' />");
 						return;
 					}
@@ -1235,12 +1187,14 @@
 	            //크로스용 함수 추가
 			function swapNodes(item1,item2){ 
 			    var itemtmp = item1.cloneNode(1); 
-			    var parent = item1.parentNode; 
+			    var parent = item1.parentNode;
+			    
 			    item2 = parent.replaceChild(itemtmp,item2); 
 			    parent.replaceChild(item2,item1); 
 			    parent.replaceChild(item1,itemtmp); 
 			    itemtmp = null; 
 			}
+	            
 			function getNextSibling(node) {
 	
 			    while (node.nodeType != 1) {
@@ -1249,6 +1203,7 @@
 	
 			    return node;
 			}
+			
 			function getPreviousSibling(node) {
 	
 			    while (node.nodeType != 1) {
@@ -1274,15 +1229,13 @@
 				
 				var curWidth = parseInt(cell.style.width.replace("px", ""));
 				
-				if (pDirection == "right")
-				{
+				if (pDirection == "right") {
 					curWidth += 2;
 					//2017-02-11
 					cell.style.width = curWidth.toString();
 					cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = curWidth.toString() + "px"; 
 					
-				}	
-				else if (pDirection == "left") {
+				} else if (pDirection == "left") {
 					curWidth -= 2;
 					//2017-02-11
 					cell.style.width = curWidth.toString();
@@ -1348,6 +1301,7 @@
 					alert("<spring:message code='ezPortal.t309' />");
 					return;
 				}
+				
 				if (tblObject.height == "100%" && (pDirection == "up" || pDirection == "down")) {
 					alert("<spring:message code='ezPortal.t310' />");
 					return;
@@ -1391,8 +1345,7 @@
 				window.open("/ezPortal/portalPage.do?mode=view&viewMode=preview&pageID=" + pageid + "&pClassID=" + g_ClassID + "&pClassName=" + g_ClassName + "&pageOption=" + document.getElementById("Optioninfo").value);
 			}
 	
-			function OpenMaxURL(pURL)
-			{
+			function OpenMaxURL(pURL) {
 				if (pURL == "") return;	
 				location.href = pURL;
 			}
@@ -1402,7 +1355,7 @@
 					alert("<spring:message code='ezPortal.t312' />");
 					return;
 				}
-	//alert("length="+eval(selectedCell).children.item(0).children.item(0).children.length);
+	
 				if (eval(selectedCell).children.item(0).children.item(0).children.length > 9) {
 					alert("<spring:message code='ezPortal.t292' />");
 					return;
@@ -1410,25 +1363,21 @@
 				
 				var strHTML = "<table id='main_table_" + GetGUID().substr(0,4) + "' border=1 cellpadding=0 cellspacing=0 width=100% height=110px style='table-layout:fixed;'>";
 				strHTML += "<tr id='main_row'>";
-	//alert("GetGUID="+GetGUID());
-	//alert("GetGUIDsub="+GetGUID().substr(0,3));
 				strHTML += "<TD id='td0" + GetGUID().substr(0,3) + "' vAlign=top><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>";
 				strHTML += "<TBODY><TR style='WIDTH: 100%; HEIGHT: 10px' onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR></tbody>";
 				strHTML += "</table></td></tr></table>";
 				
 				if (CrossYN()) {
-	//alert("!!");
 					var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
 					newrow.style.width = "100%";
 					newrow.style.height = "100";
-	//alert("subGetId="+subGetId);
+	
 					var subGetId = "subtd" + GetID();
 					
 					var strInnerHTML = "<td id='" + subGetId + "' uid='"+GetGUID()+"' style='width:100%' pageuid='"+GetGUID()+"' ownerpageuid='"+pageid+"' align='center' onclick='selectsubcell(event)' ondblclick='dblclicknotice()' onkeydown='cellkeydown(event)' canremove='1'  canresize='1'  canreplace='1'>"+strHTML+"</td>";
 					newrow.innerHTML = strInnerHTML;
 					
 					document.getElementById(subGetId).focus();
-	//alert(document.getElementById(subGetId));
 					AttachEvents(document.getElementById(subGetId))
 				} else {
 					var newrow = eval(selectedCell).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
@@ -1460,8 +1409,6 @@
 	
 				    AttachEvents(newcell);
 				}
-	
-	
 			}
 	
 			function newpage() {
@@ -1469,22 +1416,20 @@
 			}
 	
 			function layoutmode() {
-			    for (var i=0; i<document.getElementsByTagName("tr").length; i++)
-				{
+			    for (var i=0; i<document.getElementsByTagName("tr").length; i++) {
 			        var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
-					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1)
-					{
+			        
+					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1) {
 					    document.getElementsByTagName("tr").item(i).style.display = "none";
 					}
 				}
 			}
 	
 			function editingmode() {
-			    for (var i=0; i<document.getElementsByTagName("tr").length; i++)
-				{
+			    for (var i=0; i<document.getElementsByTagName("tr").length; i++) {
 			        var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
-					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1)
-					{
+			        
+					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1) {
 					    document.getElementsByTagName("tr").item(i).style.display = "";
 					}
 				}
@@ -1504,7 +1449,6 @@
 			
 			// 테이블 크기 조정
 			function resizeTable() {
-	//alert("resizeTable start");
 				if (!bCanModify) {
 					alert("<spring:message code='ezPortal.t313' />");
 					return;
@@ -1554,8 +1498,7 @@
 					
 					tblObject.height = document.getElementById("txtHeight").value;
 					tblObject.parentElement.parentElement.style.height = document.getElementById("txtHeight").value + "px";
-				}
-				else if (selObjClass == "CONTENTS") {
+				} else if (selObjClass == "CONTENTS") {
 					if (selectedSubCell == "") {	
 						alert("<spring:message code='ezPortal.t306' />");
 						return;
@@ -1580,36 +1523,30 @@
 			
 			// 초기화_관리자edit 2007-09-12
 			function ResetPortalPage() {
-			    var xmlhttp = createXMLHttpRequest();
+				var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/resetPortalPage.do?pageID=" + pageid + "&comapnyID=" + g_CompanyID + "&baseType=" +g_BaseType, false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
-			  if (xmlhttp.responseText == "OK")
-			  {
-			     //새로 고침 _ 현재의 PAGEID로 
-			     alert("<spring:message code='ezPortal.t408' />") ;
-			     location.href = "/ezPortal/portalPage.do?mode=edit&pageID="+pageid;
-			  }
-			  else
-			  {
-			      alert("<spring:message code='ezPortal.t319' />" + + xmlhttp.responseText) ;
-			  }
+				
+			  	if (xmlhttp.responseText == "OK") {
+			    	//새로 고침 _ 현재의 PAGEID로 
+			     	alert("<spring:message code='ezPortal.t408' />") ;
+			     	location.href = "/ezPortal/portalPage.do?mode=edit&pageID="+pageid;
+			  	} else {
+					alert("<spring:message code='ezPortal.t319' />" + + xmlhttp.responseText) ;
+			  	}
 			  
-			  xmlhttp = null;
+			  	xmlhttp = null;
 			}
 			
-			
 			// 초기화_Myportalpage 
-			function DeletePortalPage()
-			{
+			function DeletePortalPage() {
 				if (parentpageid.toLowerCase() == "top")
 					return;
 				
-				if (confirm("<spring:message code='ezPortal.t320' />"))
-				{
+				if (confirm("<spring:message code='ezPortal.t320' />")) {
 					// 상속페이지인 경우 자신의 캐쉬정보를 바로 삭제한다.
-					if (parentpageid.toLowerCase() != "top")
-					{
+					if (parentpageid.toLowerCase() != "top") {
 						DeleteCache();
 					}
 					
@@ -1618,8 +1555,7 @@
 					xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 					xmlhttp.send("<DATA><UID_>" + pageid + "</UID_></DATA>");
 					
-					if (xmlhttp.responseText == "OK")
-					{
+					if (xmlhttp.responseText == "OK") {
 						// 부문포탈, 마이포탈
 						alert("<spring:message code='ezPortal.t408' />") ;
 						
@@ -1628,28 +1564,30 @@
 						else
 	    					location.href = "/ezPortal/myPortal.do?mode=edit&resetMyParentPageID="+parentpageid;
 						
-					}
-					else
+					} else {
 						alert("<spring:message code='ezPortal.t239' />" + xmlhttp.responseText);
+					}
 					
 					xmlhttp = null;
 				}
 			}
 			
 			// 캐쉬삭제
-			function DeleteCache()
-			{
+			function DeleteCache() {
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "admin/remote/portal_DeleteCache.aspx", "false");
 				xmlhttp.send("<DATA><UID_>" + pageid + "</UID_></DATA>");
 				xmlhttp = null;
 			}
+			
 			var OpenFlag = false;
+			
 			function hiddenQuick() {
 			    if (!OpenFlag) {
 			        document.getElementById("btn_quick_Up").style.display = "none";
 			        document.getElementById("QuickUl").style.display = "none";
-			        document.getElementById("btn_quick_Down").style.display = "none";		        
+			        document.getElementById("btn_quick_Down").style.display = "none";
+			        
 			        if ("${userInfo.lang}" == "3") {
 			        	document.getElementById("btn_hidden").src = "/images/jp/main/quickmenu_title_hidden.gif";	
 			        } else if ("${userInfo.lang}" == "2") {
@@ -1658,8 +1596,7 @@
 			        	document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title_hidden.gif";
 			        }		        
 			        OpenFlag = true;
-			    }
-			    else {
+			    } else {
 			        document.getElementById("btn_quick_Up").style.display = "block";
 			        document.getElementById("QuickUl").style.display = "block";
 			        document.getElementById("btn_quick_Down").style.display = "block";

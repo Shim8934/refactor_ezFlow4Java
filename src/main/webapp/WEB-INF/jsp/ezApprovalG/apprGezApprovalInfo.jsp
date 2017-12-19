@@ -2175,7 +2175,7 @@
 		                        <input id="urgent" type="checkbox" name="checkbox" value="checkbox" />&nbsp;(<spring:message code='ezApproval.t2002'/>)</td>
 		                </tr>
 <!-- 		                보안결재 추가 -->
-			            <tr>
+			            <tr style="display: none;">
 			                <th><spring:message code='ezApprovalG.t1210'/></th>
 			                <td>
 			                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
