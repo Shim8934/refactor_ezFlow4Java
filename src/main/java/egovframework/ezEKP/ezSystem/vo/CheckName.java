@@ -14,5 +14,6 @@ public enum CheckName {
 	LicenseKey,
 	Use_FromAddress,
 	MaxAllowedCountOfLoginFail,
-	USE_HTMLMODE
+	USE_HTMLMODE,
+	useEditApprDoc,
 }

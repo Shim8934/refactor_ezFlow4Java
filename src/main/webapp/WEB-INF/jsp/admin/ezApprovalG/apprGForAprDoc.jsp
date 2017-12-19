@@ -18,6 +18,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/admin/FormMain_Cross.js"></script>
 		<script type="text/javascript">
 			var labelcolor = "gray";
 	        var OrderCell = "";
@@ -34,6 +35,7 @@
 	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        var SearchCond = new Array();
 	        var type = "<c:out value ='${type}' />";
+	        var useEditApprDoc = "${useEditApprDoc}";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -841,6 +843,23 @@
 		            }
 		        }
 		    }
+		    // 관리자 문서편집 기능 추가
+		    function modifyDocumnet() {
+				var url = "/admin/ezApprovalG/modifyAprDoc.do";
+				var selList = new ListView();
+				selList.LoadFromID("DocList");
+				var oArrRows = selList.GetSelectedRows();
+				
+				if (oArrRows.length != 0) {
+					var tr = oArrRows[0];
+					
+					docID = tr.getAttribute("DATA1");
+					pURL = tr.getAttribute("DATA3");
+				
+					var param = "?docID=" + docID + "&url=" + encodeURIComponent(pURL) + "&companyID=" + pCompanyID;
+					GetOpenWindow(url + param, "", 900, 870, "no");
+				}
+		    }		    
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -875,6 +894,9 @@
 		        </select><br /><br />
 		        </c:if>
             	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
+            	<c:if test="${useEditApprDoc == 'YES' }">
+            		<li id="modifyButton"><span onclick="return modifyDocumnet()"><spring:message code= 'ezApprovalG.t44' /></span></li>
+            	</c:if>
         	</ul>
     	</div>
     	<div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">

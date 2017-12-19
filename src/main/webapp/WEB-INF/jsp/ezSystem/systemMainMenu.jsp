@@ -13,6 +13,7 @@
 	
 	var list = [];
 	var confirmChange = "";
+	var test = "${configMap.useEditApprDoc}";
 	
 	function update_Sys_Param() {
 		var paramArray
@@ -28,7 +29,8 @@
 				{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value.trim() },
 				{ name : "LicenseKey", value : document.getElementById("LicenseKey").value.trim() },
 				{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() },
-				{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() }
+				{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() },
+				{ name : "useEditApprDoc", value : document.getElementById("useEditApprDoc").value.trim() }
 			  ];
 		
 		if (!paramArray[0].value.match(/^\d+$/)) {
@@ -91,6 +93,7 @@
             <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="60" maxlength="60" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
             <tr><th><spring:message code="ezSystem.x0020"/></th><td><select id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
             <tr><th><spring:message code="ezSystem.lhj1"/></th><td><select id="Use_HTMLMode"><option <c:if test="${configMap.USE_HTMLMODE == null or configMap.USE_HTMLMODE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.USE_HTMLMODE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
+            <tr><th>전자결재 진행문서 편집 기능 사용</th><td><select id="useEditApprDoc"><option <c:if test="${configMap.useEditApprDoc == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useEditApprDoc == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
         </tbody>
     </table> 
     <div class="btnposition">
