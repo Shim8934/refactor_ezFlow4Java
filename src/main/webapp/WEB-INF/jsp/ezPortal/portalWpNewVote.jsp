@@ -12,8 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
-		<script type="text/javascript">
-			var qstTitle 		= "${qstTitle}";
+		<script type="text/javascript">			
 		    var qstId 			= "${qstId}";
 		    var votesArr 		= [];
 		    var totalVotes 		= 0;
@@ -167,7 +166,7 @@
  	 				<c:choose>
   						<c:when test="${qstId != -1}">
   							<p class="qusetion">
-   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="${qstTitle }" style="margin-left:3px">${qstTitle}</span>
+   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="<c:out value='${qstTitle}'/>" style="margin-left:3px">${qstTitle}</span>
     						</p>
       						<c:forEach var="_option" items="${listOptions}" varStatus="loop">     
       							<div class="poll_list1"> 								    
