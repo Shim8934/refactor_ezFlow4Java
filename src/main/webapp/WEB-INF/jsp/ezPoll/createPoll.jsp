@@ -226,7 +226,8 @@
 	        	
 	        	if (_setDate == "1") {
 	        		$('#endDate ').attr('checked', true);
-	        		$('#_dateTimePicker').show();
+	        		//$('#_dateTimePicker').show();
+	        		$('#_dateTimePicker').css('display', 'inline-block');
 	        	}
 	        	else {
 	        		$('#endDate ').attr('checked', false);
@@ -388,7 +389,8 @@
         	$("#sTimePicker").val(sHourMinute).change();
         	$("#eTimePicker").val(eHourMinute).change();
         	
-			$('#_dateTimePicker').show();
+			//$('#_dateTimePicker').show();
+			$('#_dateTimePicker').css('display', 'inline-block');
 			$('#Edatepicker').show();
 			$('#eTimePicker').show();
 			$('#Sdatepicker').show();
@@ -414,7 +416,8 @@
 	        	$("#eTimePicker option[value='1800']").attr('selected','selected');
 			}
 			
-			$('#_dateTimePicker').show();
+			//$('#_dateTimePicker').show();
+			$('#_dateTimePicker').css('display', 'inline-block');
 			$('#Edatepicker').show();
 			$('#eTimePicker').show();
 			$('#Sdatepicker').show();
@@ -856,24 +859,40 @@
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->
 					<td>
-					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px dotted #DDD; margin:0px; padding:0px 5px;">
+					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
+						<div id="numberOfMultiSelect" style="display: inline-block; margin-left: 5px;">
+							<span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span>
+							<select id="myList">
+								<option value="1"><spring:message code="ezPoll.t156"/></option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+							</select>
+						</div>
 					</div>
-					<div id="numberOfMultiSelect" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-						<span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span>
-						<select id="myList">
-							<option value="1"><spring:message code="ezPoll.t156"/></option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-						</select>
-					</div>
+
 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="seeResultFirst" type="checkbox" checked> 
 						<span><spring:message code="ezPoll.t157"/></span>
+						
+						<input id="anonymousVote" type="checkbox">
+						<span><spring:message code="ezPoll.t158"/></span>
+						
+						<input id="endDate" type="checkbox">
+						<span><spring:message code="ezPoll.t159"/></span>
+						
+						<div id="_dateTimePicker" style="display: none;">										
+							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
+							<select id="sTimePicker"></select>
+							<span>~</span>
+							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
+							<select id="eTimePicker"></select>						
+						</div>
+						
 					</div>
-						<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+<%-- 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="anonymousVote" type="checkbox">
 						<span><spring:message code="ezPoll.t158"/></span>
 					</div>
@@ -891,7 +910,7 @@
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
 						<select id="eTimePicker"></select>						
 					</div>
-		
+--%>
 					<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px; position: relative;">
 						<span style="margin-right: 3px;"><spring:message code="ezPoll.t162"/></span>
 						<select id="set_Target">
