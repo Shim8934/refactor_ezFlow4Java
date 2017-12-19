@@ -2188,7 +2188,7 @@
 			<div>
 				<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
-					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block;float:left;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
+					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
 								<c:choose>
 									<c:when test="${primary == '1'}">
