@@ -228,6 +228,7 @@
 	       						var tempClassId = "_thu" + i;	 
 	       						var viewAll = "_tax" + i;
 	       						var listDivs = document.getElementsByClassName(tempClassId);
+	       						var emailElmt = document.getElementById("mailSend" + _optId);
 
 	       						for (var j = 0; j < tempLoop; j++) {
 	       							listDivs[j].style.display = "block";   
@@ -236,14 +237,16 @@
 	       								listDivs[j].innerHTML = Object.keys(userNameArr[i][j]).map(function(key){return userNameArr[i][j][key];})[0] + ",&nbsp;";
 	       							} 
 	       							else {
-	       								listDivs[j].innerHTML = Object.keys(userNameArr[i][j]).map(function(key){return userNameArr[i][j][key];})[0] + "<img src='/images/poll/sendMailSmall.png' style='vertical-align:middle;margin-left:5px' />";
+	       								listDivs[j].innerHTML = Object.keys(userNameArr[i][j]).map(function(key){return userNameArr[i][j][key];})[0];
 	       							}	       							       							
 	       						}   
 	       						
-	       						if (votesArr[i][1] > tempLoop) {	       							
-	       							document.getElementById(viewAll).style.display = "block";
+	       						if (votesArr[i][1] > tempLoop) {
+	       							emailElmt.style.display = "none";
+	       							document.getElementById(viewAll).style.display = "block";	       							
 	       						}
-	       						else {	       							
+	       						else {	   
+	       							emailElmt.style.display = "";
 	       							document.getElementById(viewAll).style.display = "none";
 	       						}
 	       					}
@@ -2290,7 +2293,7 @@
 													}												
 			               							userNameArr[loopIdx].push(tempObj);
 			               						}
-			               					}
+			               					}			               					
 			               				</script>      					               			
 			               		</div>
 			               		<div id="voterNumber2<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
@@ -2300,6 +2303,7 @@
 			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMailSmall.png" style="vertical-align:middle;margin-left:5px; display:none;" />
 			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
 			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;"><spring:message code = 'ezPoll.t122'/></div>
 			               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
