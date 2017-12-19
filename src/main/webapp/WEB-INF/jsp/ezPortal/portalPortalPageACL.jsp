@@ -17,7 +17,9 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		 	var uid = "${uID}";
+		 	
 		    window.resizeTo("600", "620");
+		    
 		    function AddRight() {
 		        if (newAccessID.value == "") {
 		            alert("<spring:message code='ezPortal.t85'/>");
@@ -52,15 +54,17 @@
 	            location.href = "/ezPortal/portalPageACL.do?uID=" + uid;
 
 	        }
+		    
 		    var selecttarget_dialogArguments = new Array();
+		    
 	        function SelectID() {
 	            var config = "status:false;dialogWidth:690px;dialogHeight:630px;scroll:no;status:no;edge:sunken"
+	            
 	            if (CrossYN()) {
 	                selecttarget_dialogArguments[1] = SelectID_Complete;
 	                var OpenWin = window.open("/admin/ezPortal/selectTarget.do", "SelectTarget", GetOpenWindowfeature(690, 630));
 	                try { OpenWin.focus(); } catch (e) { }
-	            }
-	            else {
+	            } else {
 	                var ret = window.showModalDialog("/admin/ezPortal/selectTarget.do", "", config);
 
 	                if (typeof (ret) != "undefined") {
@@ -69,6 +73,7 @@
 	                }
 	            }
 	        }
+	        
 	        function SelectID_Complete(ret) {
 	            if (typeof (ret) != "undefined") {
 	                newAccessID.value = ret.split(";")[0];
@@ -78,11 +83,13 @@
 
 	        function DeleteRight(pAccessID) {
 	            var strXML = "<DATA>";
+	            
 	            strXML += "<UID>" + uid + "</UID>";
 	            strXML += "<ACCESSID>" + pAccessID + "</ACCESSID>";
 	            strXML += "</DATA>";
 
 	            var xmlhttp = createXMLHttpRequest();
+	            
 	            xmlhttp.open("POST", "/admin/ezPortal/removeACL.do", false);
 	            xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	            xmlhttp.send(strXML);
@@ -90,7 +97,6 @@
 
 	            document.location.reload();
 	        }
-
     	</script>
     </head>	
     <body class="popup" >
