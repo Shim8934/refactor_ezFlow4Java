@@ -57,9 +57,9 @@
 			<div style="display: inline-block; padding:8px 0px 2px 0px;">
 				<img src="/images/group2.png" height="22" width="35" style="float:left; display:block; vertical-align:middle; padding:0px 5px 0px 0px;">
 				<div style="float:left; display:block;"><c:out value='${totalVotesForOption}'/></div>
-				<img style="position: fixed; right: 20px; top: 95px; cursor: pointer; height: 32px; width: 32px;" src="/images/poll/sendEmailGroup.png" onClick="sendMailAll('${qstID}','${optID}')">
+				<img style="position: fixed; right: 20px; top: 95px; cursor: pointer; height: 32px; width: 32px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}','${optID}')">
 			</div>	
-			<div style="height:300px; overflow: auto;">
+			<div style="height:313px; overflow: auto;">
 				<table border=1 style="width : 100%; border-color: grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
