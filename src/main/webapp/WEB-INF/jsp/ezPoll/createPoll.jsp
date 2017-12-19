@@ -862,7 +862,7 @@
 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
 						<div id="numberOfMultiSelect" style="display: inline-block; margin-left: 5px;">
-							<span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span>
+							<%-- <span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span> --%>
 							<select id="myList">
 								<option value="1"><spring:message code="ezPoll.t156"/></option>
 								<option value="2">2</option>
@@ -876,7 +876,9 @@
 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="seeResultFirst" type="checkbox" checked> 
 						<span><spring:message code="ezPoll.t157"/></span>
-						
+					</div>
+					
+					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="anonymousVote" type="checkbox">
 						<span><spring:message code="ezPoll.t158"/></span>
 						
@@ -890,7 +892,6 @@
 							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
 							<select id="eTimePicker"></select>						
 						</div>
-						
 					</div>
 <%-- 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="anonymousVote" type="checkbox">
