@@ -71,7 +71,7 @@
   				</c:if>
         	</div>
 			<div class="btnposition conf_btnPosi">
-				<input type="button" name="Submit" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
+				<input type="button" name="Submit" style="color:#fff;" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
         		<input type="button" name="Submit2" style="background:#d0d0d0; color:#333;" value="<spring:message code='ezPoll.t139' />" onclick="window.close()">
         	</div>
 		</form> 

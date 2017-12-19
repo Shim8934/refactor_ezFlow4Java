@@ -982,7 +982,8 @@ public class EzPollController extends EgovFileMngUtil {
 	public String confirmDeleteQuestion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("Confirm delete question is running!");				
 		String listQstIds = "";
-		String listQstContent = "";
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		//String listQstContent = "";
 		List<String> listQuestionIDs = new ArrayList<String>();
 		List<String> listQuestionContents = new ArrayList<String>();
 		
@@ -990,16 +991,17 @@ public class EzPollController extends EgovFileMngUtil {
 			listQstIds = request.getParameter("listQst");
 		}
 		
-		if (request.getParameter("listQstContent") != null) {
+		/*if (request.getParameter("listQstContent") != null) {
 			listQstContent = request.getParameter("listQstContent");
-		}
+		}*/
 		
 		String [] questionIDs = listQstIds.split(",");
-		String [] questionContents = listQstContent.split(",");		
+		//String [] questionContents = listQstContent.split(",");		
 		
 		for (int i = 0; i < questionIDs.length; i++) {
 			listQuestionIDs.add(questionIDs[i]);
-			listQuestionContents.add(questionContents[i]);
+			PollQuestionVO questionVO = ezPollService.getQuestionByIdAndTenantId(Integer.parseInt(questionIDs[i]), loginVO.getTenantId());
+			listQuestionContents.add(questionVO.getTitle());
 		}
 		
 		model.addAttribute("listQuestionIDs", listQuestionIDs);

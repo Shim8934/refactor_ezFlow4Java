@@ -246,15 +246,18 @@
 		    	
 	    		var feature = GetOpenPosition(420, 438);
 		    	var checkedList = checkedArr[0];
-		    	var id = "tlt" + checkedArr[0];		
-		    	var qstTitleList = document.getElementById(id).innerHTML;
+		    	//var id = "tlt" + checkedArr[0];		
+		    	//var qstTitleList = document.getElementById(id).innerHTML;
 		    	
 	    		for (var i = 1; i < checkedArr.length; i++) {	    			
 	    			checkedList = checkedList + "," + checkedArr[i];
-	    			qstTitleList = qstTitleList + "," + document.getElementById("tlt" + checkedArr[i]).innerHTML;
-	    		}		    	
+	    			//qstTitleList = qstTitleList + "," + document.getElementById("tlt" + checkedArr[i]).innerHTML;
+	    		}
+	    		
+	    		//qstTitleList = encodeURIComponent(qstTitleList);
 
-		        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=310px,width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        //var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList + "&listQstContent=" + qstTitleList, "", "height=310px,width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdID + "&listQst=" + checkedList, "", "height=310px,width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        w.focus();
 		    }
 		    

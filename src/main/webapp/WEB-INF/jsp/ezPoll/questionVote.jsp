@@ -2265,7 +2265,7 @@
 				               </td>
 			               </c:if>
 			               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
-			               		<div id="optionContent<c:out value ="${_option.ansId}"/>" class="title01" style="display:block;">${_option.content}</div> 
+			               		<div id="optionContent<c:out value ="${_option.ansId}"/>" class="title01" style="display:block;"><c:out value ="${_option.content}"/></div> 
 			               		<div id="graph<c:out value ="${_option.ansId}" />" style="float: left; display:none; width:100%; height:30px;">
 			               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
 			               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20"></canvas>			               					               					
