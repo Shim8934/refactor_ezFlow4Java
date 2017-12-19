@@ -1312,6 +1312,7 @@ function mailExport_start(pwd){
 	
 	for (var i = 0; i < PcSaveArrayList.length; i++) {
 		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
+		
 		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
 			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
 		} else {
