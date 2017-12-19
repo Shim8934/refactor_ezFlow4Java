@@ -694,7 +694,7 @@
 				parent.document.getElementById("left").contentWindow.hideProgress();
 				parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 			}
-			
+
 			function ShowMailProgressNew() {
 			    document.getElementById("mailPanel").style.display = "block";
 			    document.getElementById("mailPanel").style.opacity = 0.5;
