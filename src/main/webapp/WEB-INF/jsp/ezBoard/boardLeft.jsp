@@ -456,7 +456,11 @@
 		            SetTreeviewUnSelect("");
 		        }
 		    }
-			function Poll_Open(idx) {		       
+			function Poll_Open(idx) {
+				$(".on").attr("class", "off");
+				$(".pollDiv h2").attr("class", "on");
+				$(".pollDiv").next().attr("class", "on");
+				
 				if (CrossYN()) {
 		            if (idx == 1) {
 		                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
@@ -603,7 +607,9 @@
 	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	            </c:if>
 	        </ul>
-	        <h2><span onclick="Poll_Open(1)"><spring:message code="ezBoard.t371" /></span></h2>
+	        <div class="pollDiv" onclick="Poll_Open(1)">
+	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
+	        </div>	
 	        <ul>
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li>	            
