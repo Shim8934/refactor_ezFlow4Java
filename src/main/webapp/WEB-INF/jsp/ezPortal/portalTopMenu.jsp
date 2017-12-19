@@ -39,7 +39,6 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
-		
 			var skinnum = "${skinNum}";
 			var selectedCell = "";
 			var selectedSubCell = "";
@@ -121,6 +120,7 @@
 	//				window.setInterval("update_connectinfo()", 30000);	
 				}
 			}
+			
 			function ezNotieSetting() {
 			    <%-- var g_serverpath = document.location.protocol + "//" + document.location.hostname + "/LoginToRedirect.aspx"; try {
 			        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
@@ -133,28 +133,31 @@
 	            } catch (e) {
 	            } --%>
 	        }
+			
 			function GetObject() {
 			    var agentObj;
-				    i_icd2.SetDocumentDisp(window.document);
-					try {
-				    	i_icd2.xmlURL = "http://" + document.location.hostname + "/ezPortal/componentListTransfer.do";
-					    i_icd2.CheckVersion();
-					    var nCount = i_icd2.nNeedDownload;
-					    if (nCount) {
-			        		if_Progress.StartOn();
-			    		} else {
-			        		finish_download();
-			    		}
-					} catch (e) {
-				    	i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
-					    i_icd2.CheckVersion();
-					    var nCount = i_icd2.nNeedDownload;
-					    if (nCount) {
-			        		if_Progress.StartOn();
-			    		} else {
-			        		finish_download();
-			    		}
-					}
+			    
+			    i_icd2.SetDocumentDisp(window.document);
+			    
+				try {
+			    	i_icd2.xmlURL = "http://" + document.location.hostname + "/ezPortal/componentListTransfer.do";
+				    i_icd2.CheckVersion();
+				    var nCount = i_icd2.nNeedDownload;
+				    if (nCount) {
+		        		if_Progress.StartOn();
+		    		} else {
+		        		finish_download();
+		    		}
+				} catch (e) {
+			    	i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
+				    i_icd2.CheckVersion();
+				    var nCount = i_icd2.nNeedDownload;
+				    if (nCount) {
+		        		if_Progress.StartOn();
+		    		} else {
+		        		finish_download();
+		    		}
+				}
 			}
 	
 			function finish_download() {
@@ -162,25 +165,25 @@
 				popupNotice();
 			}
 	
-			function OfficeBugPatch()
-			{
+			function OfficeBugPatch() {
 			}
 			
 			// 2009.11.25 - 소스보기시 개인정보 유출방지
 	        function CheckPwd() {
-	                var strPwd = "";
-	                var xmlhttp = createXMLHttpRequest();
-	                xmlhttp.open("POST", "interASP/CheckPwd.aspx", false);
-	                xmlhttp.send();        
-	                strPwd = xmlhttp.responseText;
-	                if(strPwd == "FALSE") {
-	                       xmlhttp = null;        
-	                       return "FALSE";
-	                }
-	                xmlhttp = null;
-	                return strPwd;
+                var strPwd = "";
+                var xmlhttp = createXMLHttpRequest();
+                xmlhttp.open("POST", "interASP/CheckPwd.aspx", false);
+                xmlhttp.send();        
+                strPwd = xmlhttp.responseText;
+                
+                if (strPwd == "FALSE") {
+					xmlhttp = null;        
+					return "FALSE";
+                }
+                
+                xmlhttp = null;
+                return strPwd;
 	        }
-	
 			
 			function popupNotice() {
 				//document.all.ifmpopup.src ="popup_menu.aspx";
@@ -202,6 +205,7 @@
 			} */
 			
 			var bLogOutNOTICE = false;
+			
 			function event_update_connectinfo() {
 				if (xmlHTTP.readyState != 4)
 					return;
@@ -217,8 +221,7 @@
 				
 			}
 	
-			function OpenInformationUI(pInformationContent)
-			{
+			function OpenInformationUI(pInformationContent) {
 				var parameter = pInformationContent;
 				var url = "/myoffice/ezApproval/ezAPROPINION.htm";
 				var feature = "status:no;dialogWidth:330px;dialogHeight:180px;help:no;scroll:no;edge:sunken";
@@ -226,24 +229,23 @@
 				return RtnVal;
 			}
 	
-			function load()
-			{
+			function load() {
 				var ret = window.showModalDialog("TopMenu_search.aspx?mode=load");
+				
 				if (typeof(ret) == "undefined") return;
 				
 				document.location.href = "/ezPortal/topMenu.do?pageID=" + ret[0];
 			}
 	
-			function inherit()
-			{
+			function inherit() {
 				var ret = window.showModalDialog("TopMenu_search.aspx?mode=inherit");
+				
 				if (typeof(ret) == "undefined") return;
 				
 				document.location.href = "/ezPortal/topMenu.do?parentPageID=" + ret[0];
 			}
 	
-			function savesub(pObject, pPageID, pParentPageID, pDisplayName, pDisplayName2)
-			{
+			function savesub(pObject, pPageID, pParentPageID, pDisplayName, pDisplayName2) {
 				var strXML = "<DATA>";
 				strXML += "<DISPLAYNAME>" + pDisplayName + "</DISPLAYNAME>";
 				strXML += "<DISPLAYNAME2>" + pDisplayName2 + "</DISPLAYNAME2>";
@@ -253,29 +255,23 @@
 				strXML += "<PARENTPAGEID>" + pParentPageID + "</PARENTPAGEID>";
 				
 				// 대상테이블의 최상위td count
-				for (var i=0; i<pObject.children.item(0).children.item(0).children.length; i++)
-				{
+				for (var i=0; i<pObject.children.item(0).children.item(0).children.length; i++) {
 					// 최상위td
 					if (pObject.children.item(0).children.item(0).children.item(i).id == "") continue;
-					if (pObject.children.item(0).children.item(0).children.item(i).id.substr(0, 2) == "td")
-					{
+					if (pObject.children.item(0).children.item(0).children.item(i).id.substr(0, 2) == "td") {
 						strXML += "<CELL>";
 						var td_item = pObject.children.item(0).children.item(0).children.item(i);
 						strXML += "<WIDTH>" + td_item.style.width.toString().replace("px", "") + "</WIDTH>";
 						
 						// 해당td내의 tr의 카운트 (TABLE/TBODY/TR)
-						for (var j=0; j<td_item.children.item(0).children.item(0).children.length; j++)
-						{
+						for (var j=0; j<td_item.children.item(0).children.item(0).children.length; j++) {
 							// 해당 tr내의 td
 							var tdsub_item = td_item.children.item(0).children.item(0).children.item(j).children.item(0);
-								
 				
 							if (tdsub_item.id == "") continue;
 							
-							
 							// td안에 컨텐츠가 존재하는 경우
-							if (tdsub_item.children.length > 0 && tdsub_item.children.item(0).id.toLowerCase().substr(0, 4) != "main")
-							{
+							if (tdsub_item.children.length > 0 && tdsub_item.children.item(0).id.toLowerCase().substr(0, 4) != "main") {
 								strXML += "<ROW>";
 								strXML += "<TYPE>0</TYPE>";
 								strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
@@ -344,8 +340,7 @@
 				document.location.href = "/ezPortal/topMenu.do?pageID=" + pageid;
 			}
 			
-			function SaveSkin(pPageID)
-			{
+			function SaveSkin(pPageID) {
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/portalSaveSkin.do?pageID=" + pPageID, false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
@@ -353,51 +348,42 @@
 				xmlhttp = null;
 			}
 			
-			function CheckDuplicate(pUID)
-			{
-				for (var i=0; i<main_table.getElementsByTagName("td").length; i++)
-				{
+			function CheckDuplicate(pUID) {
+				for (var i=0; i<main_table.getElementsByTagName("td").length; i++) {
 				    if (main_table.getElementsByTagName("td").item(i).getAttribute("uid") == pUID) return true;
 				}
 				return false;
 			}
 			
-			function OpenEditWindow(pUID)
-			{
+			function OpenEditWindow(pUID) {
 			    if (pUID == "201") window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 			    if (pUID == "202") window.open("/admin/ezPortal/utilMenuAreaEdit.do?pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 			    if (pUID == "203") window.open("/admin/ezPortal/mainMenuAreaEdit.do?pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 			    if (pUID == "205") window.open("admin/edit/SearchArea_Edit.aspx?pageid=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 			}
 			
-			function dblclicksubcell()
-			{
+			function dblclicksubcell() {
 				var obj = null;
 				if (event.srcElement.id == "") obj = event.srcElement.parentElement;
 				else obj = event.srcElement;
 				
-				if (typeof(obj.uid) != "undefined" && obj.uid != "") 
-				{
+				if (typeof(obj.uid) != "undefined" && obj.uid != "") {
 					event.cancelBubble = true;	
 					OpenEditWindow(obj.uid);
 				}
 			}
 	
-			function AttachEvents(pObject, pPageID)
-			{
+			function AttachEvents(pObject, pPageID) {
 				var prevpageid = "";
 				var count = 0;
 				
-				for (var i = 0; i < pObject.getElementsByTagName("td").length; i++)
-				{
+				for (var i = 0; i < pObject.getElementsByTagName("td").length; i++) {
 	
 				    if (pObject.getElementsByTagName("td").item(i).id == "") continue;
 	
-				    if (pObject.getElementsByTagName("td").item(i).id.indexOf("sub") > -1)
-					{
+				    if (pObject.getElementsByTagName("td").item(i).id.indexOf("sub") > -1) {
 				        if (prevpageid != pObject.getElementsByTagName("td").item(i).getAttribute("pageuid")) count++;
 				        prevpageid = pObject.getElementsByTagName("td").item(i).getAttribute("pageuid");
-	
 	
 				        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 				        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
@@ -407,9 +393,7 @@
 						//pObject.getElementsByTagName("td").item(i).onkeyup = cellkeyup;
 						pObject.getElementsByTagName("td").item(i).style.cursor = "pointer";
 						
-					}
-					else
-				    {
+					} else {
 				        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectcell(event)");
 				        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
 				        pObject.getElementsByTagName("td").item(i).setAttribute("onkeyup", "cellkeyup()");
@@ -423,18 +407,20 @@
 			}
 	
 			// 영역 선택시 처리
-			function selectcell(e)
-			{
-	
+			function selectcell(e) {
 			    var Event = e ? e : window.event;
 			    var Element = Event.target ? Event.target : Event.srcElement;
+			    
 			    if (Element.id == "") return;
+			    
 			    if (Element.id.indexOf("sub") > -1) return;
+			    
 			    selectedCell = Element.id;
+			    
 			    if (previousCell != null) previousCell.style.backgroundColor = "white";
+			    
 			    previousCell = Element.children.item(0).children.item(0).children.item(0).children.item(0);
 			    previousCell.style.backgroundColor = "lightblue";
-				
 				
 				// 현재 선택된 cell
 				var cell = eval(selectedCell);
@@ -452,13 +438,11 @@
 				    maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
 				
 				// 해당 table의 height를 구한다.
-				for (var i = 0; i < tblObject.getElementsByTagName("tr").length; i++)
-				{
-					try{
+				for (var i = 0; i < tblObject.getElementsByTagName("tr").length; i++) {
+					try {
 					    compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
 						
-						if (compareHeight != "")
-						{
+						if (compareHeight != "") {
 							if (parseInt(compareHeight, 10) > maxHeight)
 								maxHeight = parseInt(compareHeight, 10);
 						}
@@ -471,8 +455,8 @@
 	
 				
 				document.getElementById("txtWidth").disabled = false;
-				if (document.getElementById("txtWidth").value == "")
-				{
+				
+				if (document.getElementById("txtWidth").value == "") {
 				    document.getElementById("txtWidth").value = "*";
 				    document.getElementById("txtWidth").disabled = true;
 				}
@@ -481,9 +465,7 @@
 				selObjClass = "TABLE";
 			}
 	
-			function selectcellTitle(e)
-			{
-	
+			function selectcellTitle(e) {
 			    var Event = e ? e : window.event;
 			    var Element = Event.target ? Event.target : Event.srcElement;
 			    selectcell2(Element.parentElement.parentElement.parentElement.parentElement);
@@ -491,16 +473,18 @@
 				//event.cancalBubble = true;
 				//event.returnValue = false;
 			}
+			
 			function selectcell2(obj) {
-	
-	
 			    if (obj.getAttribute("id") == "") return;
+			    
 			    if (obj.getAttribute("id").indexOf("sub") > -1) return;
+			    
 			    selectedCell = obj.getAttribute("id");
+			    
 			    if (previousCell != null) previousCell.style.backgroundColor = "white";
+			    
 			    previousCell = obj.children.item(0).children.item(0).children.item(0).children.item(0);
 			    previousCell.style.backgroundColor = "lightblue";
-	
 	
 			    // 현재 선택된 cell
 			    var cell = eval(selectedCell);
@@ -533,8 +517,8 @@
 			    document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
 			    document.getElementById("txtHeight").value = maxHeight;
 	
-	
 			    document.getElementById("txtWidth").disabled = false;
+			    
 			    if (document.getElementById("txtWidth").value == "") {
 			        document.getElementById("txtWidth").value = "*";
 			        document.getElementById("txtWidth").disabled = true;
@@ -545,18 +529,17 @@
 			}
 	
 			// 컨텐츠 선택시 처리
-			function selectsubcell(e)
-			{
+			function selectsubcell(e) {
 			    var Event = e ? e : window.event;
 			    var eventItem = Event.target ? Event.target : Event.srcElement;
-			    if (eventItem.getAttribute("id") == null)
-				{
+			    
+			    if (eventItem.getAttribute("id") == null) {
 					eventItem = eventItem.parentElement;
 				}
+			    
 			    selectedSubCell = eventItem.getAttribute("id");
 				
-				try
-				{
+				try {
 					if (previousSubCell != null) previousSubCell.parentElement.style.backgroundColor = "white";
 				} catch(e) {}
 				
@@ -565,14 +548,15 @@
 				
 				var cell;
 				var curHeight = 0;
+				
 				if (selectedSubCell != null) {
 				    cell = eval(selectedSubCell);
 				    curHeight = parseInt(cell.parentElement.style.height.replace("px", ""));
-				}
-				else {
+				} else {
 				    cell = eval(previousSubCell);
 				    curHeight = parseInt(cell.parentElement.children[1].style.height.replace("px", ""));
 				}
+				
 				document.getElementById("txtHeight").value = curHeight;
 				// 컨텐츠 선택시는 너비 입력필드를 disabled
 				document.getElementById("txtWidth").value = "*";
@@ -581,17 +565,13 @@
 				selObjClass = "CONTENTS";
 			}
 	
-			function cellkeyup()
-			{
+			function cellkeyup() {
 				pressCount = 0;
 			}
 	
-			function cellkeydown(e)
-			{
-				if (!e.ctrlKey)
-				{
-					switch(e.keyCode)
-					{
+			function cellkeydown(e) {
+				if (!e.ctrlKey) {
+					switch(e.keyCode) {
 						case 37:
 							swaprow("left");
 							break;
@@ -607,11 +587,8 @@
 						default:
 							break;
 					}
-				}
-				else
-				{
-					switch(e.keyCode)
-					{
+				} else {
+					switch(e.keyCode) {
 						case 37:
 							resizecell("left");
 							break;
@@ -634,17 +611,16 @@
 			    if (typeof (pCell.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("uid")) != "undefined") return pCell.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("uid");
 			    else return pageid;
 			}
+			
 			var menuitem_search_dialogArguments = new Array();
-			function insertrow()
-			{
-				if (selectedCell == "")
-				{
+			
+			function insertrow() {
+				if (selectedCell == "") {
 					alert("<spring:message code='ezPortal.t347' />");
 					return;
 				}
 				
-				if (eval(selectedCell).children.item(0).children.item(0).children.length > 9)
-				{
+				if (eval(selectedCell).children.item(0).children.item(0).children.length > 9) {
 					alert("<spring:message code='ezPortal.t348' />");
 					return;
 				}
@@ -653,9 +629,7 @@
 			        menuitem_search_dialogArguments[1] = insertrow_Complete;
 			        var OpenWin = window.open("/ezPortal/menuItemSearch.do", "MenuItem_search", GetOpenWindowfeature(290, 340));
 			        try { OpenWin.focus(); } catch (e) { }
-			    }
-			    else {
-	
+			    } else {
 			        var ret = window.showModalDialog("/ezPortal/menuItemSearch.do", "", "dialogHeight:340px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken" + GetShowModalPosition(290, 340));
 	
 			        if (typeof (ret) == "undefined") return;
@@ -723,48 +697,46 @@
 			        newcell.focus();
 			    }
 			}
-			    function insertrow_Complete(ret) {
-			        if (typeof (ret) == "undefined") return;
+			
+		    function insertrow_Complete(ret) {
+		        if (typeof (ret) == "undefined") return;
+
+		        if (CheckDuplicate(ret[0]) && ret[0] != "206") {
+		            alert("<spring:message code='ezPortal.t349' />");
+		            return;
+		        }
+
+                if (ret[0] == "206") {
+                    ret[0] = GetGUID();
+                    ret[1] = "";
+                }
+
+                var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+                newrow.style.width = "100%";
+                newrow.style.height = "100px";
+
+                var subtdGetid = "subtd" + GetGUID().substr(0, 4);
+                var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
+                newrow.innerHTML = strInnerHTML;
+
+                var pageuid = "";
+                if (GetPageID(document.getElementById(subtdGetid)) == null)
+                    pageuid = pageid;
+                else
+                    pageuid = GetPageID(document.getElementById(subtdGetid));
+
+                document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
+                document.getElementById(subtdGetid).focus();
+
+		    }
 	
-			        if (CheckDuplicate(ret[0]) && ret[0] != "206") {
-			            alert("<spring:message code='ezPortal.t349' />");
-			            return;
-			        }
-	
-	                if (ret[0] == "206") {
-	                    ret[0] = GetGUID();
-	                    ret[1] = "";
-	                }
-	
-	                var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
-	                newrow.style.width = "100%";
-	                newrow.style.height = "100px";
-	
-	                var subtdGetid = "subtd" + GetGUID().substr(0, 4);
-	                var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
-	                newrow.innerHTML = strInnerHTML;
-	
-	                var pageuid = "";
-	                if (GetPageID(document.getElementById(subtdGetid)) == null)
-	                    pageuid = pageid;
-	                else
-	                    pageuid = GetPageID(document.getElementById(subtdGetid));
-	
-	                document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
-	                document.getElementById(subtdGetid).focus();
-	
-			    }
-	
-			function insertcell()
-			{
-				if (bInherit)
-				{
+			function insertcell() {
+				if (bInherit) {
 					alert("<spring:message code='ezPortal.t294' />");
 					return;
 				}
 				
-				if (selectedCell == "")
-				{
+				if (selectedCell == "") {
 					alert("<spring:message code='ezPortal.t295' />");
 					return;
 				}
@@ -785,8 +757,7 @@
 			}
 	
 			function removecell(type) {
-				if (bInherit)
-				{
+				if (bInherit) {
 					alert("<spring:message code='ezPortal.t350' />");
 					return;
 				}
@@ -802,10 +773,8 @@
 				
 				if (selectedCell == "td0") return;
 				
-				if (selectedCell.substr(0,3) == "td0")
-				{
-					if (confirm("<spring:message code='ezPortal.t298' />"))
-					{
+				if (selectedCell.substr(0,3) == "td0") {
+					if (confirm("<spring:message code='ezPortal.t298' />")) {
 						eval(selectedCell).parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.removeChild(eval(selectedCell).parentElement.parentElement.parentElement.parentElement.parentElement);
 						selectedCell = "";
 						selectedSubCell = "";
@@ -815,10 +784,8 @@
 				
 				var row = eval(selectedCell).parentElement;
 				
-				for (var i=0; i<row.children.length; i++)
-				{
-					if (row.children.item(i).id == selectedCell)
-					{
+				for (var i=0; i<row.children.length; i++) {
+					if (row.children.item(i).id == selectedCell) {
 						row.removeChild(row.children.item(i));
 						break;
 					}
@@ -827,27 +794,25 @@
 				selectedSubCell = "";
 			}
 	
-			function removerow()
-			{
-				if (selectedSubCell == "")
-				{	
+			function removerow() {
+				if (selectedSubCell == "") {	
 					alert("<spring:message code='ezPortal.t351' />");
 					return;
 				}
 				
 				var cell = eval(selectedSubCell);
 				
-				if (cell.getAttribute("canremove") != 1)
-				{
+				if (cell.getAttribute("canremove") != 1) {
 					alert("<spring:message code='ezPortal.t352' />");
 					return;
 				}
 				
 			    var parentPageid = GetPageID(cell);
+			    
 			    if (parentPageid == null)
 			        parentPageid = pageid;
-			    if (cell.getAttribute("pageuid") != parentPageid)
-				{
+			    
+			    if (cell.getAttribute("pageuid") != parentPageid) {
 					alert("<spring:message code='ezPortal.t353' />");
 					return;
 				}
@@ -856,15 +821,18 @@
 				selectedSubCell = "";
 				selectedCell = "";
 			}
+			
 			//크로스용 함수 추가
 			function swapNodes(item1, item2) {
 			    var itemtmp = item1.cloneNode(1);
 			    var parent = item1.parentNode;
+			    
 			    item2 = parent.replaceChild(itemtmp, item2);
 			    parent.replaceChild(item2, item1);
 			    parent.replaceChild(item1, itemtmp);
 			    itemtmp = null;
 			}
+			
 			function getNextSibling(node) {
 	
 			    while (node.nodeType != 1) {
@@ -873,6 +841,7 @@
 	
 			    return node;
 			}
+			
 			function getPreviousSibling(node) {
 	
 			    while (node.nodeType != 1) {
@@ -881,122 +850,99 @@
 	
 			    return node;
 			}
+			
 			//크로스용 함수 추가
-			function swaprow(pDirection)
-			{
-				if (selectedSubCell == "")
-				{	
+			function swaprow(pDirection) {
+				if (selectedSubCell == "") {	
 					alert("<spring:message code='ezPortal.t354' />");
 					return;
 				}
 	
 				var cell = eval(selectedSubCell);
 	
-				if (cell.getAttribute("canreplace") != 1)
-				{
+				if (cell.getAttribute("canreplace") != 1) {
 					alert("<spring:message code='ezPortal.t355' />");
 					return;
 				}
+				
 			    var parentPageid = GetPageID(cell);
+			    
 			    if (parentPageid == null)
 			        parentPageid = pageid;
-			    if (cell.getAttribute("pageuid") != parentPageid)
-				{
+			    
+			    if (cell.getAttribute("pageuid") != parentPageid) {
 					alert("<spring:message code='ezPortal.t356' />");
 					return;
 				}
 	
 				var obj = null;
 				
-				if (pDirection == "up")
-				{
-				    if (getPreviousSibling(cell.parentElement.previousSibling) == null || getPreviousSibling(cell.parentElement.previousSibling).children.item(0).id == "")
-					{
+				if (pDirection == "up") {
+				    if (getPreviousSibling(cell.parentElement.previousSibling) == null || getPreviousSibling(cell.parentElement.previousSibling).children.item(0).id == "") {
 						if (cell.pageuid == pageid) return;
 						try {
-								obj = cell.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.insertAdjacentElement("beforeBegin", cell.parentElement);
-	//							obj.children.item(0).getAttribute("pageuid") = GetPageID(obj.children.item(0));
+							obj = cell.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.insertAdjacentElement("beforeBegin", cell.parentElement);
+	//						obj.children.item(0).getAttribute("pageuid") = GetPageID(obj.children.item(0));
 						} catch(e) { return; }
-					}
-					else 
-					{
-				        if (getPreviousSibling(cell.parentElement.previousSibling).outerHTML.toLowerCase().indexOf("table") > -1)
-						{
+					} else {
+				        if (getPreviousSibling(cell.parentElement.previousSibling).outerHTML.toLowerCase().indexOf("table") > -1) {
 							try {
 							    obj = getPreviousSibling(cell.parentElement.previousSibling).children.item(0).children.item(0).children.item(0).children.item(0).lastChild.children.item(0).children.item(0).insertAdjacentElement("beforeEnd", cell.parentElement);
 	//						    obj.children.item(0).getAttribute("pageuid") = GetPageID(obj.children.item(0));
 							} catch(e) { return; }
-						}
-						else
-						{
+						} else {
 				            //cell.parentElement.swapNode(cell.parentElement.previousSibling);
 				            swapNodes(cell.parentElement, getPreviousSibling(cell.parentElement.previousSibling));
 						}
 					}
-				}	
-				else if (pDirection == "down")
-				{
-				    if (getNextSibling(cell.parentElement.nextSibling) == null || getNextSibling(cell.parentElement.nextSibling).children.item(0).id == "")
-					{
+				} else if (pDirection == "down") {
+				    if (getNextSibling(cell.parentElement.nextSibling) == null || getNextSibling(cell.parentElement.nextSibling).children.item(0).id == "") {
 						if (cell.pageuid == pageid) return;
 						try {
-								obj = cell.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.insertAdjacentElement("afterEnd", cell.parentElement);
-								obj.children.item(0).pageuid = GetPageID(obj.children.item(0));
+							obj = cell.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.insertAdjacentElement("afterEnd", cell.parentElement);
+							obj.children.item(0).pageuid = GetPageID(obj.children.item(0));
 						} catch(e) { return; }
-					}
-					else
-					{
-				        if (getNextSibling(cell.parentElement.nextSibling).outerHTML.toLowerCase().indexOf("table") > -1)
-						{
+					} else {
+				        if (getNextSibling(cell.parentElement.nextSibling).outerHTML.toLowerCase().indexOf("table") > -1) {
 							try {
 							    obj = getNextSibling(cell.parentElement.nextSibling).children.item(0).children.item(0).children.item(0).children.item(0).firstChild.children.item(0).children.item(0).firstChild.insertAdjacentElement("afterEnd", cell.parentElement);
 	//						    obj.children.item(0).getAttribute("pageuid") = GetPageID(obj.children.item(0));
 							} catch(e) { return; }
-						}
-						else
-						{
+						} else {
 				            //cell.parentElement.swapNode(cell.parentElement.nextSibling);
 				            //cell.parentElement.swapNode(cell.parentElement.nextSibling);
 				            swapNodes(cell.parentElement, getNextSibling(cell.parentElement.nextSibling));
 						}
-	
 					}
-				}
-				else if (pDirection == "left")
-				{
+				} else if (pDirection == "left") {
 				    if (getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling) == null) return;
 					
-				    if (getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).children.length > 9)
-					{
+				    if (getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).children.length > 9) {
 						alert("<spring:message code='ezPortal.t348' />");
 						return;
 					}
+				    
 				    getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).appendChild(cell.parentElement);
-				}
-				else if (pDirection == "right")
-				{
+				} else if (pDirection == "right") {
 				    if (getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling) == null) return;
 				
-				    if (getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling).children.item(0).children.item(0).children.length > 9)
-					{
+				    if (getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling).children.item(0).children.item(0).children.length > 9) {
 						alert("<spring:message code='ezPortal.t348' />");
 						return;
 					}
+				    
 				    getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling).children.item(0).children.item(0).appendChild(cell.parentElement);
 				}
 				cell.focus();
 			}
 	
-			function resizecell(pDirection)
-			{
-				if (selectedCell == "")
-				{	
+			function resizecell(pDirection) {
+				if (selectedCell == "") {	
 					alert("<spring:message code='ezPortal.t354' />");
 					return;
 				}
 				
-				if (bInherit)
-				{
+				if (bInherit) {
 					alert("<spring:message code='ezPortal.t305' />");
 					return;
 				}
@@ -1007,16 +953,13 @@
 	
 				var increase = 1;
 	
-				if (pDirection == "right")
-				{
+				if (pDirection == "right") {
 					curWidth += increase;
 					try {
 						cell.style.width = curWidth.toString();
 						cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = curWidth.toString() + "px"; 
 					} catch(e) {}
-				}	
-				else if (pDirection == "left")
-				{
+				}  else if (pDirection == "left") {
 					curWidth -= increase;
 					try {
 						cell.style.width = curWidth.toString();
@@ -1027,24 +970,20 @@
 				event.cancelBubble = true;
 			}
 	
-			function resizerow(pDirection)
-			{
-				if (selectedSubCell == "")
-				{	
+			function resizerow(pDirection) {
+				if (selectedSubCell == "") {	
 					alert("<spring:message code='ezPortal.t306' />");
 					return;
 				}
 	
 				var cell = eval(selectedSubCell);
 				
-				if (cell.getAttribute("canresize") != 1)
-				{
+				if (cell.getAttribute("canresize") != 1) {
 					alert("<spring:message code='ezPortal.t357' />");
 					return;
 				}
 				
-			    if (cell.getAttribute("pageuid") != GetPageID(cell))
-				{
+			    if (cell.getAttribute("pageuid") != GetPageID(cell)) {
 					alert("<spring:message code='ezPortal.t358' />");
 					return;
 				}
@@ -1053,15 +992,12 @@
 	
 				var increase = 1;
 	
-				if (pDirection == "up")
-				{
+				if (pDirection == "up") {
 					curHeight += increase;
 					try {
 						cell.parentElement.style.height = curHeight.toString();
 					} catch(e) {}
-				}	
-				else if (pDirection == "down")
-				{
+				} else if (pDirection == "down") {
 					curHeight -= increase;
 					try {
 						cell.parentElement.style.height = curHeight.toString();
@@ -1070,97 +1006,81 @@
 				//event.cancelBubble = true;
 			}
 	
-			function GetMainTable(pCell)
-			{
+			function GetMainTable(pCell) {
 				try {
 					return pCell.parentElement.parentElement.parentElement.id;
 				} catch (e) {}
 			}
 			
-			function resizepage(pDirection)
-			{
-				if (selectedCell == "")
-				{
+			function resizepage(pDirection) {
+				if (selectedCell == "") {
 					alert("<spring:message code='ezPortal.t311' />");
 					return;
 				}
 				
 				var tblObject = eval(GetMainTable(eval(selectedCell)));
 				
-				if (bInherit)
-				{
+				if (bInherit) {
 					alert("<spring:message code='ezPortal.t305' />");
 					return;
 				}
 	
-				if (tblObject.width == "100%" && (pDirection == "left" || pDirection == "right"))
-				{
+				if (tblObject.width == "100%" && (pDirection == "left" || pDirection == "right")) {
 					alert("<spring:message code='ezPortal.t309' />");
 					return;
 				}
-				if (tblObject.height == "100%" && (pDirection == "up" || pDirection == "down"))
-				{
+				
+				if (tblObject.height == "100%" && (pDirection == "up" || pDirection == "down")) {
 					alert("<spring:message code='ezPortal.t310' />");
 					return;
 				}
 	
-				try
-				{
-					if (pDirection == "left")
-					{
+				try {
+					if (pDirection == "left") {
 						tblObject.width = parseInt(tblObject.width.toString().replace("px", "")) - 10;
 					}
-					if (pDirection == "right")
-					{
+					if (pDirection == "right") {
 						tblObject.width = parseInt(tblObject.width.toString().replace("px", "")) + 10;
 					}
-					if (pDirection == "down")
-					{
+					if (pDirection == "down") {
 						tblObject.height = parseInt(tblObject.height.toString().replace("px", "")) + 10;
 						tblObject.parentElement.parentElement.style.height = tblObject.height;
 					}
-					if (pDirection == "up")
-					{
+					if (pDirection == "up") {
 						tblObject.height = parseInt(tblObject.height.toString().replace("px", "")) - 10;
 						tblObject.parentElement.parentElement.style.height = tblObject.height;
 					}
 				} catch(e) {}
-				
 			}
 			
 			function S4() {
 			    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 			}
+			
 			function GetGUID() {
 			    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 			}
 	
-			function GetID()
-			{
+			function GetID() {
 				return count++;
 			}
 	
-			function preview()
-			{
+			function preview() {
 				window.open("/ezPortal/topMenu.do?mode=view&viewMode=preview&pageID=" + pageid);
 			}
 	
-			function OpenMaxURL(pURL)
-			{
+			function OpenMaxURL(pURL) {
 				if (pURL == "") return;	
 				location.href = pURL;
 			}
 	
-			function insertpage()
-			{
-				if (selectedCell == "")
-				{
+			function insertpage() {
+				if (selectedCell == "") {
 					alert("<spring:message code='ezPortal.t312' />");
 					return;
 				}
 				
-				if (eval(selectedCell).children.item(0).children.item(0).children.length > 9)
-				{
+				if (eval(selectedCell).children.item(0).children.item(0).children.length > 9) {
 					alert("<spring:message code='ezPortal.t348' />");
 					return;
 				}
@@ -1229,10 +1149,10 @@
 			function img_onMouseOver(pNewPath, obj) {
 			    temppNewPath = pNewPath;
 			    tempobj = obj;
+			    
 			    if (curImg == obj) {
 			        return;
-			    }
-			    else {
+			    } else {
 			        oldPath = obj.src;
 			        obj.src = pNewPath;
 			        if (clickmenusub != "")
@@ -1242,6 +1162,7 @@
 			            document.getElementsByName(clickmenuName)[0].src = clickmenuPath;
 			        }
 			    }
+			    
 			    if (document.getElementById("menu_" + obj.name) != null) {
 			        subPath = "menu_" + obj.name;
 			        menuName = obj.name;
@@ -1257,9 +1178,7 @@
 			            LeftMargin = LeftMargin - 30;
 			        }			        
 			        document.getElementById("menu_" + obj.name).style.left = LeftMargin + "px";
-			    }
-			    
-			    else {
+			    } else {
 			        menuName = obj.name;
 			        subPath = "";
 			    }
@@ -1267,23 +1186,24 @@
 	
 			function img_onMouseOut(obj){
 				tempobj = obj;
+				
 			    if (curImg == obj) {
 			        return;
-			    }
-			    else if (clickmenuPath == oldPath) {
-			    }
-			    else {
+			    } else if (clickmenuPath == oldPath) {
+			    	
+			    } else {
 			        obj.src = oldPath;
 			        if (tempclickmenuPath != "" && obj != document.getElementsByName(clickmenuName)[0])
 			            document.getElementsByName(clickmenuName)[0].src = tempclickmenuPath;
 			    }
+			    
 			    if (subPath != "" && document.getElementById(subPath).style.display == "" && subPath != clickmenusub) {
 			        document.getElementById(subPath).style.display = "none";
 			    }
+			    
 			    if (clickmenusub != "")
 			        document.getElementById(clickmenusub).style.display = "";
 			}
-			
 	
 			function submenuover(subObj) {
 			    if (tempobj.name === subObj.id.replace("menu_", "")) {
@@ -1294,68 +1214,59 @@
 			function submenuout(subObj) {
 			    img_onMouseOut(tempobj);
 			}
+			
 			window.onresize = function () {
 			    if (clickmenusub != "") {
 			        document.getElementById(clickmenusub).style.left = 0;
 			        var LeftMargin = parseInt(document.getElementsByName(clickmenuName)[0].offsetLeft);
+			        
 			        if (window.document.documentElement.clientWidth <= document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth) {
 			            LeftMargin = LeftMargin - (document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth - window.document.documentElement.clientWidth);
 			            LeftMargin = LeftMargin - 30;
 			        }
+			        
 			        document.getElementById(clickmenusub).style.left = LeftMargin + "px";
 			    }
 			}
 	
-			function sub_toggle(subfolder)
-			{
-				try
-				{
-					for (var i=0; i<subfolder.parentElement.children.length; i++)
-					{
+			function sub_toggle(subfolder) {
+				try {
+					for (var i=0; i<subfolder.parentElement.children.length; i++) {
 						subfolder.parentElement.children.item(i).style.display = "none";
 					}
 				
 					subfolder.style.display = "block";		
 					//subfolder.firstChild.firstChild.firstChild.click();
-				}catch(e) {}
+				} catch(e) {}
+			}
+			
+			function submenuclick(pSubMenuID) {
 				
 			}
 			
-			function submenuclick(pSubMenuID)
-			{
-				
-			}
-			
-			function layoutmode()
-			{
-				for (var i=0; i<document.getElementsByTagName("tr").length; i++)
-				{
+			function layoutmode() {
+				for (var i=0; i<document.getElementsByTagName("tr").length; i++) {
 				    var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
-					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1)
-					{
+				    
+					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1) {
 					    document.getElementsByTagName("tr").item(i).style.display = "none";
 					}
 				}
 			}
 	
-			function editingmode()
-			{
-			    for (var i = 0; i < document.getElementsByTagName("tr").length; i++)
-				{
+			function editingmode() {
+			    for (var i = 0; i < document.getElementsByTagName("tr").length; i++) {
 			        var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
-					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1)
-					{
+			        
+					if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1) {
 					    document.getElementsByTagName("tr").item(i).style.display = "";
 					}
 				}
 			}
 			
-			function resizeTable()
-			{
-				if (selObjClass == "TABLE")
-				{
-					if (selectedCell == "")
-					{
+			function resizeTable() {
+				if (selObjClass == "TABLE") {
+					if (selectedCell == "") {
 						alert("<spring:message code='ezPortal.t314' />");
 						return;
 					}
@@ -1363,10 +1274,8 @@
 					// 현재 선택된 cell
 					var cell = eval(selectedCell);
 					
-					if (txtWidth.value != "*" && txtWidth.value != "")
-					{
-						if (!is_num(txtWidth.value))
-						{
+					if (txtWidth.value != "*" && txtWidth.value != "") {
+						if (!is_num(txtWidth.value)) {
 							alert("<spring:message code='ezPortal.t315' />");
 							return;
 						}
@@ -1379,26 +1288,22 @@
 					if (typeof(tblObject) == "undefined")
 						return;
 					
-					if (!is_num(txtHeight.value))
-					{
+					if (!is_num(txtHeight.value)) {
 						alert("<spring:message code='ezPortal.t316' />");
 						return;
 					}
+					
 				    tblObject.height = document.getElementById("txtHeight").value;
 				    tblObject.parentElement.parentElement.style.height = document.getElementById("txtHeight").value + "px";
-				}
-				else if (selObjClass == "CONTENTS")
-				{
-					if (selectedSubCell == "")
-					{	
+				} else if (selObjClass == "CONTENTS") {
+					if (selectedSubCell == "") {	
 						alert("<spring:message code='ezPortal.t306' />");
 						return;
 					}
 	
 					var cell = eval(selectedSubCell);
 					
-					if (cell.getAttribute("canresize") != 1)
-					{
+					if (cell.getAttribute("canresize") != 1) {
 						alert("<spring:message code='ezPortal.t317' />");
 						return;
 					}
@@ -1406,9 +1311,7 @@
 					try {
 					    cell.parentElement.style.height = document.getElementById("txtHeight").value + "px";
 					} catch(e) { alert }
-				}
-				else
-				{
+				} else {
 					alert("<spring:message code='ezPortal.t318' />");
 				}
 				
@@ -1416,29 +1319,28 @@
 			}
 			
 			// 통합검색
-			function Search()
-			{
+			function Search() {
 				txtSearch.value = TrimText(ReplaceText(txtSearch.value, "'", ""));
 				var pSearchString = txtSearch.value;
 				
-				
 				parent.frames["main"].location.href = "/myoffice/ezsearch/index_search.aspx?Keyword=" + escape(pSearchString);
 			}
+			
 			function keyword_Clear(obj) {
 			    obj.value = "";
 			}
-			function Key_event(e,obj)
-			{
+			
+			function Key_event(e,obj) {
 			    var curevent = (typeof event == 'undefined' ? e : event)
 			        if (curevent.keyCode == "13") {
 			            Emp_Search();
 			        }
 			}
 	
-			function input_Onblur(obj)
-			{
+			function input_Onblur(obj) {
 			    if (obj.value.length == 0) { obj.className = 'input_text' } else { obj.className = 'input_text focusnot' }
 			}
+			
 			// 직원조회
 			function Emp_Search() {
 			    if (document.getElementById('input_search').value != "") {
@@ -1453,46 +1355,31 @@
 			}
 			
 			// 2009.11.27 - 팝업창의 위치를 선택할 수 있는 기능 추가
-			function openPopup(popup_number, wWidth, wHeight, wPosition)
-			{
+			function openPopup(popup_number, wWidth, wHeight, wPosition) {
 			    var wVertical, wHorizontal;
-				if(wPosition == 0)
-				{
+			    
+				if(wPosition == 0) {
 			        wVertical = Math.floor(screen.height/2) - (wHeight/2); 
 			        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
-			    }
-			    else if(wPosition == 1)
-			    {
+			    } else if(wPosition == 1) {
 			        wVertical = 100; 
 			        wHorizontal = 100;
-			    }
-			    else if(wPosition == 2)
-			    {
+			    } else if(wPosition == 2) {
 			        wVertical = screen.height - wHeight - 100; 
 			        wHorizontal = 100;
-			    }
-			    else if(wPosition == 3)
-			    {
+			    } else if(wPosition == 3) {
 			        wVertical = 100; 
 			        wHorizontal = screen.width - wWidth - 100;
-			    }
-			    else if(wPosition == 4)
-			    {
+			    } else if(wPosition == 4) {
 			        wVertical = screen.height - wHeight - 100; 
 			        wHorizontal = screen.width - wWidth - 100;
-			    }
-			    else if(wPosition == 5)
-			    {
+			    } else if(wPosition == 5) {
 			        wVertical = 100; 
 			        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
-			    }
-			    else if(wPosition == 6)
-			    {
+			    } else if(wPosition == 6) {
 			        wVertical = screen.height - wHeight - 100; 
 			        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
-			    }
-			    else
-			    {
+			    } else {
 			        wVertical = 0; 
 			        wHorizontal = 0;
 			    }
@@ -1513,17 +1400,20 @@
 			var clickmenusub = "";
 			var clickmenuPath = "";
 			var clickmenuName = "";
+			
 			function OpenWindow(evt, url, location, option) {
 				if (option != "") {
 	    			var width = 0, height = 0;
 	    			var leftPosition = "", topPosition = "";
 	    			var opt = option.split(',');
+	    			
 	    			for (var i = 0 ; i < opt.length ; i++) {
 	        			if (opt[i].indexOf('height') > -1) {
 	            			height = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
 	            			var top = (window.screen.height / 2) - ((height / 2) + 50);
 	            			topPosition = ", top=" + top + ", screenY=" + top;
 	        			}
+	        			
 	        			if (opt[i].indexOf('width') > -1) {
 	            			width = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
 	            			left = (window.screen.width / 2) - ((width / 2) + 10);
@@ -1532,6 +1422,7 @@
 	    			}
 	    			option = option + topPosition + leftPosition;
 				}
+				
 				if (evt != undefined) {
 	    			var targetid = evt.target ? evt.target.id : event.srcElement.id;
 	    			if (targetid != "") {
@@ -1543,6 +1434,7 @@
 	    			}
 	    			
 	    			var targetName = evt.target ? evt.target.parentElement.id : event.srcElement.parentElement.id;
+	    			
 	 		        if (targetName.indexOf("menu_") > -1) {
 	 		            clickmenusub = targetName;
 	 		            if (menuName != clickmenuName) {
@@ -1553,7 +1445,6 @@
 				}
 				window.open(url, location, option);
 			}
-			
 		    
 		    function showProgress() {
 			    document.getElementById("progressPanel").style.display = "block";
