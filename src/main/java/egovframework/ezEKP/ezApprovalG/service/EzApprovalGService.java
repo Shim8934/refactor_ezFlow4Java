@@ -510,4 +510,12 @@ public interface EzApprovalGService {
 	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception;
 
 	public List<OrganUserVO> getTenantID() throws Exception;
+	
+	public int getWhoKyulCount(String docID, String id, String companyID, int tenantId, String lang) throws Exception;
+
+	public String doWhoKyulComplete(String docID, String userID, String companyID, int tenantId, String lang) throws Exception;
+
+	public String returnWhoKyulSingInfo(String docID, String userID, String companyID, int tenantId, String lang) throws Exception;
+	
+	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
 }

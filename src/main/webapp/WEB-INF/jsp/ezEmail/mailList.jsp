@@ -217,7 +217,7 @@
 		                pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
 		                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
 		                
-		                if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
+		                if (pMailListWidthH <= 470) {
 		                    if (g_foldertype != "sent") {
 		                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
 		                        SmallSizeList = true;
@@ -694,7 +694,7 @@
 				parent.document.getElementById("left").contentWindow.hideProgress();
 				parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 			}
-			
+
 			function ShowMailProgressNew() {
 			    document.getElementById("mailPanel").style.display = "block";
 			    document.getElementById("mailPanel").style.opacity = 0.5;

@@ -6323,12 +6323,19 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("attachments : + " + attachments + ", itemID : " + itemID + ", boardID : " + boardID + ", thumbPath : " + thumbPath + ", fileName : " + fileName);
 		
 		try {
-			if (!attachments.substring(attachments.length() - 1).equals(";")) {
+/*			if (!attachments.substring(attachments.length() - 1).equals(";")) {
 				attachments += ";";
+			}*/
+			
+			//baonk added
+			if (!attachments.substring(attachments.length() - 1).equals("|")) {
+				attachments += "|";
 			}
+			//end			
 			
+			//String[] attachmentsArr = attachments.split(";");
+			String[] attachmentsArr = attachments.split("\\|"); //baonk added
 			
-			String[] attachmentsArr = attachments.split(";");
 			for (int i = 0; i < attachmentsArr.length; i++) {
 				map = new HashMap<String, Object>();
 				map.put("tenantID", tenantID);
@@ -6360,6 +6367,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				
 				//get fileName from attachments string
 				fileName = attachmentsArr[i];
+				
 				if (fileName.indexOf("/") > -1) {
 					fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
 				}

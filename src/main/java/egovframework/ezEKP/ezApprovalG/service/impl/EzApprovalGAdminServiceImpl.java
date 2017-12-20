@@ -2653,6 +2653,54 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return result;
 	}
 	
+	// 관리자 편집창
+	public String editApprovalDoc(String docID, String companyID, String formMHT, String formHTML, String realPath, LoginVO userInfo, String filePath, String htmlData) throws Exception {
+		logger.debug("editApprovalDoc started.");
+		
+		filePath = filePath.replace("/" + docID + ".mht", "").trim();
+		logger.debug("filePath : " + filePath);
+		String saveFileFolder = realPath + filePath;
+		String saveFileName = saveFileFolder + commonUtil.separator + docID + ".mht";
+		String strBeforeMHT = "";
+		
+		logger.debug("saveFileFolder : " + saveFileFolder);
+		logger.debug("saveFileName : " + saveFileName);
+		
+		FileOutputStream stream = null;
+		
+		try {
+			File fileFolder = new File(saveFileFolder);
+			File file = new File(saveFileName);
+			
+			if (!fileFolder.exists()) {
+				fileFolder.mkdirs();
+			}
+			
+			if (file.exists()) {
+				strBeforeMHT = FileUtils.readFileToString(file);
+			}
+			
+			FileWriter fw = new FileWriter(file);
+			fw.append(formMHT);
+			fw.close();
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_DOCID", docID);
+			map.put("v_USERID", userInfo.getId());
+			map.put("v_TENANTID", userInfo.getTenantId());
+			map.put("v_COMPANYID", userInfo.getCompanyID());
+			map.put("v_BEFOREHTML", htmlData);
+			map.put("v_AFTERHTML", formHTML);
+			map.put("v_MODIFYDATE", commonUtil.getTodayUTCTime(""));
+			ezApprovalGAdminDAO.insertEditApproDoc(map);
+		} catch (Exception e) {
+			return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
+		}
+		
+		logger.debug("editApprovalDoc ended.");
+		return "";
+	}
+	
 	@Override
 	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
 		logger.debug("saveFormInfoHWP started.");

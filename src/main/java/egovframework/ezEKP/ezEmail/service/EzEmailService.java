@@ -68,5 +68,8 @@ public interface EzEmailService {
 	public MailSecureVO getSecureMailInfoWithPassword(String secureId) throws Exception;
 	public MailSecureVO getSecureMailInfoWithPassword(String userId, int tenantId, String url) throws Exception;
 	public List<MailSecureReaderVO> getSecureMailReaderInfo(String secureId) throws Exception;
-	
+	public List<String> getInitMailBox(int tenantId) throws Exception;
+	public boolean setInitMailSignature(int tenantId, String userId) throws Exception;
+	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
+	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
 }

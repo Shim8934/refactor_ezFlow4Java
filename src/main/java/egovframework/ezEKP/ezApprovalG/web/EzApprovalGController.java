@@ -148,6 +148,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
 		
+		//CODELIST 에서 후결 결재선 사용여부에 따른 후결문서함 사용여부
+		String whoKyulYN = ezApprovalGService.getWhoKyulYN(userInfo);
+		
 		if (apprGLeftVOList.size() > 0) {
 			firstContainerID = apprGLeftVOList.get(0).getContainerID();
 		}
@@ -215,7 +218,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		model.addAttribute("hideSusin", hideSusin);
-		
+		model.addAttribute("whoKyulYN", whoKyulYN);
+
         logger.debug("apprGLeft Value : listType=" + listType + "containers=" + containers.toString() + "viewLeftCount=" + viewLeftCount);       
         logger.debug("apprGLeft Ended");       
 
@@ -1762,6 +1766,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String susinAdmin = "";
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -1772,6 +1777,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("agreeReturnType", agreeReturnType);
 		
 		logger.debug("aprOpinion ended.");
 		
@@ -2592,6 +2598,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		} 
 		
+		int whoKyulCount = ezApprovalGService.getWhoKyulCount(docID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+		String checkPwdFlag = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(),  userInfo.getCompanyID());
+
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("signCheck", signCheck);
@@ -2610,7 +2619,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("formDocType", formDocType);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("docState", docState);
-		
+		model.addAttribute("whoKyulCount", whoKyulCount);
+		model.addAttribute("checkPwdFlag", checkPwdFlag);
+
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";
@@ -3416,6 +3427,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docDir = docID.substring(docID.length() - 3);
 		String approvalPWD = ezApprovalGService.getApprovalPWD(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 
 		if (docDir.substring(0, 1).equals("0")) {
 			docDir = docDir.substring(docDir.length() - 2);
@@ -3499,6 +3511,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
+		model.addAttribute("agreeReturnType", agreeReturnType);
 		
 		logger.debug("approvui ended");
 		
