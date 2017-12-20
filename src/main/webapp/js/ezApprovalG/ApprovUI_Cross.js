@@ -2896,16 +2896,31 @@ function SignCheck() {
 		}
 	});
 
-    if (result == "" || result == null)
+	if (result == "" || result == null) {
         return;
+    }
     
     result = loadXMLString(result);
 
+    if (agreeReturnType == "2") {
+    
+	    var chkBansongList = SelectNodes(result, "SIGNINFOS");
+	    var agreeBansongType = getNodeText(SelectSingleNode(chkBansongList[0], "CHKBANSONG"));
+	
+	    if (agreeBansongType == "TRUE") {
+	    	var pAlertContent = strLangPJG03;
+	    	alert(pAlertContent);
+	    	window.close();
+	    	return;
+	    }  
+	    
+    }
+    
     var NodeList;
     NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
-    if (NodeList.length <= 0)
+    if (NodeList.length <= 0) {
         return;
-
+    }
     SignXML = result;
 
     var rtnVal = putSignXML(SignXML);

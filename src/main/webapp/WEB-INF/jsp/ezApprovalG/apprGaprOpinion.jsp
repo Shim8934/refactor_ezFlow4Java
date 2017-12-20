@@ -53,6 +53,8 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    var junGyulFlag = "${junGyulFlag}";
+		    var agreeReturnType = "${agreeReturnType}";
+		    
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");

@@ -191,6 +191,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (Integer) select("EzApprovalGAdmin.searchManageAprDocListCount", map);
 	}
 	
+	public void insertEditApproDoc(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertEditApproDoc", map);
+	}
+	
 	public void insertContainerType(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertContainerType", map);
 	}

@@ -10,6 +10,14 @@
 		<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
 	    <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
+	    <style>
+	    	#iYear {
+	    		width:53px;
+	    	}
+	    	#iMon {
+	    		width:40px;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -17,13 +25,11 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>
-	    <script type="text/javascript">
-	    	var UserOffset = "${userOffset}";
-	    </script>
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_Cross.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 
 	    <script type="text/javascript">
+	    	var UserOffset = "${userOffset}";
 	        var _funCode = "<c:out value='${funCode}'/>";
 	        var _subCode = "<c:out value='${subCode}'/>";
 	        var defaultView = "<c:out value='${defaultView}'/>";

@@ -14140,6 +14140,19 @@
 		     		COMPANYID = #companyID#
 	</update>
 	
+	<update id="EzApprovalG.updateDocInfoAprstate" parameterClass="Map">
+		UPDATE
+			TBL_APRDOCINFO
+		SET
+			FUNCTIONTYPE = #v_APRSTATE#
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#	
+	</update>	
+	
 <!-- 	<procedure id="EzApprovalG.updateHistoryForLine" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_UPDATEHISTORYFORLINE(#v_DOCID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#)} -->
 <!-- 	</procedure> -->
@@ -17723,7 +17736,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_APRSTATE#,
-		    ReceivedDate = #v_SYSDATE#
+		    ReceivedDate = #v_SYSDATE#	    
 		WHERE 
 			DocID = #v_DOCID#
 		AND 
@@ -17733,6 +17746,23 @@
 		AND
    		 	COMPANYID = #companyID#
    </update>
+   
+   <update id="EzApprovalG.updatePersonalAgreeLineInfo" parameterClass="Map">
+   		UPDATE
+   			TBL_APRLINEINFO
+   		SET
+   			APRSTATE = #v_APRSTATE#
+   		WHERE
+   			DOCID = #v_DOCID#
+   		AND
+   			APRTYPE = #v_APRTYPE#
+   		AND
+   			APRMEMBERID != #v_APRMEMBERID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#   
+   </update>   
    
     <update id="EzApprovalG.updateAprLineInfo2" parameterClass="Map">
    		UPDATE 

@@ -146,6 +146,7 @@
 			var totalMemSN = "0";
 			var LastTotalKyulSN = "0";
 			var lastHabYuiSN;
+			var agreeReturnType = "${agreeReturnType}";
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {

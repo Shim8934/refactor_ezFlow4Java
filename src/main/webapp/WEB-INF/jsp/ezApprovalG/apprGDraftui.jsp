@@ -151,6 +151,7 @@
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 			var totalMemSN = "0";
 			var reuseTitleYN = "${reuseTitleYN}";
+			var agreeResultType = "${agreeResultType}";
 			
 		    window.onload = function ()
 		    {

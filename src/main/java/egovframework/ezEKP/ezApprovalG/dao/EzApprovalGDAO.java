@@ -1549,6 +1549,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		update("EzApprovalG.updateDocInfoDocTitle", map);
 	}
 	
+	public void updateDocInfoAprstate(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateDocInfoAprstate", map);
+	}	
+	
 	public void updateHistoryForLine(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.updateHistoryForLine", map);
 	}
@@ -2287,6 +2291,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void updateAprLineInfo3(Map<String, Object> map3) throws Exception{
 		update("EzApprovalG.updateAprLineInfo3", map3);
+	}
+	
+	public void updatePersonalAgreeLineInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updatePersonalAgreeLineInfo", map);
 	}
 	
 	public void updateProxyExpAprLine(Map<String, Object> map) throws Exception{
