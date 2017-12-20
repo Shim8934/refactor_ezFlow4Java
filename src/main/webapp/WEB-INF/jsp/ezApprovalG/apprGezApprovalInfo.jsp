@@ -188,6 +188,10 @@
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
+	        	if (pIniGubun == "1") {
+	        		$("#lineTemplet").attr("display", "");
+	        	}
+	        	
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
 	        	} else {
@@ -1661,7 +1665,7 @@
 	                                    </div>
 	                                </td>
 	                            </tr>
-	                            <tr>
+	                            <tr id ="lineTemplet" style="display:none;">
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
 	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn">
