@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code = 'ezPersonal.t199' /></title>
+		<title><spring:message code = 'ezPersonal.t183' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -119,7 +119,7 @@
 		</script>
 	</head>
 	<body class="popup">
-    	<h1><spring:message code='ezPersonal.t201'/></h1>
+    	<h1><spring:message code='ezPersonal.t183'/></h1>
     	<div id="close">
         	<ul>
             	<li><span onclick="cancel_onclick()"><spring:message code='ezPersonal.t12'/></span></li>
