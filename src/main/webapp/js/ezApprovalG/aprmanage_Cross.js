@@ -574,6 +574,7 @@ function getAprLine(tr) {
     	if (approvalFlag == "S") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pMode = "END";
+    		pFlag = "Y";
     	} else {
     		pMode = "APR";
     	}
@@ -1961,11 +1962,6 @@ function setbuttonenable() {
 	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
-	    }
-	    if (pListTypeValue == "10") {
-	    	document.getElementById("tbtnRegUserCont").style.display = "";
-	    } else {
-	    	document.getElementById("tbtnRegUserCont").style.display = "none";
 	    }
 	    if (pListTypeValue == "3") {
             document.getElementById("tbtnDraft").style.display = "";   
