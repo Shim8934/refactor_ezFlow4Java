@@ -574,6 +574,7 @@ function getAprLine(tr) {
     	if (approvalFlag == "S") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pMode = "END";
+    		pFlag = "Y";
     	} else {
     		pMode = "APR";
     	}

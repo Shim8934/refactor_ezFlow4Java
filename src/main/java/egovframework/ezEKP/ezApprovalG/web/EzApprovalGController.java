@@ -518,6 +518,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
+		String flag = request.getParameter("flag");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -571,9 +572,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", tenantID);
 				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 				
-				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
-					return "NOTPERMISSION";
-				}
+				//회람일때 권한 노체크
+				if (flag != null && !flag.equals("Y")) {
+					if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+						return "NOTPERMISSION";
+					}
+				}				
 			}
 		}
 		
