@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezConn.web;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezConn.util.EzConnUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
@@ -39,6 +46,12 @@ public class EzConnController {
 	@Autowired
 	private LoginController loginController;
 	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
+    @Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+	
 	@RequestMapping("/ezConn/mailMain.do")
 	public void mailMain(
 					@RequestParam String id,
@@ -46,25 +59,88 @@ public class EzConnController {
 					HttpServletResponse response
 					) throws Exception {
 		logger.debug("mailMain started.");
+		
 		String resultPage = "";
 		
 		try {
 			id = ezConnUtil.decryptAES(id);
 			
-			String orgId = id.split(":")[0];
-			String orgPw = id.split(":")[1];
+			String[] params = id.split(":");
 			
-			logger.debug("orgId=" + orgId);
+			String orgId = params[0];
+			String orgPw = params[1];
+			
+			String userType = "user";
+			String userLang = "1";
+			String userTimeZone = "235|+09:00";
+			
+			if (params.length > 2) {
+				// 관리자 권한일 때는 admin, 사용자 권한일 때는 user가 전달됨
+				userType = params[2];
+			}
+			
+			if (params.length > 3) { 
+				userLang = params[3];
+			}
+
+			if (params.length > 4) {
+				// 235|+09:00 와 같은 형식으로 전달되며 :이 구분자로 사용되는 관계로 URL Encoding 되어 전달되어야 한다.
+				userTimeZone = URLDecoder.decode(params[4], "UTF-8");
+			}
+						
+			logger.debug("orgId=" + orgId + ",params.length=" + params.length + ",userType="
+					+ userType + ",userLang=" + userLang + ",userTimeZone=" + userTimeZone);
 			
 			String serverName = request.getServerName();
 	        int serverPort = request.getServerPort();
 	        int tenantId = loginService.getTenantId(serverName);
+	        
 	        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 			
 			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
+				if (params.length > 2) {
+					OrganUserVO organUserVO = new OrganUserVO();	
+					
+					organUserVO.setTenantId(tenantId);
+					organUserVO.setCn(orgId);
+					
+				    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			        String nowDate = date.format(new Date()); 
+			        organUserVO.setNowDate(nowDate);
+					
+					if (userType.equals("admin")) {
+						// 관리자 권한을 설정한다.
+						organUserVO.setExtensionAttribute1("c=1;k=0;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
+					} else {
+						// 사용자 권한을 설정한다.
+						organUserVO.setExtensionAttribute1("c=0;k=0;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
+					}
+					
+					ezOrganAdminService.updateDBData_user(organUserVO);
+				}
+				
+				if (params.length > 4) {
+					try {
+						// 이미 사용자 레코드가 있으면 Exception이 발생한다.
+						ezCommonService.insertTblUserLocalInfo(orgId, userTimeZone, userLang, tenantId);
+					} catch (Exception e) {
+						LoginVO userInfo = new LoginVO();
+						
+						userInfo.setId(orgId);
+						userInfo.setTenantId(tenantId);
+						userInfo.setOffset(userTimeZone);
+						userInfo.setLang(userLang);		
+						
+						// Exception이 발생하면 업데이트로 다시 시도해 본다.
+						ezCommonService.saveUserLocalInfo(userInfo.getId(), userInfo);
+					}
+				}
+				
 				String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
 				
 				loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response);
@@ -174,9 +250,11 @@ public class EzConnController {
 				
 				if (!id.equals("")) {
 			        int tenantId = 0;
+			        
 			        logger.debug("tenantId=" + tenantId);
 					
 					boolean isUserExists = checkIfUserExistsById(id, tenantId);
+					
 					logger.debug("isUserExists=" + isUserExists);
 					
 					if (isUserExists) {
