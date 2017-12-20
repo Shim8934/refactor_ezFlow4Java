@@ -1123,9 +1123,10 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\"" + pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
-							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\","
+							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\","
 							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + session.getId() + "\"}";
 			JSONParser parser = new JSONParser(); 
+			
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/addCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
 			
@@ -1236,7 +1237,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
-							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent + "\", \"sessionid\":\"" + session.getId() + "\"}";
+							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\", \"sessionid\":\"" + session.getId() + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/editCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
