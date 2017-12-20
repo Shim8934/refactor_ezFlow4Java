@@ -1963,11 +1963,6 @@ function setbuttonenable() {
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
 	    }
-	    if (pListTypeValue == "10") {
-	    	document.getElementById("tbtnRegUserCont").style.display = "";
-	    } else {
-	    	document.getElementById("tbtnRegUserCont").style.display = "none";
-	    }
 	    if (pListTypeValue == "3") {
             document.getElementById("tbtnDraft").style.display = "";   
 	    }
