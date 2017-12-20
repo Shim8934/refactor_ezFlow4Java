@@ -166,13 +166,13 @@
  	 				<c:choose>
   						<c:when test="${qstId != -1}">
   							<p class="qusetion">
-   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="<c:out value='${qstTitle}'/>" style="margin-left:3px">${qstTitle}</span>
+   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="<c:out value='${qstTitle}'/>" style="margin-left:3px; text-overflow: ellipsis;"><c:out value='${qstTitle}'/></span>
     						</p>
       						<c:forEach var="_option" items="${listOptions}" varStatus="loop">     
       							<div class="poll_list1"> 								    
 		               				<div style="display: inline-block; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
 		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
-		               					<div style="float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap;">${_option.content}</div>
+		               					<div style="float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap; text-overflow: ellipsis;" title="<c:out value ="${_option.content}" />"><c:out value ="${_option.content}" /></div>
 		               					
 		               					<c:choose>
 		               						<c:when test="${seeResultBefore == 1}">
