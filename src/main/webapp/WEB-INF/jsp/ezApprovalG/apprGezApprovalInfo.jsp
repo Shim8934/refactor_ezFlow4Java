@@ -189,7 +189,7 @@
 	        
 	        $(function () {
 	        	if (pIniGubun == "1") {
-	        		$("#lineTemplet").attr("display", "");
+	        		$("#SaveAprLineTemplet").css("display", "");
 	        	}
 	        	
 	        	if (document.getElementById("AprSecurity").checked){
@@ -1665,13 +1665,13 @@
 	                                    </div>
 	                                </td>
 	                            </tr>
-	                            <tr id ="lineTemplet" style="display:none;">
+	                            <tr>
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
 	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
-	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top;">
+	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top; display: none;" id="SaveAprLineTemplet">
 	                                 <a class="imgbtn">
 	                                 </c:if>
 	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
