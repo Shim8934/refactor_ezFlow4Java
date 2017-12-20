@@ -15,5 +15,4 @@ public enum CheckName {
 	Use_FromAddress,
 	MaxAllowedCountOfLoginFail,
 	USE_HTMLMODE,
-	useEditApprDoc,
 }

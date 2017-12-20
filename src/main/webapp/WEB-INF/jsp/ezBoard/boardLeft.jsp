@@ -584,15 +584,18 @@
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
 		        </ul>
 	        </c:if>
-	        <div class="qst" onclick="Open_Func(1)"> 
-		        <h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
-		    </div>
-		    <ul>
-	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
-	            <c:if test="${questionAdmin == 'true' }">
-	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
-	            </c:if>
-	        </ul>
+	        
+		    <c:if test="${useQuestion == 'YES'}">
+		    	<div class="qst" onclick="Open_Func(1)"> 
+		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
+		    	</div>
+		    	<ul>
+	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
+	            	<c:if test="${questionAdmin == 'true' }">
+	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
+	            	</c:if>
+	        	</ul>
+		    </c:if>
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
