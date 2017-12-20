@@ -1958,12 +1958,14 @@
 		    	}
 		    	else {		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
-		    			div2Cmt.firstElementChild.innerHTML = txtContent;
+		    			//div2Cmt.firstElementChild.innerHTML = txtContent;
+		    			div2Cmt.firstElementChild.textContent = txtContent;
 		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
-		    			pForTd2.innerHTML = txtContent;
+		    			//pForTd2.innerHTML = txtContent;
+		    			pForTd2.textContent = txtContent;		    			
 		    			pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
 		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
 		    		}
