@@ -1206,7 +1206,7 @@
 			}
 	
 			function submenuover(subObj) {
-			    if (tempobj.name === subObj.id.replace("menu_", "")) {
+			    if (tempobj.name == subObj.id.replace("menu_", "")) {
 					img_onMouseOver(temppNewPath, tempobj);
 			    }
 			}
