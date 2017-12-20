@@ -504,7 +504,7 @@
 							</c:if>						
 			        	</td>
 			        	 
-			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" ><c:out value ="${list.title}"/></td>
+			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" ><c:out value ="${list.title}"/></td>
 			          	
 			          	<%-- Question status --%>
 						<c:if test="${list.status == 0}">
