@@ -55,7 +55,7 @@
 	    			<c:forEach var="list" items="${listQuestionIDs}" varStatus="status">
 		    			<tr> 
 		      				<%-- <td style="width: 25px; text-align:center;">${list}</td> --%>
-		      				<td style="overflow: hidden; cursor: default; text-overflow: ellipsis; padding:0px 10px; max-width: 270px; white-space: nowrap; line-height: 25px;" title="${listQuestionContents[status.index]}">${listQuestionContents[status.index]}</td> 
+		      				<td style="overflow: hidden; cursor: default; text-overflow: ellipsis; padding:0px 10px; max-width: 270px; white-space: nowrap; line-height: 25px;" title="<c:out value='${listQuestionContents[status.index]}'/>"><c:out value='${listQuestionContents[status.index]}'/></td> 
 		    			</tr> 
 	    			</c:forEach>
 	  			</table>
