@@ -97,8 +97,8 @@
 			
 			if (mode == "modify") {
 				//Modify the vote
-				var questionTitle = "<c:out value='${question.title}'/>";
-				document.getElementById("qst_title").value = questionTitle;
+				//var questionTitle = "<c:out value='${question.title}'/>";
+				//document.getElementById("qst_title").value = questionTitle;
 				var pathFile = sigBody2.innerHTML;
 
 				if (pathFile != null && pathFile.replace(/ /g,'') != "") {
@@ -795,7 +795,7 @@
 				<tr>    <!------------Question title----------------> 
 					<%-- <th>Question</th>			--%>
 					<td style="width: 100%;" class="pollTd01">							
-						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150">
+						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150" value="<c:out value="${mode == 'modify' ? question.title : ''}"/>">
 					</td>
 	
 				</tr>
