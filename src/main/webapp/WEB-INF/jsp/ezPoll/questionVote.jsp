@@ -976,18 +976,19 @@
 		    		}
 		    	}
 		    	else {
-		    		fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+		    		//fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+		    		fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value);
 		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			//div2Cmt.firstElementChild.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-		    			div2Cmt.firstElementChild.textContent = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+		    			div2Cmt.firstElementChild.textContent = document.getElementById("editCmtArea" + commentIndex).value;
+		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
 		    			//pForTd2.innerHTML = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-		    			pForTd2.textContent = document.getElementById("editCmtArea" + commentIndex).value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-		    			pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+		    			pForTd2.textContent = document.getElementById("editCmtArea" + commentIndex).value;
+		    			pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
 		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
 		    		}
 		    	}
@@ -1261,11 +1262,11 @@
                 
                 //Add text comment if exists
                 if (currentText.length > 0) {
-                	currentText = currentText.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                	//currentText = currentText.replace(/(?:\r\n|\r|\n)/g, '<br />');
                 	var pForTd2 = document.createElement("p");                  	
                 	//pForTd2.innerHTML = currentText;
                 	pForTd2.textContent = currentText;
-                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 	div2ForTd2.appendChild(pForTd2);                	
                 	fd.append("cmtTxt", currentText);
@@ -1841,10 +1842,11 @@
                 
                 //Add text comment if exists
                 if (txtContent.length > 0) {
-                	txtContent = txtContent.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                	//txtContent = txtContent.replace(/(?:\r\n|\r|\n)/g, '<br />');
                 	var pForTd2 = document.createElement("p");  
-                	pForTd2.innerHTML = txtContent;
-                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+                	//pForTd2.innerHTML = txtContent;
+                	pForTd2.textContent = txtContent;
+                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 	div2ForTd2.appendChild(pForTd2);
                 }
@@ -1957,12 +1959,12 @@
 		    	else {		    		
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			div2Cmt.firstElementChild.innerHTML = txtContent;
-		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
 		    			pForTd2.innerHTML = txtContent;
-		    			pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px;");
+		    			pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
 		    			div2Cmt.insertBefore(pForTd2, div2Cmt.children[0]);
 		    		}
 		    	}
@@ -2364,11 +2366,11 @@
 										<c:otherwise>
 											<div class="userName">${_comt.userName2}</div>
 										</c:otherwise>
-									</c:choose>								
+									</c:choose>							
 									
 									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
 										<c:if test="${_comt.textContent != ''}">
-											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; "><c:out value ="${_comt.textContent}" /></p>
+											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;"><c:out value ="${_comt.textContent}" /></p>
 										</c:if>
 										<c:if test="${_comt.imageAttach != ''}">
 											<div style="padding-top: 5px;">
