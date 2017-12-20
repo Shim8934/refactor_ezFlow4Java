@@ -187,7 +187,7 @@ function MakeAddressList() {
             var _TD2 = document.createElement("TD");
             _TD2.style.width = "24px";
             _TD2.style.margin = "0px";
-            _TD2.style.padding = "0px";
+            _TD2.style.padding = "2px 0px 0px 0px";
             _TD2.style.textAlign = "left";
             var _Img = document.createElement("IMG");
             if (SType == "P")
