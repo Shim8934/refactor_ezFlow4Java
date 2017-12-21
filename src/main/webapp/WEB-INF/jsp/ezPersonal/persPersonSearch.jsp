@@ -823,7 +823,7 @@
       			selToggleList(document.getElementById("close"), "ul", "li", "0");
   			</script>
         	<div class="portlet_tabpart03">
-	            <div class="portlet_tabpart03_top" id="tab1" style="border-left:1px solid #d3d2d2;">
+	            <div class="portlet_tabpart03_top" id="tab1" style="border-bottom:0px;">
     	           <table style="margin-top:5px;width:100%;">
 						<tr>
 	                        <td>
