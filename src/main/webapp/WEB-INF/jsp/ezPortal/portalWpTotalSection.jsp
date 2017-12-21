@@ -816,7 +816,6 @@
 		    }
 		   
 		    function update_clock() {
-		    	console.log("updateClock");
 		        var hours = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[0];
 		        var minutes = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[1];
 		        var seconds = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[2];
