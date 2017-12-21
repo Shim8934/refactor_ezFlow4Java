@@ -181,7 +181,8 @@
 					var graphId = "graph" + _optId;
 					var voteInfo = "voteInfo" + _optId;
 					var percentTdId = "_resultPercentage" + _optId; 
-					var optionID = "optionContent" + _optId;					
+					var optionID = "optionContent" + _optId;		
+					var emailElmt = document.getElementById("mailSend" + _optId);
  					document.getElementById(optionID).style.color = colors[i % 30];
 					
 					if (totalVotes > 0 && (seeResultBeforVote == 1 || _status == 0)) {				
@@ -191,7 +192,7 @@
 							document.getElementById(percentTdId).innerHTML = "[" + (percent * 100).toFixed(1) + "%]";
  						} 							
  						
-						if (votesArr[i][1] != 0) {								
+						if (votesArr[i][1] != 0) {					
 							var id = "myCanvas" + _optId;							
 							var showVotes = "voterNumber" + _optId;							   					
 		   					var canv = document.getElementById(id);
@@ -226,8 +227,7 @@
 	       							       						      						
 	       						var tempClassId = "_thu" + i;	 
 	       						var viewAll = "_tax" + i;
-	       						var listDivs = document.getElementsByClassName(tempClassId);
-	       						var emailElmt = document.getElementById("mailSend" + _optId);
+	       						var listDivs = document.getElementsByClassName(tempClassId);	       						
 
 	       						for (var j = 0; j < tempLoop; j++) {
 	       							listDivs[j].style.display = "block";   
@@ -253,7 +253,7 @@
          						document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
          					}
 						}
-						else {
+						else {							
 							//Check if the poll is allowed see result before vote
 							if (seeResultBeforVote != 0) {
 								var showVotes = "voterNumber2" + _optId;
@@ -267,10 +267,13 @@
 								document.getElementById(voteInfo).style.display = "block";
 								document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
 							}
+							console.log(emailElmt);
+							emailElmt.style.display = "none";
 						}
 					}
 					else {
-						document.getElementById(percentTdId).innerHTML = "";
+						emailElmt.style.display = "none";
+						document.getElementById(percentTdId).innerHTML = "";						
 						
 						//Check if the poll is allowed see result before vote
 						if (seeResultBeforVote != 0) {
