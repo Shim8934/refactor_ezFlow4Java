@@ -73,6 +73,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzPollController extends EgovFileMngUtil {
@@ -107,6 +108,9 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@Autowired
 	private SimpMessagingTemplate template;
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
 	
 	@RequestMapping(value="/ezPoll/pollCreate.do")
 	public String questionCreate(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpSession session) throws Exception {
@@ -852,7 +856,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("curentUserName", loginVO.getDisplayName());	
 		model.addAttribute("userPhoto", userPhoto);		
 		model.addAttribute("primary", loginVO.getPrimary());
-		model.addAttribute("sessionID", session.getId());		
+		model.addAttribute("sessionID", egovFileScrty.encryptAES(session.getId()));		
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);		
@@ -1124,7 +1128,7 @@ public class EzPollController extends EgovFileMngUtil {
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\"" + pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
 							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\","
-							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + session.getId() + "\"}";
+							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
 			JSONParser parser = new JSONParser(); 
 			
 			JSONObject json = (JSONObject) parser.parse(result);
@@ -1237,7 +1241,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
-							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\", \"sessionid\":\"" + session.getId() + "\"}";
+							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/editCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -1277,7 +1281,7 @@ public class EzPollController extends EgovFileMngUtil {
 			ezPollService.deleteSpecificCmt(cmtId, qstId, loginVO.getTenantId());
 			
 			//Inform all waiting users
-			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + session.getId() + "\"}";
+			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
 			JSONParser parser = new JSONParser(); 
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/deleteCmtInQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -1552,7 +1556,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			if (check == -1) {
 				//Update number of unVoted users
-				String result = "{\"result\":\"ADD\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + session.getId() + "\"}";
+				String result = "{\"result\":\"ADD\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
 				JSONParser parser = new JSONParser(); 
 				JSONObject json = (JSONObject) parser.parse(result);
 				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);
@@ -1567,7 +1571,7 @@ public class EzPollController extends EgovFileMngUtil {
 			pollUserAnswer.setUserName1(loginVO.getDisplayName1());
 			pollUserAnswer.setUserName2(loginVO.getDisplayName2());
 			pollUserAnswer.setVoteDate(dateNow);
-			strXML = addUserAndAnswer(pollUserAnswer, session.getId());		
+			strXML = addUserAndAnswer(pollUserAnswer, egovFileScrty.encryptAES(session.getId()));		
 		}
 		else {						
 			//Delete entry in database
@@ -1578,7 +1582,7 @@ public class EzPollController extends EgovFileMngUtil {
 			pollUserAnswer.setTenantId(loginVO.getTenantId());
 			pollUserAnswer.setUserName1(loginVO.getDisplayName1());
 			pollUserAnswer.setUserName2(loginVO.getDisplayName2());
-			strXML = removeUserAndAnswer(pollUserAnswer, session.getId());
+			strXML = removeUserAndAnswer(pollUserAnswer, egovFileScrty.encryptAES(session.getId()));
 			
 			//Get all of voted users
 			List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());
@@ -1594,7 +1598,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			if (check == -1) {
 				//Update the number of not voted yet users
-				String result = "{\"result\":\"REMOVE\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + session.getId() + "\"}";		
+				String result = "{\"result\":\"REMOVE\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";		
 				JSONParser parser = new JSONParser(); 
 				JSONObject json = (JSONObject) parser.parse(result);
 				this.template.convertAndSend("/reply/updateUnVotedUsersForQst" + qstId + "+" + loginVO.getTenantId(), json);

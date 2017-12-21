@@ -33,8 +33,7 @@
 			var numberOfUnvotedUsers 	= parseInt("<c:out value='${numberOfUnvotedUsers}'/>");
 			var numberOfSelected 		= 0;
 			var maxLoop 				= 0;			
-			var _status 				= "<c:out value='${question.status}'/>";
-			var sessionId 				= "<c:out value='${question.creator}'/>";			
+			var _status 				= "<c:out value='${question.status}'/>";						
 			var commentIndex 			= parseInt("<c:out value='${numberOfCmt}'/>");
 			var votedUsers 				= parseInt("<c:out value='${votedUsers}'/>");
 			var window_open1			= null;		
