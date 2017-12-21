@@ -1596,6 +1596,90 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
+	public boolean setInitMailSignature(int tenantId, String userId) throws Exception {
+		logger.debug("setInitMailSignature started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
+		
+		boolean returnValue = false;
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domain;
+		
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setInitMailSignature";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				returnValue = true;
+			}
+		}
+		
+		logger.debug("setInitMailSignature ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+
+	@Override
+	public boolean setInitInboxRule(int tenantId, String userId) throws Exception {
+		logger.debug("setInitInboxRule started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
+		
+		boolean returnValue = false;
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domain;
+		
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setInitInboxRule";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				returnValue = true;
+			}
+		}
+		
+		logger.debug("setInitInboxRule ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+
+	@Override
+	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception {
+		logger.debug("getInitInboxRuleMailbox started. tenantId=" + tenantId);
+		
+		List<String> mailboxList = new ArrayList<String>();
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "domain=" + domain;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getInitInboxRuleMailbox", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+	    	JSONArray resultArray = (JSONArray)object.get("result");
+	    	
+	    	for (int i=0; i<resultArray.size(); i++) {
+	    		mailboxList.add((String)resultArray.get(i));
+	    	}
+		}
+		
+		logger.debug("getInitInboxRuleMailbox ended.");
+		return mailboxList;
+	}
+
+	@Override
 	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount,
 			String maxReadDate) throws Exception {
 		logger.debug("setMailSecure started.");
@@ -1879,117 +1963,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("getSecureMailReaderInfo ended.");
 		return list;
-	}
-	
-	@Override
-	public List<String> getInitMailBox(int tenantId) throws Exception {
-		logger.debug("getInitMailBox started. tenantId=" + tenantId);
-		
-		List<String> mailboxList = new ArrayList<String>();
-		
-		String inputParams = "tenantId=" + tenantId;
-		logger.debug("inputParams=" + inputParams);
-		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getInitMailBox", inputParams);
-		logger.debug("strJson=" + strJson);
-		
-		JSONParser parser = new JSONParser();
-		JSONObject object = (JSONObject)parser.parse(strJson);
-		
-		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	    	JSONArray resultArray = (JSONArray)object.get("result");
-	    	
-	    	for (int i=0; i<resultArray.size(); i++) {
-	    		mailboxList.add((String)resultArray.get(i));
-	    	}
-		}
-		
-		logger.debug("getInitMailBox ended.");
-		return mailboxList;
-	}
-
-	@Override
-	public boolean setInitMailSignature(int tenantId, String userId) throws Exception {
-		logger.debug("setInitMailSignature started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
-		
-		boolean returnValue = false;
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-		String userAccount = userId + "@" + domain;
-		
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
-		logger.debug("inputParams=" + inputParams);
-		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setInitMailSignature";			
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-		
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-			
-			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				returnValue = true;
-			}
-		}
-		
-		logger.debug("setInitMailSignature ended. returnValue=" + returnValue);
-		return returnValue;
-	}
-
-	@Override
-	public boolean setInitInboxRule(int tenantId, String userId) throws Exception {
-		logger.debug("setInitInboxRule started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
-		
-		boolean returnValue = false;
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-		String userAccount = userId + "@" + domain;
-		
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
-		logger.debug("inputParams=" + inputParams);
-		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setInitInboxRule";			
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-		
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-			
-			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				returnValue = true;
-			}
-		}
-		
-		logger.debug("setInitInboxRule ended. returnValue=" + returnValue);
-		return returnValue;
-	}
-
-	@Override
-	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception {
-		logger.debug("getInitInboxRuleMailbox started. tenantId=" + tenantId);
-		
-		List<String> mailboxList = new ArrayList<String>();
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-		
-		String inputParams = "domain=" + domain;
-		logger.debug("inputParams=" + inputParams);
-		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getInitInboxRuleMailbox", inputParams);
-		logger.debug("strJson=" + strJson);
-		
-		JSONParser parser = new JSONParser();
-		JSONObject object = (JSONObject)parser.parse(strJson);
-		
-		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	    	JSONArray resultArray = (JSONArray)object.get("result");
-	    	
-	    	for (int i=0; i<resultArray.size(); i++) {
-	    		mailboxList.add((String)resultArray.get(i));
-	    	}
-		}
-		
-		logger.debug("getInitInboxRuleMailbox ended.");
-		return mailboxList;
 	}
 	
 }

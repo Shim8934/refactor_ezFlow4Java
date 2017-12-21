@@ -816,9 +816,9 @@
 		    }
 		   
 		    function update_clock() {
-		        var hours = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[0];
-		        var minutes = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[1];
-		        var seconds = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[2];
+		        var hours = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[0];
+		        var minutes = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[1];
+		        var seconds = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[2];
 		        hour_hand.rotate(30 * hours + (minutes / 2.5), 60, 60);
 		        minute_hand.rotate(6 * minutes, 60, 60);
 		        second_hand.rotate(6 * seconds, 60, 60);
@@ -832,14 +832,14 @@
 		        var h, m;
 		        var s;
 		        var time = " ";		        
-		        time = getWorldTime(parseInt(UserOffset.split(':')[0]));
+		        time = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1]));
 		        document.getElementById("timeinput").innerHTML = time;
 		        gizmo = setTimeout("yourClock()", 1000);
 		    }
 
-		    function getWorldTime(tzOffset) { // 24시간제
+		    function getWorldTime(tzOffsetHour, tzOffsetMinute) { // 24시간제
 		        var now = new Date();
-		        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (tzOffset * 3600000);
+		        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (tzOffsetHour * 3600000) + (tzOffsetMinute * 60000);
 		        now.setTime(tz);
 		        var s =
 		          leadingZeros(now.getHours(), 2) + ':' +

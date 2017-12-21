@@ -589,10 +589,12 @@
 		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
 		            }
 		            
-		            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
-	                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
-	                else
-	                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		            if (document.getElementById('countWHO') != null) {
+			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
+		                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
+		                else
+		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		            }
 		            
 		            // 임시보관함
 		            if (pListTypeValue != "21") {

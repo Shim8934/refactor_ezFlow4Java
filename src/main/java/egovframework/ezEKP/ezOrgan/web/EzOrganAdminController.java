@@ -1312,34 +1312,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							
-							// UseInitMailBox가 YES일 경우 메일함 생성
-							String useInitMailBox = ezCommonService.getTenantConfig("UseInitMailBox", tenantID);
-							if (useInitMailBox.equals("YES")) {
-								List<String> mailboxList = ezEmailService.getInitMailBox(tenantID);
-								
-								String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
-								
-								IMAPAccess ia = null;
-						        try {
-									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-											mailAddr, password, egovMessageSource, locale);
-									
-									for (int i = 0; i < mailboxList.size(); i++) {
-										Folder mailbox = ia.getFolder(mailboxList.get(i));
-										
-										if (!mailbox.exists()) {
-											mailbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-											logger.debug(mailbox.getFullName() + " created.");
-										}
-									}
-								} finally {
-									if (ia != null) {
-										ia.close();
-										ia = null;
-									}
-								}
-							}
-							
 							// UseInitMailSign이 YES일 경우 메일 서명 등록
 							String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
 							if (useInitMailSign.equals("YES")) {

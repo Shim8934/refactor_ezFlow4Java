@@ -134,6 +134,7 @@ public class EzEmailMailListController {
 		}
 		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
 			folderType = "draft";
+			isSentItems = true;
 		}
 		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
 			folderType = "delete";

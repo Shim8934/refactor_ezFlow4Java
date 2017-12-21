@@ -1002,7 +1002,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String resID = req.getParameter("resourceId");
 
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
-System.out.println(resBrd.getOwnDeptNm2());		
+	
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("resBrd", resBrd);
 
