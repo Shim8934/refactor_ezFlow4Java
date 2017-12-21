@@ -267,7 +267,7 @@
 								document.getElementById(voteInfo).style.display = "block";
 								document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
 							}
-							console.log(emailElmt);
+							
 							emailElmt.style.display = "none";
 						}
 					}
