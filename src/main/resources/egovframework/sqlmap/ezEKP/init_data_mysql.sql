@@ -91,6 +91,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ezTalkGateNoticeBoardId2','0','비즈메카톡에서 호출하는 두 번째 사내공지게시판 아이디');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseBizmekaTalk','NO','비즈메카톡과의 연동 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'signImageType','IMAGE','이미지 서명 시 IMAGE : 서명이미지만 표출 NAME : 서명이미지 + 서명인 이름 표출');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'changePassword','1','패스워드 변경 이벤트 발생 여부 (0 : 패스워드 변경 이벤트 없음, 1 : 패스워드 변경 이벤트 있음)');
 
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_SECUREMAIL','NO','보안메일 사용 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_HTTPS','NO','HTTPS 사용여부');

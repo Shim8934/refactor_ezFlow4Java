@@ -276,6 +276,13 @@ public class LoginController {
 		        	commonUtil.resetLoginFailAttempts(_uid, tenantId);
 	        	}
 	        	
+	        	//패스워드 변경 이벤트 발생 여부
+	        	String changePassword = ezCommonService.getTenantConfig("changePassword", tenantId);
+	        	
+	        	if (changePassword != null && changePassword.equals("0")) {
+	        		diff = 1;
+	        	}
+	        	
 				//0보다 작아지면 패스워드 변경기한 Expired
 				if (diff <= 0) {				
 					model.addAttribute("isExpireDate", "Y");
