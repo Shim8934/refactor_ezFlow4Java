@@ -1054,7 +1054,7 @@
 			    
 			    //baonk added
 			    var content1 = message.document.body.innerHTML;
-			    content1 = content1.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
+			    content1 = content1.replace(/P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} /g, "");
 			    document.getElementById("printDocument").innerHTML = content1;
 			    //end
 			    
@@ -1067,7 +1067,7 @@
 			    	
 					//baonk added
 				    var content2 = message2.document.body.innerHTML;
-				    content2 = content2.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
+				    content2 = content2.replace(/P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; line-height: 1.6;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} /g, "");
 				    document.getElementById("printDocument2").innerHTML = content2;
 				    //end
 			    	

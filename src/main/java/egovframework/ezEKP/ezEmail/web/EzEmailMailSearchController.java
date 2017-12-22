@@ -102,7 +102,13 @@ public class EzEmailMailSearchController {
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
 		
-		logger.debug("userTimeSet=" + userTimeSet + ",offsetMin=" + offsetMin);
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+		
+		logger.debug("userTimeSet=" + userTimeSet + ",offsetMin=" + offsetMin + ", useEncryptZipForEmail=" + useEncryptZipForEmail);
 		
 		List<String> topLevelFolderNames = null;
 		IMAPAccess ia = null;
@@ -138,6 +144,7 @@ public class EzEmailMailSearchController {
 		model.addAttribute("userTimeSet", userTimeSet);
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
 		
 		logger.debug("mailSearchView ended.");
 		

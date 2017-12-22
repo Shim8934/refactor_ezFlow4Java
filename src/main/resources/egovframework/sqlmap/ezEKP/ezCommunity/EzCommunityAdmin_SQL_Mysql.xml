@@ -13,6 +13,7 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate
@@ -39,6 +40,7 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate
@@ -67,6 +69,7 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate
@@ -91,6 +94,7 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate

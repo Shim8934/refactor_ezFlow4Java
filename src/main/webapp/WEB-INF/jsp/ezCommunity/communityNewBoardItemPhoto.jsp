@@ -1008,7 +1008,7 @@
 		<div id="txtAttachList"></div>
    		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommunity/upload.do" target="ifrm" >
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px; display:none" multiple="true" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px; display:none" />
 			<input type="hidden" name="boardID" id="boardID" />
 			<input type="hidden" name="maxSize" id="maxSize" />
 			<input type="hidden" name="mode" id="mode" />

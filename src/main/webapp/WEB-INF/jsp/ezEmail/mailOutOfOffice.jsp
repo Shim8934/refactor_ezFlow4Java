@@ -26,6 +26,7 @@
 		    var g_startdate = "${gStartDate}";
 		    var g_enddate = "${gEndDate}";
 		    var g_externalaudience = "${gExternalAudience}";
+		    var useOnlyInnerMail = "${useOnlyInnerMail}";
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -96,7 +97,11 @@
 		    
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
-		
+				if (useOnlyInnerMail == "YES") {
+					$('#externalDiv').css('display', 'none');
+					$('#externalTable').css('display', 'none');
+				}
+	        	
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -322,7 +327,7 @@
 	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement1" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div>
-	<table style="width:720px; margin-top:10px;" class="box">
+	<table id="externalTable" style="width:720px; margin-top:10px;" class="box">
 	  <tr>
 	    <td style="padding:5px"><input type="checkbox" name="chkOut" onclick="CheckOut()" id="chkOut">
 	      <spring:message code='ezEmail.t218' /><br>
@@ -332,7 +337,7 @@
 	      <spring:message code='ezEmail.t220' /></td>
 	  </tr>
 	</table>
-	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
+	<div id="externalDiv" class="nobox" style="width:720px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div> 
 	<div style="width:700px;text-align:center;margin-top:10px">

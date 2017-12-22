@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -222,8 +224,8 @@ public class EzSystemAdminController {
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
-		if ( userInfo.getLang().equals(sysLang))  {
-			sysLang = userInfo.getLang();
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
 		}
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
@@ -273,7 +275,6 @@ public class EzSystemAdminController {
 		
 		int maxItemPerPage = 20; 
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-		String isPrimaryLang = "2";
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -281,14 +282,12 @@ public class EzSystemAdminController {
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
-		if (sysLang.equals(userInfo.getLang())) {
-			isPrimaryLang = sysLang;
-		} else { 
-			isPrimaryLang = userInfo.getLang();
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
 		}
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, isPrimaryLang, startDate, endDate);
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate);
 		
 		int totalCount = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate);
 		
@@ -323,9 +322,9 @@ public class EzSystemAdminController {
 		
 		row = sheet.createRow(0);
 		cell = row.createCell(0);	
-		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032") + " : " + startDate + " ~ " + endDate);
+		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
 		cell = row.createCell(5);
-		cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
+		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
 		
 		row = sheet.createRow(1);
 		cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0022", locale)); 
@@ -346,7 +345,7 @@ public class EzSystemAdminController {
 			row.setHeight((short)300);
 			int j = 2;
 			
-			if (sysLang.equals("1")) {
+			if (sysLang.equals("primary")) {
 				cell = row.createCell(0); cell.setCellValue((String) loginHistList.get(i-j).getUsernm());
 				cell.setCellStyle(bodyStyle);
 				cell = row.createCell(1); cell.setCellValue((String) loginHistList.get(i-j).getDeptnm());

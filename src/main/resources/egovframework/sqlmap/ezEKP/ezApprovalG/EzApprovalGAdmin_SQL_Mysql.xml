@@ -2526,6 +2526,30 @@
         		sn = '0'
 		]]>
 	</update>
+	
+	<insert id="EzApprovalGAdmin.insertEditApproDoc" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO 
+			tbl_editapprdoc (
+				DOCID, 
+				BEFOREHTML, 
+				AFTERHTML, 
+				USERID, 
+				MODIFYDATE, 
+				TENANT_ID, 
+				COMPANYID
+				)
+		VALUES (
+				#v_DOCID#, 
+				#v_BEFOREHTML#, 
+				#v_AFTERHTML#, 
+				#v_USERID#, 
+				#v_MODIFYDATE#, 
+				#v_TENANTID#, 
+				#v_COMPANYID#
+				)
+		]]>				
+	</insert>
 
 	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
 	<!-- parameterClass="Map"> -->

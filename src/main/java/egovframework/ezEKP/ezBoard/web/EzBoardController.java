@@ -240,7 +240,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (userInfo.getRollInfo().toLowerCase().indexOf("l=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			questionAdmin = "true";
 		}
-
+		
+		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantID);
+		
+		if (useQuestion == null || useQuestion.equals("")) {
+			useQuestion = "YES";
+		}
+		
         modelMap.addAttribute("userInfo", userInfo);
         modelMap.addAttribute("resultCount", resultCount);
         modelMap.addAttribute("resultXML", resultXML);
@@ -252,6 +258,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("applyFlag",applyFlag);
         modelMap.addAttribute("questionAdmin", questionAdmin);
         modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
+        modelMap.addAttribute("useQuestion", useQuestion);
         
 		return "ezBoard/boardLeft";
 	}
@@ -3056,6 +3063,10 @@ public class EzBoardController extends EgovFileMngUtil{
         
         if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
         	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        }
+        
+        if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
+        	boardListVO.setTitle(boardListVO.getTitle().replace("\\", "&#92;"));
         }
         
         model.addAttribute("boardInfo", boardInfo);

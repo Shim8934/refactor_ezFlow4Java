@@ -60,6 +60,9 @@ public interface EzEmailService {
 	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public boolean setInitMailSignature(int tenantId, String userId) throws Exception;
+	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
+	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
 	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount, String maxReadDate) throws Exception;
 	public String updateMailSecure(int tenantId, String userId, int secureId, String url) throws Exception;
 	public int checkSecureMailPassword(String secureId, String reader, String password) throws Exception;
@@ -68,5 +71,4 @@ public interface EzEmailService {
 	public MailSecureVO getSecureMailInfoWithPassword(String secureId) throws Exception;
 	public MailSecureVO getSecureMailInfoWithPassword(String userId, int tenantId, String url) throws Exception;
 	public List<MailSecureReaderVO> getSecureMailReaderInfo(String secureId) throws Exception;
-	
 }

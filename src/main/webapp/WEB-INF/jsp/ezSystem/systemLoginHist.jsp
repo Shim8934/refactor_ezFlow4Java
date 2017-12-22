@@ -344,7 +344,7 @@
 		   						} else {
 		   							var j = ((pageNum - 1) * 20) + 1 ;
 			   						
-				    				if (res.lang == 1) {
+				    				if (res.lang == "primary") {
 				    					res.loginHistList.forEach(function(i,v){
 				    						html += "<tr>";
 				    						html += "   <td>" + j					+ "</td>";

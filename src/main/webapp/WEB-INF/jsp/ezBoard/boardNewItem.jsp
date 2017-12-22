@@ -211,7 +211,7 @@
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
 			        document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
-				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
+				    document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value='${boardListVO.ABSTRACT}'/>");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
 				    }
@@ -676,12 +676,14 @@
 		            if (obj[i].className == "FIELD")
 		                obj[i].removeAttribute('className');
 		        }
-		        if (pDocID != "")
-		            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-		        
+
 		        setTimeout(JSleep, 1000);
 
 		        var strBody = message.GetEditorContent();
+		        
+		        if (pDocID != "") {
+		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        }
 		        
 				strBody = strBody.replace(/&quot;/gi, "\'");
       
@@ -1268,6 +1270,7 @@
 		        str = ReplaceText(str, "&#39;", "'");
 		        str = ReplaceText(str, "&#039;", "'");
 		        str = ReplaceText(str, "&#034;", "\'");
+		        str = ReplaceText(str, "&#92;", "\\");
 		        return str;
 		    }
 		    function GetSmallUrl() {

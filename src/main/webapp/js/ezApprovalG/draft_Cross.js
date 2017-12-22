@@ -3034,7 +3034,6 @@ function getDocInfo() {
         if (isUsed == "reuse") {
         	if (reuseTitleYN == "YES") {
         		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
-        		message.GetListItem(fields, "doctitle").textContent = doctitle;
         	}
         }
         

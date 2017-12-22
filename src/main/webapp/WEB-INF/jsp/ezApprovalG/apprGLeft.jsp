@@ -53,6 +53,7 @@
 		    var nodeIdx;
 		    var localValue = "";
 		    var hideSusin = "${hideSusin}";
+		    var whoKyulYN = "${whoKyulYN}";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -312,7 +313,10 @@
 		                case "ApprovalConfig":
 		                    PresentOpen = "CONFIG";
 		                    window.open("/ezPersonal/ezApprovalConfig.do", "right");
-		                    break;         
+		                    break;    
+		                case "MYCONTWHO":
+		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>", "TBL_ENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBL_ENDAPRLINEINFO.AprState = '" + strAprState2 + "'");
+		                    break;
 		                default:
 		                    break;
 		            }
@@ -584,6 +588,14 @@
 		                else
 		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
 		            }
+		            
+		            if (document.getElementById('countWHO') != null) {
+			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
+		                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
+		                else
+		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		            }
+		            
 		            // 임시보관함
 		            if (pListTypeValue != "21") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
@@ -897,6 +909,32 @@
 	        		}        			
 	        	});
 		    }
+		    
+		    
+		    var xmlhttp_WHO = createXMLHttpRequest();
+	        function getAprCountWHO() {
+	            var strQuery = "<DATA><CONT></CONT><QUERY>TBL_ENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBL_ENDAPRLINEINFO.AprState = '" + strAprState2 + "'</QUERY></DATA>";
+	            xmlhttp_WHO = null;
+	            xmlhttp_WHO = createXMLHttpRequest();
+	            xmlhttp_WHO.open("POST", "/ezApprovalG/getContDocCount.do", true);
+	            xmlhttp_WHO.onreadystatechange = getAprCountWHO_after;
+	            xmlhttp_WHO.send(strQuery);
+	        }
+	        function getAprCountWHO_after() {
+	            if (xmlhttp_WHO == null || xmlhttp_WHO.readyState != 4) return;
+	            try {
+	                if (xmlhttp_WHO.responseText == "") return;
+
+	                var ResultXML = "";
+	                ResultXML = loadXMLString(xmlhttp_WHO.responseText);
+	                var dataNodes = GetChildNodes(ResultXML);
+
+	                if (dataNodes.length > 0)
+	                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(dataNodes[0]) + ")</b>";
+	                else
+	                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(dataNodes[0]) + ")";
+	            } catch (e) { }
+	        }
 		</script>
 	</head>
 	<body ondragstart="return false" onselectstart="return false" class="leftbody" style="overflow-y:auto; ">
@@ -921,6 +959,10 @@
 				<c:if test="${hideSusin != 'N'}">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
 				</c:if>
+				<c:if test="${whoKyulYN == '1'}">
+					<li><span id="MYCONTWHO" style="width: 100%; display: inline-block;" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)">
+	                <img src="../../images/ImgIcon/icon_afterapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.pjj34'/><span id="countWHO"></span></span></li>
+                </c:if>
 	            <c:if test="${userInfoEnforce == '2'}">
 	            	<li>
 	            		<span style="width: 100%; display: inline-block;" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')">

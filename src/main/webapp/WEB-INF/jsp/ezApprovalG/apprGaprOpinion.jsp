@@ -53,6 +53,8 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    var junGyulFlag = "${junGyulFlag}";
+		    var agreeReturnType = "${agreeReturnType}";
+		    
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
@@ -251,7 +253,7 @@
 	            <spring:message code='ezApprovalG.t422'/>
 	        </span>
 	    </h1>
-	    <div class="listview" style="width: 100%; height: 190px; overflow-y: AUTO;">
+	    <div class="listview" style="width: 100%; height: 190px; overflow-x:hidden; overflow-y: AUTO;">
 	        <div id="OPINION" style="margin:1px 1px 1px 1px;">
 	        </div>
 	    </div>

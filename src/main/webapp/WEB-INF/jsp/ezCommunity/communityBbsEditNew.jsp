@@ -38,7 +38,7 @@
 			var pUserNM2 = "<c:out value='${userInfo.displayName2}'/>"; 
 			var strContentLocation ="";
 			var g_progresswin;
-			var pTitle = ${cBoard.title};
+			var pTitle = "<c:out value='${cBoard.title}'/>";
 			var wDate = "<c:out value='${cBoard.writeDay}'/>";
 			var fileName = "<c:out value='${fileName}'/>";
 			var writerFakeName = "<c:out value='${writerFakeName}'/>";
@@ -57,9 +57,9 @@
 // 				    document.getElementById("attachedFile").innerHTML = makeAttachDIV2(document.getElementById("preAttachList").innerText);
 				}
                 
-				if (pMode == "edit" || pNo != "") {
+/* 				if (pMode == "edit" || pNo != "") {
 					document.getElementById("title").value = ConvMakeXMLString(pTitle);
-				}
+				} */
 			}
 			
 			function trim(val) {
@@ -209,7 +209,8 @@
 			        var htmlData = message.GetEditorContentURL(fullPath);
 			        
 			        if(pMode == "write" && pNo != "") {
-			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + ConvMakeXMLString(pTitle) + "<br><br>" + htmlData;
+			            //htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + ConvMakeXMLString(pTitle) + "<br><br>" + htmlData;
+			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + "<c:out value='${cBoard.title}'/>" + "<br><br>" + htmlData;
 			            message.SetEditorContent(htmlData);
 			        } else {
 			            message.SetEditorContentURL(fullPath);
@@ -222,6 +223,8 @@
                 str = ReplaceText(str, "&lt;", "<");
                 str = ReplaceText(str, "&gt;", ">");
                 str = ReplaceText(str, "&quot;", "\"");
+                str = ReplaceText(str, "&#034;", "\"");
+                str = ReplaceText(str, "&#039;", "\'");
                 return str;
             }
 		</script>
@@ -310,7 +313,7 @@
 						</tr>
 						<tr>
 							<th><spring:message code = "ezCommunity.t156"/></th>
-							<td><INPUT id=title style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;" type=text maxLength=99 value=""></td>
+							<td><INPUT id=title style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;" type=text maxLength=99 value="<c:out value="${(pMode == 'edit' || pNo != '')? cBoard.title : ''}"/>"></td>
 						</tr>
 					</table>
 				</td>

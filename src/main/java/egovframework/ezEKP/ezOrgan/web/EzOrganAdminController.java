@@ -13,12 +13,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,9 +38,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -98,7 +102,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
     @Autowired
     private EzEmailUtil ezEmailUtil;	
-	 
+    
+    @Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+    
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
     
@@ -1198,7 +1205,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 	    logger.debug("saveUserInfo started.");
 	    
 	    LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -1304,6 +1311,38 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
+							
+							// UseInitMailSign이 YES일 경우 메일 서명 등록
+							String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
+							if (useInitMailSign.equals("YES")) {
+								ezEmailService.setInitMailSignature(tenantID, cn);
+							}
+							
+							// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
+							String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
+							if (useInitInboxRule.equals("YES")) {
+								//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
+								List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
+								String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+								
+								IMAPAccess ia = null;
+						        try {
+									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+											mailAddr, password, egovMessageSource, locale);
+									
+									for (int i = 0; i < mailboxList.size(); i++) {
+										ia.createFolder(mailboxList.get(i));
+									}
+								} finally {
+									if (ia != null) {
+										ia.close();
+										ia = null;
+									}
+								}
+								
+								ezEmailService.setInitInboxRule(tenantID, cn);
+							}
+							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);

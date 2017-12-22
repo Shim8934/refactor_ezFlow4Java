@@ -26,7 +26,7 @@
     				<div class="bottom"></div>
     			</div>
     			<div class="personal_content">
-					<a id="NewMail" onClick="btnSumming_click(this)" href="#">
+					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal01.gif" alt="<spring:message code="main.t00017" />" /></li>
 							<li class="count">
@@ -47,10 +47,10 @@
 					
 					<c:choose>
 						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')" href="#">
+							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')">
 						</c:when>
 						<c:otherwise>
-							<a id="AprSign" onClick="btnSumming_click(this)" href="#">
+							<a id="AprSign" onClick="btnSumming_click(this)">
 						</c:otherwise>
 					</c:choose>
 						<ul>
@@ -70,7 +70,7 @@
                     		</c:choose>
 						</ul>
 					</a>
-					<a id="Schedule" onClick="btnSumming_click(this)" href="#">
+					<a id="Schedule" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal03.gif" alt="<spring:message code="main.t00019" />" /></li>
 							<li class="count">
@@ -88,7 +88,7 @@
                     		</c:choose>
 						</ul>
 					</a>
-					<a id="Poll" onClick="btnSumming_click(this)" href="#">
+					<a id="Poll" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal04.gif" alt="<spring:message code="main.t00020" />" /></li>
 							<li class="count">
@@ -816,9 +816,9 @@
 		    }
 		   
 		    function update_clock() {
-		        var hours = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[0];
-		        var minutes = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[1];
-		        var seconds = getWorldTime(parseInt(UserOffset.split(':')[0])).split(":")[2];
+		        var hours = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[0];
+		        var minutes = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[1];
+		        var seconds = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1])).split(":")[2];
 		        hour_hand.rotate(30 * hours + (minutes / 2.5), 60, 60);
 		        minute_hand.rotate(6 * minutes, 60, 60);
 		        second_hand.rotate(6 * seconds, 60, 60);
@@ -832,14 +832,14 @@
 		        var h, m;
 		        var s;
 		        var time = " ";		        
-		        time = getWorldTime(parseInt(UserOffset.split(':')[0]));
+		        time = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1]));
 		        document.getElementById("timeinput").innerHTML = time;
 		        gizmo = setTimeout("yourClock()", 1000);
 		    }
 
-		    function getWorldTime(tzOffset) { // 24시간제
+		    function getWorldTime(tzOffsetHour, tzOffsetMinute) { // 24시간제
 		        var now = new Date();
-		        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (tzOffset * 3600000);
+		        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (tzOffsetHour * 3600000) + (tzOffsetMinute * 60000);
 		        now.setTime(tz);
 		        var s =
 		          leadingZeros(now.getHours(), 2) + ':' +

@@ -452,11 +452,11 @@ function aprLineAddDeptUser(mode, xmlData) {
             pparsingXML = pparsingXML + "<DATA18><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA13")[i]) + "]]></DATA18>";
             
             pparsingXML = pparsingXML + "</CELL><CELL>";
-            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA5")[i]) + "</VALUE>";
+            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA5")[i]) + "]]></VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
-            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA7")[i]) + "</VALUE>";
+            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA7")[i]) + "]]></VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
-            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetElementsByTagName(xmlData, "DATA6")[i]) + "</VALUE>";
+            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA6")[i]) + "]]></VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
@@ -3160,13 +3160,13 @@ function SCheckLineUser() {
 //    if (!pChkFlag)
 //        pAlertContent = pAlertContent + " '" + strLangS236 + "'" + strLangS298 + "<br>"
 //
-//    var pChkFlag = ChkWhoKyulDuplicate(AprLineRow)
-//    if (!pChkFlag)
-//        pAlertContent = pAlertContent + " " + strLangS299 + "'" + strLangS275 + "'" + strLangS300 + "<br>"
-//
-//    var pChkFlag = ChkWhoKyulLast(AprLineRow)
-//    if (!pChkFlag)
-//        pAlertContent = pAlertContent + " " + strLangS301 + "'" + strLangS275 + "'" + strLangS302 + "<br>"
+    var pChkFlag = ChkWhoKyulDuplicate(AprLineRow)
+    if (!pChkFlag)
+        pAlertContent = pAlertContent + " " + strLangS299 + "'" + strLangS275 + "'" + strLangS300 + "<br>"
+
+    var pChkFlag = ChkWhoKyulLast(AprLineRow)
+    if (!pChkFlag)
+        pAlertContent = pAlertContent + " " + strLangS301 + "'" + strLangS275 + "'" + strLangS302 + "<br>"
 
 //    var pChkString = CheckWorkFlowXML(AprLineRow)
 //    if (pChkString != "")

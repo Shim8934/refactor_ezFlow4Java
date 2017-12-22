@@ -1028,6 +1028,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		resultUpload = "true";
 		
+		int attachLimit = 10000000;
+		
+		if (multiFile.getSize() > attachLimit) {
+			resultUpload = "overflow";
+		}
+		
 		StringBuilder strXML = new StringBuilder();
 		
 		strXML.append("<ROOT>");

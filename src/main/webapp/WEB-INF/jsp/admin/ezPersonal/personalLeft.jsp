@@ -42,10 +42,6 @@
 			            url = "/myoffice/ezPersonal/SuperPersonal/ManageSuperPersonal.aspx";
 			            break;
 
-			        case 6:
-			            url = "/myoffice/ezPersonal/WebPart/ManageWebPart.aspx";
-			            break;
-
 			        case 7:
 			            url = "/admin/ezPersonal/employeeOfMonth.do";
 			            break;
@@ -69,19 +65,6 @@
 		  		<span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'main.t65' /></span>
 		    	<ul></ul>
 			</h2>
-
-			<c:if test="${usePortal != 'YES' }">
-				<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'main.t66' /></span>
-					<ul></ul>
-				</h2>
-			</c:if>
-			
-			<%--<span>
-			<h2><span onClick="goPage(2)">Family Site</span>
-			  <ul>
-			  </ul>
-			</h2>
-			</span>--%>
 			
 			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%">Quick Link</span>
 				<ul></ul>

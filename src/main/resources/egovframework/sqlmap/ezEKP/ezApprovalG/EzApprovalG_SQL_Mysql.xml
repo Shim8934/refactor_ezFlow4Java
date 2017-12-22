@@ -8328,6 +8328,55 @@
 	   		AND
 	   			COMPANYID = #companyID#	
 	   	]]> 
+	   	
+	   		   		UNION ALL
+	   	<![CDATA[
+			SELECT 
+				COUNT(DISTINCT A.DOCID) 
+			FROM 
+				TBL_ENDAPRDOCINFO A 
+			LEFT OUTER JOIN 
+				TBL_ENDAPRLINEINFO 
+			ON 
+				A.DOCID = TBL_ENDAPRLINEINFO.DOCID
+			AND
+				A.TENANT_ID =  TBL_ENDAPRLINEINFO.TENANT_ID
+			AND
+				A.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+    		LEFT OUTER JOIN 
+    			TBL_EXPENDAPRLINE 
+    		ON 
+    			A.DOCID = TBL_EXPENDAPRLINE.DOCID  
+    		AND
+    			A.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID
+    		AND
+    			A.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID  
+			INNER JOIN 
+				TBL_EXPENDAPRDOCINFO 
+			ON 
+				A.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+			AND
+				A.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+			AND
+				A.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+			WHERE 
+				TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
+			AND 
+				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+			AND 
+				TBL_ENDAPRLINEINFO.AprType = '040' 
+			AND 
+				TBL_ENDAPRLINEINFO.AprState = '002'
+			AND 
+   				ENDDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
+	   		AND 
+	   			ENDDATE <=   STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+	   		AND
+	   			A.TENANT_ID = #v_TENANTID#
+	   		AND	
+	   			A.COMPANYID = #companyID#
+	   		]]>
+	   	
 	</select>
 	
 	<update id="EzApprovalG.aprGetNewID" parameterClass="Map">
@@ -14091,6 +14140,19 @@
 		     		COMPANYID = #companyID#
 	</update>
 	
+	<update id="EzApprovalG.updateDocInfoAprstate" parameterClass="Map">
+		UPDATE
+			TBL_APRDOCINFO
+		SET
+			FUNCTIONTYPE = #v_APRSTATE#
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#	
+	</update>	
+	
 <!-- 	<procedure id="EzApprovalG.updateHistoryForLine" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_UPDATEHISTORYFORLINE(#v_DOCID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#)} -->
 <!-- 	</procedure> -->
@@ -17674,7 +17736,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_APRSTATE#,
-		    ReceivedDate = #v_SYSDATE#
+		    ReceivedDate = #v_SYSDATE#	    
 		WHERE 
 			DocID = #v_DOCID#
 		AND 
@@ -17684,6 +17746,23 @@
 		AND
    		 	COMPANYID = #companyID#
    </update>
+   
+   <update id="EzApprovalG.updatePersonalAgreeLineInfo" parameterClass="Map">
+   		UPDATE
+   			TBL_APRLINEINFO
+   		SET
+   			APRSTATE = #v_APRSTATE#
+   		WHERE
+   			DOCID = #v_DOCID#
+   		AND
+   			APRTYPE = #v_APRTYPE#
+   		AND
+   			APRMEMBERID != #v_APRMEMBERID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#   
+   </update>   
    
     <update id="EzApprovalG.updateAprLineInfo2" parameterClass="Map">
    		UPDATE 
@@ -23069,4 +23148,121 @@
 	  		AND
 	  			COMPANYID = #companyID#
 	  </select>
+	  
+	  <update id ="EzApprovalG.updateWhoKyulAprLine" parameterClass="map">
+      	UPDATE
+      		TBL_APRLINEINFO
+      	SET
+      		APRSTATE = #v_APRSTATE#,
+      		RECEIVEDDATE = #v_SYSDATE#
+      	WHERE 
+      		DOCID = #v_DOCID#
+      	AND
+      		TENANT_ID = #v_TENANTID#
+      	AND
+      		COMPANYID = #companyID#
+      	AND
+      		APRTYPE = '040'
+      </update>
+      
+      <select  id ="EzApprovalG.getWhoKyulCount" parameterClass="map" resultClass="int">
+      	SELECT 
+      		COUNT(*)
+      	FROM 
+      		TBL_ENDAPRLINEINFO
+      	WHERE 
+      		TENANT_ID = #v_TENANTID#
+      	AND
+      		COMPANYID = #companyID#
+      	AND
+      		DOCID = #v_DOCID#
+      	AND
+      		APRTYPE = '040'
+      	AND
+      		APRSTATE = #v_APRSTATE#
+      </select>
+      
+          <update id ="EzApprovalG.doWhoKyulComplete" parameterClass="map">
+      	UPDATE
+      		TBL_ENDAPRLINEINFO
+      	SET
+      		APRSTATE = #v_APRSTATE#,
+      		PROCESSDATE = #v_SYSDATE#
+      	WHERE 
+      		TENANT_ID = #v_TENANTID#	
+      	AND
+      		DOCID = #v_DOCID#
+      	AND
+      		COMPANYID = #companyID#
+      	AND
+      		APRSTATE = '002'
+      	AND
+      		APRTYPE = #v_APRTYPE#
+      	AND
+      		APRMEMBERID = #v_USERID#
+      </update>
+      
+      <select id ="EzApprovalG.getWhoKyulMaxReceivSN" parameterClass="map" resultClass="int">
+      		SELECT 
+      			CASE WHEN MAX(RECEIVESN) IS NULL THEN 0 ELSE MAX(RECEIVESN) END AS RECEIVESN 
+			FROM 
+				TBL_ENDRECEIPTPROCESSINFO    
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				DOCID = #v_DOCID#
+			AND
+				COMPANYID = #companyID# 
+			AND 
+				DOCSTATE = #v_DOCSTATE#
+      </select>
+      
+      <select id ="EzApprovalG.getWhoKyulSingInfoCnt" parameterClass="map" resultClass="int">
+       	SELECT 
+       		COUNT(DOCID) AS SIGNSN 
+		FROM 
+			TBL_ENDAPRLINEINFO  
+		WHERE 
+		<![CDATA[
+			APRMEMBERSN <= 
+							(	
+								SELECT 
+									APRMEMBERSN 
+								FROM 
+									TBL_ENDAPRLINEINFO    
+								WHERE
+									TENANT_ID = #v_TENANTID#
+								AND
+									COMPANYID = #companyID#
+								AND 
+									DOCID = #v_DOCID# 
+								AND 
+									APRTYPE = #v_APRTYPE#
+								AND 
+									APRSTATE = #v_APRSTATE#
+								AND 
+									APRMEMBERID = #v_USERID#  
+								LIMIT 1
+							) 
+		AND 
+			DOCID = #v_DOCID# 
+		AND 
+			APRTYPE IN ('001', '003', '004','040')
+			]]>
+       </select>
+       
+       <select id ="EzApprovalG.getWhoKyulYN" parameterClass="map" resultClass="String">
+	      	SELECT
+	      		ISUSE
+	      	FROM
+	      		TBL_CODELIST
+	      	WHERE 
+	      		TENANT_ID = #v_TENANTID#
+	      	AND
+	      		COMPANYID = #companyID#
+	      	AND
+	      		CODE1 = #v_CODE1#
+	      	AND
+	      		CODE2 = #v_CODE2#
+      </select>
 </sqlMap>
