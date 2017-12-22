@@ -188,7 +188,8 @@ function setAttachFileInfo1(strXML) {
                 }
                 
                 var strFileSize = fileinfo.split("/")[1] + "(" + fileSize + ")";
-                objTd2.innerHTML = strFileSize;
+                //objTd2.innerHTML = strFileSize;
+                objTd2.textContent = strFileSize;
                 objTr.appendChild(objTd2);
                 document.getElementById("filelist").appendChild(objTr);
             }

@@ -765,7 +765,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		if (pollQuestionVO.getFilePath() != null) {
-			files = pollQuestionVO.getFilePath().split(";");
+			files = pollQuestionVO.getFilePath().split("\\|");
 		}
 		
 		if (files != null && files.length != 0) {			

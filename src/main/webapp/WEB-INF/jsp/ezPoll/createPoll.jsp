@@ -656,7 +656,7 @@
 		    	var filelist = GetChildNodes(listtable);		    	
 				
 		    	for (var i = 0; i < filelist.length; i++) {			    	    
-		    	    document.getElementById("hidFilePath").value += GetAttribute(filelist[i], "fileinfo") + ";";
+		    	    document.getElementById("hidFilePath").value += GetAttribute(filelist[i], "fileinfo") + "|";
 		    	}
 		    	if (mode == "modify") {
 		    		var qstID = "<c:out value='${question.qstId}'/>";

@@ -2297,11 +2297,11 @@
 								<table class="content" style="width: 100%; height:32px; line-height:30px; border:none; border-bottom:1px solid #e1ebf7;">
 									<tr>
 										<td class="vote_listTd" style="border:none;">
-											<span name="file_path" _file="${list}" _path="${filePaths[status.index]}" onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer; width:16px; height:16px; margin:0px; padding:0px 5px;">
+											<span name="file_path" _file="<c:out value='${list}'/>" _path="${filePaths[status.index]}" onclick="DownloadAttach('${filePaths[status.index]}','<c:out value='${list}'/>');" style="cursor:pointer; width:16px; height:16px; margin:0px; padding:0px 5px;">
 												<img src="/images/poll/icon_adddownload_vote.gif" width="16" height="16" style="padding-left: 5px; vertical-align:middle; margin:-3px 0px 0px 0px;">											
 											</span>
-											<span onclick="DownloadAttach('${filePaths[status.index]}','${list}');" style="cursor:pointer;">	
-												<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);">${list} (${fileSizes[status.index]})</span>								
+											<span onclick="DownloadAttach('${filePaths[status.index]}','<c:out value='${list}'/>');" style="cursor:pointer;">	
+												<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);"><c:out value='${list}'/> (${fileSizes[status.index]})</span>								
 											</span>									
 										</td>
 									</tr>
