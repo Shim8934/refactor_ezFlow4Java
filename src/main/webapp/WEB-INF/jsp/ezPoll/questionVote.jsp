@@ -253,20 +253,23 @@
          						document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
          					}
 						}
-						else {							
+						else {
+							document.getElementById(voteInfo).style.display = "none";
 							//Check if the poll is allowed see result before vote
 							if (seeResultBeforVote != 0) {
-								var showVotes = "voterNumber2" + _optId;
-								document.getElementById(showVotes).style.display = "block";		
+								var showVotes = document.getElementById("voterNumber2" + _optId);
+			   					showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";		
+			   					showVotes.style.color = colors[i % 30];
+								showVotes.style.display = "block";	
 								document.getElementById(graphId).style.display = "none";
-								document.getElementById(voteInfo).style.display = "block";
+								//document.getElementById(voteInfo).style.display = "block";
 							}
 							
 							//If it is secret vote, then show 무기명 even no one votes for this option
-							if (secretVote == 1 && seeResultBeforVote == 1) {
+ 							/*if (secretVote == 1 && seeResultBeforVote == 1) {
 								document.getElementById(voteInfo).style.display = "block";
 								document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
-							}
+							} */
 							
 							if (emailElmt) {
 								emailElmt.style.display = "none";
@@ -278,14 +281,17 @@
 							emailElmt.style.display = "none";
 						}
 						
+						document.getElementById(voteInfo).style.display = "none";
 						document.getElementById(percentTdId).innerHTML = "";						
 						
 						//Check if the poll is allowed see result before vote
 						if (seeResultBeforVote != 0) {
-							var showVotes = "voterNumber2" + _optId;
-							document.getElementById(showVotes).style.display = "block";	
+							var showVotes = document.getElementById("voterNumber2" + _optId);
+		   					showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";
+		   					showVotes.style.color = colors[i % 30];
+							showVotes.style.display = "block";
 							document.getElementById(graphId).style.display = "none";
-							document.getElementById(voteInfo).style.display = "block";
+							//document.getElementById(voteInfo).style.display = "block";
 						}
 					}
 				}
@@ -2324,14 +2330,14 @@
 			               				</script>      					               			
 			               		</div>
 			               		<div id="voterNumber2<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
-			               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">	              
-			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMailSmall.png" style="vertical-align:middle; margin-left:5px; cursor:pointer; display:none;" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
-			               			<div style="display:none; float:left; margin:9px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
+			               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">              
+			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
+			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMailSmall.png" style="vertical-align:middle; margin-left:5px; cursor:pointer; display:none; margin-top: -9px;" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
+			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
 			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;"><spring:message code = 'ezPoll.t122'/></div>
 			               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 			               			</div>
