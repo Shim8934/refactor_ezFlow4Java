@@ -1436,7 +1436,9 @@
 	    			var targetName = evt.target ? evt.target.parentElement.id : event.srcElement.parentElement.id;
 	    			
 	 		        if (targetName.indexOf("menu_") > -1) {
+	 		        	clickmenusub = targetName;
 	 		        	var tName = targetName.replace("menu_", "");
+	 		        	
 	 		            if (menuName != clickmenuName) {
 	 		                /* clickmenuPath = oldPath; */
 	 		                if (clickmenuPath != "") {
