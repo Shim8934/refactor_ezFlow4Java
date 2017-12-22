@@ -192,7 +192,7 @@
 							document.getElementById(percentTdId).innerHTML = "[" + (percent * 100).toFixed(1) + "%]";
  						} 							
  						
-						if (votesArr[i][1] != 0) {					
+						if (votesArr[i][1] != 0) {			
 							var id = "myCanvas" + _optId;							
 							var showVotes = "voterNumber" + _optId;							   					
 		   					var canv = document.getElementById(id);
@@ -255,23 +255,25 @@
 						}
 						else {
 							document.getElementById(voteInfo).style.display = "none";
-							//Check if the poll is allowed see result before vote
-							if (seeResultBeforVote != 0) {
+							
+							//Check if the poll is allowed see result before vote														
+							if (_status != 0) {							
+								if (seeResultBeforVote != 0) {
+									var showVotes = document.getElementById("voterNumber_" + _optId);																	
+					   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
+				   					showVotes.style.color = colors[i % 30];
+									showVotes.style.display = "block";
+									
+									document.getElementById(graphId).style.display = "none";
+									//document.getElementById(voteInfo).style.display = "block";
+								}
+							}
+							else {
 								var showVotes = document.getElementById("voterNumber_" + _optId);
-								if (_status != 0) {									
-				   					showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";		
-								}
-								else {
-									showVotes.innerHTML = "0";
-								}
-								
+								showVotes.innerHTML = "0";
 			   					showVotes.style.color = colors[i % 30];
 								showVotes.style.display = "block";
-								
-								document.getElementById(graphId).style.display = "none";
-								//document.getElementById(voteInfo).style.display = "block";
 							}
-							
 							//If it is secret vote, then show 무기명 even no one votes for this option
  							/*if (secretVote == 1 && seeResultBeforVote == 1) {
 								document.getElementById(voteInfo).style.display = "block";
@@ -292,18 +294,22 @@
 						document.getElementById(percentTdId).innerHTML = "";						
 						
 						//Check if the poll is allowed see result before vote
-						if (seeResultBeforVote != 0) {
+						if (_status != 0) {							
+							if (seeResultBeforVote != 0) {
+								var showVotes = document.getElementById("voterNumber_" + _optId);																	
+				   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
+			   					showVotes.style.color = colors[i % 30];
+								showVotes.style.display = "block";
+								
+								document.getElementById(graphId).style.display = "none";
+								//document.getElementById(voteInfo).style.display = "block";
+							}
+						}
+						else {
 							var showVotes = document.getElementById("voterNumber_" + _optId);
-							if (_status != 0) {	
-		   						showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";
-							}
-							else {
-								showVotes.innerHTML = "0";
-							}
+							showVotes.innerHTML = "0";
 		   					showVotes.style.color = colors[i % 30];
 							showVotes.style.display = "block";
-							document.getElementById(graphId).style.display = "none";
-							//document.getElementById(voteInfo).style.display = "block";
 						}
 					}
 				}
