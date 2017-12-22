@@ -948,61 +948,8 @@ public class EzPollController extends EgovFileMngUtil {
 			}				
 		}
 		
-		FileInputStream inputStream = null;
-		OutputStream outStream = null;
-		
-		try {
-			inputStream = new FileInputStream(file);
-	        
-	        //Get mime type of the file
-	        String mimeType = request.getServletContext().getMimeType(fullPath);
-	        
-	        if (mimeType == null) {
-	            //Set to binary type if mime mapping not found
-	            mimeType = "application/octet-stream";
-	        }	        
-	        logger.debug("MIME type: " + mimeType);	 
-	        	
-	        fileName = URLEncoder.encode(fileName, "UTF-8")
-	        		 .replaceAll("\\+", "%20")
-	                 .replaceAll("\\%21", "!")
-	                 .replaceAll("\\%27", "'")
-	                 .replaceAll("\\%28", "(")
-	                 .replaceAll("\\%29", ")")
-	                 .replaceAll("\\%7E", "~");
-	        
-	        //Set content attributes and header for the response
-	        response.setContentType(mimeType);
-	        response.setContentLength((int) file.length());
-	        response.setCharacterEncoding("UTF-8");      	    	        
-	        response.setHeader("Content-Disposition","attachment; filename*=UTF-8''" + fileName );
+		downFile(request, response, fullPath, fileName);		
 
-	        //Get output stream of the response
-	        outStream = response.getOutputStream();
-	 
-	        byte[] buffer = new byte[4096];
-	        int bytesRead = -1;
-	 
-	        //Write bytes read from the input stream into the output stream
-	        while ((bytesRead = inputStream.read(buffer)) != -1) {
-	            outStream.write(buffer, 0, bytesRead);
-	        }
-	 
-	        inputStream.close();
-	        outStream.close();
-		}
-		catch (IOException e) {
-			
-		}
-		finally {
-			if (inputStream != null) {
-				try { inputStream.close(); } catch (IOException e1) {}
-			}
-			if (outStream != null) {
-				try { outStream.flush(); } catch (IOException e1) {}
-				try { outStream.close(); } catch (IOException e1) {}
-			}
-		}
 		logger.debug("Download attach finishes!");	
 	}
 	
