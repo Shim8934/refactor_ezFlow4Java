@@ -453,6 +453,27 @@ public class EzPollServiceImpl implements EzPollService{
 			set.addAll(listOfQuestion);
 		}	
 	}
+	
+	@Override
+	public void getAllQuestionForUser2(LoginVO loginvo,	Set<PollQuestionVO> set, String searchStr, String mode) throws Exception {
+		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
+		int tenantID = loginvo.getTenantId();
+		String primary = loginvo.getPrimary();
+		
+		String companyID = loginvo.getCompanyID();
+		String deptID = loginvo.getDeptID();
+		String userID = loginvo.getId();			
+		
+		try {
+			String depPath = ezOrganService.getDeptPath(deptID, tenantID);
+			listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary, mode);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		set.addAll(listOfQuestion);
+	}
 
 	@Override
 	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception {		

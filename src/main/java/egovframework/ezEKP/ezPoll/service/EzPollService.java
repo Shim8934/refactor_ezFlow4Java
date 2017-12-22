@@ -90,6 +90,8 @@ public interface EzPollService {
 	public void deleteSpecificCmt(int cmtId, int qstId, int tenantId) throws Exception;
 
 	public void getAllQuestionForUser(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr, String mode) throws Exception;
+	
+	public void getAllQuestionForUser2(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr, String mode) throws Exception;
 
 	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception;	
 }

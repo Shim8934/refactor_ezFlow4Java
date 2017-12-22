@@ -50,7 +50,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
-import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
@@ -1479,7 +1478,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//Get list of questions for user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
-		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, "", "");
+		ezPollService.getAllQuestionForUser2(loginVO, setOfQuestions, "", "");
 		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
 		
 		if (!listTotalQuestions.isEmpty()) {
@@ -1491,7 +1490,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 			    if (compareEnd <= 0) {
 			        iterator.remove();
-			    }			    
+			    }		    
 			}
 			
 			//Get list of modifying question
@@ -1525,7 +1524,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			});
 			
 			//Get list of voted answers
-			List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());	
+			/*List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());	
 			
 	        Calendar cal = Calendar.getInstance();  
 	        cal.setTime(nowTime);  
@@ -1544,9 +1543,9 @@ public class EzPortalController extends EgovFileMngUtil {
 			    if (compareResult < 0) {
 			        iterator.remove();
 			    }			    
-			}
+			}*/
 			
-			totalVoteToday = listOfPollUserAndAnswer.size();
+			totalVoteToday = listTotalQuestions.size();
 			
 			model.addAttribute("listOptions", listOptions);
 			model.addAttribute("numberOfOptions", listOptions.size());
