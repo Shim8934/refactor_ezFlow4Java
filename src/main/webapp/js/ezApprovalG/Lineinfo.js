@@ -3162,11 +3162,13 @@ function SCheckLineUser() {
 //
     var pChkFlag = ChkWhoKyulDuplicate(AprLineRow)
     if (!pChkFlag)
-        pAlertContent = pAlertContent + " " + strLangS299 + "'" + strLangS275 + "'" + strLangS300 + "<br>"
+    	pAlertContent = pAlertContent + strLangSpjj29 + "<br>"
+        //pAlertContent = pAlertContent + " " + strLangS299 + "'" + strLangS275 + "'" + strLangS300 + "<br>"
 
     var pChkFlag = ChkWhoKyulLast(AprLineRow)
     if (!pChkFlag)
-        pAlertContent = pAlertContent + " " + strLangS301 + "'" + strLangS275 + "'" + strLangS302 + "<br>"
+    	pAlertContent = pAlertContent + strLangSpjj28 + "<br>"
+        //pAlertContent = pAlertContent + " " + strLangS301 + "'" + strLangS275 + "'" + strLangS302 + "<br>"
 
 //    var pChkString = CheckWorkFlowXML(AprLineRow)
 //    if (pChkString != "")
