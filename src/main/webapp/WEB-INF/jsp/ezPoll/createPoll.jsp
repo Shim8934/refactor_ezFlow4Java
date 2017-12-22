@@ -502,9 +502,10 @@
 				var currentPage = paramArray[0];
 				var checkSeeAll = paramArray[1];
 				var radioBttn = paramArray[2];
-				var mode1 = paramArray[3];							
+				var mode1 = paramArray[3];
+				var pollType = paramArray[4];
     			
-    			var szUrl = "/ezPoll/pollList.do?brdID=6" + "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchStr + "&mode1=" + mode1 + "&searchN=" + searchN;;
+    			var szUrl = "/ezPoll/pollList.do?brdID=6" + "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchStr + "&mode1=" + mode1 + "&searchN=" + searchN + "&pollType=" + pollType;
     		} 
     		else {
     			var szUrl = "/ezPoll/pollList.do?brdID=6";

@@ -289,12 +289,13 @@
 							var checkSeeAll = 0;
 					    	var _searchPrm = document.getElementById("searchInput").value;
 					    	var mode1 = $("input[name=searchCheck]:checked").val();
+					    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 					    	
 					    	if (document.getElementById("seeAll").checked) {
 					    		checkSeeAll = 1;
 					    	}
 					    	
-					    	list_params += currentPage + "," + checkSeeAll + "," + radioBttn + "," + mode1;
+					    	list_params += currentPage + "," + checkSeeAll + "," + radioBttn + "," + mode1 + "," + pollType;
 							
 							document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve + "&params=" + list_params + "&search=" + searchParam + "&searchN=" + _searchPrm;
 						}
