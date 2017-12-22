@@ -22,12 +22,12 @@
 		    var totalVoteToday = parseInt("${totalVoteToday}");	
 		    
 		    window.onload = function() {
-		    	autoRun();
+		    	//autoRun();
 		    	getConnect();
 		    	updateGraph();
 		    }
 		    
-		    function autoRun() {
+		    /* function autoRun() {
 		        var now = new Date();
 		        var nextDay = new Date( now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
 		        var msToMidnight = nextDay.getTime() - now.getTime();
@@ -36,7 +36,7 @@
 		        	window.location.reload();              
 		            resetAtMidnight();    
 		        }, msToMidnight);
-		    }
+		    } */
 		    
 		    function getConnect(){
 			    var socket = new SockJS('/hello');
