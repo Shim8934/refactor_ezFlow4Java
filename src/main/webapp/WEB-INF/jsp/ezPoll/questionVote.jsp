@@ -268,11 +268,16 @@
 								document.getElementById(voteInfo).innerHTML = "<spring:message code = 'ezPoll.t111' />";
 							}
 							
-							emailElmt.style.display = "none";
+							if (emailElmt) {
+								emailElmt.style.display = "none";
+							}
 						}
 					}
 					else {
-						emailElmt.style.display = "none";
+						if (emailElmt) {
+							emailElmt.style.display = "none";
+						}
+						
 						document.getElementById(percentTdId).innerHTML = "";						
 						
 						//Check if the poll is allowed see result before vote
@@ -359,7 +364,8 @@
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 			        	var user = JSON.parse(updatedInfo.body).userId;	
 			        	
-			            if (ret == "DELETED" && user != curentUser) {													
+			            //if (ret == "DELETED" && user != curentUser) {		
+			            if (ret == "DELETED") {
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
 				    });

@@ -1358,7 +1358,7 @@ public class EzPollController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezPoll/deleteQuestion.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String deleteQuestion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, HttpServletResponse response) throws Exception {
-		logger.debug("Delete question is running!");			
+		logger.debug("Delete question is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);					
 		String listQstIds = "";
 		String strXML = "";
