@@ -153,7 +153,7 @@
 						for (var i = 0; i < numberOptions; i++) {
 							var _optId = votesArr[i][0];
 							var graphId = "graph" + _optId;
-							var showVotes = "voterNumber2" + _optId;	
+							var showVotes = "voterNumber_" + _optId;	
 							var voteInfo = "voteInfo" + _optId;							
 							document.getElementById(graphId).style.display = "none";
 							document.getElementById(showVotes).style.display = "none";
@@ -257,10 +257,17 @@
 							document.getElementById(voteInfo).style.display = "none";
 							//Check if the poll is allowed see result before vote
 							if (seeResultBeforVote != 0) {
-								var showVotes = document.getElementById("voterNumber2" + _optId);
-			   					showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";		
+								var showVotes = document.getElementById("voterNumber_" + _optId);
+								if (_status != 0) {									
+				   					showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";		
+								}
+								else {
+									showVotes.innerHTML = "0";
+								}
+								
 			   					showVotes.style.color = colors[i % 30];
-								showVotes.style.display = "block";	
+								showVotes.style.display = "block";
+								
 								document.getElementById(graphId).style.display = "none";
 								//document.getElementById(voteInfo).style.display = "block";
 							}
@@ -286,8 +293,13 @@
 						
 						//Check if the poll is allowed see result before vote
 						if (seeResultBeforVote != 0) {
-							var showVotes = document.getElementById("voterNumber2" + _optId);
-		   					showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";
+							var showVotes = document.getElementById("voterNumber_" + _optId);
+							if (_status != 0) {	
+		   						showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";
+							}
+							else {
+								showVotes.innerHTML = "0";
+							}
 		   					showVotes.style.color = colors[i % 30];
 							showVotes.style.display = "block";
 							document.getElementById(graphId).style.display = "none";
@@ -468,7 +480,7 @@
 			        		
 				        	if (mode == 1) {
 				        		//In adding mode
-				        		var showVotes = "voterNumber2" + optId;
+				        		var showVotes = "voterNumber_" + optId;
 				        		document.getElementById(showVotes).style.display = "none";				        		
 				        		totalVotes = totalVotes + 1;
 				        		
@@ -647,7 +659,7 @@
 	 	    		obj.src = "/images/checked.png";
 		    		var voteId = obj.name;
 		    		var optId = votesArr[voteId][0];		    	
-		    		var showVotes = "voterNumber2" + optId;
+		    		var showVotes = "voterNumber_" + optId;
 		    		
 		    		//Update values of total votes and votes for current option 
 		    		votesArr[voteId][1] = votesArr[voteId][1] + 1;
@@ -2329,7 +2341,7 @@
 			               					}			               					
 			               				</script>      					               			
 			               		</div>
-			               		<div id="voterNumber2<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
+			               		<div id="voterNumber_<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
 			               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">              
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>

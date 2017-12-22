@@ -204,16 +204,23 @@
 	    		window.location.href = szUrl;
 		    }
 		    
+		    function selectCheck() {
+		    	var _params = getParameters();
+		    	var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + _params; 
+		    	window.location.href = szUrl;
+		    }
+		    
 		    function getParameters() {
 		    	var checkSeeAll = 0;
 		    	var _searchPrm = document.getElementById("searchInput").value;
 		    	var mode1 = $("input[name=searchCheck]:checked").val();
+		    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 				
 		    	if (document.getElementById("seeAll").checked) {
 		    		checkSeeAll = 1;
 		    	}	
 		    	
-		    	return "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchParam + "&mode1=" + mode1 + "&searchN=" + _searchPrm;
+		    	return "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchParam + "&mode1=" + mode1 + "&searchN=" + _searchPrm + "&pollType=" + pollType; //2017-12-22
 
 		    }
 		    
@@ -470,9 +477,21 @@
 					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t227"/></span></a>
 				</li> --%>
 				<li id="btnDel"><a onClick="menu_Delete()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t202"/></span></a></li>
-				<li id="btnHid"><a onClick="menu_Hide()"   style="margin-top: 3px;"><span><spring:message code="ezPoll.t203"/></span></a></li>
+				<li id="btnHid"><a onClick="menu_Hide()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t203"/></span></a></li>
 				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
-				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li>
+				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li>	
+				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
+					<input id="btnRadio1" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="3" ${pollType == '3'? 'checked' : ''} >
+					<label for="btnRadio1"><spring:message code='ezPoll.t145' /></label>					
+				</li>
+				<li style="float:right; font-weight:normal; color:black;">
+					<input id="btnRadio2" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="2" ${pollType == '2'? 'checked' : ''}>
+					<label for="btnRadio2"><spring:message code='ezPoll.t146' /></label>					
+				</li>
+				<li style="float:right; font-weight:normal; color:black;">
+					<input id="btnRadio3" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
+					<label for="btnRadio3"><spring:message code='ezPoll.t237' /></label>		
+				</li>
 			</ul>
 		</div>
 		<script type="text/javascript">

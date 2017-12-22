@@ -17,12 +17,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
@@ -45,7 +43,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -321,7 +318,8 @@ public class EzPollController extends EgovFileMngUtil {
 		int seeAll = 0;	
 		int checkingArray = 0;
 		int adminPrivilege = -1;
-		String qstId = "";		
+		String qstId = "";
+		String pollType = (request.getParameter("pollType") != null) ? request.getParameter("pollType") : "2";
 		
 		if (request.getParameter("qstId") != null) {			
 			qstId = request.getParameter("qstId");
@@ -439,6 +437,30 @@ public class EzPollController extends EgovFileMngUtil {
 		//Remove all modifying questions
 		listTotalQuestions.removeAll(listOfModifyingQst);
 		
+		//Process question list based on pollType
+		if (!pollType.equals("1")) {
+			Iterator<PollQuestionVO> iterator = listTotalQuestions.iterator();
+			
+			if (pollType.equals("2")) {
+				while (iterator.hasNext()) {
+					PollQuestionVO question = iterator.next();
+					
+					if (question.getStatus() == 0) {
+						iterator.remove();	
+					}
+				}
+			}
+			else {
+				while (iterator.hasNext()) {
+					PollQuestionVO question = iterator.next();
+					
+					if (question.getStatus() != 0) {
+						iterator.remove();
+					}
+				}
+			}			
+		}		
+		
 		//Sort list of questions by question id				
 		Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
 	        return Integer.valueOf(qst2.getQstId()).compareTo(qst1.getQstId());
@@ -482,6 +504,8 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("deleteBttn", checkingArray);		
 		model.addAttribute("adminPrivilege", adminPrivilege);
 		model.addAttribute("primary", loginVO.getPrimary());
+		model.addAttribute("pollType", pollType);
+		
 		
 		logger.debug("get question finishes!");
 		return "/ezPoll/questionList";
