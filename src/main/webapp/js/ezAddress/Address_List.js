@@ -278,6 +278,9 @@ function MakeAddressList() {
                 _TD8.style.width = "10%";
                 _TD8.style.margin = "0px";
                 _TD8.style.padding = "0px";
+                _TD8.style.whiteSpace = "nowrap";
+                _TD8.style.overflow = "hidden";
+                _TD8.style.textOverflow = "ellipsis";
 
                 switch (FolderType) {
                     case "P":
