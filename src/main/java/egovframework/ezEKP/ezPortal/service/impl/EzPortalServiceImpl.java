@@ -1706,7 +1706,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
 					sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
 				} else {
-					sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
+					sb.append("<li onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
 				}
 			}
 			sb.append("<li class=\"right\"></ul>");

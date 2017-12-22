@@ -1438,7 +1438,12 @@
 	 		        if (targetName.indexOf("menu_") > -1) {
 	 		            clickmenusub = targetName;
 	 		            if (menuName != clickmenuName) {
-	 		                clickmenuPath = oldPath;
+	 		                /* clickmenuPath = oldPath; */
+	 		                if (clickmenuPath != "") {
+								clickmenuPath = clickmenuPath;	
+							} else {
+	 		                	clickmenuPath = oldPath;
+							}
 	 		                clickmenuName = targetName.split("menu_")[1];
 	 		            }
 	 		        }
