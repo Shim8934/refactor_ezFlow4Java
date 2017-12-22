@@ -3098,8 +3098,10 @@ function setDocNumFormat(pPrefix) {
 
     var fields = message.GetFieldsList();
 
-    if (pDraftFlag == "REDRAFT" && ListType != "21") {
-    	return;
+    if (approvalFlag == "G") {
+        if (pDraftFlag == "REDRAFT" && ListType != "21") {
+        	return;
+        }
     }
 
     var field = message.GetListItem(fields, pPrefix + "docnumber");
