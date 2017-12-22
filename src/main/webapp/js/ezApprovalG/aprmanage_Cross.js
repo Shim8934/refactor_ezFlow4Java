@@ -2568,7 +2568,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[0] = pUserID;
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
-    pArgument[3] = formDocType;
+    
+    if (pDraftFlag == "REDRAFT") {
+    	pArgument[3] = pCurSelRow.getAttribute("DATA15");
+    } else {
+    	pArgument[3] = formDocType;
+    }  
 
     var pDocSN = pCurSelRow.getAttribute("DATA1");
 
