@@ -318,11 +318,7 @@ public class LoginController {
 		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
 		        	//session = request.getSession();       	
 		        	
-		        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-		        	    return "redirect:/ezEmail/mailAloneMain.do";
-		        	} else {
-		        	    return "redirect:/ezPortal/portalMain.do";
-		        	}
+		        	return "redirect:/ezPortal/portalMain.do";
 				}
 			// 해당 사용자의 로그인이 블록된 경우
             } else {

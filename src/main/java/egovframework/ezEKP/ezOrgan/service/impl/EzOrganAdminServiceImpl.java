@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
@@ -53,13 +52,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	@Autowired
 	private LoginDAO loginDAO;
-	
-	@Autowired
-	private Properties config;
-	
-	@Autowired
-	private Properties globals;
-	
+		
 	@Autowired	
 	private CommonUtil commonUtil;
 	
@@ -287,17 +280,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PROPNAME", column);
 		map.put("v_PROPVALUE", number);
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-			ezOrganAdminDao.updateProperty(map);
-	    } else {
-	        // 사원의 경우
-	    	if (pClass.toLowerCase().equals("user")) {
-	    		ezOrganAdminDao.updateProperty(map);
-	    	// 부서의 경우
-	    	} else {
-	    		ezOrganAdminDao.updateProperty_U(map);
-	    	}
-	    }       
+        // 사원의 경우
+    	if (pClass.toLowerCase().equals("user")) {
+    		ezOrganAdminDao.updateProperty(map);
+    	// 부서의 경우
+    	} else {
+    		ezOrganAdminDao.updateProperty_U(map);
+    	}       
 		
 		logger.debug("updateProperty ended");
 	}
@@ -315,62 +304,58 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("type="+type);
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-			ezOrganAdminDao.moveDBData(map);
-        } else {
-            ezOrganAdminDao.moveDBDataForJMocha(map);
-            
-        	if (type.toLowerCase().equals("group")) {
-        		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
-        		OrganDeptVO dept1 = ezOrganAdminDao.moveDBData_S1(map);
-        		
-        		logger.debug("dept=" + dept.toString());
-        		logger.debug("dept1=" + dept1.toString());
-        		
-        		map.put("v_COMPNM2", dept.getCompNm2());
-        		map.put("v_EXTENSIONATTRIBUTE4", dept.getExtensionAttribute4());
-        		map.put("v_EXTENSIONATTRIBUTE2", dept.getExtensionAttribute2());
-        		
-        		if (dept.getDeptLevel() != null) {
-        		    try {
-            		    int deptLevel = Integer.parseInt(dept.getDeptLevel()) + 1;
-            		    map.put("v_DEPTLEVEL", deptLevel);
-        		    } catch (NumberFormatException e) {
-        		        map.put("v_DEPTLEVEL", null);
-        		    }
-        		} else {
-        		    map.put("v_DEPTLEVEL", null);
-        		}
-        		
-        		map.put("v_EXTENSIONATTRIBUTE3", dept.getExtensionAttribute3());
-        		map.put("v_DEPT_CD_PATH", dept.getDept_Cd_Path());
-        		map.put("v_DEPT_CD_PATH_OLD", dept1.getDept_Cd_Path());
-        		
-        		ezOrganAdminDao.moveDBData_U1(map);
-        		ezOrganAdminDao.moveDBData_U2(map);
-        		ezOrganAdminDao.moveDBData_U3(map);
-        		
-        		/**
-        		 * Active Directory
-        		 * - 부서의 부서이동
-        		 * */
-        		if(ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
-        			DirContext ctx = conn.setConnection();
-        			ezOrganAdminDao.moveDeptInAD(ctx, map, parentCn);
-        		}
-        	} else {
-    	    	ezOrganAdminDao.moveGroupUser_U(map);
-    	    	
-    	    	/**
-    	    	 * Active Directory
-    	    	 * - 유저의 부서 이동
-    	    	 * */
-    	    	if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
-    	    		DirContext ctx = conn.setConnection();
-    	    		ezOrganAdminDao.moveUserInAD(ctx, map, parentCn);    	    		
-    	    	}
-        	}
-        }
+        ezOrganAdminDao.moveDBDataForJMocha(map);
+        
+    	if (type.toLowerCase().equals("group")) {
+    		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
+    		OrganDeptVO dept1 = ezOrganAdminDao.moveDBData_S1(map);
+    		
+    		logger.debug("dept=" + dept.toString());
+    		logger.debug("dept1=" + dept1.toString());
+    		
+    		map.put("v_COMPNM2", dept.getCompNm2());
+    		map.put("v_EXTENSIONATTRIBUTE4", dept.getExtensionAttribute4());
+    		map.put("v_EXTENSIONATTRIBUTE2", dept.getExtensionAttribute2());
+    		
+    		if (dept.getDeptLevel() != null) {
+    		    try {
+        		    int deptLevel = Integer.parseInt(dept.getDeptLevel()) + 1;
+        		    map.put("v_DEPTLEVEL", deptLevel);
+    		    } catch (NumberFormatException e) {
+    		        map.put("v_DEPTLEVEL", null);
+    		    }
+    		} else {
+    		    map.put("v_DEPTLEVEL", null);
+    		}
+    		
+    		map.put("v_EXTENSIONATTRIBUTE3", dept.getExtensionAttribute3());
+    		map.put("v_DEPT_CD_PATH", dept.getDept_Cd_Path());
+    		map.put("v_DEPT_CD_PATH_OLD", dept1.getDept_Cd_Path());
+    		
+    		ezOrganAdminDao.moveDBData_U1(map);
+    		ezOrganAdminDao.moveDBData_U2(map);
+    		ezOrganAdminDao.moveDBData_U3(map);
+    		
+    		/**
+    		 * Active Directory
+    		 * - 부서의 부서이동
+    		 * */
+    		if(ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
+    			DirContext ctx = conn.setConnection();
+    			ezOrganAdminDao.moveDeptInAD(ctx, map, parentCn);
+    		}
+    	} else {
+	    	ezOrganAdminDao.moveGroupUser_U(map);
+	    	
+	    	/**
+	    	 * Active Directory
+	    	 * - 유저의 부서 이동
+	    	 * */
+	    	if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
+	    		DirContext ctx = conn.setConnection();
+	    		ezOrganAdminDao.moveUserInAD(ctx, map, parentCn);    	    		
+	    	}
+    	}
 		
 		logger.debug("moveDBData ended");
 	}
@@ -452,22 +437,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("nowDate", nowDate);
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-		    ezOrganAdminDao.retireDBData(map);
-		} else {
-		    ezOrganAdminDao.retireDBData_I(map);
-		    ezOrganAdminDao.retireDBData(map);
-		    ezOrganAdminDao.retireDBData_D3(map);
-		    
-		    /**
-		     * Active Directory
-		     * - 퇴작자 처리
-		     * */
-		    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
-		    	DirContext ctx = conn.setConnection();
-		    	ezOrganAdminDao.retireUserInAD(ctx, map);
-		    }
-		}       
+	    ezOrganAdminDao.retireDBData_I(map);
+	    ezOrganAdminDao.retireDBData(map);
+	    ezOrganAdminDao.retireDBData_D3(map);
+	    
+	    /**
+	     * Active Directory
+	     * - 퇴작자 처리
+	     * */
+	    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
+	    	DirContext ctx = conn.setConnection();
+	    	ezOrganAdminDao.retireUserInAD(ctx, map);
+	    }       
 		
 		logger.debug("retireEntry ended");
 	}	
@@ -647,23 +628,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("nowDate", nowDate);
 		
 		ezOrganAdminDao.updateDBData_company(map);
+			
+		ezOrganAdminDao.updateUserCompanyDisplayName(map);
+		ezOrganAdminDao.updateDeptCompanyDisplayName(map);
+	
+		OrganDeptVO vo = new OrganDeptVO();
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	
-			ezOrganAdminDao.updateUserCompanyDisplayName(map);
-			ezOrganAdminDao.updateDeptCompanyDisplayName(map);
+		vo.setTenantId(tenantID);
+		vo.setCn(cn);
+		vo.setDisplayName(displayName);
+		vo.setDisplayName2(displayName2);
 		
-			OrganDeptVO vo = new OrganDeptVO();
-			
-			vo.setTenantId(tenantID);
-			vo.setCn(cn);
-			vo.setDisplayName(displayName);
-			vo.setDisplayName2(displayName2);
-			
-			ezOrganAdminDao.updateUserDeptDisplayName(vo);
-			
-			map.put("v_BOARD_ID", 1);
-			ezResourceAdminDAO.updateBoardName(map);
-		}
+		ezOrganAdminDao.updateUserDeptDisplayName(vo);
+		
+		map.put("v_BOARD_ID", 1);
+		ezResourceAdminDAO.updateBoardName(map);
 		
         logger.debug("updateDBData_company ended");
 	}
@@ -803,17 +782,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         
 		ezOrganAdminDao.updateDBData_dept(vo);
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
-			ezOrganAdminDao.updateUserDeptDisplayName(vo);
-			
-			/**
-			 * Active Directory
-			 * - 부서 정보 수정
-			 * */
-			if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
-				DirContext ctx = conn.setConnection();
-				ezOrganAdminDao.updateDeptInAD(ctx, vo);				
-			}
+		ezOrganAdminDao.updateUserDeptDisplayName(vo);
+		
+		/**
+		 * Active Directory
+		 * - 부서 정보 수정
+		 * */
+		if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
+			DirContext ctx = conn.setConnection();
+			ezOrganAdminDao.updateDeptInAD(ctx, vo);				
 		}
 		
 		logger.debug("updateDBData_dept ended");
@@ -830,59 +807,55 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-		    ezOrganAdminDao.deleteDBData(map);
-		} else {
-		    if (pClass.toLowerCase().equals("group")) {
-		        ezOrganAdminDao.deleteDBData(map);
-		        
-		        //회사 삭제시 넣었던 초기데이터 테이블 삭제
-		        ezOrganAdminDao.deleteCompany_D1(map);
-		        ezOrganAdminDao.deleteCompany_D2(map);
-		        ezOrganAdminDao.deleteCompany_D3(map);
-		        ezOrganAdminDao.deleteCompany_D4(map);
-		        ezOrganAdminDao.deleteCompany_D5(map);
-		        ezOrganAdminDao.deleteCompany_D6(map);
-		        ezOrganAdminDao.deleteCompany_D7(map);
-		        ezOrganAdminDao.deleteCompany_D8(map);
-		        ezOrganAdminDao.deleteCompany_D9(map);
-		        ezOrganAdminDao.deleteCompany_D10(map);
-		        ezOrganAdminDao.deleteCompany_D11(map);
-		        ezOrganAdminDao.deleteCompany_D12(map);
-		        ezOrganAdminDao.deleteCompany_D13(map);
-		        ezOrganAdminDao.deleteCompany_D14(map);
-		        ezOrganAdminDao.deleteCompany_D15(map);
-		        ezOrganAdminDao.deleteCompany_D16(map);
-		        ezOrganAdminDao.deleteCompany_D17(map);
-		        ezOrganAdminDao.deleteCompany_D18(map);
-		        ezOrganAdminDao.deleteCompany_D19(map);
-		        
-			    /**
-			     * Active Directory
-			     * - 부서 정보 삭제
-			     * */
-			    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
-			    	DirContext ctx = conn.setConnection();
-			    	ezOrganAdminDao.deleteDeptInAD(ctx, cn);
-			    }			        
-		    } else {
-		        ezOrganAdminDao.deleteDBDataForJMocha(map);
-	     
-		        ezOrganAdminDao.deleteDBData_D1(map);
-		        ezOrganAdminDao.deleteDBData_D4(map);
-		        ezOrganAdminDao.deleteDBData_D5(map);
-		        
-			    /**
-			     * Active Directory
-			     * - 유저 정보 삭제
-			     * */
-			    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
-			    	DirContext ctx = conn.setConnection();
-			    	ezOrganAdminDao.deleteUserInAD(ctx, cn);
-			    }		        
-		    }
-
-		}		
+	    if (pClass.toLowerCase().equals("group")) {
+	        ezOrganAdminDao.deleteDBData(map);
+	        
+	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
+	        ezOrganAdminDao.deleteCompany_D1(map);
+	        ezOrganAdminDao.deleteCompany_D2(map);
+	        ezOrganAdminDao.deleteCompany_D3(map);
+	        ezOrganAdminDao.deleteCompany_D4(map);
+	        ezOrganAdminDao.deleteCompany_D5(map);
+	        ezOrganAdminDao.deleteCompany_D6(map);
+	        ezOrganAdminDao.deleteCompany_D7(map);
+	        ezOrganAdminDao.deleteCompany_D8(map);
+	        ezOrganAdminDao.deleteCompany_D9(map);
+	        ezOrganAdminDao.deleteCompany_D10(map);
+	        ezOrganAdminDao.deleteCompany_D11(map);
+	        ezOrganAdminDao.deleteCompany_D12(map);
+	        ezOrganAdminDao.deleteCompany_D13(map);
+	        ezOrganAdminDao.deleteCompany_D14(map);
+	        ezOrganAdminDao.deleteCompany_D15(map);
+	        ezOrganAdminDao.deleteCompany_D16(map);
+	        ezOrganAdminDao.deleteCompany_D17(map);
+	        ezOrganAdminDao.deleteCompany_D18(map);
+	        ezOrganAdminDao.deleteCompany_D19(map);
+	        
+		    /**
+		     * Active Directory
+		     * - 부서 정보 삭제
+		     * */
+		    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
+		    	DirContext ctx = conn.setConnection();
+		    	ezOrganAdminDao.deleteDeptInAD(ctx, cn);
+		    }			        
+	    } else {
+	        ezOrganAdminDao.deleteDBDataForJMocha(map);
+     
+	        ezOrganAdminDao.deleteDBData_D1(map);
+	        ezOrganAdminDao.deleteDBData_D4(map);
+	        ezOrganAdminDao.deleteDBData_D5(map);
+	        
+		    /**
+		     * Active Directory
+		     * - 유저 정보 삭제
+		     * */
+		    if (ezCommonService.getTenantConfig("USE_AD", tenantID).equalsIgnoreCase("YES")) {
+		    	DirContext ctx = conn.setConnection();
+		    	ezOrganAdminDao.deleteUserInAD(ctx, cn);
+		    }		        
+	    }
+		
 		logger.debug("deleteDBData ended.");
 	}
 
@@ -894,20 +867,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", lang);
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
+	    // Proxy User인 지 여부를 확인한다.
+		String temp = ezOrganAdminDao.getUserInfo_S1(map);
+		
+		// Proxy User인 경우 a=1 권한을 추가하여 반환한다.
+		if (temp != null && temp.equals("1")) {
 			return ezOrganAdminDao.getUserInfo(map);
+		// Proxy User가 아닌 경우엔 있는 그대로의 속성값을 반환한다.	
 		} else {
-		    // Proxy User인 지 여부를 확인한다.
-			String temp = ezOrganAdminDao.getUserInfo_S1(map);
-    		
-			// Proxy User인 경우 a=1 권한을 추가하여 반환한다.
-    		if (temp != null && temp.equals("1")) {
-    			return ezOrganAdminDao.getUserInfo(map);
-    		// Proxy User가 아닌 경우엔 있는 그대로의 속성값을 반환한다.	
-    		} else {
-    			return ezOrganAdminDao.getUserInfo_S2(map);
-    		}
-        }
+			return ezOrganAdminDao.getUserInfo_S2(map);
+		}
 	}
 	
 	@Override
@@ -988,13 +957,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     						}						
     					}
     					
-            			if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            				ezOrganAdminDao.setAddJob(map);
-            			} else {
-            				if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
-            					ezOrganAdminDao.setAddJob_I(map);
-            				}
-            			}       
+        				if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
+        					ezOrganAdminDao.setAddJob_I(map);
+        				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
@@ -1086,12 +1051,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PARENTCN", deptID);
 		map.put("temp", "");
 		
-		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-			ezOrganAdminDao.restoreRetireEntry(map);
-	    } else {
-	    	ezOrganAdminDao.restoreRetireEntry(map);
-	    	ezOrganAdminDao.restoreRetireEntry_D(map);
-	    }  
+    	ezOrganAdminDao.restoreRetireEntry(map);
+    	ezOrganAdminDao.restoreRetireEntry_D(map);  
 		
 		logger.debug("restoreRetireEntry ended");		
 	}
