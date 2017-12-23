@@ -20,13 +20,7 @@
 	
     window.onload = function()
     {
-        <c:if test="${IsJMochaStandAlone != 'YES'}">
-//        parent.frames[1].location.href = "Personal/ezStatistics_Connect.aspx";
         parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
-        </c:if>
-        <c:if test="${IsJMochaStandAlone == 'YES'}">
-        parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
-        </c:if>
     };
 	
     function menu_change(Item) 
@@ -72,7 +66,6 @@
     <body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 	    <div id="left">
 		    <div class="left_admin" title="<spring:message code='main.t10011' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='main.t10011' /></div>
-            <c:if test="${IsJMochaStandAlone != 'YES'}">
             <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span>
             <ul class="on"></ul>
             </h2>
@@ -82,7 +75,6 @@
             <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span>
             <ul class="on"></ul>
             </h2>            
-            </c:if>
       	</div>
         <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

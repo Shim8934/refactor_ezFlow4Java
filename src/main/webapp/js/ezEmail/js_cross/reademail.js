@@ -399,25 +399,37 @@ function timedCall_func_addaddr_Complete(ret) {
 }
 
 function func_addaddr_Complete(ret) {
-    try {
-        DivPopUpHidden();
-        if (ret == "0" || ret == "1") {
+	try {
+    
+		DivPopUpHidden();
+
+		if (ret == "0" || ret == "1") {
             return;
         }
-        var type = ret.split(':')[0];
-        var folderID = ret.split(':')[1];
-
+        
         var xmlHTTP = createXMLHttpRequest();
+        var type = ret.split(':')[0];
+        var folderId = ret.split(':')[1];
 
         try {
             senderName = TrimText(ConvertCharToEntityReference(LabelFromName.textContent));
             senderEmail = TrimText(ConvertCharToEntityReference(g_fromEmail));
             
-            var xmlDom = createXmlDom();
+            // 주소록에 추가시 중복체크
+            if (senderEmail != "") {
+            	var AddressCnt = Get_DupliCateAddressCnt(senderEmail, folderId, type);
+            	
+            	if (parseInt(AddressCnt) > 0) {
+            		alert(strLang134);
+            		return;
+            	}
+            }
             
+            var xmlDom = createXmlDom();
             var objNode, objRow;
+            
             objNode = createNodeInsert(xmlDom, objNode, "DATA");
-            createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderID);
+            createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderId);
             createNodeAndInsertText(xmlDom, objNode, "TYPE", type);
             createNodeAndInsertText(xmlDom, objNode, "OWNERID", "");
             createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", "");
@@ -474,6 +486,41 @@ function func_addaddr_Complete(ret) {
         xmlHTTP = null;
     } catch (e) { }
 }
+
+function Get_DupliCateAddressCnt(senderEmail, folderId, type) {
+	var xmlHTTP = createXMLHttpRequest();
+
+	try {
+		var returnValue = "";
+		var xmlDom = createXmlDom();
+		var objNode;
+		
+		createNodeInsert(xmlDom, objNode, "DATA");
+		createNodeAndInsertText(xmlDom, objNode, "IDLIST", "");
+		createNodeAndInsertText(xmlDom, objNode, "FILTER", senderEmail);
+		createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", type);
+		createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderId);
+		
+		xmlHTTP.open("POST", "/ezAddress/addressGetSearchCnt.do", false);
+		xmlHTTP.send(xmlDom);
+		
+		if (xmlHTTP.status != 200){
+			alert(strLang133 + xmlHTTP.statusText);
+		} else {
+			returnValue = xmlHTTP.responseText;
+		}
+		
+	} catch (e){
+		xmlHTTP = null;
+        alert(strLang133 + e.description);
+        return;
+	}
+ 
+	xmlHTTP = null;
+	
+    return returnValue;
+}
+
 var denial_cross_dialogArguments = new Array();
 function func_reject() {
     if (g_fromEmail == "" && g_rejectWord == "") {

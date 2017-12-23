@@ -117,48 +117,7 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	public PersonalLightPollVO getPollInfo (Map<String, Object> map) {
 		return (PersonalLightPollVO) select("EzPersonalDAO.getPollInfo", map);
 	}
-	
-    private String getPasswordForJMocha (String cn, int tenantID) throws Exception {
-        logger.debug("getPasswordForJMocha started. tenantId=" + tenantID + ",cn=" + cn);
-        
-        String resultValue = null;
-                
-        String param1 = "tenantId=" + URLEncoder.encode(tenantID + "", "UTF-8");
-        String param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserPassword";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        resultValue = (String)result.get("password");
-                    }                   
-                }
-            }
-        }                       
-        
-        logger.debug("getPasswordForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return resultValue;
-    }
-	
+		
     private String getPasswordForLocal (String cn, int tenantID) {
     	Map<String, Object> map = new HashMap<String, Object>();
     	map.put("cn", cn);
@@ -187,11 +146,7 @@ public class EzPersonalDAO extends EgovAbstractDAO {
     }
     
 	public String getPassword (String cn, int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getPasswordForJMocha(cn, tenantID);
-        } else {
-            return getPasswordForLocal(cn, tenantID);
-        }       
+		return getPasswordForLocal(cn, tenantID);       
 	}
 	
 	public int getPollCount(Map<String, Object> map) {

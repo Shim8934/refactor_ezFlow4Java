@@ -760,7 +760,8 @@ function setAttachFileInfo(strXML) {
                 var objTd2 = document.createElement("TD");
 
                 objTd2.setAttribute("NAME", "fileName");
-                objTd2.innerHTML = pFileName;
+                //objTd2.innerHTML = pFileName;
+                objTd2.textContent = pFileName; //baonk added
                 objTd2.style.wordBreak = "break-all";
                 objTr.appendChild(objTd2);
 
