@@ -72,7 +72,10 @@
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 						if (ret == "DELETED"){
 							//reload page
-							document.location.href = "/ezPoll/pollList.do?brdID=6&paging=" + currentPage;
+							var _params = getParameters();
+		    				var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + _params;
+							//document.location.href = "/ezPoll/pollList.do?brdID=6&paging=" + currentPage;
+		    				document.location.href = szUrl;
 						}
 				    });
 			    });
