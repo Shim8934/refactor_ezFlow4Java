@@ -2917,7 +2917,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public String getWhoKyulYN(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getWhoKyulYN", map);
-
+	}
+	
 	public String getDraftDeptID(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDraftDeptID", map);
 	}
