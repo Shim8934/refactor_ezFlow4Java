@@ -21612,12 +21612,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (mypapprfrom != null && !mypapprfrom.equals("")) {
-			whereStr = whereStr + " AND PROCESSDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 			aprFlag = "INMYAPPRSEARCH";
 		}
 		
 		if (mypapprto != null && !mypapprto.equals("")) {
-			whereStr = whereStr + " AND PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 			aprFlag = "INMYAPPRSEARCH";
 		}
 		
