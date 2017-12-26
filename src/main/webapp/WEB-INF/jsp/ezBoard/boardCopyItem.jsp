@@ -101,6 +101,9 @@
 					} catch (e) {
 					}
 // 		            window.close();
+		        } else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t201' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t201'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
 		        } else {
 		            window.returnValue = "ERROR";
 		            rtnVal = "ERROR";
