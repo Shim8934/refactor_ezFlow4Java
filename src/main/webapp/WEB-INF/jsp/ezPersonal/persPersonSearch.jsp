@@ -99,13 +99,22 @@
 	        	treeView.LoadFromID("FromTreeView");
 	        	treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 	    	}
+	    	
+	    	function MakeXMLString(str) {
+				str = ReplaceText(str, "&", "&amp;");
+			    str = ReplaceText(str, "<", "&lt;");
+			    str = ReplaceText(str, ">", "&gt;");
+			    return str;
+			}
+	    	
 	    	function TreeViewNodeClick() {
 		        issearch = false;
 		        CurPage = "1";
 	    	    var treeView = new TreeView();
 	        	treeView.LoadFromID("FromTreeView");
 	        	var nodeIdx = treeView.GetSelectNode();
-	        	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + nodeIdx.GetNodeData("VALUE");
+
+	        	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + MakeXMLString(nodeIdx.GetNodeData("VALUE"));
 	        	SelectDeptNM.setAttribute("countinfo","")
 	        	displayUserList(nodeIdx.GetNodeData("CN"));
 
@@ -317,7 +326,7 @@
 	                	var Sub_TR2 = document.createElement("TR");
 	                	var Sub_TD2 = document.createElement("TD");
 	                	Sub_TD2.style.textAlign = "left";
-	                	Sub_TD2.innerHTML = M_TR.getAttribute("_DATA5");
+	                	Sub_TD2.innerHTML = MakeXMLString(M_TR.getAttribute("_DATA5"));
 	                	Sub_TR2.appendChild(Sub_TD2);
 
 	                	var Sub_TR3 = document.createElement("TR");
@@ -823,7 +832,7 @@
       			selToggleList(document.getElementById("close"), "ul", "li", "0");
   			</script>
         	<div class="portlet_tabpart03">
-	            <div class="portlet_tabpart03_top" id="tab1" style="border-left:1px solid #d3d2d2;">
+	            <div class="portlet_tabpart03_top" id="tab1" style="border-bottom:0px;">
     	           <table style="margin-top:5px;width:100%;">
 						<tr>
 	                        <td>

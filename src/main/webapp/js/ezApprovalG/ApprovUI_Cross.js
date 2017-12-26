@@ -1525,6 +1525,12 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
     createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 
+    if (curDocNum != "") {
+   	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+   } else {
+   	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+   }
+    
     if (pApproveFlag == "1") {
         xmlhttp.open("POST", "/ezApprovalG/doApprov.do", false);
     } else if (pApproveFlag == "2") {
@@ -2583,7 +2589,7 @@ function getLastSignSN(pNodes) {
 
         var pCurrentAprType = getNodeText(dataNodes[11]);
         
-        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 ) {
+        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType40 ) {
                 if (pCurrentAprType == strAprType4) junkyulflag = true;
 
                 switch (pCurrentAprType) {
@@ -2608,6 +2614,10 @@ function getLastSignSN(pNodes) {
                         break;
 
                     case strAprType3:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
+                    //후결
+                    case strAprType40:
                         lastaprlineSN = lastaprlineSN + 1;
                         break;
                 }
@@ -2892,16 +2902,31 @@ function SignCheck() {
 		}
 	});
 
-    if (result == "" || result == null)
+	if (result == "" || result == null) {
         return;
+    }
     
     result = loadXMLString(result);
 
+    if (agreeReturnType == "2") {
+    
+	    var chkBansongList = SelectNodes(result, "SIGNINFOS");
+	    var agreeBansongType = getNodeText(SelectSingleNode(chkBansongList[0], "CHKBANSONG"));
+	
+	    if (agreeBansongType == "TRUE") {
+	    	var pAlertContent = strLangPJG03;
+	    	alert(pAlertContent);
+	    	window.close();
+	    	return;
+	    }  
+	    
+    }
+    
     var NodeList;
     NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
-    if (NodeList.length <= 0)
+    if (NodeList.length <= 0) {
         return;
-
+    }
     SignXML = result;
 
     var rtnVal = putSignXML(SignXML);

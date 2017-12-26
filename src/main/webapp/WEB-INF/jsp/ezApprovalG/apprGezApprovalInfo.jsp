@@ -188,6 +188,10 @@
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
+	        	if (pIniGubun == "1") {
+	        		$("#SaveAprLineTemplet").css("display", "");
+	        	}
+	        	
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
 	        	} else {
@@ -1667,7 +1671,7 @@
 	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
-	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top;">
+	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top; display: none;" id="SaveAprLineTemplet">
 	                                 <a class="imgbtn">
 	                                 </c:if>
 	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
@@ -2175,7 +2179,7 @@
 		                        <input id="urgent" type="checkbox" name="checkbox" value="checkbox" />&nbsp;(<spring:message code='ezApproval.t2002'/>)</td>
 		                </tr>
 <!-- 		                보안결재 추가 -->
-			            <tr>
+			            <tr style="display: none;">
 			                <th><spring:message code='ezApprovalG.t1210'/></th>
 			                <td>
 			                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
@@ -2281,12 +2285,6 @@
 			            </td>
 			            <td style="vertical-align: top;">
 			                <h2 class="h2_dot"><spring:message code='ezApprovalG.hyj20'/>
-			                    <div style="text-align: right; margin-top: -23px; padding-right: 5px">
-			                        <a class="imgbtn" onclick="return AprlineUpper_onclick();"><span>
-			                            <img src="/images/ImgIcon/prev.gif" height="16" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align: middle" /></span></a>
-			                        <a class="imgbtn" onclick="return AprlineDown_onclick();"><span>
-			                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
-			                	</div>
 			                </h2>
 			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">
                                 <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">

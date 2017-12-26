@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
@@ -754,7 +754,7 @@ function on_changeView(listtypeValue) {
     }
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
         if (pPreviewShow_HOW == "H") {
-            if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) { 
+            if (pMailListWidthH <= 470) { 
                 if (g_foldertype != "sent") {
                     p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
                     SmallSizeList = true;

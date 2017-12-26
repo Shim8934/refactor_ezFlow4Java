@@ -331,6 +331,10 @@
 		    }
 		
 		    function ShowMyBoardItem(val01) {
+		    	$(".on").attr("class", "off");
+		    	$(".myb h2").attr("class", "on");
+		    	$(".myb").next().attr("class", "on");
+		    	
 		        SetTreeConfig();
 		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
 		        var treeView = new TreeView();
@@ -375,7 +379,9 @@
 // 		        else
 // 		            clickFlag = false;
 
-// 		        if (!clickFlag) {    
+// 		        if (!clickFlag) {
+					$(".on").attr("class", "off");
+					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
 		            document.getElementById(obj + "obj").innerHTML = "";
@@ -386,7 +392,7 @@
 		            treeView.SetNodeClick("TreeCtrl_onNodeClick");
 		            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 		            treeView.DataBind(obj + "obj");
-		            tempID = ID;
+		            tempID = ID;		            
 // 		        }
 		    }
 		    
@@ -441,6 +447,10 @@
 		        }
 		    }
 		    function Open_Func(idx) {
+		    	$(".on").attr("class", "off");
+		    	$(".qst h2").attr("class", "on");
+		    	$(".qst").next().attr("class", "on");
+		    	
 		        if (CrossYN()) {
 		            if (idx == 1) {
 		                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
@@ -453,8 +463,8 @@
 		                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
 		            else
 						window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-		            SetTreeviewUnSelect("");
-		        }
+		            SetTreeviewUnSelect("");		            
+		        }		        
 		    }
 			function Poll_Open(idx) {
 				$(".on").attr("class", "off");
@@ -513,7 +523,10 @@
 		        }
 		    }
 		    function favoriteList() {
+		    	$(".on").attr("class", "off");
 		    	$(".fList h2").attr("class", "on");
+		    	$(".fList").next().attr("class", "on");
+		    	
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
@@ -548,7 +561,7 @@
 	        		</h2>	
 	        	</div>
 	        	<ul></ul>		        
-		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
+		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group.gif" />
@@ -586,7 +599,7 @@
 	        		</h2>	
 	        	</div>
 	        	<ul></ul>
-		        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
+		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group.gif" align="middle" />
@@ -600,21 +613,26 @@
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
 		        </ul>
 	        </c:if>
-	        <h2><span onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></h2>
-	        <ul>
-	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
-	            <c:if test="${questionAdmin == 'true' }">
-	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
-	            </c:if>
-	        </ul>
-	        <div class="pollDiv" onclick="Poll_Open(1)">
+	        
+		    <c:if test="${useQuestion == 'YES'}">
+		    	<div class="qst" onclick="Open_Func(1)"> 
+		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
+		    	</div>
+		    	<ul>
+	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
+	            	<c:if test="${questionAdmin == 'true' }">
+	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
+	            	</c:if>
+	        	</ul>
+		    </c:if>
+		    <div class="pollDiv" onclick="Poll_Open(1)">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
 	        </div>	
 	        <ul>
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li>	            
 	        </ul>
-	    <h3>
+	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
 	    <c:if test="${applyFlag == 'OK'}">

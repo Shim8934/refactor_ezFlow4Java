@@ -583,13 +583,13 @@
             AND
                 C.ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
             AND
-                C.tenant_id = #tenantID#
+                C.tenant_id = #v_TENANTID#
             AND
-                C.userid = #userID#
+                C.userid = #v_pUserID#
             WHERE  
                 C.itemid IS NULL  
             AND 
-            	A.StartDate < #nowDate#
+            	A.StartDate <= #nowDate#
             AND 
             	A.StartDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
             AND 

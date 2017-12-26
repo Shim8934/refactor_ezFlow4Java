@@ -2981,7 +2981,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("isSentItems", isSentItems);
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
-			mail.put("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
 			
 			if (bodyInfoList != null) { 
 				mail.put("htmlBody", bodyInfoList.get(0));

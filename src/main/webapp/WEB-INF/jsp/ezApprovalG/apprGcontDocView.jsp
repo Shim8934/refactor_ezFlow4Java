@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/whokyulSign_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/aprmanage_Cross.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
@@ -60,6 +61,8 @@
 		    var formDocType = "${formDocType}";
 		    var formUrl = "${formUrl}";
 		    var docState = "${docState}";
+		    var WhoKyulCNT = "${whoKyulCount}";
+		    var checkPwdFlag = "${checkPwdFlag}";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -96,6 +99,13 @@
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
+		            
+		            if (WhoKyulCNT > 0) {
+		                document.getElementById("btnWhoKyul").style.display = "";
+		                document.getElementById("btnReuse").style.display = "none";
+		            } else {
+		                document.getElementById("btnWhoKyul").style.display = "none";
+		            }
 		            
 		            if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
 	                	QuitWindow();
@@ -357,7 +367,7 @@
 		        ezaprhistory_cross_dialogArguments[0] = "";
 		        ezaprhistory_cross_dialogArguments[1] = btnhistory_onclick_Complete;
 		
-		        DivPopUpShow(730, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
+		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
 		    }
 		   
 		    function btnhistory_onclick_Complete() {
@@ -516,6 +526,30 @@
 		        xmlhttp.send(xmlpara);
 		        return xmlhttp.responseText;
 		    }
+		    
+		    function SaveEndFile() {
+		    	 var mhtBody = "";
+			        mhtBody = message.Get_EditorBodyHTML();
+			        mhtBody = "<HTML>" + mhtBody + "</HTML>";
+			        mhtBody = ConvertHTMLtoMHT(mhtBody);
+			        
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/saveEndFile.do",
+			    		data : {
+			    			docID : pDocID,
+			    			html  : mhtBody
+			    		},
+			    		success: function(xml){
+			    			result = xml;
+			    		}        			
+			    	});
+		    }
+
+		    
+		    
 		    function SaveSignCheck() {
 		    	var result = "";
 		    	
@@ -652,6 +686,97 @@
 		        var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
 		        window.close();
 		    }
+		    
+		    var pReceiveSN = "";
+		    var pSignSN = "";
+		    function MappingSign(ReceiveSN, SignSN) {
+		        pReceiveSN = ReceiveSN;
+		        pSignSN = SignSN;
+		        openSingUI();
+		    }
+		    
+		    function openSignUI_Complete(RtnVal) {
+		    	var result = "";
+		        if (RtnVal == "cancel") {
+		            var pAlertContent = strLang582;
+		            OpenAlertUI(pAlertContent);
+		            return;
+		        } else {
+		            var signCnt = 0;
+		            ReceiveSN = trim_Cross(pReceiveSN);
+		            
+		            if (ReceiveSN == 0) {
+		            	ReceiveSN = "";
+		            }
+		            var signID = ReceiveSN + "sign" + pSignSN;
+		            var seumyungID = ReceiveSN + "jikwe" + pSignSN;
+		            var seumyungdateID = ReceiveSN + "seumyungdate" + pSignSN;
+
+		            var fields = message.GetFieldsList();
+		            var field = message.GetListItem(fields, signID);
+
+		            if (field) {
+		                if (RtnVal == "cancel") {
+		                    return RtnVal;
+		                }
+
+		                if (RtnVal != "NAME") {
+		                    try {
+		                        var signWidth = 50;
+		                        //var signHeight = 28;
+		                        var signHeight = 50;
+		                        var strimg;
+		                        //strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?filepath=" + escape(RtnVal) + "' border=0  embedding='1' ";
+		                        strimg = "<img src='" + escape(RtnVal) + "' border=0 embedding='1' ";
+		                        strimg = strimg + " width=" + signWidth;
+		                        strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+
+		                        field.innerHTML = strimg;
+
+		                        SignType[signCnt] = "IMAGE";
+		                        SignName[signCnt] = signID;
+		                        SignContent[signCnt] = RtnVal;
+
+		                        signCnt = signCnt + 1;
+		                    }
+		                    catch (e) { alert(e.description); }
+		                }
+		                else {
+		                    strimg = "<p style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</p>";
+		                    field.innerHTML = strimg;
+		                    SignType[signCnt] = "TEXT";
+		                    SignName[signCnt] = signID;
+		                    SignContent[signCnt] = strimg;
+		                    signCnt = signCnt + 1;
+		                }
+		            }
+
+		            field = message.GetListItem(fields, seumyungdateID);
+
+		            if (field) {
+		                field.innerHTML = s;
+		                SignType[signCnt] = "TEXT";
+		                SignName[signCnt] = seumyungdateID;
+		                SignContent[signCnt] = s;
+		                signCnt = signCnt + 1;
+		            }
+
+		            SaveEndFile();
+		            SignSave();
+		            if (SetWhoKyulFlag() == "TRUE") {
+		                OpenAlertUI(strLangSpjj31, whoKyulRefresh);
+		                btnWhoKyul.style.display = "none";
+		            } else {
+		                OpenAlertUI(strLangSpjj32);
+		            }
+		        }
+		    }
+		    
+		    function whoKyulRefresh() {
+		    	window.opener.location.reload();
+		    	window.opener.parent.frames["left"].getAprCountWHO();
+                window.close();
+		    }
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -659,6 +784,7 @@
 		  <tr>
 		    <td style="height:20px"><div id="menu">
 		        <ul>
+		          <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
 		          <li id="btnMail"><span id="span_btnMail" onClick="return btnMail_onclick()"><spring:message code='ezApprovalG.t1513'/></span></li>
 		          <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 		          <li id="btnPrint"><span id="span_btnPrint" onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>

@@ -243,7 +243,7 @@ public interface EzApprovalGService {
 	
 	public String getFindSimpleCabinetList(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType, int tenantID) throws Exception;
 	
-	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo) throws Exception;
+	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo, String curDocNum) throws Exception;
 	
 	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception;
 	
@@ -297,7 +297,7 @@ public interface EzApprovalGService {
 	
 	public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 	
-	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
+	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
 	
 	public String getFindSimpleCabinetListAll(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType, int tenantID) throws Exception;
 	
@@ -440,7 +440,7 @@ public interface EzApprovalGService {
 	
 	public String checkResend(String docID, String companyID, int tenantId) throws Exception;
 
-	public String doHabyuiHesong(Document doc, String dirPath, String companyID, String lang, int tenantId, LoginVO userInfo) throws Exception;
+	public String doHabyuiHesong(Document doc, String dirPath, String companyID, String lang, int tenantId, LoginVO userInfo, String curDocNum) throws Exception;
 
 	public List<String> getAddress(String userIDs, int tenantID) throws Exception;
 	
@@ -462,11 +462,11 @@ public interface EzApprovalGService {
 
 	public String setCabinetHesong(String docID, String deptID,	String deptName, String deptName2, String userName,	String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
-	public String doBansong(String docID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo) throws Exception;
+	public String doBansong(String docID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
-	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
 
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
@@ -510,4 +510,14 @@ public interface EzApprovalGService {
 	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception;
 
 	public List<OrganUserVO> getTenantID() throws Exception;
+	
+	public int getWhoKyulCount(String docID, String id, String companyID, int tenantId, String lang) throws Exception;
+
+	public String doWhoKyulComplete(String docID, String userID, String companyID, int tenantId, String lang) throws Exception;
+
+	public String returnWhoKyulSingInfo(String docID, String userID, String companyID, int tenantId, String lang) throws Exception;
+	
+	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
+
+	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
 }

@@ -13,8 +13,8 @@
 			var selectedID = "";
 		    var selectedDisplayName = "";
 		    var ReturnFunction;
-		    window.onload = function ()
-		    {
+		    
+		    window.onload = function () {
 		        try{
 		            ReturnFunction = parent.menuitem_search_dialogArguments[1];
 		        } catch (e) {
@@ -26,34 +26,33 @@
 		        }
 		    }
 	
-		    function CheckBoxClick()
-		    {
+		    function CheckBoxClick() {
 				if (!event.srcElement.checked) return;
-				for (var i=0; i<document.getElementsByTagName("input").length; i++)
-				{
+				
+				for (var i=0; i<document.getElementsByTagName("input").length; i++) {
 				    if (document.getElementsByTagName("input").item(i).type == "checkbox") document.getElementsByTagName("input").item(i).checked = false;
 				}
+				
 				event.srcElement.checked = true;	
 				selectedID = event.srcElement.parentElement.nextSibling.uid;
 				selectedDisplayName = event.srcElement.parentElement.nextSibling.innerText;
 		    }
 		    
-		    function RadioClick(pContentsID, pContentsName)
-		    {
+		    function RadioClick(pContentsID, pContentsName) {
 		 		selectedID = pContentsID;
 		 		selectedDisplayName = pContentsName;
 		    }
 		    
-		    function Save()
-		    {
-				if (selectedID == "")
-				{
+		    function Save() {
+				if (selectedID == "") {
 					alert("<spring:message code='ezPortal.t279'/>");
 					return;
 				}
+				
 				var ret = new Array();
 				ret[0] = selectedID;
 				ret[1] = selectedDisplayName;
+				
 				if(ReturnFunction != null)
 				    ReturnFunction(ret);
 		        else
@@ -61,7 +60,6 @@
 				
 				window.close();
 		    }
-	    
 		</script>
 	</head>
 	<body class="popup" scroll="no">

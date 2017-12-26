@@ -413,11 +413,30 @@ public class EzAddressController{
 		
 		String returnData = "";
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String ownerId = xmldom.getElementsByTagName("IDLIST").item(0).getTextContent();
 		String sEmail = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
+		String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
+		String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		// ownerId가 없으면 디비에서 구하기(주소록수정 시 ownerId가 null이기 때문에)
+		if (ownerId.trim().equals("")) {
+			if (folderId.equals("0")) {
+				if (folderType.equals("C")) {
+					ownerId = userInfo.getCompanyID();
+				} else if (folderType.equals("D")) {
+					ownerId = userInfo.getDeptID();
+				} else {
+					ownerId = userInfo.getId();
+				}
+			}
+			else {
+				AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
+				ownerId = folderInfo.getOwnerId();
+			}
+		}
 		
 		boolean isDuplicate = ezAddressService.checkDuplicateAddress(userInfo.getTenantId(), ownerId, sEmail.trim());
 		if (isDuplicate) {

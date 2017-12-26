@@ -574,6 +574,7 @@ function getAprLine(tr) {
     	if (approvalFlag == "S") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pMode = "END";
+    		pFlag = "Y";
     	} else {
     		pMode = "APR";
     	}
@@ -625,7 +626,7 @@ function getAprovSub_after(xml) {
     var AprLine = new ListView();
     AprLine.SetID("AprLine");
     AprLine.SetMulSelectable(false);
-    AprLine.SetTitleIdx(arrySubTab[1]);
+//    AprLine.SetTitleIdx(arrySubTab[1]);
     AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
     AprLine.SetRowOnClick("lvAprLine_SelChange");
     AprLine.DataSource(xmlDoc);
@@ -1329,7 +1330,7 @@ function getAprDocAproveInfo(tr) {
     var AprLine = new ListView();                           
     AprLine.SetID("AprLine");                               
     AprLine.SetMulSelectable(false);                        
-    AprLine.SetTitleIdx(arrySubTab[pDocInfoValue]);
+//    AprLine.SetTitleIdx(arrySubTab[pDocInfoValue]);
     AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");      
     AprLine.DataSource(loadXMLString(RtnVal));                             
     AprLine.DataBind("lvAprLine");
@@ -1962,11 +1963,6 @@ function setbuttonenable() {
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
 	    }
-	    if (pListTypeValue == "10") {
-	    	document.getElementById("tbtnRegUserCont").style.display = "";
-	    } else {
-	    	document.getElementById("tbtnRegUserCont").style.display = "none";
-	    }
 	    if (pListTypeValue == "3") {
             document.getElementById("tbtnDraft").style.display = "";   
 	    }
@@ -2572,7 +2568,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[0] = pUserID;
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
-    pArgument[3] = formDocType;
+    
+    if (pDraftFlag == "REDRAFT") {
+    	pArgument[3] = pCurSelRow.getAttribute("DATA15");
+    } else {
+    	pArgument[3] = formDocType;
+    }  
 
     var pDocSN = pCurSelRow.getAttribute("DATA1");
 

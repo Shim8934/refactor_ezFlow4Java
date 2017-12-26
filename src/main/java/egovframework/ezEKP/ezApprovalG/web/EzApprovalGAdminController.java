@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
@@ -591,6 +592,36 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자결재 관리자 페이지
+	 * 전체 문서 조회(진행문서) -> 편집모드 ->수정 후 저장
+	 * */
+	@RequestMapping(value = "/admin/ezApprovalG/editApprDoc.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String editApprDoc (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("editApprDoc started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		//관리자 권한 체크		
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String docID = request.getParameter("docID");
+		String companyID = request.getParameter("companyID");
+		String formMHT = request.getParameter("formMHT");     
+		String formHTML = request.getParameter("formHTML");   // 수정된 html
+		String filePath = request.getParameter("filePath");   // 원본 html
+		String htmlData = request.getParameter("htmlData");
+		String realPath = commonUtil.getRealPath(request);
+		
+		String result = ezApprovalGAdminService.editApprovalDoc(docID, companyID, formMHT, formHTML, realPath, userInfo, filePath, htmlData);
+		
+		logger.debug("editApprDoc ended.");
+		return "";
+	}
+	
+	/**
 	 * 전자결재G관리 한글양식등록 양식등록,양식수정 양식작성기 저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSaveHWP.do", produces="text/xml;charset=utf-8")
@@ -821,10 +852,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/progressAdmin.do")
 	public String progressAdmin(Model model) {
-	    String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 	    
-	    model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("AdminActiveX", AdminActiveX);
 	    	    
 		return "/admin/ezApprovalG/apprGProgressAdmin";
@@ -2539,6 +2568,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String useEditApprDoc = ezCommonService.getTenantConfig("useEditApprDoc", userInfo.getTenantId());
 		
 		String type = request.getParameter("type");
 		
@@ -2561,11 +2591,43 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("type", type);
+		model.addAttribute("useEditApprDoc", useEditApprDoc);
 		
 		logger.debug("forAprDoc ended.");
 		
 		return "admin/ezApprovalG/apprGForAprDoc";
 	}
+	
+	/**
+	 * 관리자->전체 문서 조회(진행문서) // 문서편집 기능 추가
+	 * */
+	@RequestMapping(value = "/admin/ezApprovalG/modifyAprDoc.do", produces = "text/html;charset=utf-8")
+	public String modifyAprDoc(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("modifyAprDoc started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		//관리자 권한 체크
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String docID = request.getParameter("docID");
+		String pURL = request.getParameter("url");
+		String companyID = request.getParameter("companyID");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		logger.debug("docID : " + docID);
+		logger.debug("pURL : " + pURL);
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("url" , pURL);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("useEditor", useEditor);
+		
+		logger.debug("modifyAprDoc ended.");
+		return "admin/ezApprovalG/modifyAprDoc";
+	}	
 	
 	/**
 	 * 전자결재G관리 전체문서조회(진행문서) 문서목록 호출 함수

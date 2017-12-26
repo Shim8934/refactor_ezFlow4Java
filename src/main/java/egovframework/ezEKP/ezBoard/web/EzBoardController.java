@@ -251,7 +251,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (userInfo.getRollInfo().toLowerCase().indexOf("l=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			questionAdmin = "true";
 		}
-
+		
+		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantID);
+		
+		if (useQuestion == null || useQuestion.equals("")) {
+			useQuestion = "YES";
+		}
+		
         modelMap.addAttribute("userInfo", userInfo);
         modelMap.addAttribute("resultCount", resultCount);
         modelMap.addAttribute("resultXML", resultXML);
@@ -264,6 +270,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("applyFlag",applyFlag);
         modelMap.addAttribute("questionAdmin", questionAdmin);
         modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
+        modelMap.addAttribute("useQuestion", useQuestion);
         
 		return "ezBoard/boardLeft";
 	}
@@ -3202,6 +3209,10 @@ public class EzBoardController extends EgovFileMngUtil{
         	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
         }
         
+        if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
+        	boardListVO.setTitle(boardListVO.getTitle().replace("\\", "&#92;"));
+        }
+        
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("boardListVO", boardListVO);
         model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -5440,6 +5451,14 @@ public class EzBoardController extends EgovFileMngUtil{
         } else {
             totalPage = 0;
         }
+        
+        //strListInfo += pBoardID + "@" + pItemID + "," + SSUserID + ";";
+        String listInfo ="";
+        for(int i=0;i<reservedList.size();i++){
+        	listInfo += reservedList.get(i).getBoardID() + "@" + reservedList.get(i).getItemID() + "," + userInfo.getId() + ";";
+        }
+        model.addAttribute("listInfo", listInfo);
+        
         
         model.addAttribute("useEditor", useEditor);
         model.addAttribute("useRunTime", useRunTime);

@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -36,9 +37,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -74,10 +77,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-	
-	@Autowired
-	private Properties globals;
-	
+		
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -98,7 +98,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
     @Autowired
     private EzEmailUtil ezEmailUtil;	
-	 
+    
+    @Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+    
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
     
@@ -137,7 +140,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			topid = "Top";
 		}
 		
-		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
@@ -150,7 +152,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useDisablePopImap", useDisablePop3Imap);
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
-		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
@@ -412,13 +413,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), tenantID);
         String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), tenantID);
-        String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);    
        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
-        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
         
         logger.debug("deptInfo ended");
         
@@ -1198,7 +1197,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 	    logger.debug("saveUserInfo started.");
 	    
 	    LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -1304,6 +1303,38 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
+							
+							// UseInitMailSign이 YES일 경우 메일 서명 등록
+							String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
+							if (useInitMailSign.equals("YES")) {
+								ezEmailService.setInitMailSignature(tenantID, cn);
+							}
+							
+							// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
+							String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
+							if (useInitInboxRule.equals("YES")) {
+								//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
+								List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
+								String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+								
+								IMAPAccess ia = null;
+						        try {
+									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+											mailAddr, password, egovMessageSource, locale);
+									
+									for (int i = 0; i < mailboxList.size(); i++) {
+										ia.createFolder(mailboxList.get(i));
+									}
+								} finally {
+									if (ia != null) {
+										ia.close();
+										ia = null;
+									}
+								}
+								
+								ezEmailService.setInitInboxRule(tenantID, cn);
+							}
+							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
@@ -1912,8 +1943,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
-        String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
-		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -1930,8 +1959,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
-		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
-        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);	
+		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalForDoc", approvalForDoc);
 		
@@ -2038,7 +2066,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			topID = "Top";
 		}
 		
-		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
@@ -2047,7 +2074,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("topID", topID);
 		model.addAttribute("userInfo", user);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
-		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		

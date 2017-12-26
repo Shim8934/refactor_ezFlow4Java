@@ -18,18 +18,14 @@
 			var g_GubunFlag = "";
 			var g_UseFlag = "${useStartPage}";
 		
-	        function setValue(pUID,pObj)
-			{
+	        function setValue(pUID,pObj) {
 				g_UID = pUID;
 	
 				// 선택된 개체가 없는 경우
-				if( g_SelectedObj == null )
-				{
+				if( g_SelectedObj == null ) {
 					pObj.style.backgroundColor = "#ECF3BA";
 					g_SelectedObj = pObj;
-				}
-				else
-				{
+				} else {
 					pObj.style.backgroundColor = "#ECF3BA";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
@@ -37,32 +33,25 @@
 				}
 			}
 			
-			function entercheck()
-			{
+			function entercheck() {
 				if (window.event.keyCode == 13)
 					btnSearch_onClick();
 			}
 			
-			
-			
 			// 해당 페이지를 사용중으로 설정
 			// 마이포탈 페이지는 1개만 사용가능
-			function usepage()
-			{
-			    if (g_UID == "")
-				{
+			function usepage() {
+			    if (g_UID == "") {
 					alert("<spring:message code='ezPortal.t240'/>");
 					return;
 				}
 				
-				if (g_UseFlag == g_UID)
-				{
+				if (g_UseFlag == g_UID) {
 					alert("<spring:message code='ezPortal.t241'/>");
 					return;
 				}
 				
-				if (confirm("<spring:message code='ezPortal.t242'/>"))
-				{
+				if (confirm("<spring:message code='ezPortal.t242'/>")) {
 				    var xmlhttp = createXMLHttpRequest();
 					xmlhttp.open("POST", "/ezPortal/useMyStartPage.do?uID=" + g_UID + "&oldUID=" + g_UseFlag , false);
 					xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
