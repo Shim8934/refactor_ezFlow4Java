@@ -1646,7 +1646,13 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", strAprState2);
         createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));        
         createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
-        createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
+        if (approvalFlag == 'G') {
+        	createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
+        } else {
+            var fieldname = "docnumber";
+            field = message.GetListItem(fields, fieldname);
+        	createNodeAndInsertText(xmlpara, objNode, "DOCNO",  field.textContent);
+        }
         createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
         createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", "");
         createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFT");
@@ -1694,6 +1700,11 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
 
+        if (curDocNum != "") {
+          	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+          } else {
+          	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+          }
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 

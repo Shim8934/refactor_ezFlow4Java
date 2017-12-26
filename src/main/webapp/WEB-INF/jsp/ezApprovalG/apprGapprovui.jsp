@@ -147,6 +147,8 @@
 			var LastTotalKyulSN = "0";
 			var lastHabYuiSN;
 			var agreeReturnType = "${agreeReturnType}";
+			var curDocNum = "";
+			var draftDeptID = "${draftDeptID}";
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -735,6 +737,7 @@
 		            }
 		        }
 		        if (rtnVal) {
+		        	curDocNum = getCurDocNumber();
 		        	rtnVal = SaveApproveInfo("1");
 		        }
 
@@ -1534,6 +1537,33 @@
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
+		    }
+		    
+		    function TotalSave_onclick_Complete() {
+		        DivPopUpHidden();
+		    }
+		    
+		    function getCurDocNumber() {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getCabinetSN.do",
+		    		data : {
+		    			docID : pDocID,
+		    			deptID : draftDeptID
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
+		    	
+		    	   var dataNodes = GetChildNodes(loadXMLString(result));
+		           var SN = getNodeText(dataNodes[0]);
+		           
+		    	return SN;
 		    }
 		</script>
 	</head>

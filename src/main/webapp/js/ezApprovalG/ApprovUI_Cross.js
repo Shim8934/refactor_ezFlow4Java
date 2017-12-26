@@ -1525,6 +1525,12 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
     createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 
+    if (curDocNum != "") {
+   	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+   } else {
+   	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+   }
+    
     if (pApproveFlag == "1") {
         xmlhttp.open("POST", "/ezApprovalG/doApprov.do", false);
     } else if (pApproveFlag == "2") {

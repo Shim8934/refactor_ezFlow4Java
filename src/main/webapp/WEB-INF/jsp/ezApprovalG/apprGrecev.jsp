@@ -109,6 +109,8 @@
 			var junGyulFlag = "${junGyulFlag}";
 			var pSignImage_Size = "${signImageSize}";
 			var docNumZeroCnt = "${docNumZeroCnt}";
+			var curDocNum = "";
+			var draftDeptID = "${draftDeptID}";
 			
 			window.onload = function () {
 			};
@@ -609,6 +611,13 @@
 		            }
 		        }
 		
+		        // 현재 채번 차례 정보 가져오기
+		        if (LastSignSN == 1 || DraftLastFlag) {
+		        	curDocNum = getCurDocNumber();
+		        } else {
+		        	curDocNum = getCurDocNumber();
+		        }
+		        
 		        if (LastSignSN == 1 || DraftLastFlag)
 		            rtnval = getRecvDocNumber(arr_userinfo[4]);
 		        else

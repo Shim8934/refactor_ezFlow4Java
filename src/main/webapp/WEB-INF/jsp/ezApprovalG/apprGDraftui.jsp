@@ -152,7 +152,7 @@
 			var totalMemSN = "0";
 			var reuseTitleYN = "${reuseTitleYN}";
 			var agreeResultType = "${agreeResultType}";
-			
+			var curDocNum = "";
 		    window.onload = function ()
 		    {
 		        try {

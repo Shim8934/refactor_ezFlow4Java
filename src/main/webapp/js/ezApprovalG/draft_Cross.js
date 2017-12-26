@@ -2617,7 +2617,11 @@ function SaveDraftDocInfo_ilban(pState) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
 
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
-
+        if (curDocNum != "") {
+       	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+       } else {
+       	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+       }
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
