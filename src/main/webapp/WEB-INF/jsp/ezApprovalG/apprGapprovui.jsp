@@ -737,6 +737,7 @@
 		            }
 		        }
 		        if (rtnVal) {
+		        	curDocNum = getCurDocNumber();
 		        	rtnVal = SaveApproveInfo("1");
 		        }
 

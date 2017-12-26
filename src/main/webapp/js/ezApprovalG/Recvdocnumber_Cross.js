@@ -372,3 +372,26 @@ function EmbedContentIntoXML(bodyhtml) {
     }
     return bodyhtml;
 }
+
+function getCurDocNumber() {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getCabinetSN.do",
+		data : {
+			docID : pDocID,
+			deptID : draftDeptID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+	   var dataNodes = GetChildNodes(loadXMLString(result));
+       var SN = getNodeText(dataNodes[0]);
+       
+	return SN;
+}
