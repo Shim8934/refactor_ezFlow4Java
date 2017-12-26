@@ -156,6 +156,10 @@
 	            	if ((screen.height <= 800 && index >= 4) || (screen.height < 1080 && index >= 7)) {
                         return true;
                     }
+	            	//2017-12-26 장진혁 추가
+	            	if (index >= 5) {
+	            		return true;
+	            	}
                     
                     var title = cBoardVO.title;
                     var boardNum = cBoardVO.no;
@@ -554,7 +558,7 @@
 	        	<span><img src="/images/kr/left/icon_dialog.gif"></span>
 	        	<spring:message code='ezCommunity.t2000' />
 	        </h2>
-	        <div style="overflow: auto; overflow-x: hidden; height: 270px;" id="MyCopList">
+	        <div style="overflow: auto; overflow-x: hidden; height: 270px; background-color: white" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
 	            </ul>
