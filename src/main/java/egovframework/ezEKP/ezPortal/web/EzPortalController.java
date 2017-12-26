@@ -1505,50 +1505,30 @@ public class EzPortalController extends EgovFileMngUtil {
 			//Remove all modifying questions
 			listTotalQuestions.removeAll(listOfModifyingQst);
 			
-			//Sort listQuestions by question id					
-			Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
-		        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
-			});		
-			
-			PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
-			qstTitle = question.getTitle();
-			qstId = question.getQstId();			
-			seeResultBefore = question.getResultFirst();			
-			
-			//Get list of Options		
-			List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());
-			
-			//Sort list of options by number of votes
-			Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
-		        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
-			});
-			
-			//Get list of voted answers
-			/*List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, loginVO.getTenantId());	
-			
-	        Calendar cal = Calendar.getInstance();  
-	        cal.setTime(nowTime);  
-	        cal.set(Calendar.HOUR_OF_DAY, 0);  
-	        cal.set(Calendar.MINUTE, 0);  
-	        cal.set(Calendar.SECOND, 0);  
-	        cal.set(Calendar.MILLISECOND, 0);  
-	        Date today = cal.getTime();
-	        
-			for (Iterator<PollUserAnswerVO> iterator = listOfPollUserAndAnswer.iterator(); iterator.hasNext(); ) {
-				PollUserAnswerVO pollUserAnswerVO = iterator.next();
-				Date votedDate = formatter.parse(pollUserAnswerVO.getVoteDate());	
+			if (!listTotalQuestions.isEmpty()) {
+				//Sort listQuestions by question id					
+				Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
+			        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
+				});		
 				
-				int compareResult = votedDate.compareTo(today);
+				PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
+				qstTitle = question.getTitle();
+				qstId = question.getQstId();			
+				seeResultBefore = question.getResultFirst();			
 				
-			    if (compareResult < 0) {
-			        iterator.remove();
-			    }			    
-			}*/
-			
-			totalVoteToday = listTotalQuestions.size();
-			
-			model.addAttribute("listOptions", listOptions);
-			model.addAttribute("numberOfOptions", listOptions.size());
+				//Get list of Options		
+				List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());
+				
+				//Sort list of options by number of votes
+				Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
+			        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
+				});
+		
+				totalVoteToday = listTotalQuestions.size();
+				
+				model.addAttribute("listOptions", listOptions);
+				model.addAttribute("numberOfOptions", listOptions.size());				
+			}
 		}
 		
 		model.addAttribute("qstTitle", qstTitle);		

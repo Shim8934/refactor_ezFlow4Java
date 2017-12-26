@@ -22,22 +22,12 @@
 		    var totalVoteToday = parseInt("${totalVoteToday}");	
 		    
 		    window.onload = function() {
-		    	//autoRun();
-		    	getConnect();
-		    	updateGraph();
+		    	if (qstId != "-1") {
+		    		getConnect();
+		    		updateGraph();
+		    	}
 		    }
-		    
-		    /* function autoRun() {
-		        var now = new Date();
-		        var nextDay = new Date( now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
-		        var msToMidnight = nextDay.getTime() - now.getTime();
 
-		        setTimeout(function() {
-		        	window.location.reload();              
-		            resetAtMidnight();    
-		        }, msToMidnight);
-		    } */
-		    
 		    function getConnect(){
 			    var socket = new SockJS('/hello');
 			    stompClient = Stomp.over(socket);			
@@ -213,7 +203,7 @@
     						<br />
     						<div class="nodata_portlet">
 	    						<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
-    							<p><spring:message code='main.t260' /></p>
+    							<p><spring:message code='main.t261' /></p>
     						</div>
   						</c:otherwise>
   					</c:choose>
