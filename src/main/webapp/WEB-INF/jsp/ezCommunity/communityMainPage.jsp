@@ -1231,9 +1231,9 @@
 			                    <li id="categorycop" class="icon_tabpartBorder" onclick ="change_tab('categorycop')"><span><span class="icon_tabpart"></span><spring:message code = 'ezCommunity.t2006' /></span></li>
 			                </ul>
 			            </div>
-			            <div id ="mycommunity"></div>
-			            <div id ="categorycommunity" style="display:none">
-			                <div class="tabpartMycommunity02">
+			            <div id ="mycommunity" style="margin-top:10px"></div>
+			            <div id ="categorycommunity" style="display:none;">
+			                <div class="tabpartMycommunity02" style="margin-top:18px">
 			                    <div class="left_tabpart">
 			                        <ul class="left_tabpartTitle">
 			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t80' /></span></li>

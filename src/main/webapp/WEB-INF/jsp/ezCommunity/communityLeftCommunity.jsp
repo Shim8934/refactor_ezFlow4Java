@@ -12,8 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var ResultString;
 	        var code = "<c:out value='${code}'/>";
@@ -83,7 +82,7 @@
 				}catch (e) {
 	            }
 	            getCommunityList();
-	            getBoardList();
+	            //getBoardList();
 	        }
 			
 			function getCommunityList() {
@@ -172,7 +171,7 @@
                         _li.innerText = title;
                     }
 
-                    document.getElementById("list_communitynoti").appendChild(_li);
+					document.getElementById("list_communitynoti").appendChild(_li);
 	            });
 	        }
 
@@ -558,7 +557,7 @@
 	        	<span><img src="/images/kr/left/icon_dialog.gif"></span>
 	        	<spring:message code='ezCommunity.t2000' />
 	        </h2>
-	        <div style="overflow: auto; overflow-x: hidden; height: 270px; background-color: white" id="MyCopList">
+	        <div style="overflow: auto; overflow-x: hidden; height: 470px; background-color: white; border-bottom:1px solid #ddd" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
 	            </ul>
@@ -567,12 +566,12 @@
 	
 	        <!--/ mylist -->
 	        <!-- notice -->
-	        <h2 class="community_lt">
+	        <h2 class="community_lt" style="display:none">
 	        	<span><img src="/images/kr/left/icon_speaker.gif"></span>
 	            <spring:message code='ezCommunity.t2001' />
 	            <span class="btn_right" onclick="List_more()"><img src="/images/kr/community/btn_cmmore.gif"></span>
 	        </h2>
-	        <div class="divwrap">
+	        <div class="divwrap" style="display:none">
 	            <ul class="list_communitynoti" id="list_communitynoti">
 	                <!-- 최대10개 -->
 	            </ul>
@@ -580,8 +579,9 @@
 	        </div>
 	        <!-- /notice -->
 	
-	        <div class="community_banner" onclick="make_Cop()">
-	            <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90">
+	        <div class="community_banner commMake" onclick="make_Cop()" style="border:1px solid rgb(0, 72, 149);border-radius:4px;height:25px;padding-top:12px;text-align: center;color:white;background-color: rgb(0, 72, 149);font-weight: bold;">
+	        	<spring:message code="ezCommunity.t1011" />
+	            <%-- <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90"> --%>
 	        </div>
     	</div>
 	</body>
