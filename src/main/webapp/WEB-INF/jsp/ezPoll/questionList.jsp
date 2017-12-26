@@ -93,9 +93,9 @@
 					$("#radio2").prop("checked", true);
 				} */				
 				
-				if (seeCheck == 1) {
+/* 				if (seeCheck == 1) {
 					$('#seeAll').prop('checked', true);
-				}
+				} */
 				
 				if (deleteBttn == 1 || admin == 1) {
 					$('#btnDel').show();
@@ -106,11 +106,11 @@
 			
 				//document.getElementById("searchInput").value = searchParam;
 				
-				$('#seeAll').click(function() {					
+/* 				$('#seeAll').click(function() {					
 					var _params = getParameters();	
 					var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + _params;
 					window.location.href = szUrl;
-				});	
+				});	 */
 			}
 		    
 		    function menuQst_DetailUserInfo(pUserID) {
@@ -122,18 +122,18 @@
 		    	var checkSeeAll = 0;
 		    	var search_str = "";
 		    	var mode = $("input[name=searchCheck]:checked").val();
-		    	
+		    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 		    	//if ($("input[name=searchCheck]:checked").val() == ) {}
 		    	
-		    	if ($('#seeAll').is(':checked')) {
+/* 		    	if ($('#seeAll').is(':checked')) {
 		    		checkSeeAll = 1;
-		    	}	
+		    	}	 */
 		    	
 		    	if (document.getElementById("searchInput").value != null) {
 		    		search_str = document.getElementById("searchInput").value;
 		    	}
 		    	
-		        var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&search=" + search_str + "&see=" + checkSeeAll + "&mode=" + mode + "&currPage=" + currentPage;
+		        var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&search=" + search_str + "&see=" + checkSeeAll + "&mode=" + mode + "&currPage=" + currentPage + "&pollType=" + pollType;
 		        window.location.href = szUrl;
 		    }
 		    
@@ -219,9 +219,9 @@
 		    	var mode1 = $("input[name=searchCheck]:checked").val();
 		    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 				
-		    	if (document.getElementById("seeAll").checked) {
+		    	/* if (document.getElementById("seeAll").checked) {
 		    		checkSeeAll = 1;
-		    	}	
+		    	}	 */
 		    	
 		    	return "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchParam + "&mode1=" + mode1 + "&searchN=" + _searchPrm + "&pollType=" + pollType; //2017-12-22
 
@@ -294,9 +294,9 @@
 					    	var mode1 = $("input[name=searchCheck]:checked").val();
 					    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 					    	
-					    	if (document.getElementById("seeAll").checked) {
+/* 					    	if (document.getElementById("seeAll").checked) {
 					    		checkSeeAll = 1;
-					    	}
+					    	} */
 					    	
 					    	list_params += currentPage + "," + checkSeeAll + "," + radioBttn + "," + mode1 + "," + pollType;
 							
