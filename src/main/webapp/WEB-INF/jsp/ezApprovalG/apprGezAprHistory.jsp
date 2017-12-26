@@ -298,24 +298,24 @@
 		   <tr id="HisDoc"> 
 		    <td>
 		    	<div class="listview" style="overflow-y:auto;overflow-x:hidden">
-		      		<div ID="divlvDocList" style="border:0; width:696px; Height:330px;margin:1px 1px 1px 1px;"></div>
+		      		<div ID="divlvDocList" style="border:0; width:716px; Height:330px;margin:1px 1px 1px 1px;"></div>
 		      	</div>
 		    </td>
 		  </tr>
 		  <tr  id="HisAttach" > 
 		    <td>
 		    	<div class="listview" style="overflow-y:auto;overflow-x:hidden">
-		      		<div ID="divlvAttachList" style="border:0; width:696px; Height:330px;margin:1px 1px 1px 1px;"></div>
+		      		<div ID="divlvAttachList" style="border:0; width:716px; Height:330px;margin:1px 1px 1px 1px;"></div>
 		      	</div>
 		    </td>
 		  </tr>
 		  <tr id="HisLine"> 
 		    <td>
 		    	<div class="listview" style="overflow-x:hidden;">
-		      		<div id=divAprLine style="border:0; width:696px; Height:165px;margin:1px 1px 1px 1px;"></div>
+		      		<div id=divAprLine style="border:0; width:716px; Height:165px;margin:1px 1px 1px 1px;"></div>
 		      	</div>
 			  	<div class="listview" style="margin-top:5px;overflow-y:auto;overflow-x:hidden">
-			  		<div id=divAprLineInfo style="border:0; width:696px; Height:165px;margin:1px 1px 1px 1px;"></div>
+			  		<div id=divAprLineInfo style="border:0; width:716px; Height:165px;margin:1px 1px 1px 1px;"></div>
 			  	</div>
 			</td>
 		  </tr>
