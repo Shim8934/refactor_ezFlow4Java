@@ -5324,6 +5324,14 @@ public class EzBoardController extends EgovFileMngUtil{
             totalPage = 0;
         }
         
+        //strListInfo += pBoardID + "@" + pItemID + "," + SSUserID + ";";
+        String listInfo ="";
+        for(int i=0;i<reservedList.size();i++){
+        	listInfo += reservedList.get(i).getBoardID() + "@" + reservedList.get(i).getItemID() + "," + userInfo.getId() + ";";
+        }
+        model.addAttribute("listInfo", listInfo);
+        
+        
         model.addAttribute("useEditor", useEditor);
         model.addAttribute("useRunTime", useRunTime);
         model.addAttribute("orgBoardParameters", orgBoardParameters);

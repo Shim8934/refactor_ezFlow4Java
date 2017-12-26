@@ -276,6 +276,13 @@ public class LoginController {
 		        	commonUtil.resetLoginFailAttempts(_uid, tenantId);
 	        	}
 	        	
+	        	//패스워드 변경 이벤트 발생 여부
+	        	String changePassword = ezCommonService.getTenantConfig("changePassword", tenantId);
+	        	
+	        	if (changePassword != null && changePassword.equals("0")) {
+	        		diff = 1;
+	        	}
+	        	
 				//0보다 작아지면 패스워드 변경기한 Expired
 				if (diff <= 0) {				
 					model.addAttribute("isExpireDate", "Y");
@@ -311,11 +318,7 @@ public class LoginController {
 		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
 		        	//session = request.getSession();       	
 		        	
-		        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-		        	    return "redirect:/ezEmail/mailAloneMain.do";
-		        	} else {
-		        	    return "redirect:/ezPortal/portalMain.do";
-		        	}
+		        	return "redirect:/ezPortal/portalMain.do";
 				}
 			// 해당 사용자의 로그인이 블록된 경우
             } else {

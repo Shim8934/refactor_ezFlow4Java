@@ -796,7 +796,7 @@ function SendMailToCancel(DocID) {
     for (i = 0; i < objNodes.length; i++) {
         var nowstate    = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12]);
 
-        if (nowstate == "A04002")
+        if (nowstate == "002")
             break;
 
     }
@@ -833,7 +833,7 @@ function getHapyuitype(pSelectedRow, orgid) {
 
         var nowMethod   = getNodeText(GetChildNodes(GetChildNodes(objNodes[rsn])[0])[11]);
 
-        if (nowMethod == "A03011") { 
+        if (nowMethod == "011") { 
 
             var Nextid = getNodeText(GetChildNodes(GetChildNodes(objNodes[objNodes.length - 1])[0])[4]);
             var draftername = getNodeText(GetChildNodes(GetChildNodes(objNodes[objNodes.length - 1])[0])[13]);
@@ -843,7 +843,7 @@ function getHapyuitype(pSelectedRow, orgid) {
             sendmail(Nextid, doctitle, draftername, "", "hesong", "");
 
         }
-        else if (nowMethod == "A03012") { 
+        else if (nowMethod == "012") { 
 
         var doctitle = pSelectedRow.cells[0].innerText;
             var draftername = getNodeText(GetChildNodes(GetChildNodes(objNodes[objNodes.length - 1])[0])[13]);
@@ -917,7 +917,7 @@ function getOpinionInfo(docid, Flag) {
 
 function SendMailOpiniontoReceptionist(pGubn) {
 
-    if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG")
+    if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG")
         getOpinionInfo(pDocID, "END");
     else
         getOpinionInfo(pDocID, "APR");
@@ -925,7 +925,7 @@ function SendMailOpiniontoReceptionist(pGubn) {
     if (pDraftFlag == "SUSIN" || pDraftFlag == "HABYUI") {
         if (rtnValue[1] == "Receptionist") {
 
-            if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG")
+            if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG")
                 linelist = getAprLinefor("END", pDocID)
             else
                 linelist = getAprLinefor("APR", pDocID)
@@ -1004,7 +1004,7 @@ function SendMailOpiniontoReceptionist(pGubn) {
 
 function SendMailOpiniontoDrafter(pGubn) {
 
-    if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG")
+    if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG")
         getOpinionInfo(pDocID, "END");
     else
         getOpinionInfo(pDocID, "APR");
@@ -1036,7 +1036,7 @@ function SendMailOpiniontoDrafter(pGubn) {
 }
 
 function SendMailOpiniontoApproveMember(pGubn) {
-    if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG")
+    if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG")
         getOpinionInfo(pDocID, "END");
     else
         getOpinionInfo(pDocID, "APR");
@@ -1044,7 +1044,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
     if (pDraftFlag == "DRAFT") {
 
         var linelist;
-        if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG")
+        if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG")
             linelist = getAprLinefor("END", pDocID)
         else
             linelist = getAprLinefor("APR", pDocID)
@@ -1068,7 +1068,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
             approveState = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[12].textContent);
 
 
-            if ((approveType == "A03001" || approveType == "A03002" || approveType == "A03009" || approveType == "A03008" || approveType == "A03040") && approveState == "A04003") {
+            if ((approveType == "001" || approveType == "002" || approveType == "009" || approveType == "008" || approveType == "040") && approveState == "003") {
                 var pwriterID = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[4].textContent);
                 var Drafter = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[13].textContent);
                 var pstartdate = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[2].textContent);
@@ -1081,7 +1081,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
                 var NextUser = pwriterID;
                 if (pOrgAprUserID != pwriterID) { sendmail(NextUser, DocTitle, Drafter_, pstartdate_, "opinion", "", false); }
             }
-            else if ((approveType == "A03001" || approveType == "A03002" || approveType == "A03009" || approveType == "A03008" || approveType == "A03040") && approveState == "A04001") {
+            else if ((approveType == "001" || approveType == "002" || approveType == "009" || approveType == "008" || approveType == "040") && approveState == "001") {
                 var pwriterID = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[4].textContent);
                 var Drafter = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[13].textContent);
                 var pstartdate = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[2].textContent);
@@ -1095,7 +1095,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
                 if (pOrgAprUserID != pwriterID) { sendmail(NextUser, DocTitle, Drafter_, pstartdate_, "opinion", "", false); }
             }
             else {
-                if (approveType == "A03001" && trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[0].textContent) == "1" && pGubn == "BANSONG") {
+                if (approveType == "001" && trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[0].textContent) == "1" && pGubn == "BANSONG") {
                     var pwriterID = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[4].textContent);
                     var Drafter = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[13].textContent);
                     var pstartdate = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[2].textContent);
@@ -1118,7 +1118,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
 
     if (pDraftFlag == "SUSIN" || pDraftFlag == "HABYUI") {
         var linelist;
-        if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG")
+        if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG")
             linelist = getAprLinefor("END", pDocID)
         else
             linelist = getAprLinefor("APR", pDocID)
@@ -1149,7 +1149,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
         for (var i = 0; i < objNodes.length; i++) {
             approveType = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[11].textContent);
             approveState = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[12].textContent);
-            if ((approveType == "A03001" || approveType == "A03002" || approveType == "A03009" || approveType == "A03008" || approveType == "A03040") && approveState == "A04003") {
+            if ((approveType == "001" || approveType == "002" || approveType == "009" || approveType == "008" || approveType == "040") && approveState == "003") {
                 var pwriterID = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[4].textContent);
                 var DocTitle;
                 if (pDocTitle) {
@@ -1162,7 +1162,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
                 if (pOrgAprUserID != pwriterID) { sendmail(NextUser, DocTitle, Drafter_, pstartdate_, "opinion", "", false); }
             }
             else {
-                if (approveType == "A03001" && trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[0].textContent) == "1" && pGubn == "BANSONG") {
+                if (approveType == "001" && trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[0].textContent) == "1" && pGubn == "BANSONG") {
                     var pwriterID = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[4].textContent);
                     var DocTitle;
                     if (pDocTitle) {
@@ -1180,7 +1180,7 @@ function SendMailOpiniontoApproveMember(pGubn) {
 }
 
 function SendMailOpiniontoReceptionistAll(pGubn) {
-    if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG")
+    if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG")
         getOpinionInfo(pDocID, "END");
     else
         getOpinionInfo(pDocID, "APR");
@@ -1190,7 +1190,7 @@ function SendMailOpiniontoReceptionistAll(pGubn) {
     var objNodes = SelectNodes(xmldoc, "DATA");
     var orgID = trim(GetChildNodes(objNodes[0])[2].textContent);
 
-    if ((LastKyulSN == pAprMemberSN || pAprLineType == "A03004") && pGubn != "BANSONG" || pDraftFlag == "SUSIN")
+    if ((LastKyulSN == pAprMemberSN || pAprLineType == "004") && pGubn != "BANSONG" || pDraftFlag == "SUSIN")
         linelist = getAprLinefor("END", orgID);
     else
         linelist = getAprLinefor("APR", orgID);
@@ -1213,7 +1213,7 @@ function SendMailOpiniontoReceptionistAll(pGubn) {
         approveState = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[12].textContent);
 
 
-        if ((approveType == "A03001" || approveType == "A03002" || approveType == "A03009" || approveType == "A03008" || approveType == "A03040") && approveState == "A04003") {
+        if ((approveType == "001" || approveType == "002" || approveType == "009" || approveType == "008" || approveType == "040") && approveState == "003") {
             var pwriterID = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[4].textContent);
             var Drafter = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[13].textContent);
             var pstartdate = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[2].textContent);
@@ -1228,7 +1228,7 @@ function SendMailOpiniontoReceptionistAll(pGubn) {
             if (pOrgAprUserID != pwriterID) { sendmail(NextUser, DocTitle, Drafter_, pstartdate_, "opinion", "", false); }
         }
         else {
-            if (approveType == "A03001" && trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[0].textContent) == "1" && pGubn == "BANSONG") {
+            if (approveType == "001" && trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[0].textContent) == "1" && pGubn == "BANSONG") {
                 var pwriterID = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[4].textContent);
                 var Drafter = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[13].textContent);
                 var pstartdate = trim(GetChildNodes(GetChildNodes(objNodes[i])[0])[2].textContent);

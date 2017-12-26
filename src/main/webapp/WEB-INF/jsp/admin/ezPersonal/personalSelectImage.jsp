@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript">
 			var guid = "{" + GetGUID() + "}";
 		     var g_xmlhttp; 
@@ -101,7 +101,7 @@
 		                
 		                UploadSliderImage.style.display = "";
 		            } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-		                alert(strLang8 + AttachLimit + "MB" + strLang9);
+		                alert(strLang8 + "10MB" + strLang9);
 		                return;
 		            } else {
 		                alert(filename + " <spring:message code = 'ezPersonal.lhj01' />" + "\n\n" + result);

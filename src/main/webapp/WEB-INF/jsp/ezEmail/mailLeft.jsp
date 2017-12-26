@@ -518,7 +518,7 @@
 			}	        
 	    </script>
 	</head>
-	<body class="leftbody" style="overflow: hidden;">
+	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
 	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"></div>
 	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>

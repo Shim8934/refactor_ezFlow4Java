@@ -589,10 +589,12 @@
 		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
 		            }
 		            
-		            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
-	                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
-	                else
-	                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		            if (document.getElementById('countWHO') != null) {
+			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
+		                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
+		                else
+		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		            }
 		            
 		            // 임시보관함
 		            if (pListTypeValue != "21") {
@@ -1033,7 +1035,7 @@
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
             <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff;"></div>
-            <h3><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
+            <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>
 			<c:if test="${approvalFlag eq 'G'}">

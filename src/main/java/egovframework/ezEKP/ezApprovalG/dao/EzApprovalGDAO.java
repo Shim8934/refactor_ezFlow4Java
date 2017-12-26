@@ -2918,4 +2918,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getWhoKyulYN(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getWhoKyulYN", map);
 	}
+	
+	public String getDraftDeptID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDraftDeptID", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getLastHabYuiDocState(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getLastHabYuiDocState", map);
+	}
+
+	public void updateDocNumber(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateDocNumber", map);
+	}
 }

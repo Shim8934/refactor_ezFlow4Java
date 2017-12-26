@@ -1233,8 +1233,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			gEndDate = commonUtil.getDateStringInUTC(gEndDate, offset, false);
 		}
 		
+		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId());
+		
 		logger.debug("gOofState=" + gOofState + ",gStartDate=" + gStartDate + ",gEndDate=" + gEndDate
-				 + ",gExternalAudience=" + gExternalAudience + ",gInternal=" + gInternal + ",gExternal=" + gExternal);
+				 + ",gExternalAudience=" + gExternalAudience + ",gInternal=" + gInternal + ",gExternal=" + gExternal
+				 + ",useOnlyInnerMail=" + useOnlyInnerMail);
 		
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("gOofState", gOofState);
@@ -1243,6 +1246,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("gExternalAudience", gExternalAudience);
 		model.addAttribute("gInternal", gInternal);
 		model.addAttribute("gExternal", gExternal);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("userLang", userLang);
 		
 		logger.debug("mailOutOfOffice ended.");

@@ -242,13 +242,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// TO
 					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
 					if(arrRecipientsTo != null){
+						/* 받는 사람에 유저 이름이 있는지 확인하는 로직  -> 미리보기랑 맞추기 위해 주석처리
 						boolean toListme = false;
 						for(int i=0; i<arrRecipientsTo.length; i++){
 							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
 								toListme = true;
 								break;
 							}
-						}
+						}*/
 						
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);						
@@ -274,6 +275,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
 							
+							/* 유저 본인의 이름을 맨앞으로 toStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
 							if(toListme){
 								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
 									if(arrRecipientsTo.length > 1){
@@ -287,7 +289,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else{
 									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
 								}
-							} else {
+							} else {*/
 								if(i == 0){
 									if(arrRecipientsTo.length > 1){
 										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
@@ -300,20 +302,21 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else {
 									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
 								}
-							}
+							//}
 						}
 					}
 					
 					// CC
 					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
 					if(arrRecipientsCC != null){
+						/* 참조에 유저 이름이 있는지 확인하는 로직  -> 미리보기랑 맞추기 위해 주석처리
 						boolean ccListme = false;
 						for(int i=0; i<arrRecipientsCC.length; i++){
 							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)){
 								ccListme = true;
 								break;
 							}
-						}
+						}*/
 						
 						String ccHeader = message.getHeader("Cc")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
@@ -338,6 +341,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							
+							/* 유저 본인의 이름을 맨앞으로 ccStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
 							if (ccListme) {
 								if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)) {
 									if (arrRecipientsCC.length > 1) {
@@ -351,7 +355,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else {
 									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
 								}
-							} else {
+							} else { */
 								if (i == 0) {
 									if (arrRecipientsCC.length > 1) {
 										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
@@ -364,7 +368,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else {
 									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
 								}
-							}
+						//	}
 						}
 					}
 	
@@ -467,7 +471,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isSecureMail", isSecureMail);
 		model.addAttribute("pnFlag", pnFlag);
 		model.addAttribute("pIsCCFg", pIsCCFg);
-		model.addAttribute("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		

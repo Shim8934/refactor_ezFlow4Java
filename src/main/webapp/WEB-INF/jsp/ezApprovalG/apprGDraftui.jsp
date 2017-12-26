@@ -136,7 +136,7 @@
 		    var SummaryOuterReceiverList = "";
 		    var hideCabinet = "${hideCabinet}";
 		    var checkdocinfo = false;
-		    var DocType = "";
+		    //var DocType = ""; // 이미 위에 선언되어있음
 		    var junGyulFlag = "${junGyulFlag}";
 		    var draftJunGyulFlag = "${draftJunGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
@@ -152,7 +152,7 @@
 			var totalMemSN = "0";
 			var reuseTitleYN = "${reuseTitleYN}";
 			var agreeResultType = "${agreeResultType}";
-			
+			var curDocNum = "";
 		    window.onload = function ()
 		    {
 		        try {
@@ -547,7 +547,10 @@
 		            if (!checkLines()) {
 		                return;
 		            }
-		            
+		            // 재기안일 경우 pDocType에 DocType 넣기
+		            if (DraftFlag == "REDRAFT") {
+		            	pDocType = DocType;
+		            }
 		            if (pDocType == "003" && pSuSinFlag == "Y" && !btnReceivLineEnable) {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
 		                OpenInformationUI(pAlertContent, check_btnSendDraft3);

@@ -288,8 +288,11 @@
 							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
 						} else {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
-						}						
-						$("#brdExplain").html(result.resBrd.brdExplain);
+						}
+						
+						var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+						
+						$("#brdExplain").html(resbrdExc);
 						
 						$("#ResourceInfo").modal();
 					}, 
@@ -380,33 +383,33 @@
         </div>
         <!-- layer 팝업 -->
         <div id="ResourceInfo" style="display: none">
-        	<table id="resourceDataTable" style="width:100%; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
+        	<table id="resourceDataTable" style="width:440px; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
 				<tr>
-					<th colspan="2" height="35px" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white;font-weight: bold" id="brdNm"></th>
+					<th colspan="2" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white;font-weight: bold;height:30px" id="brdNm"></th>
 				</tr>
 				<tr>
-					<th width="22%" style="height:24px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-					<td style="height:35px"><span id="ownerNm"></span></td>
+					<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+					<td><span id="ownerNm"></span></td>
 				</tr>
 				<tr>
-					<th style="height:35;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
-					<td style="height:35px"><span id="ownerDept"></span></td>
+					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
+					<td><span id="ownerDept"></span></td>
 				</tr>
 				<tr>
-					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
-					<td style="height:35px"><span id="ownerCall"></span></td>
+					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
+					<td><span id="ownerCall"></span></td>
 				</tr>
 				<tr>
-					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
-					<td style="word-break:break-all; height:20px" id="resLocation"><%-- ${resLocation} --%></td>
+					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
+					<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
 				</tr>							
 				<tr>
-					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
-					<td style="height:35px" id="approveFlag"></td>
+					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
+					<td id="approveFlag"></td>
 				</tr>
 				<tr>
-					<th style="height:35px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-					<td style="height:200px"><pre><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></pre></td>
+					<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+					<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
 				</tr>
          	</table>
         </div>

@@ -310,6 +310,12 @@
 	            } catch (e) { }
 	        }
 	        function delete_address() {
+	        	
+	        	if (pTotalCnt == 0) {
+	        		alert("<spring:message code='ezAddress.t212' />");
+	        		return;
+	        	}
+	        	
 	            if (listContentArry.length == 0) {
 	                alert("<spring:message code='ezAddress.t212' />");
 	            }
@@ -419,11 +425,11 @@
 	    <div style="vertical-align: top; border: 0px solid red;" id="list_Layer">
 	        <table class="mainlist" id="DetailList_header" style="width:100%; table-layout: fixed;">
 	            <tr>
-	                <th style="cursor: pointer; padding: 0; width: 1%;">
+	                <th style="cursor: pointer;text-align:left; margin:0px; padding: 4px 0px 4px 1px; width: 24px;">
 	                	<input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)">
 	                </th>
-	                <th style="padding:0;text-align:center;width:2%;"><img src="/images/i_individual.gif" border="0"></th>
-	                <th id="CompanyName"  style="CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t124' /><span id="S_NAME"><img border="0" src="/images/view-sortup.gif"></span></th>
+	                <th style="padding-left:0px; padding-right:0px; text-align:left;width:22px;"><img src="/images/i_individual.gif" border="0"></th>
+	                <th id="CompanyName"  style="padding-left:7px; CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t124' /><span id="S_NAME"><img border="0" src="/images/view-sortup.gif"></span></th>
 	                <th id="PhoneNumber" style="CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
 	                <th id="width1" style="CURSOR: pointer; width: 15%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
 	                <th id="width2" style="CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="0" _OrderName="S_MOBILE" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>

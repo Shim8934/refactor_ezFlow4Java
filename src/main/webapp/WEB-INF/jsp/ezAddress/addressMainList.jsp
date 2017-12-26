@@ -805,7 +805,7 @@
 					<th style="cursor:pointer;text-align:center;padding:4px 1px; width:25px;">
 				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
 					</th>
-					<th style="text-align:left;width:24px;"><img src="/images/i_individual.gif" border="0"></th>
+					<th style="text-align:left;width:24px;vertical-align: middle;"><img src="/images/i_individual.gif" border="0"></th>
 					<th id="CompanyName" style="padding-left:7px; CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
 					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
 					<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
@@ -829,7 +829,7 @@
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 			    	<tr>
-						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:25px" colspan="2"><spring:message code='ezAddress.t2003' /></th>
+						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:30px" colspan="2"><spring:message code='ezAddress.t2003' /></th>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t124' /></th>
@@ -864,7 +864,7 @@
 			<div class="popupwrap3">
 				<table class="content" style="margin-top:10px;">  
 					<tr>
-						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:25px" colspan="2"><spring:message code='ezAddress.t312' /></th>
+						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:30px" colspan="2"><spring:message code='ezAddress.t312' /></th>
 					</tr>
 					<tr>
 						<th style="text-align:center;height:30px"><spring:message code='ezAddress.t314' /></th>

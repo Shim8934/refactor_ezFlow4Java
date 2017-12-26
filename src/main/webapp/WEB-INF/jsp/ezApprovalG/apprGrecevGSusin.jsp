@@ -117,6 +117,7 @@
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
 		    var signImageType = "${signImageType}";
+		    var curDocNum = "";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {

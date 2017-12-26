@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -20,10 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -31,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +39,6 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
@@ -56,9 +50,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	@Autowired
-	private Properties config;
-	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
@@ -67,10 +58,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
-	
-    @Autowired
-    private EzEmailUtil ezEmailUtil;
-	
+		
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 	
 	@Override
@@ -990,51 +978,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception {
 		return ezCommonDAO.selectUserGetTimeZone(userID, tenantID);
 	}
-	
-	private String getTenantConfigForJMocha(String property, int tenantID) throws Exception {
-        logger.debug("getTenantConfigForJMocha started. tenantID=" + tenantID + ",property=" + property);
-        
-        String returnValue = "";
-        
-        String param1 = "tenantId=" + tenantID;
-        String param2 = "property=" + URLEncoder.encode(property, "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantConfig";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = (String)result.get("propertyValue");
-                    }                   
-                }
-            }
-        }                       
-        
-        logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
-        logger.debug("PROPERTY VALUE : " + returnValue);
-        
-        logger.debug("getTenantConfigForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;	    
-	}
-	
+		
     private String getTenantConfigForLocal(String property, int tenantID) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());
@@ -1054,11 +998,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Override
 	public String getTenantConfig(String property, int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getTenantConfigForJMocha(property, tenantID);
-        } else {
-            return getTenantConfigForLocal(property, tenantID);
-        }	    
+		return getTenantConfigForLocal(property, tenantID);	    
 	}
 
 	@Override
