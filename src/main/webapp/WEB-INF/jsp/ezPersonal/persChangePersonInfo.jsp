@@ -78,6 +78,12 @@
 			    
 			    window.onload = function () {
 			    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+			    	
+			    	//익스플로러일때 css수정
+			    	if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
+						$(".imgbtn span").css("line-height","22px");
+			    	}
+			    	
 			    }
 			    
 			    var personpicture_cross_dialogArguments = new Array();
