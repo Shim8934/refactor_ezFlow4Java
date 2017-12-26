@@ -518,4 +518,6 @@ public interface EzApprovalGService {
 	public String returnWhoKyulSingInfo(String docID, String userID, String companyID, int tenantId, String lang) throws Exception;
 	
 	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
+
+	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
 }

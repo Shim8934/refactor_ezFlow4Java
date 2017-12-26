@@ -179,6 +179,7 @@ function getRecvDocNumber(pDeptID) {
         var name, docnumber;
         var rtnval;
 
+        if (approvalFlag =='G') {
         name = "receiptnumber";
         var field = message.GetListItem(fields, name);
         if (!field) {
@@ -210,6 +211,7 @@ function getRecvDocNumber(pDeptID) {
             SaveFile();
             return true;
         }
+        }
         var rtnVal = setDocNumFormat();
         if (!rtnVal)
             return true;
@@ -218,6 +220,7 @@ function getRecvDocNumber(pDeptID) {
 
     	var result = "";
     	
+    	 if (approvalFlag =='G') {
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -251,6 +254,9 @@ function getRecvDocNumber(pDeptID) {
             SaveFile();
             return true;
         }
+    	 } else {
+    		 
+    	 }
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;

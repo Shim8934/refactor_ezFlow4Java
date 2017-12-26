@@ -3429,6 +3429,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 
+		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+
 		if (docDir.substring(0, 1).equals("0")) {
 			docDir = docDir.substring(docDir.length() - 2);
 		} else if (docDir.substring(0, 2).equals("00")) {
@@ -3512,6 +3514,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("agreeReturnType", agreeReturnType);
+		model.addAttribute("draftDeptID", draftDeptID);
 		
 		logger.debug("approvui ended");
 		

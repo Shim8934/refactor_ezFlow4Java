@@ -23265,4 +23265,17 @@
 	      	AND
 	      		CODE2 = #v_CODE2#
       </select>
+
+	  <select id="EzApprovalG.getDraftDeptID" parameterClass="Map" resultClass="String">
+	  		SELECT
+	  			WRITERDEPTID
+	  		FROM
+	  			TBL_APRDOCINFO
+	  		WHERE 
+	  			DOCID = #v_DOCID#
+	  		AND
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
+	  </select>
 </sqlMap>
