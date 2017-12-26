@@ -1559,10 +1559,8 @@
 		    			result = xml;
 		    		}
 		    	});
-		    	
-		    	   var dataNodes = GetChildNodes(loadXMLString(result));
-		           var SN = getNodeText(dataNodes[0]);
-		           
+		    	var dataNodes = GetChildNodes(loadXMLString(result));
+		        var SN = getNodeText(dataNodes[0]);
 		    	return SN;
 		    }
 		</script>
