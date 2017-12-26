@@ -23998,7 +23998,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String contID = ezApprovalGDAO.getWhoKyulYN(map);
 
 		return contID;
-
+	}
+	
 	@Override
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception {
 		logger.debug("getOrgDraftDeptID started.");
