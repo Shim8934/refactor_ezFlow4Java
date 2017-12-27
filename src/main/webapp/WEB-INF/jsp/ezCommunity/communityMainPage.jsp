@@ -335,7 +335,9 @@
                     }
 
                     var tr = document.createElement("TR");
-
+                    if (i % 2 != 0) {
+                    	tr.style.backgroundColor = "#f8f8f8"; 
+                    }
                     var td = document.createElement("TD");
                     var td2 = document.createElement("TD");
                     var td3 = document.createElement("TD");
@@ -376,6 +378,8 @@
                     tr.appendChild(td4);
                     table.appendChild(tr);
                 }
+                
+                document.getElementById("tblPageRayer").style.display = "none";
 	        }
 
 	        var BlockSize = 10;
@@ -590,6 +594,8 @@
                 });
                 
                 document.getElementById("categorytab").appendChild(ul);
+                
+                document.getElementById("tblPageRayer").style.display = "";
 	        }
 	        
 	        function getcategoryname(val) {
@@ -1225,9 +1231,9 @@
 			                    <li id="categorycop" class="icon_tabpartBorder" onclick ="change_tab('categorycop')"><span><span class="icon_tabpart"></span><spring:message code = 'ezCommunity.t2006' /></span></li>
 			                </ul>
 			            </div>
-			            <div id ="mycommunity"></div>
-			            <div id ="categorycommunity" style="display:none">
-			                <div class="tabpartMycommunity02">
+			            <div id ="mycommunity" style="margin-top:10px"></div>
+			            <div id ="categorycommunity" style="display:none;">
+			                <div class="tabpartMycommunity02" style="margin-top:18px">
 			                    <div class="left_tabpart">
 			                        <ul class="left_tabpartTitle">
 			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t80' /></span></li>
