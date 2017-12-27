@@ -26,7 +26,7 @@
 		    function Select() {
 		    	board_alertArguments[1] = DivPopUpHidden;
 		        if (selectedBoard == "") {
-		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t179' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t179'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t138' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t138'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t179'/>");
 		            return;
@@ -101,7 +101,12 @@
 					} catch (e) {
 					}
 // 		            window.close();
-		        } else {
+		        } 
+		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
+		        	//var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t201' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t201'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					//DivPopUpShow(330, 205, pUrl);
+		        //}
+		        else {
 		            window.returnValue = "ERROR";
 		            rtnVal = "ERROR";
 		            board_alertArguments[1] = window.close;

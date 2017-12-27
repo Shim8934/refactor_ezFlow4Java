@@ -22464,7 +22464,7 @@
 		AND
 			COMPANYID = #companyID#
 		AND
-			(APRTYPE = '008')
+			(APRTYPE = '008' OR APRTYPE = '011')
 		<isEqual property="v_FLAG" compareValue="approvUi">
 		AND
 			(APRSTATE = '002' OR APRSTATE = '005')
@@ -23265,4 +23265,46 @@
 	      	AND
 	      		CODE2 = #v_CODE2#
       </select>
+
+	  <select id="EzApprovalG.getDraftDeptID" parameterClass="Map" resultClass="String">
+	  		SELECT
+	  			WRITERDEPTID
+	  		FROM
+	  			TBL_APRDOCINFO
+	  		WHERE 
+	  			DOCID = #v_DOCID#
+	  		AND
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
+	  </select>
+	  
+	  	  <update id="EzApprovalG.updateDocNumber" parameterClass="Map">
+	  		<isEqual property="v_MODE" compareValue="APR">
+		  		UPDATE TBL_APRDOCINFO
+	  		</isEqual>
+	  		<isEqual property="v_MODE" compareValue="END">
+		  		UPDATE TBL_ENDAPRDOCINFO
+	  		</isEqual>
+	  			SET DOCNO = #v_DOCNO#
+	  		WHERE
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
+	  		AND
+	  			DOCID = #v_DOCID#
+	  </update>
+	  
+	  <select id="EzApprovalG.getLastHabYuiDocState" parameterClass="Map" resultClass="ApprGDocListVO">
+	  		SELECT
+	  			DOCSTATE,FUNCTIONTYPE
+	  		FROM
+	  			TBL_APRDOCINFO
+	  		WHERE 
+	  			TENANT_ID = #v_TENANTID#
+	  		AND
+	  			COMPANYID = #companyID#
+	  		AND
+	  			DOCID = #v_habDocID#
+	  </select>
 </sqlMap>

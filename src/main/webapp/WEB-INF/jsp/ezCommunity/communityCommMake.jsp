@@ -25,7 +25,7 @@
 		        if (document.make.clubName.value == "" || trim_Cross(document.make.clubName.value) == "") {
 		            alert("<spring:message code='ezCommunity.t2' />");
 
-	                document.make.clubname.focus();
+	                document.make.clubName.focus();
 
 	                return;
 	            }
