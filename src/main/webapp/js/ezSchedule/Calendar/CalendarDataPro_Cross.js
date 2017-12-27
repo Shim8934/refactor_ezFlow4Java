@@ -323,8 +323,10 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.dtstartMinute = DataSDT.getMinutes();
     pTempData.dtendHour = DataEDT.getHours();
     pTempData.dtendMinute = DataEDT.getMinutes();
-    pTempData.dtstartDisplay = mfFormatTime((OrgDataSDT.getHours() * 60) + OrgDataSDT.getMinutes());
-    pTempData.dtendDisplay = mfFormatTime((OrgDataEDT.getHours() * 60) + OrgDataEDT.getMinutes());
+//    pTempData.dtstartDisplay = mfFormatTime((OrgDataSDT.getHours() * 60) + OrgDataSDT.getMinutes());
+//    pTempData.dtendDisplay = mfFormatTime((OrgDataEDT.getHours() * 60) + OrgDataEDT.getMinutes());
+    pTempData.dtstartDisplay = sbFormatTime(OrgDataSDT.getHours() , OrgDataSDT.getMinutes());
+    pTempData.dtendDisplay = sbFormatTime(OrgDataEDT.getHours() , OrgDataEDT.getMinutes());
 
     pTempData.OrgStartDate = mfGetUTFIsoDate(OrgDataSDT.getFullYear(), OrgDataSDT.getMonth(), OrgDataSDT.getDate(), OrgDataSDT.getHours(), OrgDataSDT.getMinutes());
     pTempData.OrgEndDate = mfGetUTFIsoDate(OrgDataEDT.getFullYear(), OrgDataEDT.getMonth(), OrgDataEDT.getDate(), OrgDataEDT.getHours(), OrgDataEDT.getMinutes());
@@ -337,6 +339,22 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     return pTempData;
 }
 
+function sbFormatTime(h,m){
+	var hour;
+	var min;
+	if (h<10){
+		hour = "0" + h ;
+	} else {
+		hour = h;
+	}
+	if (m==0){
+		min = m+"0";
+	} else {
+		min = m;
+	}
+	
+	return hour+":"+min;
+}
 
 function aheadDataCell(oAppointment, order) {
 
@@ -573,8 +591,8 @@ function CalMonthDataBind(oAppointment) {
         var pTime = "";
         var pSubject;
         if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay
-            pSubject = oAppointment.Subject + " " + oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay;
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject;
         }
         else {
             pTime = strLang39;
@@ -700,7 +718,7 @@ function CalWeekDataBind(oAppointment, order) {
         var pSubject;
 
         if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
             pSubject = oAppointment.Subject;
         }
         else {
@@ -835,8 +853,8 @@ function CalWeekAllDataBind(oAppointment, order) {
         var pSubject;
 
         if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
         }
         else {
             pTime = strLang39;
@@ -952,7 +970,7 @@ function CalDayDataBind(oAppointment, order) {
         var pSubject;
 
         if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
             pSubject = oAppointment.Subject;
         }
         else {
@@ -1086,8 +1104,8 @@ function CalDayAllDataBind(oAppointment, order) {
         var pSubject;
 
         if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay + " ~ " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
         }
         else {
             pTime = strLang39;
@@ -1453,7 +1471,7 @@ function TooltipMouseOver(obj, event) {
 
     if (GetAttribute(obj, "datetype") != "2") {
         if (sDateMD != eDateMD)
-            pTime = sDateMD + " " + GetAttribute(obj, "dtstartDisplay") + " ~ " + eDateMD + " " + GetAttribute(obj, "dtendDisplay");
+            pTime = sDateMD + " " + GetAttribute(obj, "dtstartDisplay") + " - " + eDateMD + " " + GetAttribute(obj, "dtendDisplay");
     }
 
     showTooltip_MouseOver(id, event, pTime, subject, scheduletype, scheduleid, location);
