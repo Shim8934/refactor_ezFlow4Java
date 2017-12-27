@@ -650,7 +650,7 @@ var strLang940 = "前へ"
 var strLang941 = "次へ"
 var strLang942 = "総 "
 var strLang943 = "件"
-var strLang944 = "検索結果がありません。";
+var strLang944 = "データが存在ません";
 var strLang945 = "起案者は削除することができません。"
 // TreeViewCtrl.js
 var strLang1001 ="選択した項目がないです。<br>文書だけ印刷しますか?";
@@ -808,10 +808,10 @@ var strOpinionType4 = "004";
 // 2011.06.17 추가
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
-var strLangOpinionType1 = "一般意見";
+var strLangOpinionType1 = "一般";
 var strLangOpinionType2 = "差し戻し";
 var strLangOpinionType3 = "保留意見";
-var strLangOpinionType4 = "差し戻し";
+var strLangOpinionType4 = "引き戻し";
 
 // 2011.06.17 추가
 

@@ -47,12 +47,11 @@
 		
 		    function checkBox_checked(pBoardID, pItemID, evt) {
 		        if (CrossYN()) {
-		            if (evt.currentTarget.checked){
+		            if (evt.currentTarget.checked) {
 		                strListInfo += pBoardID + "@" + pItemID + "," + SSUserID + ";";
-		                console.log("strListInfo = " + strListInfo);
-		        }
-		            else
+					} else {
 		                strListInfo = ReplaceText(strListInfo, pBoardID + "@" + pItemID + "," + SSUserID + ";", "");
+					}
 		        }
 		        else {
 		            if (window.event.srcElement.checked) {
@@ -62,9 +61,11 @@
 		            }
 		        }
 		    }
+		    
 		    function checkBox_checkAll() {
 		        var i = 0;
-		        var checkObj = document.getElementsByName("chk"); //ej
+		        var checkObj = document.getElementsByName("chk");
+		        
 		        for (i = 1; i < document.frmOutbox.length; i++) {
 		            if (document.frmOutbox[i].type == 'checkbox') {
 		                if (document.frmOutbox.checkbox.checked) {
@@ -76,7 +77,6 @@
 		                }
 		            }
 		        }
-		        console.log(strListInfo);//ej
 		    }
 		    function DeleteItem_onclick() {
 		        if (strListInfo == "") {
@@ -93,9 +93,10 @@
 		        var boardList = "";
 		        strListInfoSplit = strListInfoSplit.filter(Boolean);
 		        
-		        for(var i=0;i<strListInfoSplit.length;i++){
+		        for (var i = 0; i < strListInfoSplit.length; i++) {
 		        	var boardId = strListInfoSplit[i].split("@")[0];
-		        	if(boardList.indexOf(boardId)==-1){
+		        	
+		        	if (boardList.indexOf(boardId) == -1) {
 		        		boardList += boardId + ";";
 		        	}
 		        }
@@ -105,16 +106,16 @@
 		        
 	        	var xmlhttp = createXMLHttpRequest();
 		        
-		        for(var i=0;i<boardArrayList.length;i++){
-		        	var itemList="";
+		        for (var i = 0; i < boardArrayList.length; i++) {
+		        	var itemList = "";
 					
-		        	for(var j=0;j<strListInfoSplit.length;j++){
-						if(boardArrayList[i] === strListInfoSplit[j].split("@")[0]){
+		        	for (var j = 0; j < strListInfoSplit.length; j++) {
+						if (boardArrayList[i] === strListInfoSplit[j].split("@")[0]) {
 							itemList += strListInfoSplit[j].split("@")[1] + ";";
 						}
 			        }
 		        	
-					console.log("boardArrayList["+i+"] = " + boardArrayList[i]);
+					console.log("boardArrayList[" + i + "] = " + boardArrayList[i]);
 					console.log("itemList = " + itemList);
 					
 					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + boardId + "&itemList=" + itemList, false);
