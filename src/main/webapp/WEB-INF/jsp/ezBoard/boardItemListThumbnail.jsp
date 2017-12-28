@@ -487,7 +487,7 @@
 		    var strItemList = "";
 		    function DeleteItem_onclick() {
 		        if (gubun == "2") {
-		            if (strListInfo == "") {
+		            if (strListInfo == "" || strListInfo === "undefined") {
 		                alert("<spring:message code='ezBoard.t195'/>");
 		                return;
 		            }
@@ -511,7 +511,7 @@
 		            }
 		        }
 		        else {
-		            if (strListInfo == "") {
+		            if (strListInfo == "" || strListInfo === "undefined") {
 		                alert("<spring:message code='ezBoard.t195'/>");
 		                return;
 		            }
@@ -791,7 +791,7 @@
 		            alert("<spring:message code='ezBoard.t194'/>");
 		            return;
 		        }
-		        if (strListInfo == "") {
+		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t198'/>");
 		            return;
 		        }
