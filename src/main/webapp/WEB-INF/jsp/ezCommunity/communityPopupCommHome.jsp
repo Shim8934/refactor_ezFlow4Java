@@ -408,6 +408,10 @@
 		    
 		    var tempmenuid = "";
 		    function go_menu(btn) {
+		    	if (tempboard != "") {
+		    		document.getElementById(tempboard.getAttribute("TreeCtrl") + "obj").style.display = "none";
+		    	}
+		    	
 		        if (userLevel == "0" || userLevel == "9") {
 		            switch (btn.id) {
 		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";

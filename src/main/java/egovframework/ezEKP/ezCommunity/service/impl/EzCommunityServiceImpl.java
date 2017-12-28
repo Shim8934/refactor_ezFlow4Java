@@ -1942,10 +1942,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		List<String> clubNoList = myCommunityGet(userInfo.getId(), 0, 0, "CNT", userInfo.getTenantId());
 		
-		if (clubNoList.size() % 3 == 0) {
-			totalPage = clubNoList.size() / 3;
+		if (clubNoList.size() % 2 == 0) {
+			totalPage = clubNoList.size() / 2;
 		} else {
-			totalPage = clubNoList.size() / 3 + 1;
+			totalPage = clubNoList.size() / 2 + 1;
 		}
 		
 		logger.debug("mainPage ended.");
@@ -1958,11 +1958,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("myCopNewBoardItem started.");
 		
 		StringBuilder rtnVal = new StringBuilder();
-		
+System.out.println("startRow.size : " + startRow);
+System.out.println("endRow.size : " + endRow);		
 		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST", userInfo.getTenantId());
 
 		logger.debug("clubNoList.size : " + clubNoList.size());
-		
+System.out.println("clubNoList.size : " + clubNoList.size());		
 		rtnVal.append("<ITEM><DATA>");
 		
 		for (String clubNo : clubNoList) {
@@ -2621,11 +2622,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		strHTML.append("<Select name=\"cCateA\">");
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueA(strSelCateA, userInfo));
-		strHTML.append("</Select>");
-		strHTML.append("<Select name=\"cCateB\" class=\"text\" style=\"font-size:11px;\">");
+		strHTML.append("</Select>&nbsp;");
+		strHTML.append("<Select name=\"cCateB\" class=\"text\">");
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueB(strSelCateB, userInfo));
-		strHTML.append("</Select>");
+		strHTML.append("</Select>&nbsp;");
 		strHTML.append("<Select name=\"cCateC\" class=\"text\" style=\"display:none;\">");
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueC(strSelCateC, userInfo));
@@ -5706,9 +5707,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", id);
 		map.put("v_PSTART", pStart);
-		map.put("mariaStart", pStart - 1);
+		map.put("mariaStart", pStart);
 		map.put("v_PEND", pEnd);
-		map.put("mariaEnd", pEnd - pStart);
+		map.put("mariaEnd", pEnd);
 		map.put("v_MODE", mode);
 		map.put("tenantID", tenantID);
 		
