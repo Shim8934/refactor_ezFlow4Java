@@ -529,6 +529,7 @@ CREATE TABLE `jmocha_mail_general` (
   `PREVIEW_H_LIST` int(11) DEFAULT NULL,
   `PREVIEW_H_CONTENT` int(11) DEFAULT NULL,
   `MAIL_SENDER_NAME` varchar(255) DEFAULT NULL,
+  `PREVIEW_SUBTREE` varchar(10) DEFAULT 'N',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

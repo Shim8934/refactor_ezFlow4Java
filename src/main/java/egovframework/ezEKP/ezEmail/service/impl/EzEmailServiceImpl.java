@@ -103,8 +103,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 		List<MailGeneralVO> mailGeneralList = new ArrayList<MailGeneralVO>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
-		
-		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
+		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", tenantId);
+		String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
+		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
+		String inputParams = userIdParam + "&" + usePreviewSubTreeParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailGeneral", inputParams);
@@ -127,6 +129,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewHList((String)obj.get("previewHList"));
         		mailGeneral.setPreviewHContent((String)obj.get("previewHContent"));
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
+        		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -144,6 +147,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewHList("50");
 			mailGeneral.setPreviewHContent("50");
 			mailGeneral.setMailSenderNm("");
+			mailGeneral.setPreviewSubTree("N");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -154,6 +158,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Override
 	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", tenantId);
 		
 		String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
 		String listCountParam = "listCount=" + URLEncoder.encode(mailGeneral.getListCount(), "UTF-8");
@@ -165,6 +170,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String previewHListParam = "previewHList=" + URLEncoder.encode(mailGeneral.getPreviewHList(), "UTF-8");
 		String previewHContentParam = "previewHContent=" + URLEncoder.encode(mailGeneral.getPreviewHContent(), "UTF-8");
 		String mailSenderNameParam = "mailSenderName=" + URLEncoder.encode(mailGeneral.getMailSenderNm(), "UTF-8");
+		String previewSubTreeParam = "previewSubTree=" + URLEncoder.encode(mailGeneral.getPreviewSubTree(), "UTF-8");
+		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -173,7 +180,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam;
+				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);
