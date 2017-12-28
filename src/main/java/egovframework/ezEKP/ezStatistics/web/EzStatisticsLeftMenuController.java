@@ -39,10 +39,8 @@ public class EzStatisticsLeftMenuController {
 	public String statisticsLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-	    String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 	    String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 	    
-	    model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 	    model.addAttribute("use_approvalG", use_approvalG);
 	    
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());

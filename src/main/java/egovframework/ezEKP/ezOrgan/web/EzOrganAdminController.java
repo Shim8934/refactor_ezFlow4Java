@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -78,10 +77,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-	
-	@Autowired
-	private Properties globals;
-	
+		
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -144,7 +140,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			topid = "Top";
 		}
 		
-		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
@@ -157,7 +152,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useDisablePopImap", useDisablePop3Imap);
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
-		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
@@ -419,13 +413,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), tenantID);
         String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), tenantID);
-        String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);    
        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
-        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
         
         logger.debug("deptInfo ended");
         
@@ -1951,8 +1943,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
-        String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
-		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -1969,8 +1959,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
-		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
-        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);	
+		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalForDoc", approvalForDoc);
 		
@@ -2077,7 +2066,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			topID = "Top";
 		}
 		
-		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
@@ -2086,7 +2074,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("topID", topID);
 		model.addAttribute("userInfo", user);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
-		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		

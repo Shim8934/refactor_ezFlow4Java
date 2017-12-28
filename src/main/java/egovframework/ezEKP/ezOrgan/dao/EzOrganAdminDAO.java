@@ -21,7 +21,6 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -76,132 +75,15 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-    
-    private List<OrganDeptVO> getCompanyListForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("tenantID");
-        String isPrimary = (String)map.get("lang");
         
-        logger.debug("getCompanyListForJMocha started. tenantId=" + tenantId + ",isPrimary=" + isPrimary);
-        
-        List<OrganDeptVO> returnValue = new ArrayList<OrganDeptVO>();
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "isPrimary=" + isPrimary;
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getCompanyList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray result = (JSONArray)responseObj.get("result");
-                    
-                    if (result != null) {
-                        for (int i = 0; i < result.size(); i++) {
-                            JSONObject itemObj = (JSONObject)result.get(i);
-                            OrganDeptVO deptVO = new OrganDeptVO();
-                            
-                            deptVO.setCn((String)itemObj.get("companyId"));
-                            deptVO.setDisplayName((String)itemObj.get("displayname"));
-                            deptVO.setDisplayName2((String)itemObj.get("displayname2"));
-                            
-                            returnValue.add(deptVO);
-                        }
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getCompanyListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;               
-    }
-    
     @SuppressWarnings("unchecked")
     private List<OrganDeptVO> getCompanyListForLocal(Map<String, Object> map) throws Exception {
         return (List<OrganDeptVO>) list("EzOrganAdminDAO.getCompanyList", map);
     }
     
 	public List<OrganDeptVO> getCompanyList(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getCompanyListForJMocha(map);
-        } else {
-            return getCompanyListForLocal(map);
-        }       
+		return getCompanyListForLocal(map);       
 	}
-
-    private List<OrganUserVO> getAddJobListForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        String companyId = (String)map.get("v_COMPANYID");
-        String isPrimary = (String)map.get("v_LANGDATA");
-        
-        logger.debug("getAddJobListForJMocha started. tenantId=" + tenantId + ",companyId=" + companyId + ",isPrimary=" + isPrimary);
-        
-        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "companyId=" + companyId;
-        String param3 = "isPrimary=" + isPrimary;
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getAddJobList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray result = (JSONArray)responseObj.get("result");
-                    
-                    if (result != null) {
-                        for (int i = 0; i < result.size(); i++) {
-                            JSONObject itemObj = (JSONObject)result.get(i);
-                            OrganUserVO userVO = new OrganUserVO();
-                            
-                            userVO.setCn((String)itemObj.get("userId"));
-                            userVO.setDisplayName((String)itemObj.get("displayname"));
-                            userVO.setDescription(((String)itemObj.get("description")));
-                            userVO.setTitle((String)itemObj.get("title"));
-                            userVO.setMail((String)itemObj.get("mail"));
-                            userVO.setTelephoneNumber((String)itemObj.get("telephoneNumber"));
-                            userVO.setCompany((String)itemObj.get("company"));
-                            userVO.setExtensionAttribute4((String)itemObj.get("extensionAttribute4"));
-                            
-                            returnValue.add(userVO);
-                        }
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getAddJobListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;                       
-    }
 	
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getAddJobListForLocal(Map<String, Object> map) throws Exception {
@@ -209,72 +91,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public List<OrganUserVO> getAddJobList(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getAddJobListForJMocha(map);
-        } else {
-            return getAddJobListForLocal(map);
-        }       
+		return getAddJobListForLocal(map);       
 	}
-
-    private List<OrganUserVO> getUserAddJobListForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        String userId = (String)map.get("v_CN");
-        String isPrimary = (String)map.get("v_LANGDATA");
-        
-        logger.debug("getUserAddJobListForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",isPrimary=" + isPrimary);
-        
-        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "userId=" + userId;
-        String param3 = "isPrimary=" + isPrimary;
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserAddJobList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray result = (JSONArray)responseObj.get("result");
-                    
-                    if (result != null) {
-                        for (int i = 0; i < result.size(); i++) {
-                            JSONObject itemObj = (JSONObject)result.get(i);
-                            OrganUserVO userVO = new OrganUserVO();
-                            
-                            userVO.setCn((String)itemObj.get("userId"));
-                            userVO.setDepartment((String)itemObj.get("deptId"));
-                            userVO.setTitle((String)itemObj.get("title"));
-                            userVO.setDisplayName((String)itemObj.get("displayName"));
-                            userVO.setDescription((String)itemObj.get("deptName"));
-                            userVO.setCompany((String)itemObj.get("companyName"));
-                            userVO.setTitle1((String)itemObj.get("title1"));
-                            userVO.setTitle2((String)itemObj.get("title2"));
-                            
-                            returnValue.add(userVO);
-                        }
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getUserAddJobListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;                               
-    }
 	
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getUserAddJobListForLocal(Map<String, Object> map) throws Exception {
@@ -282,157 +100,17 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public List<OrganUserVO> getUserAddJobList(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getUserAddJobListForJMocha(map);
-        } else {
-            return getUserAddJobListForLocal(map);
-        }       
+		return getUserAddJobListForLocal(map);       
 	}
-	
-    private List<OrganUserVO> getPermissionListForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        String companyId = (String)map.get("v_COMPANYID");
-        String type = (String)map.get("v_TYPE");
-        String isPrimary = (String)map.get("v_LANGDATA");
-        int startRow = (int)map.get("v_PSTARTROW");
-        int endRow = (int)map.get("v_PENDROW");
-        
-        logger.debug("getPermissionListForJMocha started. tenantId=" + tenantId + ",companyId=" + companyId 
-                + ",type=" + type + ",isPrimary=" + isPrimary + ",startRow=" + startRow
-                + ",endRow=" + endRow);
-        
-        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "companyId=" + companyId;
-        String param3 = "type=" + type;
-        String param4 = "isPrimary=" + isPrimary;
-        String param5 = "startRow=" + startRow;
-        String param6 = "endRow=" + endRow;
-        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getPermissionList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray result = (JSONArray)responseObj.get("result");
-                    
-                    if (result != null) {
-                        for (int i = 0; i < result.size(); i++) {
-                            JSONObject itemObj = (JSONObject)result.get(i);
-                            OrganUserVO userVO = new OrganUserVO();
-                            
-                            userVO.setCn((String)itemObj.get("userId"));
-                            userVO.setDisplayName((String)itemObj.get("displayname"));
-                            userVO.setDescription(((String)itemObj.get("description")));
-                            userVO.setTitle((String)itemObj.get("title"));
-                            userVO.setMail((String)itemObj.get("mail"));
-                            userVO.setTelephoneNumber((String)itemObj.get("telephoneNumber"));
-                            userVO.setCompany((String)itemObj.get("company"));
-                            userVO.setExtensionAttribute1((String)itemObj.get("extensionAttribute1"));
-                            
-                            returnValue.add(userVO);
-                        }
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getPermissionListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;               
-    }
-	
+		
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getPermissionListForLocal(Map<String, Object> map) throws Exception {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.getPermissionList", map);
     }
 	
 	public List<OrganUserVO> getPermissionList(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getPermissionListForJMocha(map);
-        } else {
-            return getPermissionListForLocal(map);
-        }       
+		return getPermissionListForLocal(map);       
 	}
-
-    private List<OrganUserVO> getRetireListForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        int page = (Integer)map.get("v_PAGE");
-        int rowPerPage = (Integer)map.get("v_ROWPERPAGE");
-        
-        logger.debug("getRetireListForJMocha started. tenantId=" + tenantId + ",page=" + page 
-                + ",rowPerPage=" + rowPerPage);
-        
-        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "page=" + page;
-        String param3 = "rowPerPage=" + rowPerPage;
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getRetiredUserList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray result = (JSONArray)responseObj.get("result");
-                    
-                    if (result != null) {
-                        for (int i = 0; i < result.size(); i++) {
-                            JSONObject itemObj = (JSONObject)result.get(i);
-                            OrganUserVO userVO = new OrganUserVO();
-                            
-                            userVO.setCn((String)itemObj.get("userId"));
-                            userVO.setDisplayName((String)itemObj.get("displayName"));
-                            userVO.setDisplayName2((String)itemObj.get("displayName2"));
-                            userVO.setDescription((String)itemObj.get("deptName"));  
-                            userVO.setDescription2((String)itemObj.get("deptName2"));
-                            userVO.setTitle((String)itemObj.get("title"));
-                            userVO.setTitle2((String)itemObj.get("title2"));  
-                            userVO.setExtensionAttribute10((String)itemObj.get("role"));
-                            userVO.setExtensionAttribute102((String)itemObj.get("role2")); 
-                            userVO.setExtensionAttribute14((String)itemObj.get("empCode"));
-                            userVO.setUpdateDT((String)itemObj.get("updateDt"));
-                            
-                            returnValue.add(userVO);
-                        }
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getRetireListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;               
-    }
 	
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getRetireListForLocal(Map<String, Object> map) throws Exception {
@@ -440,59 +118,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public List<OrganUserVO> getRetireList(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getRetireListForJMocha(map);
-        } else {
-            return getRetireListForLocal(map);
-        }       
+		return getRetireListForLocal(map);       
 	}
-
-    private List<OrganUserVO> getUserCnListForJMocha(int tenantID) throws Exception {
-        logger.debug("getUserCnListForJMocha started. tenantID=" + tenantID);
-        
-        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
-        
-        String param1 = "tenantId=" + tenantID;
-        String inputParams = param1;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserIdList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray result = (JSONArray)responseObj.get("result");
-                    
-                    if (result != null) {
-                        for (int i = 0; i < result.size(); i++) {
-                            JSONObject itemObj = (JSONObject)result.get(i);
-                            OrganUserVO userVO = new OrganUserVO();
-                            
-                            userVO.setCn((String)itemObj.get("userId"));
-                            
-                            returnValue.add(userVO);
-                        }
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getUserCnListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;                       
-    }
     
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getUserCnListForLocal(int tenantID) throws Exception {
@@ -501,52 +128,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     // 퇴직자 포함하여 사용자 아이디 목록을 반환한다.
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getUserCnListForJMocha(tenantID);
-        } else {
-            return getUserCnListForLocal(tenantID);
-        }       
+    	return getUserCnListForLocal(tenantID);       
     }	
-
-    private int getUserCountForJMocha(int tenantId) throws Exception {
-        logger.debug("getUserCountForJMocha started. tenantId=" + tenantId);
-                
-        int returnValue = 0;
-        
-        String param1 = "tenantId=" + tenantId;
-        String inputParams = param1;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserCount";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = ((Long)result.get("count")).intValue();
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getUserCountForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;
-    }
     
     private int getUserCountForLocal(int tenantID) throws Exception {
         return (int) select("EzOrganAdminDAO.userCount", tenantID);
@@ -554,273 +137,28 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
     public int getUserCount(int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getUserCountForJMocha(tenantID);
-        } else {
-            return getUserCountForLocal(tenantID);
-        }       
+    	return getUserCountForLocal(tenantID);       
     }	
-    
-    private OrganUserVO getUserInfoForJMocha(Map<String, Object> map) throws Exception {
-        String userId = (String)map.get("v_CN");
-        String isPrimary = (String)map.get("v_LANGDATA");
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        
-        logger.debug("EzOrganAdminDAO.getUserInfoForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",isPrimary=" + isPrimary);
-        
-        OrganUserVO userVO = null;
-                
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
-        String param3 = "isPrimary=" + URLEncoder.encode(isPrimary, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserInfo";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        userVO = new OrganUserVO();
-                                
-                        userVO.setCn((String)result.get("userId"));                        
-                        userVO.setDisplayName((String)result.get("displayname"));
-                        userVO.setDisplayName1((String)result.get("displayname1"));
-                        userVO.setDisplayName2((String)result.get("displayname2"));
-                        userVO.setMail((String)result.get("mail"));
-                        userVO.setMailNickName((String)result.get("mailNickname"));
-                        userVO.setUpnName((String)result.get("upnname"));
-                        userVO.setDepartment((String)result.get("deptId"));
-                        userVO.setDescription((String)result.get("description"));
-                        userVO.setDescription1((String)result.get("description1"));
-                        userVO.setDescription2((String)result.get("description2"));
-                        userVO.setPhysicalDeliveryOfficeName((String)result.get("physicalDeliveryOfficename"));
-                        userVO.setCompany((String)result.get("company"));
-                        userVO.setCompany1((String)result.get("company1"));
-                        userVO.setCompany2((String)result.get("company2"));
-                        userVO.setTitle((String)result.get("title"));
-                        userVO.setTitle1((String)result.get("title1"));
-                        userVO.setTitle2((String)result.get("title2"));                  
-                        userVO.setTelephoneNumber((String)result.get("telephoneNumber"));
-                        userVO.setHomePhone((String)result.get("homePhone"));
-                        userVO.setMobile((String)result.get("mobile"));
-                        userVO.setFacsimileTelephoneNumber((String)result.get("facsimileTelephoneNumber"));
-                        userVO.setStreetAddress((String)result.get("streetAddress"));
-                        userVO.setPostalCode((String)result.get("postalCode"));
-                        userVO.setInfo((String)result.get("info"));                        
-                        userVO.setExtensionAttribute1((String)result.get("extensionattribute1"));
-                        userVO.setExtensionAttribute2((String)result.get("extensionattribute2"));
-                        userVO.setExtensionAttribute3((String)result.get("extensionattribute3"));
-                        userVO.setExtensionAttribute4((String)result.get("extensionattribute4"));
-                        userVO.setExtensionAttribute5((String)result.get("extensionattribute5"));
-                        userVO.setExtensionAttribute6((String)result.get("extensionattribute6"));
-                        userVO.setExtensionAttribute7((String)result.get("extensionattribute7"));
-                        userVO.setExtensionAttribute8((String)result.get("extensionattribute8"));
-                        userVO.setExtensionAttribute9((String)result.get("extensionattribute9"));
-                        userVO.setExtensionAttribute10((String)result.get("extensionattribute10"));
-                        userVO.setExtensionAttribute101((String)result.get("extensionattribute101"));
-                        userVO.setExtensionAttribute102((String)result.get("extensionattribute102"));
-                        userVO.setExtensionAttribute11((String)result.get("extensionattribute11"));
-                        userVO.setExtensionAttribute12((String)result.get("extensionattribute12"));
-                        userVO.setExtensionAttribute13((String)result.get("extensionattribute13"));
-                        userVO.setExtensionAttribute14((String)result.get("extensionattribute14"));
-                        userVO.setExtensionAttribute15((String)result.get("extensionattribute15"));
-                        userVO.setAdsPath((String)result.get("adsPath"));                        
-                        userVO.setUpdateDT((String)result.get("updatedt"));
-                        userVO.setType((String)result.get("type"));
-                        userVO.setDisplayNamePrintable((String)result.get("displaynamePrintable"));
-                        userVO.setPositionCD((String)result.get("positionCD"));
-                        userVO.setBirth((String)result.get("birth"));
-                        userVO.setBirthType((String)result.get("birthType"));
-                    }                   
-                }
-            }
-        }                       
-        
-        logger.debug("EzOrganAdminDAO.getUserInfoForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return userVO;        
-    }
-	
+    	
     private OrganUserVO getUserInfoForLocal(Map<String, Object> map) throws Exception {
         return (OrganUserVO) select("EzOrganAdminDAO.getUserInfo", map);
     }
 	
 	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getUserInfoForJMocha(map);
-        } else {
-            return getUserInfoForLocal(map);
-        }       
+		return getUserInfoForLocal(map);       
 	}
-	
-    private OrganUserVO getRetireEntryInfoForJMocha(Map<String, Object> map) throws Exception {
-        String userId = (String)map.get("v_CN");
-        String isPrimary = (String)map.get("v_LANGDATA");
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        
-        logger.debug("EzOrganAdminDAO.getRetireEntryInfoForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",isPrimary=" + isPrimary);
-        
-        OrganUserVO userVO = null;
-                
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
-        String param3 = "isPrimary=" + URLEncoder.encode(isPrimary, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getRetiredUserInfo";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        userVO = new OrganUserVO();
-                                
-                        userVO.setCn((String)result.get("userId"));                        
-                        userVO.setDisplayName((String)result.get("displayname"));
-                        userVO.setDisplayName1((String)result.get("displayname1"));
-                        userVO.setDisplayName2((String)result.get("displayname2"));
-                        userVO.setMail((String)result.get("mail"));
-                        userVO.setMailNickName((String)result.get("mailNickname"));
-                        userVO.setUpnName((String)result.get("upnname"));
-                        userVO.setDepartment((String)result.get("deptId"));
-                        userVO.setDescription((String)result.get("description"));
-                        userVO.setDescription1((String)result.get("description1"));
-                        userVO.setDescription2((String)result.get("description2"));
-                        userVO.setPhysicalDeliveryOfficeName((String)result.get("physicalDeliveryOfficename"));
-                        userVO.setCompany((String)result.get("company"));
-                        userVO.setCompany1((String)result.get("company1"));
-                        userVO.setCompany2((String)result.get("company2"));
-                        userVO.setTitle((String)result.get("title"));
-                        userVO.setTitle1((String)result.get("title1"));
-                        userVO.setTitle2((String)result.get("title2"));                  
-                        userVO.setTelephoneNumber((String)result.get("telephoneNumber"));
-                        userVO.setHomePhone((String)result.get("homePhone"));
-                        userVO.setMobile((String)result.get("mobile"));
-                        userVO.setFacsimileTelephoneNumber((String)result.get("facsimileTelephoneNumber"));
-                        userVO.setStreetAddress((String)result.get("streetAddress"));
-                        userVO.setPostalCode((String)result.get("postalCode"));
-                        userVO.setInfo((String)result.get("info"));                        
-                        userVO.setExtensionAttribute1((String)result.get("extensionattribute1"));
-                        userVO.setExtensionAttribute2((String)result.get("extensionattribute2"));
-                        userVO.setExtensionAttribute3((String)result.get("extensionattribute3"));
-                        userVO.setExtensionAttribute4((String)result.get("extensionattribute4"));
-                        userVO.setExtensionAttribute5((String)result.get("extensionattribute5"));
-                        userVO.setExtensionAttribute6((String)result.get("extensionattribute6"));
-                        userVO.setExtensionAttribute7((String)result.get("extensionattribute7"));
-                        userVO.setExtensionAttribute8((String)result.get("extensionattribute8"));
-                        userVO.setExtensionAttribute9((String)result.get("extensionattribute9"));
-                        userVO.setExtensionAttribute10((String)result.get("extensionattribute10"));
-                        userVO.setExtensionAttribute101((String)result.get("extensionattribute101"));
-                        userVO.setExtensionAttribute102((String)result.get("extensionattribute102"));
-                        userVO.setExtensionAttribute11((String)result.get("extensionattribute11"));
-                        userVO.setExtensionAttribute12((String)result.get("extensionattribute12"));
-                        userVO.setExtensionAttribute13((String)result.get("extensionattribute13"));
-                        userVO.setExtensionAttribute14((String)result.get("extensionattribute14"));
-                        userVO.setExtensionAttribute15((String)result.get("extensionattribute15"));
-                        userVO.setAdsPath((String)result.get("adsPath"));                        
-                        userVO.setUpdateDT((String)result.get("updatedt"));
-                        userVO.setType((String)result.get("type"));
-                        userVO.setDisplayNamePrintable((String)result.get("displaynamePrintable"));
-                        userVO.setPositionCD((String)result.get("positionCD"));
-                        userVO.setBirth((String)result.get("birth"));
-                        userVO.setBirthType((String)result.get("birthType"));
-                    }                   
-                }
-            }
-        }                       
-        
-        logger.debug("EzOrganAdminDAO.getRetireEntryInfoForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return userVO;                
-    }
-	
+		
     private OrganUserVO getRetireEntryInfoForLocal(Map<String, Object> map) throws Exception {
         return (OrganUserVO) select("EzOrganAdminDAO.getRetireEntryInfo", map);
     }
 	
 	public OrganUserVO getRetireEntryInfo(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getRetireEntryInfoForJMocha(map);
-        } else {
-            return getRetireEntryInfoForLocal(map);
-        }       
+		return getRetireEntryInfoForLocal(map);       
 	}
 
 	public int companyCheck(Map<String, Object> map) throws Exception{		
 		return (int) select("EzOrganAdminDAO.companyCheck", map);
 	}
-
-    private int companyChildCheckForJMocha(String cn, int tenantID) throws Exception {
-        logger.debug("companyChildCheckForJMocha started. tenantID=" + tenantID + ",cn=" + cn);
-        
-        int returnValue = 0;
-        
-        String param1 = "tenantId=" + tenantID;
-        String param2 = "deptId=" + URLEncoder.encode(cn, "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getDeptSubDeptCnt";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = ((Long)result.get("count")).intValue();
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("companyChildCheckForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;        
-    }
 	
     private int companyChildCheckForLocal(Map<String, Object> map) throws Exception {
         String cn = (String)map.get("cn");
@@ -837,56 +175,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
     // 지정된 부서 바로 아래에 위치한 자식 부서의 수를 반환한다.
 	public int companyChildCheck(String cn, int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return companyChildCheckForJMocha(cn, tenantID);
-        } else {
-        	Map<String,Object> map = new HashMap<String, Object>();
-        	map.put("cn", cn);
-        	map.put("tenantID", tenantID);
-            return companyChildCheckForLocal(map);
-        }       
+    	Map<String,Object> map = new HashMap<String, Object>();
+    	map.put("cn", cn);
+    	map.put("tenantID", tenantID);
+    	
+        return companyChildCheckForLocal(map);       
 	}
-
-    private int userCheckForJMocha(String cn, int tenantID) throws Exception{
-        logger.debug("userCheckForJMocha started. cn=" + cn + ",tenantID=" + tenantID);
-        
-        int returnValue = 0;
-        
-        String param1 = "tenantId=" + tenantID;
-        String param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkUserExists";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = ((Long)result.get("userCount")).intValue();
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("userCheckForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;             
-    }
 	
     private int userCheckForLocal(Map<String, Object> map) throws Exception {
         String cn = (String)map.get("cn");
@@ -902,129 +196,28 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public int userCheck(String cn, int tenantID) throws Exception{
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return userCheckForJMocha(cn, tenantID);
-        } else {
-        	Map<String, Object> map = new HashMap<String, Object>();
-        	
-        	map.put("cn", cn);
-        	map.put("tenantID", tenantID);
-        	
-            return userCheckForLocal(map);
-        }       
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("cn", cn);
+    	map.put("tenantID", tenantID);
+    	
+        return userCheckForLocal(map);       
 	}
-	
-    private int getPermissionListCountForJMocha(Map<String, Object> map) throws Exception {
-        String companyId = (String)map.get("v_COMPANYID");
-        String type = (String)map.get("v_TYPE");
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        
-        logger.debug("getPermissionListCountForJMocha started. companyId=" + companyId 
-                + ",type=" + type + ",tenantId=" + tenantId);
-        
-        int returnValue = 0;
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
-        String param3 = "type=" + URLEncoder.encode(type, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getPermissionListCount";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = ((Long)result.get("count")).intValue();
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getPermissionListCountForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;                     
-    }
-	
+		
     private int getPermissionListCountForLocal(Map<String, Object> map) throws Exception {
         return (int) select("EzOrganAdminDAO.getPermissionListCount", map);
     }
 	
 	public int getPermissionListCount(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getPermissionListCountForJMocha(map);
-        } else {
-            return getPermissionListCountForLocal(map);
-        }       
+		return getPermissionListCountForLocal(map);       
 	}
-
-    private int getRetireListCountForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("v_TENANT_ID");
-        
-        logger.debug("getRetireListCountForJMocha started. tenantId=" + tenantId);
-        
-        int returnValue = 0;
-        
-        String param1 = "tenantId=" + tenantId;
-        String inputParams = param1;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getRetiredUserCount";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = ((Long)result.get("count")).intValue();
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("getRetireListCountForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;        
-    }
 	
     private int getRetireListCountForLocal(Map<String, Object> map) throws Exception {
         return (int)select("EzOrganAdminDAO.getRetireListCount", map);
     }
 	
 	public int getRetireListCount(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getRetireListCountForJMocha(map);
-        } else {
-            return getRetireListCountForLocal(map);
-        }       	    
+		return getRetireListCountForLocal(map);       	    
 	}
 
     private void insertDBData_companyForJMocha(Map<String, Object> map) throws Exception {
@@ -1081,18 +274,16 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void insertDBData_company(Map<String, Object> map) throws Exception {        
         insertDBData_companyForJMocha(map);
 
-        if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
-            try {
-                insertDBData_companyForLocal(map);
-            // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
-            } catch (Exception e) {
-                e.printStackTrace();
-                
-                map.put("v_CLASS", "group");
-                deleteDBDataForJMocha(map);
-                
-                throw e;
-            }
+        try {
+            insertDBData_companyForLocal(map);
+        // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            map.put("v_CLASS", "group");
+            deleteDBDataForJMocha(map);
+            
+            throw e;
         }
 	}
 
@@ -1169,28 +360,26 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void insertDBData_dept(Map<String, Object> map) throws Exception {
 	    insertDBData_deptForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	   
-	        try {
-	            insertDBData_deptForLocal(map);
-	            /**
-	             * Active Directory
-	             * - 부서 추가
-	             * */
-	            if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
-	            	DirContext ctx = conn.setConnection();
-	            	insertDeptInAD(ctx, map);
-	            }
-	        // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
-	        } catch (Exception e) {
-                e.printStackTrace();
-                
-                map.put("v_CLASS", "group");
-                deleteDBDataForJMocha(map);
-                
-                throw e;	            
-	        }
-	    }
+	   
+        try {
+            insertDBData_deptForLocal(map);
+            /**
+             * Active Directory
+             * - 부서 추가
+             * */
+            if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
+            	DirContext ctx = conn.setConnection();
+            	insertDeptInAD(ctx, map);
+            }
+        // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            map.put("v_CLASS", "group");
+            deleteDBDataForJMocha(map);
+            
+            throw e;	            
+        }
 	}
 
     private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
@@ -1285,25 +474,23 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void insertDBData_user(Map<String, Object> map) throws Exception {
 	    insertDBData_userForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	   
-	        try {
-	            insertDBData_userForLocal(map);
-	            //AD를 사용하는 경우 AD에도 사용자 추가
-	            if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
-	            	DirContext ctx = conn.setConnection();
-	            	insertUserInAD(ctx, map);
-	            }
-            // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
-            } catch (Exception e) {
-                e.printStackTrace();
-                
-                map.put("v_CLASS", "user");
-                deleteDBDataForJMocha(map);
-                
-                throw e;                
-            }            
-	    }
+	   
+        try {
+            insertDBData_userForLocal(map);
+            //AD를 사용하는 경우 AD에도 사용자 추가
+            if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
+            	DirContext ctx = conn.setConnection();
+            	insertUserInAD(ctx, map);
+            }
+        // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            map.put("v_CLASS", "user");
+            deleteDBDataForJMocha(map);
+            
+            throw e;                
+        }            
 	}
 	
     private void updateDBData_companyForJMocha(Map<String, Object> map) throws Exception {
@@ -1354,10 +541,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
 	public void updateDBData_company(Map<String, Object> map) throws Exception {        
 	    updateDBData_companyForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            updateDBData_companyForLocal(map);       
-	    }
+	    
+	    updateDBData_companyForLocal(map);       
 	}
 	
     private void updateDBData_deptForJMocha(OrganDeptVO vo) throws Exception {
@@ -1413,10 +598,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception {        
 	    updateDBData_deptForJMocha(vo);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            updateDBData_deptForLocal(vo);       
-	    }
+	    
+	    updateDBData_deptForLocal(vo);       
 	}
 
     private void updateDBData_userForJMocha(OrganUserVO vo) throws Exception {
@@ -1543,73 +726,24 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void updateDBData_user(OrganUserVO vo) throws Exception {
 	    updateDBData_userForJMocha(vo);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) { 	    
-            updateDBData_userForLocal(vo);
-            // AD에도 내용을 수정
-            if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
-            	DirContext ctx = conn.setConnection();            	
-            	if (!vo.getCn().equalsIgnoreCase("MASTERADMIN")) {
-            		logger.debug("update Active Directory data....");
-            		updateUserInAD(ctx, vo, "user");
-            	}            	
-            }
-	    }
-	}
-	
-    private void updatePropertyForJMocha(Map<String, Object> map) throws Exception{
-        int tenantId = (Integer)map.get("v_TENANT_ID");        
-        String cn = (String)map.get("v_CN");
-        String type = (String)map.get("v_CLASS");
-        String propName = (String)map.get("v_PROPNAME");
-        String propValue = (String)map.get("v_PROPVALUE");
-        
-        logger.debug("updatePropertyForJMocha started. tenantId=" + tenantId + ",cn=" + cn + ",type=" + type
-                + ",propName=" + propName + ",propValue=" + propValue);
-
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "cn=" + URLEncoder.encode(cn, "UTF-8");
-        String param3 = "type=" + URLEncoder.encode(type, "UTF-8");
-        String param4 = "propName=" + URLEncoder.encode(propName, "UTF-8");
-        String param5 = "propValue=" + URLEncoder.encode(propValue, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateEntityPropertyValue";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-
-        String resultCode = "Error";
-        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-            }
-        }                       
-        
-        logger.debug("updatePropertyForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
-        
-        if (reasonCode != 0) {
-            throw new Exception("Updating Property Failed!");
+ 	    
+        updateDBData_userForLocal(vo);
+        // AD에도 내용을 수정
+        if (ezCommonService.getTenantConfig("USE_AD", vo.getTenantId()).equalsIgnoreCase("YES")) {
+        	DirContext ctx = conn.setConnection();            	
+        	if (!vo.getCn().equalsIgnoreCase("MASTERADMIN")) {
+        		logger.debug("update Active Directory data....");
+        		updateUserInAD(ctx, vo, "user");
+        	}            	
         }
-    }
-	
+	}
+		
     private void updatePropertyForLocal(Map<String, Object> map) throws Exception{
         update("EzOrganAdminDAO.updateProperty", map);
     }
 	
 	public void updateProperty(Map<String, Object> map) throws Exception{
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            updatePropertyForJMocha(map);
-        } else {
-            updatePropertyForLocal(map);
-        }       
+		updatePropertyForLocal(map);       
 	}
 
     private void restoreRetireEntryForJMocha(Map<String, Object> map) throws Exception {
@@ -1652,27 +786,25 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
 	    restoreRetireEntryForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-	    	try {
-	    		restoreRetireEntryForLocal(map);
-	    		
-	    		/**
-	    		 * Active Directory
-	    		 * - 퇴직자 복구
-	    		 * */
-	    		if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
-	    			DirContext ctx = conn.setConnection();
-	    			//retireUserInAD(ctx, map);	    
-	    			restoreUserInAD(ctx, map);
-	    		}
-	    	} catch (Exception e) {
-	    		// Local에서의 복원 작업이 실패하면 JMocha 테이블에서 다시 퇴직처리를 한다.
-	    		retireDBDataForJMocha(map);
-	    		
-	    		throw e;
-	    	}
-	    }
+	    
+    	try {
+    		restoreRetireEntryForLocal(map);
+    		
+    		/**
+    		 * Active Directory
+    		 * - 퇴직자 복구
+    		 * */
+    		if (ezCommonService.getTenantConfig("USE_AD", (Integer)map.get("v_TENANT_ID")).equalsIgnoreCase("YES")) {
+    			DirContext ctx = conn.setConnection();
+    			//retireUserInAD(ctx, map);	    
+    			restoreUserInAD(ctx, map);
+    		}
+    	} catch (Exception e) {
+    		// Local에서의 복원 작업이 실패하면 JMocha 테이블에서 다시 퇴직처리를 한다.
+    		retireDBDataForJMocha(map);
+    		
+    		throw e;
+    	}
 	}
 
     public void deleteDBDataForJMocha(Map<String, Object> map) throws Exception {
@@ -1733,10 +865,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void deleteDBData(Map<String, Object> map) throws Exception {
 	    deleteDBDataForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            deleteDBDataForLocal(map);       
-	    }
+	    
+	    deleteDBDataForLocal(map);       
 	}
 
     public void moveDBDataForJMocha(Map<String, Object> map) throws Exception {
@@ -1799,10 +929,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void moveDBData(Map<String, Object> map) throws Exception {	    
 	    moveDBDataForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            moveDBDataForLocal(map);       
-	    }
+	    
+	    moveDBDataForLocal(map);       
 	}
 
     private void retireDBDataForJMocha(Map<String, Object> map) throws Exception {
@@ -1836,160 +964,27 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
                 
         logger.debug("retireDBDataForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
     }
-	
-    private void retireDBDataForLocal(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.retireDBData", map);
-    }
-	
+		
 	public void retireDBData(Map<String, Object> map) throws Exception {
 	    retireDBDataForJMocha(map);
-
-	    /* retire 시 기존 사용자 레코드를 유지하는 것으로 로직을 변경하여 제거함
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            retireDBDataForLocal(map);       
-	    }
-	    */
 	}
-
-    private void setAddJobForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("v_TENANT_ID");        
-        String userId = (String)map.get("v_CN");
-        String deptId = (String)map.get("v_DEPTID");
-        String title1 = (String)map.get("v_TITLE1");
-        String title2 = (String)map.get("v_TITLE2");
-        
-        logger.debug("setAddJobForJMocha started. tenantId=" + tenantId + ",userId=" + userId
-                + ",deptId=" + deptId + ",title1=" + title1 + ",title2=" + title2);
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
-        String param3 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
-        String param4 = "title1=" + URLEncoder.encode(title1, "UTF-8");
-        String param5 = "title2=" + URLEncoder.encode(title2, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setAddJob";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-            }
-        }                       
-                
-        logger.debug("setAddJobForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-    }
 	
     private void setAddJobForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.setAddJob", map);
     }
 	
 	public void setAddJob(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            setAddJobForJMocha(map);
-        } else {
-            setAddJobForLocal(map);
-        }       
+		setAddJobForLocal(map);       
 	}
-
-    private void deleteAddJobForJMocha(Map<String, Object> map) throws Exception {
-        int tenantId = (Integer)map.get("v_TENANT_ID");        
-        String userId = (String)map.get("v_CN");
-        String deptId = (String)map.get("v_DEPTID");
-        
-        logger.debug("deleteAddJobForJMocha started. tenantId=" + tenantId + ",userId=" + userId
-                + ",deptId=" + deptId);
-        
-        String param1 = "tenantId=" + tenantId;
-        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
-        String param3 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/deleteAddJob";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-            }
-        }                       
-                
-        logger.debug("deleteAddJobForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-    }
     
     private void deleteAddJobForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteAddJob", map);
     }
     
     public void deleteAddJob(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            deleteAddJobForJMocha(map);
-        } else {
-            deleteAddJobForLocal(map);
-        }
+    	deleteAddJobForLocal(map);
     }
-	
-    private int userCountCheckForJMocha(String cn, int tenantID) throws Exception {
-        logger.debug("userCountCheckForJMocha started. tenantID=" + tenantID + ",cn=" + cn);
-        
-        int returnValue = 0;
-        
-        String param1 = "tenantId=" + tenantID;
-        String param2 = "deptId=" + URLEncoder.encode(cn, "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getDeptUserCount";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = ((Long)result.get("count")).intValue();
-                    }                   
-                }
-            }
-        }                       
-                
-        logger.debug("userCountCheckForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;
-    }
-	    
+		    
     private int userCountCheckForLocal(Map<String, Object> map) {
         String cn = (String)map.get("cn");
         int tenantID = (Integer)map.get("tenantID");
@@ -2005,47 +1000,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
     // 지정된 부서에 속한 사원의 수를 반환한다.
 	public int userCountCheck(String cn, int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return userCountCheckForJMocha(cn, tenantID);
-        } else {
-        	Map<String, Object> map = new HashMap<String, Object>();
-        	map.put("cn", cn);
-        	map.put("tenantID", tenantID);
-            return userCountCheckForLocal(map);
-        }       
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("cn", cn);
+    	map.put("tenantID", tenantID);
+    	
+        return userCountCheckForLocal(map);       
 	}
-	
-	private void setUserPrimaryMailForJMocha(String cn, int tenantID, String email) throws Exception {
-        logger.debug("setUserPrimaryMailForJMocha started. cn=" + cn + ",tenantId=" + tenantID
-                + ",email=" + email);
-        
-        String param1 = "tenantId=" + tenantID;
-        String param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
-        String param3 = "email=" + URLEncoder.encode(email, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setUserMail";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-        
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-            }
-        }                       
-                
-        logger.debug("setUserPrimaryMailForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-	}
-	
+		
 	private void setUserPrimaryMailForLocal(String cn, int tenantID, String email) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -2057,11 +1018,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void setUserPrimaryMail(String cn, int tenantID, String email) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-        	setUserPrimaryMailForJMocha(cn, tenantID, email);
-        } else {
-        	setUserPrimaryMailForLocal(cn, tenantID, email);
-        }
+		setUserPrimaryMailForLocal(cn, tenantID, email);
     }
 	
 	public void restoreRetireEntry_D (Map<String, Object> map) throws Exception {

@@ -952,7 +952,6 @@
 			                <DATA1>g</DATA1>
 			            </CELL>
 			        </ROW>
-                    <c:if test="${IsJMochaStandAlone != 'YES'}">
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t292'/></VALUE>
@@ -1000,7 +999,6 @@
 			                <DATA1>m</DATA1>
 			            </CELL>
 			        </ROW>   
-                    </c:if>
                     </c:if>
 				</ROWS>
 			</LISTVIEWDATA>

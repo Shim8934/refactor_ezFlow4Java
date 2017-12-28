@@ -29,7 +29,7 @@
 				{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value.trim() },
 				{ name : "LicenseKey", value : document.getElementById("LicenseKey").value.trim() },
 				{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() },
-				{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() } }
+				{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() } 
 			  ];
 		
 		if (!paramArray[0].value.match(/^\d+$/)) {

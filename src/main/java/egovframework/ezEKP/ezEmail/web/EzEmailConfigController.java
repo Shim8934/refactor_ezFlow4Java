@@ -119,12 +119,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String userEditor = "";
 		String userIE11Browser = "";
 		String noneActiveX = "YES";
-
 		if ((request.getHeader("User-Agent").contains("rv:11") || request.getHeader("User-Agent").contains("Trident/7.0"))
 				&& ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
 			userIE11Browser = "CK";
 		}
-
+		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 
 		model.addAttribute("userEditor", userEditor);
@@ -155,6 +154,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewWContentSize = mailGeneralVO.getPreviewWContent() == null ? "50" : mailGeneralVO.getPreviewWContent();
 		String refreshInterval = mailGeneralVO.getRefreshInterval() == null ? "" : mailGeneralVO.getRefreshInterval();
 		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
+		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
 		String mailSendObject = "";
 
 		if (keepDeleteLength.equals("30")) {
@@ -177,11 +177,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 		
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId());
+		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", userInfo.getTenantId());
 		
 		logger.debug("listCount=" + listCount + ",previewMode=" + previewMode  + ",previewHListSize=" + previewHListSize
 				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
 				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject
-				 + ",useOnlyInnerMail=" + useOnlyInnerMail);
+				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -193,6 +194,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("keepDeleteLength", keepDeleteLength);
 		model.addAttribute("mailSendObject", mailSendObject);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("previewSubTree", previewSubtree);
+		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
 		
 		logger.debug("mailGeneral ended.");
 		
@@ -226,7 +229,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewHList = doc.getElementsByTagName("PREVIEWHLIST").item(0).getTextContent();
 		String previewHContent = doc.getElementsByTagName("PREVIEWHCONTENT").item(0).getTextContent();
 		String mailSenderNm = "";
+		String previewSubTree = "";
+		
+		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", userInfo.getTenantId());
 
+		if (usePreviewSubTree.equals("YES")) {
+			previewSubTree = doc.getElementsByTagName("PREVIEWSUBTREE").item(0).getTextContent();
+		}
+		
 		if (mode != null && mode.equals("ALL")) {
 			mailSenderNm = doc.getElementsByTagName("MAILSENDERNM").item(0).getTextContent();
 		}
@@ -235,7 +245,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
 				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
-				+ ",mailSenderNm=" + mailSenderNm
+				+ ",mailSenderNm=" + mailSenderNm + ",previewSubTree=" + previewSubTree
 				);
 
 		String rtnValue= "OK";
@@ -252,6 +262,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewHList(previewHList);
 			mailGeneral.setPreviewHContent(previewHContent);	
 			mailGeneral.setMailSenderNm(mailSenderNm);
+			mailGeneral.setPreviewSubTree(previewSubTree);
 			
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
 		} catch (Exception e) {

@@ -87,6 +87,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -94,7 +95,6 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -134,8 +134,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	@Autowired
 	private EzEmailMailReadController ezEmailMailReadController;
-	
-	
+		
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
 	
@@ -250,23 +249,34 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	public Object mMailFolderMailList(HttpServletRequest request, @PathVariable String folderId, @PathVariable String userId, 
 			@RequestParam(value="start", required=true) String start,
 			@RequestParam(value="end", required=true) String end,
+			@RequestParam(value="searchField", required=false) String searchField,
 			@RequestParam(value="search", required=false) String search,
 			@RequestParam(value="filter", required=false) String filter,
+			@RequestParam(value="startDate", required=false) String startDate,
 			@RequestParam(value="endDate", required=false) String endDate) {
 		LOGGER.debug("MOBILE G/W MAIL mMailFolderMailList started.");
 		LOGGER.debug("folderId=" + folderId + ",userId=" + userId + ",start=" + start + ",end=" + end);
-		LOGGER.debug("search=" + search + ",filter=" + filter + ",endDate=" + endDate);
+		LOGGER.debug("searchField=" + searchField + ",search=" + search + ",filter=" + filter);
+		LOGGER.debug("startDate=" + startDate + ",endDate=" + endDate);
 
 		JSONObject result = new JSONObject();
         IMAPAccess ia = null;
 		
 		try {
+			if (searchField == null) {
+				searchField = "";
+			}
+			
 			if (search == null) {
 				search = "";
 			}
 			
 			if (filter == null) {
 				filter = "";
+			}
+
+			if (startDate == null) {
+				startDate = "";
 			}
 			
 			if (endDate == null) {
@@ -277,6 +287,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			JSONArray messageJsonArray = new JSONArray();
 			
+			Date sd = null;
 			Date ed = null;
 			
 			boolean senderReceiverFlag = false;
@@ -301,18 +312,23 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        senderReceiverFlag = folderId.equals(sendName) || folderId.equals(tempName) ? true : false;
 	        
 	        LOGGER.debug("folderId : " + folderId + ", senderReceiverFlag : " + senderReceiverFlag);
+
+			if (!startDate.equals("")) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				sd = sdf.parse(startDate);
+			}
 	        
 			if (!endDate.equals("")) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-//				String receivedDateStr = sdf.format(receivedDate);
+
 				ed = sdf.parse(endDate);
 			}
 	        
 	        folderId = URLDecoder.decode(folderId, "UTF-8");
 	        
 	        LOGGER.debug("userID : " + userId + ",folderId : " + folderId + ",start : " + start 
-	        		+ ",end : " + end + ",search : " + search + ",endDate : " + ed); 
+	        		+ ",end : " + end + ",search : " + search + ",startDate : " + sd + ",endDate : " + ed); 
 	        
 	        Message[] messages = null;
 			
@@ -337,34 +353,35 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (!search.equals("")) {
 				LOGGER.debug("search field not empty");
 
-				String searchField = "SUBJECT&FROM";
-				
-				if (senderReceiverFlag) {
-					searchField = "SUBJECT&TO";
+				if (searchField.isEmpty()) {
+					searchField = "SUBJECT&FROM";
+					
+					if (senderReceiverFlag) {
+						searchField = "SUBJECT&TO";
+					}
 				}
 				
 				final String searchValue = search;
 				
 				LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue + ",endDate=" + endDate);
-				
-				
+								
 				if (!endDate.equals("")) {
 					LOGGER.debug("search field paging");
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, ed, false, null, isUnreadOnly, isImportantOnly);
 				} else {
 					LOGGER.debug("search field not paging");
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
 				}
+				
+				messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, sd, ed, false, null, isUnreadOnly, isImportantOnly, true);
 			} else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, false);
+				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, false, null, isUnreadOnly, false, true);
 			} else if (isImportantOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, false, isImportantOnly);
+				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, false, null, false, isImportantOnly, true);
 			}
-			
+						
 			if (messages == null && !endDate.equals("")) {
 				LOGGER.debug("search field paging");
 				
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, isImportantOnly);
+				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, false, null, isUnreadOnly, isImportantOnly, true);
 			}
 			
 			if (messages == null) {
@@ -376,7 +393,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			int startNo = Integer.parseInt(start);
 			int endNo = Math.min(Integer.parseInt(end), messages.length - 1);
 			
-			LOGGER.debug("isUnreadOnly=" + isUnreadOnly + "isImportantOnly" + isImportantOnly);
+			LOGGER.debug("isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly);
 							
 			LOGGER.debug("Message Length=" + messages.length);
 			
@@ -2981,7 +2998,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("isSentItems", isSentItems);
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
-			mail.put("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
 			
 			if (bodyInfoList != null) { 
 				mail.put("htmlBody", bodyInfoList.get(0));
@@ -3842,6 +3858,48 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		}
 		
 		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo ended.");		
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/config", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getConfigInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		LOGGER.debug("MOBILE G/W MAIL getConfigInfo started.");
+		LOGGER.debug("userId=" + userId);
+			
+		JSONObject data = new JSONObject();
+		JSONObject result = new JSONObject();
+		
+		IMAPAccess ia = null;
+
+		try {			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+		
+			// retrieve the mail general settings from DB.
+			MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(info.getTenantId(), info.getUserId()).get(0);
+
+			LOGGER.debug("mailGeneral=" + mailGeneral);
+			
+			data.put("listCount", mailGeneral.getListCount());
+											
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");			
+		} finally {
+			if (ia != null) {
+				ia.close();		
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL getConfigInfo ended.");		
 		
 		return result;
 	}

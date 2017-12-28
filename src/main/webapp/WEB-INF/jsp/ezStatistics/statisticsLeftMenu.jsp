@@ -20,13 +20,7 @@
 	
     window.onload = function()
     {
-        <c:if test="${IsJMochaStandAlone != 'YES'}">
-//        parent.frames[1].location.href = "Personal/ezStatistics_Connect.aspx";
         parent.frames[1].location.href = "/ezStatistics/statisticsPerSonalMain.do";        
-        </c:if>
-        <c:if test="${IsJMochaStandAlone == 'YES'}">
-        parent.frames[1].location.href = "/ezStatistics/statisticsPerSonalMain.do";
-        </c:if>
     };
 	
     function menu_change(Item) 
@@ -140,14 +134,12 @@
     <body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 	    <div id="left">
 		    <div class="left_admin" title="<spring:message code='ezStatistics.t124' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezStatistics.t124' /></div>      
-            <c:if test="${IsJMochaStandAlone != 'YES'}">
             <h2><span id="PERSONAL" style="display:inline-block;width:100%;" onClick="menu_change('PERSONAL')" ><spring:message code='ezStatistics.t1049' /></span></h2>
             <ul>
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(16)"><spring:message code='ezStatistics.t1047' /></span></li>
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(17)"><spring:message code='ezStatistics.t1045' /></span></li>
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span></li>
             </ul>
-            </c:if>
       	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t2' /></span></h2>
 		    <ul>
 			    <li><span style="display:inline-block;width:100%;" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t1001' /></span></li>
@@ -158,7 +150,7 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(22)"><spring:message code='ezStatistics.kyj1' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(23)"><spring:message code='ezStatistics.kyj2' /></span></li>
 		    </ul>
-            <c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
+            <c:if test="${packageType != 'basic'}">
             <c:if test="${use_approvalG == 'YES'}">
             <h2><span id="APPROVAL" style="display:inline-block;width:100%;" onClick="menu_change('APPROVAL')" ><spring:message code='ezStatistics.t1030' /></span></h2>
 		    <ul>

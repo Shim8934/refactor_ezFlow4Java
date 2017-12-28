@@ -49,7 +49,6 @@
 		    var pisDelete = "${isDelete}";
 		    var pContentClass = "${pContentClass}";
 		    var pNoneActiveX = "${NoneActiveX}";
-		    var jMochaStandAlone = "${jMochaStandAlone}";
 		    var isSecureMail = "${isSecureMail}";
 		    window.onresize = window_onresize;
 		    
@@ -90,11 +89,7 @@
 		        	document.getElementById("HolderSent").style.display = "none";
 		            document.getElementById("HolderElse").style.display = "";
 		        }
-		        
-		        if (jMochaStandAlone.toUpperCase() == "YES") {
-		        	document.getElementById("BoardItem").style.display = "none";
-		        }
-		        
+		        		        
 		        try{
 		            if(ReadCountCheck=="N")
 		            {

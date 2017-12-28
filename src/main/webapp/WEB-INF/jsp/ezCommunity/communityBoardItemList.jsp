@@ -852,7 +852,7 @@
 				    </tr>
 			    </c:if>
 		</table>
-		<div id="tblPageRayer"></div>
+		<div id="tblPageRayer" style="margin-top:5px"></div>
 		<div id="ListInfo" style="DISPLAY:none">${ListInfo }</div>
 		<FONT face="<spring:message code='ezCommunity.t154' />"></FONT>	
 	</body>

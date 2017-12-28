@@ -35,7 +35,7 @@ th{
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
-	color: #666;
+	color: #555;
 	background-color:#f3f3f3;
 	border:1px solid #b6b6b6;
 	padding:2px 10px;
@@ -314,7 +314,8 @@ img { border:0px;}
 }
 #cmhome_type1 .tree{
 	padding:10px 0px;
-	border-top:1px solid #c6c6ca;
+	background-color: #f8f8f8;
+	border-top:1px solid #eee;
 }
 #cmhome_type1 .leftmenu h3 {
 	font-size:12px;
@@ -1361,7 +1362,7 @@ img { border:0px;}
 .btype_list ul li .date{
 	float:right;
 	width:70px;
-	color:#666;
+	color:#555;
 	text-align:right;
 }
 
@@ -1451,7 +1452,7 @@ img { border:0px;}
 	color:#333;
 	height:20px;
 	line-height:20px;
-	border-bottom:2px solid #92969a;
+	border-bottom:1px solid #92969a;
 }
 
 .cmhome_body .type1_h2 {
@@ -1498,10 +1499,10 @@ img { border:0px;}
 
 .cmhomelist{table-layout:fixed; border:0 none !important;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
-.cmhomelist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:6px 4px 6px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/kr/community/type1/cmhometh_bg.gif)  bottom repeat-x; }
+.cmhomelist tr th{text-align:left;border:0px;text-decoration:none; color:#555; font-size:11px; padding:6px 4px 6px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; height:22px}
 .cmhomelist tr th.title{width:100%; text-align:left;}
 
-.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0; height:24px;}
+.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#555; border-bottom:1px solid #ebebed; border-spacing:0; height:32px;}
 .cmhomelist tr td img{vertical-align:middle;}
 .cmhomelist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .cmhomelist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}

@@ -552,6 +552,13 @@ public class EzEmailUtil {
 		// 이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
 		// disposition이 attachment인지 체크하는 조건을 뺐다.
 		//
+		// Content-Type: image/png;
+		//   name=IMG_5729.PNG;
+		//   x-apple-part-url=EB4D7F71-6AF8-40C0-9F14-67B22A5B404E
+		//   Content-Disposition: inline;
+		//   filename=IMG_5729.PNG
+		//   Content-Transfer-Encoding: base64
+		//
 		// 본문인(첨부파일이 아닌) text/plain 혹은 text/html에서 Content-Disposition 헤더가 있는 경우가 있어 
 		// disposition이 attachment인지 체크하는 조건을 다시 추가함
 		// Content-Type: text/plain; charset="UTF-8"
@@ -568,7 +575,9 @@ public class EzEmailUtil {
 		// 예) Content-Type: application/octet-stream;
 		//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 	    //    Content-Transfer-Encoding: base64	    										
-		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+		if ((part.getDisposition() != null
+				&& (part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")))
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
 				|| part.isMimeType("application/*")) {
             double size = part.getSize();
@@ -1185,7 +1194,20 @@ public class EzEmailUtil {
             
         return resultList;
     }
-    
+
+	public Message[] searchFolder (
+			Folder folder, 
+			String searchField, 
+			final String searchValue,
+			Date startDate,
+			Date endDate,
+			boolean searchSubFolder,
+			SearchTerm existingSearchTerm,
+			boolean isUnreadOnly,
+			boolean isImportantOnly) throws Exception {		
+		return this.searchFolder(folder, searchField, searchValue, startDate, endDate, searchSubFolder, existingSearchTerm, isUnreadOnly, isImportantOnly, false);
+	}
+	
 	/**
 	 * searches an open folder for messages matching the specified criterion. 
 	 */
@@ -1198,11 +1220,13 @@ public class EzEmailUtil {
 			boolean searchSubFolder,
 			SearchTerm existingSearchTerm,
 			boolean isUnreadOnly,
-			boolean isImportantOnly
+			boolean isImportantOnly,
+			boolean isFromMobile
 			) throws Exception {
 		Message[] messages = folder.getMessages();
 		
-		logger.debug("searchField=" + searchField + ", endDate=" + endDate + ", isImportantOnly=" + isImportantOnly );
+		logger.debug("searchField=" + searchField + ",startDate=" + startDate + ",endDate=" + endDate + ",isImportantOnly=" + isImportantOnly);
+		logger.debug("isUnreadOnly=" + isUnreadOnly + ",isFromMobile=" + isFromMobile);
 		
 		SearchTerm sTerm = existingSearchTerm; 
 		
@@ -1228,7 +1252,7 @@ public class EzEmailUtil {
 				sTerm = new SearchTerm() {
 				    public boolean match(Message message) {
 			        	String from = getFullFromAddressOfMessage(message);
-			            if (from != null & from.toLowerCase().contains(searchValue.toLowerCase())) {
+			            if (from != null && from.toLowerCase().contains(searchValue.toLowerCase())) {
 			                return true;
 			            }
 				        
@@ -1451,21 +1475,18 @@ public class EzEmailUtil {
 			messages = folder.search(sTerm);
 			logger.debug("UnRead Message Count : " + messages.length);
 		}
-		
 		else if (isImportantOnly) {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
 			
 			messages = folder.search(sTerm);
 			logger.debug("Important Message Count : " + messages.length);
 		} 
-		
 		else {
 //			messages = null;
 		}
 		
-		if (endDate != null) {
-			if(sTerm == null) {// filter search 없을 때
-
+		if (isFromMobile && endDate != null && startDate == null) {
+			if (sTerm == null) { // filter search 없을 때
 				ArrayList<Message> arrayList = new ArrayList<>();
 
 				Date from = endDate;       
@@ -1474,46 +1495,49 @@ public class EzEmailUtil {
 				int end = f.getMessageCount();       
 				long lFrom = from.getTime(); //endDate
 
-				Date rDate;//message Date       
-				long lrDate;//message Date long for  comparing endDate
+				Date rDate; //message Date       
+				long lrDate; //message Date long for comparing endDate
 
 				Message orgMsg[] = f.getMessages();
-				if ( orgMsg.length > 0 ) {
+				
+				if (orgMsg.length > 0) {
 					this.sortMessages(folder, orgMsg, "receivedDate", true);
 					
 					int j = 0;
+					
 					do {                
 						Message testMsg = orgMsg[end-1];         
 						rDate = testMsg.getReceivedDate();         
 						lrDate = rDate.getTime();
 						end--;
+						
 						if (lrDate < lFrom) {
 							arrayList.add(testMsg);
 							j++;
 						}
-					} 
-					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
 				}
 				
 				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 
 				return msg;
-			} else { //filter 있을 때
-				
+			// filter 있을 때				
+			} else {				
 				ArrayList<Message> arrayList = new ArrayList<>();
 				
 				Date from = endDate;       
 				Folder f = folder;
 				
-				int end = f.search(sTerm).length;       
+				Message orgMsg[] = f.search(sTerm);
+				
+				int end = orgMsg.length;       
 				long lFrom = from.getTime(); //endDate
 				
-				Date rDate;//message Date       
-				long lrDate;//message Date long for  comparing endDate       
+				Date rDate; // message Date       
+				long lrDate; // message Date long for comparing endDate       
 				int j = 0;
-				
-				Message orgMsg[] = f.search(sTerm);
-				if ( orgMsg.length > 0 ) {
+								
+				if (orgMsg.length > 0) {
 					this.sortMessages(folder, orgMsg, "receivedDate", true);
 					
 					do {                
@@ -1521,6 +1545,7 @@ public class EzEmailUtil {
 						rDate = testMsg.getReceivedDate();         
 						lrDate = rDate.getTime();
 						end--;
+						
 						if (lrDate < lFrom) {
 							if (isUnreadOnly || isImportantOnly) {
 								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
@@ -1535,9 +1560,9 @@ public class EzEmailUtil {
 								j++;
 							}
 						}
-					} 
-					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
 				}
+				
 				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 				
 				messages = msg;

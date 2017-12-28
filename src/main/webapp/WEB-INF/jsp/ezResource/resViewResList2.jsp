@@ -288,8 +288,11 @@
 							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
 						} else {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
-						}						
-						$("#brdExplain").html(result.resBrd.brdExplain);
+						}
+						
+						var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+						
+						$("#brdExplain").html(resbrdExc);
 						
 						$("#ResourceInfo").modal();
 					}, 
@@ -406,7 +409,7 @@
 				</tr>
 				<tr>
 					<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-					<td><pre><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></pre></td>
+					<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
 				</tr>
          	</table>
         </div>

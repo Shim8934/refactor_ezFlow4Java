@@ -1436,9 +1436,20 @@
 	    			var targetName = evt.target ? evt.target.parentElement.id : event.srcElement.parentElement.id;
 	    			
 	 		        if (targetName.indexOf("menu_") > -1) {
-	 		            clickmenusub = targetName;
+	 		        	clickmenusub = targetName;
+	 		        	var tName = targetName.replace("menu_", "");
+	 		        	
 	 		            if (menuName != clickmenuName) {
-	 		                clickmenuPath = oldPath;
+	 		                /* clickmenuPath = oldPath; */
+	 		                if (clickmenuPath != "") {
+	 		                	if (tName == clickmenuName) {
+									clickmenuPath = clickmenuPath;
+	 		                	} else {
+	 		                		clickmenuPath = oldPath;	
+	 		                	}
+							} else {
+	 		                	clickmenuPath = oldPath;
+							}
 	 		                clickmenuName = targetName.split("menu_")[1];
 	 		            }
 	 		        }

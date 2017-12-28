@@ -782,7 +782,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		SSL = req.getRequestURL().toString();
 		
-		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
 		//초기화면 메일만 사용하고 싶을 때 YES
@@ -805,7 +804,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
-		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
 		model.addAttribute("USE_CIRCULAR", useCircular);
         model.addAttribute("packageType", packageType);

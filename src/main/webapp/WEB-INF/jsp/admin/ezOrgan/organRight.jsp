@@ -292,21 +292,11 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
 				    
-				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));
-				    </c:if>
-                    <c:if test="${IsJMochaStandAlone == 'YES'}">
-                    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 270));
-                    </c:if>
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else{
-				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
-                    </c:if>
-                    <c:if test="${IsJMochaStandAlone == 'YES'}">
-                    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 270));
-                    </c:if>
                     
 				    if (typeof (rtnValue) != "undefined"){
 				        getDeptFullTree(rtnValue);
@@ -389,21 +379,11 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));
-				    </c:if>
-                    <c:if test="${IsJMochaStandAlone == 'YES'}">
-                    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 270));
-                    </c:if>
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
-				    </c:if>
-                    <c:if test="${IsJMochaStandAlone == 'YES'}">
-                    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 270));
-                    </c:if>
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -728,12 +708,10 @@
 		            usermenu1.disabled = false;
 		            usermenu2.disabled = false;
 		            usermenu3.disabled = false;
-		            
-		            <c:if test="${IsJMochaStandAlone != 'YES'}"> 
+		             
 		            usermenu4.disabled = false;
 		            usermenu5.disabled = false;
 		            usermenu6.disabled = false;
-		            </c:if>
 		            
 		            usermenu7.disabled = false;
 		            usermenu8.disabled = false;
@@ -751,11 +729,9 @@
 		            usermenu2.disabled = true;
 		            usermenu3.disabled = true;
 		            
-		            <c:if test="${IsJMochaStandAlone != 'YES'}">
 		            usermenu4.disabled = true;
 		            usermenu5.disabled = true;
 		            usermenu6.disabled = true;
-		            </c:if>
 		            
 		            usermenu7.disabled = true;
 		            usermenu8.disabled = true;
@@ -1482,8 +1458,7 @@
 						</tr>
 						<tr>
 							<td><a class="imgbtn" id="userRetire"><span onClick="Retire_user()"><spring:message code='ezOrgan.t310' /></span></a></td>
-						</tr>
-                        <c:if test="${IsJMochaStandAlone != 'YES'}">      
+						</tr>      
 						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
 							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
 						</tr>
@@ -1499,7 +1474,6 @@
 						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
 							<td><a class="imgbtn" id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></a></td>
 						</tr>
-                        </c:if>
 						<tr>
 							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
 						</tr>

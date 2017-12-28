@@ -179,6 +179,7 @@ function getRecvDocNumber(pDeptID) {
         var name, docnumber;
         var rtnval;
 
+        if (approvalFlag =='G') {
         name = "receiptnumber";
         var field = message.GetListItem(fields, name);
         if (!field) {
@@ -210,6 +211,7 @@ function getRecvDocNumber(pDeptID) {
             SaveFile();
             return true;
         }
+        }
         var rtnVal = setDocNumFormat();
         if (!rtnVal)
             return true;
@@ -218,6 +220,7 @@ function getRecvDocNumber(pDeptID) {
 
     	var result = "";
     	
+    	 if (approvalFlag =='G') {
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -251,6 +254,9 @@ function getRecvDocNumber(pDeptID) {
             SaveFile();
             return true;
         }
+    	 } else {
+    		 
+    	 }
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
@@ -365,4 +371,26 @@ function EmbedContentIntoXML(bodyhtml) {
         }
     }
     return bodyhtml;
+}
+
+function getCurDocNumber() {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getCabinetSN.do",
+		data : {
+			docID : pDocID,
+			deptID : draftDeptID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+       
+	var dataNodes = GetChildNodes(loadXMLString(result));
+    var SN = getNodeText(dataNodes[0]);
+	return SN;
 }

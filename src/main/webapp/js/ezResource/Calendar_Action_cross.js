@@ -281,7 +281,7 @@ function tableListControl_Week()
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
         document.getElementById("divViewHeader").setAttribute("style", "color:#666;");
-        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -601,7 +601,7 @@ function tableListControl_Week()
                 _span.style.color = "#0090d0";
 
                 if (alldayevent == "0")
-                    setNodeText(_span, Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
+                    setNodeText(_span, Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " - " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
                 else
                     setNodeText(_span, strLang126);
 
@@ -722,7 +722,7 @@ function makeTable(xmldom, pNum, dayType) {
 
     _td = document.createElement("TD");
     _span.style.color = "#0090d0";
-    setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
+    setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " - " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
     _td.appendChild(_span);
     _tr.appendChild(_td);
     _table.appendChild(_tr);

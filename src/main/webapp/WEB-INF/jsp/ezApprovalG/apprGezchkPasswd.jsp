@@ -34,6 +34,7 @@
 			        if (trim(document.getElementById("inpPassword").value).length == 0) {
 			            alert("<spring:message code='ezApprovalG.t1746'/>");
 			            document.getElementById("inpPassword").focus();
+			            flag = true;
 			            return;
 			        }
 			        else {
@@ -52,7 +53,8 @@
 					} else {
 							flag = true;
 				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-				            OpenAlertUI(pAlertContent);
+				            alert(pAlertContent); // 추가
+				            //OpenAlertUI(pAlertContent);
 				            return;
 					}
 			    }

@@ -463,7 +463,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isSecureMail", isSecureMail);
 		model.addAttribute("pnFlag", pnFlag);
 		model.addAttribute("pIsCCFg", pIsCCFg);
-		model.addAttribute("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
 		
 		logger.debug("readMail ended.");
 		

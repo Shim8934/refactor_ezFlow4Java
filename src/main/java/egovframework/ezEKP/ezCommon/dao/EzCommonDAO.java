@@ -1,13 +1,11 @@
 package egovframework.ezEKP.ezCommon.dao;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -40,47 +38,6 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	public String getContentInfo(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommonDAO.getContentInfo", map);
 	}
-
-    private String selectUserGetLangForJMocha(String userID, int tenantID) throws Exception {
-        logger.debug("selectUserGetLangForJMocha started. tenantID=" + tenantID + ",userID=" + userID);
-        
-        String returnValue = null;
-        
-        String param1 = "tenantId=" + tenantID;
-        String param2 = "userId=" + URLEncoder.encode(userID, "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserLang";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = (String)result.get("lang");
-                    }                   
-                }
-            }
-        }                       
-        
-        logger.debug("selectUserGetLangForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;
-    }
 	
     private String selectUserGetLangForLocal(String userID, int tenantID) throws Exception {
     	Map<String, Object> map = new HashMap<String, Object>();
@@ -92,53 +49,8 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public String selectUserGetLang(String userID, int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return selectUserGetLangForJMocha(userID, tenantID);
-        } else {
-            return selectUserGetLangForLocal(userID, tenantID);
-        }       
+		return selectUserGetLangForLocal(userID, tenantID);       
 	}
-
-    private String selectUserGetTimeZoneForJMocha(String userID, int tenantID) throws Exception {
-        logger.debug("selectUserGetTimeZoneForJMocha started. tenantID=" + tenantID + ",userID=" + userID);
-        
-        String returnValue = null;
-        
-        String param1 = "tenantId=" + tenantID;
-        String param2 = "userId=" + URLEncoder.encode(userID, "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserTimeZone";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        returnValue = (String)result.get("timeZone");
-                    }                   
-                }
-            }
-        }                       
-        
-        logger.debug("selectUserGetTimeZoneForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;
-    }
 	
     private String selectUserGetTimeZoneForLocal(String userID, int tenantID) throws Exception {
     	Map<String, Object> map = new HashMap<String, Object>();
@@ -150,11 +62,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return selectUserGetTimeZoneForJMocha(userID, tenantID);
-        } else {
-            return selectUserGetTimeZoneForLocal(userID, tenantID);
-        }       
+		return selectUserGetTimeZoneForLocal(userID, tenantID);       
 	}
 	
 	public String getTenantConfig(Map<String, Object> map) throws Exception{
@@ -208,10 +116,8 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	
 	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception {
 	    insertTblUserLocalInfoForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            insertTblUserLocalInfoForLocal(map);               
-	    }
+	    
+	    insertTblUserLocalInfoForLocal(map);               
 	}
 
     private void deleteUserLocalInfoForJMocha(Map<String, Object> map) throws Exception {
@@ -256,214 +162,35 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	
 	public void deleteUserLocalInfo(Map<String, Object> map) throws Exception {
 	    deleteUserLocalInfoForJMocha(map);
-
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            deleteUserLocalInfoForLocal(map);               
-	    }
+	    
+	    deleteUserLocalInfoForLocal(map);               
 	}
-
-	private int getTenantIdByDomainNameForJMocha(Map<String, Object> map) throws Exception {
-		String domainName = (String)map.get("DOMAIN_NAME");
-		
-        logger.debug("getTenantIdByDomainNameForJMocha started. domainName=" + domainName);
-        
-        int returnValue = -1;
-        
-        String inputParams = "domainName=" + URLEncoder.encode(domainName, "UTF-8");
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantIdByDomainName";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    returnValue = ((Long)responseObj.get("result")).intValue();
-                }
-            }
-        }                       
-        
-        logger.debug("getTenantIdByDomainNameForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return returnValue;
-    }
 	
     private int getTenantIdByDomainNameForLocal(Map<String, Object> map) throws Exception {
     	return (Integer) select("EzCommonDAO.getTenantIdByDomainName", map);
     }
 	
 	public int getTenantIdByDomainName(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getTenantIdByDomainNameForJMocha(map);
-        } else {
-            return getTenantIdByDomainNameForLocal(map);
-        }               
+		return getTenantIdByDomainNameForLocal(map);               
 	}
-	
-	private List<TenantServerNameVO> getTenantServerNameListForJMocha() throws Exception {
-		logger.debug("getTenantServerNameListForJMocha started.");
-        
-		List<TenantServerNameVO> list = new ArrayList<TenantServerNameVO>();
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantServerList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray resultArray = (JSONArray)responseObj.get("result");
-                    
-                    for (int i=0; i<resultArray.size(); i++) {
-                		JSONObject obj = (JSONObject)resultArray.get(i);
-                		
-                		TenantServerNameVO vo = new TenantServerNameVO();
-                		
-                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
-                		vo.setServerName((String)obj.get("serverName"));
-                		
-        				list.add(vo);
-                	}
-                }
-            }
-        }                       
-        
-        for(TenantServerNameVO vo : list) {
-        	logger.debug("tenantId=" + vo.getTenantId() + ",serverName=" + vo.getServerName());
-        }
-        
-        logger.debug("getTenantServerNameListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return list;
-    }
-	
+		
 	@SuppressWarnings("unchecked")
 	private List<TenantServerNameVO> getTenantServerNameListForLocal() throws Exception{
 		return (List<TenantServerNameVO>) list("EzCommonDAO.getTenantServerNameList");
     }
 	
 	public List<TenantServerNameVO> getTenantServerNameList() throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getTenantServerNameListForJMocha();
-        } else {
-            return getTenantServerNameListForLocal();
-        }               
+		return getTenantServerNameListForLocal();               
 	}
-	
-	private List<TenantVO> getTenantListForJMocha() throws Exception {
-		logger.debug("getTenantList started.");
-        
-		List<TenantVO> list = new ArrayList<TenantVO>();
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray resultArray = (JSONArray)responseObj.get("result");
-                    
-                    for (int i=0; i<resultArray.size(); i++) {
-                		JSONObject obj = (JSONObject)resultArray.get(i);
-                		
-                		TenantVO vo = new TenantVO();
-                		
-                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
-                		vo.setTenantName((String)obj.get("tenantName"));
-                		
-        				list.add(vo);
-                	}
-                }
-            }
-        }                       
-        
-        for(TenantVO vo : list) {
-        	logger.debug("tenantId=" + vo.getTenantId() + ",tenantName=" + vo.getTenantName());
-        }
-        
-        logger.debug("getTenantList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return list;
-    }
-	
+		
 	@SuppressWarnings("unchecked")
 	private List<TenantVO> getTenantListForLocal() throws Exception {
 		return (List<TenantVO>) list("EzCommonDAO.getTenantList");
     }
 	
 	public List<TenantVO> getTenantList() throws Exception {
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-            return getTenantListForJMocha();
-        } else {
-            return getTenantListForLocal();
-        }               
+		return getTenantListForLocal();               
 	}
-
-	@SuppressWarnings("unchecked")
-	private Map<String, Object> getTenantConfigsForJMocha(int tenantID) throws Exception {
-		logger.debug("getTenantConfigsForJMocha started. tenantID=" + tenantID);
-        
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		String inputParams = "tenantId=" + tenantID;
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantConfigs";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                	map = (Map<String, Object>)responseObj.get("result");
-                }
-            }
-        }                       
-        
-        logger.debug("getTenantConfigsForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        return map;
-    }
 	
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> getTenantConfigsForLocal(int tenantID) throws Exception {
@@ -471,11 +198,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public Map<String, Object> getTenantConfigs(int tenantID) throws Exception {
-		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-			return getTenantConfigsForJMocha(tenantID);
-		} else {
-			return getTenantConfigsForLocal(tenantID);
-		}
+		return getTenantConfigsForLocal(tenantID);
 	}
 	
 	public String getUserConfigInfo(Map<String, Object> map) throws Exception {

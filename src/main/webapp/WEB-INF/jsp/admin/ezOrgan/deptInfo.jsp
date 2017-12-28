@@ -226,23 +226,23 @@
 		      		</table>
 		      	</td> 
 		  	</tr>
-		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
 		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
 		  	</tr>
-		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t222' /></th> 
 		    	<td><input type="text" id=SusinSymbol style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>>
+		  	<tr>
 		    	<th><spring:message code='ezOrgan.t223' /></th> 
 		    	<td><input type="text" id=BalsinPerson style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t224' /></th> 
 		    	<td><input type="text" id=DocManage style="width:97%" maxlength="50"></td>		    	 
 		  	</tr> 
-		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
 		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
 		  	</tr> 
@@ -251,13 +251,13 @@
 		    	<td><input type="text" id=SortNum style="width:97%" maxlength="10"></td> 
 		  	</tr> 
 		  	<c:if test="${approvalFlag == 'G'}">
-		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t227' /></th> 
 		    	<td><input type="checkbox" id=InsDept value="checkbox"></td> 
 		  	</tr> 
 		  	</c:if>
 		  	<c:if test="${approvalFlag == 'G'}">
-		    <tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
+		    <tr> 
 		    	<th><spring:message code='ezOrgan.t990' /></th> 
 		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
 		  	</tr> 

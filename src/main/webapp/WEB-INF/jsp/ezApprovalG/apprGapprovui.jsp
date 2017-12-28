@@ -147,6 +147,8 @@
 			var LastTotalKyulSN = "0";
 			var lastHabYuiSN;
 			var agreeReturnType = "${agreeReturnType}";
+			var curDocNum = "";
+			var draftDeptID = "${draftDeptID}";
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -631,13 +633,19 @@
 		        }
 		        
 		        if (addLastKyulJeYN != "0") {
+		        	var hDocID ;
+					if (pDraftFlag == "HABYUI") {
+						hDocID = pOrgDocID;
+		        	} else {
+		        		hDocID = pDocID;
+		        	}
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",
                 		async : false,
                 		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
                 		data : {
-                				docID     : pDocID,
+                				docID     : hDocID,
                 				flag      : "approvUi"
                 				},
                 		success : function(result){
@@ -1534,6 +1542,31 @@
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
+		    }
+		    
+		    function TotalSave_onclick_Complete() {
+		        DivPopUpHidden();
+		    }
+		    
+		    function getCurDocNumber() {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getCabinetSN.do",
+		    		data : {
+		    			docID : pDocID,
+		    			deptID : draftDeptID
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
+		    	var dataNodes = GetChildNodes(loadXMLString(result));
+		        var SN = getNodeText(dataNodes[0]);
+		    	return SN;
 		    }
 		</script>
 	</head>

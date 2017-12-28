@@ -125,8 +125,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")
-        		|| commonUtil.getPackageType(userInfo.getTenantId()).equals(CommonUtil.PT_BASIC)) {
+        if (commonUtil.getPackageType(userInfo.getTenantId()).equals(CommonUtil.PT_BASIC)) {
             return "redirect:/ezEmail/mailAloneMain.do";
         }
 		
@@ -2478,7 +2477,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String usePortal = "";
 		String url = "";
 		String funCode = "";
-		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
 		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
@@ -2494,7 +2492,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
-		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalEnvironmentMain";
