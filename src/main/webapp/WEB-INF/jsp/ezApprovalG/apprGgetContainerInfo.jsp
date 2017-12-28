@@ -87,6 +87,8 @@
  	        var DocState = "";
  	        var period;
  	        var pDocInfoValue = "1";
+ 	       	var nowDate = "${nowDateUTC}";
+ 	        
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
@@ -125,10 +127,9 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	
-	            var toDay = new Date();
-	            var toDayYear = parseInt(toDay.getFullYear());
-	            var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
+	            
+	            var toDayYear = parseInt(nowDate.substring(0,4));
+	            var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
 	                AddOption(sel_year, i, i);
 	
@@ -152,9 +153,10 @@
 	                document.getElementById("menuapr").style.display = "none";
 	                document.getElementById("menuend").style.display = "";
 	                
-	                var nowyear = new Date().getFullYear();
-	                var nowmonth = new Date().getMonth() + 1;
-	                var nowday = new Date().getDate();
+	                var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10);       
+	                
 					if(approvalFlag == "G") {
 		                if (nowmonth < 10)
 		                    nowmonth = "0" + nowmonth;
@@ -186,14 +188,10 @@
 					}
 						DocListType == "GetDocSearch";
 	                	 var settingDate = new Date();
-	                	     settingDate.setYear(settingDate.getYear() - 1);
+	                	     settingDate.setYear(parseInt(nowDate.substring(0,4)) - 1);
 
-	                     var settingmonth = settingDate.getMonth() + 1;
-	                     var settingday = settingDate.getDate();
-	                     if (settingmonth < 10)
-	                         settingmonth = "0" + settingmonth;
-	                     if (settingday < 10)
-	                         settingday = "0" + settingday;
+	                     var settingmonth = nowDate.substring(5,7);
+	                     var settingday = nowDate.substring(8,10);
 
 	                     condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
 	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
@@ -287,15 +285,9 @@
 		                DocListType == "GetDocSearch";
 		                GetDocSearch();
 		            } else {
-		                var nowyear = new Date().getFullYear();
-		                var nowmonth = new Date().getMonth() + 1;
-		                var nowday = new Date().getDate();
-		
-		                if (nowmonth < 10)
-		                    nowmonth = "0" + nowmonth;
-		
-		                if (nowday < 10)
-		                    nowday = "0" + nowday;
+		            	var nowyear = nowDate.substring(0,4);
+			            var nowmonth = nowDate.substring(5,7);
+			            var nowday = nowDate.substring(8,10);       
 		
 		                condition[9] = nowyear - 1;
 		                condition[10] = nowmonth;
@@ -321,24 +313,12 @@
 	                    }
 	                }
 	                else {
-	                    var nowyear = new Date().getFullYear();
-	                    var nowmonth = new Date().getMonth() + 1;
-	                    var nowday = new Date().getDate();
-
-	                    if (nowmonth < 10)
-	                        nowmonth = "0" + nowmonth;
-
-	                    if (nowday < 10)
-	                        nowday = "0" + nowday;
-
-	                    var settingDate = new Date();
-	                    var settingmonth = settingDate.getMonth() + 1;
-	                    var settingday = settingDate.getDate();
-	                    if (settingmonth < 10)
-	                        settingmonth = "0" + settingmonth;
-	                    if (settingday < 10)
-	                        settingday = "0" + settingday;
-
+	                	var nowyear = nowDate.substring(0,4);
+			            var nowmonth = nowDate.substring(5,7);
+			            var nowday = nowDate.substring(8,10);       
+	                    
+	                    var settingmonth = nowDate.substring(5,7);
+	                    var settingday = nowDate.substring(8,10);
 
 	                    condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
 	                    condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
