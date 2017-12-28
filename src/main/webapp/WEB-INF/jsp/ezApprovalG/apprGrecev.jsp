@@ -610,13 +610,6 @@
 		                return;
 		            }
 		        }
-		
-		        // 현재 채번 차례 정보 가져오기
-		        if (approvalFlag == "S") {
-			        if (LastSignSN == 1 || DraftLastFlag) {
-			        	curDocNum = getCurDocNumber();
-			        } 
-		        }
 		        
 		        if (LastSignSN == 1 || DraftLastFlag)
 		            rtnval = getRecvDocNumber(arr_userinfo[4]);

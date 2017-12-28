@@ -795,12 +795,11 @@ function ListView() {
                             objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
                         else
                             objTd.innerHTML += MakeXMLString(strValue);
-                    }
-                    else {
+                    } else {
                         if (getNodeText(oDatas[10]) != "0"){
-                            objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
+                            objTd.innerHTML = titleImage + strValue + " " + titleOneLineCnt;
                         }else{
-                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
+                        	objTd.innerHTML = titleImage + strValue;
                         }
                     }
                 }
