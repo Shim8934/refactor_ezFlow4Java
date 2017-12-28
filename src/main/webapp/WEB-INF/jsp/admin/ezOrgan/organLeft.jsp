@@ -79,6 +79,10 @@
 		            case 21:
 		                url = "/myoffice/ezEmail/DLmail_list.aspx";
 		                break;
+//s
+		            case 22:
+		            	url = "/admin/ezOrgan/statistics_list.do";
+		                break;
 				}
 				window.open(url,"right");
 			}
@@ -121,6 +125,11 @@
 			</h2>
 			-->
 			<!-- 편지지등록 끝 -->
+			<%-- <spring:message code='main.t58' /> --%>
+			<h2>
+  				<span onClick="goPage(22)" style="display:inline-block;width:100%;">메일박스용량관리</span>
+    			<ul></ul>
+  			</h2>
 			<h2>
 				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 			    <ul></ul>

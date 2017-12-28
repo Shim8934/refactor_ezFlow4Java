@@ -115,5 +115,31 @@
             	CONNECTTIME < SUBDATE(DATE(NOW()), #v_KEEP_LOG_PERIOD#)
 		]]>
 	</delete>
+		
+	<select id="EzSystemAdminDAO.getUserList" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT 	CN,
+					DISPLAYNAME,
+					DISPLAYNAME2,
+					DEPARTMENT,
+					DESCRIPTION,
+					DESCRIPTION2
+			FROM 
+					TBL_USERMASTER
+			WHERE 
+					TENANT_ID=#tenantID#	
+			LIMIT
+				    #STARTPAGE#, #MAXITEMPERPAGE#  
+		]]>
 	
+	</select>
+	
+	<select id="EzSystemAdminDAO.getUserListCount" parameterClass="Integer" resultClass="int">
+		SELECT 	COUNT(CN) 
+		FROM   	
+				TBL_USERMASTER
+		WHERE	
+				TENANT_ID=#TENANTID#
+				
+	</select>
 </sqlMap>
