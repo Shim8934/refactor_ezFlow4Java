@@ -13,6 +13,7 @@
 	        var pUse_Editor = "${userEditor}";
 	        var p_Use_IE11Browser = "${useIE11Browser}";
 	        var pNoneActiveX = "${noneActiveX}";
+	        
 	        window.onload = window_onload;
 	        document.onselectstart = function () { return false; };
 	        function window_onload() {

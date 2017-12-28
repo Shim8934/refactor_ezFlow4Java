@@ -95,7 +95,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	        if (filter.equals("isUnreadOnly")) {
 	        	LOGGER.debug("isUnreadOnly");
 	        	isUnreadOnly = true;
-	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
+	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false, true);
 	        	LOGGER.debug("isUnreadOnly unreadMessage : " + messages.length);
 	        } 
 	        

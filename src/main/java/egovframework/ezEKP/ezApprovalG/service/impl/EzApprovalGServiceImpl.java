@@ -12644,14 +12644,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		//부서 합의 일 경우 원문서 문서번호 채번
 		if (!isHesong) {
-			int a = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
-			if (a > 0) {
+			int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
+			String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
+			if (lastHabyuiCnt > 0) {
 				map.put("v_habDocID", docID);
 				List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
 				
 				if (docState.size() > 0) {
 					if (docState.get(0).getDocState().equals("012")) {
-						cabinetSN = curDocNum;
+						Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
+						cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
+						
 						map.put("v_DOCNO", doc.getElementById("docnumber").html() + getNDigitNum(getNDigitNum(cabinetSN, 6).substring(getNDigitNum(cabinetSN, 6).length()-Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt)));
 						map.put("v_MODE", "APR");
 						ezApprovalGDAO.updateDocNumber(map);

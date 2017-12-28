@@ -563,6 +563,28 @@
 		            	return;
 		            }
 		            
+		            if (addLastKyulJeYN != "0") {
+			        	var hDocID ;
+						if (pDraftFlag == "HABYUI") {
+							hDocID = pOrgDocID;
+			        	} else {
+			        		hDocID = pDocID;
+			        	}
+			        	$.ajax({
+	                		type : "POST",
+	                		dataType : "text",
+	                		async : false,
+	                		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+	                		data : {
+	                				docID     : hDocID,
+	                				flag      : "draft"
+	                				},
+	                		success : function(result){
+	                			totalMemSN = result;
+	                		}
+	                	});
+			        }
+		            
 		            setDrafterAddress();
 		            if (pDraftFlag == "REDRAFT")
 		                delOpinionInfo();
@@ -802,13 +824,19 @@
 		        }
 		        
 		        if (addLastKyulJeYN != "0") {
+		        	var hDocID ;
+					if (pDraftFlag == "HABYUI") {
+						hDocID = pOrgDocID;
+		        	} else {
+		        		hDocID = pDocID;
+		        	}
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",
                 		async : false,
                 		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
                 		data : {
-                				docID     : pDocID,
+                				docID     : hDocID,
                 				flag      : "draft"
                 				},
                 		success : function(result){
