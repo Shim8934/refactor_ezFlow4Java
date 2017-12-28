@@ -521,7 +521,9 @@
 		
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
-		        rtnval = getRecvDocNumber(arr_userinfo[4]);
+		        if (approvalFlag == "G") {
+		        	rtnval = getRecvDocNumber(arr_userinfo[4]);
+		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";
 		            OpenAlertUI(pAlertContent);
