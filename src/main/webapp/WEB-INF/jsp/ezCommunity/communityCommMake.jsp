@@ -191,8 +191,8 @@
 	<body class="mainbody">
 		<h1><spring:message code='ezCommunity.t1011' /></h1>
 	    <div id="mainmenu" style="margin-bottom:10px">
-	        <ul class="on">
-	            <li class="on"><span id="btnDraft" onclick="javascript:check();"><spring:message code='ezCommunity.t1011' /></span></li>
+	        <ul>
+	            <li><span id="btnDraft" onclick="javascript:check();"><spring:message code='ezCommunity.t1011' /></span></li>
 	            <li><span id="btnDraft" onclick="javascript:back();"><spring:message code='ezCommunity.t109' /></span></li>
 	        </ul>
 	    </div>
@@ -320,9 +320,8 @@
 	            </tr>
 			</table> 
 	    </form>	    
-	    <br />
-	    <div class="txt">
-	    	<br>
-	    </div>
+	    <script type="text/javascript">
+            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+        </script>
 	</body>
 </html>

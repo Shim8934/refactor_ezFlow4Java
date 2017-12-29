@@ -1130,7 +1130,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				if(!selType.equals("2")){
 					for(int i=1; i <= Integer.parseInt(selRes); i++) {
-						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input class='inputText' style='width:90%;margin:3px;height:20px' type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -1138,7 +1138,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					selectedNo = 9;
 					
 					for(int i=1; i <= Integer.parseInt(selRes) - 1; i++) {
-						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input class='inputText' style='width:90%;margin:3px;height:20px' type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -1148,7 +1148,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				if (selType.equals("3")) {
 					answerCount = 1;
 					selectedNo = 10;
-					sb.append(egovMessageSource.getMessage("ezCommunity.t654", userInfo.getLocale()) + "<input type = \"text\" size=\"80\" name = \"selJU\">");
+					sb.append(egovMessageSource.getMessage("ezCommunity.t654", userInfo.getLocale()) + "<input class='inputText' style='width:90%;margin:3px;height:20px' type = \"text\" size=\"80\" name = \"selJU\">");
 				}
 			}
 		}
@@ -1466,7 +1466,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			for(CommunityCPollAnswerVO answerVO : answerList) {
 				switch (questionVO.getAnswerType()) {
 					case 1 :
-						sb.append("<tr><td class=\"t2\" width=\"50\" align=\"center\">");
+						sb.append("<tr style='height:25px'><td class=\"t2\" width=\"50\" align=\"center\">");
 						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo());
 						
 						if (isSave == 1) {
@@ -1501,7 +1501,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 						break;
 					case 2 :
-						sb.append("<tr><td class=\"t2\" width=\"50\" align=\"center\">");
+						sb.append("<tr style='height:25px'><td class=\"t2\" width=\"50\" align=\"center\">");
 						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo() + " id=\"pollSelectID_" + questionVO.getQuestionNo() + "_" + answerVO.getAnswerNo() + "\"");
 						
 						if (isSave == 1) {
@@ -1543,7 +1543,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						
 						break;
 					case 3 :
-						sb.append("<tr><td colspan=\"5\" style=\"padding-left:10px\"><b>" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": </b> <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
+						sb.append("<tr style='height:25px'><td colspan=\"5\" style=\"padding-left:10px\"><b>" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": </b> <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
 						sb.append("<input type=hidden name=pollSelect_" + questionVO.getQuestionNo() + ">&nbsp;<a href=\"javascript:etcview('" + egovMessageSource.getMessage("ezCommunity.t207", userInfo.getLocale()) + "', '" + questionVO.getQuestionID() + "' );\" class=\"imgbtn\" ><span>" + egovMessageSource.getMessage("ezCommunity.t689", userInfo.getLocale()) + "</span></a>");
 						sb.append("</td>");
 						sb.append("</tr>");
@@ -1556,7 +1556,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder strHTML = new StringBuilder();
 		String name = pollResGet4(userInfo.getPrimary(), managerVO.getPollRegUser(), tenantID);
 		
-		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr>");
+		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr style='height:25px'>");
 		
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
 			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
@@ -1682,7 +1682,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<td>");
 			
 			if (user.getC_ID().trim().equals(strSysopID)) {
-				sb.append("<img src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
+				sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
 			}
 			
 			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");

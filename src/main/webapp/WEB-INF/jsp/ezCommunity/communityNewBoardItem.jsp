@@ -866,7 +866,8 @@
 					<div id="menu">
 						<ul>
 							<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t155' /></span></li>
-							<li><span onclick="PreviewItem();"><spring:message code='ezCommunity.t1167' /></span></li>
+							<!-- 2017-12-27 장진혁 - 미리보기가 필요하지 않아 보임 주석처리함 -->
+							<%-- <li><span onclick="PreviewItem();"><spring:message code='ezCommunity.t1167' /></span></li> --%>
 						</ul>
 					</div>
 					<div id="close">
@@ -998,7 +999,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-top: 10px; height: 20px; vertical-align: top;">
+				<td style="height: 20px; vertical-align: top;">
 	
 					<c:choose>
 						<c:when test="${isCrossBrowser != true}">

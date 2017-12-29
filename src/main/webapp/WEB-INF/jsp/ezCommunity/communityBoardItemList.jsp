@@ -22,6 +22,12 @@
 		        font:bold;
 		        color:#017bec;
         	}
+        	
+        	#tblList td{
+        		white-space: nowrap;
+        		text-overflow: ellipsis;
+        		overflow:hidden;
+        	}
         </style>
     	
     	<script type="text/javascript">
@@ -785,13 +791,13 @@
 					<c:if test="${boardInfo.gubun != '2'}">
 						<c:choose>
 							<c:when test="${pSortBy == 'A.WriterDeptName'}">
-								<th style="cursor:pointer"  width="150" onClick="SortPage('A.WriterDeptName desc')"><spring:message code='ezCommunity.t241' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+								<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterDeptName desc')"><spring:message code='ezCommunity.t241' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
 							</c:when>
 							<c:when test="${pSortBy == 'A.WriterDeptName desc'}">
-								<th style="cursor:pointer"  width="150" onClick="SortPage('A.WriterDeptName')"><spring:message code='ezCommunity.t241' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+								<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterDeptName')"><spring:message code='ezCommunity.t241' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 							</c:when>
 							<c:otherwise>
-								<th style="cursor:pointer"  width="150" onClick="SortPage('A.WriterDeptName')"><spring:message code='ezCommunity.t241' /></th>
+								<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterDeptName')"><spring:message code='ezCommunity.t241' /></th>
 							</c:otherwise>
 						</c:choose>
 					</c:if>
@@ -852,7 +858,7 @@
 				    </tr>
 			    </c:if>
 		</table>
-		<div id="tblPageRayer" style="margin-top:5px"></div>
+		<div id="tblPageRayer" style="margin-top:10px"></div>
 		<div id="ListInfo" style="DISPLAY:none">${ListInfo }</div>
 		<FONT face="<spring:message code='ezCommunity.t154' />"></FONT>	
 	</body>
