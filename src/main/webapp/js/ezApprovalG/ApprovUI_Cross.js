@@ -3113,7 +3113,7 @@ function getHistory() {
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
 
-    DivPopUpShow(730, 450, URL);
+    DivPopUpShow(740, 450, URL);
 }
 
 function getHistory_Complete() {

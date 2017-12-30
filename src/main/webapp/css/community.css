@@ -35,7 +35,7 @@ th{
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
-	color: #555;
+	color: #777;
 	background-color:#f3f3f3;
 	border:1px solid #b6b6b6;
 	padding:2px 10px;
@@ -192,7 +192,7 @@ img { border:0px;}
 	cursor:pointer;
 	background:url(../images/kr/community/type1/icon_setting.gif) no-repeat 5px 5px;
 	padding:5px 0px 0px 23px;
-	color:#555;
+	color:#666;
  	font-size:12px;
 	height:15px;	
 }
@@ -367,7 +367,7 @@ img { border:0px;}
 	padding:15px;
 	height:62px;
 	font-size:12px;
-	color:#555;
+	color:#666;
 	overflow:auto;
 	line-height:18px;	
 }
@@ -590,7 +590,7 @@ img { border:0px;}
 	padding:15px;
 	height:62px;
 	font-size:12px;
-	color:#555;
+	color:#666;
 	overflow:auto;
 	line-height:18px;	
 }
@@ -813,7 +813,7 @@ img { border:0px;}
 	padding:15px;
 	height:62px;
 	font-size:12px;
-	color:#555;
+	color:#666;
 	overflow:auto;
 	line-height:18px;	
 }
@@ -1037,7 +1037,7 @@ img { border:0px;}
 	padding:15px;
 	height:62px;
 	font-size:12px;
-	color:#555;
+	color:#666;
 	overflow:auto;
 	line-height:18px;	
 }
@@ -1270,7 +1270,7 @@ img { border:0px;}
 	padding:15px;
 	height:62px;
 	font-size:12px;
-	color:#555;
+	color:#666;
 	overflow:auto;
 	line-height:18px;	
 }
@@ -1362,7 +1362,7 @@ img { border:0px;}
 .btype_list ul li .date{
 	float:right;
 	width:70px;
-	color:#555;
+	color:#666;
 	text-align:right;
 }
 
@@ -1499,10 +1499,10 @@ img { border:0px;}
 
 .cmhomelist{table-layout:fixed; border:0 none !important;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
-.cmhomelist tr th{text-align:left;border:0px;text-decoration:none; color:#555; font-size:12px; padding:6px 4px 6px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; height:22px}
+.cmhomelist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:6px 4px 6px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; height:22px}
 .cmhomelist tr th.title{width:100%; text-align:left;}
 
-.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#555; border-bottom:1px solid #ebebed; border-spacing:0; height:32px;}
+.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#666; border-bottom:1px solid #ebebed; border-spacing:0; height:32px;}
 .cmhomelist tr td img{vertical-align:middle;}
 .cmhomelist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .cmhomelist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
