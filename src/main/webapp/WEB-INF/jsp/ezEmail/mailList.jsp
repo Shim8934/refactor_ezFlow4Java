@@ -353,6 +353,8 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWCONTENT", parseInt(pMailPreVDiv));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWSUBTREE", "");
+	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
 	            xmlhttp.send(xmlpara);		  
 		    }

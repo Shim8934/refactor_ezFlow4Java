@@ -309,8 +309,7 @@
 	</head>
 	<body class="cmhome_body">
 		<h1 class="type1_h1"><spring:message code='ezCommunity.t598' /></h1>
-		<br>
-		<br>
+		
 		<form action=/ezCommunity/pollEditOk.do	method=post name=poll_edit id="polledit">
 			<input type="hidden" name="pClubNo" value="<c:out value ='${pClubNo}' />">
 			<input type="hidden" name="managerID" value="<c:out value = '${managerID}' />">
@@ -321,16 +320,15 @@
 			<input type="hidden" name="endPollMonth" id ="endPollMonth" value="">
 			<input type="hidden" name="endPollDay" id ="endPollDay" value="">
 			
-			<table class="content">
+			<table class="content" style="margin-top:12px">
 				<tr>
 					<th><spring:message code='ezCommunity.t599' /></th>
-					<td><textarea name="pollSubject" style="width: 98%;height:130px" readonly><c:out value="${managerVO.pollSubject}" /></textarea></td>
+					<td style="padding:3px"><textarea name="pollSubject" style="width: 98%;height:130px;background-color: #fafafa" readonly><c:out value="${managerVO.pollSubject}" /></textarea></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCommunity.t600' /></th>
 	      			<td>
-	      				<select id="selType" name="selType" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selTypeChange('${questionVO.answerType}');" disabled>
-	      				
+	      				<select id="selType" name="selType" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selTypeChange('${questionVO.answerType}');" disabled>	      				
 	      					<c:choose>
 	      						<c:when test="${questionVO.answerType == '1' }">
 	      							<option value="1" selected><spring:message code='ezCommunity.t601' />
@@ -359,8 +357,7 @@
 	      						<c:otherwise>
 	      							<option value="3"><spring:message code='ezCommunity.t603' />
 	      						</c:otherwise>
-	      					</c:choose>
-	      					
+	      					</c:choose>	      					
 	        			</select>
 	        			
 	        			<select id="selRes1" name="selRes1" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selResChange('${questionVO.answerViewType}');" disabled>
@@ -442,21 +439,19 @@
 	        					<c:otherwise>
 	        						<option value="14"><spring:message code='ezCommunity.t610' />
 	        					</c:otherwise>
-	        				</c:choose>
-	        				
-	        			</select>
-	        			
-	        			<input type="text" id="selRes2" name="selRes2" size="5" value="<c:out value = '${questionVO.answerCount}' />" disabled><spring:message code='ezCommunity.t611' />
+	        				</c:choose>	        				
+	        			</select>	        			
+	        			<input type="text" class="inputText" id="selRes2" name="selRes2" size="5" value="<c:out value = '${questionVO.answerCount}' />" disabled><spring:message code='ezCommunity.t611' />
 	        		</td>
 	    		</tr>
 	    		<tr>
 					<th rowspan="1"><spring:message code='ezCommunity.t612' /></th>
-					<td><input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center"></td>
+					<td><input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center"></td>
 				</tr>
 			</table>
 			
 			<div class="btnposition">
-				<a class="imgbtn"  name="Submit" id="outok" onClick="poll_send();" ><span><spring:message code='ezCommunity.t613' /></span></a>
+				<a class="imgbtn"  name="Submit" id="outok" onClick="poll_send();" ><span><spring:message code='ezCommunity.t678' /></span></a>
 				<a class="imgbtn" name="Submit2" id="outcancel" onClick="history.back();" ><span><spring:message code='ezCommunity.t246' /></span></a>
 			</div>
 		</form>
