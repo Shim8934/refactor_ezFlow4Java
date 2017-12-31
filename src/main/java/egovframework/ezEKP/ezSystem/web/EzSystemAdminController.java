@@ -124,9 +124,19 @@ public class EzSystemAdminController {
 		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
 		userCount--;
 		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
+		boolean isDotNetAdmin = false;
+		
+		if (dotNetIntegration.equals("YES")) {
+			if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1) {
+				isDotNetAdmin = true;
+			}			
+		}
+		
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
 		model.addAttribute("userCount", userCount);
+		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
 		
 		logger.debug("systemMainMenu ended");
 		

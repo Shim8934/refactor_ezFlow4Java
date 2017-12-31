@@ -499,45 +499,35 @@
 						url = "/admin/ezEmail/mailDefaultQuota.do" ;
 						break;
 					case 4:
-						url = "/myoffice/ezEmail/Admin/mail_spamfilter_category.aspx"  ;
-						break;
-					case 5:
-						if (!CrossYN()) {
-							url = "/myoffice/ezEmail/Admin/FormMaker.aspx";
-						} else {
-							url = "/myoffice/ezEmail/Admin/FormMaker_Cross.aspx";
-						}
-						break;
-					case 6:
-						url = "/myoffice/ezEmail/Admin/mail_approve_category.aspx";
-						break;
-					case 7:
-						url = "/myoffice/ezEmail/Admin/Right_DLSendManage.aspx" ;
-						break;
-					case 8:
-						url = "/myoffice/ezEmail/Admin/Right_DLSentItems.aspx";
-						break;
-					case 9:
 						url = "/admin/ezEmail/mailConfigColor.do";
 						break;
-					case 10:
+					case 5:
 						url = "/admin/ezOrgan/retireUserManage.do";
 						break;
-					case 11:
-						url = "/myoffice/ezEmail/Admin/Right_LargeSizeMailManage.aspx";
+					case 6:
+						url = "/ezStatistics/statisticsMailMain.do";
 						break;
-				    case 12:
-				        url = "/admin/ezOrgan/permissionsList.do";
-				        break;
-				    case 13:
-				        url = "/admin/ezOrgan/addJobList.do";
-				        break;
-		            case 20:
-		                url = "/myoffice/ezEmail/Admin/mail_DLMailConfig.aspx";
-		                break;
-		            case 21:
-		                url = "/myoffice/ezEmail/DLmail_list.aspx";
-		                break;
+				    case 7:
+				        url = "/ezStatistics/statisticsMailDept.do";
+					    break;
+			        case 8:
+			            url = "/ezStatistics/statisticsMailUser.do";
+			            break;
+			        case 9:
+			            url = "/ezStatistics/statisticsQuantityDept.do";
+			            break;
+			        case 10:
+			            url = "/ezStatistics/statisticsQuantityUser.do";
+			            break;
+			        case 11:
+			        	url = "/ezStatistics/statisticsMailRecieveLogList.do";
+			        	break;
+			        case 12:
+			        	url = "/ezStatistics/statisticsMailSendLogList.do";
+			        	break;			            
+			        case 13:
+			        	url = "/admin/ezSystem/systemMainMenu.do";
+			        	break;			            
 				}
 				
 				window.open(url, "right");
@@ -571,7 +561,7 @@
 	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>
 	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
-	        <c:if test="${isAdmin == true}">
+	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
     			<ul></ul>  				
@@ -585,13 +575,26 @@
     			<ul></ul>
   			</h2>  			
 			<h2>
-				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
+				<span onClick="goPage(4)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 			    <ul></ul>
 			</h2>
 			<h2>
-				<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
+				<span onClick="goPage(5)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
 			    <ul></ul>
 			</h2>		
+            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(13)" ><spring:message code='main.kms1' /></span>
+            <ul class="on"></ul>
+            </h2>			
+      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezStatistics.t2' /></span></h2>
+		    <ul>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezStatistics.t1001' /></span></li>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='ezStatistics.t1012' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(8)"><spring:message code='ezStatistics.t1018' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(9)"><spring:message code='ezStatistics.t1023' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(10)"><spring:message code='ezStatistics.t1025' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(11)"><spring:message code='ezStatistics.kyj1' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(12)"><spring:message code='ezStatistics.kyj2' /></span></li>
+		    </ul>			
 			</c:if>		        
 	    </div>
 	    <script type="text/javascript">
