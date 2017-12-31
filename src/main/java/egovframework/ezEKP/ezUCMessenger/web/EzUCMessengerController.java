@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezUCMessenger.util.EzUCMessengerUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
@@ -65,7 +66,7 @@ public class EzUCMessengerController {
 	        int tenantId = loginService.getTenantId(serverName);
 	        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 			
-			boolean isUserExists = checkIfUserExistsWithPassword(orgId, orgPw, tenantId);
+			boolean isUserExists = checkIfUserExistsWithPassword(orgId, orgPw, tenantId, request);
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
@@ -76,17 +77,26 @@ public class EzUCMessengerController {
 			e.printStackTrace();
 		}
 		
-		PrintWriter writer = response.getWriter();
+		PrintWriter writer = null;
 		
-		writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		writer.println("<login_check>");
-		writer.printf("<result>%s</result>", result);
-		writer.println();
-		writer.println("<cause></cause>");
-		writer.println("</login_check>");
-		
-		writer.flush();
-		writer.close();
+		try {
+			writer = response.getWriter();
+			
+			writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+			writer.println("<login_check>");
+			writer.printf("<result>%s</result>", result);
+			writer.println();
+			writer.println("<cause></cause>");
+			writer.println("</login_check>");
+			
+			writer.flush();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				try { writer.close(); } catch(Exception e) {}
+			}
+		}
 		
 		logger.debug("loginCheck ended. result=" + result);
 	}
@@ -168,7 +178,7 @@ public class EzUCMessengerController {
 		return orgId;
 	}
     
-	private boolean checkIfUserExistsWithPassword(String id, String pw, int tenantId) throws Exception {
+	private boolean checkIfUserExistsWithPassword(String id, String pw, int tenantId, HttpServletRequest request) throws Exception {
 		logger.debug("checkIfUserExistsWithPassword started. id=" + id + ",tenantId=" + tenantId);
 		
 		boolean isUserExists = false;
@@ -194,6 +204,30 @@ public class EzUCMessengerController {
 	            	
 	            	if (chkADpass.equalsIgnoreCase("TRUE")) {
 	            		isUserExists = true;
+	            		
+	            		String ip = ClientUtil.getClientIP(request);
+	            		String agent = ClientUtil.getClientInfo(request, "agent");
+	            		String os = ClientUtil.getClientInfo(request, "os");
+	            		String browser = "uc messenger";
+	            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
+	            		
+	    				loginVO.setIp(ip);
+	    				
+	    				//IP Address,  마지막 login시간 저장
+	    				loginService.updateUser(loginVO);
+	            		
+	            		//접속 로그정보 저장
+						resultVO.setIp(ip);
+						resultVO.setAgent(agent);
+						resultVO.setOs(os);
+						resultVO.setBrowser(browser);
+						resultVO.setTenantId(tenantId);
+		
+						if (resultVO.getTitle2() == null) {
+							resultVO.setTitle2("");
+						}
+						
+						loginService.insertLog(resultVO);
 	            	}
 	            	
 	            // AD를 사용하지 않는 경우
@@ -209,6 +243,30 @@ public class EzUCMessengerController {
 	        		
 	        		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
 	        			isUserExists = true;
+	        			
+	        			String ip = ClientUtil.getClientIP(request);
+	            		String agent = ClientUtil.getClientInfo(request, "agent");
+	            		String os = ClientUtil.getClientInfo(request, "os");
+	            		String browser = "uc messenger";
+	            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
+	            		
+	    				loginVO.setIp(ip);
+	    				
+	    				//IP Address,  마지막 login시간 저장
+	    				loginService.updateUser(loginVO);
+	            		
+	            		//접속 로그정보 저장
+						resultVO.setIp(ip);
+						resultVO.setAgent(agent);
+						resultVO.setOs(os);
+						resultVO.setBrowser(browser);
+						resultVO.setTenantId(tenantId);
+		
+						if (resultVO.getTitle2() == null) {
+							resultVO.setTitle2("");
+						}
+						
+						loginService.insertLog(resultVO);
 	        		}
 	            }
 				
@@ -231,6 +289,30 @@ public class EzUCMessengerController {
 		            	
 		            	if (chkADpass.equalsIgnoreCase("TRUE")) {
 		            		isUserExists = true;
+		            		
+		            		String ip = ClientUtil.getClientIP(request);
+		            		String agent = ClientUtil.getClientInfo(request, "agent");
+		            		String os = ClientUtil.getClientInfo(request, "os");
+		            		String browser = "uc messenger";
+		            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
+		            		
+		    				loginVO.setIp(ip);
+		    				
+		    				//IP Address,  마지막 login시간 저장
+		    				loginService.updateUser(loginVO);
+		            		
+		            		//접속 로그정보 저장
+							resultVO.setIp(ip);
+							resultVO.setAgent(agent);
+							resultVO.setOs(os);
+							resultVO.setBrowser(browser);
+							resultVO.setTenantId(tenantId);
+			
+							if (resultVO.getTitle2() == null) {
+								resultVO.setTitle2("");
+							}
+							
+							loginService.insertLog(resultVO);
 		            	}
 		            	
 		            // AD를 사용하지 않는 경우
@@ -246,6 +328,30 @@ public class EzUCMessengerController {
 		        		
 		        		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
 		        			isUserExists = true;
+		        			
+		        			String ip = ClientUtil.getClientIP(request);
+		            		String agent = ClientUtil.getClientInfo(request, "agent");
+		            		String os = ClientUtil.getClientInfo(request, "os");
+		            		String browser = "uc messenger";
+		            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
+		            		
+		    				loginVO.setIp(ip);
+		    				
+		    				//IP Address,  마지막 login시간 저장
+		    				loginService.updateUser(loginVO);
+		            		
+		            		//접속 로그정보 저장
+							resultVO.setIp(ip);
+							resultVO.setAgent(agent);
+							resultVO.setOs(os);
+							resultVO.setBrowser(browser);
+							resultVO.setTenantId(tenantId);
+			
+							if (resultVO.getTitle2() == null) {
+								resultVO.setTitle2("");
+							}
+							
+							loginService.insertLog(resultVO);
 		        		}
 					}
 				}

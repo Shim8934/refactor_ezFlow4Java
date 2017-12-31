@@ -27,22 +27,21 @@
 	<body class = "cmhome_body">
 		<form name = "poll_res_ok" action = "/ezCommunity/pollResOk.do" method = "post">
 			<input type = "hidden" name = "code" value = "${code}" />
+			
 			<h1 class = "type1_h1"><spring:message code = 'ezCommunity.t598' /></h1>
-			<div id = "mainmenu">
+			<div id="mainmenu" style="margin-bottom:12px">
 				<ul>
 					<c:set var="t679"><spring:message code='ezCommunity.t679'/></c:set>
 					<c:if test="${pollState == t679 }">
 						<c:choose>
 							<c:when test="${isSave == 0 }">
 								<li><span onclick="javascript:sendIt();" ><spring:message code = 'ezCommunity.t20' /></span></li>
-							</c:when>
-							
+							</c:when>							
 							<c:otherwise>
 								<li><span onclick="javascript:sendIt();" ><spring:message code = 'ezCommunity.t6' /></span></li>
 							</c:otherwise>
 						</c:choose>
-					</c:if>
-					
+					</c:if>					
 					<li><span onclick="goPage()" ><spring:message code = 'ezCommunity.t168' /></span></li>
 				</ul>
 			</div>
@@ -54,10 +53,13 @@
 			<span id = "idSpan">${idSpanValue }</span>
 
 			<c:if test="${pollState != t679 }">
-				<div class = "subtxt" style = "margin:20px 0 0 20px" ><spring:message code = 'ezCommunity.t683' /></div>
+				<div style="font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt"><spring:message code = 'ezCommunity.t683' /></div>
 			</c:if>
 			<c:if test="${pollState == t679 && isSave == 1}">
-				<div class = "subtxt" style = "margin:20px 0 0 20px" ><spring:message code = 'ezCommunity.t684' /></div>
+				<div style="font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt"><spring:message code = 'ezCommunity.t684' /></div>
+			</c:if>
+			<c:if test="${pollState == t679 && isSave != 1}">
+				<div style="font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt">&nbsp;</div>
 			</c:if>
 			
 			<input type = "hidden" name = "isSave" value = "${isSave }" />

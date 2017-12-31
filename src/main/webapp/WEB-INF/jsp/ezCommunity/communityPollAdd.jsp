@@ -20,9 +20,7 @@
         <link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<!-- time picker -->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		
-		
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 	        var ExpireDays = "N";
@@ -224,7 +222,7 @@
 	            }
 
 	            if (trim(poll_add.pollSubject.value) == "") {
-                    alert("<spring:message code='ezCommunity.t592' />");
+                    alert("<spring:message code='ezQuestion.t492' />");
                     poll_add.pollSubject.value = "";
                     poll_add.pollSubject.focus();
                     return false;
@@ -383,36 +381,34 @@
 		</script>
 		
 	</head>
-	<body class = "cmhome_body">
-		<h1 class="type1_h1"><spring:message code='ezCommunity.t598' /></h1>
-    	<br/>
-    	<br/>
-    	
-	    <table class="content">
-	        <form action="/ezCommunity/pollAddOk.do" method="post" name="poll_add" id="polladd">
-	            <input type="hidden" name="mode" value="write">
-	            <input type="hidden" name="code" value="<c:out value = '${code }' />">
-	            <input type="hidden" name="answerViewType" value="<c:out value = '${answerViewType }' />">
-	            <input type="hidden" name="startPollYear" id="startPollYear" value="">
-	            <input type="hidden" name="startPollMonth" id="startPollMonth" value="">
-	            <input type="hidden" name="startPollDay" id="startPollDay" value="">
-	            <input type="hidden" name="endPollYear" id="endPollYear" value="">
-	            <input type="hidden" name="endPollMonth" id="endPollMonth" value="">
-	            <input type="hidden" name="endPollDay" id="endPollDay" value="">
+	<body class="cmhome_body">		
+    	<h1 class="type1_h1"><spring:message code='ezCommunity.t598' /></h1>		
+		    	
+		<form action="/ezCommunity/pollAddOk.do" method="post" name="poll_add" id="polladd">
+            <input type="hidden" name="mode" value="write">
+            <input type="hidden" name="code" value="<c:out value = '${code }' />">
+            <input type="hidden" name="answerViewType" value="<c:out value = '${answerViewType }' />">
+            <input type="hidden" name="startPollYear" id="startPollYear" value="">
+            <input type="hidden" name="startPollMonth" id="startPollMonth" value="">
+            <input type="hidden" name="startPollDay" id="startPollDay" value="">
+            <input type="hidden" name="endPollYear" id="endPollYear" value="">
+            <input type="hidden" name="endPollMonth" id="endPollMonth" value="">
+            <input type="hidden" name="endPollDay" id="endPollDay" value="">
 	            
+	    	<table class="content" style="margin-top:12px">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t599' /></th>
-	                <td><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
+	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t600' /></th>
 	                <td>
-	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;">
+	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">
 	                        <option value="1"><spring:message code='ezCommunity.t601' />
 	                        <option value="2"><spring:message code='ezCommunity.t602' />
 	                        <option value="3"><spring:message code='ezCommunity.t603' />
 	                    </select>
-	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;">
+	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">
 	                    	<option value="0"><spring:message code='ezCommunity.t604' />
 	                        <option value="1"><spring:message code='ezCommunity.t605' />
 	                        <option value="2"><spring:message code='ezCommunity.t606' />
@@ -423,17 +419,16 @@
 	                  		<option value="14"><spring:message code='ezCommunity.t610' />
 	                    </select>
 	                    
-	                    <input type="text" id="selRes2" name="selRes2" onkeydown="return selRes2_onkeydown()" onchange="selRes2_onchange(this);" size="5" maxlength="3">
+	                    <input class="inputText" type="text" id="selRes2" name="selRes2" onkeydown="return selRes2_onkeydown()" onchange="selRes2_onchange(this);" size="5" maxlength="3">
 	                    <spring:message code='ezCommunity.t611' />
 					</td>
 	            </tr>
 	            <tr>
 	                <th rowspan="1"><spring:message code='ezCommunity.t612' /></th>
-	                <td><input type="text" id="Sdatepicker" style="width:80px;text-align:center" > ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" ></td>
+	                <td><input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center" > ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center" ></td>
 	            </tr>
-	        </form>
-	    </table>
-    
+	        </table>
+		</form>    
 	    <div class="btnposition">
 	        <a class="imgbtn" name="Submit" id="outok" onclick="poll_send();"><span><spring:message code='ezCommunity.t613' /></span></a>
 	        <a class="imgbtn" name="Submit2" id="outcancel" onclick="cancel_click();"><span><spring:message code='ezCommunity.t246' /></span></a>

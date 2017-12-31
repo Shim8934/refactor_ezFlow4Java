@@ -136,7 +136,7 @@ function CalendarView(pTagetID) {
 
                     var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
                     if (current_day.getDay() == "6")
-                        oTh.style.color = "#0032cf";
+                        oTh.style.color = "rgb(0, 72, 149)";
                     else if (current_day.getDay() == "0" || isholiday)
                         oTh.style.color = "#ee1c25";
 
