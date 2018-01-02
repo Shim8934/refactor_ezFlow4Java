@@ -206,7 +206,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		
 		logger.debug("contDocView_NoDoc ended");
-
 		
 		return "ezApprovalG/apprGcontDocView_NoDoc";
 	}
@@ -214,22 +213,28 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezApprovalG/getRecordInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecordInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model,@RequestBody String xmlPara) throws Exception{
+		logger.debug("getRecordInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.GetRecordInfo(xmlDom, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getRecordInfo ended");
 		
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/regRecord.do", produces = "text/xml;charset=utf-8")
 	public String regRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("regRecord started");
+
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		
 	    if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
-	    	useIE11Browser ="CK";
+	    	useIE11Browser = "CK";
 	    }
 	    
 	    String regY = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,4);
@@ -246,6 +251,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	    model.addAttribute("regH", regH);
 	    model.addAttribute("regMi", regMi);
 	    
+		logger.debug("regRecord ended");
+
 	    return "ezApprovalG/apprGregrecord";
 	}
 	 
@@ -1039,8 +1046,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		  model.addAttribute("tRegSn", tRegSn);
 		  model.addAttribute("tVolNo", tVolNo);
 		  
-		logger.debug("printFormCabInfo ended");
-
+		  logger.debug("printFormCabInfo ended");
 			
 		  return "/ezApprovalG/apprGprintFormCabInfo";
 	}
@@ -1410,7 +1416,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     	String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
     	Document doc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
 		String saveSendBoxFlag = doc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
-		logger.debug("saveSendBoxFlag=" + saveSendBoxFlag);
+		logger.debug("saveSendBoxFlag= " + saveSendBoxFlag);
 		
     	if (saveSendBoxFlag.equals("Y")) {
     		flag = true;

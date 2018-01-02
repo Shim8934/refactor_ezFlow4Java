@@ -236,7 +236,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (usePreviewSubTree.equals("YES")) {
 			previewSubTree = doc.getElementsByTagName("PREVIEWSUBTREE").item(0).getTextContent();
 		}
-		
+
 		if (mode != null && mode.equals("ALL")) {
 			mailSenderNm = doc.getElementsByTagName("MAILSENDERNM").item(0).getTextContent();
 		}
