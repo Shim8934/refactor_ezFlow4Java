@@ -81,6 +81,12 @@
 	                                    TDRows.item(i).innerHTML = "&nbsp;";
 	                                }
 	                            }
+	                            if (TDRows.item(i).id == "doctitle") { // 제목 태그제거 로직
+									var str = TDRows.item(i).innerHTML;
+									// str = str.replace(/(<([^>]+)>)/gi, ""); 태그 제거
+									str = "<XMP>"+str+"</XMP>";  // 태그 무효화
+									TDRows.item(i).innerHTML = str;
+	                            }
 	                        }
 	                    }
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
