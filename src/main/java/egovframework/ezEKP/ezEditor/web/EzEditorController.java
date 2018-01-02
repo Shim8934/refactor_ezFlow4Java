@@ -366,12 +366,21 @@ public class EzEditorController extends EgovFileMngUtil{
 			logger.debug("The file size is too big.");
 			resultCode = "1";
 			
-		} else if (fileData.startsWith("data:")) { //이미지 파일이 아닌경우 fileData앞에 data:이 붙음.
-			logger.debug("The file is not image.");
-			resultCode = "2";
-			
 		} else {
 			logger.debug("fileType=" + fileType + ", rootId=" + rootId);
+			
+			if (fileData.startsWith("data:")) { //fileData앞에 data:이 붙어있을 경우
+				logger.debug("The fileData start with data:.");
+				
+				String[] fileDatas = fileData.split(",");
+				if (fileDatas[0].indexOf("image") > -1) {
+					fileData = fileDatas[1];
+				} else {
+					model.addAttribute("resultCode", "2");
+					logger.debug("tfxSimpleUpload ended. resultCode=" + resultCode);
+					return "ezEditor/tfxSimpleUpload";
+				}
+			}
 			
 			String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 			String realPath = commonUtil.getRealPath(request);
@@ -469,12 +478,21 @@ public class EzEditorController extends EgovFileMngUtil{
 			logger.debug("The file size is too big.");
 			resultCode = "1";
 			
-		} else if (fileData.startsWith("data:")) { //이미지 파일이 아닌경우 fileData앞에 data:이 붙음.
-			logger.debug("The file is not image.");
-			resultCode = "2";
-			
 		} else {
 			logger.debug("fileType=" + fileType + ", rootId=" + rootId);
+			
+			if (fileData.startsWith("data:")) { //fileData앞에 data:이 붙어있을 경우
+				logger.debug("The fileData start with data:.");
+				
+				String[] fileDatas = fileData.split(",");
+				if (fileDatas[0].indexOf("image") > -1) {
+					fileData = fileDatas[1];
+				} else {
+					model.addAttribute("resultCode", "2");
+					logger.debug("tfxSimpleUpload ended. resultCode=" + resultCode);
+					return "ezEditor/tfxSimpleUpload";
+				}
+			}
 			
 			String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 			String realPath = commonUtil.getRealPath(request);
@@ -507,9 +525,8 @@ public class EzEditorController extends EgovFileMngUtil{
 				
 				resultCode = "1";
 			} finally {
-				try {
-					fileOuputStream.close();
-				} catch (Exception e2) {
+				if (fileOuputStream != null) {
+					try { fileOuputStream.close(); } catch (Exception e) {}
 				}
 			}
 			

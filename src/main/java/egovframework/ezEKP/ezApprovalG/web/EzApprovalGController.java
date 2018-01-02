@@ -3057,7 +3057,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getExtTotalAttachSize.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getExtTotalAttachSize(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
-		logger.debug("getExtTotalAttachSizestarted.");
+		logger.debug("getExtTotalAttachSize started.");
 
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -3065,7 +3065,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.getTotalAttachSize(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("getExtTotalAttachSize result =" + result );
-		logger.debug("getExtTotalAttachSize started.");
+		logger.debug("getExtTotalAttachSize ended.");
 
 		return result;
 	}

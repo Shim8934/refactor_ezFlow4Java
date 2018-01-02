@@ -3481,8 +3481,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int page = Integer.parseInt(request.getParameter("page"));
-		int startRow = (3 * (page - 1)) + 1;
-		int endRow = 3 * page;
+		int startRow = 2 * (page - 1);
+		int endRow = 2;
 		
 		logger.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
 		

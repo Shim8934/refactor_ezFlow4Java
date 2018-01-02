@@ -265,6 +265,8 @@
                 	return;
                 }
                 
+                var j = 0;
+                
                 for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
                     var copno;
 
@@ -332,10 +334,11 @@
                         table.style.border = "0";
                         div.appendChild(table);
                         document.getElementById("mycommunity").appendChild(div);
+                        j = 0;
                     }
 
                     var tr = document.createElement("TR");
-                    if (i % 2 != 0) {
+                    if (j % 2 == 0) {
                     	tr.style.backgroundColor = "#f8f8f8"; 
                     }
                     var td = document.createElement("TD");
@@ -377,9 +380,15 @@
                     tr.appendChild(td3);
                     tr.appendChild(td4);
                     table.appendChild(tr);
+                    
+                    j++;
                 }
                 
-                document.getElementById("tblPageRayer").style.display = "none";
+                if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
+                	var str = "<spring:message code = 'ezCommunity.t926' />";
+                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:200px;text-align:center;border-radius:3px;background-color:#f8f8f8'><div style='margin-top:92px;color:#777'>" + str + "</div></div>";
+                }
+                //document.getElementById("tblPageRayer").style.display = "none";
 	        }
 
 	        var BlockSize = 10;
@@ -595,7 +604,7 @@
                 
                 document.getElementById("categorytab").appendChild(ul);
                 
-                document.getElementById("tblPageRayer").style.display = "";
+                //document.getElementById("tblPageRayer").style.display = "";
 	        }
 	        
 	        function getcategoryname(val) {
@@ -1231,15 +1240,14 @@
 			                    <li id="categorycop" class="icon_tabpartBorder" onclick ="change_tab('categorycop')"><span><span class="icon_tabpart"></span><spring:message code = 'ezCommunity.t2006' /></span></li>
 			                </ul>
 			            </div>
-			            <div id ="mycommunity" style="margin-top:10px"></div>
+			            <div id ="mycommunity" style="height:497px"></div>
 			            <div id ="categorycommunity" style="display:none;">
 			                <div class="tabpartMycommunity02" style="margin-top:18px">
 			                    <div class="left_tabpart">
 			                        <ul class="left_tabpartTitle">
 			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t80' /></span></li>
 			                            <li id="type" class="line" onclick ="change_tab('TYPE')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t81' /></span></li>
-			                        </ul>
-			                        
+			                        </ul>			                        
 			                        <div class="left_tabpartList_layout" id ="categorytab"></div>
 			                    </div>
 			                    
@@ -1255,18 +1263,16 @@
 			                                    <input id="keyword" name="keyword" onkeydown ="key_down(event)" />
 			                                    <a class="imgbtn"><span onclick ="copsearch()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			                                </p>
-			                            </div>
-			                            
+			                            </div>			                            
 			                            <div id ="categorylist"></div>
 			                        </div>
 			                    </div>
 			                </div>
 			            </div>
-			            
-			            <div id="tblPageRayer" style="text-align:center"></div>
 			        </td>
 			    </tr>
 			</table>
+			<div id="tblPageRayer" style="text-align:center;margin-top:3px;"></div>
 		</div>
 	</body>
 </html>
