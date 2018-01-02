@@ -6887,8 +6887,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (href != null) {
 			String[] arry = href.split("/");
 			
-			if (arry.length >= 7 && arry[4].length() == 4) {
-				rtnValue = arry[4];
+			if (arry.length >= 7 && arry[7].length() == 4) {
+				rtnValue = arry[7];
 			}
 		}
 		
