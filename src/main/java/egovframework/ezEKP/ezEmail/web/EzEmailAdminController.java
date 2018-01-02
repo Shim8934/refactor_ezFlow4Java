@@ -88,6 +88,8 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailDistributionList.do")
 	public String mailDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailDistributionList started.");
+		
 		//관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
@@ -108,6 +110,7 @@ public class EzEmailAdminController {
 		model.addAttribute("listCompany", listCompany);
 		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
 		
+		logger.debug("mailDistributionList ended.");
 		return "admin/ezEmail/mailDistributionList";
 	}
 	
@@ -175,7 +178,9 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailAddDistributionList.do")
 	public String mailAddDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-        //관리자 권한체크
+		logger.debug("mailAddDistributionList started.");
+		
+		//관리자 권한체크
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         if (auth == null) {
             return "cmm/error/adminDenied";
@@ -191,6 +196,7 @@ public class EzEmailAdminController {
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
 		
+		logger.debug("mailAddDistributionList ended.");
 		return "admin/ezEmail/mailAddDistributionList";
 	}
 	
@@ -512,12 +518,14 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailConfigColor.do")
 	public String mailConfigColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailConfigColor started.");
         //관리자 권한체크
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         if (auth == null) {
             return "cmm/error/adminDenied";
         }
 	    
+        logger.debug("mailConfigColor ended.");
 		return "admin/ezEmail/mailConfigColor";
 	}
 	
@@ -526,7 +534,9 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailColor.do")
 	public String mailColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-        //관리자 권한체크
+		logger.debug("mailColor started.");
+		
+		//관리자 권한체크
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         if (auth == null) {
             return "cmm/error/adminDenied";
@@ -557,6 +567,7 @@ public class EzEmailAdminController {
 		
 		logger.debug("importanceColor=" + importanceColor + ",inColor=" + inColor + ",outColor=" + outColor);
 		
+		logger.debug("mailColor ended.");
 		return "admin/ezEmail/mailColor";
 	}
 	
@@ -603,7 +614,9 @@ public class EzEmailAdminController {
      */
     @RequestMapping(value="/admin/ezEmail/mailDefaultQuota.do")
     public String mailDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
-        //관리자 권한체크
+    	logger.debug("mailDefaultQuota started.");
+    	
+    	//관리자 권한체크
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         
         if (auth == null) {
@@ -617,6 +630,7 @@ public class EzEmailAdminController {
         model.addAttribute("defaultMax", returnedData[0]/1024);
         model.addAttribute("defaultWarn", returnedData[1]/1024);
         
+        logger.debug("mailDefaultQuota ended.");
         return "admin/ezEmail/mailDefaultQuota";
     }
     
@@ -626,7 +640,9 @@ public class EzEmailAdminController {
     @RequestMapping(value="/admin/ezEmail/mailSaveDefaultQuota.do")
     @ResponseBody
     public String mailSaveDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
-        //관리자 권한체크
+    	logger.debug("mailSaveDefaultQuota started.");
+    	
+    	//관리자 권한체크
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         
         if (auth == null) {
@@ -649,6 +665,7 @@ public class EzEmailAdminController {
             returnValue = "ERROR";            
         }
         
+        logger.debug("mailSaveDefaultQuota ended.");
         return returnValue;
     }    
     
