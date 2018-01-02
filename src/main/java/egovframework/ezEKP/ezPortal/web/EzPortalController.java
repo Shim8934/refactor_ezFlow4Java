@@ -463,6 +463,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
 				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
+
 			}
 		}
 		
