@@ -40,7 +40,6 @@
 					$(".approvalG").show();
 				}
 				
-				
 			    var RtnVal = new Array();
 			    var Para = opener.formContMain_dialogArguments[0];
 			    returnFunction = opener.formContMain_dialogArguments[1];
@@ -57,11 +56,6 @@
 			        InitValue(Para);
 			    }
 			    
-/* 			    if (gMultiDataNum == "1") {
-			        document.getElementById("ParantName").innerHTML = " <font color='gray'> " + gParantName + " </font> ";
-			    } else {
-			        document.getElementById("ParantName").innerHTML = " <font color='gray'> " + gParantName2 + " </font> ";
-			    } */
 			    document.getElementById("ParantName").innerHTML = " <font color='gray'> " + parentContName + " </font> ";
 
 			    initTreeInfo();
