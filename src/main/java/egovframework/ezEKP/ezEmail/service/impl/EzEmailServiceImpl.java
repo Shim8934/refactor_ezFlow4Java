@@ -100,6 +100,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Override
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception {
+		logger.debug("getMailGeneral started. tenantId=" + tenantId + ",userId=" + userId);
+		
 		List<MailGeneralVO> mailGeneralList = new ArrayList<MailGeneralVO>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -152,11 +154,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneralList.add(mailGeneral);
 		}
 		
+		logger.debug("getMailGeneral ended.");
 		return mailGeneralList;
 	}
 	
 	@Override
 	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode) throws Exception {
+		logger.debug("setMailGeneral started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",mode=" + mode);
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", tenantId);
 		
@@ -192,10 +198,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
+        
+        logger.debug("setMailGeneral ended.");
 	}
 	
 	@Override
 	public MailSignatureVO getMailSignature(int tenantId, String pUserID) throws Exception {
+		logger.debug("getMailSignature started. tenantId=" + tenantId + ",pUserID" + pUserID);
+		
 		MailSignatureVO mailSignatureVO = null;
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -224,12 +234,16 @@ public class EzEmailServiceImpl implements EzEmailService {
         	throw new Exception("JGwServer ERROR");
         }
         
+        logger.debug("getMailSignature ended.");
         return mailSignatureVO;
 	}
 
 	@Override
 	public void setMailSignature(int tenantId, String pUserID, String pUseFlag, String pContent1, String pContent2, String pContent3)
 			throws Exception {
+		logger.debug("setMailSignature started.");
+		logger.debug("tenantId=" + tenantId + ",pUserID=" + pUserID + ",pUseFlag=" + pUseFlag);
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String userIdParam = "userId=" + URLEncoder.encode(pUserID + "@" + domainName, "UTF-8");
@@ -250,10 +264,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
+        
+        logger.debug("setMailSignature ended.");
 	}
 	
 	@Override
 	public MailColorVO getMailColor(int tenantId) throws Exception {
+		logger.debug("getMailColor started. tenantId=" + tenantId);
+		
 		MailColorVO vo = null;
 		
 		String inputParams = "tenantId=" + tenantId;
@@ -278,11 +296,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	throw new Exception("Error from JGwServer.");
         }
         
+        logger.debug("getMailColor ended.");
         return vo;
 	}
 	
 	@Override
 	public void setMailColor(int pTenantId, String pImportanceColor, String pInColor, String pOutColor) throws Exception {
+		logger.debug("setMailColor started.");
+		logger.debug("pTenantId=" + pTenantId + ",pImportanceColor=" + pImportanceColor + ",pInColor=" + pInColor + ",pOutColor=" + pOutColor);
+		
 		String tenantIdParam = "tenantId=" + pTenantId;
 		String importanceColorParam = "importanceColor=" + URLEncoder.encode(pImportanceColor, "UTF-8");
 		String inmailColorParam = "inmailColor=" + URLEncoder.encode(pInColor, "UTF-8");
@@ -300,10 +322,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("Error from JGwServer.");
         }
+        
+        logger.debug("setMailColor ended.");
 	}
 	
 	@Override
 	public List<MailDeleteVO> getMailDelete(int tenantId, String userId) throws Exception {
+		logger.debug("getMailDelete started. tenantId=" + tenantId + ",userId=" + userId);
+		
 		List<MailDeleteVO> list = new ArrayList<MailDeleteVO>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -336,12 +362,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	throw new Exception("JGwServer ERROR");
         }
         
+        logger.debug("getMailDelete ended.");
         return list;
 	}
 	
 	@Override
-	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName)
-			throws Exception {
+	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception {
+		logger.debug("setMailDelete started.");
+		logger.debug("tenantId=" + tenantId + ",pUserID=" + pUserID + ",pPath=" + pPath + ",pExpireTime=" + pExpireTime + ",pDeleteUnread=" + pDeleteUnread + ",pFolderName=" + pFolderName);
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String userIdParam = "userId=" + URLEncoder.encode(pUserID + "@" + domainName, "UTF-8");
@@ -362,10 +391,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
+        
+        logger.debug("setMailDelete ended.");
 	}
 	
 	@Override
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception {
+		logger.debug("deleteMailDelete started.");
+		logger.debug("tenantId=" + tenantId + ",pUserID=" + pUserID + ",pFolderPath=" + pFolderPath);
+		
 		if (pFolderPath == null || pFolderPath.trim().equals("")) {
 			logger.error("Cannot delete autoDelete. folderPath is empty.");
 			throw new Exception("Cannot delete autoDelete. folderPath is empty.");
@@ -388,10 +422,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
+        
+        logger.debug("deleteMailDelete ended.");
 	}
 	
 	@Override
 	public List<MailDeleteVO> getMailDeleteList() throws Exception {
+		logger.debug("getMailDeleteList started.");
+		
 		List<MailDeleteVO> list = new ArrayList<MailDeleteVO>();
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailDeleteAll", null);
@@ -418,11 +456,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         	}
         }
         
+        logger.debug("getMailDeleteList ended.");
         return list;
 	}
 	
 	@Override
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception {
+		logger.debug("getMailReserved started. tenantId=" + tenantId + ",pUserId=" + pUserId);
+		
 		List<MailReservationVO> list = new ArrayList<MailReservationVO>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -453,11 +494,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         	}
         }
         
+        logger.debug("getMailReserved ended.");
         return list;
 	}
 	
 	@Override
 	public List<MailReservationVO> getMailReserved2() throws Exception {
+		logger.debug("getMailReserved2 started.");
+		
 		List<MailReservationVO> list = new ArrayList<MailReservationVO>();
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailReserved2", null);
@@ -481,12 +525,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	}
         }
         
+        logger.debug("getMailReserved2 ended.");
 		return list;
 	}
 	
 	@Override
-	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String pUserId, String isReserve)
-			throws Exception {
+	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String pUserId, String isReserve) throws Exception {
+		logger.debug("setMailReserved started.");
+		logger.debug("tenantId=" + tenantId + ",pMessageId=" + pMessageId + ",pSubject=" + pSubject + ",pSendDate=" + pSendDate + ",pUserId=" + pUserId + ",isReserve=" + isReserve);
+		
 		if (!isReserve.equalsIgnoreCase("YES")) {
 			pMessageId = UUID.randomUUID().toString();
 		}
@@ -511,11 +558,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         	throw new Exception("Error from JGwServer.");
         }
         
+        logger.debug("setMailReserved ended. pMessageId=" + pMessageId);
         return pMessageId;
 	}
 	
 	@Override
 	public void deleteMailReserved(String pMessageId) throws Exception {
+		logger.debug("deleteMailReserved started. pMessageId=" + pMessageId);
+		
 		String inputParams = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
@@ -528,10 +578,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("Error from JGwServer.");
         }
+        
+        logger.debug("deleteMailReserved ended.");
 	}
 	
 	@Override
 	public String getMailReservedTime(String pMessageId) throws Exception {
+		logger.debug("getMailReservedTime started. pMessageId=" + pMessageId);
+		
 		String pReservedSaveTime = "";
 		
 		String inputParams = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
@@ -549,11 +603,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	throw new Exception("Error from JGwServer.");
         }
         
+        logger.debug("getMailReservedTime ended.");
         return pReservedSaveTime;
 	}
 	
 	@Override
 	public List<MailReadVO> getMailReadList(int tenantId, String pUserId, String pMessageId) throws Exception {
+		logger.debug("getMailReadList started.");
+		logger.debug("tenantId=" + tenantId + ",pUserId=" + pUserId + ",pMessageId=" + pMessageId);
+		
 		List<MailReadVO> readList = new ArrayList<MailReadVO>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -586,11 +644,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         	}
 		}
 		
+		logger.debug("getMailReadList ended.");
 		return readList;
 	}
 	
 	@Override
 	public List<MailCancelVO> getMailCancelList(String pMessage) throws Exception {
+		logger.debug("getMailCancelList started. pMessage=" + pMessage);
+		
 		List<MailCancelVO> cancelList = new ArrayList<MailCancelVO>();
 		
 		String inputParams = "messageId=" + URLEncoder.encode(pMessage, "UTF-8");
@@ -617,11 +678,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	}
 		}
 		
+		logger.debug("getMailCancelList ended.");
 		return cancelList;
 	}
 	
 	@Override
 	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception {
+		logger.debug("setMailCancelSend started.");
+		logger.debug("tenantId=" + tenantId + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
@@ -656,10 +721,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 		} else {
 			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
 		}
+		
+		logger.debug("setMailCancelSend ended.");
 	}
 
 	@Override
 	public String getMailReceiveMessageId(String pNum) throws Exception {
+		logger.debug("getMailReceiveMessageId started. pNum=" + pNum);
+		
 		String messageId = null;
 		
 		String inputParams = "recallIdx=" + URLEncoder.encode(pNum, "UTF-8");
@@ -675,13 +744,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	messageId = (String)object.get("result");
         }
         
+        logger.debug("getMailReceiveMessageId ended.");
         return messageId;
 	}
 	
 	@Override
 	public void updateMailReceiveDetailInfo(String pNum, List<String[]> receiveDetailList) throws Exception {
-		StringBuilder inputParams = new StringBuilder();
+		logger.debug("updateMailReceiveDetailInfo started.");
 		
+		StringBuilder inputParams = new StringBuilder();
 		inputParams.append("recallIdx=" + URLEncoder.encode(pNum, "UTF-8"));
 		
 		for (String[] receiveDetail : receiveDetailList) {
@@ -700,10 +771,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("Error from JGwServer.");
         }
+        
+        logger.debug("updateMailReceiveDetailInfo ended.");
 	}
 	
 	@Override
 	public List<String> getMailReceiveAddress(String pNum) throws Exception {
+		logger.debug("getMailReceiveAddress started. pNum=" + pNum);
+		
 		List<String> addressList = new ArrayList<String>();
 		
 		String inputParams = "recallIdx=" + URLEncoder.encode(pNum, "UTF-8");
@@ -723,11 +798,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         	}
 		}
 		
+		logger.debug("getMailReceiveAddress ended.");
 		return addressList;
 	}
 	
 	@Override
 	public List<MailPOP3VO> getMailPOP3(int tenantId, String pUserId) throws Exception {
+		logger.debug("getMailPOP3 started. tenantId=" + tenantId + ",pUserId=" + pUserId);
+		
 		List<MailPOP3VO> list = new ArrayList<MailPOP3VO>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -762,11 +840,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         	}
 		}
 		
+		logger.debug("getMailPOP3 ended.");
 		return list;
 	}
 	
 	@Override
 	public void savePop3(int tenantId, String pUserId, String pRet) throws Exception {
+		logger.debug("savePop3 started. tenantId=" + tenantId + ",pUserId=" + pUserId);
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String inputParams = "userId=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
@@ -843,10 +924,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 		if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
+		
+		logger.debug("savePop3 ended.");
 	}
 	
 	@Override
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception {
+		logger.debug("setMailPOP3List started.");
+		logger.debug("tenantId=" + tenantId + ",pUserId=" + pUserId + ",pPop3Server=" + pPop3Server + ",pPop3UserId=" + pPop3UserId);
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		StringBuilder inputParams = new StringBuilder();
@@ -869,10 +955,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 		if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
 			throw new Exception("Error from JGwServer.");
         }
+		
+		logger.debug("setMailPOP3List ended.");
 	}
 	
 	@Override
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception {
+		logger.debug("getMailPOP3List started.");
+		logger.debug("tenantId=" + tenantId + ",pUserId=" + pUserId + ",pPop3Server=" + pPop3Server + ",pPop3UserId=" + pPop3UserId);
+		
 		List<String> list = new ArrayList<String>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -899,6 +990,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			throw new Exception("JGwServer ERROR");
 		}
 		
+		logger.debug("getMailPOP3List ended.");
 		return list;
 	}
 	
@@ -1423,8 +1515,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count)
-			throws Exception {
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception {
+		logger.debug("getMailListT started.");
+		
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
@@ -1494,6 +1587,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			}
 		}
 		
+		logger.debug("getMailListT ended.");
 		return list;
 	}
 	

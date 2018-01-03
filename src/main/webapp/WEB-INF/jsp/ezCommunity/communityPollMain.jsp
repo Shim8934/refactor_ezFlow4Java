@@ -86,7 +86,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table id="tblList" class="cmhomelist" style="width:100%;" >
+		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:12px">
 			<tr>
 				<th style="width:40px;"><spring:message code='ezCommunity.t32' /></th>
 			    <th style="width:150px;"><spring:message code='ezCommunity.t672' /></th>

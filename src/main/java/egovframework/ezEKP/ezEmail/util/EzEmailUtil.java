@@ -552,6 +552,13 @@ public class EzEmailUtil {
 		// 이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
 		// disposition이 attachment인지 체크하는 조건을 뺐다.
 		//
+		// Content-Type: image/png;
+		//   name=IMG_5729.PNG;
+		//   x-apple-part-url=EB4D7F71-6AF8-40C0-9F14-67B22A5B404E
+		//   Content-Disposition: inline;
+		//   filename=IMG_5729.PNG
+		//   Content-Transfer-Encoding: base64
+		//
 		// 본문인(첨부파일이 아닌) text/plain 혹은 text/html에서 Content-Disposition 헤더가 있는 경우가 있어 
 		// disposition이 attachment인지 체크하는 조건을 다시 추가함
 		// Content-Type: text/plain; charset="UTF-8"
@@ -568,7 +575,9 @@ public class EzEmailUtil {
 		// 예) Content-Type: application/octet-stream;
 		//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 	    //    Content-Transfer-Encoding: base64	    										
-		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+		if ((part.getDisposition() != null
+				&& (part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")))
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
 				|| part.isMimeType("application/*")) {
             double size = part.getSize();
@@ -1214,6 +1223,8 @@ public class EzEmailUtil {
 			boolean isImportantOnly,
 			boolean isFromMobile
 			) throws Exception {
+		logger.debug("searchFolder started.");
+		
 		Message[] messages = folder.getMessages();
 		
 		logger.debug("searchField=" + searchField + ",startDate=" + startDate + ",endDate=" + endDate + ",isImportantOnly=" + isImportantOnly);
@@ -1243,7 +1254,7 @@ public class EzEmailUtil {
 				sTerm = new SearchTerm() {
 				    public boolean match(Message message) {
 			        	String from = getFullFromAddressOfMessage(message);
-			            if (from != null & from.toLowerCase().contains(searchValue.toLowerCase())) {
+			            if (from != null && from.toLowerCase().contains(searchValue.toLowerCase())) {
 			                return true;
 			            }
 				        
@@ -1560,6 +1571,7 @@ public class EzEmailUtil {
 			}
 		}
 		
+		logger.debug("searchFolder ended.");
 		return messages;
 	}
 	
@@ -1639,6 +1651,7 @@ public class EzEmailUtil {
 	 * 메일 리스트 정렬 실행 함수
 	 */
 	public void sortMessages(Folder folder, Message[] messages, String sortTypeSpecifier, boolean isAscending) throws Exception {
+		logger.debug("sortMessages started.");
 		logger.debug("sortTypeSpecifier=" + sortTypeSpecifier + ",isAscending=" + isAscending);
 		
 		Comparator<Message> comparator = null;
@@ -1769,6 +1782,8 @@ public class EzEmailUtil {
 		if (comparator != null) {			
 			Arrays.sort(messages, comparator);
 		}
+		
+		logger.debug("sortMessages ended.");
 	}
 	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest) throws MessagingException, IOException {
