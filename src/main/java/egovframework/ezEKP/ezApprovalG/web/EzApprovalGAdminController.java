@@ -237,6 +237,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String secondary= ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String title = "", topID = "";
 		String parentID = request.getParameter("parentID");
+		String contID = request.getParameter("contID");
 		String parentName = "";
 		
 		if (tCheck.equals("fContIns")) {
@@ -251,12 +252,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			topID = "Top";
 		}
 
-		if (parentID != null) {
-			if (!parentID.equalsIgnoreCase("ROOT")) {
-				parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
-			} else {//ezApprovalG.t1539
-				parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
-			}						
+		if (tCheck.equals("fContIns")) {
+			if (contID != null) {
+				if (!contID.equalsIgnoreCase("ROOT")) {
+					parentName = ezApprovalGAdminService.getParentContName(contID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+				} else {//ezApprovalG.t1539
+					parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
+				}
+			}
+		} else {
+			if (parentID != null) {
+				if (!parentID.equalsIgnoreCase("ROOT")) {
+					parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+				} else {//ezApprovalG.t1539
+					parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
+				}
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
