@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
@@ -793,11 +792,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSelect.do")
 	public String formSelect(@CookieValue ("loginCookie") String loginCookie) throws Exception {
+		logger.debug("formSelect started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
+		
+		logger.debug("formSelect ended.");
 		
 		return "admin/ezApprovalG/apprGFormSelect";
 	}
@@ -859,6 +862,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("result : " + result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
+		logger.debug("componentListTransfer ended.");
 		
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
 	}
@@ -1811,7 +1815,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String result = ezApprovalGAdminService.setTaskCode(vo, categoryName, categoryName2, categoryDesc, companyID, userInfo, approvalFlag);
 		
-		logger.debug("setTaskCode started.");
+		logger.debug("setTaskCode ended.");
 		
 		return result;
 	}
@@ -2129,7 +2133,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("checkIE", checkIE);
 		model.addAttribute("pDeptYN", pDeptYN);
 		
-		logger.debug("ezSealInfo started.");
+		logger.debug("ezSealInfo ended.");
 
 		return "admin/ezApprovalG/apprGSealInfo";
 	}
@@ -2500,11 +2504,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			writer.write(returnString);
 			writer.flush();
 			writer.close();
-			logger.debug("saveOptionInfo ended.");
+			
+			logger.debug("saveOptionInfo success.");
 
 			return "TRUE";
 		} catch (Exception e) {
+			logger.debug("saveOptionInfo exception.");
+			
 			return "FALSE";
+		} finally {
+			logger.debug("saveOptionInfo ended.");
 		}
 	}
 	
@@ -2749,6 +2758,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		
 		logger.debug("modifyAprDoc ended.");
+		
 		return "admin/ezApprovalG/modifyAprDoc";
 	}	
 	
@@ -2997,7 +3007,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
     				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         }
         
-        logger.debug("result = " + result);
         logger.debug("getStatSearchDocList ended.");
         
 		return result;
@@ -3115,6 +3124,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String getDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDocList started");
 		logger.debug("period = " + request.getParameter("period"));
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String contID = request.getParameter("contID");

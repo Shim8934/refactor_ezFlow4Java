@@ -1223,6 +1223,8 @@ public class EzEmailUtil {
 			boolean isImportantOnly,
 			boolean isFromMobile
 			) throws Exception {
+		logger.debug("searchFolder started.");
+		
 		Message[] messages = folder.getMessages();
 		
 		logger.debug("searchField=" + searchField + ",startDate=" + startDate + ",endDate=" + endDate + ",isImportantOnly=" + isImportantOnly);
@@ -1569,6 +1571,7 @@ public class EzEmailUtil {
 			}
 		}
 		
+		logger.debug("searchFolder ended.");
 		return messages;
 	}
 	
@@ -1648,6 +1651,7 @@ public class EzEmailUtil {
 	 * 메일 리스트 정렬 실행 함수
 	 */
 	public void sortMessages(Folder folder, Message[] messages, String sortTypeSpecifier, boolean isAscending) throws Exception {
+		logger.debug("sortMessages started.");
 		logger.debug("sortTypeSpecifier=" + sortTypeSpecifier + ",isAscending=" + isAscending);
 		
 		Comparator<Message> comparator = null;
@@ -1778,6 +1782,8 @@ public class EzEmailUtil {
 		if (comparator != null) {			
 			Arrays.sort(messages, comparator);
 		}
+		
+		logger.debug("sortMessages ended.");
 	}
 	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest) throws MessagingException, IOException {
