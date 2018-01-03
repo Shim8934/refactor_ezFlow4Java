@@ -139,8 +139,8 @@
 			        document.getElementById("securePassword").disabled = false;
 			        document.getElementById("securePasswordCheck").disabled = false;
 			    } else {
-			    		document.getElementById("securePassword").value = "";
-			    		document.getElementById("securePasswordCheck").value = "";
+			    	document.getElementById("securePassword").value = "";
+			    	document.getElementById("securePasswordCheck").value = "";
 			        document.getElementById("securePassword").disabled = true;
 			        document.getElementById("securePasswordCheck").disabled = true;
 			    }
