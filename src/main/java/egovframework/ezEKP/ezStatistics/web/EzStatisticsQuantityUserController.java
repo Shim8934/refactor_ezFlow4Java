@@ -108,7 +108,7 @@ public class EzStatisticsQuantityUserController {
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/statMailAnalysis";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
+			
 		logger.debug("response=" + response);		
 		
 		JSONArray resultArray = null;

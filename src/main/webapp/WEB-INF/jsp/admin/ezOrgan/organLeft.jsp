@@ -79,9 +79,9 @@
 		            case 21:
 		                url = "/myoffice/ezEmail/DLmail_list.aspx";
 		                break;
-//s
+
 		            case 22:
-		            	url = "/admin/ezOrgan/statistics_list.do";
+		            	url = "/admin/ezEmail/statistics_list.do";
 		                break;
 				}
 				window.open(url,"right");

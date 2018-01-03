@@ -38,13 +38,5 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
         delete("EzSystemAdminDAO.deleteLoginHist", map);
     }
 	
-	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getUserList(Map<String, Object> map) throws Exception {
-		return (List<OrganUserVO>) list("EzSystemAdminDAO.getUserList", map);
-	}
-	
-	public int getUserListCount(int tenantID) throws Exception {
-		return (int) select("EzSystemAdminDAO.getUserListCount",tenantID); 
-	}
 	
 }

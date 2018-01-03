@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,12 +22,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
@@ -36,6 +40,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -73,6 +78,9 @@ public class EzEmailAdminController {
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "jspw")
+    private String jspw;
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
@@ -652,4 +660,120 @@ public class EzEmailAdminController {
         return returnValue;
     }    
     
+	
+    /**
+	 *  회원별 메일함 사용용량 및 총용량 
+	 */
+
+    @RequestMapping(value="/admin/ezEmail/statistics_list.do")
+	public String statisticsList_view() throws Exception { 
+
+    	return "/admin/ezEmail/statistics_list";
+    }
+    
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/admin/ezEmail/statistics_userList.do")
+	public String statisticsList(@CookieValue("loginCookie") String loginCookie, Model model,HttpServletRequest req,
+			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword) throws Exception {
+		
+		logger.debug("started statisticsList controller.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String currPage = req.getParameter("pageNum");
+		
+		if (currPage == null || currPage.equals("")) {
+			currPage = "1";
+		}
+		
+		int maxItemPerPage = 20; 
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		int itemCnt = ezOrganAdminService.getMailUserCount(userInfo.getTenantId(),searchKeycode, searchKeyword);	
+		
+		int totalPage = itemCnt / maxItemPerPage ;
+		
+		if (itemCnt < 1) {
+			totalPage = 1;
+		} 
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1 ;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);	
+		
+		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();   
+			
+			// 모든 사용자의 목록을 가져온다.
+			List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(),startRow, maxItemPerPage,searchKeycode, searchKeyword);
+			IMAPAccess ia = null;
+			Locale locale = Locale.getDefault();
+			String password = jspw;
+			String userId = null;
+        	String email = null;
+        	String displayname = null;
+        	String department = null;
+        
+        	// 각 사용자별로 처리한다.
+            try {
+            	
+            	for (OrganUserVO organUser : userCnList) {
+                 	
+            		List<String> quaList = new ArrayList<String>();
+                    userId = organUser.getCn();
+                    department = organUser.getDepartment();                    
+                    displayname = organUser.getDisplayName();                    
+                    logger.debug("userId=" + userId);
+                    quaList.add(0, userId);
+                    quaList.add(1, displayname);
+                    quaList.add(2, department);
+                    
+                    email = userId + "@" + ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+                    ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+                    		 					email, password, egovMessageSource, locale);
+                        
+                    long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+                
+                    // 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
+                    long mailboxUsage = storageUsageAndLimit[0]; // in KBs
+                    long mailboxQuota = storageUsageAndLimit[1]; // in KBs
+                
+                    logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);     
+               
+                    quaList.add(3, String.valueOf(mailboxUsage));
+                    quaList.add(4, String.valueOf(mailboxQuota));
+                    userList.add((ArrayList<String>) quaList);
+            	
+            	 }
+            	 
+            } catch (Exception e) {
+               
+            	logger.debug(e.getMessage());
+                e.printStackTrace();
+            
+            } finally {
+               
+            	if (ia != null) {
+                    ia.close();
+                }
+            }
+
+        model.addAttribute("userList", userList);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("searchKeycode", searchKeycode);
+		
+		logger.debug("ended statisticsList controller.");
+		
+		return "json";
+	}
 }
+	

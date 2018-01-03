@@ -118,6 +118,8 @@
         	async : false,
         	data : {deptID : DeptID, cell : "displayName;description", prop : "department;displayName;description;title", type : "user"},
         	success : function(result){
+        		
+        		console.log("result   :"+result)
         		var retXml = createXmlDom();
 
                 if (document.getElementById("UserList").innerHTML != "")
@@ -209,6 +211,7 @@
         createNodeAndInsertText(xmlDoc, objNode, "EDATE", document.getElementById("selyear").value);
         xmlHttp.open("POST", "/ezStatistics/getQuantityUser.do", true);
         xmlHttp.onreadystatechange = event_getmailstatistics;
+        console.log("xmlDoc"+xmlDoc)
         xmlHttp.send(xmlDoc);
     }
 

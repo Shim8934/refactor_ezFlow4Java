@@ -199,33 +199,5 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
         
         logger.debug("deleteLoginHist ended.");
 	}	
-	@Override
-	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage) throws Exception {
 
-		logger.debug("getUserList started. tenantID : " + tenantID);
-		
- 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("tenantID", tenantID);
-		params.put("STARTPAGE", startPage);
-		params.put("MAXITEMPERPAGE", maxItemPerPage);
-		
-		logger.debug("STARTPAGE : " + startPage);
-		logger.debug("maxItemPerPage : " + maxItemPerPage);
-
-		List<OrganUserVO> list = ezSystemAdminDAO.getUserList(params);
-		
-		logger.debug("getUserList ended.");
-		
-		return list;
-	}
-
-	@Override
-	public int getUserListCount(int tenantID) throws Exception {
-		
-		logger.debug("getUserListCount started. tenantID : " + tenantID);
-		
-		logger.debug("getUserListCount ended.");
-		
-		return ezSystemAdminDAO.getUserListCount(tenantID);
-	}
 }

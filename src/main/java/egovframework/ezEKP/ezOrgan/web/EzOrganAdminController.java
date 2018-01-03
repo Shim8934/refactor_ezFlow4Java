@@ -5,6 +5,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +24,10 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -2649,93 +2655,5 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		return result;
-	}
-	 
-	@RequestMapping(value="/admin/ezOrgan/statistics_list.do")
-	public String  statisticsList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
-		
-		logger.debug("started statisticsList controller.");
-		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
-		if (userInfo == null) {
-			return "cmm/error/adminDenied";
-		}
-
-		String topid = "";
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-			topid = userInfo.getCompanyID();
-		} else {
-			topid = "Top";
-		}
-		
-		model.addAttribute("companyID", topid);				
-		model.addAttribute("deptID", userInfo.getDeptID());
-	
-		logger.debug("ended systemLoginHistMain controller.");
-		
-		return "/admin/ezOrgan/statistics_list";
-		
-	}
-   	
-	/**
-	 *  회원 리스트 호출
-	 */
-	@RequestMapping(value="/admin/ezOrgan/userstatistics_list.do")
-	public String statisticsList(@CookieValue("loginCookie") String loginCookie, Model model,HttpServletRequest req) throws Exception {
-		
-		logger.debug("started  statisticsList controller.");
-		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
-		if (userInfo == null) {
-			return "cmm/error/adminDenied";
-		}
-
-		String currPage = req.getParameter("pageNum");
-	
-		if (currPage == null || currPage.equals("")) {
-			currPage = "1";
-		}
-		
-		int maxItemPerPage = 20; 
-		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;	
-		
-		logger.debug("currPage"+currPage);
-		if (currPage.equals("-1")) {
-			startRow = -1;
-		}
-		
-		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-
-		if (userInfo.getLang().equals(sysLang))  {
-			sysLang = "primary";
-		}
-		
-		 List<OrganUserVO> userList = ezSystemAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()),startRow,maxItemPerPage);
-		
-		int itemCnt = ezSystemAdminService.getUserListCount(userInfo.getTenantId());
-		int totalPage = itemCnt / maxItemPerPage ;
-		if (itemCnt < 1) {
-			totalPage = 1;
-		} 
-		
-		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
-			totalPage = totalPage + 1 ;
-		}
-		
-		currentPage = Math.min(currentPage, totalPage);	
-		model.addAttribute("userList", userList); 
-		model.addAttribute("lang", sysLang);
-		model.addAttribute("currPage", currentPage);
-		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("itemCnt", itemCnt);
-
-		
-		logger.debug("ended systemLoginHistList controller.");
-		
-		return "json";
 	}
 }

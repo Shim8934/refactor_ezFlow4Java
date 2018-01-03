@@ -19,8 +19,5 @@ public interface EzSystemAdminService {
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
 			String lang, String startDate, String endDate) throws Exception;
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
-	public List<OrganUserVO> getUserList(int tenantID,int startPage,int maxItemPerPage) throws Exception;
-	public int getUserListCount(int tenantID) throws Exception;
-	
 	
 }
