@@ -8,8 +8,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" type="text/css" href="/css/community.css" />
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		
+		<style>
+			select {
+				padding : 3px
+			}
+		</style>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript">
 		    function sendIt() {
 				if ( ByteLength(document.getElementById("pollSubject").value) > 200 ) {
@@ -59,35 +63,31 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="cmhome_body">
+		<h1 class="type1_h1"><spring:message code='ezCommunity.t598' /></h1>
 		<form name="poll_add" action="/ezCommunity/pollAddOkGo.do" method="POST">
 			<input type="hidden" name="mode"			value="<c:out value = '${mode}' />">
 			<input type="hidden" name="code"			value="<c:out value = '${code}' />">
-			<input type="hidden" name="startDate"	value="<c:out value = '${startDate}' />">
-			<input type="hidden" name="endDate"		value="<c:out value = '${endDate}' />">
+			<input type="hidden" name="startDate"		value="<c:out value = '${startDate}' />">
+			<input type="hidden" name="endDate"			value="<c:out value = '${endDate}' />">
 			<input type="hidden" name="selRes"			value="<c:out value = '${selRes}' />">
 			<input type="hidden" name="answerCount"		value="<c:out value = '${answerCount}' />">
 			<input type="hidden" name="sel"				value="<c:out value = '${sel}' />">
 			<input type="hidden" name="selType"			value="<c:out value = '${selType}' />">
 			<input type="hidden" name="selectedNo"		value="<c:out value = '${selectedNo}' />">
 			<input type="hidden" name="selJU"			value="<c:out value = '${selJU}' />">
-			<input type="hidden" name="answerViewType"	value="<c:out value = '${answerViewType}' />">
-			
-			<h1><spring:message code='ezCommunity.t598' /></h1>
-			<br>
-			<br>
-			
-			<table class="content">
+			<input type="hidden" name="answerViewType"	value="<c:out value = '${answerViewType}' />">			
+						
+			<table class="content" style="margin-top:12px">
 				<tr>
 					<th><spring:message code='ezCommunity.t599' /></th>
-					<td><textarea id="pollSubject" name="pollSubject" style="width: 98.5%;height:130px">${subject }</textarea></td>
+					<td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98.5%;height:130px">${subject }</textarea></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCommunity.t600' /></th>
-					<td><span id="idSpan">${idSpanValue }</span></td>
+					<td style="padding:3px"><span id="idSpan">${idSpanValue }</span></td>
 				</tr>
 			</table>
-			  
 			<div class="btnposition">
 				<a class="imgbtn" name="Submit2" onClick="fun_Prev();"><span><spring:message code='ezCommunity.t616' /></span></a>
 				<a class="imgbtn" name="Submit" onClick="sendIt();"><span><spring:message code='ezCommunity.t680' /></span></a>

@@ -74,9 +74,9 @@
 				
 		<div id="mainmenu">
 			<ul>
-				<li><span onclick="javascript:sendit()"><spring:message code='ezCommunity.t20' /></span></li>
-				<li><span onclick="javascript:webpds.reset();"><spring:message code='ezCommunity.t109' /></span></li>
 				<li><span onclick="goPage(1)"><spring:message code='ezCommunity.t168' /></span></li>
+				<li><span onclick="javascript:sendit()"><spring:message code='ezCommunity.t20' /></span></li>
+				<li><span onclick="javascript:webpds.reset();"><spring:message code='ezCommunity.t109' /></span></li>				
 			</ul>
 		</div>
 		
@@ -84,13 +84,13 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table class="content" >
-			<form action="/ezCommunity/guestEditOk.do" method="POST" name="webpds">
-		        <input type="hidden" id="c_no" value="<c:out value = '${no}' />">
-		        <input type=hidden id="name" value="<c:out value = '${item.id}' />">
-		        <input type=hidden id="code" value="<c:out value = '${code}' />">
-		        <input type=hidden id="mode" value="<c:out value = '${mode}' />">
-		        
+		<form action="/ezCommunity/guestEditOk.do" method="POST" name="webpds">
+	        <input type="hidden" id="c_no" value="<c:out value = '${no}' />">
+	        <input type=hidden id="name" value="<c:out value = '${item.id}' />">
+	        <input type=hidden id="code" value="<c:out value = '${code}' />">
+	        <input type=hidden id="mode" value="<c:out value = '${mode}' />">
+	        
+			<table class="content" style="margin-top:12px">
 	        	<tr>
 					<th><spring:message code='ezCommunity.t138' /></th>
 					<c:choose>
@@ -103,10 +103,10 @@
 					</c:choose>
 				</tr>
 				<tr>
-	          		<td colspan="2"><textarea id="memo" style="width:98%;height:300px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
+	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
 	        	</tr>
-      		</form>
-		</table>
+			</table>
+		</form>	
 		
 		<script type="text/javascript">
 			document.webpds.memo.focus();

@@ -190,26 +190,26 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezCommunity.t1011' /></h1>
-
-	    <div id="mainmenu">
+	    <div id="mainmenu" style="margin-bottom:10px">
 	        <ul>
 	            <li><span id="btnDraft" onclick="javascript:check();"><spring:message code='ezCommunity.t1011' /></span></li>
 	            <li><span id="btnDraft" onclick="javascript:back();"><spring:message code='ezCommunity.t109' /></span></li>
 	        </ul>
 	    </div>
-	
-	    <table class="content">
-	        <form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
-	            <input type="hidden" name="makeID" value="<c:out value='${userInfo.id }' />">
-	            <input type="hidden" name="hiddenClubName">
-	            <input type="hidden" name="hiddenClubName2">
-	            <input type="hidden" name="hiddenIntro">
-	            <input type="hidden" name="sNewID">
-	            <input type="hidden" name="sNewSubID">
+		<form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
+			<input type="hidden" name="makeID" value="<c:out value='${userInfo.id }' />">
+            <input type="hidden" name="hiddenClubName">
+            <input type="hidden" name="hiddenClubName2">
+            <input type="hidden" name="hiddenIntro">
+            <input type="hidden" name="sNewID">
+            <input type="hidden" name="sNewSubID">
+            
+	    	<table class="content" style="width:100%">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1012' /></th>
 	                <td colspan="2">
-	                    <input type="text" name="userName" value="<c:out value='${userInfoDisplayName }' />" readonly="true" size="40"></td>
+	                    <input type="text" name="userName" value="<c:out value='${userInfoDisplayName }' />" readonly="true" size="40" style="border:1px solid white">
+					</td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t9991' /></th>
@@ -218,78 +218,78 @@
 	                        <tr class="primary">
 	                            <th><c:out value='${langPrimary }' /></th>
 	                            <td>
-	                                <input type="text" name="clubName" size="80" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+	                                <input type="text" class="inputText" name="clubName" size="80" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
+								</td>
 	                        </tr>
 	                        <tr class="secondary">
 	                            <th><c:out value='${langSecondary} ' /></th>
 	                            <td>
-	                                <input type="text" name="clubName2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+	                                <input type="text" class="inputText" name="clubName2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
+								</td>
 	                        </tr>
 	                    </table>
 	                </td>
 	            </tr>
-	            <tr>
+	            <tr style="height:60px">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /></th>
-	                <td style="white-space:nowrap"><span id="idSpan">${idSpanValue }</span></td>
-	                <td style="padding: 5px;white-space:nowrap">
-	                	<span>
-	                		<spring:message code='ezCommunity.t1013' /><br>
-	                		<spring:message code='ezCommunity.t1014' />
-	                	</span>
+	                <td style="white-space:nowrap;border-right:0px"><span id="idSpan">${idSpanValue }</span></td>
+	                <td style="padding: 5px;padding-right:25px;white-space:nowrap;border-left:0px">
+	                	<div><spring:message code='ezCommunity.t1013' /></div>
+	                	<div style="margin-top:7px"><spring:message code='ezCommunity.t1014' /></div>
 	                </td>
 	            </tr>
-	            <tr>
+	            <tr style="height:60px">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t12' /></th>
-	                <td style="white-space:nowrap">
+	                <td style="white-space:nowrap;border-right:0px">
 	                    <input type="radio" name="clubConfirmType" value="2" checked><spring:message code='ezCommunity.t13' />
 	                    <input type="radio" name="clubConfirmType" value="3"><spring:message code='ezCommunity.t1015' />
 	                </td>
-	                <td style="padding: 5px;white-space:nowrap">
-	                	<spring:message code='ezCommunity.t452' /><br>
-	                    <spring:message code='ezCommunity.t1016' />
+	                <td style="padding: 5px;white-space:nowrap;border-left:0px">	                
+	                	<div><spring:message code='ezCommunity.t452' /></div>
+	                    <div style="margin-top:7px"><spring:message code='ezCommunity.t1016' /></div>
 	                </td>
 	            </tr>
-	            <tr>
+	            <tr style="height:60px">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t15' /></th>
-	                <td style="white-space:nowrap">
+	                <td style="white-space:nowrap;border-right:0px">
 	                    <input type="radio" name="clubType" value="2" checked><spring:message code='ezCommunity.t16' />
 	                    <input type="radio" name="clubType" value="3"><spring:message code='ezCommunity.t17' />
 	                </td>
-	                <td style="padding: 5px;white-space:nowrap">
-	                	<spring:message code='ezCommunity.t1017' /><br>
-	                    <spring:message code='ezCommunity.t1018' />
+	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
+	                	<div><spring:message code='ezCommunity.t1017' /></div>
+	                    <div style="margin-top:7px"><spring:message code='ezCommunity.t1018' /></div>
 	                </td>
 	            </tr>
-	            <tr style="display: none">
+	            <tr style="display: none;height:60px">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t1019' /></th>
-	                <td style="white-space:nowrap">
+	                <td style="white-space:nowrap;border-right:0px">
 	                    <input type="radio" name="isIn" value="1"><spring:message code='ezCommunity.t1020' />
 	                    <input type="radio" name="isIn" value="2" checked><spring:message code='ezCommunity.t1021' />
 	                </td>
-	                <td style="padding: 5px;white-space:nowrap">
-	                	<spring:message code='ezCommunity.t459' /><br>
-	                    <spring:message code='ezCommunity.t1022' />
+	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
+	                	<div><spring:message code='ezCommunity.t459' /></div>
+	                    <div style="margin-top:3px"><spring:message code='ezCommunity.t1022' /></div>
 	                </td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1023' /></th>
-	                <td>
+	                <td style="border-right:0px;padding-left:5px">
 	                	<c:if test="${isCrossBrowser == true}">
 		                    <span style="vertical-align:middle">
 		                        <a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick(1)"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id="filename" style="vertical-align:middle"></span>
+		                        <span id="filename" style="vertical-align:middle;padding:3px"></span>
 		                        <input type="file" id="file1" name="logo" onchange="btn_AttachAdd_onclick(this)" style="display:none">
 		                    </span>
 		                </c:if>
 		                
 		                <c:if test="${isCrossBrowser == false}">
 		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
-		                        <a class="imgbtn" onclick="return btn_AttachAdd_onclick(1)"><span id="btn_AttachAdd_logo"><spring:message code='ezCommunity.t1177' /></span></a>
+		                        <a class="imgbtn" style="padding:3px" onclick="return btn_AttachAdd_onclick(1)"><span id="btn_AttachAdd_logo"><spring:message code='ezCommunity.t1177' /></span></a>
 		                        <span id ="filename"></span>
 		                    </div>
 		                </c:if>
 	                </td>
-	                <td style="padding: 5px;white-space:nowrap"><spring:message code='ezCommunity.t1024' /></td>
+	                <td style="padding: 5px;white-space:nowrap;border-left:0px"><spring:message code='ezCommunity.t1024' /></td>
 	            </tr>
 <!-- 				2016-05-02 이효진 사용하지 않는 부분 -->
 	            <tr style="display:none;">
@@ -315,13 +315,13 @@
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
 	                <td colspan="2">
-	                    <textarea name="intro" style="height: 120px; width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;"></textarea></td>
+	                    <textarea name="intro" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
+					</td>
 	            </tr>
-	        </form>
-	    </table>
-	    <br>
-	    <div class="txt">
-	    	<br>
-	    </div>
+			</table> 
+	    </form>	    
+	    <script type="text/javascript">
+            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+        </script>
 	</body>
 </html>

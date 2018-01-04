@@ -165,7 +165,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Model model, 
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		
 		logger.debug("mailWrite started.");
 		
 		String from = "";
@@ -1000,7 +999,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		response.setHeader("X-XSS-Protection", "0");
 		
 		logger.debug("mailWrite ended.");
-		
 		return "ezEmail/mailWrite";
 	}
 	
@@ -1016,6 +1014,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					HttpServletRequest request,
 					LoginVO userInfo,
 					Model model) throws Exception {
+		logger.debug("mailConfirmDialog started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1046,6 +1045,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("buttonName1", buttonName1);
 		model.addAttribute("buttonName2", buttonName2);
 		
+		logger.debug("mailConfirmDialog ended.");
 		return "ezEmail/mailConfirmDialog";
 	}
 	
@@ -1071,7 +1071,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	public String mailInterUpload(
 			@CookieValue("loginCookie") String loginCookie, 
 			MultipartHttpServletRequest request) throws Exception{
-		
 		logger.debug("mailInterUploadXCK started.");
 		
 		String strXML = "";
@@ -1082,9 +1081,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String isBigYN = "N";
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
 		int cnt = 0;
+		
 		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
 			cnt = Integer.parseInt(request.getParameter("cnt"));
 		}
+		
 		String realPath = commonUtil.getRealPath(request);
 		String[] pFileName = new String[cnt];
 		Long[] fileSize = new Long[cnt];
@@ -1141,18 +1142,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					isEmpty = true;
 				}
 			}
+			
 			if (isEmpty) {
 				return "OVERFLOW";
 			}
 		}
 
-		for (int i=0; i<cnt; i++) {
+		for (int i = 0; i < cnt; i++) {
 			sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
 		}
 
 		if (request.getParameter("bigmaxsize") != null) {
 			bigMaxSize = Long.parseLong(request.getParameter("bigmaxsize"));
 		}
+		
 		if (request.getParameter("changesize") != null) {
 			changeSize = Long.parseLong(request.getParameter("changesize"));
 		}
@@ -1175,13 +1178,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 folderDate = pDate;
                 pDirTempPath = pDirPath + commonUtil.separator + pDate;
                 File file = new File(pDirTempPath);
+                
                 if (!file.exists()) {
                 	file.mkdirs();
                 }
+                
                 pBigFileUpload = "Y";
                 
                 String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
                 FileOutputStream fos = null;
+                
                 try {
                 	File f = new File(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt");
                 	fos = new FileOutputStream(f);
@@ -1228,6 +1234,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             }
             pDirTempPath = "";
 		}
+		
 		strXML += strXML2 + "</NODES></ROOT>";
 
         String xmlPath = pDirPath + commonUtil.separator + "templist";
@@ -1238,33 +1245,38 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
         xmlPath += commonUtil.separator + tempFolderName + ".txt";
         f = new File(xmlPath);
+        
         if (f.exists()) {
         	String tempXmlList = "";
         	InputStreamReader isr = null;
         	BufferedReader br = null;
         	OutputStreamWriter osw = null;
+        	
         	try {
 	        	isr = new InputStreamReader(new FileInputStream(f));
 	        	br = new BufferedReader(isr);
 	        	int read = 0;
-				while ((read = br.read()) != -1) {
+				
+	        	while ((read = br.read()) != -1) {
 					tempXmlList += (char)read;
 				}
+				
 				Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
 				Document xmldom2 = commonUtil.convertStringToDocument(strXML);
 				
 	            NodeList nodeList = xmldom.getElementsByTagName("NODES");
 	            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
+	            
 	            for (int i=0; i<nodeList2.getLength(); i++) {
 	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
 	            }
-            	osw = new OutputStreamWriter(new FileOutputStream(f));
+            	
+	            osw = new OutputStreamWriter(new FileOutputStream(f));
             	osw.write(commonUtil.convertDocumentToString(xmldom));
             	String crlf = System.getProperty("line.separator");
         		osw.append(crlf+crlf);
 	            
 	            xmlList = strXML;
-	            
         	} catch(Exception e) {
         		throw e;
         	} finally {
@@ -1279,17 +1291,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         		}
         	}
         	
-        	return xmlList;
-        	
         } else {
         	OutputStreamWriter osw = null;
+        	
         	try {
         		osw = new OutputStreamWriter(new FileOutputStream(f));
         		osw.write(strXML);
         		String crlf = System.getProperty("line.separator");
         		osw.append(crlf+crlf);
         		xmlList = strXML;
-        		
         	} catch(Exception e) {
         		throw e;
         	} finally {
@@ -1297,9 +1307,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         			osw.close();
         		}
         	}
-            
-            return xmlList;
         }
+        
+        logger.debug("mailInterUploadXCK started.");
+        return xmlList;
 	}
 	
 	/**
@@ -1317,7 +1328,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@RequestBody String bodyData,
 			HttpServletRequest request) throws Exception {
 		logger.debug("mailInterUploadCopy started.");
-		
 		logger.debug("bodyData=" + bodyData);
 		
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
@@ -1579,6 +1589,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     public String mailInterUploadX(
     		@CookieValue("loginCookie") String loginCookie, 
     		HttpServletRequest request) {
+    	logger.debug("mailInterUploadX started.");
     	
         String returnedData = "";
         
@@ -1776,6 +1787,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }
         
         logger.debug("returnedData=" + returnedData);
+        logger.debug("mailInterUploadX ended.");
         
         return returnedData;
     }
@@ -3518,10 +3530,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 					
 					if (oldMessage != null) {
-						
-						//TODO: rows에 filename대신 index넣기, 
-						//deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) 부르기
-						
 						MimeMessage newMessage = sa.createMimeMessage();
 						Multipart multipart = new MimeMultipart();
 						
@@ -3529,6 +3537,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						int count = mp.getCount();
 						BodyPart p = null;
 						boolean containBody = false; 
+						
 						for (int i = 0; i < count; i++) {
 							p = mp.getBodyPart(i);
 //							logger.debug("p.getDisposition : " + p.getDisposition());
@@ -3536,8 +3545,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							if (p.getDisposition() == null) {
 								containBody = true;
 							}
+							
 							int length = rows.getLength();
 							boolean isRemoved = false;
+							
 							//파일의 index가 한칸씩 뒤로 밀렸으므로 i-1과 비교하여 파일을 삭제한다. 
 							if (containBody) {
 								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
@@ -3698,6 +3709,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			Model model, 
 			HttpServletRequest request) throws Exception{
+		logger.debug("mailNameCheck started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3768,6 +3780,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
+        
+        logger.debug("mailNameCheck ended.");
         return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
 	}
 	
@@ -3792,6 +3806,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Locale locale, 
 			Model model, 
 			HttpServletRequest request) throws Exception{
+		logger.debug("mailLetterOption started.");
 		
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -3806,6 +3821,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("individualMailUser", individualMailUser);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
+		logger.debug("mailLetterOption ended.");
 		return "ezEmail/mailLetterOption";
 	}
 	
@@ -3817,6 +3833,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
 			Model model) throws Exception{
+		logger.debug("mailSecureOption started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
@@ -3830,6 +3847,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		
+		logger.debug("mailSecureOption ended.");
 		return "ezEmail/mailSecureOption";
 	}
 
@@ -3842,6 +3860,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Locale locale, 
 			Model model, 
 			HttpServletRequest request) throws Exception{
+		logger.debug("mailNewReceiverChoose started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3856,6 +3875,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		
+		logger.debug("mailNewReceiverChoose ended.");
 		return "ezEmail/mailNewReceiverChoose";
 	}
 	
@@ -3869,6 +3889,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Locale locale, 
 			Model model, 
 			HttpServletRequest request) throws Exception{
+		logger.debug("mailGetDistribution started.");
 		
 		String returnData = "";
 		
@@ -3907,6 +3928,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 
+		logger.debug("mailGetDistribution ended.");
 		return returnData;
 	}
 	
@@ -3919,6 +3941,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Locale locale, 
 			Model model, 
 			HttpServletRequest request) throws Exception{
+		logger.debug("mailSelectDLMember started.");
 		
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	    
@@ -3993,6 +4016,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("isUser", isUser);
 		model.addAttribute("list", list);
 		
+		logger.debug("mailSelectDLMember ended.");
 		return "ezEmail/mailSelectDLMember";
 	}
 	
@@ -4006,6 +4030,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Locale locale, 
 			Model model, 
 			HttpServletRequest request) throws Exception{
+		logger.debug("mailGetAddress started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<SimpleAddressVO> addressList = ezAddressService.getSimpleAddress(userInfo.getTenantId(), userInfo.getId());
@@ -4022,6 +4048,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		sb.append("</NewDataSet>");
 		
+		logger.debug("mailGetAddress ended.");
 		return sb.toString();
 	}
 	
