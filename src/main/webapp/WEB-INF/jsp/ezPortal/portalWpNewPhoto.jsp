@@ -38,12 +38,14 @@
 			var pBoardType_NewPhoto = "4";
 	    	var pBoardID_NewPhoto = "${pPhotoGalleryID}";
 	    	var strLang1_NewPhoto = "<spring:message code='main.t00026' />";
-	        
 	    	var OrderCell_NewPhoto = "";
 	    	var OrderOption_NewPhoto = "";
 	    	var totalPage_NewPhoto = "";
 	    	var CurPage_NewPhoto = 1;
+	    	var perCnt = "";
+	    	
 	    	document.onselectstart = function () { return false; };
+	    	
 	    	function window_onload_NewPhoto() {
 	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            	document.body.style.MozUserSelect = 'none';
@@ -56,6 +58,7 @@
 
 	        	try { top.onresize() } catch (e) { }
 	    	}
+	    	
 	    	function getBoardList_NewPhoto() {
 		        var xmlpara = createXmlDom();
 		        var objNode;
@@ -72,15 +75,16 @@
 	        	xmlhttp_getBoardList_NewPhoto.onreadystatechange = getBoardList_NewPhoto_after;
 	        	xmlhttp_getBoardList_NewPhoto.send(xmlpara);
 	    	}
-
-	    	var perCnt = "";
+	    	
 	    	function getBoardList_NewPhoto_after() {
 		        if (xmlhttp_getBoardList_NewPhoto == null || xmlhttp_getBoardList_NewPhoto.readyState != 4) return;
+		        
 		        var cntNode = SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/TOTALCNT");
 	    	    var perNode = SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/PERSONALCNT");
 	        	var pagenode = SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/PAGECNT");
 	        	var lstCnt = getNodeText(cntNode);
 	        	var pageCnt = getNodeText(pagenode);
+	        	
 	        	perCnt = getNodeText(perNode);
 	        	totalPage_NewPhoto = Math.ceil(new Number(pageCnt / perCnt));
 
@@ -94,6 +98,7 @@
 				//$('.btn_area').html(start_li);
 	        	
 		        var cnt = GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS")).length;
+		        
 		        if (cnt > 0) {
 	    	        for (var i = 1; i < cnt + 1; i++) {
 	        	        var Imgsrc = getNodeText(GetChildNodes(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[0])[5]);
@@ -112,12 +117,15 @@
 	                	_span1.innerHTML = "<img src=\"" + imgSrc + "\" width=\"80\" height=\"80\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + BoardID + "\" DATA2=\"" + ItemID + "\">";
 
 		                var _span2 = document.createElement("span");
+		                
 		                _span2.className = "ptxt";
+		                
 	    	            if (CrossYN()) {
 	        	            _span2.textContent = ImgTitle;
 	    	            } else {
 	                	    _span2.innerText = ImgTitle;
 	            	    }
+	    	            
 	                	_span2.setAttribute("DATA1", BoardID);
 	                	_span2.setAttribute("DATA2", ItemID);
 	                	_span2.onclick = new Function("ItemRead_onclick(this);");
@@ -127,12 +135,15 @@
 
 	                	document.getElementById("photoul").appendChild(_li);
 	            	}
+	    	        
 	            	var end_li = document.createElement("li");
+	            	
 	            	end_li.className = "btn_next";
 	            	end_li.innerHTML = "<img src=\"/images/kr/main/btn_next2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('NEXT')\">";
 	            	document.getElementById("photoul").appendChild(end_li);
 	        	} else {
 	        		var nodata = "";
+	        		
 	            	nodata += "<div class='nodata_portlet '>";
 	            	nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
 	            	nodata += "<p>" + strLang1_NewPhoto + "</p></div>";
@@ -152,6 +163,7 @@
 		                    CurPage_NewPhoto++;
 	    	            break;
 	        	}
+	    	    
 	        	getBoardList_NewPhoto();
 	    	}
 		    

@@ -2511,7 +2511,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pageID = "";
 		String gubunFlag = "";
 		String newMyPortalPage = "";
-		String newMyPortalPageList = "";
+		//String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
 		int recordCnt = 0;
 		int intPage = 1;
@@ -2560,7 +2560,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			sb.append("</DATA>");
-			newMyPortalPageList = sb.toString();
+			//newMyPortalPageList = sb.toString();
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
@@ -2619,6 +2619,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("resultHTML="+resultHTML);
+		
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);
@@ -2629,7 +2630,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalMyPortalPageList";
 	}
-	
 	
 	/**
 	 * 포탈 - 환경설정 초기 화면 호출 함수
@@ -3100,6 +3100,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 메인 화면 호출 함수
 	 */
+	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/help.do")
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("help started");

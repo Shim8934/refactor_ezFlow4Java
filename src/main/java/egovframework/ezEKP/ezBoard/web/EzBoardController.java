@@ -2857,6 +2857,11 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
         	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
         }
+        //2017.12.29 강민수92 댓글 갯수 구하기
+        if (boardPropertyVO.getOneLineReply().equals("1")) {
+        	String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
+        	model.addAttribute("commentCount", commentCount);
+        }
         
         model.addAttribute("userInfo", userInfo);
         model.addAttribute("boardInfo", boardInfo);
@@ -4245,7 +4250,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
         
-		return "ezBoard/boardCheckPassWord";
+		return "ezBoard/deleteCommentPopup";
 	}
 	
 	/**
@@ -4371,6 +4376,11 @@ public class EzBoardController extends EgovFileMngUtil{
         boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
         boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
 		
+        //2017.12.29 강민수92 댓글 갯수 구하기
+        if (boardProperty.getOneLineReply().equals("1")) {
+        	String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
+        	model.addAttribute("commentCount", commentCount);
+        }
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("apprFlag", apprFlag);
@@ -6293,4 +6303,84 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return "ezBoard/boardAlertDialog";
 	}
+	
+    /**
+     * 댓글 팝업화면 조회
+     * 강민수92
+     */
+    @RequestMapping(value = "/ezBoard/boardCommentPopup.do")
+    public String boardCommentPopup(@CookieValue("loginCookie") String loginCookie, BoardItemVO boardItemVO, String gubun, String Reply_FG,String OneLineReplyFlag, Model model) throws Exception {
+    	logger.debug("boardCommentPopup started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    		
+		String boardID = boardItemVO.getBoardID();
+		String itemID = boardItemVO.getItemID();
+		String userName = "";
+		String publicModulus = egovFileScrty.getPbm();
+        String publicExponent = "10001";
+		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+
+    	logger.debug("itemID = " + itemID);
+    	
+    	model.addAttribute("boardInfo", boardInfo);
+    	model.addAttribute("publicModulus", publicModulus);
+    	model.addAttribute("publicExponent", publicExponent);
+    	model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
+    	model.addAttribute("Reply_FG", Reply_FG);
+    	model.addAttribute("gubun", gubun);
+    	model.addAttribute("boardItemVo", boardItemVO);
+    	model.addAttribute("userInfo", userInfo);
+    	model.addAttribute("boardLineReplyVOList", boardLineReplyVOList);
+    	
+    	logger.debug("boardCommentPopup ended.");
+    	
+    	return "/ezBoard/boardCommentPopup";
+    }
+    
+    /**
+     * ajax 댓글 목록 조회
+     * 강민수92
+     */
+    @RequestMapping(value = "/ezBoard/getBoardComment.do")
+    public String getBoardComment(@CookieValue("loginCookie") String loginCookie, BoardItemVO boardItemVO, HttpServletRequest request, Model model) throws Exception {
+    	logger.debug("getBoardComment started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String boardID = boardItemVO.getBoardID();
+		String itemID = boardItemVO.getItemID();
+		String userName = "";
+		
+		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+    	for (BoardLineReplyVO reply : boardLineReplyVOList) {
+    		reply.setWriteDate(commonUtil.getDateStringInUTC(reply.getWriteDate(), userInfo.getOffset(), false));
+    	}
+    	
+    	String totalCommentCount = String.valueOf(boardLineReplyVOList.size());
+    	
+    	model.addAttribute("totalCommentCount", totalCommentCount);
+    	model.addAttribute("boardLineReplyVOList", boardLineReplyVOList);
+    	model.addAttribute("userInfo", userInfo);
+    	logger.debug("getBoardComment ended.");
+    	
+    	return "json";
+    }
+    /**
+     * 게시물 댓글 삭제
+     * 강민수92
+     */
+    @RequestMapping(value = "/ezBoard/deleteBoardComment.do")
+    public String deleteBoardComment(@CookieValue("loginCookie") String loginCookie, BoardLineReplyVO boardLineReplyVO, String guBun) throws Exception {
+    	logger.debug("deleteCircularComment started.");
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String result = ezBoardService.deleteOneLineReply(userInfo.getId(), boardLineReplyVO.getReplyID(), guBun, userInfo.getTenantId());
+    	//익명일 경우
+    	logger.debug("deleteCircularComment ended.");
+    	return "json";
+    }
 }

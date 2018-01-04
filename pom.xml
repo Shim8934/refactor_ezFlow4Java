@@ -291,7 +291,7 @@
             <groupId>com.sun.xml.security</groupId>
             <artifactId>xml-security-impl</artifactId>
             <version>1.0</version>
-        </dependency>   
+        </dependency>           
         <dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-aop</artifactId>
@@ -350,7 +350,6 @@
             <version>${spring.maven.artifact.version}</version>
         </dependency>
         <!-- 웹 소켓  - end -->
-             
         <!-- Azure Auth -->
         <dependency>
             <groupId>com.microsoft.azure</groupId>

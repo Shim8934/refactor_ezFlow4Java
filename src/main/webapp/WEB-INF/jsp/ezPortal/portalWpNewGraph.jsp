@@ -45,6 +45,7 @@
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript">
 			window.onload = window_onload_NewGraph;
+			
 	    	function window_onload_NewGraph(){
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            	document.body.style.MozUserSelect = 'none';
@@ -54,6 +55,7 @@
 	            	document.body.style.UserSelect = 'none';
 	        	}
 	    	}
+	    	
 	    	window_onload_NewGraph();
 		</script>
 	</head>
