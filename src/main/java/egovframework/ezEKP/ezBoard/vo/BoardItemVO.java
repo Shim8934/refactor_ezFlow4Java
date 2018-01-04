@@ -13,7 +13,8 @@ public class BoardItemVO {
 	private int tenantID;
 	/** */
 	private String filePath;
-	
+	/** 2017.12.29 강민수92 추가 */
+	private String boardID;
 	public String getItemID() {
 		return itemID;
 	}
@@ -49,6 +50,12 @@ public class BoardItemVO {
 	}
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+	public String getBoardID() {
+		return boardID;
+	}
+	public void setBoardID(String boardID) {
+		this.boardID = boardID;
 	}
 	
 }

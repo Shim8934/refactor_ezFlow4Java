@@ -3209,5 +3209,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		return result;
 	}
+	//2017.12.29 강민수92
+	@Override
+	public String getOneLineReplyCount(String boardID, String itemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		return ezBoardDAO.getOneLineReplyCount(map);
+	}
 	
 }

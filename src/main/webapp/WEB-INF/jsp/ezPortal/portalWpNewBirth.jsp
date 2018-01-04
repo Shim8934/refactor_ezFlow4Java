@@ -62,35 +62,36 @@
 	            	document.body.style.UserSelect = 'none';
 	        	}
 		        
-		        
 		        if (CrossYN())
 		            document.getElementById("curMon").textContent = month;
 	    	    else
 	        	    document.getElementById("curMon").innerText = month;
 
 	        	try { top.onresize() } catch (e) { }
+	        	
 	        	getbirthUserList();
 	    	}
 	    	
 	    	function getbirthUserList() {
 	    		window.clearTimeout(timer);
-	        	 $.ajax({
-	    	        	type : "POST",
-	    	        	dataType : "text",
-	    	        	url : "/ezPersonal/mainBirthUserList.do",
-	    	        	data : {
-	    	        		mon   : month, 
-	    	        	},
-	    	        	success : function(xml){		        		
-	    	        		getbirthUserList_after(loadXMLString(xml));
-	    	        	},
-	    	        	error : function(error){
-	    	        		console.log(error);	
-	    	        	}
+	        	$.ajax({
+    	        	type : "POST",
+    	        	dataType : "text",
+    	        	url : "/ezPersonal/mainBirthUserList.do",
+    	        	data : {
+    	        		mon   : month, 
+    	        	},
+    	        	success : function(xml){		        		
+    	        		getbirthUserList_after(loadXMLString(xml));
+    	        	},
+    	        	error : function(error){
+    	        		console.log(error);	
+    	        	}
 	    	    });
-	        	
 	    	}
+	    	
 	    	var userPrimary = "${userInfo.primary}";
+	    	
 	    	function getbirthUserList_after(xml) {
 		        if (xml == null) return;
 
@@ -102,6 +103,7 @@
 
 	            	document.getElementById("birthcont").style.display = "";
 	            	document.getElementById("nodata_NewBirth").style.display = "none";
+	            	
 	            	for (var i = 0; i < totalCnt; i++) {
 		                var cn = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "CN");
 	                    
@@ -115,6 +117,7 @@
 	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
 
 	                	var userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE");
+	                	
 	                	if (userPrimary != "1")
 		                    userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE2");
 	                    
@@ -122,10 +125,12 @@
 		                _li.style.display = "none";
 	    	            _li.style.cursor = "pointer";
 	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
+	        	        
 	            	    if (CrossYN())
 	                	    _li.textContent = "[" + birthDate + "]" + userName + " " + userTitle;
 	                	else
 	                    	_li.innerText = "[" + birthDate + "]" + userName + " " + userTitle;
+	            	    
 	                	document.getElementById("userlist").appendChild(_li);
 
 	                	if (i >= (curPage * 10) && i < (curPage + 1) * 10) {
@@ -135,9 +140,11 @@
 	                	}
 		            }
 		            curPage++;
+		            
 	    	        if (curPage >= totalPage) {
 	        	        curPage = 0;
 	            	}
+	    	        
 	            	if (totalCnt > EndCnt) {
 		                timer = window.setInterval("intervalList()", 5000);
 		            }
@@ -155,7 +162,9 @@
 	                	document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'none';
 	            	}
 	        	}
+	    	    
 	        	curPage++;
+	        	
 	        	if (curPage >= totalPage) {
 		            curPage = 0;
 		        }
@@ -176,14 +185,15 @@
 	        	            month = 1;
 	            	    break;
 	        	}
+		        
 	        	if (month < 10 && String(month).length == 1)
 		            month = "0" + month;
-
 
 	        	if(CrossYN())
 		            document.getElementById("curMon").textContent = month;
 	        	else
 		            document.getElementById("curMon").innerText = month;
+	        	
 	        	curPage = 0;
 	        	getbirthUserList();
 	    	}
@@ -193,6 +203,7 @@
 	        	var width = window.screen.availWidth;
 	        	var left = (width - 500) / 2;
 	        	var top = (heigth - 400) / 2;
+	        	
 	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    	}
 

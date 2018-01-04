@@ -579,7 +579,7 @@
 	        </div>
 	        <!-- /notice -->
 	
-	        <div class="community_banner commMake" onclick="make_Cop()" style="border:1px solid rgb(0, 72, 149);border-radius:4px;height:25px;padding-top:12px;text-align: center;color:white;background-color: rgb(0, 72, 149);font-weight: bold;">
+	        <div class="community_banner commMake" onclick="make_Cop()" style="border:1px solid rgb(0, 72, 149);border-radius:4px;height:25px;padding-top:12px;text-align: center;color:rgb(0, 72, 149);background-color: white;font-weight: bold;">
 	        	<spring:message code="ezCommunity.t1011" />
 	            <%-- <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90"> --%>
 	        </div>

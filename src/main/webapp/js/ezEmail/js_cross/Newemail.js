@@ -1281,14 +1281,13 @@ function mail_export(pwd) {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listSubContentArry[i]);
         }
     }
-// 특수문자 현상 때문에 임시로 닫아놓음.
-//    if (PcSaveArrayList.length == 1) { //하나의 메일을 다운로드 할 경우
-//    	var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
-//    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
-//    	AttachDownFrame.location.href = fullpath;
-//        AttachDownFrame.target = "_blank";
-//        
-//    } else { // 여러개의 메일을 다운로드 할 경우
+    if (PcSaveArrayList.length == 1) { //하나의 메일을 다운로드 할 경우
+    	var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
+    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
+    	AttachDownFrame.location.href = fullpath;
+        AttachDownFrame.target = "_blank";
+        
+    } else { // 여러개의 메일을 다운로드 할 경우
     	var type = "MAIL";
     	
     	if (useEncryptZipForEmail == "YES") { // 암호화 config 인 경우
@@ -1296,7 +1295,7 @@ function mail_export(pwd) {
     	} else { // 암호 적용 안할 경우
     		mailExport_start();
     	}
-//    }
+    }
     
 }
 

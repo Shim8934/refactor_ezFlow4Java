@@ -259,5 +259,7 @@ public interface EzBoardService {
 	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception;
 
 	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception;
+	//2017.12.29 강민수92
+	public String getOneLineReplyCount(String boardID, String itemID, int tenantID) throws Exception;
 
 }

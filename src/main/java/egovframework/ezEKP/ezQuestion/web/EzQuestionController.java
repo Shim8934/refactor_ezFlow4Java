@@ -994,7 +994,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
 		
 		if(req.getParameter("RangeXMLStr") != null) {
-			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("\"", "\'"));
+			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&quot;", "\"").replace("\"", "\'"));
 		}
 		
 		pStep1DataXML.append("</PARAMETER>");
@@ -1318,7 +1318,12 @@ public class EzQuestionController extends EgovFileMngUtil {
          			}
 				}
 				
-				int pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
+				int pUserCnt = 0;
+				
+				if(doc.getElementsByTagName("MEMBER").item(0) != null) {
+					pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
+				}
+				
 				for(int i=0; i<pUserCnt; i++) {
 					String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
 		        	String userNm = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();

@@ -140,14 +140,14 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			firstScreenMail = "NO";
-		}
-		
-		if (userInfo == null) {
-			return "cmm/error/adminDenied";
 		}
 		
 		model.addAttribute("firstScreen_Mail", firstScreenMail);
@@ -196,6 +196,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		logger.debug("themeInfo started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String mode = "new";
 		String strUserLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String pKeyCode = "";
@@ -735,6 +736,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 
 		String mainHtml = "";
+		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
 			mainHtml += "<tr style=\"cursor:pointer\" onClick=\"setValue('"+xmlDom.getElementsByTagName("UID").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("GUBUNFLAG").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID").item(i).getTextContent()+"', this)\">";
 			mainHtml += "<td width=\"120\" style=\"display:none\">";
@@ -760,9 +762,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
             mainHtml += "</td>";
             mainHtml += "<td width='150'>"+xmlDom.getElementsByTagName("THEMENM" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>"; 
 			mainHtml += "<td width='130'>";
+			
 			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim().equals("Y")) {
 				mainHtml += egovMessageSource.getMessage("ezPortal.t259", locale);
 			}
+			
 			mainHtml += "</td>";
 			
 			mainHtml += "<td width='170'>"+commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent(), userInfo.getOffset(), false)+"</td>";
@@ -1147,9 +1151,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		//포탈페이지 카테고리 정보를 가져온다.
 		List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 		portalPageCategoryXML = "<DATA>";
+		
 		for (int i=0; i<portalPagelist.size(); i++) {
 			portalPageCategoryXML += commonUtil.getQueryResult(portalPagelist.get(i));
 		}
+		
 		portalPageCategoryXML += "</DATA>";
 		portalPageCategoryXML.replace("\"", "\\\"");
 		
@@ -1192,6 +1198,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String paramHtml = "";
+		
 		for (int i=0; i<param.size(); i++) {
 			if (param.get(i).getParamType() == 0) {
 				paramHtml += "<tr>";
@@ -1513,6 +1520,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			sb.append("<TD class='portlet' align=left><img src='/css/ezPortal/portlet_bar.gif' width=3 height=15 border=0 align=absmiddle> <span class='portletfont'>" + displayName + "</span></TD>\n");
 			sb.append("</TR>\n");
 		}
+		
 		sb.append("<TR style='WIDTH:100%; HEIGHT:" + height + "px'>\n");
 		sb.append("<TD style='WIDTH:100%' align=middle valign=top><iframe width=100% height=" + height + " border=0 src='" + url + ezPortalService.loadGetParameters(url, uID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
 		sb.append("</TR>\n");
@@ -1560,6 +1568,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String pSelected = "";
 		StringBuilder sb = new StringBuilder();
+		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().equals(pageID)) {
 				pSelected = "selected";
@@ -1568,6 +1577,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			sb.append("<option value='" + xmlDom.getElementsByTagName("UID_").item(i).getTextContent() + "' " + pSelected + ">" + xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent().trim() + "</option>");
 		}
+		
 		layoutList = sb.toString();
 		
 		String gXmlStr = ezPortalAdminService.loadLogoItems(pageID, userInfo.getTenantId());
@@ -1579,9 +1589,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		map.put("tenantID", userInfo.getTenantId());
 		List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
 		String xmlStr = "<DATA>";
+		
 		for (int i=0; i<result.size(); i++) {
 			xmlStr += commonUtil.getQueryResult(result.get(i));
 		}
+		
 		xmlStr += "</DATA>";
 		Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -1590,6 +1602,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String mainHTML = "";
+		
 		for (int i=0; i<gXmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			mainHTML += "<tr style='cursor:pointer' imageurl='"+gXmlDom.getElementsByTagName("NORMALIMAGEPATH").item(i).getTextContent()+"' onclick=\"setValue('"+gXmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\" ondblclick=\"selectItem('"+gXmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 			mainHTML += "<td width='60'>"+String.valueOf(i+1)+"</td>";
@@ -1708,6 +1721,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String pageID = "";
 		String mode = "";
 		String uID = "";
+		
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 			pageID = req.getParameter("pageID");
 		}
@@ -1743,20 +1757,26 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_UID", uID);
 			map.put("v_OWNERPAGEID", pageID);
+			
 			if (skin == null || skin.equals("")) {
 				skin = "0";
 			}
+			
 			map.put("v_SKINNUM", Integer.parseInt(skin));
 			map.put("v_DISPLAYNAME", displayName);
 			map.put("v_DISPLAYNAME2", displayName2);
 			map.put("v_NORMALIMAGEPATH", normalImage);
+			
 			if (imageWidth == null || imageWidth.equals("")) {
 				imageWidth = "0";
 			}
+			
 			map.put("v_IMAGEWIDTH", Integer.parseInt(imageWidth));
+			
 			if (imageHeight == null || imageHeight.equals("")) {
 				imageHeight = "0";
 			}
+			
 			map.put("v_IMAGEHEIGHT", Integer.parseInt(imageHeight));
 			map.put("v_LINKURL", linkUrl);
 			map.put("v_LINKLOCATION", linkLocation);
@@ -1777,9 +1797,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("v_UID", uID);
 			map.put("v_OWNERPAGEID", pageID);
 			map.put("tenantID", userInfo.getTenantId());
+			
 			ezPortalAdminService.saveLogoImage2(map);
 		}
 
@@ -1934,6 +1956,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String pSelected = "";
 		StringBuilder sb = new StringBuilder();
+		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().equals(pageID)) {
 				pSelected = "selected";
@@ -1942,6 +1965,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			sb.append("<option value='" + xmlDom.getElementsByTagName("UID_").item(i).getTextContent() + "' " + pSelected + ">" + xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent().trim() + "</option>");
 		}
+		
 		layoutList = sb.toString();
 		
 		//유틸메뉴목록
