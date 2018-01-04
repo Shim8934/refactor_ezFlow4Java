@@ -250,14 +250,22 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		
 		String funCode = "1";
+		
 		if (request.getParameter("funCode") != null) {
 			funCode = request.getParameter("funCode");
+		}
+
+		String subCode = "1";
+		
+		if (request.getParameter("subCode") != null) {
+			subCode = request.getParameter("subCode");
 		}
 		
 		model.addAttribute("mailServerAddress", mailServerAddress);
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		model.addAttribute("funCode", funCode);
+		model.addAttribute("subCode", subCode);
 		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
