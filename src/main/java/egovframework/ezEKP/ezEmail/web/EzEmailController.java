@@ -36,11 +36,18 @@ public class EzEmailController {
 	@RequestMapping(value="/ezEmail/mailMain.do")
 	public String showMailMain(Model model, HttpServletRequest request) throws Exception {
 		String funCode = "1";
-		if(request.getParameter("funCode") != null) {
+		String subCode = "1";
+		
+		if (request.getParameter("funCode") != null) {
 			funCode = request.getParameter("funCode");
+		}
+
+		if (request.getParameter("subCode") != null) {
+			subCode = request.getParameter("subCode");
 		}
 		
 		model.addAttribute("funCode", funCode);
+		model.addAttribute("subCode", subCode);
 		
 		return "ezEmail/mailMain";
 	}

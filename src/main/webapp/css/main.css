@@ -310,7 +310,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .t11 { font-size:11px; font-weight:normal; color:#666; margin-left:5px;}
 
 /*------------ photogallery ------------*/
-.photobox {position:relative; float:left;  width:536px; background:#fff;}
+.photobox {position:relative; float:left;  width:541px; background:#fff;}
 .photocont {position:relative;padding:7px 5px 21px; height:100px; overflow:hidden;}
 .photocont ul {margin:0px 0px 0px 2px; padding:0px; white-space:nowrap; overflow:hidden; height:110px;}
 .photocont ul li {display:inline-block; float:left;width:82px;margin:0px 9px;padding:0px;text-align:center;list-style:none; color:#333; cursor: pointer;}

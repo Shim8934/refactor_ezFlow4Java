@@ -2425,13 +2425,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			            }
 				        
 				        // file system의 templist txt파일 삭제
-				        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
-				        pDirPath += commonUtil.separator + stateName + ".txt";
-				        File f = new File(pDirPath);
-				        
-				        if (f.exists()) {
-				        	f.delete();
-				        }			        
+			            if (!stateName.isEmpty()) {
+					        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
+					        pDirPath += commonUtil.separator + stateName + ".txt";
+					        File f = new File(pDirPath);
+					        
+					        if (f.exists()) {
+					        	f.delete();
+					        }			        
+			            }
 			        }
 			        		        
 			        draftFolder.close(true);

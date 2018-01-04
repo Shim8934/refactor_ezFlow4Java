@@ -1535,7 +1535,11 @@ function setRecevInfo(ret) {
 
         }
         else {
-            precipent = strLang92;
+        	if (approvalFlag == "G") {
+        		precipent = strLang92;
+        	} else {
+        		precipent = strLangS68;
+        	}
 
             if (getNodeText(dataNodes[3]) == "Y")
                 precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
