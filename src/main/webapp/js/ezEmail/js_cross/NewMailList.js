@@ -549,6 +549,9 @@ function MailSelect_One() {
 }
 var pOldSearchKeyword;
 function GetListInfo(HeaderObject, ContentObject) {
+	/*수아 재은 수정*/
+	checkedHrefArry = getCheckHrefArry();
+    
     listSubContentArry = new Array();
     listContentArry = new Array();
     var xmlpara = createXmlDom();
@@ -688,10 +691,28 @@ function GetListIevent_ongetxmlcomplete() {
             
             HiddenMailProgress();
             GetList_HTTP = null;
-        }
+            
+            /*수아 재은 수정(선택된 input href)*/
+            for (i = 0; i < checkedHrefArry.length; i++) {
+            	var getChkId = $(".mainlist tr[_href='" + checkedHrefArry[i] + "']").attr("id");
+            	
+            	if (!(typeof getChkId === 'undefined')) {
+	            	document.getElementById(getChkId).childNodes.item(0).childNodes.item(0).checked = true;
+	                document.getElementById(getChkId).style.backgroundColor = m_strColorSelect;
+            	}
+            }//for End
+        }   
     }
 }
-
+/*수아 재은 수정(선택된 input href)*/
+function getCheckHrefArry() {
+	var checkedHrefArry = new Array();
+	$("#MailList tr input:checked").each(function (){
+		checkedHrefArry.push($(this).parents("tr").attr("_href"));
+	});
+	
+	return checkedHrefArry;
+}
 function isScrollMailList(){
 	if ($("#contentlist").height() < $("table.mainlist#MailList").height()) {
 		if ($("#MailHeader tr th#forScroll").length < 1) {
