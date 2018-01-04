@@ -25,7 +25,7 @@
 		</style>
 
 		<script type="text/javascript">
-			var CurPage = '<c:out value="${curpage}" />';
+			var CurPage = '<c:out value="${curPage}" />';
 			var totalPage = '<c:out value="${totalPage}" />';
 		    var totalCount = '<c:out value="${keywordCount}" />';
 		    var code = '<c:out value="${code}" />';
@@ -41,7 +41,7 @@
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
 		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\">";
 		        	html += "<tr style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\" >";
-		        	html += "<th style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
+		        	html += "<th style=\"border-left:1px solid #b6b6b6;width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
 		        	html += "<th style=\"width:100%; text-align:left;border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\" >";
 		        	
@@ -64,7 +64,7 @@
 		        if (SelectNodes(xmlDoc, "DATA/ROW").length == 0) {
 		        	var strstr = "<spring:message code='ezCommunity.t926' />";
 		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;width:100%;height:130px;text-align:center\">";
-		        	html += "<tr style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\" ><td style='color:#777;background-color:#fafafa'>" + strstr +"</td></tr></table>";
+		        	html += "<tr style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\" ><td style='color:#777;background-color:#fafafa;border:1px solid #ddd !important'>" + strstr +"</td></tr></table>";
 		        }
 		        
 		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 

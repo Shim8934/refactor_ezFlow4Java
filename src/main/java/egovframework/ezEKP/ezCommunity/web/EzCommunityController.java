@@ -2067,6 +2067,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		model.addAttribute("selRes", selRes);
+		model.addAttribute("selRes1", selRes1);
+		model.addAttribute("selRes2", selRes2);
 		model.addAttribute("sel", sel);
 		model.addAttribute("selType", selType);
 		model.addAttribute("selJU", 0);

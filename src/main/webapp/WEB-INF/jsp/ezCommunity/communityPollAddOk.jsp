@@ -55,7 +55,7 @@
 				stringHTML += '<INPUT type="hidden" name="selRes2" value="${selRes2}">';
 				stringHTML += '<INPUT type="hidden" name="startDate" value="${startDate}">';
 				stringHTML += '<INPUT type="hidden" name="endDate" value="${endDate}">';	
-				stringHTML += '<INPUT type="hidden" name="pSub" value="' + escape(document.getElementById("pollSubject").value) + '" >';
+				stringHTML += '<INPUT type="hidden" name="subject" value="' + document.getElementById("pollSubject").value + '" >';
 				stringHTML += '</form>';			
 					
 				document.body.innerHTML += stringHTML;
