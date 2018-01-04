@@ -117,6 +117,7 @@
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
 		    var signImageType = "${signImageType}";
+		    var curDocNum = "";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -520,7 +521,9 @@
 		
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
-		        rtnval = getRecvDocNumber(arr_userinfo[4]);
+		        if (approvalFlag == "G") {
+		        	rtnval = getRecvDocNumber(arr_userinfo[4]);
+		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";
 		            OpenAlertUI(pAlertContent);

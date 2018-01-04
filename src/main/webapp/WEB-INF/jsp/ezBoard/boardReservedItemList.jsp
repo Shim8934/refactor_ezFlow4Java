@@ -47,10 +47,11 @@
 		
 		    function checkBox_checked(pBoardID, pItemID, evt) {
 		        if (CrossYN()) {
-		            if (evt.currentTarget.checked)
+		            if (evt.currentTarget.checked) {
 		                strListInfo += pBoardID + "@" + pItemID + "," + SSUserID + ";";
-		            else
+					} else {
 		                strListInfo = ReplaceText(strListInfo, pBoardID + "@" + pItemID + "," + SSUserID + ";", "");
+					}
 		        }
 		        else {
 		            if (window.event.srcElement.checked) {
@@ -60,8 +61,11 @@
 		            }
 		        }
 		    }
+		    
 		    function checkBox_checkAll() {
 		        var i = 0;
+		        var checkObj = document.getElementsByName("chk");
+		        
 		        for (i = 1; i < document.frmOutbox.length; i++) {
 		            if (document.frmOutbox[i].type == 'checkbox') {
 		                if (document.frmOutbox.checkbox.checked) {
@@ -83,22 +87,51 @@
 		        if (ret) DeleteItem();
 		    }
 		    function DeleteItem() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + strListInfo.split("@")[0] + "&itemList=" + strListInfo.split("@")[1], false);
-		        xmlhttp.send();
-		
-		        if (xmlhttp.responseText == "NO") {
-		            alert("<spring:message code='ezBoard.t265'/>");
-		            return;
+		        // EzBoardServiceImpl 에서 deleteItem 매서드에서 이미 Split으로 ;로 나눠주고 있음. 그래서 이 형식에 맞춰서
+		        //형태를 바꿔주는게 좋음!
+		        var strListInfoSplit = strListInfo.split(";");
+		        var boardList = "";
+		        strListInfoSplit = strListInfoSplit.filter(Boolean);
+		        
+		        for (var i = 0; i < strListInfoSplit.length; i++) {
+		        	var boardId = strListInfoSplit[i].split("@")[0];
+		        	
+		        	if (boardList.indexOf(boardId) == -1) {
+		        		boardList += boardId + ";";
+		        	}
 		        }
-		
+		    	
+		        var boardArrayList = boardList.split(";");
+		        boardArrayList = boardArrayList.filter(Boolean);
+		        
+	        	var xmlhttp = createXMLHttpRequest();
+		        
+		        for (var i = 0; i < boardArrayList.length; i++) {
+		        	var itemList = "";
+					
+		        	for (var j = 0; j < strListInfoSplit.length; j++) {
+						if (boardArrayList[i] === strListInfoSplit[j].split("@")[0]) {
+							itemList += strListInfoSplit[j].split("@")[1] + ";";
+						}
+			        }
+		        	
+					console.log("boardArrayList[" + i + "] = " + boardArrayList[i]);
+					console.log("itemList = " + itemList);
+					
+					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + boardId + "&itemList=" + itemList, false);
+		        	xmlhttp.send();
+			        if (xmlhttp.responseText == "NO") {
+			            alert("<spring:message code='ezBoard.t265'/>");
+			            return;
+			        }
+		        }
+		        
 		        xmlhttp = null;
 		        
 		        try {
 			        leftCountRf();
 				} catch (e) {
 				}
-				
 		        window.location.reload();
 		    }
 		    function ReplaceText(orgStr, findStr, replaceStr) {
@@ -362,6 +395,6 @@
 	</div>
 	<br />
 	<div id="tblPageRayer" style="text-align:center"></div>
-	<div id="ListInfo" style="DISPLAY:none">${ListInfo}</div>
+	<div id="ListInfo" style="display:none">${listInfo }</div>
 	</body>
 </html>

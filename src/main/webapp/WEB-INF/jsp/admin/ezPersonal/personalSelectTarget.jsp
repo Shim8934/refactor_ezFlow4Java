@@ -125,14 +125,14 @@
 	                    pparsingXML = "";
 	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + ACCESSID + "</DATA1>";
-	                    pparsingXML = pparsingXML + "<DATA2>" + ACCESSNAME + "</DATA2>";
-	                    pparsingXML = pparsingXML + "<DATA3>" + ACCESSNAME2 + "</DATA3>";
+	                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(ACCESSNAME) + "</DATA2>";
+	                    pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(ACCESSNAME2) + "</DATA3>";
 	                    pparsingXML = pparsingXML + "<DATA5>" + PERMISSIONS + "</DATA5>";
 	
 	                    if (userLang == "") {
-	                        pparsingXML = pparsingXML + "<VALUE>" + ACCESSNAME + "</VALUE>";
+	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(ACCESSNAME) + "</VALUE>";
 	                    } else {
-	                        pparsingXML = pparsingXML + "<VALUE>" + ACCESSNAME2 + "</VALUE>";
+	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(ACCESSNAME2) + "</VALUE>";
 	                    }
 	                    
 	                    pparsingXML = pparsingXML + "</CELL></ROW>";
@@ -267,8 +267,8 @@
 		        for (var nCnt1 = 0; nCnt1 < listviewSelected.length; nCnt1++) {
 		            selectTargetListXML += "<NODE>";
 		            selectTargetListXML += "<ACCESSID>" + listviewSelected[nCnt1].getAttribute("data1") + "</ACCESSID>";
-		            selectTargetListXML += "<ACCESSNAME>" + listviewSelected[nCnt1].getAttribute("data2") + "</ACCESSNAME>";
-		            selectTargetListXML += "<ACCESSNAME2>" + listviewSelected[nCnt1].getAttribute("data3") + "</ACCESSNAME2>";
+		            selectTargetListXML += "<ACCESSNAME>" + MakeXMLString(listviewSelected[nCnt1].getAttribute("data2")) + "</ACCESSNAME>";
+		            selectTargetListXML += "<ACCESSNAME2>" + MakeXMLString(listviewSelected[nCnt1].getAttribute("data3")) + "</ACCESSNAME2>";
 		            selectTargetListXML += "<PERMISSIONS>" + listviewSelected[nCnt1].getAttribute("data5") + "</PERMISSIONS>";
 		            selectTargetListXML += "</NODE>";
 		        }
@@ -311,15 +311,15 @@
 		                    pparsingXML = "";
 		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + existId + "</DATA1>";
-		                    pparsingXML = pparsingXML + "<DATA2>" + existName + "(" + strDeptNM.trim() + ")" + "</DATA2>";
-		                    pparsingXML = pparsingXML + "<DATA3>" + existName2 + "(" + strDeptNM2.trim() + ")" + "</DATA3>";
+		                    pparsingXML = pparsingXML + "<DATA2>" + existName + "(" + MakeXMLString(strDeptNM.trim()) + ")" + "</DATA2>";
+		                    pparsingXML = pparsingXML + "<DATA3>" + existName2 + "(" + MakeXMLString(strDeptNM2.trim()) + ")" + "</DATA3>";
 		                    pparsingXML = pparsingXML + "<DATA5>" + "Y" + "</DATA5>";
 		
 		
 		                    if (userLang == "")
-		                        pparsingXML = pparsingXML + "<VALUE>" + existName + "(" + strDeptNM.trim() + ")" + "</VALUE>";
+		                        pparsingXML = pparsingXML + "<VALUE>" + existName + "(" + MakeXMLString(strDeptNM.trim()) + ")" + "</VALUE>";
 		                    else
-		                        pparsingXML = pparsingXML + "<VALUE>" + existName2 + "(" + strDeptNM2.trim() + ")" + "</VALUE>";
+		                        pparsingXML = pparsingXML + "<VALUE>" + existName2 + "(" + MakeXMLString(strDeptNM2.trim()) + ")" + "</VALUE>";
 		                    pparsingXML = pparsingXML + "</CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		
@@ -364,14 +364,14 @@
 		                    pparsingXML = "";
 		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + nodeIdx.GetNodeData("CN") + "</DATA1>";
-		                    pparsingXML = pparsingXML + "<DATA2>" + nodeIdx.GetNodeData("DISPLAYNAME") + "</DATA2>";
-		                    pparsingXML = pparsingXML + "<DATA3>" + nodeIdx.GetNodeData("DISPLAYNAME2") + "</DATA3>";
+		                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + "</DATA2>";
+		                    pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + "</DATA3>";
 		                    pparsingXML = pparsingXML + "<DATA5>" + "Y" + "</DATA5>";
 		
 		                    if (userLang == "")
-		                        pparsingXML = pparsingXML + "<VALUE>" + nodeIdx.GetNodeData("DISPLAYNAME") + "</VALUE>";
+		                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME")) + "</VALUE>";
 		                    else
-		                        pparsingXML = pparsingXML + "<VALUE>" + nodeIdx.GetNodeData("DISPLAYNAME2") + "</VALUE>";
+		                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(nodeIdx.GetNodeData("DISPLAYNAME2")) + "</VALUE>";
 		                    pparsingXML = pparsingXML + "</CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                    Resultxml = loadXMLString(pparsingXML2);

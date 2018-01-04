@@ -8,12 +8,16 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="/css/organ_tree.css">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
+		<style>
+			#TopBoardsList {
+				border-top:0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
       		var selectedBoard = "";
@@ -287,8 +291,8 @@
 	<body class = "popup" style = "overflow : hidden">
 		<h1><spring:message code='ezCommunity.t359' /></h1>
 		
-	    <div class="box" style="width: 420px; height: 550px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
-	    <div class="btnposition">
+	    <div class="box" style="width: 420px; height: 540px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" name="Submit" onclick="return Select()"><span><spring:message code='ezCommunity.t278' /></span></a>
 	        <a class="imgbtn" name="Submit" onclick="javascript: window.close();"><span><spring:message code='ezCommunity.t21' /></span></a>
 	    </div>

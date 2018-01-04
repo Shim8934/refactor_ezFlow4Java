@@ -607,7 +607,8 @@
     var g_selectedNode = null;
 
     function make_childHtml(nodeIdx) {
-        var nodeXML;
+
+    	var nodeXML;
         var depth = "";
         if (nodeIdx == 0)
         {
@@ -679,6 +680,7 @@
                     mydepth += "0";
                 }
 
+                IMG_TAG.setAttribute("class", "plusTreeImg");
                 IMG_TAG.setAttribute("id", g_toggleid + g_nodeCount);
                 IMG_TAG.setAttribute("name", g_toggleid + g_nodeCount);
                 IMG_TAG.setAttribute("width", g_imageWidth);

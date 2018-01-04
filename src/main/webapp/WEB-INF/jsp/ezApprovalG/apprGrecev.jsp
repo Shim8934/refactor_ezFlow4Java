@@ -109,6 +109,8 @@
 			var junGyulFlag = "${junGyulFlag}";
 			var pSignImage_Size = "${signImageSize}";
 			var docNumZeroCnt = "${docNumZeroCnt}";
+			var curDocNum = "";
+			var draftDeptID = "${draftDeptID}";
 			
 			window.onload = function () {
 			};
@@ -608,7 +610,7 @@
 		                return;
 		            }
 		        }
-		
+		        
 		        if (LastSignSN == 1 || DraftLastFlag)
 		            rtnval = getRecvDocNumber(arr_userinfo[4]);
 		        else

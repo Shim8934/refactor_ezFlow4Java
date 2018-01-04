@@ -2617,7 +2617,11 @@ function SaveDraftDocInfo_ilban(pState) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
 
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
-
+        if (curDocNum != "") {
+       	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+       } else {
+       	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+       }
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
@@ -3619,7 +3623,7 @@ function getSignDate() {
 }
 function getHistory() {
     var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
-    centerOpenWindow(URL, 730, 450);
+    centerOpenWindow(URL, 740, 450);
 }
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {

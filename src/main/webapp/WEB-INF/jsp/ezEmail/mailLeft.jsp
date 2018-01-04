@@ -26,6 +26,9 @@
 	        var lang = "${userinfo.lang}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var reloadRetryCount = 1;
+	      	var previewSubTree = "${previewSubTree}";
+	      	var usePreviewSubTree = "${usePreviewSubTree}";
+	        
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -57,7 +60,30 @@
 	            document.getElementById("mailexportall").style.display = "none";
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
+	            
+	            // 2017.12.27 단암 시스템 트리 열기 
+	            // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
+	            if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
+		            var treeArrNum = $('.plusTreeImg').length;
+
+		          	for (var i = 0; i < treeArrNum; i++) {
+		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
+		        	    var idx = getSubtree.split('PostTreeView_img_');
+		        	    
+		        	    if (typeof idx[1] != "undefined") {
+		        	    	var childxml = get_childXML(PostTreeView.getvalue(idx[1], "href"), false, true, false);
+		        	    	
+		        	    	PostTreeView.putchildxml(idx[1], childxml);
+		        	    	
+		        	    	$('#PostTreeView_img_' + idx[1] + '').attr("src", "/images/OrganTree_cross/minus.gif");
+		        	    }
+		        	    
+	        	    	treeArrNum = $('.plusTreeImg').length;
+		          	}
+	            }
+	            
 	        }
+	        
 	        function write_Letter() {
 	            var pheight = window.screen.availHeight;
 	            var conHeight = pheight * 0.8;

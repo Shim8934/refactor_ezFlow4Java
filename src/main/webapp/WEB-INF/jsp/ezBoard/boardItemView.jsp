@@ -54,6 +54,7 @@
 		    var pReservedItem = "${pReservedItem}";
 		    var g_progresswin;
 		    var OneLineReplyFlag = "${boardPropertyVO.oneLineReply}";
+		    var commentCount = "${commentCount}";
 			var gubun = "${guBun}";
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
@@ -98,21 +99,21 @@
 						addheight = AtttributeCount * 30;
 		            }
 		
-		            if (OneLineReplyFlag == "1") {
-		                getOneLineReply();
+// 		            if (OneLineReplyFlag == "1") {
+// 		                getOneLineReply();
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
 		                    self.resizeTo(760, (768 + addheight));
 		                else {
 		                    self.resizeTo(785, (795 + addheight));
 		                }
-		            }
-		            else {
-		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-		                    self.resizeTo(760, (690 + addheight));
-		                } else {
-		                    self.resizeTo(785, (715 + addheight));
-		                }
-		            }
+// 		            }
+// 		            else {
+// 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+// 		                    self.resizeTo(760, (690 + addheight));
+// 		                } else {
+// 		                    self.resizeTo(785, (715 + addheight));
+// 		                }
+// 		            }
 		
 		            var Div = document.createElement("DIV");
 		            var Span = document.createElement("SPAN");
@@ -153,25 +154,25 @@
 		
 		    window.onresize = function () {
 		        if (gubun != "3") { 
-			        if (OneLineReplyFlag == "1") {
-				        if (pAttributeYN == "Y") {
-				            var contentHeight;
-				            if (gubun == "2")
-				                contentHeight = document.documentElement.clientHeight - 290 - addheight;
-				            else
-				                contentHeight = document.documentElement.clientHeight - 320 - addheight;
-				            document.getElementById("message").style.height = contentHeight + "PX";
-				            document.getElementById("pad1").style.height = contentHeight + "PX";
-				        } else {
-				            var contentHeight;
-				            if (gubun == "2")
-				                contentHeight = document.documentElement.clientHeight - 290;
-				            else
-				                contentHeight = document.documentElement.clientHeight - 320;
-				            document.getElementById("message").style.height = contentHeight + "PX";
-				            document.getElementById("pad1").style.height = contentHeight + "PX";
-				        }
-				    } else {
+// 			        if (OneLineReplyFlag == "1") {
+// 				        if (pAttributeYN == "Y") {
+// 				            var contentHeight;
+// 				            if (gubun == "2")
+// 				                contentHeight = document.documentElement.clientHeight - 290 - addheight;
+// 				            else
+// 				                contentHeight = document.documentElement.clientHeight - 320 - addheight;
+// 				            document.getElementById("message").style.height = contentHeight + "PX";
+// 				            document.getElementById("pad1").style.height = contentHeight + "PX";
+// 				        } else {
+// 				            var contentHeight;
+// 				            if (gubun == "2")
+// 				                contentHeight = document.documentElement.clientHeight - 290;
+// 				            else
+// 				                contentHeight = document.documentElement.clientHeight - 320;
+// 				            document.getElementById("message").style.height = contentHeight + "PX";
+// 				            document.getElementById("pad1").style.height = contentHeight + "PX";
+// 				        }
+// 				    } else {
 				        if (pAttributeYN == "Y") {
 				            var contentHeight;
 				            if (gubun == "2")
@@ -189,7 +190,7 @@
 				            document.getElementById("message").style.height = contentHeight + "PX";
 				            document.getElementById("pad1").style.height = contentHeight + "PX";
 				        }
-			        }
+// 			        }
 		        }
 		    };
 		
@@ -333,6 +334,13 @@
 		        } catch (e) {
 		        }
 		        window.close();
+		    }
+		 	 //강민수92
+		    function btn_One_Line_Reply_Onclick() {
+		    	if (OneLineReplyFlag == "1") {
+		    		openBoardComment();
+		    		return;
+		    	} 
 		    }
 		    function btn_Reply_Onclick() {
 		        if (Reply_FG != "true") {
@@ -613,164 +621,164 @@
 		    function OpenUserInfo(pUserID) {
 		        var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
 		    }
-		    function OneLineReply_onkeydown() {
-		        if (event.keyCode == 13) Save_OneLineReply();
-		    }
-		    function Save_OneLineReply() {
-		        if (Reply_FG != "true") {
-		            alert("<spring:message code='ezBoard.t303' />");
-				    return;
-				}
-		        if (OneLineReplyFlag == "1") {
-		            if (document.getElementById('onelinereply').value == "") {
-		                alert("<spring:message code='ezBoard.t307' />");
-				        return;
-				    }
-		        }
+// 		    function OneLineReply_onkeydown() {
+// 		        if (event.keyCode == 13) Save_OneLineReply();
+// 		    }
+// 		    function Save_OneLineReply() {
+// 		        if (Reply_FG != "true") {
+// 		            alert("<spring:message code='ezBoard.t303' />");
+// 				    return;
+// 				}
+// 		        if (OneLineReplyFlag == "1") {
+// 		            if (document.getElementById('onelinereply').value == "") {
+// 		                alert("<spring:message code='ezBoard.t307' />");
+// 				        return;
+// 				    }
+// 		        }
 
-		        if (gubun == "2" && trim(document.getElementById('txtPassWord').value) == "") {
-		            alert("<spring:message code='ezBoard.t391' />");
-				    document.getElementById('txtPassWord').focus();
-				    return;
-				}
-		        var pReplyID = "";
-		        pReplyID = "{" + GetGUID().toUpperCase() + "}";
+// 		        if (gubun == "2" && trim(document.getElementById('txtPassWord').value) == "") {
+// 		            alert("<spring:message code='ezBoard.t391' />");
+// 				    document.getElementById('txtPassWord').focus();
+// 				    return;
+// 				}
+// 		        var pReplyID = "";
+// 		        pReplyID = "{" + GetGUID().toUpperCase() + "}";
 		
-				var content,password;
-				if (OneLineReplyFlag == "1"){
-					content = MakeXMLString(document.getElementById('onelinereply').value);
-				}else{
-					content = "";
-				}
-				if (gubun != "2") {
-				    password = "";
-				}
-				else {
-				    password = rsa.encrypt(document.getElementById("txtPassWord").value);
-				}
+// 				var content,password;
+// 				if (OneLineReplyFlag == "1"){
+// 					content = MakeXMLString(document.getElementById('onelinereply').value);
+// 				}else{
+// 					content = "";
+// 				}
+// 				if (gubun != "2") {
+// 				    password = "";
+// 				}
+// 				else {
+// 				    password = rsa.encrypt(document.getElementById("txtPassWord").value);
+// 				}
 		
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezBoard/saveOneLineReply.do",
-					data : { boardID    : pBoardID, 
-							 itemID 	: pItemID,
-							 replyID	: pReplyID,
-							 content	: content,
-							 password	: password
+// 				$.ajax({
+// 					type : "POST",
+// 					dataType : "text",
+// 					async : false,
+// 					url : "/ezBoard/saveOneLineReply.do",
+// 					data : { boardID    : pBoardID, 
+// 							 itemID 	: pItemID,
+// 							 replyID	: pReplyID,
+// 							 content	: content,
+// 							 password	: password
 								 
-						   },
-					success: function(){
-						reloadOneline();
-					}
-				});
-		    }
+// 						   },
+// 					success: function(){
+// 						reloadOneline();
+// 					}
+// 				});
+// 		    }
 		    
-			function reloadOneline(){
-			    if (OneLineReplyFlag == "1")
-			        document.getElementById('onelinereply').value = "";
-			    if (gubun == "2")
-			        document.getElementById('txtPassWord').value = "";
-			    getOneLineReply();
-			}
+// 			function reloadOneline(){
+// 			    if (OneLineReplyFlag == "1")
+// 			        document.getElementById('onelinereply').value = "";
+// 			    if (gubun == "2")
+// 			        document.getElementById('txtPassWord').value = "";
+// 			    getOneLineReply();
+// 			}
 			
 		    var delpReplyID = "";
-		    function delete_onelinereply(pReplyID) {
-		        delpReplyID = pReplyID;
-		        var xmlhttp = createXMLHttpRequest();
+// 		    function delete_onelinereply(pReplyID) {
+// 		        delpReplyID = pReplyID;
+// 		        var xmlhttp = createXMLHttpRequest();
 		        
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
-		            if (gubun == "2") {
-		                if (CrossYN()) {
-		                	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
+// 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
+// 		            if (gubun == "2") {
+// 		                if (CrossYN()) {
+// 		                	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
+// 		                    feature = feature + GetShowModalPosition(330, 200);
+// 		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
 		                    
-		                    if (ret == "NO") {
-		                        alert("<spring:message code='ezBoard.t267' />");
-		                        return;
-		                    } else if (ret == "cancel" || ret == undefined) {
-		                        alert(strLang27);
-		                        return;
-		                    }
+// 		                    if (ret == "NO") {
+// 		                        alert("<spring:message code='ezBoard.t267' />");
+// 		                        return;
+// 		                    } else if (ret == "cancel" || ret == undefined) {
+// 		                        alert(strLang27);
+// 		                        return;
+// 		                    }
 		                    
-		                    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
-		                    xmlhttp.send();
-		                    if (xmlhttp.responseText == "FAIL") {
-		                        alert("<spring:message code='ezBoard.t310' />");
-		                    }
+// 		                    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
+// 		                    xmlhttp.send();
+// 		                    if (xmlhttp.responseText == "FAIL") {
+// 		                        alert("<spring:message code='ezBoard.t310' />");
+// 		                    }
 		
-		                    getOneLineReply();
-		                    xmlhttp = null;
-		                } else {		                	
-		                    checkpassword_dialogArguments = new Array();
-		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
-		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
-		                    try { OpenWin.focus(); } catch (e) { }
-		                }
+// 		                    getOneLineReply();
+// 		                    xmlhttp = null;
+// 		                } else {		                	
+// 		                    checkpassword_dialogArguments = new Array();
+// 		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
+// 		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+// 		                    try { OpenWin.focus(); } catch (e) { }
+// 		                }
 		                
-		            } else {
-		                xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
-		                xmlhttp.send();
-		                if (xmlhttp.responseText.substr(0, 2) != "OK") {
-		                    alert("<spring:message code='ezBoard.t310' />");
-		                    return;
-		                }
-		                if (!confirm("<spring:message code='ezBoard.t311' />")) return;
-		            }
-		        } else {
-		        	if (!confirm("<spring:message code='ezBoard.t311' />")) return;
-		        }
-		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
-		        xmlhttp.send();	        
+// 		            } else {
+// 		                xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
+// 		                xmlhttp.send();
+// 		                if (xmlhttp.responseText.substr(0, 2) != "OK") {
+// 		                    alert("<spring:message code='ezBoard.t310' />");
+// 		                    return;
+// 		                }
+// 		                if (!confirm("<spring:message code='ezBoard.t311' />")) return;
+// 		            }
+// 		        } else {
+// 		        	if (!confirm("<spring:message code='ezBoard.t311' />")) return;
+// 		        }
+// 		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
+// 		        xmlhttp.send();	        
 		        
-		        if (xmlhttp.responseText == "FAIL") {
-		            alert("<spring:message code='ezBoard.t310' />");
-		        }
-		        getOneLineReply();
-		        xmlhttp = null;
-		    }
-		    function delete_onelinereply_Complete(ret) {
-		        var xmlhttp = createXMLHttpRequest();
-		        if (ret == "NO") {
-		            alert("<spring:message code='ezBoard.t267' />");
-		            return;
-		        }
-		        else if (ret == "cancel" || ret == undefined) {
-		            alert(strLang27);
-		            return;
-		        }
+// 		        if (xmlhttp.responseText == "FAIL") {
+// 		            alert("<spring:message code='ezBoard.t310' />");
+// 		        }
+// 		        getOneLineReply();
+// 		        xmlhttp = null;
+// 		    }
+// 		    function delete_onelinereply_Complete(ret) {
+// 		        var xmlhttp = createXMLHttpRequest();
+// 		        if (ret == "NO") {
+// 		            alert("<spring:message code='ezBoard.t267' />");
+// 		            return;
+// 		        }
+// 		        else if (ret == "cancel" || ret == undefined) {
+// 		            alert(strLang27);
+// 		            return;
+// 		        }
 		
-		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + delpReplyID + "&guBun=" + gubun, false);
-		        xmlhttp.send();
-		        getOneLineReply();
-		        xmlhttp = null;
-		    }
-		    function getOneLineReply() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
-		        xmlhttp.send();
-		        var xmldom = createXmlDom();
-		        xmldom = loadXMLString(xmlhttp.responseText);
-		        xmlhttp = null;
-		        strHTML = "";
-		        var temp;
-		        for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
-		            temp = i + 1;
-		            if (gubun != "2")
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-		            else
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-		        }
-		        if (i == 0)
-		            strHTML = "<spring:message code='ezBoard.t312' />";
-		        try {
-		            document.getElementById('onelinereplylist').innerHTML = strHTML;
-		        }
-		        catch (e) {
-		        }
-		    }
+// 		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + delpReplyID + "&guBun=" + gubun, false);
+// 		        xmlhttp.send();
+// 		        getOneLineReply();
+// 		        xmlhttp = null;
+// 		    }
+// 		    function getOneLineReply() {
+// 		        var xmlhttp = createXMLHttpRequest();
+// 		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+// 		        xmlhttp.send();
+// 		        var xmldom = createXmlDom();
+// 		        xmldom = loadXMLString(xmlhttp.responseText);
+// 		        xmlhttp = null;
+// 		        strHTML = "";
+// 		        var temp;
+// 		        for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
+// 		            temp = i + 1;
+// 		            if (gubun != "2")
+// 		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
+// 		            else
+// 		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
+// 		        }
+// 		        if (i == 0)
+// 		            strHTML = "<spring:message code='ezBoard.t312' />";
+// 		        try {
+// 		            document.getElementById('onelinereplylist').innerHTML = strHTML;
+// 		        }
+// 		        catch (e) {
+// 		        }
+// 		    }
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
@@ -956,6 +964,11 @@
 		        	<c:choose>
 		        		<c:when test="${boardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 		        			<c:if test="${guBun != '3'}">
+								<!--		강민수92	   -->
+		        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+		        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
+		        				</c:if>
+								<!--		강민수92 end -->		        			
 			        			<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 <%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 		        			</c:if>
@@ -987,6 +1000,11 @@
 			        			<c:when test="${guBun == '2'}">
 			        				<c:choose>
 				        				<c:when test="${guBun != '3'}">
+							        		<!--		강민수92	   -->
+					        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+					        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+					        				</c:if>
+											<!--		강민수92 end -->				        				
 				        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 				        				</c:when>
 			        				</c:choose>
@@ -1000,6 +1018,11 @@
 			        			</c:when>
 			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
 			        				<c:if test="${guBun != '3'}">
+			        					<!--		강민수92	   -->
+				        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+				        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+				        				</c:if>
+										<!--		강민수92 end -->			        				
 			        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			        				</c:if>
 			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
@@ -1022,6 +1045,11 @@
 			        			</c:when>
 			        			<c:otherwise>
 			        				<c:if test="${guBun != '3'}">
+					        			<!--		강민수92	   -->
+				        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+				        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+				        				</c:if>
+										<!--		강민수92 end -->			        				
 				                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 				                        <li ID='btn_Move' style="display:none;"><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
 				                        <c:if test="${guBun != '2'}">
@@ -1152,7 +1180,7 @@
 						</c:if>
 			        <tr>
 			          <th><spring:message code='ezBoard.t323' /></th>
-			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5>
+			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
 			             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
 			             </td>
 			        </tr>
@@ -1199,45 +1227,45 @@
 		  </tr>
 		  <c:choose>
 			  <c:when test="${boardPropertyVO.oneLineReply == '1'}">
-				  <tr>
-				  <c:choose>
-				      <c:when test="${guBun != '2'}">
-					    <td style="vertical-align: top;">
-					        <table class="content">
-					        <tr>
-					          <td style="height:50px;" colspan="3"><div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div></td>
-					        </tr>
-					        <tr>
-					          <th><spring:message code='ezBoard.t324' /></th>
-					          <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
-					          <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
-					        </tr>
-					      </table>
-					    </td>
-				  	</c:when>
-				    <c:otherwise><!-- 2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가  -->
-				        <td style="vertical-align: top; height:10%;">
-				            <table class="content">
-				            <tr>
-				              <td style="height:50px" colspan="5">
-				                  <div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div>
-				              </td>
-				            </tr>
-				            <tr>
-				              <th><spring:message code='ezBoard.t324' /></th>
-				              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
-				              <th><spring:message code='ezBoard.t438' /></th>
-				              <td>
-				              	<INPUT type="password" id="txtPassWord_fake" name="pwd" style="WIDTH:80px; display: none;" autocomplete="new-password">
-				              	<INPUT type="password" id="txtPassWord" name="pwd" style="WIDTH:80px" maxlength="15" autocomplete="new-password">
-				              </td>
-				              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
-				            </tr>
-				          </table>
-				        </td>
-				    </c:otherwise>
-			    </c:choose>
-			  </tr>
+<!-- 				  <tr> -->
+<%-- 				  <c:choose> --%>
+<%-- 				      <c:when test="${guBun != '2'}"> --%>
+<!-- 					    <td style="vertical-align: top;"> -->
+<!-- 					        <table class="content"> -->
+<!-- 					        <tr> -->
+<!-- 					          <td style="height:50px;" colspan="3"><div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div></td> -->
+<!-- 					        </tr> -->
+<!-- 					        <tr> -->
+<%-- 					          <th><spring:message code='ezBoard.t324' /></th> --%>
+<!-- 					          <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td> -->
+<%-- 					          <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td> --%>
+<!-- 					        </tr> -->
+<!-- 					      </table> -->
+<!-- 					    </td> -->
+<%-- 				  	</c:when> --%>
+<%-- 				    <c:otherwise><!-- 2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가  --> --%>
+<!-- 				        <td style="vertical-align: top; height:10%;"> -->
+<!-- 				            <table class="content"> -->
+<!-- 				            <tr> -->
+<!-- 				              <td style="height:50px" colspan="5"> -->
+<!-- 				                  <div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div> -->
+<!-- 				              </td> -->
+<!-- 				            </tr> -->
+<!-- 				            <tr> -->
+<%-- 				              <th><spring:message code='ezBoard.t324' /></th> --%>
+<!-- 				              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td> -->
+<%-- 				              <th><spring:message code='ezBoard.t438' /></th> --%>
+<!-- 				              <td> -->
+<!-- 				              	<INPUT type="password" id="txtPassWord_fake" name="pwd" style="WIDTH:80px; display: none;" autocomplete="new-password"> -->
+<!-- 				              	<INPUT type="password" id="txtPassWord" name="pwd" style="WIDTH:80px" maxlength="15" autocomplete="new-password"> -->
+<!-- 				              </td> -->
+<%-- 				              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td> --%>
+<!-- 				            </tr> -->
+<!-- 				          </table> -->
+<!-- 				        </td> -->
+<%-- 				    </c:otherwise> --%>
+<%-- 			    </c:choose> --%>
+<!-- 			  </tr> -->
 			  <tr>
 			  <c:choose>
 				  <c:when test="${guBun != '3'}">

@@ -25,7 +25,7 @@ var 	strLang39	=	"前へ";
 var 	strLang40	=	"次へ";
 var 	strLang41	=	"総 ";
 var 	strLang42	=	"件";
-var 	strLang43	=	"検索結果がありません。";
+var 	strLang43	=	"データが存在しません";
 var 	strLang44	=	"画像を追加してください。";
 var 	strLang45	=	"メイン画像を選択してください。";
 var 	strLang46	=	"画像を追加しました。";
@@ -52,3 +52,12 @@ var	strLang176	=	"削除権限がありません。";
 var	strLang177	=	"掲示物を選択してください。";
 var	strLang178	=	"選択した掲示物を既読処理しますか？";
 var	strLang179	=	"を選択してください。";
+
+//2017.12.26 강민수92 추가
+var strLang180 = "コメントを削除しますか？";
+var strLang181 = "コメントが存在しません。";
+var strLang182 = "内容を入力してください。";
+var strLang183 = "パスワードを入力してください。";
+var strLang184 = "自分が登録したコメントのみを削除することができます。";
+var strLang185 = "パスワードが正しくありません。";
+var strLang186 = "コメント";

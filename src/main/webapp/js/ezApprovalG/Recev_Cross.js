@@ -1590,7 +1590,11 @@ function SaveDraftDocInfo()
             //createNodeAndInsertText(xmlpara, objNode, "SMEMBERDEPTNAME", arr_userinfo[16]);
             //createNodeAndInsertText(xmlpara, objNode, "PMEMBERJOBTITLE", arr_userinfo[13]);
             //createNodeAndInsertText(xmlpara, objNode, "SMEMBERJOBTITLE", arr_userinfo[14]);
-	
+            if (curDocNum != "") {
+              	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+              } else {
+              	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+              }
             xmlhttp.open("POST","/ezApprovalG/doDraft.do",false);
             xmlhttp.send(xmlpara);
             
@@ -1677,6 +1681,12 @@ function SaveDraftDocInfo()
             createNodeAndInsertText(xmlpara, objNode, "PMEMBERJOBTITLE", arr_userinfo[13]);
             createNodeAndInsertText(xmlpara, objNode, "SMEMBERJOBTITLE", arr_userinfo[14]);
 	
+            if (curDocNum != "") {
+              	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+              } else {
+              	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
+              }
+            
             xmlhttp.open("POST","/ezApprovalG/doDraft.do",false);
             xmlhttp.send(xmlpara);
             

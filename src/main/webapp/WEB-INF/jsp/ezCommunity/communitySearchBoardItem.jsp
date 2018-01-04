@@ -847,12 +847,12 @@
 		<h1 class = "type1_h1"><spring:message code='ezCommunity.t415'/><span id = "mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
+				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987'/></span></li>
 				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
 				<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208'/></span></li>
 <%-- 				<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911'/></span></li> --%>
-				<li><span onClick="Print_onclick()"><spring:message code='ezCommunity.t951'/></span></li>
-				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912'/></span></li>
-				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987'/></span></li>
+<%-- 				<li><span onClick="Print_onclick()"><spring:message code='ezCommunity.t951'/></span></li> --%>
+				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912'/></span></li>				
 			</ul>
 		</div>
 		
@@ -860,32 +860,32 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table class="content">
+		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><spring:message code='ezCommunity.t418'/></th>
 				<td>${boardName}</td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t138'/></th>
-				<td><input type="text" id="txtWriterName" style="width:100px" value="${writerName}"></td>
+				<td><input class="inputText" type="text" id="txtWriterName" style="width:100px" value="${writerName}"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t124'/></th>
-				<td><input type="text" id="txtTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${title}"></td>
+				<td><input class="inputText" type="text" id="txtTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${title}"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t433'/></th>
-				<td><input type="text" id="txtAbstract" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${abstracts}"></td>
+				<td><input class="inputText" type="text" id="txtAbstract" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${abstracts}"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t434'/></th>
 				<td>
-				<input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center">
-				<a class="imgbtn"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a><a class="imgbtn"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a></td>
+					<input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center">&nbsp;
+					<a class="imgbtn"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a>&nbsp;<a class="imgbtn"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a>
+				</td>
 			</tr>
-			
-			<table class="mainlist" style="margin-top:3px;width:100%">
-				<form id = "listXML" name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">
+			<form id="listXML" name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">
+				<table class="mainlist" style="margin-top:5px;width:100%">				
 					<tr>
 					    <th style="padding:0" align="center" width="20"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
 					    <c:choose>
@@ -974,14 +974,12 @@
 					    	<c:otherwise>
 					    		<th style="cursor:pointer" width="50px" onClick="SortPage('A.ReadCount')"><spring:message code='ezCommunity.t173'/></th>
 					    	</c:otherwise>
-					    </c:choose>
-					    
+					    </c:choose>					    
 					</tr>
-					
-				</form>
-			</table>
+				</table>
+			</form>	
 		</table>
-		<div id="tblPageRayer"></div>
+		<div id="tblPageRayer" style="margin-top:10px"></div>
 		<div id="ListInfo" style="display:none">${ListInfo}</div>
 	</body>
 </html>

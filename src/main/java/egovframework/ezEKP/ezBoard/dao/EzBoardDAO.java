@@ -649,5 +649,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		delete("EzBoardDAO.deleteReservedBoard", k);
 	}
 	
-    
+	public String getOneLineReplyCount(Map<String, Object> map) throws Exception{
+		return String.valueOf(select("EzBoardDAO.getOneLineReplyCount", map));
+	}
+	
 }

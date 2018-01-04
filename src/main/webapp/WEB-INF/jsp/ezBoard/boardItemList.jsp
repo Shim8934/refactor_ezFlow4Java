@@ -573,7 +573,7 @@
 		    function DeleteItem_onclick() {
 		    	strItemList = "";
 		        if (gubun == "2") {
-		            if (strListInfo == "") {
+		            if (strListInfo == "" || strListInfo === "undefined") {
 		                alert("<spring:message code='ezBoard.t195' />");
 		                return;
 		            }
@@ -597,7 +597,7 @@
 		            }
 		        }
 		        else {
-		            if (strListInfo == "") {
+		            if (strListInfo == "" || strListInfo === "undefined") {
 		                alert("<spring:message code='ezBoard.t195' />");
 		                return;
 		            }
@@ -784,8 +784,8 @@
 		            alert("<spring:message code='ezBoard.t202' />");
 		            return;
 		        }
-		
-		        if (strListInfo == "") {
+				
+		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t201' />");
 		            return;
 		        }
@@ -827,7 +827,7 @@
 		            alert("<spring:message code='ezBoard.t202' />");
 		            return;
 		        }
-		        if (strListInfo == "") {
+		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t497' />");
 		            return;
 		        }
@@ -895,7 +895,7 @@
 		            alert("<spring:message code='ezBoard.t194' />");
 		            return;
 		        }
-		        if (strListInfo == "") {
+		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t198' />");
 		            return;
 		        }
@@ -1037,7 +1037,7 @@
 		    }
 		    function SaveMyBoard() {
 		        if (CrossYN()) {
-		            OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 450, 415);
+		            OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 457, 418);
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		        }

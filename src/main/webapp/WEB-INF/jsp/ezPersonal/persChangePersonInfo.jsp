@@ -78,6 +78,12 @@
 			    
 			    window.onload = function () {
 			    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+			    	
+			    	//익스플로러일때 css수정
+			    	if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
+						$(".imgbtn span").css("line-height","22px");
+			    	}
+			    	
 			    }
 			    
 			    var personpicture_cross_dialogArguments = new Array();
@@ -344,13 +350,13 @@
     		<table class="content" width="100%" style="margin-top:10px;"> 
         		<tr>
             		<th><spring:message code='ezPersonal.t177'/></th>
-            		<td width="230"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}" maxlength="20"></td>
+            		<td width="230" style="width:50%"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}" maxlength="20"></td>
             		<th><spring:message code='ezPersonal.t178'/></th>
             		<td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}" maxlength="20"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t70'/></th> 
-            		<td> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}" maxlength="20"> </td> 
+            		<td style="width:50%"> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}" maxlength="20"> </td> 
             		<th><spring:message code='ezPersonal.t179'/></th> 
             		<td> <input type="text" id="txtFax" size="22" value="${txtFax}" maxlength="20"> </td> 
         		</tr> 

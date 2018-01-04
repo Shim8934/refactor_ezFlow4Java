@@ -51,10 +51,10 @@
 			.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
 			.table_layout th {
-				color:#666;
+				color:#777;
 			}
 			#divViewHeader {
-				color:#666
+				color:#777
 			}
 		</style>
 		<script type="text/javascript">
@@ -288,8 +288,11 @@
 							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
 						} else {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
-						}						
-						$("#brdExplain").html(result.resBrd.brdExplain);
+						}
+						
+						var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+						
+						$("#brdExplain").html(resbrdExc);
 						
 						$("#ResourceInfo").modal();
 					}, 
@@ -336,7 +339,7 @@
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f8f8f8;">
                 					<div style="border:1px solid #ddd;border-bottom:0px;padding-top:9px;padding-bottom:7px;height:19px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-					                	&nbsp;<span id="divViewHeader" style="color: #666; text-align:center;vertical-align: middle;"></span>&nbsp;
+					                	&nbsp;<span id="divViewHeader" style="color: #777; text-align:center;vertical-align: middle;"></span>&nbsp;
 					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
 				                	</div>
 				            	</td>
@@ -406,7 +409,7 @@
 				</tr>
 				<tr>
 					<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-					<td><pre><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></pre></td>
+					<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
 				</tr>
          	</table>
         </div>

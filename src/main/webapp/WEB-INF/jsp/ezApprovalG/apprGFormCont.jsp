@@ -444,6 +444,10 @@
 		                var KIND = document.getElementById('FromList').value;
 		                var searchtype = document.getElementById('searchoption').selectedIndex;
 		                var searchname = document.getElementById('forminfo').value;
+		                
+		                if (searchname.match('%') == '%') {
+		                	searchname = searchname.concat("\\");
+		                }
 		
 		                GetFormInfo("ALL", KIND, searchtype, searchname);
 		            }
