@@ -126,12 +126,14 @@
 	            PostTreeView.config(treeconfig);
 	            PostTreeView.source("<tree><nodes>" + document.getElementById("RootFolderXML").innerHTML + "</nodes></tree>");
 	            PostTreeView.update();
+	            
 	            if (subCode != "1" && subCode != "") {
 	                PostTreeView.select(subCode);
-	                selectnode();
-	            }
-	            else
+	            } else {
 	                PostTreeView.select(1);
+	            }
+	            
+                selectnode();	            
 	        }
 	        function requestdata(event) {
 	            if (!event) event = window.event;

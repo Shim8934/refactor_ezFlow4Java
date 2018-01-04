@@ -40,6 +40,7 @@
             	}
     	        // 2016-08-03 첫화면에 공지게시판 불러오기
 				getBoardList_NewBoard();
+    	        
             	try { top.onresize() } catch (e) { }
         	}
         	var xmlhttp_getBoardList_NewBoard = createXMLHttpRequest();
@@ -67,6 +68,7 @@
         	}
 			function getBoardList_NewBoard_after(xml) {
             	if (xml == null) return;
+            	
             	try {
                 	if (xml == "") {
 	                    var nodata = "<div class='nodata_portlet '>";
@@ -102,12 +104,14 @@
                         listHTML += "</dl>";
 
                         listHTML += "<ul class=\"mainlist \">";
+                        
                         for (var i = 1; i < RowCnt; i++) {
                             var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(2));
                             var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
                             
                             listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
                         }
+                        
                         listHTML += "</ul>";
                         
                         document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
@@ -129,6 +133,7 @@
             		
             	}
         	}
+			
 			function openDoc(pItemID) {
 	            var pheight = window.screen.availHeight;
             	var pwidth = window.screen.availWidth;
@@ -149,8 +154,10 @@
     	    
         	function getContent(pItemID) {
 	            xmlhttp_getContent_Newboard = createXMLHttpRequest();
+	            
             	var xmlpara = createXmlDom();
             	var objNode;
+            	
             	createNodeInsert(xmlpara, objNode, "PARAMETER");
             	createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID_NewBoard);
             	createNodeAndInsertText(xmlpara, objNode, "pItemID", pItemID);
@@ -161,6 +168,7 @@
         	
         	function getContent_NewBoard_after() {
 	            if (xmlhttp_getContent_Newboard == null || xmlhttp_getContent_Newboard.readyState != 4) return;
+	            
     	        try {
         	        var xmldom = xmlhttp_getContent_Newboard.responseXML;
             	    xmlhttp_getContent_Newboard = null;
@@ -195,6 +203,7 @@
     	        catch (e) {
         	    }
 	        }	
+        	
     	    function boardChangeTab_Newboard(obj) {
         	    switch (obj.id) {
             	    case "Board0_Newboard":

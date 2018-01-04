@@ -515,6 +515,7 @@
 			    for (var i=0; i<main_table.getElementsByTagName("td").length; i++) {
 			        if (main_table.getElementsByTagName("td").item(i).getAttribute("uid") == pUID) return true;
 				}
+			    
 				return false;
 			}
 
@@ -953,6 +954,7 @@
 				var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%; height:"+ret[2]+"px\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
 				newrow.innerHTML = strInnerHTML;
 				var pageuid = "";
+				
 				if (GetPageID(document.getElementById(subtdGetid)) == null)
 				    pageuid = pageid;
 				else
@@ -1106,6 +1108,7 @@
 				}
 	
 				var cell = eval(selectedSubCell);
+				
 				if (cell.getAttribute("canreplace") != 1) {
 					alert("<spring:message code='ezPortal.t303' />");
 					return;
