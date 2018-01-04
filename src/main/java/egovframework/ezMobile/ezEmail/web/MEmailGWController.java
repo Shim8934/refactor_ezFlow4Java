@@ -1173,6 +1173,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				useFromAddress = "NO";
 			}
 			
+			String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
+			
+			if (dotNetIntegration.equals("YES")) {
+				String mobileDownloadInline = config.getProperty("config.MobileDownloadInline");
+							
+				if (bodyValue != null && !bodyValue.isEmpty()) {
+					bodyValue = bodyValue.replace("/ezEmail/downloadInline.do", mobileDownloadInline);
+				}
+				
+				if (tempBody != null && !tempBody.isEmpty()) {
+					tempBody = tempBody.replace("/ezEmail/downloadInline.do", mobileDownloadInline);
+				}
+			}
+			
 			JSONObject data = new JSONObject();
 	        data.put("userEmail",userEmail);
 			data.put("to", to);
