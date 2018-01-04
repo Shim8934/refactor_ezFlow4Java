@@ -74,7 +74,11 @@
 		        window.onload = function () {
 		            imageViewInit();
 		            pageimageout();
-		            
+		            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+	                    self.resizeTo(780, 860);
+	                } else {
+	                    self.resizeTo(780, 860);
+	                }
 // 		            if (OneLineReplyFlag == "1") {
 // 		                getOneLineReply();
 // 		                if (CrossYN()) {
@@ -97,7 +101,7 @@
 		                pSIPUriList = null;
 		            }
 		            else {
-		                document.getElementById("WriteUserNM").innerHTML = "${boardItem.writerName}";
+		               // document.getElementById("WriteUserNM").innerHTML = "${boardItem.writerName}";
 		            }
 		        };
 		        //강민수92 댓글 클릭 이벤트
@@ -1227,24 +1231,34 @@
 		  </tr>
 		  <tr>
 		     <td>
-		         <table class="content" style="border:0px">
+		         <table class="content" style="border:0px; width:100%">
 		            <tr>
-		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-		              <td style="width:100px; text-overflow:ellipsis; white-space:nowrap; cursor:pointer;" id="WriteUserNM" onclick='OpenUserInfo("${boardItem.writerID}")'><c:out value="${boardItem.writerName}"/></td>
-		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t289'/></th>
-		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM"><c:out value="${boardItem.writerDeptName}"/></td>
-		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t290'/></th>
-		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;" id="User_JobTitle">${boardItem.extensionAttribute3}</td>
-		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t224'/></th>
-		              <td style="width:125px; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate} </td>
+		              <th style="width:10%"><spring:message code='ezBoard.t223'/></th>
+			              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="WriteUserNM">
+			              	  <div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto">
+								 <span onclick='OpenUserInfo("${boardItem.writerID}")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
+							  </div>
+			              </td> 
+		              <th style="width:10%"><spring:message code='ezBoard.t289'/></th>
+		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM"><c:out value="${boardItem.writerDeptName}"/></td>
 		            </tr>
 		            <tr>
-		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t291'/></th>
-		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666"><c:out value="${boardItem.title}"/></div></td>
+		              <th style="width:10%"><spring:message code='ezBoard.t290'/></th>
+		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_JobTitle">${boardItem.extensionAttribute3}</td>
+		              <th style="width:10%"><spring:message code='ezBoard.t224'/></th>
+		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate} </td>
 		            </tr>
 		            <tr>
-		                <th ><spring:message code='ezBoard.t1008'/></th>
-		                <td id="cimagecontent" colspan="7">
+		              <th><spring:message code='ezBoard.t291'/></th>
+		              <td id="cTitle" colspan="3">
+			              <div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle;">
+			            	  <c:out value="${boardItem.title}"/>
+			              </div>
+		              </td>
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezBoard.t1008'/></th>
+		                <td id="cimagecontent" colspan="3">
 		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
