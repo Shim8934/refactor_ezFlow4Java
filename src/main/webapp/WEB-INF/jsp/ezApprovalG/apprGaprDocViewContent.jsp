@@ -81,10 +81,10 @@
 	                                    TDRows.item(i).innerHTML = "&nbsp;";
 	                                }
 	                            }
-	                            if (TDRows.item(i).id == "doctitle") { // 제목 태그제거 로직
+	                            if (TDRows.item(i).id == "doctitle") { /* 기안문서 제목 일경우 */
 									var str = TDRows.item(i).innerHTML;
-									// str = str.replace(/(<([^>]+)>)/gi, ""); 태그 제거
-									str = "<XMP>"+str+"</XMP>";  // 태그 무효화
+          							str = str.replace(/&nbsp;/gi, " "); /* &nbsp; => " "으로변환 */
+									str = "<XMP>"+str+"</XMP>"; /* xmp사이의 모든 태그 무효+출력 */
 									TDRows.item(i).innerHTML = str;
 	                            }
 	                        }

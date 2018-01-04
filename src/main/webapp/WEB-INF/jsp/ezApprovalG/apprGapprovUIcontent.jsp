@@ -251,6 +251,12 @@
 	                                    TDRows.item(i).innerHTML = "";
 	                                }
 	                            }
+	                            if (TDRows.item(i).id == "doctitle") { /* 기안문서 제목 일경우 */
+									var str = TDRows.item(i).innerHTML;
+          							str = str.replace(/&nbsp;/gi, " "); /* &nbsp; => " "으로변환 */
+									str = "<XMP>"+str+"</XMP>"; /* xmp사이의 모든 태그 무효+출력 */
+									TDRows.item(i).innerHTML = str;
+	                            }
 	                        }
 	
 	                        if (TDRows.item(i).style.borderLeftWidth.indexOf("0.") > -1) {

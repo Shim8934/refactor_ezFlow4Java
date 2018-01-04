@@ -65,3 +65,12 @@ var strLang176 = "삭제 권한이 없습니다.";
 var strLang177 = "게시물을 선택해 주세요.";
 var strLang178 = "읽음 표시 하시겠습니까?";
 var strLang179 = "를(을) 선택하세요.";
+
+//2017.12.26 강민수92 추가
+var strLang180 = "Are you sure you want to delete a comment ?";
+var strLang181 = "There is no comment.";
+var strLang182 = "Please enter your content.";
+var strLang183 = "Please enter your password.";
+var strLang184 = "You can only delete comments you have registered.";
+var strLang185 = "The password is incorrect.";
+var strLang186 = "Comment";

@@ -671,6 +671,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
@@ -1172,9 +1173,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				useFromAddress = "NO";
 			}
 			
-	        String browser = ClientUtil.getClientInfo(request, "browser");
-			boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-						
 			JSONObject data = new JSONObject();
 	        data.put("userEmail",userEmail);
 			data.put("to", to);
@@ -1197,9 +1195,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("tempBody", tempBody);
 			data.put("newWindowId", newWindowId);
 			data.put("serverName", serverName);
-			data.put("isCrossBrowser", isCrossBrowser);
 			data.put("useFromAddress", useFromAddress);
 			data.put("fromAddressHtml", fromAddressHtml);
+			data.put("mailAttachLimit", mailAttachLimit);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
