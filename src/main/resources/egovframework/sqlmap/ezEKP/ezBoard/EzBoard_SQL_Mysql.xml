@@ -3312,7 +3312,7 @@
 				writedate ASC
 		]]>                
 	</select>
-	
+		
 	<select id="EzBoardDAO.checkOneLineOwner" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -4457,6 +4457,21 @@
   				BOARDID = #boardID#
 		]]>
   </delete>
+  
+  <select id="EzBoardDAO.getOneLineReplyCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(replyID)
+        	FROM 
+        		tbl_board_onelinereply 
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			boardID = #boardID#
+            AND 
+            	ItemID = #itemID#
+		]]>
+  </select>
 	
 </sqlMap>
 

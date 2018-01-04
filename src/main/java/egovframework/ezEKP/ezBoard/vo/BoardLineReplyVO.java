@@ -12,7 +12,10 @@ public class BoardLineReplyVO {
 	private String content;
 	/** 작성일*/
 	private String writeDate;
-	
+	/** 2017.12.29 게시물 아이디 */
+	private String boardItemID;
+	/** 2017.12.29 게시판 아이디 */
+	private String boardID;
 	public String getReplyID() {
 		return replyID;
 	}
@@ -43,6 +46,17 @@ public class BoardLineReplyVO {
 	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
 	}
-	
+	public String getBoardItemID() {
+		return boardItemID;
+	}
+	public void setBoardItemID(String boardItemID) {
+		this.boardItemID = boardItemID;
+	}
+	public String getBoardID() {
+		return boardID;
+	}
+	public void setBoardID(String boardID) {
+		this.boardID = boardID;
+	}
 	
 }

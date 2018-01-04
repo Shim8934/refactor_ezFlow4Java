@@ -59,6 +59,9 @@
             <mvc:exclude-mapping path="/ezEmail/downloadSecureAttach.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadSecureInline.do"/>
             <mvc:exclude-mapping path="/admin/ezApprovalG/componentListTransfer.do"/>
+            <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>     
+            <mvc:exclude-mapping path="/ezSystem/util/getSysInfo"/>   
+            <mvc:exclude-mapping path="/ezSystem/util/getSysMonitorInfo  "/>          
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>      
             <mvc:exclude-mapping path="/ezTalkGate/main.do"/>      
             <mvc:exclude-mapping path="/ezConn/**"/>      
@@ -69,6 +72,14 @@
 
     <!-- Annotation 을 사용하지 않는 경우에 대한 MVC 처리 설정 -->
     <mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator"/>
+    
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+    <mvc:resources location="/images/" mapping="/images/**"/>
+    <mvc:resources location="/images_en/" mapping="/images_en/**"/>
+    <mvc:resources location="/images_ja/" mapping="/images_ja/**"/>
+    <mvc:resources location="/files/" mapping="/files/**"/>
+    <mvc:resources location="/docs/" mapping="/docs/**"/>
     
     <mvc:annotation-driven/>
 
