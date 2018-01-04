@@ -189,7 +189,13 @@ public class EzConnController {
 					
 					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");					
 				} else {				
-					resultPage = "/ezEmail/mailMain.do";
+					String subCode = "1";
+					
+					if (request.getParameter("subCode") != null) {
+						subCode = request.getParameter("subCode");
+					}
+					
+					resultPage = "/ezEmail/mailMain.do?subCode=" + subCode;
 				}
 			}
 		} catch (Exception e) {
