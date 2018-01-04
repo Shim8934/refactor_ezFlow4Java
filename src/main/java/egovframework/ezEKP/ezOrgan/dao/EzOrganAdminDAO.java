@@ -131,17 +131,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
     	return getUserCnListForLocal(tenantID);       
     }	
-
-    // 퇴직자 포함하여 사용자 이름,부서 목록을 반환한다.
-    public List<OrganUserVO> getUserList(Map<String, Object> map) throws Exception {
-    	return (List<OrganUserVO>) list("EzOrganAdminDAO.userList", map);
-    }	
-    
-    // 퇴직자 포함하여 사용자 이름,부서 목록개수를 반환한다.
-    public int getMailUserCount(Map<String, Object> map) throws Exception {
-    	return (int) select("EzOrganAdminDAO.getMailUserCount", map);        
-    }
-    
+   
     private int getUserCountForLocal(int tenantID) throws Exception {
         return (int) select("EzOrganAdminDAO.userCount", tenantID);
     }

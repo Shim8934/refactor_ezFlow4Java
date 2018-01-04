@@ -7,6 +7,7 @@
 <head>
 <title><spring:message code='ezSystem.x0021' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
 <link rel="stylesheet" href="<spring:message code='main.e15'/>"
 	type="text/css">
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
@@ -296,11 +297,11 @@
 					var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 					var searchKeyword = document.getElementById("searchKeyword").value;
 					
-					 if (false) {
+					 if (pageNum == "-1") {
 						var pageSize = "-1";
 						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword ;
 							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
-						var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
+						var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
 		
 						saveExcel.location.href = pURL;
 					} else { 
@@ -327,11 +328,12 @@
 				    						
 				    						html += "<tr>";
 				    						html += "   <td>" + j					+ "</td>";
-				    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>"
+				    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
 				    						html += "	<td>" + i[2] 			+ "</td>";
 				    						html += "	<td>" + i[3] 			+ "</td>";
 				    						html += "	<td>" + i[4] 			+ "</td>";
-				    	    				html += "</tr>";
+				    						html += "<td><a class='imgbtn' id='usermenu7'><span onClick=mod_quota('"+i[0]+"')><spring:message code='ezOrgan.t92'></spring:message></span></a></td>";
+				    						html += "</tr>";
 				    						j++;
 				        				});
 									} else {
@@ -342,6 +344,7 @@
 				    						html += "	<td>" + i[2] 			+ "</td>";
 				    						html += "	<td>" + i[3] 			+ "</td>";
 				    						html += "	<td>" + i[4] 			+ "</td>";
+// 				    						html += "<td><a class="imgbtn" id="usermenu7">"+i[1]+"<span onClick="mod_quota()"></span></a></td>";
 				    						html += "</tr>";
 				    						j++;
 					    				});
@@ -374,7 +377,24 @@
 		  	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
 		    function excelExport() {
 				var pageNum = "-1";
-				getLoginHist(pageNum, searchStartTime, searchEndTime);
+				getUserList(pageNum);
+		    }
+		  	
+		  	//**/ 편지함 용량수정 이벤트 호출
+		  	
+		  	function mod_quota(res)
+		    {
+		  		var width=450, height=200;
+		  		var left = (screen.availWidth - width)/2;
+		  		var top = (screen.availHeight - height)/2;
+		  		var specs = "width=" + width;
+		  		specs += ",height=" + height;
+		  		specs += ",left=" + left;
+		  		specs += ",top=" + top;
+			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res,"",specs);
+			    opener.location.reload(true);
+			    window.close();
+		   		getUserList(pageNum);
 		    }
 		    
 		</script>
@@ -419,6 +439,7 @@
 					<th><spring:message code="ezStatistics.t113"></spring:message></th>
 					<th><spring:message code="ezStatistics.t1022"></spring:message></th>
 					<th><spring:message code="ezStatistics.t1024"></spring:message></th>
+					<th><spring:message code="ezOrgan.t92"></spring:message></th>
 				</tr>
 			</thead>
 			<tbody id="userListBody" style="overflow: auto;"></tbody>

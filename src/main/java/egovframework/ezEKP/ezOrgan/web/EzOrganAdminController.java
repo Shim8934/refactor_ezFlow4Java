@@ -2446,7 +2446,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         logger.debug("tenantID=" + tenantID);
         
         String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));  
-
         String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
         String userEmail = userId + "@" + domainName;
                         

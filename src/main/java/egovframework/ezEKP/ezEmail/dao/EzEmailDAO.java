@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzEmailDAO")
@@ -156,4 +157,15 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		insert("EzEmailDAO.setMailColor", map);
 	}
 	
+	// 퇴직자 포함하여 사용자 이름,부서 목록을 반환한다.
+    @SuppressWarnings("unchecked")
+	public List<OrganUserVO> getUserList(Map<String, Object> map) throws Exception {
+    	return (List<OrganUserVO>) list("EzEmailDAO.userList", map);
+    }	
+    
+    // 퇴직자 포함하여 사용자 이름,부서 목록개수를 반환한다.
+    public int getMailUserCount(Map<String, Object> map) throws Exception {
+    	return (int) select("EzEmailDAO.getMailUserCount", map);        
+    }
+    
 }

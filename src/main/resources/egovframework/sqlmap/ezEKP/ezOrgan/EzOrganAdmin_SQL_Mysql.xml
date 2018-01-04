@@ -50,19 +50,6 @@
 		<result property="cn" 									column="CN" 							columnIndex="1"/>	
 	</resultMap>
 	
-	<sql id="EzOrganAdminDAO.searchQuery1">
-		<isNotEmpty property="search_keycode" prepend="and">
-			<isNotEmpty property="search_keyword" >
-					<isEqual property="search_keycode" compareValue="1">
-						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
-					</isEqual>
-					<isEqual property="search_keycode" compareValue="2">
-						DEPARTMENT LIKE CONCAT('%', #search_keyword#,'%')
-					</isEqual>
-			</isNotEmpty>
-		</isNotEmpty>
-	</sql>
-	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -2718,34 +2705,6 @@
 	    	ORDER BY cn
 	    ]]>    		 				
 	</select>
-
-	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
-
-			SELECT 
-				cn,
-				displayName,
-				department
-			FROM 
-	    		TBL_USERMASTER 
-            WHERE 
-            	tenant_id = #tenantID# 
-				<include refid="EzOrganAdminDAO.searchQuery1"/>
-	    	ORDER BY 
-	    		displayName
-	    	LIMIT
-				    #v_start#, #pageCount#	
-				    
-	</select>
-	
-	<select id="EzOrganAdminDAO.getMailUserCount" parameterClass="map" resultClass="int">
-	 	
-			SELECT 	COUNT(displayName) 
-			FROM   	TBL_USERMASTER
-			WHERE	tenant_id = #tenantID#
-  				<include refid="EzOrganAdminDAO.searchQuery1"/>
-	</select>
- 	
-
 	
     <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
         <![CDATA[
