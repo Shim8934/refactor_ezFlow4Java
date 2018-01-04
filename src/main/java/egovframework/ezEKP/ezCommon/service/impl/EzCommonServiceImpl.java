@@ -757,6 +757,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 //                }
             	
             } else {
+            	realPath = realPath + commonUtil.separator;
+            	
             	File file = new File(realPath + m_BackImageList[i]);
             	in = new FileInputStream(file);
                 int len = 0;
