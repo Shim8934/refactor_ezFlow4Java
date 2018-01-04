@@ -686,7 +686,11 @@
 		        }
 		        
 				strBody = strBody.replace(/&quot;/gi, "\'");
-      
+				
+      			if (strBody.indexOf("url(\'/") > -1) {
+      				strBody = strBody.replace("url(\'/", "url(\'");
+      			}
+      			
 		        if (trim_Cross(strBody) != "" || pDocID == "") {
 		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>", "clean");
 		        }
