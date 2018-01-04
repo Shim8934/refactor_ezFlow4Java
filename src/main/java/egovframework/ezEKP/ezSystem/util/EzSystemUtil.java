@@ -28,7 +28,7 @@ public class EzSystemUtil {
 	@SuppressWarnings("unchecked")
 	public static String getSysInfo(String ip) throws Exception {
 		
-		logger.debug("getSysInfo started." );
+//		logger.debug("getSysInfo started." );
 
 		BufferedReader br = null;
 		BufferedReader cbr = null;
@@ -75,8 +75,8 @@ public class EzSystemUtil {
 		
 		while (true) {
 			String line = br.readLine();
-			logger.debug("write unameInfo");
-			logger.debug("<<<!!br.readLine : " + line); 
+//			logger.debug("write unameInfo");
+//			logger.debug("<<<!!br.readLine : " + line); 
 			if (line == null) {
 				break;
 			} else {
@@ -93,16 +93,16 @@ public class EzSystemUtil {
 		
 		for (int i = 0; i < 1; i ++) {
 			String cline = cbr.readLine();
-			logger.debug("write cpuinfo");
-			logger.debug("<<<!!cbr.readLine : " + cline); 
+//			logger.debug("write cpuinfo");
+//			logger.debug("<<<!!cbr.readLine : " + cline); 
 			String[] tmp = cline.trim().split(":");
 			tmpObj.put("cpu", tmp[1].trim());		
 		}
 		
 		for (int i = 0; i < 1; i ++) {
 			String mline = mbr.readLine();
-			logger.debug("write meminfo");
-			logger.debug("<<<!!mbr.readLine : " + mline); 
+//			logger.debug("write meminfo");
+//			logger.debug("<<<!!mbr.readLine : " + mline); 
 			String[] tmp = mline.trim().split("\\s+");
 			
 			tmpObj.put("memory", tmp[1]);
@@ -116,9 +116,9 @@ public class EzSystemUtil {
 		
 		jObj.put("getSysInfo", jArr);		
 		
-		logger.debug(jObj.toString());	
+//		logger.debug(jObj.toString());	
 		
-		logger.debug("getSysInfo ended");
+//		logger.debug("getSysInfo ended");
 		
 		return jObj.toString();
 	}
@@ -129,7 +129,7 @@ public class EzSystemUtil {
 	@SuppressWarnings("unchecked")
 	public static String getCpuInfo(String ip) throws Exception {
 		
-		logger.debug("getCpuInfo started.");
+//		logger.debug("getCpuInfo started.");
 
 		BufferedReader br = null;
 		/**
@@ -166,8 +166,8 @@ public class EzSystemUtil {
 					if ( cnt == 1 ) {
 						logger.debug(line);
 						String[] tmp = line.trim().split("\\s+");
-						logger.debug("tmp[0] : " + tmp[0]);
-						logger.debug("tmp[2] : " + tmp[2]);
+//						logger.debug("tmp[0] : " + tmp[0]);
+//						logger.debug("tmp[2] : " + tmp[2]);
 						double usedPer = Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[2]);
 						tmpObj.put("user", tmp[0]);
 						tmpObj.put("system", tmp[2]);
@@ -186,8 +186,8 @@ public class EzSystemUtil {
 		
 		jObj.put("getCpuInfo", jArr);		
 		
-		logger.debug(jObj.toString());
-		logger.debug("getCpuInfo ended.");
+//		logger.debug(jObj.toString());
+//		logger.debug("getCpuInfo ended.");
 		
 		return jObj.toString();
 	}	
@@ -198,7 +198,7 @@ public class EzSystemUtil {
 	@SuppressWarnings("unchecked")
 	public static String getMemoryInfo(String ip) throws Exception {
 		
-		logger.debug("getMemoryInfo started." );
+//		logger.debug("getMemoryInfo started." );
 
 		BufferedReader br = null;
 		/**
@@ -241,8 +241,8 @@ public class EzSystemUtil {
 		jObj.put("getMemoryInfo", jArr);	
 		result = jObj.toString().replaceAll("\\},\\{", ",");
 		
-		logger.debug(result);
-		logger.debug("getMemoryInfo ended.");
+//		logger.debug(result);
+//		logger.debug("getMemoryInfo ended.");
 		
 		return result;
 	}
@@ -253,7 +253,7 @@ public class EzSystemUtil {
 	@SuppressWarnings("unchecked")
 	public static String getFileSysInfo(String ip) throws Exception {
 		
-		logger.debug("getFileSysInfo started.");
+//		logger.debug("getFileSysInfo started.");
 	
 		BufferedReader br = null;
 		/**
@@ -299,8 +299,8 @@ public class EzSystemUtil {
 		
 		jObj.put("getFileSysInfo", jArr);	
 		
-		logger.debug(jObj.toString());
-		logger.debug("getFileSysInfo ended.");
+//		logger.debug(jObj.toString());
+//		logger.debug("getFileSysInfo ended.");
 		
 		return jObj.toString();
 	}
@@ -311,7 +311,7 @@ public class EzSystemUtil {
 	@SuppressWarnings("unchecked")
 	public static String getDiskioInfo(String ip) throws Exception {
 		
-		logger.debug("getDiskioInfo started.");
+//		logger.debug("getDiskioInfo started.");
 		
 		BufferedReader br = null;
 		/**
@@ -347,14 +347,14 @@ public class EzSystemUtil {
 				}					
 				if ( cpuCnt == 2 ) {	
 					if ( cnt > 3 ) {
-						logger.debug(line);
+//						logger.debug(line);
 						String[] tmp = line.trim().split("\\s+");
 						if (!tmp[0].equalsIgnoreCase("")) {        // 마지막 줄은 공백이라 불필요
 							double tmpVal = 0;
 							double readVal = Double.parseDouble(tmp[2]) / 1024;
 							double writeVal = Double.parseDouble(tmp[3]) / 1024;
-							logger.debug("readVal : " + readVal);
-							logger.debug("writeVal : " + writeVal);
+//							logger.debug("readVal : " + readVal);
+//							logger.debug("writeVal : " + writeVal);
 							if ( readVal >= writeVal ) {
 								tmpVal = readVal;
 							} else {
@@ -363,7 +363,7 @@ public class EzSystemUtil {
 							if (tmpVal > diskioMax) {
 								diskioMax = tmpVal;
 							}
-							logger.debug("diskioMax : " + diskioMax);
+//							logger.debug("diskioMax : " + diskioMax);
 							//tmpObj.put("read_" + tmp[0], tmp[2]);
 							//tmpObj.put("write_"+ tmp[0], tmp[3]);
 							tmpObj.put("read_" + tmp[0], f.format(readVal));
@@ -381,8 +381,8 @@ public class EzSystemUtil {
 		jObj.put("diskioMax", diskioMax);
 		result = jObj.toString().replaceAll("\\},\\{", ",");
 		
-		logger.debug(result);		
-		logger.debug("getDiskioInfo ended.");
+//		logger.debug(result);		
+//		logger.debug("getDiskioInfo ended.");
 		
 		return result;
 	}
@@ -393,7 +393,7 @@ public class EzSystemUtil {
 	@SuppressWarnings("unchecked")
 	public static String getNetDataInfo(String ip) throws Exception {
 		
-		logger.debug("getNetDataInfo started.");
+//		logger.debug("getNetDataInfo started.");
 		
 		BufferedReader br = null;
 		/**
@@ -442,9 +442,9 @@ public class EzSystemUtil {
 		
 		jObj.put("getNetDataInfo", jArr);
 		
-		logger.debug(jObj.toString());
+//		logger.debug(jObj.toString());
 		
-		logger.debug("getNetDataInfo ended.");
+//		logger.debug("getNetDataInfo ended.");
 		
 		return jObj.toString();
 	}
