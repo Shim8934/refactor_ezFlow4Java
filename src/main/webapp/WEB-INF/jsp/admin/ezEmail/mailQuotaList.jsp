@@ -20,7 +20,21 @@
 	src="/js/ezEmail/<spring:message code='ezEmail.e1' />">
 	
 </script>
+
+<style>
+#myProgress {
+  width: 80%;
+  height:10px;
+  background-color: #ddd;
+}
+
+#myBar{
  
+  height: 10px;
+  background-color: #4CAF50;
+}
+</style>
+		
 <script type="text/javascript">
 		
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";
@@ -35,13 +49,13 @@
 			var totalPage = "";
 			var totalCount = "";
 			var BlockSize = 10;
-			var searchStartTime = "";
-			var searchEndTime = "";
+
 			
 			//**/ 화면 호출시 실행 함수
 			window.onload = function(){
 				getTime();
 				getUserList(1);
+				myFunction(res1,res2);
 				makePageSelPage();
 			}
 			
@@ -284,7 +298,7 @@
 					getTime();
 				});
 			}
-			
+		    
 		    //**/ 페이지네이션 클릭시
 			function goToPage(page) {
 				getUserList(page);
@@ -306,7 +320,7 @@
 						saveExcel.location.href = pURL;
 					} else { 
 			    		var pURL = "/admin/ezEmail/statistics_userList.do";
-			    	
+			    		 
 			    		$.ajax({
 			    			 url: pURL
 			    			,type: "POST"
@@ -322,35 +336,27 @@
 		   							html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
 		   						} else {
 		   							var j = ((pageNum - 1) * 20) + 1 ;
-			   						
-				    				if (true) {
-				    					res.userList.forEach(function(i,v){
-				    						
+		   							res.userList.forEach(function(i,v){
+		   								
+		   								var res1 = i[3];
+		   								var res2 = i[4];
+		   								var progress = Number(res1/res2)*100;
+		   								var result = Math.floor(progress);
+		   								
 				    						html += "<tr>";
 				    						html += "   <td>" + j					+ "</td>";
 				    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
 				    						html += "	<td>" + i[2] 			+ "</td>";
-				    						html += "	<td>" + i[3] 			+ "</td>";
-				    						html += "	<td>" + i[4] 			+ "</td>";
-				    						html += "<td><a class='imgbtn' id='usermenu7'><span onClick=mod_quota('"+i[0]+"')><spring:message code='ezOrgan.t92'></spring:message></span></a></td>";
+				    						html += "	<td>" + i[3] 			+ "</td>"; //사용량
+				    						html += "	<td>" + i[4] 			+ "</td>"; //총용량
+				    						html += "	<td><div id='myProgress'><div id='myBar' style='width:"+result+"%'></div></div></td>";
+				    						html += "	<td><a class='imgbtn' id='usermenu7'><span onClick=mod_quota('"+i[0]+"')><spring:message code='ezOrgan.t92'></spring:message></span></a></td>";
 				    						html += "</tr>";
 				    						j++;
-				        				});
-									} else {
-										res.userList.forEach(function(i,v){
-											html += "<tr>";
-											html += "   <td>" + j 					+ "</td>";
-											html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
-				    						html += "	<td>" + i[2] 			+ "</td>";
-				    						html += "	<td>" + i[3] 			+ "</td>";
-				    						html += "	<td>" + i[4] 			+ "</td>";
-// 				    						html += "<td><a class="imgbtn" id="usermenu7">"+i[1]+"<span onClick="mod_quota()"></span></a></td>";
-				    						html += "</tr>";
-				    						j++;
-					    				});
-									}
-		   						}
-			    				
+									})
+		   						
+
+		   					    }
 			    				$('#userListBody').empty().append(html);
 			    				
 			    				CurPage = res.currPage;
@@ -373,7 +379,7 @@
 					 } 
 		    	});
 		    } 
-		    
+
 		  	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
 		    function excelExport() {
 				var pageNum = "-1";
@@ -392,11 +398,9 @@
 		  		specs += ",left=" + left;
 		  		specs += ",top=" + top;
 			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res,"",specs);
-			    opener.location.reload(true);
-			    window.close();
-		   		getUserList(pageNum);
+			    
 		    }
-		    
+
 		</script>
 </head>
 	<body class="mainbody"> <%-- <spring:message code="ezSystem.x0021"> </spring:message>--%>
@@ -437,8 +441,9 @@
 					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
 					<th><spring:message code="ezStatistics.t1068"></spring:message></th>
 					<th><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1022"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1024"></spring:message></th>
+					<th><spring:message code="ezStatistics.t1022"></spring:message>(MB)</th>
+					<th><spring:message code="ezStatistics.t1024"></spring:message>(MB)</th>
+					<th><spring:message code="main.t00011"></spring:message></th>
 					<th><spring:message code="ezOrgan.t92"></spring:message></th>
 				</tr>
 			</thead>

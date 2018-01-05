@@ -101,7 +101,8 @@
             window.close();
         }
     }	
-	</script>
+
+    </script>
 </head>
 <body class="popup" onload="javascript:window_onload()">
 <form name="Form1" method="post" action="ConfigQuota.aspx?id=dev01" id="Form1">

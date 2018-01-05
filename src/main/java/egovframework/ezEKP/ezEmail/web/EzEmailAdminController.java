@@ -859,8 +859,8 @@ public class EzEmailAdminController {
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-				long mailboxUsage = storageUsageAndLimit[0]; // in KBs
-				long mailboxQuota = storageUsageAndLimit[1]; // in KBs
+				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
+				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
 
 				logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
 						+ ",mailboxQuota=" + mailboxQuota);
@@ -961,8 +961,8 @@ public class EzEmailAdminController {
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-				long mailboxUsage = storageUsageAndLimit[0]; // in KBs
-				long mailboxQuota = storageUsageAndLimit[1]; // in KBs
+				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
+				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
 
 				logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
 						+ ",mailboxQuota=" + mailboxQuota);

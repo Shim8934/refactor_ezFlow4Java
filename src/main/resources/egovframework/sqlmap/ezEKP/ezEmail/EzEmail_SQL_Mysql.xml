@@ -260,7 +260,7 @@
 			FROM 
 	    		TBL_USERMASTER	
             WHERE 
-            	tenant_id = #tenantID# and cn not in('masteradmin')
+            	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
 				<include refid="EzEmailDAO.searchQuery"/>
 	    	ORDER BY 
 	    		displayName
@@ -276,7 +276,7 @@
 			SELECT 	COUNT(CN) 
 			FROM 
                 TBL_USERMASTER 
-			WHERE	tenant_id = #tenantID# and cn not in('masteradmin')
+			WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
   				<include refid="EzEmailDAO.searchQuery"/>
 	</select>
  	
