@@ -66,10 +66,11 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminGroup.do")
-	public String webfolderAdminGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+	public String webfolderAdminGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
         
+        model.addAttribute("companyID", "S907000");
         
 		return "admin/ezWebFolder/webfolderGroupConfig";
 	}
