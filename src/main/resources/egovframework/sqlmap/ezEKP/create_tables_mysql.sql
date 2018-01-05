@@ -1875,35 +1875,6 @@ CREATE TABLE `talk_tblversion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `tb_mig_aprdocinfo`
---
-
-DROP TABLE IF EXISTS `tb_mig_aprdocinfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tb_mig_aprdocinfo` (
-  `FORMNAME` varchar(500) DEFAULT NULL,
-  `DOCTYPE` varchar(500) DEFAULT NULL,
-  `DOCSTATE` varchar(500) DEFAULT NULL,
-  `HREF` varchar(500) DEFAULT NULL,
-  `DOCTITLE` varchar(500) DEFAULT NULL,
-  `DOCNO` varchar(500) DEFAULT NULL,
-  `HASATTACHYN` varchar(500) DEFAULT NULL,
-  `HASOPINIONYN` varchar(500) DEFAULT NULL,
-  `STORAGEPERIOD` varchar(500) DEFAULT NULL,
-  `STARTDATE` datetime DEFAULT NULL,
-  `ENDDATE` datetime DEFAULT NULL,
-  `WRITERID` varchar(500) DEFAULT NULL,
-  `WRITERNAME` varchar(500) DEFAULT NULL,
-  `WRITERTITLE` varchar(500) DEFAULT NULL,
-  `WRITERDEPTID` varchar(500) DEFAULT NULL,
-  `WRITERDEPTNAME` varchar(500) DEFAULT NULL,
-  `ISPUBLIC` varchar(500) DEFAULT NULL,
-  `COMPANYID` varchar(500) DEFAULT NULL,
-  `COMPANYNAME` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `tbl_addjobmaster`
