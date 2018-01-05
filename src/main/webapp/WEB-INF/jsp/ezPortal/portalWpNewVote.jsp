@@ -151,7 +151,7 @@
 	<body>
 		<section class="body_bg1">
 			<article class="portletbox pollbox">
-   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 13px; left: 72px; font-size: 13px; font-weight: bold;"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
+   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 14px; left: 70px;" class="tab_num"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
   				<div class="pollcont" style="overflow-y: auto; overflow-x: hidden;">
  	 				<c:choose>
   						<c:when test="${qstId != -1}">

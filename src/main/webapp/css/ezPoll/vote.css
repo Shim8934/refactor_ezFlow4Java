@@ -25,7 +25,7 @@
 .poll_list1 .graphbar1 .gx_bar11 {background:#68bbef; height:7px; margin:0px; padding:0px;}
 
 /* 20171115 */
-.voteInfo{height:63px; background:#f9f9f9; border:1px solid #dddddd; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif !important;}
+.voteInfo{height:68px; background:#f9f9f9; border:1px solid #dddddd; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif !important;}
 .voteTextTest{line-height:20px; margin:1px 8px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 
 
@@ -54,16 +54,16 @@
 .questionFont02 a:hover{ color:#000;}
 .questionFont02 a span{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:16px;}
 
-.voteInfoP{ margin:8px 0px 0px 10px;border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px; padding:0px; float:left;}
+.voteInfoP{ margin:10px;border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px; padding:0px; float:left;}
 .voteInfoP img{ border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px;}
 
 .voteTextTest span{ display:block; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:normal;}
 .voteTextTest span.questionFont{ font-size:16px; padding:3px 0px 0px 0px;}
-.voteTextTest span.questionFontS{color:#aaa9a9; padding:3px 0px 0px 0px;}
+.voteTextTest span.questionFontS{color:#aaa9a9; padding:5px 0px 0px 0px;}
 
 #titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif;}
-#titleAndContent .baonkTest{ font-size:20px; color:#004896;}
-.questionTitle{display:inline-block;float:left; width:100%; height:49px; line-height:49px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:14px;}
+#titleAndContent .baonkTest{ font-size:18px; color:#004896;}
+.questionTitle{display:inline-block;float:left; width:100%; height:39px; line-height:39px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
 
 #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
 #_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; font-size:15px;}

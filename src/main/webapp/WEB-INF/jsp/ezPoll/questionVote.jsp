@@ -242,6 +242,7 @@
 	       						
 	       						if (votesArr[i][1] > tempLoop) {
 	       							emailElmt.style.display = "none";
+	       							document.getElementById("vAll" + i).style.color = colors[i % 30];
 	       							document.getElementById(viewAll).style.display = "block";	       							
 	       						}
 	       						else {	   
@@ -2246,7 +2247,7 @@
 										<span class="questionFont"><c:out value='${question.creatorName2}'/></span>
 									</c:otherwise>
 								</c:choose>													
-								<span><c:out value='${creatorDept}'/></span>	
+								<span style="padding-top: 5px;"><c:out value='${creatorDept}'/></span>	
 								<span class="questionFontS"><c:out value='${question.startDate}'/></span>
 							</div>
 					  </div>
@@ -2283,7 +2284,7 @@
 						</div>			
 					</div>
 					
-					<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block;" id="messagetd">
+					<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block; min-height: 130px;" id="messagetd">
 		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
 		       	 	</div>				
 				</div>			
@@ -2363,7 +2364,7 @@
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMailSmall.png" style="vertical-align:middle; margin-left:5px; cursor:pointer; display:none; margin-top: -9px;" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
-			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;"><spring:message code = 'ezPoll.t122'/></div>
+			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;" id="vAll${loop.index}"><spring:message code = 'ezPoll.t122'/></div>
 			               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 			               			</div>
 			               		</div>          		

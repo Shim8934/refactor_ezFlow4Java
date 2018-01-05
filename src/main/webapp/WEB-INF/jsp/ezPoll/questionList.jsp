@@ -579,7 +579,7 @@
 		        
 			    <c:if test="${list.size() == 0}"> 
 			        <tr> 
-						<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td> 
+						<td colspan="9" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td>
 		       		</tr> 
 		        </c:if> 
 			</table> 
