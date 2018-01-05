@@ -88,12 +88,12 @@
 		
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:12px">
 			<tr>
-				<th style="width:40px;"><spring:message code='ezCommunity.t32' /></th>
-			    <th style="width:150px;"><spring:message code='ezCommunity.t672' /></th>
-			    <th><spring:message code='ezCommunity.t673' /></th>
-			    <th style="width:50px;"><spring:message code='ezCommunity.t674' /></th>
+				<th><spring:message code='ezCommunity.t673' /></th>
+				<%-- <th style="width:40px;"><spring:message code='ezCommunity.t32' /></th> --%>
+			    <th style="width:170px;"><spring:message code='ezCommunity.t672' /></th>
+			    <th style="width:60px;"><spring:message code='ezCommunity.t674' /></th>
 			    <th style="width:60px;"><spring:message code='ezCommunity.t675' /></th>
-			    <th style="width:100px;"><spring:message code='ezCommunity.t676' /></th>
+			    <th style="width:80px;"><spring:message code='ezCommunity.t676' /></th>
 			</tr>
 		</table>
 	</body>

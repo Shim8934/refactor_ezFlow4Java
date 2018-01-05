@@ -97,10 +97,7 @@
 				<h1><spring:message code = 'ezCommunity.t505' /></h1>
 			</c:otherwise>
 		</c:choose>
-		
-		<br>
-		<br>
-		
+				
 		<form method="post" name="member" action="/ezCommunity/adminMemberList.do?code=<c:out value = '${code}' />&mode=<c:out value = '${mode}' />">
 			<div class="point">
 		  
@@ -116,7 +113,7 @@
 		    
 		  	</div>
 		  
-		  	<table class="content" style="margin-top:5px" >
+		  	<table class="content" style="margin-top:10px" >
 				<tr>
 					<th><spring:message code = 'ezCommunity.t31' /></th>
 					<td>
@@ -129,15 +126,13 @@
 		        	</td>
 		    	</tr>
 		  	</table>
-		</form>
-		
-		<br>
-		
+		</form>		
+		<br>		
 		<div class="subtxt">
 			<spring:message code = 'ezCommunity.t510' /><span class="point"><c:out value = '${postCount}' /></span><spring:message code = 'ezCommunity.t511' />
 		</div>
 		
-		<table class="mainlist" style ="width:100%">
+		<table class="mainlist" style ="width:100%;margin-top:5px">
 			<tr>
 			    <th style="width:40px;"><spring:message code = 'ezCommunity.t32' /></th>
 			    <th  style="width:120px;"><spring:message code = 'ezCommunity.t10' /></th>

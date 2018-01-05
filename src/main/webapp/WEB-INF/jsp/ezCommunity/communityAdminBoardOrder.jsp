@@ -7,13 +7,17 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
+		<style>
+			.mainlist tr th {
+				border-top:0px;
+			}
+		</style>
+		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>		
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var UpperBoardID = "${upperBoardID}";
 	        var BoardID = "${boardID}";
@@ -261,15 +265,15 @@
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	    </script>
 	    	
-	    <table>
+	    <table style="margin-top:10px">
 	        <tr>
-	            <th><spring:message code = 'ezCommunity.t306' /></th>
+	            <th style="height:25px"><spring:message code = 'ezCommunity.t306' /></th>
 	            <th colspan="2" align="left"><b class="point">${boardName}</b></th>
 	        </tr>
 	        <tr>
 	            <th><spring:message code = 'ezCommunity.t361' /></th>
-	            <td>
-	                <div class="listview">
+	            <td style="border-bottom:1px solid #b6b6b6">
+	                <div class="listview" style="border:0px">
 	                    <div id="BoardList" style="BORDER: 0; HEIGHT: 250px; WIDTH: 440px; overflow: auto"></div>
 	                </div>
 	            </td>
@@ -280,7 +284,7 @@
 	        </tr>
 	    </table>
 		
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" onclick="Save()"><span><spring:message code = 'ezCommunity.t108' /></span></a>
 	        <a class="imgbtn" onclick="window.location.reload(false)"><span><spring:message code = 'ezCommunity.t109' /></span></a>
 	    </div>

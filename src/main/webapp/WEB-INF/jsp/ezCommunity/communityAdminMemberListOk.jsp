@@ -41,13 +41,9 @@
 			<c:otherwise>
 				<h1><spring:message code = 'ezCommunity.t517' /></h1>
 			</c:otherwise>
-		
 		</c:choose>
 		
-		<br>
-		<br>
-		
-		<table class="content" >
+		<table class="content" style="margin-top:10px">
 			<tr>
 				<th width="70"><spring:message code = 'ezCommunity.t518' /></th>
 				<td>${memberInfo.userName}</td>
@@ -117,13 +113,11 @@
 				<td>${clubUser.c_intro }</td>
 			</tr>
 		</table>
-
-		<br>
-		
+		<br/>
+				
 		<div class="point">
             <!-- // 20090902 : 표준모듈 패치 -->
             <c:choose>
-
             	<c:when test="${mode == 'master' && cID != userInfo.id && existOutList }">
             		<spring:message code = 'ezCommunity.t1530' />
             	</c:when>
@@ -146,7 +140,7 @@
             </c:choose>
 		</div>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
         <!-- // 20090902 : 표준모듈 패치 -->
         	<c:if test="${cID != userInfo.id && !(mode == 'master' && cID != userInfo.id && existOutList) }">
         		<a class="imgbtn" name="Submit"  onClick="javascript:document.master.submit();"><span><spring:message code = 'ezCommunity.t532' /></span></a>
@@ -161,8 +155,6 @@
 			<input type="hidden" name="userName" value="<c:out value = '${memberInfo.userName}' />" >
 			<!-- 표준모듈 (2007.03.15) 수정 : 마스터 위임 시 게시판 권한 위임 관련 수정 -->
 		    <input type="hidden" name="cNm" value="<c:out value = '${cNm}' />" >
-		</form>
-		
-</body>
-
+		</form>		
+	</body>
 </html>

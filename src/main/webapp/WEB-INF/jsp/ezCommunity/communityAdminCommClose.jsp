@@ -79,16 +79,13 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t475' /></h1>
-		<br>
-		<br>
-		<table class="content">
+		<table class="content" style="margin-top:10px">
 			<tr>
 			    <th><spring:message code = 'ezCommunity.t9' /></th>
 			    <td><c:out value = '${sysopName}' /></td>
 		  	</tr>
 		  	<tr>
-			    <th><spring:message code = 'ezCommunity.t9991' /></th>
-			    
+			    <th><spring:message code = 'ezCommunity.t9991' /></th>			    
 			    <c:choose>
 			    	<c:when test="${userInfo.lang == '2' }">
 			    		<td><c:out value = '${club.c_ClubName2}' /></td>
@@ -97,8 +94,7 @@
 			    	<c:otherwise>
 			    		<td><c:out value = '${club.c_ClubName}' /></td>
 			    	</c:otherwise>
-			    </c:choose>
-			    
+			    </c:choose>			    
 		  	</tr>
 		  	<tr>
 			    <th><spring:message code = 'ezCommunity.t477' /></th>
@@ -131,12 +127,13 @@
 		    	<th colspan="2"><spring:message code = 'ezCommunity.t71' /></th>
 		  	</tr>
 		  	<tr>
-		    	<td colspan="2"><textarea name="textarea" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;height:180px;resize:none" id="closereason"></textarea>
+		    	<td colspan="2" style="padding:3px">
+		    		<textarea name="textarea" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;height:180px;resize:none" id="closereason"></textarea>
 		    	</td>
 		  	</tr>
 		</table>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" name="Submit"  id="closeok" onClick="return closeok_onclick('${code}')"><span><spring:message code = 'ezCommunity.t108' /></span></a>
 			<a class="imgbtn" name="Submit2" id="closecancel" onClick="return closecancel_onclick()" ><span><spring:message code = 'ezCommunity.t109' /></span></a>
 			<a class="imgbtn" name="Submit3" onclick="parent.parent.window.close()"><span><spring:message code = 'ezCommunity.t21' /></span></a>
