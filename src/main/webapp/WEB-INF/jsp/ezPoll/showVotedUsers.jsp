@@ -49,16 +49,17 @@
 	<body class = "popup" id = "mainbody">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
-			    <div id="menu1" style="float: left; display: inline-block; padding-left: 25%;">
-			        <h1 style="padding-left: 35px;"><spring:message code='ezPoll.t138'/><font color="white"> <c:out value='${totalVotes}'/></font></h1>
+			    <div id="menu1" style="float: left; display: inline-block; padding-left: 5px; text-align:left;">
+			        <h1><c:out value='${content}'/>&nbsp;(<c:out value='${totalVotesForOption}'/>)</h1>
+			        <img style="position: fixed; right: 15px; top: 4px; cursor: pointer; height: 35px; width: 35px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}','${optID}')">
 			    </div>				
 			</div>
-			<div style="display: inline-block; width: 100%; height:35px; line-height:34px; text-align:center; font-size:16px; background:#d1e3f5; border-radius:5px; color:#212121;"><b><c:out value='${content}'/></b></div>	
+			<%-- <div style="display: inline-block; width: 100%; height:35px; line-height:34px; text-align:center; font-size:16px; background:#d1e3f5; border-radius:5px; color:#212121;"><b><c:out value='${content}'/></b></div>	
 			<div style="display: inline-block; padding:8px 0px 2px 0px;">
 				<img src="/images/group2.png" height="22" width="35" style="float:left; display:block; vertical-align:middle; padding:0px 5px 0px 0px;">
 				<div style="float:left; display:block;"><c:out value='${totalVotesForOption}'/></div>
 				<img style="position: fixed; right: 20px; top: 95px; cursor: pointer; height: 32px; width: 32px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}','${optID}')">
-			</div>	
+			</div>	 --%>
 			<div style="height:313px; overflow: auto;">
 				<table border=1 style="width : 100%; border-color: grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 

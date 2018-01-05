@@ -32,6 +32,26 @@
 		        var pLeft = (pwidth - 890) / 2;
 		        window.open("/ezPoll/mailWrite.do?type=one&userId=" + pUserID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
 		    }
+		    
+		    function sendMailAll1(pQstID) {
+		    	var feature = GetOpenPosition(890, 840);
+		    	var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        window.open("/ezPoll/mailWrite.do?type=group&state=seen&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		    }
+		    
+		    function sendMailAll2(pQstID) {
+		    	var feature = GetOpenPosition(890, 840);
+		    	var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        window.open("/ezPoll/mailWrite.do?type=group&state=unseen&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		    }
 		</script>
 	</head>
 	
@@ -45,7 +65,10 @@
 			<div style="height:359px; overflow: auto;">
 				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey" class="voteSeenTbl">
 					<tr> 
-						<th colspan="3"> <a id="seenUser_"><spring:message code='ezPoll.t136'/> (<c:out value='${numberOfSeenUsers}'/>)</a></th> 
+						<th colspan="3"> 
+							<a id="seenUser_"><spring:message code='ezPoll.t136'/> (<c:out value='${numberOfSeenUsers}'/>)</a>
+							<img style="position: absolute; right: 10px; top: 3px; cursor: pointer; height: 40px; width: 40px;" src="/images/poll/sendMail.png" onClick="sendMailAll1('${qstID}')">
+						</th> 
 					</tr>
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
 						<tr id="${list1.id}" class="white" style="border: 1px solid #DDD;">
@@ -74,7 +97,10 @@
 				</table>
 				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;" class="voteUnseenTbl">
 					<tr> 
-						<th colspan="3"> <a id="unseenUser_" style="color:#000;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a></th> 
+						<th colspan="3"> 
+							<a id="unseenUser_" style="color:#000; position: absolute; top:16px; left:15px;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a>
+							<img style="position: absolute; right: 10px; top: 3px; cursor: pointer; height: 40px; width: 40px;" src="/images/poll/sendMail.png" onClick="sendMailAll2('${qstID}')">
+						</th> 
 					</tr>
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
 						<tr id="${list2.id}" class="white" style="border: 1px solid #DDD;">

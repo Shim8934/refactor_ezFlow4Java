@@ -32,17 +32,28 @@
 		        var pLeft = (pwidth - 890) / 2;
 		        window.open("/ezPoll/mailWrite.do?type=one&userId=" + pUserID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
 		    }
+		    
+		    function sendMailAll(pQstID) {
+		    	var feature = GetOpenPosition(890, 840);
+		    	var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        window.open("/ezPoll/mailWrite.do?type=group&state=notjoin&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		    }
 		</script>
 	</head>
 	
 	<body class = "popup" id = "mainbody">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
-			    <div id="menu1" style="float: left; display: block; width:100%; text-align:center;">
+			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
 					<h1><spring:message code='ezPoll.t123'/>&nbsp;(<c:out value='${numberOfUnVotedUsers}'/>)</h1>
+					<img style="position: fixed; right: 15px; top: 4px; cursor: pointer; height: 35px; width: 35px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}')">
 			    </div>					
 			</div>
-			<div style="height:359px; overflow: auto;">
+			<div style="height:365px; overflow: auto;">
 				<table border=1 style="width : 100%; border-color: grey;">
 					<c:forEach var="list" items="${listOfUnvotedUsers}"> 
 						<tr id="${list.id}" class="white" style="border: 1px solid #ddd;">
