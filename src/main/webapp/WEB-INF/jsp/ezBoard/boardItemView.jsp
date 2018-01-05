@@ -101,11 +101,19 @@
 		
 // 		            if (OneLineReplyFlag == "1") {
 // 		                getOneLineReply();
-		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
-		                    self.resizeTo(760, (768 + addheight));
-		                else {
-		                    self.resizeTo(785, (795 + addheight));
-		                }
+						if (gubun != "2") {
+			                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+			                    self.resizeTo(760, (800 + addheight));
+			                } else {
+			                    self.resizeTo(785, (830 + addheight));
+			                }
+						} else {
+							if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+			                    self.resizeTo(760, (775 + addheight));
+							} else  {
+			                    self.resizeTo(785, (805 + addheight));
+			                }
+						}
 // 		            }
 // 		            else {
 // 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -175,18 +183,20 @@
 // 				    } else {
 				        if (pAttributeYN == "Y") {
 				            var contentHeight;
-				            if (gubun == "2")
-				                contentHeight = document.documentElement.clientHeight - 230;
-				            else
-				                contentHeight = document.documentElement.clientHeight - 240 - addheight;
+				            if (gubun == "2") {
+				                contentHeight = document.documentElement.clientHeight - 243;
+				            } else {
+				                contentHeight = document.documentElement.clientHeight - 268 - addheight;
+				            }
 				            document.getElementById("message").style.height = contentHeight + "PX";
 				            document.getElementById("pad1").style.height = contentHeight + "PX";
 				        } else {
 				            var contentHeight;
-				            if (gubun == "2")
-				                contentHeight = document.documentElement.clientHeight - 210;
-				            else
-				                contentHeight = document.documentElement.clientHeight - 240;
+				            if (gubun == "2") {
+				                contentHeight = document.documentElement.clientHeight - 243;
+				            } else {
+				                contentHeight = document.documentElement.clientHeight - 268;
+				            }
 				            document.getElementById("message").style.height = contentHeight + "PX";
 				            document.getElementById("pad1").style.height = contentHeight + "PX";
 				        }
@@ -1088,62 +1098,118 @@
 				<c:when test="${guBun != '3'}">
 					<td style="vertical-align: top; height: 10px;">
 					<table class="content2" style="width:100%;">
+						<!-- 게시자  -->
 						<tr>
-						<th><spring:message code='ezBoard.t223' /></th>
+							<th style="width:10%;"><spring:message code='ezBoard.t223' /></th>
+							<c:choose>
+								<c:when test="${guBun != '2'}">
+									<td id="WriteUserNM" style="width:40%; white-space:nowrap">
+										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}")'>
+											<c:out value="${boardItem.writerName}"/>
+										</div>
+									</td>
+								</c:when>
+								<c:otherwise>
+									<td id="WriteUserNM" style="width:40%; white-space:nowrap">
+										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">
+											<c:out value="${boardItem.writerName}"/>
+										</div>
+									</td>
+								</c:otherwise>
+							</c:choose>
+						<!-- 게시자 end -->
 						<c:choose>
 							<c:when test="${guBun != '2'}">
-								<td id="WriteUserNM" style="width:190px; white-space:nowrap"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}")'><c:out value="${boardItem.writerName}"/></div></td>
-							</c:when>
-							<c:otherwise>
-								<td id="WriteUserNM" style="width:190px; white-space:nowrap"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"><c:out value="${boardItem.writerName}"/></div></td>
-							</c:otherwise>
-						</c:choose>
-						<th><spring:message code='ezBoard.t224' /></th>
-						<td id="PostDate" style="width:120px; white-space:nowrap; padding-right:5px"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div></td>
-						<th><spring:message code='ezBoard.t288' /></th>
-						<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
-						<c:choose>
-							<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-								<td id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap"><div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div></td>
-							</c:when>
-							<c:otherwise>
-								<td id="EndDate" style="padding-right:15px; width:120px; white-space:nowrap"><div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div></td>
-							</c:otherwise>
-						</c:choose>
+								<!-- 부서 -->
+									<th style="width:10%;"><spring:message code='ezBoard.t322' /></th>
+									<c:choose>
+										<c:when test="${guBun != '2'}">
+											<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>${boardItem.writerDeptName}</span></td>
+										</c:when>
+										<c:otherwise>
+											<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>&nbsp;</span> </td>
+										</c:otherwise>
+									</c:choose>
 						</tr>
-						<c:choose>
-							<c:when test="${guBun != '2'}">
+								<!-- 부서 end -->
+								<!-- 직위 -->
 								<tr>
-								<th><spring:message code='ezBoard.t322' /></th>
-								<c:choose>
-									<c:when test="${guBun != '2'}">
-										<td id="User_DeptNM" style="width:100px; white-space:nowrap"><span>${boardItem.writerDeptName}</span></td>
-									</c:when>
-									<c:otherwise>
-										<td id="User_DeptNM" style="width:100px; white-space:nowrap"><span>&nbsp;</span> </td>
-									</c:otherwise>
-								</c:choose>
-								<th><spring:message code='ezBoard.t290' /></th>
-								<c:choose>
-									<c:when test="${guBun != '2'}">
-										<td id="User_JobTitle"><span>${boardItem.extensionAttribute3}</span> </td>
-									</c:when>
-									<c:otherwise>
-										<th id="User_JobTitle"><span>&nbsp; </span> </th>
-									</c:otherwise>
-								</c:choose>
-								<th><spring:message code='ezBoard.t38' /></th>
-								<c:choose>
-									<c:when test="${guBun != '2'}">
-										<td id="Telephone"><span>${boardItem.extensionAttribute4} </span> </td>
-									</c:when>
-									<c:otherwise>
-										<td id="Telephone"><span>&nbsp; </span> </td>
-									</c:otherwise>
-								</c:choose>
+									<th><spring:message code='ezBoard.t290' /></th>
+									<c:choose>
+										<c:when test="${guBun != '2'}">
+											<td id="User_JobTitle"><span>${boardItem.extensionAttribute3}</span> </td>
+										</c:when>
+										<c:otherwise>
+											<th id="User_JobTitle"><span>&nbsp; </span> </th>
+										</c:otherwise>
+									</c:choose>
+								<!-- 직위 end -->
+								<!-- 전화번호 -->
+									<th><spring:message code='ezBoard.t38' /></th>
+									<c:choose>
+										<c:when test="${guBun != '2'}">
+											<td id="Telephone"><span>${boardItem.extensionAttribute4} </span> </td>
+										</c:when>
+										<c:otherwise>
+											<td id="Telephone"><span>&nbsp; </span> </td>
+										</c:otherwise>
+									</c:choose>
 								</tr>
+								<!-- 전화번호 end -->
+								<!-- 게시일 -->
+								<tr>
+									<th><spring:message code='ezBoard.t224' /></th>
+									<td id="PostDate" style = "white-space:nowrap; padding-right:5px">
+										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div>
+									</td>
+									<!-- 게시일 end -->
+									<!-- 게시 종료일 -->
+								<th><spring:message code='ezBoard.t288' /></th>
+								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
+								<c:choose>
+									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
+										<td id="EndDate" style="padding-right:5px;  white-space:nowrap">
+											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										</td>
+									</c:when>
+									<c:otherwise>
+										<td id="EndDate" style="padding-right:15px;  white-space:nowrap">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
+										</td>
+									</c:otherwise>
+								</c:choose>
+							</tr>
+							<!-- 게시 종료일 end -->
 							</c:when>
+							<c:otherwise>
+								<th style="width:10%"><spring:message code='ezBoard.t224' /></th>
+									<td id="PostDate" style="width:120px; white-space:nowrap; padding-right:5px">
+										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div>
+									</td>
+									<!-- 게시일 end -->
+							</tr>
+							<!-- 게시 종료일 -->
+							<tr>
+								<th><spring:message code='ezBoard.t288' /></th>
+								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
+								<c:choose>
+									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
+										<td colspan="3" id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap">
+											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										</td>
+									</c:when>
+									<c:otherwise>
+										<td colspan="3" id="EndDate" style="padding-right:15px; width:120px; white-space:nowrap">
+											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
+										</td>
+									</c:otherwise>
+								</c:choose>
+							</tr>
+							<!-- 게시 종료일 end -->
+							</c:otherwise>
 						</c:choose>
+							
+							
 						<c:if test="${boardAttrCount > 0}">
 							<c:forEach var="boardAttr" items="${boardAttr}">
 								<tr>
@@ -1178,12 +1244,14 @@
 					            </tr>
 							</c:forEach>
 						</c:if>
+					<!-- 제목 -->	
 			        <tr>
 			          <th><spring:message code='ezBoard.t323' /></th>
 			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
 			             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
 			             </td>
 			        </tr>
+			        <!-- 제목 end -->
 			      </table>
 			    </td>
 			    </c:when>

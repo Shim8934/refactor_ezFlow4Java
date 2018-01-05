@@ -422,7 +422,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table class="content" >
+		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><spring:message code = 'ezCommunity.t306' /></th>
 				<td>&nbsp;&nbsp;${boardInfo.boardName}</td>
@@ -639,7 +639,7 @@
 		
 		<br>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"  onClick="return Save()"><span><spring:message code = 'ezCommunity.t108' /></span></a>
 			<a class="imgbtn"  onClick="window.location.reload(false)"><span><spring:message code = 'ezCommunity.t109' /></span></a>
 			<a class="imgbtn"  onclick="parent.parent.window.close()"><span><spring:message code = 'ezCommunity.t21' /></span></a>

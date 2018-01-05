@@ -224,7 +224,7 @@
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
 			        strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-			        strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;'></DIV></td></tr>";
+			        strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='padding-top:5px;display:none;height:100%;width:300px;overflow-x:hidden;'></DIV></td></tr>";
 			    }
 			    
 			    strHTML += "</table>";
@@ -239,7 +239,7 @@
 	<body class="popup" style="overflow: hidden">
 		<h1><spring:message code = 'ezCommunity.t359' /></h1>
 		
-        <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
+        <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all;border-top:0px" id="TopBoardsList"></div>
         <div class="btnposition">
             <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
         </div>

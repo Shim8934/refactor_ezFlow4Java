@@ -295,7 +295,7 @@
 	    <h1><spring:message code = 'ezCommunity.t2014' /></h1>
 	    <table style="height:390px">
 	        <tr>
-	            <td style="width:170px;vertical-align:top;border:1px solid gray;">
+	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
 	                <div id="LeftBoardList" style="margin-top:-1px;overflow:auto;height:390px;"></div>
 	            </td>
 	            <td style="text-align:center">
@@ -304,7 +304,7 @@
 	                <a class="imgbtn"><span onclick="leftmoveboard(3)" style="font-family:'Gulim', 'arial', 'verdana'">◁</span></a>
 	                <a class="imgbtn"><span onclick="leftmoveboard(4)" style="font-family:'Gulim', 'arial', 'verdana'">▷</span></a>
 	            </td>
-	            <td style="width:170px;vertical-align:top;border:1px solid gray;">
+	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
 	                <div id="CopBoardList" style="margin-top:-1px;overflow:auto;height:390px;"></div>
 	            </td>
 	            <td style="text-align:center">
@@ -313,14 +313,14 @@
 	                <a class="imgbtn"><span onclick="rightmoveboard(4)" style="font-family:'Gulim', 'arial', 'verdana'">▷</span></a>
 	                <a class="imgbtn"><span onclick="rightmoveboard(3)" style="font-family:'Gulim', 'arial', 'verdana'">◁</span></a>
 	            </td>
-	            <td style="width:170px;vertical-align:top;border:1px solid gray;">
+	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
 	                <div id="RightBoardList" style="margin-top:-1px;overflow:auto;height:390px;"></div>
 	            </td>
 	        </tr>
 	    </table>
 	    
 	    <br />
-	    <div style="text-align:center">
+	    <div style="text-align:center" class="btnpositionNew">
 		    <a class="imgbtn"><span onclick="save_onclick()" ><spring:message code = 'ezCommunity.t20' /></span></a>
 		    <a class="imgbtn"><span onclick="cancel_click()" ><spring:message code = 'ezCommunity.t109' /></span></a>
 		    <a class="imgbtn"><span onclick="parent.parent.window.close()" ><spring:message code = 'ezCommunity.t21' /></span></a>
