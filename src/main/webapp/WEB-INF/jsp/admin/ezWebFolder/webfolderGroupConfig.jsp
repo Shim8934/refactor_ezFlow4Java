@@ -117,7 +117,7 @@
 		                }
 		                var pUserList = new ListView();
 		                pUserList.SetID("lvUserList");
-		                pUserList.SetRowOnClick("getmailstatistics");
+		                pUserList.SetRowOnClick("");
 		                pUserList.SetSelectFlag(false);
 		                pUserList.SetHeightFree(true);
 		                pUserList.DataSource(headerData);
@@ -129,6 +129,15 @@
 		        });
 
 		    }
+		    
+		    function add_member() {
+        		
+		    }
+		    
+	    	function delete_member() {
+
+	    	}
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -136,11 +145,11 @@
 		    <LISTVIEWDATA>
 		    <HEADERS>
 		        <HEADER>
-		        <NAME><spring:message code='ezStatistics.t1017' /></NAME>
+		        <NAME><spring:message code='ezOrgan.t67' /></NAME>
 		        <WIDTH>70</WIDTH>
 		        </HEADER>
 		        <HEADER>
-		        <NAME><spring:message code='ezStatistics.t113' /></NAME>
+		        <NAME><spring:message code='ezOrgan.t68' /></NAME>
 		        <WIDTH>100</WIDTH>
 		        </HEADER>
 		    </HEADERS>
@@ -161,14 +170,24 @@
 	   </div>
 	   
 	   <div id="mainSetting" style="margin: 10px 10px;">
-		   <table style="width: 1150px;height:640px ;border:1px solid #b6b6b6"> 
+		   <table style="width: 950px;height:640px;"> 
 		        <tr>
 		            <td style="vertical-align:top">
-		                <div style="width: 310px; height: 310px; overflow-x: auto; overflow-y: auto; border-right: 1px solid #b6b6b6;" id="TreeView"></div>
-		                <div id="UserList" style="Width: 310px; Height: 330px; overflow: auto; border-right: 1px solid #b6b6b6"></div>
+		                <div style="width: 350px; height: 310px; overflow-x: auto; overflow-y: auto; border: 1px solid #b6b6b6; margin-bottom: 20px;" id="TreeView"></div>
+		                <div id="UserList" style="Width: 350px; Height: 330px; overflow: auto; border: 1px solid #b6b6b6;"></div>
 		            </td>
-		            <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
-		                
+		            
+	            	<td width="30" align="center" valign="middle" style="min-width: 40px; padding-left:10px;"> 
+		           		<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_member()" style="cursor:pointer"></div>
+		           		<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_member()" style="cursor:pointer"></div>
+		       		</td>
+		            
+		            <td style="padding-left:10px;padding-right:20px;width: 100%; text-align: center; ">
+		                <div class="listview" style="margin-top:0px;margin-bottom:0px; border: 1px solid #b6b6b6; height: 459px;">
+                    		<div id="MemberListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:240px;border:0"><table id="MListView" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="delete_member" width="100%" border="0" class="mainlist_free"><thead id="MListView_THEAD"><tr id="MListView_TH"></tr></thead><tbody style="background-color: rgb(255, 255, 255);"></tbody></table></div>
+                		</div>
+                		<div style="margin-top:1px; border: 1px solid #b6b6b6; height: 200px;">
+                		</div>
 		            </td>
 		        </tr>
 		    </table>
