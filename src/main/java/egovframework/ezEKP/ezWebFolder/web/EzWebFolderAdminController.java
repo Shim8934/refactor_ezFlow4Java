@@ -8,9 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -56,11 +58,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminPersonal.do")
-	public String webfolderAdminPersonal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+	public String webfolderAdminPersonal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
-        
-        
+        model.addAttribute("topid", "S907000");
 		return "admin/ezWebFolder/webfolderPersonalConfig";
 	}
 	
