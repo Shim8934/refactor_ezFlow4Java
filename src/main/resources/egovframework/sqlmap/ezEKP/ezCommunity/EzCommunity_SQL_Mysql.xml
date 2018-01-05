@@ -1964,7 +1964,7 @@
 					ON
 						RTRIM(T1. c_sysopid) =  RTRIM(T2.cn)
 					AND
-						T1.tenant_id = #tenantID#
+						T1.tenant_id = T2.tenant_id
 					WHERE
 						$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 					AND

@@ -1816,7 +1816,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String mode = "", keyword = "", sRadio = "";
-		int totalPage = 0, curPage = 0, nowBlock = 0, comNoPerPage = 5;
+		int totalPage = 0, curPage = 0, nowBlock = 0, comNoPerPage = 3;
 		
 		String code = request.getParameter("code");
 		
