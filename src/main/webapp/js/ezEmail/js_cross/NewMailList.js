@@ -697,6 +697,7 @@ function GetListIevent_ongetxmlcomplete() {
             	var getChkId = $(".mainlist tr[_href='" + checkedHrefArry[i] + "']").attr("id");
             	
             	if (!(typeof getChkId === 'undefined')) {
+                    listContentArry[listContentArry.length] = getChkId;
 	            	document.getElementById(getChkId).childNodes.item(0).childNodes.item(0).checked = true;
 	                document.getElementById(getChkId).style.backgroundColor = m_strColorSelect;
             	}
@@ -704,7 +705,7 @@ function GetListIevent_ongetxmlcomplete() {
         }   
     }
 }
-/*수아 재은 수정(선택된 input href)*/
+/*수아 재은 추가(선택된 input href)*/
 function getCheckHrefArry() {
 	var checkedHrefArry = new Array();
 	$("#MailList tr input:checked").each(function (){
@@ -1205,6 +1206,7 @@ function event_listclick(obj, event) {
 	if (obj.tagName == "TD") {
         obj = obj.parentElement;
     }
+	
     if (!listEventCheckbox) {
         if (document.getElementById("HeaderAllCheckBox").checked) {
             var TemplistArray = new Array();
