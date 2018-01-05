@@ -1083,7 +1083,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = ezApprovalGService.getAprLineInfo(docID.trim(), userID, formID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), reDraftFlag, isUsed, beforeDocID);
 
-		logger.debug("aprLineRequest ended. result = " + result);
+		logger.debug("aprLineRequest ended.");
 		
 		return result;
 	}
