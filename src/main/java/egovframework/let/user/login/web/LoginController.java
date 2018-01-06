@@ -3,6 +3,10 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -485,10 +489,14 @@ public class LoginController {
 				lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			}
 			
-			logger.debug("userID=" + userId);
-			logger.debug("lang=" + lang);
-			
-			ezCommonService.insertTblUserLocalInfo(userId, "235|+09:00", lang, tenantId);
+		    LocalDateTime dt = LocalDateTime.now();
+		    ZonedDateTime zdt = dt.atZone(ZoneId.systemDefault());
+		    ZoneOffset offset = zdt.getOffset();
+		    String offsetStr = "235|" + offset.toString();
+
+		    logger.debug("userID=" + userId + ",lang=" + lang + ",offsetStr=" + offsetStr);
+		    
+			ezCommonService.insertTblUserLocalInfo(userId, offsetStr, lang, tenantId);
 		}
 		
 		String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
