@@ -14,7 +14,7 @@
 	<frameset rows="68,*" framespacing="0" frameborder="no" border="0">
     	
     		<c:choose>
-    			<c:when test="${pakageType == 'basic'}">
+    			<c:when test="${packageType != 'standard'}">
     				<c:choose>	
 						<c:when test="${lang != '3'}">
 							<frame src="/ezPortal/help/top.do" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
