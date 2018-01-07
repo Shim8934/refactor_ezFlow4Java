@@ -1207,6 +1207,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	return "EMAIL_ERROR";
         }
 	    	    
+        // JMocha Mail Server가 계정이 소문자로 저장될 필요가 있어 
+        // 사용자 아이디를 무조건 소문자로 변환한다.
+        // 소문자로 저장되기만 하면 메일 수신 시에는 발신자가 대소문자를 혼합해서 보내도
+        // 수신에 문제는 없다.
+        if (vo.getCn() != null) {
+        	vo.setCn(vo.getCn().toLowerCase());
+        }
+        
 	    int tenantID = userInfo.getTenantId();
 
 	    vo.setTenantId(tenantID);
