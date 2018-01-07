@@ -1816,7 +1816,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String mode = "", keyword = "", sRadio = "";
-		int totalPage = 0, curPage = 0, nowBlock = 0, comNoPerPage = 5;
+		int totalPage = 0, curPage = 0, nowBlock = 0, comNoPerPage = 3;
 		
 		String code = request.getParameter("code");
 		
@@ -2067,6 +2067,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		model.addAttribute("selRes", selRes);
+		model.addAttribute("selRes1", selRes1);
+		model.addAttribute("selRes2", selRes2);
 		model.addAttribute("sel", sel);
 		model.addAttribute("selType", selType);
 		model.addAttribute("selJU", 0);

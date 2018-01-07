@@ -4,11 +4,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code = 'ezCommunity.t664' /></title>
+		<title><spring:message code = 'ezCommunity.t663' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		
+		<style>
+			.box {
+				border:0px;
+				margin-top:5px
+			}
+		</style>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript">
 			function closeBtn_click() {
 				window.close();
@@ -26,7 +31,7 @@
 			<iframe src="/ezCommunity/pollETCTable.do?questionID=<c:out value = '${questionID }' />&etc=<c:out value = '${etc }' />" scrolling="auto" frameborder="0" id="etc" style="HEIGHT: 255px; WIDTH: 400px;" ></iframe>
 		</div>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<input type="button" name="Submit2" value="<spring:message code = 'ezCommunity.t108' />" onClick="javascript:closeBtn_click()" >
 		</div>
 	</body>
