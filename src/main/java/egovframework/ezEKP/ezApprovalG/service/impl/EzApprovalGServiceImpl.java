@@ -1982,11 +1982,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (apprGDocListVO != null) {
 			orgDocNumCode = apprGDocListVO.getOrgDocNumCode();
-//			sn = getCabinetNum(deptID, "", companyID, tenantID, offSet);
-//			sn = sn.replace("<REGNUM>", "").replace("</REGNUM>", "");
-//			sn = sn.replace("<RESULT>", "").replace("</RESULT>", "");
+			sn = getCabinetNum(deptID, "", companyID, tenantID, offSet);
+			sn = sn.replace("<REGNUM>", "").replace("</REGNUM>", "");
+			sn = sn.replace("<RESULT>", "").replace("</RESULT>", "");
 			
-//			if (!sn.trim().equals("")) {
+			if (!sn.trim().equals("")) {
 				newDocID = getNewID(companyID, tenantID);
 				
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
@@ -2010,7 +2010,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docNo = "";
 				}
 			}
-//		}
+		}
 		
 		if (strSQL.toString().equals("FALSE") || newDocID.trim().equals("")) {
 			if (!sn.trim().equals("")) {

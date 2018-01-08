@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -20,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -50,6 +53,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
@@ -99,6 +103,8 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import net.htmlparser.jericho.Renderer;
+import net.htmlparser.jericho.Source;
 
 @RestController
 public class MEmailGWController extends EgovFileMngUtil {
@@ -1173,9 +1179,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				useFromAddress = "NO";
 			}
 			
-	        String browser = ClientUtil.getClientInfo(request, "browser");
-			boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-						
 			JSONObject data = new JSONObject();
 	        data.put("userEmail",userEmail);
 			data.put("to", to);
@@ -1198,7 +1201,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("tempBody", tempBody);
 			data.put("newWindowId", newWindowId);
 			data.put("serverName", serverName);
-			data.put("isCrossBrowser", isCrossBrowser);
 			data.put("useFromAddress", useFromAddress);
 			data.put("fromAddressHtml", fromAddressHtml);
 			data.put("mailAttachLimit", mailAttachLimit);
@@ -2187,7 +2189,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		            
 	                // text/plain 파트를 구성한다.
 		            MimeBodyPart textPlainPart = new MimeBodyPart();
-		            textPlainPart.setText(textBody, "utf-8");	
+		            
+		            // HTML 태그들을 제거한 Plain Text로 변환한다. 
+		            Source htmlSource = new Source(textBody);
+		            Renderer htmlRend = new Renderer(htmlSource);
+		            textPlainPart.setText(htmlRend.toString(), "utf-8");	
 		            
 		            // text/plain 파트를 추가한다.
 		            alternativePart.addBodyPart(textPlainPart);
@@ -2221,6 +2227,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        // User-Agent 설정
 			        message.setHeader("User-Agent", "JMocha Mail 1.0");	        
 			        		        
+			        //inline image 처리
+			        MimeMultipart relatedPart = null;
+			        Set<String> contentIdSet = new HashSet<String>();
+			        
 		            // 임시 보관함에 메시지가 있는 경우 해당 메시지와 병합 작업을 수행한다.
 			        Message oldMessage = null;
 			        long uid = 0;
@@ -2270,12 +2280,103 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 										p = mp.getBodyPart(i);
 										
 										while (true) {
+										    // Part가 Related Part일 경우의 처리
+		    								if (alternativePart != null && p.isMimeType("multipart/related")) {
+		    									LOGGER.debug("Part is multipart/related");
+		    								    
+		    									hasAttach = true;
+		    									
+		    									LOGGER.debug("relatedPart=" + relatedPart);
+		    									
+		    									if (relatedPart == null) {
+		    										relatedPart = new MimeMultipart("related");
+		    										    							
+		    					                    MimeBodyPart wrap = new MimeBodyPart();
+		    					                    wrap.setContent(relatedPart);
+		    					                    alternativePart.removeBodyPart(1);
+		    					                    alternativePart.addBodyPart(wrap, 1);
+		    									}
+		    									// new related part is already created by the above routine
+		    									// for adding new in-line images.
+		    									else {
+		    										relatedPart.removeBodyPart(0);
+		    									}
+		    									
+		    									// 기존 메시지의 Related Part와 병합한다.
+		    									Multipart existingRelatedPart = (Multipart)p.getContent();
+		    									int existingRelatedPartCount = existingRelatedPart.getCount();
+		    									BodyPart existingRelatedSubPart = null;
+		    									
+		    									for (int j = 0; j < existingRelatedPartCount; j++) {
+		    									    existingRelatedSubPart = existingRelatedPart.getBodyPart(j);
+		    										
+		    										if (existingRelatedSubPart instanceof MimePart) {
+		    										    String contentId = ((MimePart)existingRelatedSubPart).getContentID();
+		    										    LOGGER.debug("Existing ContentId=" + contentId);
+		    										    
+		    											if (contentId != null && !contentIdSet.contains(contentId)) {
+		    												LOGGER.debug("Adding ContentId=" + contentId);
+		    											    
+		    												relatedPart.addBodyPart(existingRelatedSubPart);						
+		    											}
+		    										}				
+		    									}
+		    									
+		    									String bodyContent = content.getContent().toString();
+		    									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
+		    									content.setContent(bodyContent, "text/html; charset=utf-8");
+		    									relatedPart.addBodyPart(content, 0);
+		    									
+		    									removeUnusedInlineImagePart(relatedPart);
+		    								}
+		    								// Part가 Alternative Part일 경우의 처리
+		    								else if (alternativePart != null && p.isMimeType("multipart/alternative")) {
+		    									LOGGER.debug("Part is multipart/alternative");
+		    								    
+		    								    hasAttach = true;
+		    								    
+		                                        Multipart existingAlternativePart = (Multipart)p.getContent();
+		                                        int existingAlternativePartCount = existingAlternativePart.getCount();
+		                                        BodyPart existingAlternativeSubPart = null;
+		                                        boolean isRelatedFound = false;
+		                                        
+		                                        for (int j = 0; j < existingAlternativePartCount; j++) {
+		                                            existingAlternativeSubPart = existingAlternativePart.getBodyPart(j);
+		                                            
+		                                            if (existingAlternativeSubPart instanceof MimePart) {
+		                                                // Alternative Part 안에 Related Part가 있는 경우에 대한 처리
+		                                                if (existingAlternativeSubPart.isMimeType("multipart/related")) {
+		                                                    isRelatedFound = true;
+		                                                    break;
+		                                                }
+		                                            }               
+		                                        }						
+		                                        
+		                                        if (isRelatedFound) {
+		                                            // p를 발견된 related 파트로 변경하여 루프의 시작 부분에 있는 related 파트 처리 부분으로 제어를 옮긴다.
+		                                            p = existingAlternativeSubPart;
+		                                            continue;
+		                                        }
+		                                    }								
+		                                    // there are cases where an in-line image part doesn't have
+		                                    // a Content-Disposition header, but has a Content-ID header.    								
+		    								else if (p instanceof MimePart 
+		    								        && ((MimePart)p).getContentID() != null) {
+		    								    String contentId = ((MimePart)p).getContentID();
+		    								    LOGGER.debug("Existing ContentId=" + contentId);
+		    								    
+		    								    if (!contentIdSet.contains(contentId)) {
+		    								    	LOGGER.debug("Adding ContentId=" + contentId);
+		    								        
+		    								        mixedPart.addBodyPart(p);
+		    								    }
+		    								}											
 		    								// Content-Disposition 헤더가 없이 첨부된 파일이 있어
 		    								// Content-Type이 application으로 시작하는 경우도 추가함 
 		    								// 예) Content-Type: application/octet-stream;
 		    								//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 		    							    //    Content-Transfer-Encoding: base64	    								
-		    								if (p.getDisposition() != null || p.isMimeType("application/*")) { 
+		    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
 		    									mixedPart.addBodyPart(p);
 		    									
 		    									// 첨부파일 파트인 경우
@@ -2308,6 +2409,43 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 										
 										message.setContent(mixedPart);							
 									}
+									// 기존 메시지가 Related Part일 경우의 처리
+									else if (oldMessage.isMimeType("multipart/related")) {
+									    LOGGER.debug("oldMessage is multipart/related");
+									    LOGGER.debug("relatedPart=" + relatedPart);
+										
+		                                if (alternativePart != null) {								
+		    								// 새로 추가되는 이미지 파트들을 추가한다.
+		    								// 기존 메시지의 이미지 파트들은 위에서 이미 mixedPart에 추가되어 있다.
+		    								// a new related part is already created by the above routine
+		    								// for adding new in-line images.						
+		    								if (relatedPart != null) {
+		    									relatedPart.removeBodyPart(0);
+		    									
+		    									BodyPart relatedSubPart = null;
+		    									for (int i = 0; i < relatedPart.getCount(); i++) {
+		    										relatedSubPart = relatedPart.getBodyPart(i);
+		    										mixedPart.addBodyPart(relatedSubPart);
+		    									}
+		    								}
+		    								
+		    								// 기존 메시지가 Related Part인 경우는 첨부파일이 없는 경우이므로 mixed가 아니다.
+		    								// this mixedPart is actually a related part.
+		    								mixedPart.setSubType("related");
+		    								
+		    								String bodyContent = content.getContent().toString();																
+		                                    bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);                          
+		                                    content.setContent(bodyContent, "text/html; charset=utf-8");                            
+		                                    mixedPart.addBodyPart(content, 0);
+		                                    
+		                                    removeUnusedInlineImagePart(mixedPart);
+		                                                                        
+		                                    MimeBodyPart wrap = new MimeBodyPart();
+		                                    wrap.setContent(mixedPart);
+		                                    alternativePart.removeBodyPart(1);
+		                                    alternativePart.addBodyPart(wrap, 1);                                                                               
+		                                } 
+									}									
 								}					
 							}
 						}
@@ -2429,13 +2567,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			            }
 				        
 				        // file system의 templist txt파일 삭제
-				        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
-				        pDirPath += commonUtil.separator + stateName + ".txt";
-				        File f = new File(pDirPath);
-				        
-				        if (f.exists()) {
-				        	f.delete();
-				        }			        
+			            if (!stateName.isEmpty()) {
+					        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
+					        pDirPath += commonUtil.separator + stateName + ".txt";
+					        File f = new File(pDirPath);
+					        
+					        if (f.exists()) {
+					        	f.delete();
+					        }			        
+			            }
 			        }
 			        		        
 			        draftFolder.close(true);
@@ -4039,6 +4179,52 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         
         return returnValue;
     }
+	
+	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
+		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher mat = pat.matcher(htmlStr);
+				
+		StringBuffer result = new StringBuffer();
+		while (mat.find()) {
+			String cid = mat.group(1);
+			try {
+				cid = URLDecoder.decode(cid, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			mat.appendReplacement(result, Matcher.quoteReplacement("src=\"cid:" + cid + "\""));
+		}
+		mat.appendTail(result);
+		
+		return result.toString();	
+	}
+	
+	private void removeUnusedInlineImagePart(Multipart relatedPart) {
+		try {
+			String htmlStr = relatedPart.getBodyPart(0).getContent().toString();
+			int count = relatedPart.getCount() - 1;
+			
+			for (int i = count; i >= 1; i--) {
+				MimeBodyPart bp = (MimeBodyPart)relatedPart.getBodyPart(i);
+				
+				if (bp.getDisposition() != null) {
+					String contentID = bp.getContentID();
+					
+					if (contentID != null && contentID.length() > 2) {
+						contentID = contentID.substring(1, contentID.length() - 1);
+						if (htmlStr.indexOf("src=\"cid:" + contentID) < 0) {
+							LOGGER.debug("this inline image isn't used. contentID=" + contentID);
+							relatedPart.removeBodyPart(i);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";

@@ -185,6 +185,11 @@
 						return false;
 					}
 				}
+				
+				if ($("#Sdatepicker").val() > $("#Edatepicker").val()) {
+	            	alert("<spring:message code='ezCommunity.t595' />");
+	                return false;
+	            }
 			}
 			
 			function selTypeChange( sel ) {

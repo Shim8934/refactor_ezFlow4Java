@@ -435,7 +435,7 @@ public class EzEmailUtil {
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
                         
-                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
+//                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
                         
                         subject = MimeUtility.decodeText(rawHeader);
                     }                        

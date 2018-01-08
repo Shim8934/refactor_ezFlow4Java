@@ -36,8 +36,8 @@ th{
 	word-break: keep-all;
 	word-wrap: normal;
 	color: #777;
-	background-color:#f3f3f3;
-	border:1px solid #b6b6b6;
+	background-color:#f8f8f8;
+	border:1px solid #cfcfcf;
 	padding:2px 10px;
 }
 
@@ -1314,7 +1314,7 @@ img { border:0px;}
 .btype_list {
 	margin:0px; 
 	padding:0px;
-
+	height:160px;
 }
 .btype_list .title {
 	position:relative;
@@ -1449,10 +1449,10 @@ img { border:0px;}
 	font-weight:bold;
 	padding:0px 0px 5px;
 	margin:0px 0px 7px;
-	color:#333;
+	color:#666;
 	height:20px;
 	line-height:20px;
-	border-bottom:1px solid #92969a;
+	border-bottom:1px solid #cfcfcf;
 }
 
 .cmhome_body .type1_h2 {
@@ -1499,7 +1499,7 @@ img { border:0px;}
 
 .cmhomelist{table-layout:fixed; border:0 none !important;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
-.cmhomelist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:6px 4px 6px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; height:22px}
+.cmhomelist tr th{background-color:#f8f8f8; text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:6px 4px 6px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; height:20px}
 .cmhomelist tr th.title{width:100%; text-align:left;}
 
 .cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#666; border-bottom:1px solid #ebebed; border-spacing:0; height:32px;}
