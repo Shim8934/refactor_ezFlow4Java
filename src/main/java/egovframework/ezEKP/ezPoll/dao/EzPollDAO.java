@@ -182,5 +182,9 @@ public class EzPollDAO extends EgovAbstractDAO {
 	
 	public void removeAnswerAndUser(Map<String, Object> map) {
 		delete("EzPollDAO.removeAnswerAndUser", map);
+	}
+
+	public PollUserAnswerVO getSpecificPollUserAndAnswer(Map<String, Object> map) {		
+		return (PollUserAnswerVO) select("EzPollDAO.getSpecificPollUserAndAnswer", map);
 	}	
 }

@@ -493,6 +493,23 @@
 		]]>				
     </select>  
     
+    <select id="EzPollDAO.getSpecificPollUserAndAnswer" resultMap="pollUserAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_ANSWER
+			WHERE
+				ANS_ID = #opt_id#
+			AND 
+				QST_ID = #qst_id#
+			AND
+				USER_ID = #user_id#
+			AND
+				TENANT_ID = #tenant_id#
+		]]>				
+    </select>  
+    
     <select id="EzPollDAO.getListVotedUsersForAnswer" resultMap="pollUserAnswer">   
 		<![CDATA[
 			SELECT 

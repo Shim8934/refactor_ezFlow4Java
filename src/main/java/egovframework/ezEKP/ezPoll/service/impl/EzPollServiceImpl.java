@@ -484,4 +484,14 @@ public class EzPollServiceImpl implements EzPollService{
 		ezPollDAO.unhideQuestion(map);	
 	}
 
+	@Override
+	public PollUserAnswerVO getSpecificPollUserAndAnswer(int optId, int qstId, String id, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("opt_id", optId);
+		map.put("qst_id", qstId);
+		map.put("user_id", id);
+		map.put("tenant_id", tenantId);
+		return ezPollDAO.getSpecificPollUserAndAnswer(map);
+	}
+
 }

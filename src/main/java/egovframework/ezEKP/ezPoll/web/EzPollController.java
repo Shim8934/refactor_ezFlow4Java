@@ -1505,9 +1505,18 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		if (req.getParameter("flag") != null) {
 			flag = req.getParameter("flag");
-		}		
+		}
+		
+		PollUserAnswerVO pollUserAnswerCheck = ezPollService.getSpecificPollUserAndAnswer(optId, qstId, loginVO.getId(), loginVO.getTenantId()); //20180108 baonk added
 		
 		if (flag.equals("1")) {
+			//20180108 baonk added
+			if (pollUserAnswerCheck != null) {
+				strXML = "<RESULT>ADD_OK</RESULT>";
+				return strXML;
+			}
+			//end
+			
 			//Get string of time now
 			Date date = new Date();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -1544,7 +1553,14 @@ public class EzPollController extends EgovFileMngUtil {
 			pollUserAnswer.setVoteDate(dateNow);
 			strXML = addUserAndAnswer(pollUserAnswer, egovFileScrty.encryptAES(session.getId()));		
 		}
-		else {						
+		else {
+			//20180108 baonk added
+			if (pollUserAnswerCheck == null) {
+				strXML = "<RESULT>ADD_OK</RESULT>";
+				return strXML;
+			}
+			//end
+			
 			//Delete entry in database
 			PollUserAnswerVO pollUserAnswer = new PollUserAnswerVO();
 			pollUserAnswer.setAnsId(optId);

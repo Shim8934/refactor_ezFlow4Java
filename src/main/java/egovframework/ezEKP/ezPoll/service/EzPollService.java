@@ -93,5 +93,7 @@ public interface EzPollService {
 	
 	public void getAllQuestionForUser2(LoginVO loginVO, Set<PollQuestionVO> setOfQuestions, String searchStr, String mode) throws Exception;
 
-	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception;	
+	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception;
+
+	public PollUserAnswerVO getSpecificPollUserAndAnswer(int optId, int qstId, String id, int tenantId) throws Exception;	
 }
