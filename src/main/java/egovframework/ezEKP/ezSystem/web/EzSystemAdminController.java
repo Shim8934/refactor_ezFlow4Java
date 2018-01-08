@@ -82,6 +82,7 @@ public class EzSystemAdminController {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
+		
 		return "/ezSystem/systemMain";
 	}
 

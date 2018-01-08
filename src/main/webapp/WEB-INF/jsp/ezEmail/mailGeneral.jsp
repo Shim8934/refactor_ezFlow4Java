@@ -110,6 +110,8 @@
 
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
+			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
+			    var previewSubTreeStatus = window.parent.parent.frames["left"].previewSubTree;
 				var sendStr = "<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
 				                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
 				                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
@@ -120,13 +122,18 @@
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>";
 				
                 if (usePreviewSubTree == "YES") {
-                	sendStr +=  "<PREVIEWSUBTREE>" + $("#previewSubTreeSlb option:selected").val() + "</PREVIEWSUBTREE>";
+                	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
                 }
 				
 				xmlHTTP.open("POST", url, false);
 				xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
                 xmlHTTP.send(sendStr + "</DATA>");
-				
+
+                if (previewSubTreeStatus != previewSubTreeSlb) {
+                	var type = "conf";
+                	window.parent.parent.frames["left"].previewSubTreeCall(type);
+                }
+                
 				if (Gubun == "1") {
 				    if (xmlHTTP.status == 200)
 				        alert("<spring:message code='ezEmail.t42' />");
