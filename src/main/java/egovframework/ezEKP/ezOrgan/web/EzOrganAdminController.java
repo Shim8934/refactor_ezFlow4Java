@@ -2441,10 +2441,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
             return "cmm/error/adminDenied";
         }
-        
         int tenantID = userInfo.getTenantId();        
         logger.debug("tenantID=" + tenantID);
         
+        String strCurrentUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        String caller = request.getHeader("referer").replace(strCurrentUrl, "");
+        logger.debug("caller=" + caller);
+       
         String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));  
         String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
         String userEmail = userId + "@" + domainName;
@@ -2466,6 +2469,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("userId", userId);
         model.addAttribute("userQuota", userQuota);
         model.addAttribute("userWarn", userWarn);
+        model.addAttribute("caller", caller);
         
         logger.debug("configUserQuota ended.");
         

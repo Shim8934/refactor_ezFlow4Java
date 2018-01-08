@@ -4,38 +4,22 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
-<head>
-<title><spring:message code='ezSystem.x0021' /></title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
-<link rel="stylesheet" href="<spring:message code='main.e15'/>"
-	type="text/css">
-<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript"
-	src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-<script type="text/javascript"
-	src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-<script type="text/javascript"
-	src="/js/ezEmail/<spring:message code='ezEmail.e1' />">
-	
-</script>
-
-<style>
-#myProgress {
-  width: 80%;
-  height:10px;
-  background-color: #ddd;
-}
-
-#myBar{
- 
-  height: 10px;
-  background-color: #4CAF50;
-}
-</style>
-		
-<script type="text/javascript">
+	<head>
+		<title><spring:message code='ezSystem.x0021' /></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
+		<link rel="stylesheet" href="<spring:message code='main.e15'/>"
+			type="text/css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript"
+			src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript"
+			src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript"
+			src="/js/ezEmail/<spring:message code='ezEmail.e1' />">
+		</script>
+		<script type="text/javascript">
 		
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";
 			var strLang2 = "<spring:message code='ezSystem.x0031'/>";
@@ -53,9 +37,7 @@
 			
 			//**/ 화면 호출시 실행 함수
 			window.onload = function(){
-				getTime();
 				getUserList(1);
-				myFunction(res1,res2);
 				makePageSelPage();
 			}
 			
@@ -72,88 +54,9 @@
 					search();
 					return false;
 				}
-		        
 				return true;
 			}
 		
-			 //**/ 날짜 아이콘 적용 및 날짜 검색
-			 function getTime() {
-				
-				var dateObj = new Date();
-				var year = dateObj.getFullYear();
-				var month = dateObj.getMonth() + 1;
-				var date = dateObj.getDate();
-				
-				if (date<10) {
-					date = '0' + date;
-				}
-				if (month<10) {
-					month = '0' + month;
-				}
-				
-				dateObj = year +"-"+ month +"-" + date;
-				searchStartTime = dateObj;
-		    	searchEndTime = dateObj;
-		    	
-		    	$('#startDatepicker').val(dateObj);
-				$('#endDatepicker').val(dateObj);
-				
-			}
-			 
-		    $(function() {
-		    	$('#startDatepicker').datepicker({
-		    		changeMonth: true,
-		    		changeYear: true,
-		    		autoSize: true,
-		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-		    		buttonImageOnly: true,
-		    		maxDate: 0,
-		    		onSelect: function(selected) {
-		    			$('#endDatepicker').datepicker("option", "minDate", selected)
-		    		}
-		    	});
-		    	$('#endDatepicker').datepicker({
-		    		changeMonth: true,
-		    		changeYear: true,
-		    		autoSize: true,
-		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-		    		buttonImageOnly: true,
-		    		maxDate: 0,
-		    		onSelect: function(selected) {
-		    			$('#startDatepicker').datepicker("option", "maxDate", selected)
-		    		}
-		    	});    	    	
-		    });
-		    
-		    var dayMsg = "<spring:message code='main.kyj1'/>";
-		    var dayStr = dayMsg.split(";");
-		    var monthMsg = "<spring:message code='main.kyj2'/>";
-		    var monthStr = monthMsg.split(";");
-		   
-		    $(function() {
-		    	$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
-		    			closeText: "<spring:message code='main.t3'/>",
-		    			prevText: "<spring:message code='main.t0604'/>",
-		    			nextText: "<spring:message code='main.t0605'/>",
-		    			currentText: "<spring:message code='main.t0606' />",
-		    			monthNames: monthStr,
-						monthNamesShort: monthStr,
-		    			dayNames: dayStr,
-		    			dayNamesShort: dayStr,
-		    			dayNamesMin: dayStr,
-		    			weekHeader: 'Wk',
-		    			dateFormat: 'yy-mm-dd',
-		       			firstDay:0,
-		    			isRTL: false,
-		    			duration: 200,
-		    			showAnim: 'show',
-		    			showMonthAfterYear: true
-		    	};
-		    	$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);	
-		    });
-			
 			//**/ 페이징처리
 			function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -283,9 +186,10 @@
 			//**/ 검색 버튼 클릭시 이벤트
 		    function search() {
 				$(function() {
-					
 					if ($('#searchKeyword').val().trim() == "") {
-						$('#searchKeyword').val('');
+						
+						alert("<spring:message code='ezEmail.t349'></spring:message>");
+						 
 					}
 		        	getUserList(1);
 				});
@@ -295,7 +199,7 @@
 			function reset() {
 				$(function() {
 					$('#searchKeyword').val('');
-					getTime();
+					
 				});
 			}
 		    
@@ -349,13 +253,19 @@
 				    						html += "	<td>" + i[2] 			+ "</td>";
 				    						html += "	<td>" + i[3] 			+ "</td>"; //사용량
 				    						html += "	<td>" + i[4] 			+ "</td>"; //총용량
-				    						html += "	<td><div id='myProgress'><div id='myBar' style='width:"+result+"%'></div></div></td>";
-				    						html += "	<td><a class='imgbtn' id='usermenu7'><span onClick=mod_quota('"+i[0]+"')><spring:message code='ezOrgan.t92'></spring:message></span></a></td>";
-				    						html += "</tr>";
+				    						if (result >= 90){				    							
+				    							html += "	<td><div id='myProgress'><div id='myBar_red' style='width:"+result+"%'></div></div></td>";
+				    						} else if (result >= 70){ 
+				    							html += "	<td><div id='myProgress'><div id='myBar_orange' style='width:"+result+"%'></div></div></td>";
+				    						} else if (result >= 60){
+				    							html += "	<td><div id='myProgress'><div id='myBar_yellow' style='width:"+result+"%'></div></div></td>";
+				    						} else {
+				    							html += "	<td><div id='myProgress'><div id='myBar_green' style='width:"+result+"%'></div></div></td>";
+		   									}
+											html += "<td><a class='imgbtn'><span onClick=mod_quota('"+i[0]+"')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
+											html += "</tr>";
 				    						j++;
 									})
-		   						
-
 		   					    }
 			    				$('#userListBody').empty().append(html);
 			    				
@@ -402,7 +312,7 @@
 		    }
 
 		</script>
-</head>
+	</head>
 	<body class="mainbody"> <%-- <spring:message code="ezSystem.x0021"> </spring:message>--%>
 		<h1>메일박스 용량관리<span id="listInfo"></span></h1>
 		<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">

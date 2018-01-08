@@ -771,9 +771,15 @@ public class EzEmailAdminController {
 	 * 회원별 메일함 사용용량 및 총용량
 	 */
 
-	@RequestMapping(value = "/admin/ezEmail/statistics_list.do")
-	public String statisticsList_view() throws Exception {
-
+	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
+	public String statisticsList_view(@CookieValue("loginCookie")String loginCookie) throws Exception {
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		return "/admin/ezEmail/mailQuotaList";
 	}
 
@@ -788,7 +794,11 @@ public class EzEmailAdminController {
 		logger.debug("started statisticsList controller.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String currPage = req.getParameter("pageNum");
 
 		if (currPage == null || currPage.equals("")) {
@@ -861,14 +871,18 @@ public class EzEmailAdminController {
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
 				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
 				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
-
-				logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
-						+ ",mailboxQuota=" + mailboxQuota);
-
+				
+			
 				quaList.add(3, String.valueOf(mailboxUsage));
 				quaList.add(4, String.valueOf(mailboxQuota));
 				userList.add((ArrayList<String>) quaList);
 
+				for (int i = 0; i < quaList.size(); i++ ){
+				logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
+						+ ",mailboxQuota=" + mailboxQuota);
+				if ( i == 20 ) 
+				break;   
+				}
 			}
 
 		} catch (Exception e) {
@@ -963,13 +977,15 @@ public class EzEmailAdminController {
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
 				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
 				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
-
-				logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
-						+ ",mailboxQuota=" + mailboxQuota);
-
 				quaList.add(3, String.valueOf(mailboxUsage));
 				quaList.add(4, String.valueOf(mailboxQuota));
 				userList.add((ArrayList<String>) quaList);
+				for (int i = 0; i < quaList.size(); i++ ){
+					logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
+							+ ",mailboxQuota=" + mailboxQuota);
+					if ( i == 20 ) 
+						break;   
+				}
 			}
 
 		} catch (Exception e) {
@@ -986,7 +1002,7 @@ public class EzEmailAdminController {
 		/* 엑셀 만들기 */
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("MailQuotaList");
-
+		
 		Row row = null;
 		Cell cell = null;
 
@@ -1001,7 +1017,7 @@ public class EzEmailAdminController {
 		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setVerticalAlignment((short) 1);
-
+		
 		HSSFCellStyle bodyStyle = workbook.createCellStyle();
 		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);

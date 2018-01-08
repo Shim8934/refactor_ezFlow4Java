@@ -81,7 +81,7 @@
 		                break;
 
 		            case 22:
-		            	url = "/admin/ezEmail/statistics_list.do";
+		            	url = "/admin/ezEmail/mailQuotaList.do";
 		                break;
 				}
 				window.open(url,"right");
