@@ -110,7 +110,10 @@
                 BANSONG ,
                 CALLBACK ,
                 HESONG ,
-                SAVEMAILFLAG 
+                (SELECT SAVEMAILFLAG 
+                 FROM TBL_PS_APPROVNOTIMAILCONF
+                 WHERE UserID = #currentID# 
+                 AND TENANT_ID = #tenantID#) AS SAVEMAILFLAG  
            	FROM
 				TBL_PS_APPROVNOTIMAILCONF 
           	WHERE
@@ -148,24 +151,60 @@
                 	WHERE
                 		USERID = #v_PUSERID#
                 	AND
-                		TENANT_ID = #tenantID#	 ) <> 0
+                		TENANT_ID = #tenantID#
+                    AND
+                        COMPANYID = #companyID# ) <> 0
 		]]>
 	</select>
 	
 	<update id="EzPersonalDAO.setApprovalPwd_U" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_PWDINFO
-          	SET
-          		FLAG = #v_PFLAG#,
-              	PWD = #v_PPWD#,
-              	PWDTYPE = #v_PPWDTYPE#
-        	WHERE
-        		USERID = #v_PUSERID#
-        	AND
-        		TENANT_ID = #tenantID#	
-		]]>
-	</update>	
+        <isEqual property="v_PFLAG" compareValue="Y">
+            <![CDATA[
+                UPDATE
+                    TBL_PWDINFO
+                SET
+                    FLAG = #v_PFLAG#,
+                    PWD = #v_PPWD#,
+                    PWDTYPE = #v_PPWDTYPE#
+                WHERE
+                    USERID = #v_PUSERID#
+                AND
+                    TENANT_ID = #tenantID#
+                AND
+                    COMPANYID = #companyID# 
+            ]]>
+        </isEqual> 
+        <isEqual property="v_PFLAG" compareValue="N"> 
+            <![CDATA[
+                UPDATE
+                    TBL_PWDINFO
+                SET
+                    FLAG = #v_PFLAG#
+                WHERE
+                    USERID = #v_PUSERID#
+                AND
+                    TENANT_ID = #tenantID#
+                AND
+                    COMPANYID = #companyID# 
+            ]]>     
+        </isEqual>
+	</update>
+    
+    <update id="EzPersonalDAO.setApprovalPwd_L" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_PWDINFO
+            SET
+                FLAG = #v_PFLAG#,
+                PWDTYPE = #v_PPWDTYPE#
+            WHERE
+                USERID = #v_PUSERID#
+            AND
+                TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID# 
+        ]]>     
+    </update>	
 	
 	<insert id="EzPersonalDAO.setApprovalPwd_I" parameterClass="Map">
 		<![CDATA[
@@ -811,6 +850,5 @@
               </isEmpty>              
           </isNotEqual>
      </select>
-  
 </sqlMap>
 
