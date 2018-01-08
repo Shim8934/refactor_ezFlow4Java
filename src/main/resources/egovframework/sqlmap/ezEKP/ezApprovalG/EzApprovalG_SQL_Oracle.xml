@@ -18152,4 +18152,19 @@
 		WHERE 
 			A.DOCID = #pDocID#
    	</select>
+    
+    <select id ="EzApprovalG.getWhoKyulYN" parameterClass="map" resultClass="String">
+        SELECT
+            ISUSE
+        FROM
+            TBL_CODELIST
+        WHERE 
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            CODE1 = #v_CODE1#
+        AND
+            CODE2 = #v_CODE2#
+      </select>
 </sqlMap>
