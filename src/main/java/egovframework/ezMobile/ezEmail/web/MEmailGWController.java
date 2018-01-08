@@ -103,6 +103,8 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import net.htmlparser.jericho.Renderer;
+import net.htmlparser.jericho.Source;
 
 @RestController
 public class MEmailGWController extends EgovFileMngUtil {
@@ -2201,7 +2203,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		            
 	                // text/plain 파트를 구성한다.
 		            MimeBodyPart textPlainPart = new MimeBodyPart();
-		            textPlainPart.setText(textBody, "utf-8");	
+		            
+		            // HTML 태그들을 제거한 Plain Text로 변환한다. 
+		            Source htmlSource = new Source(textBody);
+		            Renderer htmlRend = new Renderer(htmlSource);
+		            textPlainPart.setText(htmlRend.toString(), "utf-8");	
 		            
 		            // text/plain 파트를 추가한다.
 		            alternativePart.addBodyPart(textPlainPart);

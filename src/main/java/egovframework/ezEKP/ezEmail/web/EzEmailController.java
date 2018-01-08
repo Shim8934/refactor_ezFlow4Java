@@ -68,12 +68,20 @@ public class EzEmailController {
         
         model.addAttribute("checkAdmin", checkAdmin);
         
+        String packageType = "";
+        
         if (checkAdmin) {
+        	packageType = commonUtil.getPackageType(auth.getTenantId());
+        	
             model.addAttribute("lang", auth.getLang());
         } else {
             LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        	packageType = commonUtil.getPackageType(userInfo.getTenantId());            
+            
             model.addAttribute("lang", userInfo.getLang());
         }
+        
+        model.addAttribute("packageType", packageType);
         
         return "ezEmail/mailAloneTop";
     }

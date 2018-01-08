@@ -150,7 +150,7 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(22)"><spring:message code='ezStatistics.kyj1' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(23)"><spring:message code='ezStatistics.kyj2' /></span></li>
 		    </ul>
-            <c:if test="${packageType != 'basic'}">
+            <c:if test="${packageType == 'standard'}">
             <c:if test="${use_approvalG == 'YES'}">
             <h2><span id="APPROVAL" style="display:inline-block;width:100%;" onClick="menu_change('APPROVAL')" ><spring:message code='ezStatistics.t1030' /></span></h2>
 		    <ul>

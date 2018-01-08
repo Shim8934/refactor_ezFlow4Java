@@ -3068,7 +3068,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
 		}
 		//2017.12.29 강민수92 댓글 갯수 구하기
-		if (boardPropertyVO.getOneLineReply().equals("1")) {
+		if (boardPropertyVO.getOneLineReply() != null && boardPropertyVO.getOneLineReply().equals("1")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
 		}
