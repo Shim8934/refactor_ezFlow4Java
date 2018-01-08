@@ -678,8 +678,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
+			String fromEmail = userVO.getMail();
+			
 			String password = jspw;
 
 			int tenantID = 0;
@@ -1180,7 +1183,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			JSONObject data = new JSONObject();
-	        data.put("userEmail",userEmail);
+	        data.put("fromEmail",fromEmail);
 			data.put("to", to);
 			data.put("cc", cc);
 			data.put("bcc", bcc);
@@ -2734,6 +2737,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
+			String useKukudocs = ezCommonService.getTenantConfig("USE_KUKUDOCS", info.getTenantId());
 			String pAttachListHtmlSub = null;
 			
 			List<String> bodyInfoList = null;
@@ -3140,6 +3144,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("isSentItems", isSentItems);
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
+			mail.put("useKukudocs", useKukudocs);
 			
 			if (bodyInfoList != null) { 
 				mail.put("htmlBody", bodyInfoList.get(0));
@@ -3194,6 +3199,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
+			String useKukudocs = ezCommonService.getTenantConfig("USE_KUKUDOCS", info.getTenantId());
 			
 			LOGGER.debug("userEmail=" + userEmail);
 			
@@ -3229,7 +3235,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
-	
+			
 			Folder f = ia.getFolder(folderPath);
 			
 			if (f == null || !f.exists()) {
@@ -3272,6 +3278,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							data.put("bytes", bytes);
 							data.put("filename",filename);
 							data.put("filetype",part.getContentType());
+							data.put("useKukudocs", useKukudocs);
 							
 							result.put("status", "ok");
 							result.put("code", 0);			
