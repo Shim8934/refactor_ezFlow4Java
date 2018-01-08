@@ -108,7 +108,6 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
-		    	
 		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
 		        if ('WebSocket' in window) {
 	           	} else if ('MozWebSocket' in window) {
@@ -251,7 +250,7 @@
 	                // 브라우저가 Page Visibility API를 지원할 때의 처리
 	                if ('hidden' in document) {
 	                    console.log('adding visibilitychange event handler');
-	                    
+
 	                    document.addEventListener('visibilitychange', onVisibilityChange);
 	                    recordNextMailListRefreshTime();
 	                }		            
@@ -262,13 +261,16 @@
 		        return new Date().getTime();		        
 		    }
 		    
-		    function setMailListRefreshTimer() {                  
+		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
 		            refreshIntervalTimerId = setInterval(function() {
-		                MailListRefresh();
-		                
-		                // 다음 자동 갱신 시간을 기록한다.
-		                recordNextMailListRefreshTime();
+		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
+		            	if (!searchMode) {
+			                MailListRefresh();
+			                
+			                // 다음 자동 갱신 시간을 기록한다.
+			                recordNextMailListRefreshTime();
+		            	}
 		            }, pSaveInterval);
 		        }
 		    }
@@ -281,7 +283,7 @@
 		    
 		    function onVisibilityChange() {
                 var remainingTime = nextMailListRefreshTime - getCurrentTime();
-                                
+                
 		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
  		        if (!document.hidden) { 		            
  		           console.log('remainingTime=' + remainingTime + ',showing...');

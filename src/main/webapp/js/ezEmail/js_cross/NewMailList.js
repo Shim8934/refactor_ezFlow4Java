@@ -549,7 +549,7 @@ function MailSelect_One() {
 }
 var pOldSearchKeyword;
 function GetListInfo(HeaderObject, ContentObject) {
-	/*수아 재은 수정*/
+	/* 수아 재은 수정 */
 	checkedHrefArry = getCheckHrefArry();
     
     listSubContentArry = new Array();
@@ -692,7 +692,7 @@ function GetListIevent_ongetxmlcomplete() {
             HiddenMailProgress();
             GetList_HTTP = null;
             
-            /*수아 재은 수정(선택된 input href)*/
+            /* 수아 재은 수정 (선택된 input href) */
             for (i = 0; i < checkedHrefArry.length; i++) {
             	var getChkId = $(".mainlist tr[_href='" + checkedHrefArry[i] + "']").attr("id");
             	
@@ -705,7 +705,7 @@ function GetListIevent_ongetxmlcomplete() {
         }   
     }
 }
-/*수아 재은 추가(선택된 input href)*/
+/* 수아 재은 추가 (선택된 input href) */
 function getCheckHrefArry() {
 	var checkedHrefArry = new Array();
 	$("#MailList tr input:checked").each(function (){
