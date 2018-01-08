@@ -29,7 +29,6 @@
 	      	var previewSubTree = "${previewSubTree}";
 	      	var usePreviewSubTree = "${usePreviewSubTree}";
 	        
-	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
 	            if (document.documentElement.clientHeight > 900) {
@@ -60,10 +59,14 @@
 	            document.getElementById("mailexportall").style.display = "none";
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
-	            
-	            // 2017.12.27 단암 시스템 트리 열기 
-	            // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
-	            if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
+	            previewSubTreeCall();
+	        }
+	        
+        	// 2017.12.27 단암 시스템 트리 열기 
+            // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
+	        function previewSubTreeCall(type){
+	           
+        		if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
 		            var treeArrNum = $('.plusTreeImg').length;
 
 		          	for (var i = 0; i < treeArrNum; i++) {
@@ -72,16 +75,18 @@
 		        	    
 		        	    if (typeof idx[1] != "undefined") {
 		        	    	var childxml = get_childXML(PostTreeView.getvalue(idx[1], "href"), false, true, false);
-		        	    	
 		        	    	PostTreeView.putchildxml(idx[1], childxml);
-		        	    	
-		        	    	$('#PostTreeView_img_' + idx[1] + '').attr("src", "/images/OrganTree_cross/minus.gif");
+		        	    	$('#PostTreeView_img_' + idx[1]).attr("src", "/images/OrganTree_cross/minus.gif");
 		        	    }
 		        	    
 	        	    	treeArrNum = $('.plusTreeImg').length;
 		          	}
 	            }
-	            
+        		
+        		if (type == "conf") {
+        			window.location.reload(true);
+        		}
+        		
 	        }
 	        
 	        function write_Letter() {
@@ -114,7 +119,7 @@
 	            PostTreeView.attachEvent('dragdrop', email_dragdrop);
 	            PostTreeView.dragdrop(true);
 	            var xmlHTTP = createXMLHttpRequest();
-	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false); 
 	            xmlHTTP.send();
 	            var treeconfig;
 	            if (CrossYN()) {
@@ -268,6 +273,7 @@
 	                    PostTreeView.select(1);
 	                }
 	                window.open(url, "right");
+	                previewSubTreeCall();
 	            }
 	        }
 	        function Function_Flag(v_data) {

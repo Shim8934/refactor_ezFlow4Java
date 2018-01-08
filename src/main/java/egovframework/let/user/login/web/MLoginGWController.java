@@ -219,6 +219,9 @@ public class MLoginGWController {
         				useSecurity = mOptionVO.getUseSecurity();
         				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
     				}
+    				
+    				/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
+    				String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
  				
     				Map<String, Object> map = new HashMap<String, Object>();
     				map.put("uid", uid);
@@ -232,13 +235,15 @@ public class MLoginGWController {
     				map.put("useSecurity", useSecurity);    		
     				map.put("companyID", resultVO.getCompanyID());
     				map.put("primaryLang", primaryLang);
-    				map.put("rollInfo", resultVO.getRollInfo());
+    				map.put("rollInfo", resultVO.getRollInfo());    				
     				
     				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
     					map.put("userName", resultVO.getDisplayName1());
     				} else {
     					map.put("userName", resultVO.getDisplayName2());
     				}
+    				
+    				map.put("useMobileMailOnly", useMobileMailOnly);
 				    				    				
     				result.put("status", "ok");
     				result.put("code", "0");
