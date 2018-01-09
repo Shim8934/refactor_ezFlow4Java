@@ -125,8 +125,8 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else Subject = strLang1122;
     
     if(Subject==strLang1122) {
-    	    	Approv_a = "<a href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' style='cursor: pointer; font-size: 15px; color: blue;'>문서 열기</a>";
-    	
+    			
+    	    	Approv_a += "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(this);' style='cursor: pointer; font-size: 15px; color: blue;'>문서 열기</a>";
     }
     
     Subject += " " + eSubject;
