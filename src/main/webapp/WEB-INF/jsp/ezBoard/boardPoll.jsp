@@ -373,7 +373,7 @@
             	</tr>
             	<tr>
                 	<th><spring:message code="ezBoard.t00074" /></th>
-                	<td style="position: relative;">
+                	<td style="position: relative; z-index: -1;">
                			<c:choose>
                				<c:when test="${hasConfig == '1' && listOfTarget != ''}">
                					<select id="set_Target" style="margin-left: 5px;">							
