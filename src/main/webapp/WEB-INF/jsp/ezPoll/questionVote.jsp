@@ -380,7 +380,7 @@
 			        	var sessionId = "<c:out value='${sessionID}'/>";
 			        	
 			            if (ret == "CHANGED" && (user != curentUser || sessionId != _sessionid)) {			            
-							alert(user + "<spring:message code = 'ezPoll.t113'/>");
+							alert("<spring:message code = 'ezPoll.t113'/>");
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
 				    });
@@ -658,7 +658,7 @@
 	 	    		}
 	 	    		
 	 	    		if (numberOfMultiSelect != 0 && numberOfSelected >= numberOfMultiSelect) {
-	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect);
+	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
 	 	    		}
 	 	    		

@@ -66,7 +66,7 @@
         			<spring:message code='ezPoll.t131'/>
   				</c:if>
   				<c:if test="${numberOfQst > 1}">
-	  				<spring:message code='ezPoll.t132'/> <c:out value='${numberOfQst}'/> <spring:message code='ezPoll.t133'/><br> 
+	  				<spring:message code='ezPoll.t130'/><br> 
 	        		<spring:message code='ezPoll.t131'/>
   				</c:if>
         	</div>
