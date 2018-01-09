@@ -745,7 +745,7 @@
 	        if (!rtnValue) {	        	
 	        	return false;
 	        }
-	        
+
 	        if ($('#hidSecreteVote').val() == "") {
 	        	return false;
 	        }

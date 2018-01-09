@@ -515,8 +515,11 @@
 						<c:if test="${list.status == 0}">
 							<td><spring:message code="ezPoll.t145"/></td>
 						</c:if>
-						<c:if test="${list.status != 0}">
+						<c:if test="${list.status == 1}">
 							<td><spring:message code="ezPoll.t146"/></td>
+						</c:if>
+						<c:if test="${list.status == 2}">
+							<td><spring:message code="ezPoll.t251"/></td>
 						</c:if>
 						
 			          	<%-- Creator --%>

@@ -441,7 +441,7 @@ public class EzPollController extends EgovFileMngUtil {
 				while (iterator.hasNext()) {
 					PollQuestionVO question = iterator.next();
 					
-					if (question.getStatus() == 0) {
+					if (question.getStatus() != 1) { //20180109
 						iterator.remove();	
 					}
 				}
@@ -620,6 +620,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int totalVotes = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		int compareEnd = 0;
+		int compareStart = 0;
 		int numberOfVotedUsers = 0;
 		int totalSeenUsers = 0;
 		String timeRemain = "";
@@ -651,36 +652,43 @@ public class EzPollController extends EgovFileMngUtil {
 		}	
 		
 		Date endDate = formatter.parse(pollQuestionVO.getEndDate());
+		Date startDate = formatter.parse(pollQuestionVO.getStartDate()); //20180109
 		Date nowTime = new Date();
 		compareEnd = endDate.compareTo(nowTime);
+		compareStart = startDate.compareTo(nowTime); //20180109
 		
 		if (compareEnd > 0) {
-			pollQuestionVO.setStatus(1);
-			DateTime endDate_ = new DateTime(endDate);
-			DateTime toDay_   = new DateTime(nowTime);
-			int diffInDays  = Days.daysBetween(toDay_, endDate_).getDays();		
-			
-			if (diffInDays != 0) {
-				timeRemain = Integer.toString(diffInDays) + egovMessageSource.getMessage("ezPoll.t118", loginVO.getLocale());				
+			if (compareStart > 0) {
+				pollQuestionVO.setStatus(2); // reserve poll
 			}
 			else {
-				int diffInHours  = endDate_.getHourOfDay() - toDay_.getHourOfDay();
+				pollQuestionVO.setStatus(1); // processing poll
+				DateTime endDate_ = new DateTime(endDate);
+				DateTime toDay_   = new DateTime(nowTime);
+				int diffInDays  = Days.daysBetween(toDay_, endDate_).getDays();		
 				
-				if (diffInHours != 0) {
-					timeRemain = Integer.toString(diffInHours) + egovMessageSource.getMessage("ezPoll.t119", loginVO.getLocale());
+				if (diffInDays != 0) {
+					timeRemain = Integer.toString(diffInDays) + egovMessageSource.getMessage("ezPoll.t118", loginVO.getLocale());				
 				}
 				else {
-					int diffInMinutes = endDate_.getMinuteOfHour() - toDay_.getMinuteOfHour();
+					int diffInHours  = endDate_.getHourOfDay() - toDay_.getHourOfDay();
 					
-					if (diffInMinutes != 0) {
-						timeRemain = Integer.toString(diffInMinutes) + egovMessageSource.getMessage("ezPoll.t120", loginVO.getLocale());
+					if (diffInHours != 0) {
+						timeRemain = Integer.toString(diffInHours) + egovMessageSource.getMessage("ezPoll.t119", loginVO.getLocale());
 					}
 					else {
-						int diffInSeconds = endDate_.getSecondOfMinute() - toDay_.getSecondOfMinute();						
-						timeRemain = Integer.toString(diffInSeconds) + egovMessageSource.getMessage("ezPoll.t121", loginVO.getLocale());
-					}										
-				}	
-			}
+						int diffInMinutes = endDate_.getMinuteOfHour() - toDay_.getMinuteOfHour();
+						
+						if (diffInMinutes != 0) {
+							timeRemain = Integer.toString(diffInMinutes) + egovMessageSource.getMessage("ezPoll.t120", loginVO.getLocale());
+						}
+						else {
+							int diffInSeconds = endDate_.getSecondOfMinute() - toDay_.getSecondOfMinute();						
+							timeRemain = Integer.toString(diffInSeconds) + egovMessageSource.getMessage("ezPoll.t121", loginVO.getLocale());
+						}										
+					}	
+				}
+			}	
 		}
 		else {
 			pollQuestionVO.setStatus(0);
@@ -2425,8 +2433,10 @@ public class EzPollController extends EgovFileMngUtil {
 		String userID = loginVO.getId();		
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date endDate;
+		Date startDate; //20180109
 		Date sysDate = new Date();
 		int compareEnd;
+		int compareStart; //20180109
 		
 		if (seeAll == 1) {
 			for (PollQuestionVO pollQstVO: setOfQuestions) {
@@ -2437,14 +2447,23 @@ public class EzPollController extends EgovFileMngUtil {
 					pollQstVO.setIsHidden(0);
 				}			
 				
-				endDate = formatter.parse(pollQstVO.getEndDate());
-				compareEnd = endDate.compareTo(sysDate);
+				endDate = formatter.parse(pollQstVO.getEndDate());				
+				compareEnd = endDate.compareTo(sysDate); 
+				startDate = formatter.parse(pollQstVO.getStartDate()); //20180109
+				compareStart = startDate.compareTo(sysDate); //20180109
+				
+				logger.debug("BNKKK Question Title: " + pollQstVO.getTitle() + " || StartDate: " + startDate.toString() +  " || EndDate: " + endDate.toString() + " || Today: " + sysDate.toString());
 				
 				if (compareEnd > 0) {
-					pollQstVO.setStatus(1);
+					if (compareStart > 0) {
+						pollQstVO.setStatus(2); // reserve poll
+					}
+					else {
+						pollQstVO.setStatus(1); // processing poll
+					}					
 				}
 				else {
-					pollQstVO.setStatus(0);
+					pollQstVO.setStatus(0); // ended poll
 				}
 				
 				//Checking Array
@@ -2465,9 +2484,18 @@ public class EzPollController extends EgovFileMngUtil {
 				else {					
 					endDate = formatter.parse(pollQstVO.getEndDate());
 					compareEnd = endDate.compareTo(sysDate);
+					startDate = formatter.parse(pollQstVO.getStartDate()); //20180109
+					compareStart = startDate.compareTo(sysDate); //20180109
+					
+					logger.debug("BNKKK Question Title: " + pollQstVO.getTitle() + " || StartDate: " + startDate.toString() +  " || EndDate: " + endDate.toString() + " || Today: " + sysDate.toString());
 					
 					if (compareEnd > 0) {
-						pollQstVO.setStatus(1);
+						if (compareStart > 0) {
+							pollQstVO.setStatus(2); // reserve poll
+						}
+						else {
+							pollQstVO.setStatus(1); // processing poll
+						}	
 					} 
 					else {
 						pollQstVO.setStatus(0);

@@ -711,6 +711,13 @@
 		    }		
 		    
 		    function change(obj) {
+				//baonk added 20180109 
+				if (_status == "2") {
+					alert("<spring:message code = 'ezPoll.t252'/>");
+					return;
+				}
+				//end
+		    	
 		    	var voteId = obj.name;
  	    		var optId = votesArr[voteId][0]; 	    		
  	    		
@@ -2293,7 +2300,7 @@
 								<span class="questionFontS"><c:out value='${question.createDate}'/></span>
 							</div>
 					  </div>
-					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
+					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
 						  <div id="_editVote" onclick="voteEdit()"><span><spring:message code = 'ezEmail.t149'/></span></div>
 					  </c:if>
 	                  <div class="voteBtn">
@@ -2312,7 +2319,10 @@
 							<span id="status" style="font-weight: bold; color: #FFF;">
 							<c:choose>
 								<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
-								<c:otherwise><spring:message code = 'ezPoll.t117'/></c:otherwise>
+								<c:otherwise>
+									<c:if test="${question.status == 0}"><spring:message code = 'ezPoll.t117'/></c:if>
+									<c:if test="${question.status == 2}"><spring:message code = 'ezPoll.t251'/></c:if>
+								</c:otherwise>
 							</c:choose>
 							</span>
 							<span id="votedUsers" style="font-weight: bold;">					
@@ -2363,7 +2373,7 @@
 				<table class="content" style="width:100%; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
 					<c:forEach var="_option" items="${listOptions}" varStatus="loop">
 			        	<tr>
-			        	   <c:if test="${question.status == 1}">
+			        	   <c:if test="${question.status == 1 || question.status == 2}">
 				               <td class="vote_listTd" style="width:54px; border:1px solid #DDD; background:#f9f9f9;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
 				               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 15px; padding-top: 14px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
 				               </td>

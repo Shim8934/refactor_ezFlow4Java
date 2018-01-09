@@ -1473,6 +1473,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		int totalVoteToday = 0;
 		int seeResultBefore = -1;
 		int compareEnd = 0;
+		int compareStart = 0;
 		Date nowTime = new Date();
 		
 		//Get list of questions for user
@@ -1484,12 +1485,22 @@ public class EzPortalController extends EgovFileMngUtil {
 			//Get only processing poll
 			for (Iterator<PollQuestionVO> iterator = listTotalQuestions.iterator(); iterator.hasNext(); ) {
 				PollQuestionVO pollQstVO = iterator.next();
-				Date endDate = formatter.parse(pollQstVO.getEndDate());	
-				compareEnd = endDate.compareTo(nowTime);
+				Date endDate = formatter.parse(pollQstVO.getEndDate());				
+				compareEnd = endDate.compareTo(nowTime);				
 				
 			    if (compareEnd <= 0) {
 			        iterator.remove();
-			    }		    
+			    }
+			    else {
+			    	//baonk added 20180109
+			    	Date startDate = formatter.parse(pollQstVO.getStartDate());
+			    	compareStart = startDate.compareTo(nowTime);
+			    	
+			    	if (compareStart > 0) {
+			    		iterator.remove();
+			    	}
+			    	//end
+			    }
 			}
 			
 			//Get list of modifying question
