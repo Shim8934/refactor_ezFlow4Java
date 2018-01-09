@@ -1340,7 +1340,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = curentUserName;
-                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:16px; padding:5px 0px 0px 20px;");       
+                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:14px; padding:7px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (currentText.length > 0) {

@@ -742,13 +742,11 @@
  	        
 	        var rtnValue = $.isNumeric(trim_Cross($('#multiSelectNumber').val()));
 	        
-	        if (!rtnValue) {
-	        	//alert('<spring:message code="ezPoll.t149"/>');
+	        if (!rtnValue) {	        	
 	        	return false;
 	        }
 	        
 	        if ($('#hidSecreteVote').val() == "") {
-	        	//alert('<spring:message code="ezPoll.t150"/>');
 	        	return false;
 	        }
     	}

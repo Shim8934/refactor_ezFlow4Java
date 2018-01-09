@@ -248,7 +248,7 @@
 		<xmp id="sigBody" style="display: none;">${xmlRange}</xmp>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
-    		<h2><spring:message code="ezBoard.t0006" /></h2>
+    		<h2><spring:message code="ezBoard.t10011" /></h2>
     		<span class="txt">▒ <spring:message code="ezBoard.t00071" /></span>   
     		<br />  		
     		<span class="txt">▒ <spring:message code="ezBoard.t00072" /></span>
@@ -373,7 +373,7 @@
             	</tr>
             	<tr>
                 	<th><spring:message code="ezBoard.t00074" /></th>
-                	<td style="position: relative;">               			
+                	<td>               			
                			<c:choose>
                				<c:when test="${hasConfig == '1' && listOfTarget != ''}">
                					<select id="set_Target" style="margin-left: 5px;">							
