@@ -3495,6 +3495,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+					String aprchk = ezApprovalGService.checkPermission2(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId());
+					if(aprchk == null || aprchk.equals("003")) {
+						model.addAttribute("chk", "no");
+					}
+					
 					return "main/warning";
 				}
 			}

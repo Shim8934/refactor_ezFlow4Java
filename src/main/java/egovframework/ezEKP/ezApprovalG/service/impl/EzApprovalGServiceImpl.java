@@ -17602,7 +17602,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
-		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.checkPermission(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -17619,6 +17618,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("checkPermission ended.");
 		
 		return doc;
+	}
+	
+	public String checkPermission2(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID) throws Exception {
+		logger.debug("checkPermission2 started.");
+		
+		int v_temp = 0;
+		int v_temp2 = 0;
+		int v_temp3 = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PDOCID", docID);
+		map.put("v_PAPRUSERID", userID);
+		map.put("v_PDEPTID", deptID);
+		map.put("v_PMODE", checkMode);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		map.put("v_temp3", 0);
+		map.put("v_temp4", 0);
+		
+		String str = ezApprovalGDAO.checkPermission2(map);
+		
+		logger.debug("checkPermission2 ended.");
+		
+		return str;
 	}
 	
 	@Override

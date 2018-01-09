@@ -477,6 +477,7 @@
 			    		url : "/ezApprovalG/getExtTotalAttachSize.do",
 			    		data : {
 			    			docID : pDocID
+			    			////////
 			    		},
 			    		success: function(text){
 			    			result = text;
@@ -763,6 +764,7 @@
 		                        return;
 		                    }
 		                    Gyuljedate = GetDocInfoData("END", "STARTDATE");
+		                  
 		                    SendMailToReceiveDept(pDocTitle, arr_userinfo[2], Gyuljedate, pDocID);
 		                } else {
 		                	Gyuljedate = GetDocInfoData("APR", "STARTDATE");

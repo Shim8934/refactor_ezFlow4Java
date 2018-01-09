@@ -323,6 +323,8 @@ public interface EzApprovalGService {
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID) throws Exception;
 
+	public String checkPermission2(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID) throws Exception;
+
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception;
 
 	public String GetRecordInfo(Document xmlDom, String lang, int tenantID, String offSet)throws Exception;
@@ -520,4 +522,5 @@ public interface EzApprovalGService {
 	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
 
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
+
 }

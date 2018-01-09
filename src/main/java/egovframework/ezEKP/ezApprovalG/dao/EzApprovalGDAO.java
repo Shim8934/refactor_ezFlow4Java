@@ -101,6 +101,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGAprLineVO> checkPermission(Map<String, Object> map) throws Exception{
 		return (List<ApprGAprLineVO>) list("EzApprovalG.checkPermission", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public String checkPermission2(Map<String, Object> map) throws Exception{
+		return (String)select("EzApprovalG.checkPermission2", map);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGAprLineVO> getLineInfo(Map<String, Object> map) throws Exception{
