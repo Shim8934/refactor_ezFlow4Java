@@ -1367,10 +1367,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("getMailAddress started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String proplist = "displayName;mail;department";
+		String proplist = "displayName;mail";
 		String email = "";
 		String name = "";
-		String deptID = "";
 		String result = "";
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String id = xmlDom.getElementsByTagName("id").item(0).getTextContent();
@@ -1381,8 +1380,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			
 			email  = doc.getElementsByTagName("MAIL").item(0).getTextContent();
 			name = doc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
-			deptID = doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent().trim();
-			result = name + "," + email + "," + deptID;
+			result = name + "," + email ;
 		}
 		
 		logger.debug("getMailAddress ended");
