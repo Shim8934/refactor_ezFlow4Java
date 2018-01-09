@@ -3438,8 +3438,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
-
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		String mailchk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
+		
 
 		if (docDir.substring(0, 1).equals("0")) {
 			docDir = docDir.substring(docDir.length() - 2);
@@ -3495,11 +3496,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-					String aprchk = ezApprovalGService.checkPermission2(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId());
-					if(aprchk == null || aprchk.equals("003")) {
+					if(mailchk.equals("Y")) {
 						model.addAttribute("chk", "no");
 					}
-					
 					return "main/warning";
 				}
 			}

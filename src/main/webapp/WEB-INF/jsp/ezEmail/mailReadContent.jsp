@@ -238,7 +238,7 @@
 						var deptId ="${deptId}"
 						var Name ="${Name}"
 						
-			        	openLocation="/ezApprovalG/approvui.do?docID="+a.id+"&id="+Id+"&name="+Name+"&deptID="+deptId+"&allFlag=0";
+			        	openLocation="/ezApprovalG/approvui.do?docID="+a.id+"&id="+Id+"&name="+Name+"&deptID="+deptId+"&allFlag=0&mailchk=Y";
 						openwindow(openLocation, "", 900, 600);
 						
 			        }

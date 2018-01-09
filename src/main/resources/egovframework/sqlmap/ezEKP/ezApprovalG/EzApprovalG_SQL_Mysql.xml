@@ -2192,23 +2192,6 @@
 		
 	</select>
 	
-	<select id ="EzApprovalG.checkPermission2" parameterClass="Map" resultClass="String">
-		<![CDATA[
- 			SELECT 
- 				APRSTATE
-           	FROM 
-           		TBL_APRLINEINFO  
-           	WHERE  
-           		DOCID = #v_PDOCID# 
-             AND 
-             	APRMEMBERID = #v_PAPRUSERID# 
-             AND 
- 				TENANT_ID = #v_TENANTID#      
- 			AND 
- 				COMPANYID = #companyID#       	 
- 				]]> 
-		</select>
-	
 	<select id ="EzApprovalG.countVieTempDocID" parameterClass="Map" resultClass="Integer">
 	<![CDATA[
 		SELECT 
