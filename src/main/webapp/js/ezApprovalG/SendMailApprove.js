@@ -78,11 +78,11 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
     }
 }
 
-function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
+function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method) {
     var dosend = GetNoticeMail(to, type);  
         if (!dosend && isCheck == undefined)
         return;
-        var id = to;
+    var id = to;
     var to = getmailaddress(id);
     var deptid = to.split(",")[2];
     to = to.split(",")[0] + "," + to.split(",")[1];
@@ -123,7 +123,9 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else Subject = strLang1122;
     
     if(Subject == strLang1122) {
-    	Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(this);' style='cursor: pointer; font-size: 15px; color: blue;'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>결재 요약 </span><br>";
+    	if (Method != "007") {
+    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(this);' style='cursor: pointer; font-size: 15px; color: blue;'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>결재 요약 </span><br>";
+    	}
     }
     
     Subject += " " + eSubject;
@@ -375,7 +377,7 @@ function sendNextMail(isDept, nextID, Method) {
         sendmailBusu(nextID, Method);
     }
     else {
-        sendmail(nextID, MDrafttitle, MdraftName, Mdraftdate, "", "");
+        sendmail(nextID, MDrafttitle, MdraftName, Mdraftdate, "", "", undefined, Method);
     }
 }
 
