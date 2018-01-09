@@ -82,7 +82,10 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     var dosend = GetNoticeMail(to, type);  
         if (!dosend && isCheck == undefined)
         return;
-    var to = getmailaddress(to);
+        var id = to;
+    var to = getmailaddress(id);
+    var deptid = to.split(",")[2];
+    to = to.split(",")[0] + "," + to.split(",")[1];
     var from = "\"" + arr_userinfo[2] + "\" <" + arr_userinfo[8] + ">\ ";
     var Subject = "";
     var Content = "";
@@ -122,8 +125,8 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else Subject = strLang1122;
     
     if(Subject==strLang1122) {
+    	    	Approv_a = "<a href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' style='cursor: pointer; font-size: 15px; color: blue;'>문서 열기</a>";
     	
-    	Approv_a = "<span id='"+pDocID+"' onclick ='Approval_Link(this);' style='cursor: pointer; font-size: 15px; color: blue;'>문서 열기<span>";
     }
     
     Subject += " " + eSubject;
