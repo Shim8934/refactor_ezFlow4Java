@@ -63,9 +63,63 @@
 		    var AtttributeCount = "${boardAttrCount}"; 
 		    var rsa = new RSAKey();
 		    var addheight = 0;
+
+		    // 수정 수아 재은	    
+		    var nowZoom = 100;
+	        var maxZoom = 200;
+	        var minZoom = 80;
+	
+	        var MozNowZoom = 1;
+	        var MozMaxZoom = 2;
+	        var MozMinZoom = 0.8;
+	        function Bigger(doc) {     
+	            if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                if (MozNowZoom < MozMaxZoom) {
+	                    MozNowZoom += 0.1;
+	                } else {
+	                    return;
+	                }
+	                $(doc).find('p').css("MozTransform","scale(" + MozNowZoom + ")");
+	                $(doc).find('p').css("MozTransformOrigin","0 0");
+	            }
+	            else {
+	                if (nowZoom < maxZoom) {
+	                    nowZoom += 10;
+	                } else {
+	                    return;
+	                }
+	                $(doc).find('p').css("zoom",nowZoom + "%");
+	            }
+	        }
+	        function Smaller(doc) {
+	            if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                if (MozNowZoom > MozMinZoom) {
+	                    MozNowZoom -= 0.1;
+	                } else {
+	                    return;
+	                }
+	                $(doc).find('p').css("MozTransform","scale(" + MozNowZoom + ")");
+	                $(doc).find('p').css("MozTransformOrigin","0 0");
+	            }
+	            else {
+	                if (nowZoom > minZoom) {
+	                    nowZoom -= 10;
+	                } else {
+	                    return;
+	                }
+	                $(doc).find('p').css("zoom",nowZoom + "%");
+	            }
+	        }
+		    
+		    
+		    
 		    window.onload = function () {
 		        try {
-					var html = "";
+		        	// 수정 수아 재은
+		        	var html = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />";
+						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-left: -4px;' />";
+						html += "<br><br>";
+						
 					$.ajax({
 						type : "POST",
 						dataType : "text",
@@ -76,7 +130,7 @@
 								 href   : strContentLocation 
 							   },
 						success: function(result){
-							html = result;
+							html += result;
 						}        			
 					});
 
@@ -84,6 +138,14 @@
 					doc.open();
 					doc.write(html);
 					doc.close();
+					
+					// 수정 수아 재은
+					doc.getElementById('smaller').onclick = function () {
+						Smaller(doc);
+					}
+					doc.getElementById('bigger').onclick = function () {
+						Bigger(doc);
+					}
 					
 					$("#message").contents().find("body").css("word-wrap", "break-word");
 					
@@ -150,6 +212,24 @@
 		            alert(e.description);
 		        }
 		    };
+		    
+			    // 수정
+			  /*   $(document).ready(function(){
+			    	alert();
+			    	var html2 = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />";
+					html2 += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-left: -4px;' />";
+					html2 += "<p>";
+					
+					document.getElementById('message').prepend(html2);
+					
+			    }); */
+			  /*   console.log($("#pad1 #smaller").attr);
+			    $(document).on("click","#pad1 #smaller",function(){
+			    	alert();
+			    })
+				//console.log(document.getElementById("pad1").children);
+				//document.getElementById("smaller").onclick = smaller();
+				 */
 		
 		    window.onresize = function () {
 		        if (gubun != "3") { 
