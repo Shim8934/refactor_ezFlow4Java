@@ -943,7 +943,7 @@
 			</table>			
 			<div class="button pollButton02" style="padding-top: 20px;margin-bottom:30px">				
 				<a class="imgbtn pollButton03" onclick="fun_OK()"><span><spring:message code="ezPoll.t145" /></span></a>				
-				<a class="imgbtn pollButton04" onclick="fun_Cancel()" style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><span style="background:#efefef; color:#000; border:1px solid #dcdcdc;"><spring:message code="ezPoll.t139" /></span></a>				
+				<a class="imgbtn pollButton04" onclick="fun_Cancel()" style="background:#efefef; color:#000;"><span style="background:#efefef; color:#000;"><spring:message code="ezPoll.t139" /></span></a>				
 			</div>
 		</div>	
 	</form>

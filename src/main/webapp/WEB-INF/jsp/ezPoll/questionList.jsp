@@ -241,7 +241,11 @@
 	    		
 	    		var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + "&listQst=" + checkedList + _params;
 		    	window.location.href = szUrl;		    	
-		    } 
+		    }
+ 		    
+ 		    function menu_Insert() {
+ 		    	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+ 		    }
 		    
 		    function menu_Delete() {
 		    	if (checkedArr.length == 0) {
@@ -480,6 +484,7 @@
 					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" >
 					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t227"/></span></a>
 				</li> --%>
+				<li id="btnInsert"><a onClick="menu_Insert()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t144"/></span></a></li>
 				<li id="btnDel"><a onClick="menu_Delete()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t202"/></span></a></li>
 				<%--<li id="btnHid"><a onClick="menu_Hide()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t203"/></span></a></li>
 				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				

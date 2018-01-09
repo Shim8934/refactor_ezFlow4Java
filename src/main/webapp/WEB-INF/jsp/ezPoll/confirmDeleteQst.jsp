@@ -70,9 +70,9 @@
 	        		<spring:message code='ezPoll.t131'/>
   				</c:if>
         	</div>
-			<div class="btnposition conf_btnPosi">
-				<input type="button" name="Submit" style="color:#000;" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
-        		<input type="button" name="Submit2" style="background:#d0d0d0; color:#333;" value="<spring:message code='ezPoll.t139' />" onclick="window.close()">
+			<div class="btnposition btnpositionNew">
+				<input type="button" name="Submit" style="color:white;background-color: #004896;border:1px solid #004896" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
+        		<input type="button" name="Submit2" style="color:#333;" value="<spring:message code='ezPoll.t139' />" onclick="window.close()">
         	</div>
 		</form> 
 	</body>

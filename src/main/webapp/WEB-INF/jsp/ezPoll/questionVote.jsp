@@ -2235,7 +2235,7 @@
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div>
-				<div id="mainmenu3" style="overflow: hidden; margin:34px 0px 20px 0px">
+				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 12px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
@@ -2284,7 +2284,7 @@
 						</div>			
 					</div>
 					
-					<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block; min-height: 130px;" id="messagetd">
+					<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block; min-height: 150px;" id="messagetd">
 		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
 		       	 	</div>				
 				</div>			

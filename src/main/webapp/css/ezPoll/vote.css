@@ -25,11 +25,11 @@
 .poll_list1 .graphbar1 .gx_bar11 {background:#68bbef; height:7px; margin:0px; padding:0px;}
 
 /* 20171115 */
-.voteInfo{height:68px; background:#f9f9f9; border:1px solid #dddddd; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif !important;}
-.voteTextTest{line-height:20px; margin:1px 8px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.voteInfo{height:68px;}
+.voteTextTest{line-height:20px; margin:1px 8px;}
 
 
-.vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343;}
 .vote_listTd .graph01{background:#efa1a1; border:none;}
 
 
@@ -50,31 +50,31 @@
 
 /* 20171214 */
 .questionFont02{float: right; display: block; padding:0px 10px; height:43px; line-height:41px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; margin:10px 5px 0px 0px; text-align:center; color:#000; font-size:16px;}
-.questionFont02 a{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; height:45px;}
+.questionFont02 a{height:45px;}
 .questionFont02 a:hover{ color:#000;}
-.questionFont02 a span{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:16px;}
+.questionFont02 a span{font-size:16px;}
 
 .voteInfoP{ margin:10px;border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px; padding:0px; float:left;}
 .voteInfoP img{ border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px;}
 
-.voteTextTest span{ display:block; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:normal;}
+.voteTextTest span{ display:block; font-size:12px; color:#000; line-height:normal;}
 .voteTextTest span.questionFont{ font-size:16px; padding:3px 0px 0px 0px;}
-.voteTextTest span.questionFontS{color:#aaa9a9; padding:5px 0px 0px 0px;}
+.voteTextTest span.questionFontS{color:#aaa9a9; padding:6px 0px 0px 0px;}
 
-#titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif;}
-#titleAndContent .baonkTest{ font-size:18px; color:#004896;}
+#titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px;}
+#titleAndContent .baonkTest{ font-size:16px; color:#004896;}
 .questionTitle{display:inline-block;float:left; width:100%; height:39px; line-height:39px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
 
 #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
-#_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; font-size:15px;}
+#_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; overflow:hidden; font-size:15px;}
 
 .voteTdBg{background:#f9f9f9 !important; margin:0px !important; padding:0px !important; height:68px !important; border:1px solid #dddddd !important;}
 .voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
-.voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:16px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; display:inline-block; cursor:pointer;}
-.voteBtn #_unVotedNumber{font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; font-size:16px; color:#004896;}
-#_finish{height:45px; margin:0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:16px;font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif; display:inline-block;}
+.voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:16px; display:inline-block; cursor:pointer;}
+.voteBtn #_unVotedNumber{font-size:16px; color:#004896;}
+#_finish{height:45px; margin:0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:16px;display:inline-block;}
 
-.userName{display: block; color:#004896; font-size:16px; padding:5px 0px 0px 20px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, Gulim, Arial, Helvetica, sans-serif;}
+.userName{display: block; color:#004896; font-size:16px; padding:5px 0px 0px 20px;}
 
 .voteComment{width:100%; height:79px !important; background:#f9f9f9; border:1px solid #DDD; border-top:0px; margin:0px 0px 0px 0px; padding:0px; overflow:hidden;}
 .sendComment_layout{ height:58px; overflow:hidden; margin:10px; background:#fff; border:1px solid #ddd;}
