@@ -1251,9 +1251,7 @@
 		            <tr>
 		              <th><spring:message code='ezBoard.t291'/></th>
 		              <td id="cTitle" colspan="3">
-			              <div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle;">
-			            	  <c:out value="${boardItem.title}"/>
-			              </div>
+			              <div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle;"><c:out value="${boardItem.title}"/></div>
 		              </td>
 		            </tr>
 		            <tr>
