@@ -565,6 +565,7 @@
 							AND
 								TENANTID = #tenantID#
 				), 0)	
+				FROM DUAL
 	
 		]]>
 	</select>
@@ -582,6 +583,7 @@
 							AND
 								TENANTID = #tenantID#
 				), 0)	
+				FROM DUAL
 	
 		]]>
 	</select>
