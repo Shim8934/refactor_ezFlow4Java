@@ -8,110 +8,12 @@
 	<typeAlias alias="TaskAttachVO"					type="egovframework.ezEKP.ezTask.vo.TaskAttachVO"/>
 	<typeAlias alias="TaskConfigVO"					type="egovframework.ezEKP.ezTask.vo.TaskConfigVO"/>
 	<typeAlias alias="TaskGeneralVO"				type="egovframework.ezEKP.ezTask.vo.TaskGeneralVO"/>
-	
-	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
-	   <![CDATA[
-		    SELECT
-				taskid,
-				creatorid,
-				case when #primary# = 1 then creatorname else creatorName2 end as creatorname,
-				case when #primary# = 1 then creatordeptname else creatordeptname2 end as creatordeptname,
-				creatoremail,
-				DATE_ADD(DATE_FORMAT(createdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as createDate,
-				taskstatus,
-				completerate,
-				importance,
-				hasshare,
-				hasattach,
-				hascomment,
-				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
-				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as enddate,
-				title,
-				contentpath,
-				tasktype,
-				updatetime,
-				personid,
-				case when #primary# = 1 then personname else personname2 end as personname,
-				personname as personname1,
-				personname2,
-				case when #primary# = 1 then persondeptname else persondeptname2 end as persondeptname,
-				persondeptname as persondeptname1,
-				persondeptname2,
-				personemail,
-				personattach,
-				personcontentpath,
-				memo,
-				repetition,
-				totalrep
-			FROM
-				TBL_TASK
-			WHERE
-				tenantid = #tenantID#
-			AND
-				taskid = #taskID#
-		]]>
-	</select>
-	
-	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO">
-	   <![CDATA[
-		    SELECT
-		    	taskID,
-				commentid,
-				commentorid,
-				case when #primary# = 1 then commentorname else commentorname2 end as commentorname,
-				DATE_ADD(DATE_FORMAT(commentdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as commentdate,
-				comment
-			FROM
-				TBL_TASKCOMMENT
-			WHERE
-				tenantid = #tenantID#
-			AND
-				taskid = #taskID#				
-		]]>
-	</select>
-	
-	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
-	   <![CDATA[
-		    SELECT
-				sharerid,
-				case when #primary# = 1 then sharername else sharername2 end as sharername,
-				sharername as sharername1,
-				sharername2,
-				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname,
-				sharerdeptname2,
-				shareremail
-			FROM
-				TBL_TASKSHARE
-			WHERE
-				tenantid = #tenantID#
-			AND
-				taskid = #taskID#
-		]]>
-	</select>
-	
-	<select id="EzTaskDAO.getAttachList" resultClass="TaskAttachVO">
-		<![CDATA[
-			SELECT
-				taskid,
-				attachid,
-				filename,
-				filepath,
-				filesize
-			FROM
-				TBL_TASKATTACH
-			WHERE
-				tenantid = #tenantID#
-			AND
-				taskid = #taskID#
-			AND
-				type = #type#
-		]]>
-	</select>
-	
+
+<!-- select -->
 	<select id="EzTaskDAO.getOriginColor" parameterClass="Map" resultClass="TaskConfigVO">
 		<![CDATA[
 			SELECT
-				IFNULL((SELECT
+				NVL((SELECT
 							delaycolor
 						FROM
 							TBL_TASKCONFIG
@@ -119,7 +21,7 @@
 							tenantid = #tenantID#
 						AND
 							userid = #userID#), '##FF1B1B') as delaycolor,
-				IFNULL((SELECT
+				NVL((SELECT
 							completecolor
 						FROM
 							TBL_TASKCONFIG
@@ -127,7 +29,7 @@
 							tenantid = #tenantID#
 						AND
 							userid = #userID#), '##8DFF1B') as completecolor,
-				IFNULL((SELECT
+				NVL((SELECT
 							origincolor
 						FROM
 							TBL_TASKCONFIG
@@ -135,7 +37,7 @@
 							tenantid = #tenantID#
 						AND
 							userid = #userID#), '') as origincolor,
-				IFNULL((SELECT
+				NVL((SELECT
 							origincolor2
 						FROM
 							TBL_TASKCONFIG
@@ -152,8 +54,21 @@
 				tenantid = #tenantID#
 		]]>
 	</select>
-
-	<select id="EzTaskDAO.getTaskList" resultClass="TaskInfoVO">
+	
+	<select id="EzTaskDAO.getTaskGeneral" parameterClass="Map" resultClass="TaskGeneralVO">
+		<![CDATA[
+			SELECT
+				userid, listcount, selecttaskstatus
+			FROM
+				TBL_TASKGENERAL
+			WHERE
+				userid = #userID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getTaskList" resultClass="TaskInfoVO"><!-- startdate, enddate 나중에 수정  -->
 	   <![CDATA[
 		    SELECT
 		    	DISTINCT(A.taskid),
@@ -165,8 +80,8 @@
 				creatoremail,
 				importance,
 				hasattach,
-				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startDate,
-				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as endDate,
+				startdate,
+				enddate,
 				title,
 				tasktype,
 				taskstatus,
@@ -190,13 +105,13 @@
 			WHERE
 				A.tenantid = #tenantID#
 		]]>
-
+		
 		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
 			<![CDATA[
 					(
 						(taskstatus = 3 AND (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3))
 					OR
-						(A.TOTALREP != -1 AND ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND endDate <= #today#) )
+						(A.totalrep != -1 AND ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND endDate <= #today#) )
 					)
 			]]>
 		</isEqual>
@@ -205,7 +120,7 @@
 					(
 						(taskstatus != 3 AND (A.tasktype = 1 OR A.tasktype = 2 OR A.tasktype = 3))
 					OR
-						(A.TOTALREP = -1 OR ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND endDate > #today#) )	
+						(A.totalrep = -1 OR ((A.tasktype = 4 OR A.tasktype = 5 OR A.tasktype = 6) AND endDate > #today#) )	
 					)			
 			]]>
 		</isEqual>
@@ -217,7 +132,7 @@
 					OR
 						(A.personid = #userID#)
 					OR	
-						(B.sharerid = #userID# and A.TASKID = B.TASKID))
+						(B.sharerid = #userID# and A.taskid = B.taskid))
 				]]>
 			</isEqual>
 
@@ -233,7 +148,7 @@
 					OR										
 						(A.personid = #userID#)
 					OR
-						(B.sharerid = #userID# and A.TASKID = B.TASKID))
+						(B.sharerid = #userID# and A.taskid = B.taskid))
 				]]>
 			</isEqual>
 		</isNotNull>
@@ -241,19 +156,19 @@
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
-        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE '%' || #filter# || '%'
 	        	]]>
         	</isEqual>
         	
         	<isEqual property="chkValue" compareValue="personName">
         		<isEqual property="primary" compareValue="1">
 		        	<![CDATA[
-	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
 	        	<isEqual property="primary" compareValue="2">
 		        	<![CDATA[
-	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname2 LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
         	</isEqual>
@@ -291,11 +206,11 @@
 	           	OR
 	           		(startdate < #startDate# and enddate >= #endDate#)
 	           	OR
-	           		TASKTYPE = "4" 
+	           		tasktype = 4 
 	           	OR 
-	           		TASKTYPE = "5" 
+	           		tasktype = 5 
 	           	OR 
-	           		TASKTYPE = "6")
+	           		tasktype = 6)
 	           	AND
 					(A.personid = #userID# or (B.sharerid = #userID# and A.taskid = B.taskid) or A.creatorid = #userID#)
            	]]>
@@ -307,22 +222,7 @@
 				A.taskid DESC
 		]]>
 	</select>
-
-	<select id="EzTaskDAO.getTaskRepeDelList" parameterClass="Map" resultClass="String"> 
-		<![CDATA[
-			select 
-				date_format(date_add(startDate, interval +#offset# minute), '%Y-%m-%d') as startDate
-			from 
-				tbl_taskinstancestatus
-			where
-				taskid = #taskID#
-			and
-				tenantid = #tenantID#
-			and 
-				deletestatus = 1
-		]]>
-	</select>
-
+	
 	<select id="EzTaskDAO.getTaskCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		    SELECT
@@ -358,24 +258,24 @@
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
-        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE '%' || #filter# || '%'
 	        	]]>
         	</isEqual>
         	<isEqual property="chkValue" compareValue="personName">
 	        	<isEqual property="primary" compareValue="1">
 		        	<![CDATA[
-	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
 	        	<isEqual property="primary" compareValue="2">
 		        	<![CDATA[
-	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname2 LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
         	</isEqual>
         </isNotEqual>
 	</select>
-
+	
 	<select id="EzTaskDAO.getTaskCount2" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		    SELECT
@@ -415,18 +315,18 @@
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
-        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE '%' || #filter# || '%'
 	        	]]>
         	</isEqual>
         	<isEqual property="chkValue" compareValue="personName">
 	        	<isEqual property="primary" compareValue="1">
 		        	<![CDATA[
-	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
 	        	<isEqual property="primary" compareValue="2">
 		        	<![CDATA[
-	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname2 LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
         	</isEqual>
@@ -477,18 +377,18 @@
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
-        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE '%' || #filter# || '%'
 	        	]]>
         	</isEqual>
         	<isEqual property="chkValue" compareValue="personName">
 	        	<isEqual property="primary" compareValue="1">
 		        	<![CDATA[
-	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
 	        	<isEqual property="primary" compareValue="2">
 		        	<![CDATA[
-	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname2 LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
         	</isEqual>
@@ -520,37 +420,181 @@
 		<isNotEqual property="filter" compareValue="" prepend="AND">
         	<isEqual property="chkValue" compareValue="title">
 	        	<![CDATA[
-        			title LIKE CONCAT(CONCAT('%', #filter#), '%')
+        			title LIKE '%' || #filter# || '%'
 	        	]]>
         	</isEqual>
         	<isEqual property="chkValue" compareValue="personName">
 	        	<isEqual property="primary" compareValue="1">
 		        	<![CDATA[
-	        			personname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
 	        	<isEqual property="primary" compareValue="2">
 		        	<![CDATA[
-	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        			personname2 LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
         	</isEqual>
         </isNotEqual>
 	</select>
-
-	<select id="EzTaskDAO.getTaskGeneral" parameterClass="Map" resultClass="TaskGeneralVO">
-		<![CDATA[
-			SELECT
-				userid, listcount, selecttaskstatus
+	
+	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO"><!-- createDate, startdate, enddate -->
+	   <![CDATA[
+		    SELECT
+				taskid,
+				creatorid,
+				case when #primary# = 1 then creatorname else creatorName2 end as creatorname,
+				case when #primary# = 1 then creatordeptname else creatordeptname2 end as creatordeptname,
+				creatoremail,
+				createDate,
+				taskstatus,
+				completerate,
+				importance,
+				hasshare,
+				hasattach,
+				hascomment,
+				startdate,
+				enddate,
+				title,
+				contentpath,
+				tasktype,
+				updatetime,
+				personid,
+				case when #primary# = 1 then personname else personname2 end as personname,
+				personname as personname1,
+				personname2,
+				case when #primary# = 1 then persondeptname else persondeptname2 end as persondeptname,
+				persondeptname as persondeptname1,
+				persondeptname2,
+				personemail,
+				personattach,
+				personcontentpath,
+				memo,
+				repetition,
+				totalrep
 			FROM
-				TBL_TASKGENERAL
+				TBL_TASK
 			WHERE
-				userid = #userID#
-			AND
 				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
 		]]>
 	</select>
-
+	
+	<select id="EzTaskDAO.getTaskRepeDelList" parameterClass="Map" resultClass="String"><!-- startDate -->
+		<![CDATA[
+			select 
+				startDate
+			from 
+				tbl_taskinstancestatus
+			where
+				taskid = #taskID#
+			and
+				tenantid = #tenantID#
+			and 
+				deletestatus = 1
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO"><!-- commentdate -->
+	   <![CDATA[
+		    SELECT
+		    	taskID,
+				commentid,
+				commentorid,
+				case when #primary# = 1 then commentorname else commentorname2 end as commentorname,
+				commentdate,
+				t_comment as "comment"
+			FROM
+				TBL_TASKCOMMENT
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#				
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
+	   <![CDATA[
+		    SELECT
+				sharerid,
+				case when #primary# = 1 then sharername else sharername2 end as sharername,
+				sharername as sharername1,
+				sharername2,
+				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname,
+				sharerdeptname2,
+				shareremail
+			FROM
+				TBL_TASKSHARE
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getAttachList" resultClass="TaskAttachVO">
+		<![CDATA[
+			SELECT
+				taskid,
+				attachid,
+				filename,
+				filepath,
+				filesize
+			FROM
+				TBL_TASKATTACH
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+			AND
+				type = #type#
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getStatusOfRepTask" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL ( (SELECT TASKSTATUS
+						  	FROM
+								TBL_TASKINSTANCESTATUS
+							WHERE
+								TASKID = #taskID#
+							AND
+								STARTDATE = #date#
+							AND
+								TENANTID = #tenantID#
+				), 0)	
+	
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.selectCompletionOfRepTask" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL ( (SELECT COMPLETERATE
+						  	FROM
+								TBL_TASKINSTANCESTATUS
+							WHERE
+								TASKID = #taskID#
+							AND
+								STARTDATE = #date#
+							AND
+								TENANTID = #tenantID#
+				), 0)	
+	
+		]]>
+	</select>
+<!-- select end -->
+<!-- insert -->
+	<insert id="EzTaskDAO.insertTaskGeneral" parameterClass="map">
+		INSERT INTO 
+			TBL_TASKCONFIG
+			(USERID, DELAYCOLOR, COMPLETECOLOR, ORIGINCOLOR, ORIGINCOLOR2, TENANTID)
+		VALUES 
+			(#userID#, #initColor#, #initColor2# , ' ' , ' ' , #tenantID#)
+	</insert>
+	
 	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASK
@@ -623,7 +667,7 @@
 		</isNull>
 		
 		<selectKey keyProperty="taskID" resultClass="String">
-			SELECT LAST_INSERT_ID()
+			SELECT SEQ_TBL_TASK.NEXTVAL-1 FROM DUAL
 		</selectKey>
     </insert>
     
@@ -647,8 +691,26 @@
 				#sharerDeptName#,
 				#sharerDeptName2#,
 				#sharerEmail#,
-				#nowDate#,
+				TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS'),
 				#tenantID#)
+        ]]>
+    </insert>
+    
+    <insert id="EzTaskDAO.insertTaskAttach" parameterClass="map">
+        <![CDATA[
+            INSERT INTO TBL_TASKATTACH
+                (taskid, filesize, filename, filepath, type, tenantid) 
+            VALUES
+                (#taskID#, #fileSize#, #fileName#, #filePath#, #taskType#, #tenantID#)
+        ]]>
+    </insert>
+    
+    <insert id="EzTaskDAO.insertComment" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKCOMMENT
+				(taskid, commentorid, commentorname, commentorname2, commentdate,  t_comment, tenantID)
+			VALUES
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS'), #comment#, #tenantID#)
         ]]>
     </insert>
     
@@ -660,17 +722,8 @@
                 (#memberID#, #delayColor#, #completeColor#, #originColor#, #originColor2#, #tenantID#)
         ]]>
     </insert>
-
-	<insert id="EzTaskDAO.insertTaskAttach" parameterClass="map">
-        <![CDATA[
-            INSERT INTO TBL_TASKATTACH
-                (taskid, filesize, filename, filepath, type, tenantid) 
-            VALUES
-                (#taskID#, #fileSize#, #fileName#, #filePath#, #taskType#, #tenantID#)
-        ]]>
-    </insert>
-
-	<insert id="EzTaskDAO.taskSaveGeneral" parameterClass="map">
+    
+    <insert id="EzTaskDAO.taskSaveGeneral" parameterClass="map">
         <![CDATA[
             INSERT INTO TBL_TASKGENERAL
                 (userid, listcount, selecttaskstatus, tenantid) 
@@ -678,8 +731,8 @@
                 (#userID#, #listCount#, #selectTaskStatus#, #tenantID#)
         ]]>
     </insert>
-
-	<insert id="EzTaskDAO.insertTaskRepeDel" parameterClass="map">	
+    
+    <insert id="EzTaskDAO.insertTaskRepeDel" parameterClass="map">	
 		<selectKey keyProperty="v_temp" resultClass="Integer">
 			<![CDATA[
 				SELECT
@@ -726,110 +779,7 @@
 	            		TENANTID		= #tenantID#
             ]]> 
         </isNotEqual>     
-
     </insert>
-
-    <update id="EzTaskDAO.updateTask" parameterClass="Map">
-    	<![CDATA[
-    		UPDATE
-    			TBL_TASK
-    		SET
-				importance = #importance#,
-				hasshare = #hasShare#,
-				hasattach = #hasAttach#,
-				startdate = #startDate#,
-				enddate = #endDate#,
-				title = #title#,
-				tasktype = #taskType#,
-				updatetime = #nowDate#,
-				personid = #personID#,
-				personname = #personName#,
-				personname2 = #personName2#,
-				persondeptname = #personDeptName#,
-				persondeptname2 = #personDeptName2#,
-				personemail = #personEmail#,
-				memo = #memo#,
-				repetition = #repetition#,
-				totalrep   = #totalrepetition#
-    		WHERE
-    			tenantID = #tenantID#
-    		AND
-    			taskID = #taskID#
-    	]]>
-    </update>
-    
-    <update id="EzTaskDAO.updateTaskStartDate" parameterClass="Map">
-    	<![CDATA[
-    		UPDATE
-    			TBL_TASK
-    		SET
-				startdate = #startDate#					
-    		WHERE
-    			taskID = #taskID#
-    		AND
-    			tenantID = #tenantID#
-    	]]>
-    </update>    
-	
-	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
-		<isEqual property="hasComment" compareValue="Y">
-			<![CDATA[
-				UPDATE
-					TBL_TASK
-				SET
-					hascomment=#hasComment#
-				WHERE
-					tenantID = #tenantID#
-				AND
-					taskid = #taskID#
-	        ]]>
-		</isEqual>
-		<isEqual property="hasComment" compareValue="N">
-			<![CDATA[
-				UPDATE
-					TBL_TASK
-				SET
-					hascomment=#hasComment#
-				WHERE
-					tenantID = #tenantID#
-				AND
-					taskid = #taskID#
-				AND
-					0 = (SELECT
-							COUNT(*)
-						FROM
-							TBL_TASKCOMMENT
-						WHERE
-							tenantid = #tenantID#
-						AND
-							taskid = #taskID#)
-	        ]]>
-		</isEqual>
-		
-    </update>
-    
-    <update id="EzTaskDAO.insertComment" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_TASKCOMMENT
-				(taskid, commentorid, commentorname, commentorname2, commentdate,  comment, tenantID)
-			VALUES
-				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#, #tenantID#)
-        ]]>
-    </update>
-    
-    <update id="EzTaskDAO.updateTaskStatus" parameterClass="Map">
-    	<![CDATA[
-    		UPDATE
-    			TBL_TASK
-    		SET
-    			taskstatus = #taskStatus#,
-    			completerate = #completeRate#
-    		WHERE
-    			tenantid = #tenantID#
-    		AND
-    			taskid = #taskID#
-    	]]>
-    </update>
     
     <insert id="EzTaskDAO.updateRepetionTaskStatus" parameterClass="Map">
     	<selectKey keyProperty="v_temp" resultClass="Integer">
@@ -880,6 +830,99 @@
             ]]> 
         </isNotEqual>     
     </insert>
+<!-- insert end -->
+<!-- update -->
+	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
+		<isEqual property="hasComment" compareValue="Y">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					taskid = #taskID#
+	        ]]>
+		</isEqual>
+		<isEqual property="hasComment" compareValue="N">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					taskid = #taskID#
+				AND
+					0 = (SELECT
+							COUNT(*)
+						FROM
+							TBL_TASKCOMMENT
+						WHERE
+							tenantid = #tenantID#
+						AND
+							taskid = #taskID#)
+	        ]]>
+		</isEqual>
+    </update>
+    
+    <update id="EzTaskDAO.updateTask" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+				importance = #importance#,
+				hasshare = #hasShare#,
+				hasattach = #hasAttach#,
+				startdate = #startDate#,
+				enddate = #endDate#,
+				title = #title#,
+				tasktype = #taskType#,
+				updatetime = #nowDate#,
+				personid = #personID#,
+				personname = #personName#,
+				personname2 = #personName2#,
+				persondeptname = #personDeptName#,
+				persondeptname2 = #personDeptName2#,
+				personemail = #personEmail#,
+				memo = #memo#,
+				repetition = #repetition#,
+				totalrep   = #totalrepetition#
+    		WHERE
+    			tenantID = #tenantID#
+    		AND
+    			taskID = #taskID#
+    	]]>
+    </update>
+    
+    <update id="EzTaskDAO.updateTaskStartDate" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+				startdate = #startDate#					
+    		WHERE
+    			taskID = #taskID#
+    		AND
+    			tenantID = #tenantID#
+    	]]>
+    </update> 
+    
+    <update id="EzTaskDAO.updateTaskStatus" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+    			taskstatus = #taskStatus#,
+    			completerate = #completeRate#
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			taskid = #taskID#
+    	]]>
+    </update>
     
     <update id="EzTaskDAO.updateTaskWork" parameterClass="Map">
     	<![CDATA[
@@ -924,8 +967,6 @@
         ]]>
     </update>
     
-    
-    
     <update id="EzTaskDAO.updateTaskGeneral" parameterClass="map">
         <![CDATA[
             UPDATE
@@ -939,8 +980,9 @@
                 tenantid = #tenantID#
         ]]>
     </update>
-    
-    <delete id="EzTaskDAO.deleteComment" parameterClass="Map">
+<!-- update end -->
+<!-- delete -->
+	<delete id="EzTaskDAO.deleteComment" parameterClass="Map">
     	<![CDATA[
 			DELETE FROM
 				TBL_TASKCOMMENT
@@ -953,20 +995,7 @@
         ]]>
     </delete>
     
-    <delete id="EzTaskDAO.deleteTaskAttach" parameterClass="Map">
-    	<![CDATA[
-    		DELETE FROM
-    			TBL_TASKATTACH
-    		WHERE
-    			tenantid = #tenantID#
-    		AND
-    			taskid = #taskID#
-    		AND
-    			type = #attachType#
-    	]]>
-    </delete>
-    
-	<delete id="EzTaskDAO.taskDelete" parameterClass="map">
+    <delete id="EzTaskDAO.taskDelete" parameterClass="map">
 		<![CDATA[
 			DELETE FROM
 				TBL_TASK
@@ -976,7 +1005,7 @@
 				taskid = #taskID#
 		]]>
 	</delete>
-
+	
 	<delete id="EzTaskDAO.taskDeleteShare" parameterClass="map">
 	  	<![CDATA[
 			DELETE FROM
@@ -987,7 +1016,7 @@
 				tenantid = #tenantID#
 	    ]]>
 	</delete>
-
+	
 	<delete id="EzTaskDAO.taskDeleteAttach" parameterClass="map">
 	  	<![CDATA[
 			DELETE FROM
@@ -999,6 +1028,19 @@
 	    ]]>
 	</delete>
 	
+	<delete id="EzTaskDAO.deleteTaskAttach" parameterClass="Map">
+    	<![CDATA[
+    		DELETE FROM
+    			TBL_TASKATTACH
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			taskid = #taskID#
+    		AND
+    			type = #attachType#
+    	]]>
+    </delete>
+	
 	<delete id="EzTaskDAO.repTaskDelete" parameterClass="map">
 		<![CDATA[
 			DELETE FROM
@@ -1009,47 +1051,6 @@
 				TASKID = #taskID#
 		]]>
 	</delete>
-	
-	<select id="EzTaskDAO.selectCompletionOfRepTask" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				IFNULL ( (SELECT COMPLETERATE
-						  	FROM
-								TBL_TASKINSTANCESTATUS
-							WHERE
-								TASKID = #taskID#
-							AND
-								STARTDATE = #date#
-							AND
-								TENANTID = #tenantID#
-				), 0)	
-	
-		]]>
-	</select>
-	
-	<select id="EzTaskDAO.getStatusOfRepTask" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				IFNULL ( (SELECT TASKSTATUS
-						  	FROM
-								TBL_TASKINSTANCESTATUS
-							WHERE
-								TASKID = #taskID#
-							AND
-								STARTDATE = #date#
-							AND
-								TENANTID = #tenantID#
-				), 0)	
-	
-		]]>
-	</select>
-	
-	<insert id="EzTaskDAO.insertTaskGeneral" parameterClass="map">
-		INSERT INTO 
-			TBL_TASKCONFIG
-			(USERID, DELAYCOLOR, COMPLETECOLOR, ORIGINCOLOR, ORIGINCOLOR2, TENANTID)
-		VALUES 
-			(#userID#, #initColor#, #initColor2# , '' , '' , #tenantID#)
-	</insert>
+<!-- delete end -->
 </sqlMap>
 
