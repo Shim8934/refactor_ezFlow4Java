@@ -338,30 +338,7 @@ form{display:inline;margin:0}
 	margin-bottom:5px !important;
 }
 
-/* 2018년 01월 08일 유저별 메일용량 체크- progressbar */
 
-#myProgress {
-  width: 80%;
-  height:10px;
-  background-color: #ddd;
-  overflow:hidden;
-}
-#myBar_red{
-  height: 10px;
-  background-color: #ff1616;
-}
-#myBar_orange{
-  height: 10px;
-  background-color: #ff7f00;
-}
-#myBar_yellow{
-  height: 10px;
-  background-color: #ffb600;
-}
-#myBar_green{
-  height: 10px;
-  background-color: #4CAF50;
-}
 	
 .table_manage{margin-top:10px;}
 	

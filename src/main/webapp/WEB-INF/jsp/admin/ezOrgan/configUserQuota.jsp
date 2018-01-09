@@ -76,7 +76,6 @@
         var xmlpara = createXmlDom();
         var xmlPara = createXmlDom();
         var objRoot, objNode, subNode;
-		var caller = "${caller}";
         var objNode;
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "PARENTCN", "");
@@ -95,13 +94,21 @@
         xmlHTTP.send(xmlpara);
 
         if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-            alert("<spring:message code='ezOrgan.t173' />");
+            
+        	alert("<spring:message code='ezOrgan.t173' />");
         } else {
+        	
         	alert("<spring:message code='ezOrgan.t174' />");
-        		if(caller=="/admin/ezEmail/mailQuotaList.do"){
+        	var url = window.opener.document.location.href;
+        	var arrUrl = url.split(window.location.protocol + "//" + window.location.host);
+        		
+        		if(arrUrl[1]=="/admin/ezEmail/mailQuotaList.do"){
+        			
         			opener.location.href = "javascript:reload()";
         			window.close();
+        		
         		} else {
+        			
         			window.close();
         		}
         }

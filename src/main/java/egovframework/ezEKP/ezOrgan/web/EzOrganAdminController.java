@@ -2444,9 +2444,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         int tenantID = userInfo.getTenantId();        
         logger.debug("tenantID=" + tenantID);
         
-        String strCurrentUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        String caller = request.getHeader("referer").replace(strCurrentUrl, "");
-        logger.debug("caller=" + caller);
+//        String strCurrentUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+//        String caller = request.getHeader("referer").replace(strCurrentUrl, "");
+//        logger.debug("caller=" + caller);
        
         String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));  
         String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -2469,7 +2469,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("userId", userId);
         model.addAttribute("userQuota", userQuota);
         model.addAttribute("userWarn", userWarn);
-        model.addAttribute("caller", caller);
+//        model.addAttribute("caller", caller);
         
         logger.debug("configUserQuota ended.");
         
