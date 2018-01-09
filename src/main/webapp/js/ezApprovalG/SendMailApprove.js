@@ -21,7 +21,7 @@ function getAprLinefor(mode, docid) {
 			result = text;
 		}			
 	});
-
+	
     return result;
 }
 
@@ -86,7 +86,8 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     var from = "\"" + arr_userinfo[2] + "\" <" + arr_userinfo[8] + ">\ ";
     var Subject = "";
     var Content = "";
-
+    //메일에서 문서 볼 수 있는 문서 생성 변수
+    var Approv_a = "";
     Content = strLang1124 + " : " + eSubject + "<br>";
     if (type == "SIHANG") {
         Content += strLang1107 + " : " + Drafter + "<br>";
@@ -119,8 +120,14 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else if (type == "SIMSAALERT") Subject = strLang1120;
     else if (type == "hukyul") Subject = strLang1121;
     else Subject = strLang1122;
+    
+    if(Subject==strLang1122) {
+    	
+    	Approv_a = "<span id='"+pDocID+"' onclick ='Approval_Link(this);' style='cursor: pointer; font-size: 15px; color: blue;'>문서 열기<span>";
+    }
+    
     Subject += " " + eSubject;
-
+    
     if (type == "approve_complete" && (pDraftFlag == "DRAFT" || pDraftFlag == "SUSIN")) {
         if (valueOpinion != "") {
             Content = Content + "<br>" + valueOpinion;
@@ -136,10 +143,9 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     if (type == "hesong" || type == "SIMSABANSONG") {
         if (valueOpinion != "") {
             Content = Content + "<br>" + valueOpinion;
-        }
+        } 
     }
-
-    Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Content + "</td></tr></table>";
+    Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Content + Approv_a + "</td></tr></table>";
 
     try {
             var Result = "";
@@ -271,7 +277,6 @@ function getmailaddress(id) {
     xmlhttp.send(xmlpara);
 
     var RtnVal = xmlhttp.responseText;
-
 
     return RtnVal;
 }
