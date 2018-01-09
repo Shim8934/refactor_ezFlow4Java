@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <style type="text/css">PRE {font-size:small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/ezEmail/js_cross/reademail.js"></script>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
