@@ -2252,7 +2252,7 @@
 							</div>
 					  </div>
 					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-						  <div id="_editVote" onclick="voteEdit()"><span>수정</span></div>
+						  <div id="_editVote" onclick="voteEdit()"><span><spring:message code = 'ezEmail.t149'/></span></div>
 					  </c:if>
 	                  <div class="voteBtn">
 	                                <div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>

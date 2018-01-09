@@ -44,7 +44,7 @@
 .vote_attachedFile .all_save{position:absolute; top:13px; left:230px; float: left;}
 
 .voteComment #sendBttn:active{background:#00346d;}
-.voteCancelBttn{cursor: pointer; width:46px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#004896; border:none; border-radius:3px;}
+.voteCancelBttn{cursor: pointer; width:56px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#004896; border:none; border-radius:3px;}
 .voteSaveBttn{cursor: pointer; width:46px; height:24px; color:#FFF; background:#004896; border:none; border-radius:3px;}
 
 
