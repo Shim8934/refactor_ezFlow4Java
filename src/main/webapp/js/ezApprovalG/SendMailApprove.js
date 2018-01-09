@@ -82,30 +82,31 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     var dosend = GetNoticeMail(to, type);  
         if (!dosend && isCheck == undefined)
         return;
-    var to = getmailaddress(to);
+        var id = to;
+    var to = getmailaddress(id);
+    var deptid = to.split(",")[2];
+    to = to.split(",")[0] + "," + to.split(",")[1];
     var from = "\"" + arr_userinfo[2] + "\" <" + arr_userinfo[8] + ">\ ";
     var Subject = "";
     var Content = "";
     //메일에서 문서 볼 수 있는 문서 생성 변수
     var Approv_a = "";
-    Content = strLang1124 + " : " + eSubject + "<br>";
+    Content = strLang1124 + "  | " + eSubject + "<br>";
     if (type == "SIHANG") {
-        Content += strLang1107 + " : " + Drafter + "<br>";
+        Content += strLang1107 + " | " + Drafter + "<br>";
     }
     else if (type == "SIMSABANSONG") {
-        Content += strLang1108 + " : " + Drafter + "<br>";
+        Content += strLang1108 + " | " + Drafter + "<br>";
     }
     else {
-        Content += strLang1109 + " : " + Drafter + "<br>";
+        Content += strLang1109 + " | " + Drafter + "<br>";
     }
     if (pDraftDate != "") {
     	if (pDraftDate.slice(-2) == ".0") {
     		pDraftDate = pDraftDate.substring(0, pDraftDate.length - 2);
     	}
-    	Content += strLang332 + " : " + pDraftDate + "<br>";
+    	Content += strLang332 + " | " + pDraftDate + "<br>";
     }
-
-
 
     if (type == "callback") Subject = strLang1111;
     else if (type == "susin") Subject = strLang1112;
@@ -122,8 +123,8 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else Subject = strLang1122;
     
     if(Subject==strLang1122) {
-    	
-    	Approv_a = "<span id='"+pDocID+"' onclick ='Approval_Link(this);' style='cursor: pointer; font-size: 15px; color: blue;'>문서 열기<span>";
+    	   Approv_a += Drafter + strLangSpjj34 + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(this);' style='cursor: pointer; font-size: 15px; color: blue;'>"+ strLangSpjj33 + "</a><br><br><h3>결재 요약 </h3><br>";
+
     }
     
     Subject += " " + eSubject;
@@ -145,7 +146,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
             Content = Content + "<br>" + valueOpinion;
         } 
     }
-    Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Content + Approv_a + "</td></tr></table>";
+    Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Approv_a + Content +"</td></tr></table>";
 
     try {
             var Result = "";
