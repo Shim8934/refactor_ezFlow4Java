@@ -232,20 +232,6 @@
 			        function Schedule_btn(pGubun) {
 			            parent.mtg_onClick(pGubun);
 			        }
-			        function mail_link(a){
-			        	var real_href = "";
-			        	var link = $("#approv_a").attr("href").split("/");
-			        	
-			        	for (var i = 1; i < link.length; i++) {
-			        		real_href += "/" + link[i];
-			        	}
-			        	
-			        	
-			        	console.log(real_href)
-			        	
-			        	$("#approv_a").attr("href", real_href);
-			        }
-
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
