@@ -51,6 +51,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", pollQuestionVO.getTenantId());
 		map.put("content", pollQuestionVO.getContent());
 		map.put("multi_select", pollQuestionVO.getMultiSelect());
+		map.put("create_date", pollQuestionVO.getCreateDate());
 		map.put("start_date", pollQuestionVO.getStartDate());
 		map.put("end_date", pollQuestionVO.getEndDate());
 		map.put("target", pollQuestionVO.getTarget());

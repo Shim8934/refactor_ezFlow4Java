@@ -650,8 +650,71 @@
 				messTd.style.height = (newheight) + "px";
 		    }
 		    
+		    function updateVoteResult1(obj, voteId, optId) {	    	
+		    	if (hasVoted == 0) {
+ 	    			votedUsers = votedUsers + 1;
+ 	    			hasVoted = 1;	 	    			
+ 	    			document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
+ 	    		} 	    		
+
+ 	    		numberOfSelected = numberOfSelected + 1;
+ 	    		obj.src = "/images/checked.png";
+	    		//var voteId = obj.name;
+	    		//var optId = votesArr[voteId][0];    	
+	    		var showVotes = "voterNumber_" + optId;
+	    		
+	    		//Update values of total votes and votes for current option 
+	    		votesArr[voteId][1] = votesArr[voteId][1] + 1;
+	    		totalVotes = totalVotes + 1;				
+				document.getElementById(showVotes).style.display = "none";
+				
+				if (secretVote == 0) {
+					//Update the userName array
+					var tempObj = new Object();
+					tempObj[curentUser] = curentUserName;
+					
+					if (userNameArr[voteId].map(function (o) {return o[curentUser];}).indexOf(curentUserName) === -1) {	
+						userNameArr[voteId].push(tempObj);
+					}
+				}
+				
+	    		//Then update the graph for all options				    		
+	    		updateGraph();
+		    }
+		    
+		    function updateVoteResult2(obj, voteId, optId) {
+		    	obj.src = "/images/poll/unchecked_vote.png";		
+ 	    		checkVoted();	 	    			 	    		
+ 	    		
+ 	    		//Update local information
+ 	    		numberOfSelected = numberOfSelected - 1;
+ 	    		votesArr[voteId][1] = votesArr[voteId][1] - 1;
+ 	    		totalVotes = totalVotes - 1;
+
+				if (secretVote == 0) {
+	 	    		var pos = userNameArr[voteId].map(function (o) {return o[curentUser];}).indexOf(curentUserName);
+	 	    		
+					if ( pos > -1) {	
+						userNameArr[voteId].splice(pos, 1);						
+   						var tempClassId = "_thu" + voteId;	   						
+   						var listDivs = document.getElementsByClassName(tempClassId);
+   						
+   						for (var j = 0; j < 5; j++) {
+   							listDivs[j].innerHTML == "";
+   							listDivs[j].style.display = "none";
+   						}  						
+					}
+				}
+				
+				//Then update the graph for all options	
+ 	    		updateGraph();
+		    }		
+		    
 		    function change(obj) {
-	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) {	 	    		   		
+		    	var voteId = obj.name;
+ 	    		var optId = votesArr[voteId][0]; 	    		
+ 	    		
+	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) { 	    		   		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
@@ -662,84 +725,63 @@
 	 					return;
 	 	    		}
 	 	    		
-	 	    		if (hasVoted == 0) {
-	 	    			votedUsers = votedUsers + 1;
-	 	    			hasVoted = 1;	 	    			
-	 	    			document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
-	 	    		}
+	 	    		obj.onclick = null;
 	 	    		
-	 	    		//seeResultBeforVote = 1;
-	 	    		numberOfSelected = numberOfSelected + 1;
-	 	    		obj.src = "/images/checked.png";
-		    		var voteId = obj.name;
-		    		var optId = votesArr[voteId][0];		    	
-		    		var showVotes = "voterNumber_" + optId;
-		    		
-		    		//Update values of total votes and votes for current option 
-		    		votesArr[voteId][1] = votesArr[voteId][1] + 1;
-		    		totalVotes = totalVotes + 1;				
-					document.getElementById(showVotes).style.display = "none";
-					
-					if (secretVote == 0) {
-						//Update the userName array
-						var tempObj = new Object();
-						tempObj[curentUser] = curentUserName;
-						
-						if (userNameArr[voteId].map(function (o) {return o[curentUser];}).indexOf(curentUserName) === -1) {	
-							userNameArr[voteId].push(tempObj);
-						}
-					}
-					
-		    		//Then update the graph for all options				    		
-		    		updateGraph();
-		    		
-		    		//Send update request to server
-		    		var xhr = new XMLHttpRequest();
-		    	    var fd = new FormData();
-		    	    fd.append("optionId", optId);
-		    	    fd.append("questId", qstId);
-		    	    fd.append("flag", "1");
-		    	    xhr.open("POST", "/ezPoll/adjustJoinedUsers.do");
-		    	    xhr.send(fd);		    		
+	 	    		$.ajax({
+						type: "POST",
+						url: "/ezPoll/adjustJoinedUsers.do",
+						data: {
+							"optionId": optId,
+							"questId": qstId,
+							"flag": "1"
+						},
+						dataType: "text",
+						async: true,
+						success: function(result) {							
+							var xml = loadXMLString(result);							
+							var state = SelectSingleNodeValue(xml, "RESULT");
+							
+							if (state == "ADD_OK") {
+								updateVoteResult1(obj, voteId, optId);
+							}							
+						},
+						error: function (xhr, status, e){
+							alert("<spring:message code = 'ezPoll.t250'/>");
+						},
+						complete: function() {
+							obj.onclick = function() {change(obj);};
+				        }
+					});   		
 		    	}
 	 	    	else {
-	 	    		obj.src = "/images/poll/unchecked_vote.png";
-	 	    		var voteId = obj.name;
-	 	    		var optId = votesArr[voteId][0];
-	 	    		checkVoted();
-	 	    		//seeResultBeforVote = 1;	 	    			 	    		
+	 	    		obj.onclick = null;
 	 	    		
-	 	    		//Update local information
-	 	    		numberOfSelected = numberOfSelected - 1;
-	 	    		votesArr[voteId][1] = votesArr[voteId][1] - 1;
-	 	    		totalVotes = totalVotes - 1;
+	 	    		$.ajax({
+						type: "POST",
+						url: "/ezPoll/adjustJoinedUsers.do",
+						data: {
+							"optionId": optId,
+							"questId": qstId,
+							"flag": "0"
+						},
+						dataType: "text",
+						async: true,
+						success: function(result) {
+							var xml = loadXMLString(result);							
+							var state = SelectSingleNodeValue(xml, "RESULT");						
 
-					if (secretVote == 0) {
-		 	    		var pos = userNameArr[voteId].map(function (o) {return o[curentUser];}).indexOf(curentUserName);
-		 	    		
-						if ( pos > -1) {	
-							userNameArr[voteId].splice(pos, 1);						
-	   						var tempClassId = "_thu" + voteId;	   						
-	   						var listDivs = document.getElementsByClassName(tempClassId);
-	   						
-	   						for (var j = 0; j < 5; j++) {
-	   							listDivs[j].innerHTML == "";
-	   							listDivs[j].style.display = "none";
-	   						}  						
-						}
-					}
-					
-					//Then update the graph for all options	
-	 	    		updateGraph();   			
- 	    			
- 	    			//Send remove entry request to server
-		    		var xhr = new XMLHttpRequest();
-		    	    var fd = new FormData();
-		    	    fd.append("optionId", optId);
-		    	    fd.append("questId", qstId);
-		    	    fd.append("flag", "0");
-		    	    xhr.open("POST", "/ezPoll/adjustJoinedUsers.do");
-		    	    xhr.send(fd);	
+							if (state == "REMOVE_OK") {
+								updateVoteResult2(obj, voteId, optId);
+							}					
+						},
+						error: function (xhr, status, e){
+							alert("<spring:message code = 'ezPoll.t250'/>");
+						},
+						complete: function() {
+							obj.onclick = function() {change(obj);};
+				        }
+					});
+	 	    		
 	 	    	}
 		    }
 		    
@@ -747,7 +789,7 @@
 		    	var flag = 0;	
 		    	var imgTags = document.getElementsByClassName("_imageTag");	
 		    	
-		    	for (var i = 0; i < imgTags.length; i++) {					
+		    	for (var i = 0; i < imgTags.length; i++) {
 		    		if (imgTags[i].src.indexOf("/images/checked.png") !== -1) {
 		    			flag = 1;
 		    			break;
@@ -2248,7 +2290,7 @@
 									</c:otherwise>
 								</c:choose>													
 								<span style="padding-top: 5px;"><c:out value='${creatorDept}'/></span>	
-								<span class="questionFontS"><c:out value='${question.startDate}'/></span>
+								<span class="questionFontS"><c:out value='${question.createDate}'/></span>
 							</div>
 					  </div>
 					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
@@ -2364,7 +2406,7 @@
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMailSmall.png" style="vertical-align:middle; margin-left:5px; cursor:pointer; display:none; margin-top: -9px;" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
-			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px;" id="vAll${loop.index}"><spring:message code = 'ezPoll.t122'/></div>
+			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px; cursor: pointer;" id="vAll${loop.index}" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}');"><spring:message code = 'ezPoll.t122'/></div>
 			               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
 			               			</div>
 			               		</div>          		

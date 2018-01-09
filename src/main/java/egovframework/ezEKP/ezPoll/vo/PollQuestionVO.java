@@ -10,6 +10,7 @@ public class PollQuestionVO implements Serializable {
 	private int tenantId;
 	private String content;
 	private int multiSelect;
+	private String createDate; //20180109
 	private String startDate;
 	private String endDate;
 	private int target;
@@ -193,6 +194,14 @@ public class PollQuestionVO implements Serializable {
 
 	public void setSetDate(int setDate) {
 		this.setDate = setDate;
+	}
+
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
 
 	public boolean equals(Object object) {

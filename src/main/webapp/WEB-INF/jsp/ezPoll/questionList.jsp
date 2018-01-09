@@ -33,7 +33,7 @@
 			var radioBttn		  = "<c:out value='${mode}'/>";
 			var userID 			  = "<c:out value='${userID}'/>";
 			var seeCheck 		  = "<c:out value='${seeCheck}'/>";	
-			var deleteBttn 		  = "<c:out value='${deleteBttn}'/>";			
+			//var deleteBttn 	  = "<c:out value='${deleteBttn}'/>";
 			var checkedArr		  = [];					
 			var chkDelete		  = 0;
 			var tenantId		  =  "<c:out value='${tenantID}'/>";
@@ -87,30 +87,7 @@
 				divList.style.height = reheight + "px";				
 				
 				//Uncheck all checkboxes after reload for firefox
-		    	$(':checkbox:checked').removeAttr('checked');  
-				
-/* 				if(radioBttn == "wri") {
-					$("#radio2").prop("checked", true);
-				} */				
-				
-/* 				if (seeCheck == 1) {
-					$('#seeAll').prop('checked', true);
-				} */
-				
-				if (deleteBttn == 1 || admin == 1) {
-					$('#btnDel').show();
-				}
-				else {
-					$('#btnDel').hide();
-				}
-			
-				//document.getElementById("searchInput").value = searchParam;
-				
-/* 				$('#seeAll').click(function() {					
-					var _params = getParameters();	
-					var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + _params;
-					window.location.href = szUrl;
-				});	 */
+		    	$(':checkbox:checked').removeAttr('checked');
 			}
 		    
 		    function menuQst_DetailUserInfo(pUserID) {
@@ -485,7 +462,7 @@
 					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t227"/></span></a>
 				</li> --%>
 				<li id="btnInsert"><a onClick="menu_Insert()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t144"/></span></a></li>
-				<li id="btnDel"><a onClick="menu_Delete()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t202"/></span></a></li>
+				<li id="btnDel" style="display: ${(deleteBttn == 1 || adminPrivilege == 1) ? 'block' : 'none'}"><a onClick="menu_Delete()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t202"/></span></a></li>
 				<%--<li id="btnHid"><a onClick="menu_Hide()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t203"/></span></a></li>
 				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li> --%>

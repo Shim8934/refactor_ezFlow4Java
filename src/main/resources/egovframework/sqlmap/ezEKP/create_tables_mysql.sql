@@ -8122,6 +8122,7 @@ CREATE TABLE `tbl_vote_question` (
   `TENANT_ID` mediumint(9) NOT NULL,
   `CONTENT` longtext,
   `MULTI_SELECT` tinyint(4) NOT NULL DEFAULT '0',
+  `CREATE_DATE` varchar(38) NOT NULL,
   `START_DATE` varchar(38) NOT NULL,
   `END_DATE` varchar(38) NOT NULL,
   `TARGET` tinyint(4) NOT NULL DEFAULT '0',

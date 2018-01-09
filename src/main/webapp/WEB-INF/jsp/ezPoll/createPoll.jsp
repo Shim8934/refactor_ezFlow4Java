@@ -412,6 +412,8 @@
 	        	$("#eTimePicker").val(eConfigTime).change();
 			}
 			else {
+				$("#sTimePicker").val("0900").change();
+	        	$("#eTimePicker").val("1800").change();
 				$("#sTimePicker option[value='0900']").attr('selected','selected');
 	        	$("#eTimePicker option[value='1800']").attr('selected','selected');
 			}
@@ -599,7 +601,7 @@
     	function fun_OK() {
     		$('#numberOfOptions').val($('#columnsbnk li').length); 
     		
-    		if (!$('#endDate').is(':checked')) {    			
+/*     		if (!$('#endDate').is(':checked')) {    			
             	$("#sTimePicker option[value='0000']").attr('selected','selected');            	
             	$("#eTimePicker option[value='2330']").attr('selected','selected');
             	L_StartTime = $( "#sTimePicker option:selected" ).text() + ":00";
@@ -608,7 +610,10 @@
     		else {
     			L_StartTime = $( "#sTimePicker option:selected" ).text() + ":00";
     			L_EndTime   = $( "#eTimePicker option:selected" ).text() + ":59";
-    		}
+    		} */
+    		
+    		L_StartTime = $( "#sTimePicker option:selected" ).text() + ":00"; //20180109
+			L_EndTime   = $( "#eTimePicker option:selected" ).text() + ":59"; //20180109
     		
     		L_StartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
     		L_EndDate   = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -650,8 +655,9 @@
         	} 
     		else {        		
             	document.getElementById("hidStartDate").value = L_StartDate + " " + L_StartTime ; 
-            	document.getElementById("hidEndDate").value = L_EndDate + " " + L_EndTime ;           	
-            	document.getElementById("hidContent").innerHTML = message.GetEditorContent();          	       	
+            	document.getElementById("hidEndDate").value = L_EndDate + " " + L_EndTime ;
+            	document.getElementById("hidCreateDate").value = getCurrTime();
+            	document.getElementById("hidContent").innerHTML = message.GetEditorContent();     	       	
 		    	var listtable = document.getElementById("filelist");
 		    	var filelist = GetChildNodes(listtable);		    	
 				
@@ -782,6 +788,13 @@
 	    
 	    function uploadbtn() {
 	        document.getElementById("file").click();
+	    }
+	    
+	    function getCurrTime() {		    	
+	    	var strTime = new Date().toTimeString().split(" ")[0];
+	    	var strDateTime = new Date().toISOString();
+	    	var strDate = strDateTime.substring(0, 10);
+	    	return strDate + " " + strTime;
 	    }
 	</script>
 </head>
@@ -936,7 +949,8 @@
 						<input type="text" name="hidModifyInfo" id="hidModifyInfo" value="" style="display:none"> 
 						<textarea name="hidContent" id="hidContent" style="display:none"></textarea>
 						<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
-						<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">				
+						<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">
+						<input type="text" name="hidCreateDate" id="hidCreateDate" value="" style="display:none">		
 					</div>
 					</td>
 				</tr>						

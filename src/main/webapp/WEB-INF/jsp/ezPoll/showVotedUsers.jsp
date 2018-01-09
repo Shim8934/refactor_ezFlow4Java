@@ -60,11 +60,11 @@
 				<div style="float:left; display:block;"><c:out value='${totalVotesForOption}'/></div>
 				<img style="position: fixed; right: 20px; top: 95px; cursor: pointer; height: 32px; width: 32px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}','${optID}')">
 			</div>	 --%>
-			<div style="height:313px; overflow: auto;">
-				<table border=1 style="width : 100%; border-color: grey;">
+			<div style="height:313px; overflow-y: auto;  overflow-x: hidden;">
+				<table border=1 style="width:100%; border-color:grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
-							<td style="border-right:none; max-width: 200px; width: 190px;">
+							<td style="border-right:none; max-width: 200px; width: 200px;">
 								<img src="${list.userImage}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">								
 								<a style="cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
 									<c:choose>
@@ -77,8 +77,9 @@
 									</c:choose>											
 								</a>
 							</td>
-							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list.phone}"/></td>
-							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick="sendMail('${list.userId}')"></td>		
+							<td style="border:none; width: 110px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list.phone}"/></td>
+							<%-- <td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick="sendMail('${list.userId}')"></td> --%>
+							<td style="border-left:none; width: 60px; min-width: 60px;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; top: 5px; padding-right: 10px; padding-left: 10px; cursor: pointer;" onClick="sendMail('${list.userId}')"></td> 	
 						</tr>
 					</c:forEach>
 				</table>				

@@ -31,7 +31,7 @@
 		            alert("<spring:message code='ezPoll.t230'/>" + "\n" + "<spring:message code='ezPoll.t231'/>");
 		        }
 		        else {
-		            state = SelectSingleNodeValue(resultXML, "DATA");
+		            var state = SelectSingleNodeValue(resultXML, "DATA");
 		            
 		            if (state != "DELETE_OK") {
 		                alert("<spring:message code='ezPoll.t230'/>" + "\n" + "<spring:message code='ezPoll.t231'/>");

@@ -1,10 +1,6 @@
 package egovframework.ezEKP.ezPoll.web;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -525,6 +521,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int secretVote = Integer.parseInt(req.getParameter("hidSecreteVote"));
 		String endDate = req.getParameter("hidEndDate");
 		String startDate = req.getParameter("hidStartDate");
+		String createDate = req.getParameter("hidCreateDate"); //20180109		
 		int numberOfMultiSelect = Integer.parseInt(req.getParameter("multiSelectNumber"));
 		String range = req.getParameter("RangeXMLStr");		
 		int resultFirst = Integer.parseInt(req.getParameter("hidResultFirst"));
@@ -566,6 +563,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setCreator(userID);
 		pollQuestionVO.setCreatorName1(loginVO.getDisplayName1());
 		pollQuestionVO.setCreatorName2(loginVO.getDisplayName2());
+		pollQuestionVO.setCreateDate(createDate); //20180109
 		pollQuestionVO.setEndDate(endDate);
 		pollQuestionVO.setStartDate(startDate);
 		pollQuestionVO.setSecretVote(secretVote);
@@ -1511,7 +1509,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		if (flag.equals("1")) {
 			//20180108 baonk added
-			if (pollUserAnswerCheck != null) {
+			if (pollUserAnswerCheck != null) {				
 				strXML = "<RESULT>ADD_OK</RESULT>";
 				return strXML;
 			}
@@ -1556,7 +1554,7 @@ public class EzPollController extends EgovFileMngUtil {
 		else {
 			//20180108 baonk added
 			if (pollUserAnswerCheck == null) {
-				strXML = "<RESULT>ADD_OK</RESULT>";
+				strXML = "<RESULT>REMOVE_OK</RESULT>";
 				return strXML;
 			}
 			//end
