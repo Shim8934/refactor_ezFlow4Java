@@ -97,7 +97,7 @@
                        	
                         listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>";
 
-                        var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(2));
+                        var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0));
                         listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
                         listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.gif' width='83' height='54' alt=''></dd>";
                         listHTML += "<dd id='content' class='txt'></dd>";
@@ -106,7 +106,7 @@
                         listHTML += "<ul class=\"mainlist \">";
                         
                         for (var i = 1; i < RowCnt; i++) {
-                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(2));
+                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0));
                             var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
                             
                             listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
