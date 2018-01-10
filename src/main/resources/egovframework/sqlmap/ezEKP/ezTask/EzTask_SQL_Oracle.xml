@@ -220,6 +220,7 @@
 			ORDER BY
 				A.STARTDATE DESC,
 				A.TASKID DESC
+				
 		]]>
 	</select>
 	
@@ -504,7 +505,7 @@
 				COMMENTORID,
 				CASE WHEN #primary# = 1 THEN COMMENTORNAME ELSE COMMENTORNAME2 END AS COMMENTORNAME,
 				COMMENTDATE,
-				T_COMMENT AS "comment"
+				T_COMMENT AS "COMMENT"
 			FROM
 				TBL_TASKCOMMENT
 			WHERE
@@ -641,19 +642,19 @@
 				#creatorDeptName#,
 				#creatorDeptName2#,
 				#creatorEmail#,
-				#nowDate#,
+				TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
 				#taskStatus#,
 				0,
 				#importance#,
 				#hasShare#,
 				#hasAttach#,
 				'N',
-				#startDate#,
-				#endDate#,
+				TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+1,'YYYY-MM-DD HH24:MI:SS'),
+				TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),
 				#title#,
 				#contentPath#,
 				#taskType#,
-				#nowDate#,
+				TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
 				#personID#,
 				#personName#,
 				#personName2#,
@@ -693,7 +694,7 @@
 				#sharerDeptName#,
 				#sharerDeptName2#,
 				#sharerEmail#,
-				TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS'),
+				TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')+9/24,
 				#tenantID#)
         ]]>
     </insert>
@@ -712,7 +713,7 @@
 			INSERT INTO TBL_TASKCOMMENT
 				(TASKID, COMMENTORID, COMMENTORNAME, COMMENTORNAME2, COMMENTDATE,  T_COMMENT, TENANTID)
 			VALUES
-				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS'), #comment#, #tenantID#)
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')+9/24, #comment#, #tenantID#)
         ]]>
     </insert>
     
@@ -878,11 +879,11 @@
 				IMPORTANCE = #importance#,
 				HASSHARE = #hasShare#,
 				HASATTACH = #hasAttach#,
-				STARTDATE = #startDate#,
-				ENDDATE = #endDate#,
+				STARTDATE = TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+1,'YYYY-MM-DD HH24:MI:SS'),
+				ENDDATE = TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),
 				TITLE = #title#,
 				TASKTYPE = #taskType#,
-				UPDATETIME = #nowDate#,
+				UPDATETIME = TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
 				PERSONID = #personID#,
 				PERSONNAME = #personName#,
 				PERSONNAME2 = #personName2#,
