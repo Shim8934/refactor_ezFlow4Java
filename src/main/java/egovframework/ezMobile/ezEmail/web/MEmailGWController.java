@@ -3809,7 +3809,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			if (!pAddressFilter.isEmpty()) {
-				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info);
+				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, null);
 			}
 	        
 	        data.put("organXML", organXML);
@@ -3850,6 +3850,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String searchTarget = "";
 			String filterName = "";
 			String filterValue = "";
+			int start = 0;
+			int end = 99;
 			
 			if (jsonObject.get("searchTarget") != null) {
 				searchTarget = (String)jsonObject.get("searchTarget");
@@ -3863,11 +3865,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				filterValue = (String)jsonObject.get("filterValue");
 			}
 			
+			if (jsonObject.get("start") != null) {
+				start =  ((Integer)jsonObject.get("start")).intValue();
+			}
+
+			if (jsonObject.get("end") != null) {
+				end =  ((Integer)jsonObject.get("end")).intValue();
+			}
+			
+			int[] searchCount = {0, 0};
+			
 			if (!searchTarget.isEmpty() && !filterName.isEmpty() && !filterValue.isEmpty()) {
-				addressXML = getAddressSearch(searchTarget, filterName, filterValue, info);
+				addressXML = getAddressSearch(searchTarget, filterName, filterValue, info,
+						start, end - start + 1, searchCount);	
 			}
 			
 	        data.put("addressXML", addressXML);
+	        data.put("fullCount", searchCount[0]);	        
+	        data.put("optionCount", searchCount[1]);
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -4149,10 +4164,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 주소록 정보 호출 함수
 	 */
-	private String getAddressSearch(String searchTarget, String filterName, String filterValue, MCommonVO userInfo) {
+	private String getAddressSearch(String searchTarget, String filterName, String filterValue, MCommonVO userInfo,
+					int start, int count, int[] searchCount) {
 		LOGGER.debug("getAddressSearch started");
 		LOGGER.debug("getAddressSearch searchTarget=" + searchTarget + ",filterName=" + filterName
-				+ ",filterValue=" + filterValue);
+				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count);
 		
         String returnValue = "";
         
@@ -4183,8 +4199,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         	}
         	
             String pFilter = filterName + "," + filterValue;
+                        
+            searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
+            searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);            
             
-            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
             
             StringBuilder sb = new StringBuilder();
             
@@ -4198,6 +4217,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
             	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
             	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
+            	sb.append("<SCOMPANYPHONE>" + (addressInfo.getsCompanyPhone() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompanyPhone())) + "</SCOMPANYPHONE>");
+            	sb.append("<SMOBILE>" + (addressInfo.getsMobile() == null ? "" : commonUtil.cleanValue(addressInfo.getsMobile())) + "</SMOBILE>");
             	sb.append("</ROW>");
             }
             

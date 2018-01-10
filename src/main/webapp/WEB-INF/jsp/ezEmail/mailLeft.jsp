@@ -65,6 +65,25 @@
         	// 2017.12.27 단암 시스템 트리 열기 
             // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
 	        function previewSubTreeCall(type){
+        		
+        		if (typeof type != "undefined") {
+        			previewSubTree = type;
+
+            		if (usePreviewSubTree == "YES" && previewSubTree == "N") {
+    	            	var treeArrNum = $('.plusTreeImg').length;
+
+    		          	for (var i = 0; i < treeArrNum; i++) {
+    		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
+    		        	    var idx = getSubtree.split('PostTreeView_img_');
+    		        	    
+    		        	    if (typeof idx[1] != "undefined") {
+    			        	    	PostTreeView.toggle(idx[1]);
+    		        	    }
+    		        	    
+    	        	    	treeArrNum = $('.plusTreeImg').length;
+    		          	}
+    	            }
+        		}
 	           
         		if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
 		            var treeArrNum = $('.plusTreeImg').length;
@@ -81,12 +100,8 @@
 		        	    
 	        	    	treeArrNum = $('.plusTreeImg').length;
 		          	}
-	            }
-        		
-        		if (type == "conf") {
-        			window.location.reload(true);
-        		}
-        		
+	            } 
+
 	        }
 	        
 	        function write_Letter() {

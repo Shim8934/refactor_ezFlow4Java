@@ -1003,3 +1003,6 @@ var strLangSpjj29 = "동일인이 '후결'로 2번이상 지정될 수 없습니
 var strLangSpjj30 =	"후결을 승인하시겠습니까?"
 var strLangSpjj31 =	"후결을 승인하였습니다.";
 var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."
+	
+var strLangSpjj33 = "문서 열기";
+var strLangSpjj34 = "가 올린 결재 문서입니다. 결재를 하시려면 링크를 클릭하세요.";

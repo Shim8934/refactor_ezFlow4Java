@@ -248,7 +248,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
 		
 		String displayNamePrintable = userInfo.getDisplayName();
+		
+		// set serverName
 		String serverName = loginInfo.getServerName();
+		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", loginInfo.getTenantId());
+		
+		if (useMailLinkHostname.equals("YES")) {
+			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", loginInfo.getTenantId());
+			
+			if (!mailLinkHostname.equals("")) {
+				serverName = mailLinkHostname;
+			}
+		}
+		
 		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
@@ -2925,7 +2937,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    		        	message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadDate", secureReadDate);
-	    		        	message.setHeader("X-JMocha-Secure-Mail-ServerName", userInfo.getServerName());
+	    		        	
+	    		        	// set serverName
+	    		    		String serverName = userInfo.getServerName();
+	    		    		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+	    		    		
+	    		    		if (useMailLinkHostname.equals("YES")) {
+	    		    			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+	    		    			
+	    		    			if (!mailLinkHostname.equals("")) {
+	    		    				serverName = mailLinkHostname;
+	    		    			}
+	    		    		}
+	    		        	
+	    		        	message.setHeader("X-JMocha-Secure-Mail-ServerName", serverName);
 		            	}
 			        	
 			        	doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
@@ -3021,10 +3046,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureAttachPart.setHeader("Content-Type", "text/html");
 		    		        	
-		    		        	String serverName = userInfo.getServerName();
-		    		        	
 		    		        	String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId());
-		    		        	logger.debug("useHttps=" + useHttps);
+		    		        	
+		    		    		String serverName = userInfo.getServerName();
+		    		    		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+		    		    		
+		    		    		if (useMailLinkHostname.equals("YES")) {
+		    		    			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+		    		    			
+		    		    			if (!mailLinkHostname.equals("")) {
+		    		    				serverName = mailLinkHostname;
+		    		    			}
+		    		    		}
+		    		        	
+		    		        	logger.debug("useHttps=" + useHttps + ",serverName=" + serverName);
 		    		        	
 		    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
 		    		        	

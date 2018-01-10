@@ -130,7 +130,7 @@
                 xmlHTTP.send(sendStr + "</DATA>");
 
                 if (previewSubTreeStatus != previewSubTreeSlb) {
-                	var type = "conf";
+                	var type = previewSubTreeSlb;
                 	window.parent.parent.frames["left"].previewSubTreeCall(type);
                 }
                 
