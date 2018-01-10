@@ -9,6 +9,7 @@
 	        <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	        <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
+	        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	        <style type="text/css">PRE {font-size:x-small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    	<script language="javascript" type="text/javascript">
@@ -230,17 +231,6 @@
 			        }
 			        function Schedule_btn(pGubun) {
 			            parent.mtg_onClick(pGubun);
-			        }
-			        
-			        function Approval_Link(a){
-
-						var Id ="${Id}"
-						var deptId ="${deptId}"
-						var Name ="${Name}"
-						
-			        	openLocation="/ezApprovalG/approvui.do?docID="+a.id+"&id="+Id+"&name="+Name+"&deptID="+deptId+"&allFlag=0&mailchk=Y";
-						openwindow(openLocation, "", 900, 600);
-						
 			        }
 			</script> 
 	</head>
