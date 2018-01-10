@@ -649,8 +649,8 @@
 				#hasShare#,
 				#hasAttach#,
 				'N',
-				TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+1,'YYYY-MM-DD HH24:MI:SS'),
-				TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),
+				TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
+				TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
 				#title#,
 				#contentPath#,
 				#taskType#,
@@ -879,8 +879,8 @@
 				IMPORTANCE = #importance#,
 				HASSHARE = #hasShare#,
 				HASATTACH = #hasAttach#,
-				STARTDATE = TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+1,'YYYY-MM-DD HH24:MI:SS'),
-				ENDDATE = TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),
+				STARTDATE = TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
+				ENDDATE = TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
 				TITLE = #title#,
 				TASKTYPE = #taskType#,
 				UPDATETIME = TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
@@ -1056,4 +1056,3 @@
 	</delete>
 <!-- delete end -->
 </sqlMap>
-
