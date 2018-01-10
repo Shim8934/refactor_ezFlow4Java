@@ -91,21 +91,21 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     var Content = "";
     //메일에서 문서 볼 수 있는 문서 생성 변수
     var Approv_a = "";
-    Content = "<span style='font-size:13pt;'>" + strLang1124 + "</span>  | " + eSubject + "<br>";
+    Content = "<span style='font-size:13pt;'>" + strLang1124 + "</span>: " + eSubject + "<br>";
     if (type == "SIHANG") {
-        Content += "<span style='font-size:13pt;'>" + strLang1107 + "</span> | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1107 + "</span>: " + Drafter + "<br>";
     }
     else if (type == "SIMSABANSONG") {
-        Content += "<span style='font-size:13pt;'>" + strLang1108 + "</span> | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1108 + "</span>: " + Drafter + "<br>";
     }
     else {
-        Content += "<span style='font-size:13pt;'>" + strLang1109 + "</span> | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1109 + "</span>: " + Drafter + "<br>";
     }
     if (pDraftDate != "") {
     	if (pDraftDate.slice(-2) == ".0") {
     		pDraftDate = pDraftDate.substring(0, pDraftDate.length - 2);
     	}
-    	Content += "<span style='font-size:13pt;'>" + strLang332 + "</span> | " + pDraftDate + "<br>";
+    	Content += "<span style='font-size:13pt;'>" + strLang332 + "</span>: " + pDraftDate + "<br>";
     }
 
     if (type == "callback") Subject = strLang1111;
