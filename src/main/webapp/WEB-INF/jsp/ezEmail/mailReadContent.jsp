@@ -240,7 +240,6 @@
 			        		real_href += "/" + link[i];
 			        	}
 			        	
-			        	
 			        	console.log(real_href)
 			        	
 			        	$("#approv_a").attr("href", real_href);
