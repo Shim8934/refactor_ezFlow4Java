@@ -536,6 +536,7 @@
 			        var KIND = document.getElementById('FromList').value;
 			        var searchtype = document.getElementById('searchoption').selectedIndex;
 			        var searchname = document.getElementById('forminfo').value;
+			        console.log("/"+searchname+"/")
 			        GetFormInfo("ALL", KIND, searchtype, searchname);
 		    	}
 		    }
