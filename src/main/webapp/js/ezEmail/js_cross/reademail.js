@@ -1032,5 +1032,6 @@ function mail_link(a){
 	}
 	
 	$("#approv_a").attr("href", real_href);
+	openwindow(real_href, "", 880, 550);
 }
 

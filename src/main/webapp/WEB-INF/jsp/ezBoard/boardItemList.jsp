@@ -353,7 +353,7 @@
 		            }
 		            tempno = tempno + "";
 		            if (tempno.length > 4) {
-		                document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 20 + "px";
+		                document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 22 + "px"; // +  tempno.length * 3 + 20
 		            }
 		            if (USE_OCS == "YES" && lstCnt > 0 && gubun != 2) {
 		                check_presence();
