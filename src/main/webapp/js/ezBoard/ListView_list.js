@@ -795,11 +795,17 @@ function ListView() {
                             objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
                         else
                             objTd.innerHTML += MakeXMLString(strValue);
-                    } else {
+                    } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1){
                         if (getNodeText(oDatas[10]) != "0"){
                             objTd.innerHTML = titleImage + strValue + " " + titleOneLineCnt;
                         }else{
                         	objTd.innerHTML = titleImage + strValue;
+                        }
+                    } else {
+                    	if (getNodeText(oDatas[10]) != "0"){
+                            objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
+                        }else{
+                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
                         }
                     }
                 }
