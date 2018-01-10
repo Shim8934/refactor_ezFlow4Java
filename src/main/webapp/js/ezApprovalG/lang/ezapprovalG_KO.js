@@ -854,7 +854,7 @@ var strLang1120 = "[심사문서도착알림]";
 var strLang1121 = "[후결문서도착알림]";
 var strLang1122 = "[결재문서도착알림]";
 var strLang1123 = "[의견내용알림]";
-var strLang1124 = "제&nbsp;&nbsp;&nbsp;목"
+var strLang1124 = "제&nbsp;&nbsp;목"
 
 /* 2016-09-05 js 한글 하드코딩 수정 */
 var strLang1127 = "데이터가 지정되지 않았습니다.";
