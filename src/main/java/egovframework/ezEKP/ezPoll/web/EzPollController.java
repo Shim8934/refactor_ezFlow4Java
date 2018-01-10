@@ -2452,8 +2452,6 @@ public class EzPollController extends EgovFileMngUtil {
 				startDate = formatter.parse(pollQstVO.getStartDate()); //20180109
 				compareStart = startDate.compareTo(sysDate); //20180109
 				
-				logger.debug("BNKKK Question Title: " + pollQstVO.getTitle() + " || StartDate: " + startDate.toString() +  " || EndDate: " + endDate.toString() + " || Today: " + sysDate.toString());
-				
 				if (compareEnd > 0) {
 					if (compareStart > 0) {
 						pollQstVO.setStatus(2); // reserve poll
@@ -2486,8 +2484,6 @@ public class EzPollController extends EgovFileMngUtil {
 					compareEnd = endDate.compareTo(sysDate);
 					startDate = formatter.parse(pollQstVO.getStartDate()); //20180109
 					compareStart = startDate.compareTo(sysDate); //20180109
-					
-					logger.debug("BNKKK Question Title: " + pollQstVO.getTitle() + " || StartDate: " + startDate.toString() +  " || EndDate: " + endDate.toString() + " || Today: " + sysDate.toString());
 					
 					if (compareEnd > 0) {
 						if (compareStart > 0) {
