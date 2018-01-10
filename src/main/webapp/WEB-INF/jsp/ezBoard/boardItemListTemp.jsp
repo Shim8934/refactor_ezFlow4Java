@@ -326,7 +326,7 @@
 		                tempno = tempno + "";
 		
 		                if (tempno.length > 4) {
-		                    document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 20 + "px";
+		                    document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 22 + "px";
 		                }
 		
 		                if ("${useOcs}" == "YES" && lstCnt > 0) {
