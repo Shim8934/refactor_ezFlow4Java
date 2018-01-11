@@ -68,7 +68,7 @@
 		]]>
 	</select>
 	
-	<select id="EzTaskDAO.getTaskList" resultClass="TaskInfoVO"><!-- startdate, enddate 나중에 수정  -->
+	<select id="EzTaskDAO.getTaskList" resultClass="TaskInfoVO">
 	   <![CDATA[
 		    SELECT
 		    	DISTINCT(A.TASKID),
@@ -80,8 +80,8 @@
 				CREATOREMAIL,
 				IMPORTANCE,
 				HASATTACH,
-				STARTDATE,
-				ENDDATE,
+				TO_CHAR(TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)), 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
+				TO_CHAR(TO_DATE(ENDDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)), 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
 				TITLE,
 				TASKTYPE,
 				TASKSTATUS,
@@ -218,9 +218,8 @@
 
 		<![CDATA[
 			ORDER BY
-				A.STARTDATE DESC,
+				STARTDATE DESC,
 				A.TASKID DESC
-				
 		]]>
 	</select>
 	
@@ -439,7 +438,7 @@
         </isNotEqual>
 	</select>
 	
-	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO"><!-- createDate, startdate, enddate -->
+	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
 	   <![CDATA[
 		    SELECT
 				TASKID,
@@ -447,15 +446,15 @@
 				CASE WHEN #primary# = 1 THEN CREATORNAME ELSE CREATORNAME2 END AS CREATORNAME,
 				CASE WHEN #primary# = 1 THEN CREATORDEPTNAME ELSE CREATORDEPTNAME2 END AS CREATORDEPTNAME,
 				CREATOREMAIL,
-				CREATEDATE,
+				TO_CHAR(TO_DATE(CREATEDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)), 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE,
 				TASKSTATUS,
 				COMPLETERATE,
 				IMPORTANCE,
 				HASSHARE,
 				HASATTACH,
 				HASCOMMENT,
-				STARTDATE,
-				ENDDATE,
+				TO_CHAR(TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)), 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
+				TO_CHAR(TO_DATE(ENDDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)), 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
 				TITLE,
 				CONTENTPATH,
 				TASKTYPE,
@@ -482,7 +481,7 @@
 		]]>
 	</select>
 	
-	<select id="EzTaskDAO.getTaskRepeDelList" parameterClass="Map" resultClass="String"><!-- startDate -->
+	<select id="EzTaskDAO.getTaskRepeDelList" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				STARTDATE
@@ -497,14 +496,14 @@
 		]]>
 	</select>
 	
-	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO"><!-- commentdate -->
+	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO">
 	   <![CDATA[
 		    SELECT
 		    	TASKID,
 				COMMENTID,
 				COMMENTORID,
 				CASE WHEN #primary# = 1 THEN COMMENTORNAME ELSE COMMENTORNAME2 END AS COMMENTORNAME,
-				COMMENTDATE,
+				COMMENTDATE + (#offset#/(24*60)) AS COMMENTDATE,
 				T_COMMENT AS "COMMENT"
 			FROM
 				TBL_TASKCOMMENT
@@ -642,19 +641,19 @@
 				#creatorDeptName#,
 				#creatorDeptName2#,
 				#creatorEmail#,
-				TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
+				#nowDate#,
 				#taskStatus#,
 				0,
 				#importance#,
 				#hasShare#,
 				#hasAttach#,
 				'N',
-				TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
-				TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
+				#startDate#,
+				#endDate#,
 				#title#,
 				#contentPath#,
 				#taskType#,
-				TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
+				#nowDate#,
 				#personID#,
 				#personName#,
 				#personName2#,
@@ -694,7 +693,7 @@
 				#sharerDeptName#,
 				#sharerDeptName2#,
 				#sharerEmail#,
-				TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')+9/24,
+				TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS'),
 				#tenantID#)
         ]]>
     </insert>
@@ -713,7 +712,7 @@
 			INSERT INTO TBL_TASKCOMMENT
 				(TASKID, COMMENTORID, COMMENTORNAME, COMMENTORNAME2, COMMENTDATE,  T_COMMENT, TENANTID)
 			VALUES
-				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')+9/24, #comment#, #tenantID#)
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS'), #comment#, #tenantID#)
         ]]>
     </insert>
     
@@ -879,11 +878,11 @@
 				IMPORTANCE = #importance#,
 				HASSHARE = #hasShare#,
 				HASATTACH = #hasAttach#,
-				STARTDATE = TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
-				ENDDATE = TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
+				STARTDATE = #startDate#,
+				ENDDATE = #endDate#,
 				TITLE = #title#,
 				TASKTYPE = #taskType#,
-				UPDATETIME = TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')+9/24,'YYYY-MM-DD HH24:MI:SS'),
+				UPDATETIME = #nowDate#,
 				PERSONID = #personID#,
 				PERSONNAME = #personName#,
 				PERSONNAME2 = #personName2#,
