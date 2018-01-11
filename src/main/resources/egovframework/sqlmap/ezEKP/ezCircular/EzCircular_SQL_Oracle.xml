@@ -43,23 +43,7 @@
     <select id="EzCircularDAO.getCircularList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-				circularid,
-                importance,
-                hasfile,
-                status,
-                updateStatus,
-                title,
-                memberid,
-                membername,
-                regdate,
-                confirmstatus,
-                confirmdate,
-                updatedate,
-                confirmcount,
-				confirmtotalcount,
-				commentStatus,
-				shareStatus,
-				totalstatus
+				*
 			FROM
             (SELECT AAA.*, rownum as rNum FROM 
             (SELECT
@@ -488,20 +472,7 @@
     <select id="EzCircularDAO.getCircularCompleteList" resultClass="CircularListVO" >
         <![CDATA[
 			SELECT 
-				circularid,
-				importance,
-				hasfile,
-				status,
-				title,
-				memberid,
-				membername,
-				regdate,
-				confirmstatus,
-			 	confirmdate,
-				updatedate,
-				updatestatus,
-                confirmcount,
-				confirmtotalcount
+				*
 			FROM
 			(SELECT AAA.*, rownum as rNUM FROM
 			(SELECT
@@ -732,19 +703,7 @@
     <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT 
-				circularid, 
-                importance,
-             	hasfile,
-                status,
-                title,
-              	memberid,
-                membername,
-            	confirmstatus,
-          		regdate,
-             	confirmdate,
-                updatedate,
-                confirmcount,
-				confirmtotalcount
+				*
 			FROM
             (SELECT AAA.*, rownum as rNum FROM
             (SELECT
@@ -939,20 +898,7 @@
     <select id="EzCircularDAO.getMyCircularList" resultClass="CircularListVO" >
         <![CDATA[
 			SELECT 
-				circularid,
-				importance,
-				hasfile,
-				status,
-				title,
-				memberid,
-				membername,
-				regdate,
-				confirmstatus,
-				confirmdate,
-				updatedate,
-				updatestatus,
-				confirmcount,
-				confirmtotalcount
+				*
 			
 			FROM
 			(SELECT AAA.*, rownum as rNum FROM
@@ -1105,20 +1051,7 @@
 	<select id="EzCircularDAO.getCircularTDList" resultClass="CircularListVO" >
         <![CDATA[
            SELECT
-           	 	circularid,
-                importance,
-                hasfile,
-                status,
-                title,
-                memberid,
-                membername,
-              	regdate,
-                confirmstatus,
-           		confirmdate,
-            	updatedate,
-				confirmcount,
-				confirmtotalcount,
-                updatestatus
+           	 	*
            FROM
            (SELECT AAA.*, rownum as rNum FROM
            (SELECT
@@ -1342,19 +1275,7 @@
     <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
         <![CDATA[
 			SELECT 
-				circularid,
-				importance,
-				hasfile,
-				status,
-				title,
-				memberid,
-				membername,
-				regdate,
-				confirmstatus,
-				confirmdate,
-				updatestatus,
-				confirmcount,
-				confirmtotalcount
+				*
 			FROM
 			(SELECT AAA.*, rownum as rNum FROM
 			(SELECT

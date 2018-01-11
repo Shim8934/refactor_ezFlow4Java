@@ -167,9 +167,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("lang", lang);
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
-		
+
+		//lang 값에 primary가 들어가는데 sql에서 비교를 숫자 1과 해서 더번쨰 조건문이 실행되는데 이것은 영어 이름 같은데 뭔가 문제가 있는게 아닌지??
 		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
-		
 		logger.debug("getLoginHist ended.");
 		
 		return list;

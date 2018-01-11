@@ -30,7 +30,7 @@
 			TENANT_ID=#tenantID#
 	]]>
 	</update>
-	<!--  -->
+
 	<sql id="EzSystemAdminDAO.searchQuery">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
@@ -63,12 +63,12 @@
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			CONNECTTIME + #offset# / (24 * 60) >= #startDate# 
+			TO_CHAR((CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate# 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			CONNECTTIME + #offset# / (24 * 60) <= #endDate#
+			TO_CHAR((CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD') <= #endDate#
 			]]>
 		</isNotEmpty>
 	</sql>
@@ -76,15 +76,7 @@
 	<select id="EzSystemAdminDAO.getLoginHist" parameterClass="map" resultClass="ConnectionInfoVO">
 			
 			SELECT 
-				CONNECTTIME,
-				"SEQUENCE",
-				USERNM,
-				USERNM2,
-				DEPTNM,
-				DEPTNM2,
-				CONNECTIP,
-				CONNECTBROWSER,
-				CONNECTOS
+				*
 			
 			FROM 
 			(SELECT  
@@ -114,7 +106,7 @@
 		<isNotEqual property="v_start" compareValue="-1">
 					
 			WHERE rNum between (#v_start# + 1) and (#pageCount# + #v_start#)
-		</isNotEqual>
+		</isNotEqual> 
 	</select>
 	
 	<select id="EzSystemAdminDAO.getLoginHistCount" parameterClass="map" resultClass="int">
