@@ -52,7 +52,7 @@ public class EzConnController {
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
-	@RequestMapping("/ezConn/mailMain.do")
+	@RequestMapping(value={"/ezConn/mailMain.do", "/ezConn/scheduleMain.do"})
 	public void mailMain(
 					@RequestParam String id,
 					HttpServletRequest request,
@@ -156,6 +156,10 @@ public class EzConnController {
 				
 				logger.debug("cmd=" + cmd);
 				
+				String requestUri = request.getRequestURI();
+				
+				logger.debug("requestUri=" + requestUri);
+				
 				if (cmd != null && cmd.equals("boardDotNet")) {
 					String boardID = request.getParameter("boardID");
 					String itemID = request.getParameter("itemID");
@@ -190,7 +194,9 @@ public class EzConnController {
 				} else if (cmd != null && cmd.equals("mailRead")) {
 					String mailFullPath = request.getParameter("mailFullPath");
 					
-					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");					
+					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
+				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
+					resultPage = "/ezSchedule/scheduleIndex.do?funCode=2";
 				} else {				
 					String subCode = "1";
 					
