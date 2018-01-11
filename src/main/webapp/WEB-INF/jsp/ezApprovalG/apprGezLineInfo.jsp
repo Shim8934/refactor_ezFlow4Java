@@ -292,7 +292,7 @@
 		    <li id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()" ><spring:message code='ezApprovalG.t946'/></span></li>
 		  </ul>
 		</div>
-		<div class="listview" style="overflow-x:auto;WIDTH:574px;"><div id="lvAprLine" style="HEIGHT:120px;WIDTH:572px;margin:1px 1px 1px 1px; "></div></div>
+		<div class="listview" style="overflow-x:auto;"><div id="lvAprLine" style="HEIGHT:120px;WIDTH:572px;"></div></div>
 		<script type="text/javascript" >
 			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
