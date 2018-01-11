@@ -415,14 +415,25 @@
 			        		_userName = JSON.parse(updatedInfo.body).userName2;
 			        	}
 			        	
-			            if (_userId != curentUser || _sessionID != sessionId) {			          		
+/* 			            if (_userId != curentUser || _sessionID != sessionId) {			          		
 			            	if (_cmdId <= commentIndex) {
 			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
 			          		}
 			            	
 			            	updateNewCmt(_userId, _userName, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto);
-					    }
+					    } */
+		            	if (_cmdId < commentIndex) {
+		          			alert("<spring:message code = 'ezPoll.t114'/>");
+		          			return;
+		          		}
+		            	else {
+		            		if (_cmdId > commentIndex) {
+		            			commentIndex = commentIndex + 1;
+		            		}
+		            	}
+		            	
+		            	updateNewCmt(_userId, _userName, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto);
 				    });
 			        
 			        stompClient.subscribe('/reply/editCmtForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
@@ -435,14 +446,21 @@
 			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
 			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;			        	
 
-			            if (_userId != curentUser || _sessionId != sessionId) {			          		
+/* 			            if (_userId != curentUser || _sessionId != sessionId) {			          		
 			            	if (_cmdId > commentIndex) {
 			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
 			          		}
 			            	
 			            	updateCurrentCmt(_cmdId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent);
-					    }
+					    } */
+					    
+			        	if (_cmdId > commentIndex) {
+		          			alert("<spring:message code = 'ezPoll.t114'/>");
+		          			return;
+		          		}
+		            	
+		            	updateCurrentCmt(_cmdId, _attachFilePath, _fileType, _fileName, _filePath, _txtContent);					    
 				    });
 			        
 			        stompClient.subscribe('/reply/deleteCmtInQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
@@ -450,7 +468,7 @@
 			        	var _userId = JSON.parse(updatedInfo.body).userId;
 			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;			        	
 
-			            if (_userId != curentUser || _sessionId != sessionId) {			          		
+			            /* if (_userId != curentUser || _sessionId != sessionId) {			          		
 			            	if (_cmdId > commentIndex) {
 			          			alert("<spring:message code = 'ezPoll.t114'/>");
 			          			return;
@@ -461,7 +479,17 @@
 			            	}
 			            	
 			            	deleteCurrentCmt(_cmdId);
-					    }
+					    } */
+					    /*if (_cmdId > commentIndex) {
+		          			alert("<spring:message code = 'ezPoll.t114'/>");
+		          			return;
+		          		} */
+		            	
+		            	if (_cmdId == commentIndex) {
+		            		commentIndex = commentIndex - 1;
+		            	}
+		            	
+		            	deleteCurrentCmt(_cmdId);
 				    });
 			        
 			        stompClient.subscribe('/reply/getResultUpdateForQst' + qstId + "+" + tenantId, function (updatedInfo) {
@@ -1056,7 +1084,71 @@
 		    	currentEditingCmt = -1;
 		    }
 		    
-		    function saveEditComment(obj) {		    	
+		    function saveEditComment(obj) { 	
+		    	var fd = new FormData();
+		    	currentEditingCmt = -1;
+		    	var commentIndex = obj.getAttribute("_cmtIndex");
+		    	var div2Cmt = document.getElementById("div2Cmt" + commentIndex);
+				
+				if (document.getElementById("editCmtArea" + commentIndex).value != "") {
+					fd.append("cmtTxt", document.getElementById("editCmtArea" + commentIndex).value);
+				}	
+
+				if (document.getElementById("descriptCmt" + commentIndex).style.display != "none") {
+					var fileType = document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_type");
+		    		fd.append("fileType", fileType);
+					
+					if (div2Cmt.childElementCount == 1) {			    			
+		    			if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {	                					    	
+					    	if (fileType != "sticker" && fileType != "images") {				    		
+					    		fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");					    		
+					    		fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
+			    			}
+					    	
+					    	fd.append("cmtAttach", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+		    			}
+		    			else {   				
+							if (fileType != "sticker" && fileType != "images") {			    				
+			    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");	
+			    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
+			    			}
+		    				
+		    				fd.append("cmtAttach", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+		    			}
+		    		}
+		    		else {   					    			
+		    			if (fileType != "sticker" && fileType != "images") {   					    				
+		    				fd.append("fileName", document.getElementById("descriptCmt" + commentIndex).lastElementChild.getAttribute("_orgName") || "");	
+		    				fd.append("filePath", document.getElementById("descriptCmt" + commentIndex).firstElementChild.getAttribute("_fileInfo"));
+		    			}
+		    			
+		    			fd.append("cmtAttach", document.getElementById("descriptCmt" + commentIndex).firstElementChild.src);
+		    		}					
+					
+				}
+				
+				//Delete all child element of editCmtDiv
+		    	var editDiv2Cmt = document.getElementById("editCmtDiv" + commentIndex);
+		    	
+		    	while (editDiv2Cmt.hasChildNodes()) {
+		    		editDiv2Cmt.removeChild(editDiv2Cmt.lastChild);
+		    	}
+		    	
+		    	editDiv2Cmt.style.display = "none";	
+		    	
+		    	//Enable div2Cmt, sendComment and edit option
+		    	//div2Cmt.style.display = "inline-block";
+		    	document.getElementById("_eCmt" + commentIndex).style.display = "block";
+		    	document.getElementById("sendComment").style.display = "block";
+		    	
+		    	//Send an update comment request to server
+		        fd.append("qstId", qstId);
+		        fd.append("cmtId", commentIndex);		        		        
+	    	    xhr1.open("POST", "/ezPoll/editComment.do");
+	    	    xhr1.send(fd);
+			}		
+		    
+/* 		    function saveEditComment(obj) {		    	
 		    	var fd = new FormData();
 		    	currentEditingCmt = -1;
 		    	var commentIndex = obj.getAttribute("_cmtIndex");
@@ -1287,7 +1379,7 @@
 		        fd.append("cmtId", commentIndex);		        		        
 	    	    xhr1.open("POST", "/ezPoll/editComment.do");
 	    	    xhr1.send(fd); 		  
-		    }
+		    } */ 
 		    
 		    function deleteComment(obj) {
 		    	var id = obj.getAttribute("_comtIndex");
@@ -1317,7 +1409,92 @@
 		    	currentEditingCmt = -1;
 		    }
 		    
-		    function sendComment() {		    	
+			function sendComment() {		    	
+		    	var fd = new FormData();
+		    	commentIndex = commentIndex + 1;
+		    	document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
+		    	document.getElementById("sendBttn").disabled = true;		    		    		    		    	
+		    	var currentText = document.getElementById("comment_input").value;	//de lai	    			    	
+
+                //Add text comment if exists
+                if (currentText.length > 0) {                	
+                	fd.append("cmtTxt", currentText);
+                }
+                
+                //Add files/sticker if exists
+                var uploadFileElement = document.getElementById("uploadedFile");   
+                
+		        if (uploadFileElement.style.display !== "none") {
+		        	var img2ForUpFileElmt = uploadFileElement.lastElementChild;
+		        	var fileinfo = img2ForUpFileElmt.getAttribute("_fileInfo");	
+		        	var fileType = img2ForUpFileElmt.getAttribute("_type");	
+			    	var orgFileName = "";	
+			    	
+			    	if (fileType == "file") {
+			    		orgFileName = fileinfo.split("/")[1];  		
+			    	}
+			    	else {
+			    		orgFileName = fileinfo.split("/")[4];
+			    	}			    	
+			    	
+			    	var ext = orgFileName.split('.').pop().toLowerCase();
+					var imgSrc = null;
+			    	
+			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {	   			    		
+			    		if (fileType == "file") {			    						    		
+				    		fd.append("fileType", "file");						    	
+				    		imgSrc= "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];
+				    	}
+				    	else {			    						    		
+				    		fd.append("fileType", "sticker");					    	
+				    		imgSrc = fileinfo;				    		   
+				    	}
+			    	}
+			    	else {			    		
+			    		fd.append("fileType", "file");
+				    	
+				    	if (ext == "doc" || ext == "docx") {
+				    		imgSrc = "/images/msWord.png";
+				    	}
+				    	else if (ext == "ppt" || ext == "pptx") {
+				    		imgSrc = "/images/msPowerpoint.png";
+				    	}
+				    	else if (ext == "xls" || ext == "xlsx") {
+				    		imgSrc = "/images/msExcel.png";
+				    	}
+				    	else if (ext == "hwp") {
+				    		imgSrc = "/images/hancomHWP.png";
+				    	}
+				    	else if (ext == "pdf") {
+				    		imgSrc = "/images/pdfIcon.png";
+				    	}
+				    	else {
+				    		imgSrc = "/images/cmtFile.png";
+				    	}		    	
+			    		
+			    		fd.append("fileName", fileinfo.split("/")[1]);
+			    		fd.append("filePath", fileinfo.split("/")[0]);
+			    	}	
+			    	fd.append("cmtAttach", imgSrc);
+		        }           
+                
+                //Clean the place
+                document.getElementById("comment_input").value = "";          
+		        document.getElementById("uploadedFile").style.display = "none"; 
+		        document.getElementById("sendComment").style.height = "66px";
+		        document.getElementById("comment_input").style.height = "15px";
+		        //window.scrollTo(0, document.body.scrollHeight);
+		        
+		        //Send add comment request to server
+		        fd.append("qstId", qstId);
+		        fd.append("cmtId", commentIndex);
+		        fd.append("cmtTime", formatCmtTime());	        		       
+		        
+	    	    xhr1.open("POST", "/ezPoll/addComment.do");
+	    	    xhr1.send(fd); 		        
+		    }
+		    
+		    /* function sendComment() {		    	
 		    	var fd = new FormData();
 		    	commentIndex = commentIndex + 1;
 		    	document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
@@ -1513,7 +1690,7 @@
 		        
 	    	    xhr1.open("POST", "/ezPoll/addComment.do");
 	    	    xhr1.send(fd); 		        
-		    }
+		    } */
 		    
 		    function formatCmtTime() {		    	
 		    	var strTime = new Date().toTimeString().split(" ")[0];
@@ -1901,8 +2078,7 @@
 		    	}
 		    }
 		    
-		    function updateNewCmt(userId, userName, attach, type, name, path, txtContent, cmtTime, userPhoto) {
-		    	commentIndex = commentIndex + 1;
+		    function updateNewCmt(userId, userName, attach, type, name, path, txtContent, cmtTime, userPhoto) {		    	
 		    	var oTable = document.getElementById("commentListView");
 		    	
 		    	//Create the tr element
@@ -2037,7 +2213,9 @@
                 }                
                                                         
                 objTr.appendChild(objTd3);             
-                oTable.appendChild(objTr);  
+                oTable.appendChild(objTr);
+                
+                window.scrollTo(0, document.body.scrollHeight);
 		    }
 		    
 		    function updateCurrentCmt(cmdId, attachFilePath, fileType, fileName, filePath, txtContent) {	    			    	
@@ -2068,8 +2246,8 @@
 		    			div2Cmt.removeChild(div2Cmt.children[1]);
 		    		}
 		    	}
-		    	else {	    			    		
-		    		if (div2Cmt.childElementCount == 1) {		    			
+		    	else {					
+		    		if (div2Cmt.childElementCount == 1) {						
 		    			if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {		                	
 		    				var innerDiv1 = document.createElement("div");
 		                	innerDiv1.setAttribute("style", "padding-top: 5px;");
@@ -2123,6 +2301,7 @@
 			    					div2Cmt.firstElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 			    				}
 			    				
+			    				div2Cmt.firstElementChild.children[0].setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
 		    					div2Cmt.firstElementChild.children[0].setAttribute("_type", "sticker");					    		
 		    					div2Cmt.firstElementChild.children[0].setAttribute("height", "80");
 		    					div2Cmt.firstElementChild.children[0].setAttribute("width", "80");	
@@ -2176,6 +2355,7 @@
 		    					div2Cmt.lastElementChild.removeChild(div2Cmt.lastElementChild.children[1]);	    					
 		    				}
 		    				
+		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px;");
 	    					div2Cmt.lastElementChild.children[0].setAttribute("_type", "sticker");					    		
 	    					div2Cmt.lastElementChild.children[0].setAttribute("height", "80");
 	    					div2Cmt.lastElementChild.children[0].setAttribute("width", "80");
@@ -2190,7 +2370,7 @@
 		    				
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_type", "images");				    		
 		    				div2Cmt.lastElementChild.children[0].setAttribute("style", "cursor: pointer; padding-left: 10px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
-		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;	
+		    				div2Cmt.lastElementChild.children[0].src = attachFilePath;
 		    				div2Cmt.lastElementChild.children[0].setAttribute("_fileInfo", attachFilePath); 
 		    				div2Cmt.lastElementChild.children[0].onclick = function () { downloadFileInCmt(this); };
 		    			}
@@ -2223,10 +2403,18 @@
 		    			}		    			
 		    		}
 		    	}
+		    	
+		    	if (div2Cmt.style.display == "none") {
+		    		div2Cmt.style.display = "inline-block";
+		    	}
 		    }
 		    
 		    function deleteCurrentCmt(cmdId) {
 		    	var div2Cmt = document.getElementById("div2Cmt" + cmdId);
+		    	
+		    	if (div2Cmt == null) {
+		    		return;
+		    	}
 		    	
 	    		//Delete this row in comment table
 	    		var oTable = document.getElementById("commentListView");
