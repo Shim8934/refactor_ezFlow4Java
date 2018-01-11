@@ -885,8 +885,8 @@
 				<td style="height: 20px;">
 					<table class="content" style="width:100%">
 						<tr>
-							<th style="width:17%"><spring:message code='ezCommunity.t1168' /></th>
-							<td style="width:80%" id="tdBoardName">${boardInfo.boardName }</td>
+							<th style="width:15%"><spring:message code='ezCommunity.t1168' /></th>
+							<td style="width:85%" id="tdBoardName">${boardInfo.boardName }</td>
 						</tr>
 	
 						<c:choose>

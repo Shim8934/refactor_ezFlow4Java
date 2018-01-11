@@ -9,7 +9,7 @@
 	        <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	        <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
-	        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	    	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	        <style type="text/css">PRE {font-size:x-small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    	<script language="javascript" type="text/javascript">
@@ -232,20 +232,6 @@
 			        function Schedule_btn(pGubun) {
 			            parent.mtg_onClick(pGubun);
 			        }
-			        function mail_link(a){
-			        	var real_href = "";
-			        	var link = $("#approv_a").attr("href").split("/");
-			        	
-			        	for (var i = 1; i < link.length; i++) {
-			        		real_href += "/" + link[i];
-			        	}
-			        	
-			        	
-			        	console.log(real_href)
-			        	
-			        	$("#approv_a").attr("href", real_href);
-			        }
-
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

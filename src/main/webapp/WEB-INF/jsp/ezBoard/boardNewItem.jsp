@@ -529,7 +529,7 @@
 		            alert("<spring:message code='ezBoard.t389' />");
 		            return;
 		        }
-		        if (document.getElementById("txtTitle").value == "") {
+		        if (document.getElementById("txtTitle").value == "" || trim(document.getElementById("txtTitle").value) == "") {
 		            alert("<spring:message code='ezBoard.t390' />");
 		            Tab1_MouseClick(document.getElementById("1tab1"));
 		            document.getElementById("txtTitle").focus();

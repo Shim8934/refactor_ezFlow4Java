@@ -78,11 +78,11 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
     }
 }
 
-function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
+function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method) {
     var dosend = GetNoticeMail(to, type);  
         if (!dosend && isCheck == undefined)
         return;
-        var id = to;
+    var id = to;
     var to = getmailaddress(id);
     var deptid = to.split(",")[2];
     to = to.split(",")[0] + "," + to.split(",")[1];
@@ -91,21 +91,21 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     var Content = "";
     //메일에서 문서 볼 수 있는 문서 생성 변수
     var Approv_a = "";
-    Content = strLang1124 + "  | " + eSubject + "<br>";
+    Content = "<span style='font-size:13pt;'>" + strLang1124 + "</span>: " + eSubject + "<br>";
     if (type == "SIHANG") {
-        Content += strLang1107 + " | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1107 + "</span>: " + Drafter + "<br>";
     }
     else if (type == "SIMSABANSONG") {
-        Content += strLang1108 + " | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1108 + "</span>: " + Drafter + "<br>";
     }
     else {
-        Content += strLang1109 + " | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1109 + "</span>: " + Drafter + "<br>";
     }
     if (pDraftDate != "") {
     	if (pDraftDate.slice(-2) == ".0") {
     		pDraftDate = pDraftDate.substring(0, pDraftDate.length - 2);
     	}
-    	Content += strLang332 + " | " + pDraftDate + "<br>";
+    	Content += "<span style='font-size:13pt;'>" + strLang332 + "</span>: " + pDraftDate + "<br>";
     }
 
     if (type == "callback") Subject = strLang1111;
@@ -122,9 +122,10 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else if (type == "hukyul") Subject = strLang1121;
     else Subject = strLang1122;
     
-    if(Subject==strLang1122) {
-    	   Approv_a += Drafter + strLangSpjj34 + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(this);' style='cursor: pointer; font-size: 15px; color: blue;'>"+ strLangSpjj33 + "</a><br><br><h3>결재 요약 </h3><br>";
-
+    if(Subject == strLang1122) {
+    	if (Method != "007") {
+    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(href.this); return false;' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>결재 요약 </span><br>";
+    	}
     }
     
     Subject += " " + eSubject;
@@ -149,28 +150,27 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Approv_a + Content +"</td></tr></table>";
 
     try {
-            var Result = "";
-	        $.ajax({
-	    		type : "POST",
-	    		dataType : "text",
-	    		async : false,
-	    		data : {
-	    			Content : Content,
-	    			Subject : Subject,
-	    			to  : to,
-	    			from : from
-	    		},
-	    		url : "/ezApprovalG/mail_intersend.do",
-	    		success: function(xml){
-	    
-	    		}        			
-	    	});
+        var Result = "";
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		data : {
+    			Content : Content,
+    			Subject : Subject,
+    			to  : to,
+    			from : from
+    		},
+    		url : "/ezApprovalG/mail_intersend.do",
+    		success: function(xml){
+    
+    		}        			
+    	});
     }
     catch (e) {
         alert(e.description);
     }
 }
-
 
 function MakeXmlNode(xmldoc, root, key, value) {
     var childNode = xmldoc.createElement(key);
@@ -192,10 +192,8 @@ function ReplaceText(orgStr, findStr, replaceStr) {
 }
 
 function GetNoticeMail(UserID, type) {
-
     if (type == "daeree")
         return true
-
 
     var xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
@@ -217,8 +215,7 @@ function GetNoticeMail(UserID, type) {
     var objNodes = SelectNodes(xmlDocument, "DATA");
     if (objNodes.length <= 0) {
         return false;
-    }
-    else {
+    } else {
         s_alertMail     = getNodeText(SelectNodes(xmlDocument, "DATA/ALERT")[0]); 
         s_completeMail  = getNodeText(SelectNodes(xmlDocument, "DATA/COMPLETE")[0]);  
         s_bansongMail   = getNodeText(SelectNodes(xmlDocument, "DATA/BANSONG")[0]); 
@@ -227,44 +224,32 @@ function GetNoticeMail(UserID, type) {
         SaveSendBoxFlag = getNodeText(SelectNodes(xmlDocument, "DATA/SAVEMAILFLAG")[0]);  
     }
 
-
     if (type == "" || type == "susin" || type == "SIHANG" || type == "SIMSAALERT" || type == "hukyul") {
         if (s_alertMail == 1)
             return true;
         else
             return false;
-
-    }
-    
-    else if (type == "approve_complete") {
+    } else if (type == "approve_complete") {
         if (s_completeMail == 1)
             return true;
         else
             return false;
-
-    }
-    
-    else if (type == "hesong") {
+    } else if (type == "hesong") {
         if (s_hesongMail == 1)
             return true;
         else
             return false;
-    }
-    
-    else if (type == "bansong" || type == "SIMSABANSONG" || type == "opinion") {
+    } else if (type == "bansong" || type == "SIMSABANSONG" || type == "opinion") {
         if (s_bansongMail == 1)
             return true;
         else
             return false;
-    }
-    
-    else if (type == "callback") {
+    } else if (type == "callback") {
         if (s_callbackMail == 1)
             return true;
         else
             return false;
     }
-
 }
 
 function getmailaddress(id) {
@@ -392,7 +377,7 @@ function sendNextMail(isDept, nextID, Method) {
         sendmailBusu(nextID, Method);
     }
     else {
-        sendmail(nextID, MDrafttitle, MdraftName, Mdraftdate, "", "");
+        sendmail(nextID, MDrafttitle, MdraftName, Mdraftdate, "", "", undefined, Method);
     }
 }
 
