@@ -42,8 +42,26 @@
     
     <select id="EzCircularDAO.getCircularList" resultClass="CircularListVO" >
         <![CDATA[
-            
-            SELECT * FROM 
+            SELECT
+				circularid,
+                importance,
+                hasfile,
+                status,
+                updateStatus,
+                title,
+                memberid,
+                membername,
+                regdate,
+                confirmstatus,
+                confirmdate,
+                updatedate,
+                confirmcount,
+				confirmtotalcount,
+				commentStatus,
+				shareStatus,
+				totalstatus
+			FROM
+            (SELECT AAA.*, rownum as rNum FROM 
             (SELECT
                 A.circularid,
                 A.importance,
@@ -55,34 +73,15 @@
                 A.membername,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
                 B.status AS confirmstatus,
-                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS confirmdate,
-                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS updatedate,
+                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
                 NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
 				B.commentStatus,
 				B.shareStatus,
-				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus,
-		]]>
-		  	            	
-			row_number() over (
-			<isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	order by  
-            	$orderOption1$
-            ]]>
-       		 </isNotEqual>
-        
-	        <isEqual property="orderCell" compareValue="">
-	        	<![CDATA[
-	        		order by     
-	            	totalstatus DESC,
-	            	B.updatedate DESC,
-	            	A.regdate DESC
-	            ]]>
-	        </isEqual>
+				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus
 	        
-		<![CDATA[	
-	        ) as rNum
+	        
 				
 				
             FROM
@@ -96,7 +95,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_NUMBER(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmCount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -134,7 +133,7 @@
             WHERE
             	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
-            	A.status != '2'
+            	A.status <> '2'
             	
 		]]>
 		
@@ -168,7 +167,28 @@
                 B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
-        )
+        ]]>
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+				
+            	order by  
+	            	$orderOption1$
+	           
+            ]]>
+      	</isNotEqual>
+       
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+		      
+        		order by     
+	            	B.updatedate DESC,
+	            	totalstatus DESC,
+	            	A.regdate DESC
+        
+            ]]>
+        </isEqual>    
+        <![CDATA[        
+        )AAA)
         
         WHERE 
             rNum between (#limit# + 1) and (#limit# + #rowCount#)
@@ -190,7 +210,7 @@
             WHERE
             	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
-            	A.status != 2
+            	A.status <> 2
             AND
                 B.memberid = #memberID#
             AND
@@ -233,8 +253,8 @@
                 A.title,
                 A.memberid,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
-                A.option,
-                A.content,
+                A."option",
+                A."content",
                 A.memberName,
                 NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
@@ -298,9 +318,9 @@
             	B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
-            GROUP BY
-            	A.circularid
         ]]>
+         <!--    GROUP BY
+            	A.circularid -->
     </select>
 
     <select id="EzCircularDAO.getCircularUserList" resultClass="CircularListVO" >
@@ -312,7 +332,7 @@
                 A.membername,
                 A.membername2,
                 A.status,
-                NVL(TO_CHAR(TO_DATE(A.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS confirmdate,
+                NVL(TO_CHAR(TO_DATE(A.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
                 A.updatestatus,
                 A.updatedate,
                 A.commentstatus,
@@ -344,10 +364,11 @@
        		</isEqual>
 		</isNotEqual>
 		
+				<!-- FIELD(A.memberid, (SELECT memberID FROM TBL_CIRCULAR WHERE circularid = #circularID#)) DESC, 
+				A.memberid ASC-->
 		<![CDATA[
 			ORDER BY
-				FIELD(A.memberid, (SELECT memberID FROM TBL_CIRCULAR WHERE circularid = #circularID#)) DESC,
-				A.memberid ASC;
+				A.memberid ASC
 		]]>
     </select>
     
@@ -394,15 +415,19 @@
                 A.circularbmid,
                 A.title,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate, 
+                
+                (SELECT membername FROM
                 (SELECT
-                	membername 
-                 FROM
-                 	TBL_CIRCULAR_BMUSER 
-                 WHERE
-                 	circularbmid = A.circularbmid 
-                 ORDER BY
-                 	circularbmuserid
-                 LIMIT 1) membername,
+                	membername, row_number() over(ORDER BY circularbmuserid) as rNum 
+                FROM
+                 	TBL_CIRCULAR_BMUSER B 
+                JOIN 
+                 	TBL_CIRCULAR_BM C	
+                ON
+                 	B.circularbmid = C.circularbmid 
+                 
+                ) WHERE rNum = 1) as membername,
+	                
              	(SELECT
              		COUNT(*) - 1 
              	 FROM
@@ -462,8 +487,23 @@
   
     <select id="EzCircularDAO.getCircularCompleteList" resultClass="CircularListVO" >
         <![CDATA[
-			SELECT * FROM
-			
+			SELECT 
+				circularid,
+				importance,
+				hasfile,
+				status,
+				title,
+				memberid,
+				membername,
+				regdate,
+				confirmstatus,
+			 	confirmdate,
+				updatedate,
+				updatestatus,
+                confirmcount,
+				confirmtotalcount
+			FROM
+			(SELECT AAA.*, rownum as rNUM FROM
 			(SELECT
 				A.circularid,
 				A.importance,
@@ -474,29 +514,12 @@
 				A.membername,
 				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 				B.status AS confirmstatus,
-				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS confirmdate,
-				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS updatedate,
+				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
 				B.updatestatus,
                 NVL(C.confirmcount, '0') AS confirmcount,
-				D.confirmtotalcount,
-				row_number() over(
-			]]>
-			<isNotEqual property="orderCell" compareValue="">
-	        	<![CDATA[
-	        		ORDER BY
-	            		$orderOption1$
-	            ]]>
-	        </isNotEqual>
-	        
-	        <isEqual property="orderCell" compareValue="">
-	        	<![CDATA[
-	        		ORDER BY
-	            		A.regdate DESC
-	            ]]>
-	        </isEqual>
-		<![CDATA[
-	        ) as rNum
-				
+				D.confirmtotalcount
+							
 			FROM
 				TBL_CIRCULAR A
 			JOIN
@@ -544,13 +567,13 @@
 			ON
 				A.circularid = D.circularid
 			WHERE
-				A.STATUS != '2'
+				A.STATUS <> '2'
 			AND
 				B.updatestatus IN (0, 1)
 			AND
 				B.memberid = #memberID#
 			AND
-				A.memberid != #memberID#
+				A.memberid <> #memberID#
 			AND
 				A.tenantid = #tenantID#
 		]]>
@@ -579,8 +602,28 @@
 	        ]]>
 	       
 	    </isNotEqual>
+	   
+		<isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[
+				
+        		ORDER BY
+            		$orderOption1$
+				
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+			
+        		ORDER BY
+            		A.regdate DESC
+			
+            ]]>
+        </isEqual>
+	
+	        
 		<![CDATA[
-	       )
+	       )AAA)
 	       WHERE
 				rNum between (#limit# + 1) and (#limit# + #rowCount#)     
         ]]>
@@ -601,13 +644,13 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	A.STATUS != '2'
+            	A.STATUS <> '2'
             AND
             	B.updatestatus IN (0, 1)
             AND
                 B.memberid = #memberID#
             AND
-				A.memberid != #memberID#
+				A.memberid <> #memberID#
             AND
                 A.tenantid = #tenantID#
         ]]>
@@ -688,8 +731,22 @@
   
     <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
         <![CDATA[
-            SELECT * FROM
-            
+            SELECT 
+				circularid, 
+                importance,
+             	hasfile,
+                status,
+                title,
+              	memberid,
+                membername,
+            	confirmstatus,
+          		regdate,
+             	confirmdate,
+                updatedate,
+                confirmcount,
+				confirmtotalcount
+			FROM
+            (SELECT AAA.*, rownum as rNum FROM
             (SELECT
                 DISTINCT A.circularid, 
                 A.importance,
@@ -700,32 +757,11 @@
                 A.membername,
                 B.status AS confirmstatus,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
-                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS confirmdate,
-                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS updatedate,
+                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
                 NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
-				row_number() over(
-				
-		]]>
-        
-        <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-        		order by 
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
-        
-        <isEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	order by 	
-            	A.regdate DESC
-            ]]>
-        </isEqual>
-        
-        
-        
-       	<![CDATA[
-        ) as rNum
+				A.regdate as aRegdate
 				
             FROM
                 TBL_CIRCULAR A
@@ -808,9 +844,31 @@
                 A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
-            GROUP BY
-            	A.circularID
-           )
+        ]]>
+        
+           <!--  GROUP BY
+            	A.circularID -->
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+		
+        		order by 
+            	$orderOption1$
+      
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+	
+            	order by 	
+            	A.regdate DESC
+		        
+            ]]>
+        </isEqual>
+              
+        
+       	<![CDATA[	
+           )AAA)
            WHERE
 	            rNum between (#limit# + 1) and (#limit# + #rowCount#)
        ]]>
@@ -842,7 +900,7 @@
 			AND
 				A.tenantid = B.tenantid
 			WHERE
-				A.status != 2
+				A.status <> 2
 			AND
 				B.UPDATESTATUS IN (0, 1)
 			AND
@@ -880,8 +938,24 @@
   
     <select id="EzCircularDAO.getMyCircularList" resultClass="CircularListVO" >
         <![CDATA[
-			SELECT * FROM
+			SELECT 
+				circularid,
+				importance,
+				hasfile,
+				status,
+				title,
+				memberid,
+				membername,
+				regdate,
+				confirmstatus,
+				confirmdate,
+				updatedate,
+				updatestatus,
+				confirmcount,
+				confirmtotalcount
 			
+			FROM
+			(SELECT AAA.*, rownum as rNum FROM
 			(SELECT
 				A.circularid,
 				A.importance,
@@ -892,30 +966,13 @@
 				A.membername,
 				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 				B.status AS confirmstatus,
-				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS confirmdate,
-				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS updatedate,
+				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
 				B.updatestatus,
 				NVL(C.confirmcount, '0') AS confirmcount,
-				D.confirmtotalcount,
-				row_number() over(
+				D.confirmtotalcount
 				
-		]]>
 		
-		<isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-        		order by 
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
-        
-        <isEqual property="orderCell" compareValue="">
-        	<![CDATA[
-        		order by 
-        		A.regdate DESC
-        	]]>
-        </isEqual>
-		<![CDATA[ 
-        ) as rNum
 			FROM
 				TBL_CIRCULAR A
 			JOIN
@@ -969,7 +1026,7 @@
 			AND
 				A.tenantid = #tenantID# 
 			AND
-				A.status != 2
+				A.status <> 2
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -996,13 +1053,34 @@
 	        ]]>
 	    </isNotEqual>
         
+			<!-- GROUP BY
+				A.circularid -->
 		<![CDATA[
 			AND
 				B.updatestatus IN (0, 1)
 			
-			GROUP BY
-				A.circularid
-			)
+		]]>
+		
+		<isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+	       		ORDER BY 
+				
+            		$orderOption1$
+
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+		
+        		order by 
+        			A.regdate DESC
+		       
+        	]]>
+        </isEqual>
+		<![CDATA[ 		
+				
+			)AAA)
 			WHERE
 				rNum between (#limit# + 1) and (#limit# + #rowCount#)
 			
@@ -1026,8 +1104,23 @@
 	
 	<select id="EzCircularDAO.getCircularTDList" resultClass="CircularListVO" >
         <![CDATA[
-           SELECT * FROM
-           
+           SELECT
+           	 	circularid,
+                importance,
+                hasfile,
+                status,
+                title,
+                memberid,
+                membername,
+              	regdate,
+                confirmstatus,
+           		confirmdate,
+            	updatedate,
+				confirmcount,
+				confirmtotalcount,
+                updatestatus
+           FROM
+           (SELECT AAA.*, rownum as rNum FROM
            (SELECT
                 A.circularid,
                 A.importance,
@@ -1036,32 +1129,15 @@
                 A.title,
                 A.memberid,
                 A.membername,
-                NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS regdate,
+                NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
                 B.status AS confirmstatus,
-                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS confirmdate,
-                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS updatedate,
+                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
 				NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
-                B.updatestatus,
-                row_number() over(
+                B.updatestatus
                 
-        ]]>
-        
-        <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-        		order by 
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
-        
-        <isEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	order by 
-            	A.regdate DESC
-            ]]>
-        </isEqual>
-       	<![CDATA[
-        ) as rNum
+      
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -1132,10 +1208,33 @@
         	</isEqual>
         </isNotEqual>
 				        
+           <!--  GROUP BY
+				A.circularid -->
         <![CDATA[
-            GROUP BY
-				A.circularid
-		)
+				
+		]]>
+        
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+           
+        		order by 
+       	     		$orderOption1$
+     		
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+	            
+            	order by 
+            		A.regdate DESC
+      		
+            ]]>
+        </isEqual>
+       	<![CDATA[		
+				
+				
+		)AAA)
 		WHERE
            	rNum between (#limit# + 1) and (#limit# + #rowCount#)
 		
@@ -1242,8 +1341,22 @@
     
     <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
         <![CDATA[
-			SELECT * FROM
-			
+			SELECT 
+				circularid,
+				importance,
+				hasfile,
+				status,
+				title,
+				memberid,
+				membername,
+				regdate,
+				confirmstatus,
+				confirmdate,
+				updatestatus,
+				confirmcount,
+				confirmtotalcount
+			FROM
+			(SELECT AAA.*, rownum as rNum FROM
 			(SELECT
 				distinct A.circularid,
 				A.importance,
@@ -1252,32 +1365,14 @@
 				A.title,
 				A.memberid,
 				A.membername,
-				NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS regdate,
+				NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
 				d.status as confirmstatus,
-				NVL(TO_CHAR(TO_DATE(D.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), '') AS confirmdate,
+				NVL(TO_CHAR(TO_DATE(D.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
 				D.updatestatus,
 				NVL(E.confirmcount, '0') AS confirmcount,
 				F.confirmtotalcount,
-				row_number() over(
-				
-		]]>
-        
-        <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-        		order by 
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
-        
-        <isEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-        		order by 
-            	A.regdate DESC
-            ]]>
-        </isEqual>
-        
-		<![CDATA[ 
-        ) as rNum 
+				A.regdate as regg
+		
 			FROM
 				TBL_CIRCULAR A
 			JOIN
@@ -1370,8 +1465,31 @@
 				D.updatestatus = '3'  
 			AND
 				A.tenantid = #tenantID#
+			
+		]]>
+        
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+			
+        		order by 
+            		$orderOption1$
+		       
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+			
+        		order by 
+            		A.regdate DESC
+		       
+            ]]>
+        </isEqual>
+        
+		<![CDATA[ 
 				
-			)
+			)AAA)
+		
 			WHERE
 				rNum between (#limit# + 1) and (#limit# + #rowCount#)
 		]]>
@@ -1422,7 +1540,7 @@
 	<select id="EzCircularDAO.getListHeader" parameterClass="Map" resultClass="CircularListHeaderVO">
 		<![CDATA[
 			SELECT 
-				NVL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END, '') name,
+				NVL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END, ' ') name,
 				width,
 				colname
 			FROM 
@@ -1622,7 +1740,7 @@
 				WHERE
 					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
 				AND
-					A.status != 2
+					A.status <> 2
 				AND
 					B.memberid = #userID#
 				AND
@@ -1642,13 +1760,13 @@
 				AND
 					A.tenantid = B.tenantid
 				WHERE
-					A.status != '2'
+					A.status <> '2'
 				AND
 					B.updatestatus IN (0, 1)
 				AND
 					B.memberid = #userID#
 				AND
-					A.memberid != #userID#
+					A.memberid <> #userID#
 				AND
 					A.tenantid = #tenantID#
 			]]>
@@ -1666,7 +1784,7 @@
 				AND
 					A.tenantid = B.tenantid
 				WHERE
-					A.status != 2
+					A.status <> 2
 				AND
 					B.UPDATESTATUS IN (0, 1)
 				AND
@@ -1771,14 +1889,14 @@
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR
-                (circularid, title, importance, option, content, hasfile, status, memberid, membername, membername2, regdate, enddate, tenantid)
+                (circularid, title, importance, "option", "content", hasfile, status, memberid, membername, membername2, regdate, enddate, tenantid)
             VALUES
-                (#circularID#, #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#)
+                ((select (case when max(circularid) is null then 1 else max(circularid)+1 end) from tbl_circular), #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#)
         ]]>
         
-        <selectKey keyProperty="circularid" resultClass="Integer">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
+        <selectKey keyProperty="circularid" resultClass="Integer" >
+			SELECT max(circularid) from tbl_circular
+		</selectKey> 
     </insert>
   
     <insert id="EzCircularDAO.insertCircularUser" parameterClass="Map">
@@ -1786,16 +1904,16 @@
             INSERT INTO TBL_CIRCULAR_USER
                 (circularuserid, circularid, memberid, membername, membername2, status, confirmdate, updatestatus, tenantid)
             VALUES
-                (#circularUserID# ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#)
+                ((select (case when max(circularuserid) is null then 1 else max(circularuserid)+1 end) from tbl_circular_user) ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#)
         ]]>
     </insert>
   
     <insert id="EzCircularDAO.insertCircularAttach" parameterClass="map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_FILE
-                (circularid, filename, filesize, filepath, tenantid) 
+                (circularfileid, circularid, filename, filesize, filepath, tenantid) 
             VALUES
-                (#circularID#, #fileName#, #fileSize#, #filePath#, #tenantID#)
+                ((select (case when max(circularfileID) is null then 1 else max(circularfileID)+1 end) from tbl_circular_file), #circularID#, #fileName#, #fileSize#, #filePath#, #tenantID#)
         ]]>
     </insert>
 
@@ -1804,28 +1922,29 @@
             INSERT INTO TBL_CIRCULAR_OPTION
             	(circularoptionid, memberid, listcnt,  ispreview,  previewlistvalue, previewcontentvalue,  tenantid)
             VALUES
-            	(#circularOptionID#, #memberID#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantID#)
+            	((select (case when max(circularOptionID) is null then 1 else max(circularOptionID)+1 end) from tbl_circular_option), #memberID#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantID#)
         ]]>
     </insert>
     
     <insert id="EzCircularDAO.setCircularDeptSave" parameterClass="Map">
         <![CDATA[
 			INSERT INTO TBL_CIRCULAR_BM
-				(title, memberid, regdate, tenantid)
+				(circularbmid, title, memberid, regdate, tenantid)
 			VALUES 
-				(#title#, #userID#, #nowDate#, #tenantID#)
+				((select (case when max(circularbmid) is null then 1 else max(circularbmid)+1 end) from tbl_circular_bm), #title#, #userID#, #nowDate#, #tenantID#)
         ]]>
         
         <selectKey resultClass="String">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
+			SELECT max(circularBMid) from tbl_circular_bm
+		</selectKey> 
     </insert>
     
     <insert id="EzCircularDAO.setCircularMemberList" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_BMUSER 
-				(circularbmid, memberid, membername, membername2, tenantid)
+				(circularbmuserid, circularbmid, memberid, membername, membername2, tenantid)
 			SELECT
+				(select (case when max(circularbmuserid) is null then 1 else max(circularbmuserid)+1 end) from tbl_circular_bmuser),
 				#circularBMId#,
 				cn,
 				displayname,
@@ -1843,49 +1962,49 @@
     <insert id="EzCircularDAO.setCircularConfig2" parameterClass="Map">
         <![CDATA[
 			INSERT INTO TBL_CIRCULAR_OPTION 
-				(memberid, listcnt, ispreview, previewlistvalue, previewcontentvalue, tenantid)
+				(circularoptionid, memberid, listcnt, ispreview, previewlistvalue, previewcontentvalue, tenantid)
 			VALUES 
-				(#v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, '50', '50', #v_TENANTID#)
+				((select (case when max(circularoptionid) is null then 1 else max(circularoptionid)+1 end) from tbl_circular_option), #v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, '50', '50', #v_TENANTID#)
 		]]>
     </insert>
     
     <insert id="EzCircularDAO.circularFolderAdd" parameterClass="map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_FOLDER
-                (circularfoldername, memberid, regdate, tenantid) 
+                (circularfolderid, circularfoldername, memberid, regdate, tenantid) 
             VALUES 
-                (#folderName#, #memberId#, #regDate#, #tenantId#)
+                ((select (case when max(circularfolderid) is null then 1 else max(circularfolderid)+1 end) from tbl_circular_folder), #folderName#, #memberId#, #regDate#, #tenantId#)
         ]]>
     </insert>
     
     <insert id="EzCircularDAO.moveCircular2" parameterClass="map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_LINK
-                (circularfolderid, circularid, memberid, tenantid) 
+                (circularlinkid, circularfolderid, circularid, memberid, tenantid) 
             VALUES 
-                (#folderId#, #circularId#, #memberId#, #tenantId#)
+                ((select (case when max(circularlinkid) is null then 1 else max(circularlinkid)+1 end) from tbl_circular_link), #folderId#, #circularId#, #memberId#, #tenantId#)
         ]]>
     </insert>
 
 	<insert id="EzCircularDAO.insertComment" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_COMMENT
-				(circularid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
+				(circularcommentid, circularid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
             VALUES
-                (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #nowDate#, #status#, #tenantID#)
+                ((select (case when max(circularcommentid) is null then 1 else max(circularcommentid)+1 end)from tbl_circular_comment), #circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #nowDate#, #status#, #tenantID#)
 		]]>
 		
 		<selectKey keyProperty="circularcommentid" resultClass="String">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
+			select max(circularcommentid) from tbl_circular_comment 
+		</selectKey> 
 	</insert>
 	
 	<insert id="EzCircularDAO.insertCommentState" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_COMMENTSTATE
-				(circularcommentid, memberid, status, updateDate, tenantid)
+				(circularcommentstateid, circularcommentid, memberid, status, updateDate, tenantid)
             VALUES
-                (#circularCommentID#, #memberID#, #status#, #nowDate#, #tenantID#)
+                ((select (case when max(circularcommentstateid) is null then 1 else max(circularcommentstateid)+1 end) from tbl_circular_commentstate), #circularCommentID#, #memberID#, #status#, #nowDate#, #tenantID#)
 		]]>
 	</insert>
 
@@ -1896,8 +2015,8 @@
             SET
                 title = #title#,
                 importance = #importance#,
-                option = #option#,
-                content = #content#,
+                "option" = #option#,
+                "content" = #content#,
                 hasfile = #hasFile#
             WHERE 
                 circularid = #circularID#
@@ -2069,7 +2188,7 @@
 			WHERE 
 				circularid = #circularID#
 			AND
-				memberid IN ('', #memberID#)
+				memberid IN (' ', #memberID#)
 			AND
 				tenantid = #tenantID#
         ]]>
@@ -2259,8 +2378,8 @@
             SET
                 title = #title#,
                 importance = #importance#,
-                option = #option#,
-                content = #content#,
+                "option" = #option#,
+                "content" = #content#,
                 hasfile = #hasFile#,
                 status = #status#,
                 regdate = #regDate#

@@ -3,6 +3,8 @@
 <sqlMap namespace="ezSystemAdmin">
 
 	<typeAlias alias="SysParamVO" type="egovframework.ezEKP.ezSystem.vo.SysParamVO"/>
+	<typeAlias alias="ConnectionInfoVO" type="egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO"/>
+	
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -28,4 +30,110 @@
 			TENANT_ID=#tenantID#
 	]]>
 	</update>
+	<!--  -->
+	<sql id="EzSystemAdminDAO.searchQuery">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+				<isEqual property="lang" compareValue="1" >
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE '%'||#search_keyword#||'%'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE '%'||#search_keyword#||'%'
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2 LIKE '%'||#search_keyword#||'%'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2 LIKE '%'||#search_keyword#||'%'
+					</isEqual>
+				</isNotEqual>
+				<isEqual property="search_keycode" compareValue="3">
+					CONNECTIP LIKE '%'||#search_keyword#||'%'
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="4">
+					CONNECTBROWSER LIKE '%'||#search_keyword#||'%'
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="5">
+					CONNECTOS LIKE '%'||#search_keyword#||'%'
+				</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			CONNECTTIME + #offset# / (24 * 60) >= #startDate# 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			CONNECTTIME + #offset# / (24 * 60) <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="EzSystemAdminDAO.getLoginHist" parameterClass="map" resultClass="ConnectionInfoVO">
+			
+			SELECT 
+				CONNECTTIME,
+				"SEQUENCE",
+				USERNM,
+				USERNM2,
+				DEPTNM,
+				DEPTNM2,
+				CONNECTIP,
+				CONNECTBROWSER,
+				CONNECTOS
+			
+			FROM 
+			(SELECT  
+					TO_CHAR((C.CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS CONNECTTIME,
+					C."SEQUENCE",
+					C.USERNM,
+					C.USERNM2,
+					C.DEPTNM,
+					C.DEPTNM2,
+					C.CONNECTIP,
+					C.CONNECTBROWSER,
+					C.CONNECTOS,
+					row_number() over(
+						ORDER BY 
+							"SEQUENCE" DESC
+					) as rNum
+					
+			FROM 
+					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+			ON 
+					C.USERID = U.USERID
+			WHERE 
+					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
+					<include refid="EzSystemAdminDAO.searchQuery"/>
+			
+			)
+		<isNotEqual property="v_start" compareValue="-1">
+					
+			WHERE rNum between (#v_start# + 1) and (#pageCount# + #v_start#)
+		</isNotEqual>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getLoginHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE) 
+		FROM   	TBL_CONNECTION_INFO
+		WHERE	TENANT_ID = #v_tenantID#
+				<include refid="EzSystemAdminDAO.searchQuery"/>
+	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteLoginHist" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CONNECTION_INFO
+            WHERE
+            	TENANT_ID = #v_TENANT_ID#	
+            AND
+            	CONNECTTIME < sysdate - #v_KEEP_LOG_PERIOD#
+		]]>
+	</delete>
+	
+	
 </sqlMap>
