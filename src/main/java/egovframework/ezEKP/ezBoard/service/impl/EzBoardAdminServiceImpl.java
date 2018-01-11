@@ -45,6 +45,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	private Properties config;
 	
 	@Autowired
+	private Properties globals;
+	
+	@Autowired
 	private CommonUtil commonUtil;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminServiceImpl.class);

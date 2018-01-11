@@ -96,6 +96,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private Properties globals;
+	
 	@Resource(name = "loginService")
 	private LoginService loginService;
 	
@@ -863,6 +866,7 @@ public class EzBoardController extends EgovFileMngUtil{
     		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
     			boardVO.setBoardType("N");
     			resultXML = getNewItemList(boardVO, userInfo);
+    			System.out.println(resultXML);
     		} else {
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
@@ -1817,7 +1821,13 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA4>N</DATA4>");
 					}
 					resultXML.append("<DATA5>" + boardThumbnailList.get(j).get("FILEPATH") + "</DATA5>");
-					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("MAINCONTENT")) + "</DATA6>");
+					
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA6>");
+					} else {
+						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("MAINCONTENT")) + "</DATA6>");
+					}
+					
 					resultXML.append("<DATA7>" + boardThumbnailList.get(j).get("ONELINECNT") + "</DATA7>");
 					resultXML.append("<DATA8>" + boardThumbnailList.get(j).get("READFLAG") + "</DATA8>");
 				}
@@ -2197,7 +2207,13 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					
 					resultXML.append("<DATA5>" + boardThumbnailList.get(j).get("FILEPATH") + "</DATA5>");
-					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("MAINCONTENT")) + "</DATA6>");
+					
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA6>");
+					} else {
+						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("MAINCONTENT")) + "</DATA6>");
+					}
+					
 					resultXML.append("<DATA7>" + boardThumbnailList.get(j).get("ONELINECNT") + "</DATA7>");
 					resultXML.append("<DATA8>" + boardThumbnailList.get(j).get("READFLAG") + "</DATA8>");
 				}
@@ -2345,7 +2361,13 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardSearchList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardSearchList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardSearchList.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");
+					
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");
+					}
+					
 				}
 				resultXML.append("</CELL>");
 			}
@@ -2475,7 +2497,13 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardList.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
+					
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
+					}
+					
 				}
 				resultXML.append("</CELL>");
 			}
@@ -2633,7 +2661,13 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
 						resultXML.append("<DATA10></DATA10>");
 						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
-						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("MAINCONTENT")) + "</DATA12>");
+						
+						if (globals.getProperty("Globals.DbType").equals("oracle")) {
+							resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+						} else {
+							resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("MAINCONTENT")) + "</DATA12>");
+						}
+						
 						resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
 						
 						if (primaryData.equals("1")) {
@@ -2737,7 +2771,13 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
 					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("MAINCONTENT")) + "</DATA12>");
+					
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("MAINCONTENT")) + "</DATA12>");
+					}
+					
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
