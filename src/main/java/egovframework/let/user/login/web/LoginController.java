@@ -489,14 +489,14 @@ public class LoginController {
 				lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			}
 			
-		    LocalDateTime dt = LocalDateTime.now();
-		    ZonedDateTime zdt = dt.atZone(ZoneId.systemDefault());
-		    ZoneOffset offset = zdt.getOffset();
-		    String offsetStr = "235|" + offset.toString();
-
-		    logger.debug("userID=" + userId + ",lang=" + lang + ",offsetStr=" + offsetStr);
+		    String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
 		    
-			ezCommonService.insertTblUserLocalInfo(userId, offsetStr, lang, tenantId);
+		    if (primaryTimeZone.equals("")) {
+		    	primaryTimeZone = "235|+09:00";
+		    }
+		    
+			logger.debug("userID=" + userId + ",lang=" + lang + ",primaryTimeZone=" + primaryTimeZone);
+			ezCommonService.insertTblUserLocalInfo(userId, primaryTimeZone, lang, tenantId);
 		}
 		
 		String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);

@@ -575,12 +575,21 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     		}
         } while (retryFlag && retryCount > -1);		
 		
+        
+     
+        
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
 		model.addAttribute("url", url);
 		model.addAttribute("rejectKeyWord", rejectKeyWord);
+		
+		/////////추가
+		model.addAttribute("deptId", userInfo.getDeptID());
+		model.addAttribute("Name", userInfo.getDisplayName());	
+		model.addAttribute("Id", userInfo.getId());
+		
 		
 		logger.debug("readMailContent ended.");
 		

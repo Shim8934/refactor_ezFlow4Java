@@ -157,7 +157,7 @@ public class IMAPAccess {
 			Folder personal = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t648", locale));
 			Folder junk = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale));
 			
-			// if default folders are not exist, create the folders.
+			// if default folders do not exist, create the folders.
 			if (!inbox.exists()) {
 				createFolder(inbox.getFullName());
 			}
@@ -201,7 +201,7 @@ public class IMAPAccess {
 			Folder personal = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t648", locale));
 			Folder junk = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale));
 			
-			// if default folders are not exist, create the folders.
+			// if default folders do not exist, create the folders.
 			if (!inbox.exists()) {
 				createFolder(inbox.getFullName());
 			}

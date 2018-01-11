@@ -361,6 +361,7 @@
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick() {
+		    	console.log("modify");
 		        if (Write_FG != "true" && gubun != "2") {
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
@@ -374,7 +375,7 @@
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(435, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
