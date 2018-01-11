@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -20,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -50,6 +53,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
@@ -99,6 +103,8 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import net.htmlparser.jericho.Renderer;
+import net.htmlparser.jericho.Source;
 
 @RestController
 public class MEmailGWController extends EgovFileMngUtil {
@@ -671,8 +677,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
+			String fromEmail = userVO.getMail();
+			
 			String password = jspw;
 
 			int tenantID = 0;
@@ -1172,11 +1182,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				useFromAddress = "NO";
 			}
 			
-	        String browser = ClientUtil.getClientInfo(request, "browser");
-			boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-						
 			JSONObject data = new JSONObject();
-	        data.put("userEmail",userEmail);
+	        data.put("fromEmail",fromEmail);
 			data.put("to", to);
 			data.put("cc", cc);
 			data.put("bcc", bcc);
@@ -1197,9 +1204,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("tempBody", tempBody);
 			data.put("newWindowId", newWindowId);
 			data.put("serverName", serverName);
-			data.put("isCrossBrowser", isCrossBrowser);
 			data.put("useFromAddress", useFromAddress);
 			data.put("fromAddressHtml", fromAddressHtml);
+			data.put("mailAttachLimit", mailAttachLimit);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -2185,7 +2192,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		            
 	                // text/plain 파트를 구성한다.
 		            MimeBodyPart textPlainPart = new MimeBodyPart();
-		            textPlainPart.setText(textBody, "utf-8");	
+		            
+		            // HTML 태그들을 제거한 Plain Text로 변환한다. 
+		            Source htmlSource = new Source(textBody);
+		            Renderer htmlRend = new Renderer(htmlSource);
+		            textPlainPart.setText(htmlRend.toString(), "utf-8");	
 		            
 		            // text/plain 파트를 추가한다.
 		            alternativePart.addBodyPart(textPlainPart);
@@ -2219,6 +2230,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        // User-Agent 설정
 			        message.setHeader("User-Agent", "JMocha Mail 1.0");	        
 			        		        
+			        //inline image 처리
+			        MimeMultipart relatedPart = null;
+			        Set<String> contentIdSet = new HashSet<String>();
+			        
 		            // 임시 보관함에 메시지가 있는 경우 해당 메시지와 병합 작업을 수행한다.
 			        Message oldMessage = null;
 			        long uid = 0;
@@ -2268,12 +2283,103 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 										p = mp.getBodyPart(i);
 										
 										while (true) {
+										    // Part가 Related Part일 경우의 처리
+		    								if (alternativePart != null && p.isMimeType("multipart/related")) {
+		    									LOGGER.debug("Part is multipart/related");
+		    								    
+		    									hasAttach = true;
+		    									
+		    									LOGGER.debug("relatedPart=" + relatedPart);
+		    									
+		    									if (relatedPart == null) {
+		    										relatedPart = new MimeMultipart("related");
+		    										    							
+		    					                    MimeBodyPart wrap = new MimeBodyPart();
+		    					                    wrap.setContent(relatedPart);
+		    					                    alternativePart.removeBodyPart(1);
+		    					                    alternativePart.addBodyPart(wrap, 1);
+		    									}
+		    									// new related part is already created by the above routine
+		    									// for adding new in-line images.
+		    									else {
+		    										relatedPart.removeBodyPart(0);
+		    									}
+		    									
+		    									// 기존 메시지의 Related Part와 병합한다.
+		    									Multipart existingRelatedPart = (Multipart)p.getContent();
+		    									int existingRelatedPartCount = existingRelatedPart.getCount();
+		    									BodyPart existingRelatedSubPart = null;
+		    									
+		    									for (int j = 0; j < existingRelatedPartCount; j++) {
+		    									    existingRelatedSubPart = existingRelatedPart.getBodyPart(j);
+		    										
+		    										if (existingRelatedSubPart instanceof MimePart) {
+		    										    String contentId = ((MimePart)existingRelatedSubPart).getContentID();
+		    										    LOGGER.debug("Existing ContentId=" + contentId);
+		    										    
+		    											if (contentId != null && !contentIdSet.contains(contentId)) {
+		    												LOGGER.debug("Adding ContentId=" + contentId);
+		    											    
+		    												relatedPart.addBodyPart(existingRelatedSubPart);						
+		    											}
+		    										}				
+		    									}
+		    									
+		    									String bodyContent = content.getContent().toString();
+		    									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
+		    									content.setContent(bodyContent, "text/html; charset=utf-8");
+		    									relatedPart.addBodyPart(content, 0);
+		    									
+		    									removeUnusedInlineImagePart(relatedPart);
+		    								}
+		    								// Part가 Alternative Part일 경우의 처리
+		    								else if (alternativePart != null && p.isMimeType("multipart/alternative")) {
+		    									LOGGER.debug("Part is multipart/alternative");
+		    								    
+		    								    hasAttach = true;
+		    								    
+		                                        Multipart existingAlternativePart = (Multipart)p.getContent();
+		                                        int existingAlternativePartCount = existingAlternativePart.getCount();
+		                                        BodyPart existingAlternativeSubPart = null;
+		                                        boolean isRelatedFound = false;
+		                                        
+		                                        for (int j = 0; j < existingAlternativePartCount; j++) {
+		                                            existingAlternativeSubPart = existingAlternativePart.getBodyPart(j);
+		                                            
+		                                            if (existingAlternativeSubPart instanceof MimePart) {
+		                                                // Alternative Part 안에 Related Part가 있는 경우에 대한 처리
+		                                                if (existingAlternativeSubPart.isMimeType("multipart/related")) {
+		                                                    isRelatedFound = true;
+		                                                    break;
+		                                                }
+		                                            }               
+		                                        }						
+		                                        
+		                                        if (isRelatedFound) {
+		                                            // p를 발견된 related 파트로 변경하여 루프의 시작 부분에 있는 related 파트 처리 부분으로 제어를 옮긴다.
+		                                            p = existingAlternativeSubPart;
+		                                            continue;
+		                                        }
+		                                    }								
+		                                    // there are cases where an in-line image part doesn't have
+		                                    // a Content-Disposition header, but has a Content-ID header.    								
+		    								else if (p instanceof MimePart 
+		    								        && ((MimePart)p).getContentID() != null) {
+		    								    String contentId = ((MimePart)p).getContentID();
+		    								    LOGGER.debug("Existing ContentId=" + contentId);
+		    								    
+		    								    if (!contentIdSet.contains(contentId)) {
+		    								    	LOGGER.debug("Adding ContentId=" + contentId);
+		    								        
+		    								        mixedPart.addBodyPart(p);
+		    								    }
+		    								}											
 		    								// Content-Disposition 헤더가 없이 첨부된 파일이 있어
 		    								// Content-Type이 application으로 시작하는 경우도 추가함 
 		    								// 예) Content-Type: application/octet-stream;
 		    								//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 		    							    //    Content-Transfer-Encoding: base64	    								
-		    								if (p.getDisposition() != null || p.isMimeType("application/*")) { 
+		    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
 		    									mixedPart.addBodyPart(p);
 		    									
 		    									// 첨부파일 파트인 경우
@@ -2306,6 +2412,43 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 										
 										message.setContent(mixedPart);							
 									}
+									// 기존 메시지가 Related Part일 경우의 처리
+									else if (oldMessage.isMimeType("multipart/related")) {
+									    LOGGER.debug("oldMessage is multipart/related");
+									    LOGGER.debug("relatedPart=" + relatedPart);
+										
+		                                if (alternativePart != null) {								
+		    								// 새로 추가되는 이미지 파트들을 추가한다.
+		    								// 기존 메시지의 이미지 파트들은 위에서 이미 mixedPart에 추가되어 있다.
+		    								// a new related part is already created by the above routine
+		    								// for adding new in-line images.						
+		    								if (relatedPart != null) {
+		    									relatedPart.removeBodyPart(0);
+		    									
+		    									BodyPart relatedSubPart = null;
+		    									for (int i = 0; i < relatedPart.getCount(); i++) {
+		    										relatedSubPart = relatedPart.getBodyPart(i);
+		    										mixedPart.addBodyPart(relatedSubPart);
+		    									}
+		    								}
+		    								
+		    								// 기존 메시지가 Related Part인 경우는 첨부파일이 없는 경우이므로 mixed가 아니다.
+		    								// this mixedPart is actually a related part.
+		    								mixedPart.setSubType("related");
+		    								
+		    								String bodyContent = content.getContent().toString();																
+		                                    bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);                          
+		                                    content.setContent(bodyContent, "text/html; charset=utf-8");                            
+		                                    mixedPart.addBodyPart(content, 0);
+		                                    
+		                                    removeUnusedInlineImagePart(mixedPart);
+		                                                                        
+		                                    MimeBodyPart wrap = new MimeBodyPart();
+		                                    wrap.setContent(mixedPart);
+		                                    alternativePart.removeBodyPart(1);
+		                                    alternativePart.addBodyPart(wrap, 1);                                                                               
+		                                } 
+									}									
 								}					
 							}
 						}
@@ -2427,13 +2570,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			            }
 				        
 				        // file system의 templist txt파일 삭제
-				        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
-				        pDirPath += commonUtil.separator + stateName + ".txt";
-				        File f = new File(pDirPath);
-				        
-				        if (f.exists()) {
-				        	f.delete();
-				        }			        
+			            if (!stateName.isEmpty()) {
+					        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
+					        pDirPath += commonUtil.separator + stateName + ".txt";
+					        File f = new File(pDirPath);
+					        
+					        if (f.exists()) {
+					        	f.delete();
+					        }			        
+			            }
 			        }
 			        		        
 			        draftFolder.close(true);
@@ -2592,6 +2737,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
+			String useKukudocs = ezCommonService.getTenantConfig("USE_KUKUDOCS", info.getTenantId());
 			String pAttachListHtmlSub = null;
 			
 			List<String> bodyInfoList = null;
@@ -2998,6 +3144,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("isSentItems", isSentItems);
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
+			mail.put("useKukudocs", useKukudocs);
 			
 			if (bodyInfoList != null) { 
 				mail.put("htmlBody", bodyInfoList.get(0));
@@ -3052,6 +3199,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
+			String useKukudocs = ezCommonService.getTenantConfig("USE_KUKUDOCS", info.getTenantId());
 			
 			LOGGER.debug("userEmail=" + userEmail);
 			
@@ -3087,7 +3235,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
-	
+			
 			Folder f = ia.getFolder(folderPath);
 			
 			if (f == null || !f.exists()) {
@@ -3130,6 +3278,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							data.put("bytes", bytes);
 							data.put("filename",filename);
 							data.put("filetype",part.getContentType());
+							data.put("useKukudocs", useKukudocs);
 							
 							result.put("status", "ok");
 							result.put("code", 0);			
@@ -3630,7 +3779,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			if (!pAddressFilter.isEmpty()) {
-				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info);
+				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, null);
 			}
 	        
 	        data.put("organXML", organXML);
@@ -3671,6 +3820,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String searchTarget = "";
 			String filterName = "";
 			String filterValue = "";
+			int start = 0;
+			int end = 99;
 			
 			if (jsonObject.get("searchTarget") != null) {
 				searchTarget = (String)jsonObject.get("searchTarget");
@@ -3684,11 +3835,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				filterValue = (String)jsonObject.get("filterValue");
 			}
 			
+			if (jsonObject.get("start") != null) {
+				start =  ((Integer)jsonObject.get("start")).intValue();
+			}
+
+			if (jsonObject.get("end") != null) {
+				end =  ((Integer)jsonObject.get("end")).intValue();
+			}
+			
+			int[] searchCount = {0, 0};
+			
 			if (!searchTarget.isEmpty() && !filterName.isEmpty() && !filterValue.isEmpty()) {
-				addressXML = getAddressSearch(searchTarget, filterName, filterValue, info);
+				addressXML = getAddressSearch(searchTarget, filterName, filterValue, info,
+						start, end - start + 1, searchCount);	
 			}
 			
 	        data.put("addressXML", addressXML);
+	        data.put("fullCount", searchCount[0]);	        
+	        data.put("optionCount", searchCount[1]);
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -3702,6 +3866,99 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		}
         
 		LOGGER.debug("MOBILE G/W MAIL searchAddressBook ended.");
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook", method= RequestMethod.PUT,  produces="application/json;charset=utf-8")
+	public Object addAddress(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
+		LOGGER.debug("MOBILE G/W MAIL addAddress started.");
+		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
+		
+        JSONObject result = new JSONObject();
+		
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+								
+			String ownerId = "";
+			String folderType = "";
+			String sName = "";
+			String sCompany = "";
+			String sDept = "";
+			String sTitle = "";
+			String sEmail = "";
+			String sCompanyPhone = "";
+			String sMobile = "";
+			String sMemo = "";
+			
+			if (jsonObject.get("folderType") != null) {
+				folderType = (String)jsonObject.get("folderType");
+			}
+			
+			if (jsonObject.get("sName") != null) {
+				sName = (String)jsonObject.get("sName");
+			}
+
+			if (jsonObject.get("sCompany") != null) {
+				sCompany = (String)jsonObject.get("sCompany");
+			}
+			
+			if (jsonObject.get("sDept") != null) {
+				sDept = (String)jsonObject.get("sDept");
+			}
+			
+			if (jsonObject.get("sTitle") != null) {
+				sTitle = (String)jsonObject.get("sTitle");
+			}
+
+			if (jsonObject.get("sEmail") != null) {
+				sEmail = (String)jsonObject.get("sEmail");
+			}
+			
+			if (jsonObject.get("sCompanyPhone") != null) {
+				sCompanyPhone = (String)jsonObject.get("sCompanyPhone");
+			}
+			
+			if (jsonObject.get("sMobile") != null) {
+				sMobile = (String)jsonObject.get("sMobile");
+			}
+
+			if (jsonObject.get("sMemo") != null) {
+				sMemo = (String)jsonObject.get("sMemo");
+			}
+			
+			if (!folderType.isEmpty()) {				
+				if (folderType.equals("C")) {
+					ownerId = info.getCompanyId();
+				} else if (folderType.equals("D")) {
+					ownerId = info.getDeptId();
+				} else {
+					ownerId = info.getUserId();
+				}
+				
+				ezAddressService.insertAddress(info.getTenantId(), ownerId, "0", info.getUserId(),
+						info.getUserName(), info.getUserName2(), sName, sEmail, sCompanyPhone, sDept,
+						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P");
+				
+		        result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", "success");
+			} else {
+				result.put("status", "error");
+				result.put("code", 2);			
+				result.put("data", "fail");							
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL addAddress ended.");
 		
 		return result;
 	}
@@ -3970,10 +4227,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 주소록 정보 호출 함수
 	 */
-	private String getAddressSearch(String searchTarget, String filterName, String filterValue, MCommonVO userInfo) {
+	private String getAddressSearch(String searchTarget, String filterName, String filterValue, MCommonVO userInfo,
+					int start, int count, int[] searchCount) {
 		LOGGER.debug("getAddressSearch started");
 		LOGGER.debug("getAddressSearch searchTarget=" + searchTarget + ",filterName=" + filterName
-				+ ",filterValue=" + filterValue);
+				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count);
 		
         String returnValue = "";
         
@@ -4004,8 +4262,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         	}
         	
             String pFilter = filterName + "," + filterValue;
+                        
+            searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
+            searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);            
             
-            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
             
             StringBuilder sb = new StringBuilder();
             
@@ -4019,6 +4280,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
             	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
             	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
+            	sb.append("<SCOMPANYPHONE>" + (addressInfo.getsCompanyPhone() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompanyPhone())) + "</SCOMPANYPHONE>");
+            	sb.append("<SMOBILE>" + (addressInfo.getsMobile() == null ? "" : commonUtil.cleanValue(addressInfo.getsMobile())) + "</SMOBILE>");
             	sb.append("</ROW>");
             }
             
@@ -4033,6 +4296,52 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         
         return returnValue;
     }
+	
+	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
+		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher mat = pat.matcher(htmlStr);
+				
+		StringBuffer result = new StringBuffer();
+		while (mat.find()) {
+			String cid = mat.group(1);
+			try {
+				cid = URLDecoder.decode(cid, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			mat.appendReplacement(result, Matcher.quoteReplacement("src=\"cid:" + cid + "\""));
+		}
+		mat.appendTail(result);
+		
+		return result.toString();	
+	}
+	
+	private void removeUnusedInlineImagePart(Multipart relatedPart) {
+		try {
+			String htmlStr = relatedPart.getBodyPart(0).getContent().toString();
+			int count = relatedPart.getCount() - 1;
+			
+			for (int i = count; i >= 1; i--) {
+				MimeBodyPart bp = (MimeBodyPart)relatedPart.getBodyPart(i);
+				
+				if (bp.getDisposition() != null) {
+					String contentID = bp.getContentID();
+					
+					if (contentID != null && contentID.length() > 2) {
+						contentID = contentID.substring(1, contentID.length() - 1);
+						if (htmlStr.indexOf("src=\"cid:" + contentID) < 0) {
+							LOGGER.debug("this inline image isn't used. contentID=" + contentID);
+							relatedPart.removeBodyPart(i);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";

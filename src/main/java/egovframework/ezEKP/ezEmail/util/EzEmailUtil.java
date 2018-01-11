@@ -435,7 +435,7 @@ public class EzEmailUtil {
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
                         
-                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
+//                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
                         
                         subject = MimeUtility.decodeText(rawHeader);
                     }                        
@@ -2864,6 +2864,7 @@ public class EzEmailUtil {
 			String att = m.group(1);
 			
 			if (att.toLowerCase().indexOf("target=") < 0) {
+				att = att.replaceAll("'", "\"");
 				m.appendReplacement(result, Matcher.quoteReplacement("<a " + att + " target=\"_blank\">"));
 			}
 		}

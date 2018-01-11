@@ -227,7 +227,7 @@
 								}
 	
 								window.onload = function() {
-								    document.getElementById("pMessageContent").innerHTML = "<spring:message code = 'ezCommunity.t1092' />" + "<br />" + "<c:out value = '${clubVO.c_ClubName}' />" + " Community" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
+								    document.getElementById("pMessageContent").innerHTML = "<c:out value = '${clubVO.c_ClubName}' />" + " Community" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
 								    
 								    var UserAgentState = navigator.userAgent.toLowerCase();
 							        

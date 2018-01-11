@@ -520,4 +520,5 @@ public interface EzApprovalGService {
 	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
 
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
+
 }

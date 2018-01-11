@@ -813,7 +813,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table class="content" >
+		<table class="content" style="margin-top:10px">
 			<tr>
 			    <th><spring:message code = 'ezCommunity.t418' /></th>
 			    <td><input type="text" id="txtBoardName" readonly ="readonly" style="width:200px">
@@ -839,8 +839,8 @@
 		  	</tr>
 		</table>
 		
-		<table class="mainlist" style ="width:100%" >
-			<form name="frmOutbox" method="post">
+		<form name="frmOutbox" method="post">
+			<table class="mainlist" style="width:100%;margin-top:10px">
 				<tr>
 				    <th style="width:20px;padding:0px" align="center"><input type='checkbox' id ="checkbox" name="checkbox" onclick='checkBox_checkAll()'></th>
 				     <c:choose>
@@ -925,13 +925,10 @@
 				    	<c:otherwise>
 				    		<th style="cursor:pointer;width:45px;" onClick="SortPage('A.ReadCount')"><spring:message code='ezCommunity.t173'/></th>
 				    	</c:otherwise>
-				    </c:choose>
-					    
+				    </c:choose>					    
 				</tr>
-		    
-			</form>
-		</table>
-		
+			</table>
+		</form>
 	    <br/>
 	    <div id="tblPageRayer"></div>
 		<div id="ListInfo" style="DISPLAY:none">${listInfo }</div>

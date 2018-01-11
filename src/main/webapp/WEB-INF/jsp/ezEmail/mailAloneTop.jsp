@@ -1517,41 +1517,7 @@
                 </div>
             </header>
             <nav>
-                <ul class='topmenu'>
-            <!--        <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu01.gif' id="top_menu01" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu01o.gif', this);" onmouseout="img_onMouseOut(this);" name='cf34747c-d809-461d-93d9-e50486ae3b68' style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/myPortal.do", "main", " ")' width='86' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu02.gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
-                        </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu03(4).gif' id="top_menu03(4)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', this);" onmouseout="img_onMouseOut(this);" name='6cdb78b7-ae72-48ce-990f-5c0f6838fbbc' style='cursor:pointer' onclick='OpenWindow(event, "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ")' width='121' height='33'>
-                        </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu04.gif' id="top_menu04" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o.gif', this);" onmouseout="img_onMouseOut(this);" name='c1d31831-98a4-4c0a-9815-6c71ea9ff4d0' style='cursor:pointer' onclick='OpenWindow(event, "/myoffice/ezApproval/index_approval.aspx", "main", " ")' width='123' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu05.gif' id="top_menu05" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', this);" onmouseout="img_onMouseOut(this);" name='1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d' style='cursor:pointer' onclick='OpenWindow(event, "/EgovPageLink.do?menuNo=11&link=ezBoard%2FboardMain", "main", " ")' width='110' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu09(16).gif' id="top_menu09(16)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu09o(21).gif', this);" onmouseout="img_onMouseOut(this);" name='f5c278f0-b62d-4437-8b08-1a81c2410497' style='cursor:pointer' onclick='OpenWindow(event, "/ezCommunity/communityMain.do", "main", " ")' width='116' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu07.gif' id="top_menu07" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu07o.gif', this);" onmouseout="img_onMouseOut(this);" name='23ced55b-ace8-48cb-9834-19b8d9fb8d8b' style='cursor:pointer' onclick='OpenWindow(event, "/myoffice/ezKMS/index_ezkms.aspx", "main", " ")' width='122' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu08(1).gif' id="top_menu08(1)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu08o(1).gif', this);" onmouseout="img_onMouseOut(this);" name='e4807d84-7872-4e58-b2c6-d92d55c3d66f' style='cursor:pointer' onclick='OpenWindow(event, "/myoffice/ezDMS/index_ezDMS.aspx", "main", " ")' width='123' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu06.gif' id="top_menu06" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu06o.gif', this);" onmouseout="img_onMouseOut(this);" name='6db81dc5-e8ba-49c8-b625-df4fd375a43a' style='cursor:pointer' onclick='OpenWindow(event, "/ezResource/resMain.do", "main", " ")' width='121' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu04(1).gif' id="top_menu04(1)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', this);" onmouseout="img_onMouseOut(this);" name='b39f97e9-4272-45d2-bcda-2ceb6d6e46d0' style='cursor:pointer' onclick='OpenWindow(event, "/ezApprovalG/apprGMain.do", "main", " ")' width='123' height='33'>
-                    </li>
-                    <li>
-                        <img src='/files/upload_portal/S907000/Menu/top_menu11(4)(2).gif' id="top_menu11(4)(2)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu11o(4)(2).gif', this);" onmouseout="img_onMouseOut(this);" name='4203ff61-93f2-4c8c-b439-3a8a8b79c767' style='cursor:pointer' onclick='OpenWindow(event, "/myoffice/ezSNS/SNSMain.aspx", "main", "null")' width='101' height='33'>
-                    </li> -->
-                    
+                <ul class='topmenu'>                    
                     <li>
                         <c:if test="${lang == '1'}">
                         <img src='/files/upload_portal/S907000/Menu/top_menu02.gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
@@ -1566,6 +1532,7 @@
                         <img src='/files/upload_portal/S907000/Menu/top_menu02(4).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(2).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
                         </c:if>
                     </li>
+                    <c:if test="${packageType == 'basic'}">
                     <li>
                         <c:if test="${lang == '1'}">
                         <img src='/files/upload_portal/S907000/Menu/top_menu03(4).gif' id="top_menu03(4)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', this);" onmouseout="img_onMouseOut(this);" name='6cdb78b7-ae72-48ce-990f-5c0f6838fbbc' style='cursor:pointer' onclick='OpenWindow(event, "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ")' width='121' height='33'>
@@ -1581,7 +1548,8 @@
                         <c:if test="${lang == '3'}">
                         <img src='/files/upload_portal/S907000/Menu/top_menu05(4).gif' id="top_menu05(4)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o(4).gif', this);" onmouseout="img_onMouseOut(this);" name='1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d' style='cursor:pointer' onclick='OpenWindow(event, "/EgovPageLink.do?menuNo=11&link=ezBoard%2FboardMain", "main", " ")' width='110' height='33'>
                         </c:if>
-                    </li>                                                                                                                                                                                        
+                    </li>        
+                    </c:if>                                                                                                                                                                                
                 </ul>
             </nav> 
             <div class="topSubMenu">

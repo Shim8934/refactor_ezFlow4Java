@@ -59,6 +59,7 @@
 			// 2009.11.25 - 소스보기시 개인정보 유출방지
 			var pwd = "";
 			document.onselectstart = function () { return false; };
+			
 			window.onload = function() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
@@ -67,7 +68,9 @@
 			        document.body.style.oUserSelect = 'none';
 			        document.body.style.UserSelect = 'none';
 			    }
+			    
 				if (editmode == "new_inherit") bInherit = true;
+				
 				if (mode == "edit") AttachEvents(main_table);
 				
 				// 2009.11.25 - 소스보기시 개인정보 유출방지
@@ -98,7 +101,8 @@
 				// 보기모드에서 미리보기가 아닌 경우 실행
 				if (mode == "view" && viewmode != "preview") {
 				    var agentObj;
-				     if (!CrossYN()) {
+				    
+				    if (!CrossYN()) {
 				    	 //브라우저 정보 가져오기
 				    	var userAgent = window.navigator.userAgent;
 						
