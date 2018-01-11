@@ -1219,7 +1219,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		int circularUserId = 0;
 		int updateStatus = 0;
 		circularListVO.setStatus(0);
-
+		
 		String originCircularID = request.getParameter("oldCircularID");
 		String mode = request.getParameter("mode");
 		String receiverIDs = request.getParameter("receiverID");
@@ -1252,7 +1252,7 @@ public class EzCircularController extends EgovFileMngUtil {
 					circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
 					receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, pDirPath, mode, userInfo, loginCookie);			
 		}
-
+		logger.debug("def+++");
 		logger.debug("saveCircular ended");
 	}
 	
