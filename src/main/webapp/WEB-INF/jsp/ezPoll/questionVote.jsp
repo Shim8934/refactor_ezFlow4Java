@@ -29,6 +29,7 @@
 			var qstId 					= "<c:out value='${question.qstId}'/>";
 			var tenantId 				= "<c:out value='${question.tenantId}'/>";
 			var curentUser 				= "<c:out value='${curentUser}'/>";
+			var sessionId 				= "<c:out value='${sessionID}'/>";
 			var curentUserName 			= "<c:out value='${curentUserName}'/>";
 			var numberOfUnvotedUsers 	= parseInt("<c:out value='${numberOfUnvotedUsers}'/>");
 			var numberOfSelected 		= 0;
@@ -175,7 +176,7 @@
 				}				
 			}
 			
-			function updateGraph() {					
+			function updateGraph() {				
 				for (var i = 0; i < numberOptions; i++) {
 					var _optId = votesArr[i][0];					
 					var graphId = "graph" + _optId;
@@ -347,25 +348,25 @@
 			        	var ret = JSON.parse(updatedInfo.body).result;	
 			        	var user = JSON.parse(updatedInfo.body).userId;
 			        	var _sessionid = JSON.parse(updatedInfo.body).sessionid;
-			        	var sessionId = "<c:out value='${sessionID}'/>";
+			        	
 			        	
 			            if (ret == "ADD") {							
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;			            	
 			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
 			            	
-			            	if (user != curentUser || sessionId != _sessionid) {
-				            	votedUsers = votedUsers + 1;
-				            	document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
-			            	}
+			            	//if (user != curentUser || sessionId != _sessionid) {
+			            	votedUsers = votedUsers + 1;
+			            	document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
+			            	//}
 					    }
 			            else {
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;			            	
 			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
 			            	
-			            	if (user != curentUser || sessionId != _sessionid) {
-			            		votedUsers = votedUsers - 1;
-			            		document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
-			            	}			            	
+			            	//if (user != curentUser || sessionId != _sessionid) {
+		            		votedUsers = votedUsers - 1;
+		            		document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
+			            	//}			            	
 			            }
 			            
 			    		if (window_open2 != null && !window_open2.closed) {	
@@ -376,8 +377,7 @@
 			        stompClient.subscribe('/reply/editQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
 			        	var user = JSON.parse(updatedInfo.body).userId;	
-			        	var _sessionid = JSON.parse(updatedInfo.body).sessionid;
-			        	var sessionId = "<c:out value='${sessionID}'/>";
+			        	var _sessionid = JSON.parse(updatedInfo.body).sessionid;			        	
 			        	
 			            if (ret == "CHANGED" && (user != curentUser || sessionId != _sessionid)) {			            
 							alert("<spring:message code = 'ezPoll.t113'/>");
@@ -406,8 +406,7 @@
 			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
 			        	var _userPhoto = JSON.parse(updatedInfo.body).userPhoto;
 			        	var _sessionID = JSON.parse(updatedInfo.body).sessionid;
-			        	var _userName = "";
-			        	var sessionId = "<c:out value='${sessionID}'/>";			        	
+			        	var _userName = "";			        				        	
 			        	
 			        	if (_primary == 1) {
 			        		_userName = JSON.parse(updatedInfo.body).userName1;
@@ -434,8 +433,7 @@
 			        	var _fileName = JSON.parse(updatedInfo.body).fileName;
 			        	var _filePath = JSON.parse(updatedInfo.body).filePath;
 			        	var _txtContent = JSON.parse(updatedInfo.body).txtContent;
-			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;
-			        	var sessionId = "<c:out value='${sessionID}'/>";
+			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;			        	
 
 			            if (_userId != curentUser || _sessionId != sessionId) {			          		
 			            	if (_cmdId > commentIndex) {
@@ -450,8 +448,7 @@
 			        stompClient.subscribe('/reply/deleteCmtInQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var _cmdId = JSON.parse(updatedInfo.body).cmId;	
 			        	var _userId = JSON.parse(updatedInfo.body).userId;
-			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;
-			        	var sessionId = "<c:out value='${sessionID}'/>";
+			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;			        	
 
 			            if (_userId != curentUser || _sessionId != sessionId) {			          		
 			            	if (_cmdId > commentIndex) {
@@ -471,8 +468,7 @@
 			        	var optId = JSON.parse(updatedInfo.body).optionId;			        	
 			        	var mode = JSON.parse(updatedInfo.body).mode;
 			        	var user = JSON.parse(updatedInfo.body).userId;
-			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;
-			        	var sessionId = "<c:out value='${sessionID}'/>";
+			        	var _sessionId = JSON.parse(updatedInfo.body).sessionid;			        	
 			        	var userName = "";
 			        	
 			        	if (_primary == 1) {
@@ -482,74 +478,82 @@
 			        		userName = JSON.parse(updatedInfo.body).userName2;
 			        	}
 			        	
-			        	if (user != curentUser || _sessionId != sessionId) {
-			        		var voteId = -1;
+			        	//if (user != curentUser || _sessionId != sessionId) {
+		        		var voteId = -1;
+		        		
+			        	if (mode == 1) {							
+			        		//In adding mode
+			        		var showVotes = "voterNumber_" + optId;
+			        		document.getElementById(showVotes).style.display = "none";				        		
+			        		totalVotes = totalVotes + 1;
 			        		
-				        	if (mode == 1) {
-				        		//In adding mode
-				        		var showVotes = "voterNumber_" + optId;
-				        		document.getElementById(showVotes).style.display = "none";				        		
-				        		totalVotes = totalVotes + 1;
-				        		
-				        		if (user == curentUser) {
-		        					document.getElementById("_imageCheckBox" + optId).src = "/images/checked.png";				        					
-		        				}
-				        		
-				        		for (var i = 0; i < numberOptions; i++) {
-				        			if (votesArr[i][0] == optId) {		        								        				
-				        				votesArr[i][1] = votesArr[i][1] + 1;
-				        				voteId = i;	
-				        				break;
-				        			}
-				        		}						        		
-				        		
-				        		if (secretVote == 0) {
-									//Update the userName array
-									var tempObj = new Object();
-									tempObj[user] = userName;	
-									
-									if (userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName) === -1) {	
-										userNameArr[voteId].push(tempObj);
-									}
-				        		}
-				        		
-				        		updateGraph();
-				        	}
-				        	else {
-				        		//In removing mode
-				        		totalVotes = totalVotes - 1;
-				        		
-				        		if (user == curentUser) {
-		        					document.getElementById("_imageCheckBox" + optId).src = "/images/poll/unchecked_vote.png";				        					
-		        				}
-				        		
-				        		for (var i = 0; i < numberOptions; i++) {
-				        			if (votesArr[i][0] == optId) {
-				        				votesArr[i][1] = votesArr[i][1] - 1;
-				        				voteId = i;
-				        				break;
-				        			}
-				        		}	
-				        		
-				        		if (secretVote == 0) {
-					        		//Remove userName if exist in userName array
-					        		var pos = userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName);	
-					        		
-									if ( pos > -1) {	
-										userNameArr[voteId].splice(pos, 1);									
-				   						var tempClassId = "_thu" + voteId;
-				   						var listDivs = document.getElementsByClassName(tempClassId);
-				   						
-				   						for (var j = 0; j < 5; j++) {
-				   							listDivs[j].innerHTML == "";
-				   							listDivs[j].style.display = "none";
-				   						}		   						
-									}		
-				        		}
-				        		
-				        		updateGraph();
-				        	}
+			        		if (user == curentUser) {
+			        			numberOfSelected = numberOfSelected + 1;
+	        					document.getElementById("_imageCheckBox" + optId).src = "/images/checked.png";
+	        					if (hasVoted == 0) {
+									//votedUsers = votedUsers + 1;
+									hasVoted = 1;	 	    			
+									//document.getElementById("votedUsers").innerHTML = "(" + votedUsers + "<spring:message code = 'ezPoll.t110'/>" + ")";
+								} 	
+	        				}
+			        		
+			        		for (var i = 0; i < numberOptions; i++) {
+			        			if (votesArr[i][0] == optId) {		        								        				
+			        				votesArr[i][1] = votesArr[i][1] + 1;
+			        				voteId = i;	
+			        				break;
+			        			}
+			        		}						        		
+			        		
+			        		if (secretVote == 0) {
+								//Update the userName array
+								var tempObj = new Object();
+								tempObj[user] = userName;	
+								
+								if (userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName) === -1) {	
+									userNameArr[voteId].push(tempObj);
+								}
+			        		}
+			        		
+			        		updateGraph();
 			        	}
+			        	else {			        	
+			        		//In removing mode
+			        		totalVotes = totalVotes - 1;
+			        		
+			        		if (user == curentUser) {
+			        			numberOfSelected = numberOfSelected - 1;
+	        					document.getElementById("_imageCheckBox" + optId).src = "/images/poll/unchecked_vote.png";
+	        					checkVoted();
+	        				}
+			        		
+			        		for (var i = 0; i < numberOptions; i++) {
+			        			if (votesArr[i][0] == optId) {
+			        				votesArr[i][1] = votesArr[i][1] - 1;
+			        				voteId = i;
+			        				break;
+			        			}
+			        		}	
+			        		
+			        		if (secretVote == 0) {
+				        		//Remove userName if exist in userName array
+				        		var pos = userNameArr[voteId].map(function (o) {return o[user];}).indexOf(userName);	
+				        		
+								if ( pos > -1) {	
+									userNameArr[voteId].splice(pos, 1);									
+			   						var tempClassId = "_thu" + voteId;
+			   						var listDivs = document.getElementsByClassName(tempClassId);
+			   						
+			   						for (var j = 0; j < 5; j++) {
+			   							listDivs[j].innerHTML == "";
+			   							listDivs[j].style.display = "none";
+			   						}		   						
+								}		
+			        		}
+			        		
+			        		updateGraph();
+			        	}
+			        	//}
 			        	
 			    		if (window_open3 != null && !window_open3.closed) {	
 			    			window_open3.location.reload();
@@ -564,8 +568,7 @@
 					return;
 				}
 				
-				var tenantId = "<c:out value='${question.tenantId}'/>";
-				var sessionId = "<c:out value='${sessionID}'/>";
+				var tenantId = "<c:out value='${question.tenantId}'/>";				
 				stompClient.send("/app/editVote", {}, JSON.stringify({'question': qstId, 'tenant': tenantId, 'user': curentUser, 'sessionid': sessionId}));
 				
 				var params = "<c:out value='${params}'/>";
@@ -745,12 +748,12 @@
 						dataType: "text",
 						async: true,
 						success: function(result) {							
-							var xml = loadXMLString(result);							
+/* 							var xml = loadXMLString(result);							
 							var state = SelectSingleNodeValue(xml, "RESULT");
 							
 							if (state == "ADD_OK") {
 								updateVoteResult1(obj, voteId, optId);
-							}							
+							} */						
 						},
 						error: function (xhr, status, e){
 							alert("<spring:message code = 'ezPoll.t250'/>");
@@ -774,12 +777,12 @@
 						dataType: "text",
 						async: true,
 						success: function(result) {
-							var xml = loadXMLString(result);							
+/* 							var xml = loadXMLString(result);							
 							var state = SelectSingleNodeValue(xml, "RESULT");						
 
 							if (state == "REMOVE_OK") {
 								updateVoteResult2(obj, voteId, optId);
-							}					
+							}	 */		
 						},
 						error: function (xhr, status, e){
 							alert("<spring:message code = 'ezPoll.t250'/>");
