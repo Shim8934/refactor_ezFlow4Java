@@ -678,8 +678,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
+			String fromEmail = userVO.getMail();
+			
 			String password = jspw;
 
 			int tenantID = 0;
@@ -1180,7 +1183,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			JSONObject data = new JSONObject();
-	        data.put("userEmail",userEmail);
+	        data.put("fromEmail",fromEmail);
 			data.put("to", to);
 			data.put("cc", cc);
 			data.put("bcc", bcc);

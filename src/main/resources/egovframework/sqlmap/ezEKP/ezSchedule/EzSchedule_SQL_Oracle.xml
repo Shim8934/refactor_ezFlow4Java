@@ -277,6 +277,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
             ]]>
+             
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
         	ORDER BY STARTDATE ASC
 	</select>
@@ -865,14 +866,18 @@
 				DATETYPE = #v_DATETYPE#,
 				STARTDATE = TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),				
 				ENDDATE = TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),
-				REPETITION = NVL(#v_REPETITION#, ' '),
+		    ]]>
+            <isNotEmpty property="v_REPETITION">
+                REPETITION = NVL(#v_REPETITION#, ' '),
+            </isNotEmpty>
+            <![CDATA[	
 				TITLE = #v_TITLE#,
 				LOCATION = NVL(#v_LOCATION#, ' ')
 	   		WHERE  
 	   			(SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#)	   		
 	   		AND
 	   			TENANT_ID = #v_TENANTID#
-		]]>	
+        ]]>        
 	</update>
 	<update id="EzScheduleDAO.updateScheduleMember" parameterClass="map">
 		<![CDATA[

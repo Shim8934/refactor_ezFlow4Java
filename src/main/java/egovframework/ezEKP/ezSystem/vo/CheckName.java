@@ -9,6 +9,7 @@ public enum CheckName {
 	IS_READ_DELETE,
 	MailAttachLimit,
 	PrimaryLang,
+	PrimaryTimeZone,
 	USE_FileExtension,
 	ExpirePassPeriod,
 	LicenseKey,
