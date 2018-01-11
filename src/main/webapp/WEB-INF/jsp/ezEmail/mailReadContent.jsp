@@ -9,7 +9,7 @@
 	        <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	        <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
-	        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	        <script src="/js/jquery/jquery-1.11.3.min.js"></script>
 	        <style type="text/css">PRE {font-size:x-small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    	<script language="javascript" type="text/javascript">
