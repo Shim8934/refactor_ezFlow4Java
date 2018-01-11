@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -23,8 +24,17 @@
 			<span class="warningimg"><img src="/images/warning02.gif" width="136" height="112"></span>
 		<dl class="warningdl">
 			<dt><img alt="" src="/images/warning01.gif" width="183" height="27"></dt>
-			<dd><spring:message code='main.t00001' /><br/>
-			</dd>
+			<c:choose>
+				<c:when test="${chk == 'no'  }">
+				<dd><spring:message code='main.t00001_1' /><br/>
+				</dd>
+				</c:when>
+				<c:otherwise>
+				<dd><spring:message code='main.t00001' /><br/>
+				</dd>
+				</c:otherwise>
+			</c:choose>
+			
 		</dl>
 		</div>
 		<!-- 삽입할 내용이 없으신경우 아래 <p></p> 태그를 삭제해주세요 -->

@@ -114,7 +114,6 @@
      					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li> --%>
      					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" width="50" height="115"></li>
      					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li> --%>    
-     					
      					<c:choose>
     						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>

@@ -1023,3 +1023,14 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
     } catch (e) { }
 }
 
+function mail_link(a){
+	var real_href = "";
+	var link = $("#approv_a").attr("href").split("/");
+	
+	for (var i = 1; i < link.length; i++) {
+		real_href += "/" + link[i];
+	}
+	
+	$("#approv_a").attr("href", real_href);
+}
+
