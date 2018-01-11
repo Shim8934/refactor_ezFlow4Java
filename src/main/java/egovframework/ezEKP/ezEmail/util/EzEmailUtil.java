@@ -2864,6 +2864,7 @@ public class EzEmailUtil {
 			String att = m.group(1);
 			
 			if (att.toLowerCase().indexOf("target=") < 0) {
+				att = att.replaceAll("'", "\"");
 				m.appendReplacement(result, Matcher.quoteReplacement("<a " + att + " target=\"_blank\">"));
 			}
 		}
