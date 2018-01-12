@@ -54,10 +54,10 @@
 		            D2_Temp = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        }
 		        if (startdate != "") {
-		            var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7), startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 15));
-		            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7), enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 15));
-		            nowDate.setMonth(nowDate.getMonth() - 1);
-		            nowDate2.setMonth(nowDate2.getMonth() - 1);
+		        	var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7)-1, startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 15));
+		            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7)-1, enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 15));
+		            nowDate.setMonth(nowDate.getMonth());
+		            nowDate2.setMonth(nowDate2.getMonth());
 		            $("#Sdatepicker").datepicker('setDate', nowDate);
 		            $("#Edatepicker").datepicker('setDate', nowDate2);
 		            document.getElementById("absentreason").value = BReason;            
@@ -285,7 +285,6 @@
 		        }
 		        else
 		            pProxy = "";
-
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
