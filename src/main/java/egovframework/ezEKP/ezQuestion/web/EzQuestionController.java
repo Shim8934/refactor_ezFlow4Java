@@ -255,7 +255,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(formatter.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false)).compareTo(sysDate)<0){
 			endPoll = true;
 		}
-		if(qstUserPermissionVO.getEndFlg().equals('1')){
+		if(qstUserPermissionVO.getEndFlg().equals("1")){
 			endPoll = true;
 		}
 		/**UserIDAdmin*/
@@ -483,7 +483,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO, userInfo.getTenantId());
 		
-		if(qstUserPermissionVO.getMultiResponseFlg().equals('1')){
+		if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 			multiResponseOK = true;
 		}else{
 			if(ezQuestionService.getResponseDateCnt(qstUserPermissionVO,userID, userInfo.getTenantId())!=0){
