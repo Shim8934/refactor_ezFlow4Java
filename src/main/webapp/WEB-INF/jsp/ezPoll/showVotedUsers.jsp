@@ -11,7 +11,13 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">			
-		<script type="text/javascript">				
+		<script type="text/javascript">
+			window.onresize = function () {
+				var height = document.documentElement.clientHeight;				
+				var divElmt = document.getElementById("divTbl");
+				divElmt.style.height = (height - 50) + "px";
+			}
+		
 			window.onload = function () {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
@@ -46,7 +52,7 @@
 		</script>
 	</head>
 	
-	<body class = "popup" id = "mainbody">
+	<body class = "popup" id = "mainbody" style="overflow: hidden;">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: inline-block; padding-left: 5px; text-align:left;">
@@ -60,7 +66,7 @@
 				<div style="float:left; display:block;"><c:out value='${totalVotesForOption}'/></div>
 				<img style="position: fixed; right: 20px; top: 95px; cursor: pointer; height: 32px; width: 32px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}','${optID}')">
 			</div>	 --%>
-			<div style="height:313px; overflow-y: auto;  overflow-x: hidden;">
+			<div style="height:313px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
 				<table border=1 style="width:100%; border-color:grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
 						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">

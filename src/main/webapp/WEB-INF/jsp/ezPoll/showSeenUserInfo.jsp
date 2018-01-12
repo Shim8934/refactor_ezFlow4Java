@@ -11,7 +11,13 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">			
-		<script type="text/javascript">				
+		<script type="text/javascript">	
+			window.onresize = function () {
+				var height = document.documentElement.clientHeight;				
+				var divElmt = document.getElementById("divTbl");
+				divElmt.style.height = (height - 50) + "px";
+			}
+			
 			window.onload = function () {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
@@ -55,14 +61,14 @@
 		</script>
 	</head>
 	
-	<body class = "popup" id = "mainbody">
+	<body class = "popup" id="mainbody" style="overflow: hidden;">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float:left; display: block; width:100%; text-align:center;">
 			        	<h1><spring:message code='ezPoll.t135'/></h1>
 			    </div>				
 			</div>
-			<div style="height:359px; overflow: auto;">
+			<div style="height:359px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
 				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey" class="voteSeenTbl">
 					<tr> 
 						<th colspan="3"> 
