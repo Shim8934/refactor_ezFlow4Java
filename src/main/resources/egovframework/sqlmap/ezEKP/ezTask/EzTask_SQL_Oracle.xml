@@ -669,7 +669,7 @@
 		</isNull>
 		
 		<selectKey keyProperty="taskID" resultClass="String">
-			SELECT SEQ_TBL_TASK.NEXTVAL-1 FROM DUAL
+			SELECT SEQ_TBL_TASK.CURRVAL FROM DUAL
 		</selectKey>
     </insert>
     
