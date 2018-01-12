@@ -645,12 +645,13 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
 function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     var treeDiv = document.getElementById(pTreeID);
     var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
-
+    
+    $("#descrip").text("");
+    
     if (preSelectID != "" && preSelectID != "undefined" && preSelectID!= null) {
         var objSpan = document.getElementById("spn_" + preSelectID);
         objSpan.className = TreeClasses["normal"];
     }
-
     if (pNodeID != "" && pNodeID != "undefined") {
         var objSpan = document.getElementById("spn_" + pNodeID);
         objSpan.className = TreeClasses["selected"];
