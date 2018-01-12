@@ -1964,13 +1964,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String myCopNewBoardItem(LoginVO userInfo, int startRow, int endRow) throws Exception {
 		logger.debug("myCopNewBoardItem started.");
 		
-		StringBuilder rtnVal = new StringBuilder();
-System.out.println("startRow.size : " + startRow);
-System.out.println("endRow.size : " + endRow);		
+		StringBuilder rtnVal = new StringBuilder();	
 		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST", userInfo.getTenantId());
 
 		logger.debug("clubNoList.size : " + clubNoList.size());
-System.out.println("clubNoList.size : " + clubNoList.size());		
+		
 		rtnVal.append("<ITEM><DATA>");
 		
 		for (String clubNo : clubNoList) {
