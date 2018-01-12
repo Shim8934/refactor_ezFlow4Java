@@ -123,10 +123,11 @@
 			function form_check(){
 		        var cur_date = new Date();
 	            //var start_date = "<c:out value='${qstUserPollItemVO.pollStartDate}'/>";
-	            var start_date = "${pollStartDate}";
+	            var start_date_str = "${pollStartDate}";
+	            var start_date = new Date(start_date_str);
 
 	            if(start_date > cur_date){
-	                alert("<spring:message code='ezQuestion.t316' />" + start_date + "<spring:message code='ezQuestion.t317' />");
+	                alert("<spring:message code='ezQuestion.t316' />" + start_date_str + "<spring:message code='ezQuestion.t317' />");
 	                return false;
 	            }
 	            var iQuestonCount = 0;

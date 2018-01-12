@@ -462,6 +462,7 @@
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
 		        	var obj = JSON.parse(message.data);
+		        	
 		        	if (obj.status == "transferStart") {
 		            	userkey = obj.userkey;
 			            ShowMailProgressNew();
@@ -500,9 +501,11 @@
 						});
 						
 		            } else if (obj.status == 'progress') {
+		            	
 		            	if (obj.percent <= 100) {
 			            	ShowPercent(obj.percent);
 		            	}
+		            	
 		            } else if (obj.status == 'end') {
 		            	webSocket.close();
 		            	HiddenMailProgressNew();

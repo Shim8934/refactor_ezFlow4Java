@@ -76,6 +76,8 @@
 	        
         	// 2017.12.27 단암 시스템 트리 열기 
             // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
+            // 환경설정에서 기존설정값과 신규설정값이 다르면 트리를 재호출하여 적용시킨다. 
+            // 편지함 관리에서도 닫기버튼을 누르면 트리를 재호출하여 적용시킨다.
 	        function previewSubTreeCall(type){
         		
         		if (typeof type != "undefined") {
@@ -429,11 +431,7 @@
 	            frmSpam.submit();
 	        }
 	        function mail_export() {
-	            try {
-	                parent.frames["right"].mail_export();
-	            } catch (e) {
-	                alert("<spring:message code="ezEmail.t640" />");
-	            }
+	            parent.frames["right"].mail_export();
 	        }
 	        function mail_exportall() {
 	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };

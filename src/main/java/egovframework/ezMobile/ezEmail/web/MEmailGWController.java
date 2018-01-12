@@ -3939,7 +3939,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				
 				ezAddressService.insertAddress(info.getTenantId(), ownerId, "0", info.getUserId(),
-						info.getUserName(), info.getUserName2(), sName, sEmail, sCompanyPhone, sDept,
+						info.getUserName(), info.getUserName2(), sName, sEmail, sCompany, sDept,
 						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P");
 				
 		        result.put("status", "ok");
