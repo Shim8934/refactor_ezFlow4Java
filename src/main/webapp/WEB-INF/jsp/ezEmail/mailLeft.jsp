@@ -40,7 +40,18 @@
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px";
 	            }
 	        }
+	        
+	        //수정 수아 재은
+	        var xmlhttp;
+	        
 	        window.onload = function () {
+		    	
+		    	//수정 수아 재은
+		        xmlhttp = createXMLHttpRequest();
+                xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
+                xmlhttp.onreadystatechange = detailbox_info;
+                xmlhttp.send();
+	        	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -105,6 +116,44 @@
 	            } 
 
 	        }
+		    
+		    //수정 수아 재은
+		    function detailbox_info() { 
+		    	if (xmlhttp == null || xmlhttp.readyState != 4) return;
+		    	
+                var result = xmlhttp.responseXML; 
+                var totalVolume = ""; 
+                var useVolume = "";
+                var percent = "";
+                var colorClass = "myBar_green";
+                
+                if (CrossYN()) { 
+                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
+                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
+                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
+                } else { 
+                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
+                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
+                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
+                }
+                                
+                //뿌려주기
+                $("#myBar").css({
+                	"width" : percent + "%"
+                });
+                $(".volumes").text(useVolume + "(" + percent + "%)" + " / " + totalVolume);                
+                
+                //용량 체크(색깔로)
+                if (percent > 90) {
+                	colorClass = "myBar_red";
+                } else if (percent > 70) {
+                	colorClass = "myBar_orange";
+                } else if (percent > 60) {
+                	colorClass = "myBar_yellow";
+                }
+                
+                $("#myBar").addClass(colorClass);
+		    }
 	        
 	        function write_Letter() {
 	            var pheight = window.screen.availHeight;
@@ -554,6 +603,30 @@
 				window.open(url, "right");
 			}	        
 	    </script>
+		 <style type="text/css">
+				#myProgress {
+				  width: 80%;
+				  height:10px;
+				  background-color: #ddd;
+				  overflow:hidden;
+				}
+				.myBar_red {
+				  height: 10px;
+				  background-color: #ff1616;
+				}
+				.myBar_orange {
+				  height: 10px;
+				  background-color: #ff7f00;
+				}
+				.myBar_yellow {
+				  height: 10px;
+				  background-color: #ffb600;
+				}
+				.myBar_green {
+				  height: 10px;
+				  background-color: #4CAF50;
+				}
+			</style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
@@ -582,6 +655,13 @@
 	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>
 	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
+	        
+	    	<!-- 수정 수아 재은 -->
+		     <div id='myProgress' style='margin-left:20px;'>
+		    	<div id='myBar'></div>
+		    </div>
+		    <div style='text-align:center; margin-top:10px; font-weight:bold;' class="volumes"></div>
+	        
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
@@ -618,6 +698,7 @@
 		    </ul>			
 			</c:if>		        
 	    </div>
+	        		               
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>
