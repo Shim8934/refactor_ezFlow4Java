@@ -73,6 +73,7 @@
 	        var MozNowZoom = 1;
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
+	        
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom < MozMaxZoom) {
@@ -80,18 +81,20 @@
 	                } else {
 	                    return;
 	                }
+	                
 	                $(doc).find('p').css("MozTransform","scale(" + MozNowZoom + ")");
 	                $(doc).find('p').css("MozTransformOrigin","0 0");
-	            }
-	            else {
+	            } else {
 	                if (nowZoom < maxZoom) {
 	                    nowZoom += 10;
 	                } else {
 	                    return;
 	                }
+	                
 	                $(doc).find('p').css("zoom",nowZoom + "%");
 	            }
 	        }
+	        
 	        function Smaller(doc) {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom > MozMinZoom) {
@@ -99,20 +102,19 @@
 	                } else {
 	                    return;
 	                }
+	                
 	                $(doc).find('p').css("MozTransform","scale(" + MozNowZoom + ")");
 	                $(doc).find('p').css("MozTransformOrigin","0 0");
-	            }
-	            else {
+	            } else {
 	                if (nowZoom > minZoom) {
 	                    nowZoom -= 10;
 	                } else {
 	                    return;
 	                }
+	                
 	                $(doc).find('p').css("zoom",nowZoom + "%");
 	            }
-	        }
-		    
-		    
+	        }		    		    
 		    
 		    window.onload = function () {
 		        try {

@@ -701,19 +701,22 @@ function GetListIevent_ongetxmlcomplete() {
 	            	document.getElementById(getChkId).childNodes.item(0).childNodes.item(0).checked = true;
 	                document.getElementById(getChkId).style.backgroundColor = m_strColorSelect;
             	}
-            }//for End
+            } // for End
         }   
     }
 }
+
 /* 수아 재은 추가 (선택된 input href) */
 function getCheckHrefArry() {
 	var checkedHrefArry = new Array();
-	$("#MailList tr input:checked").each(function (){
+	
+	$("#MailList tr input:checked").each(function () {
 		checkedHrefArry.push($(this).parents("tr").attr("_href"));
 	});
 	
 	return checkedHrefArry;
 }
+
 function isScrollMailList(){
 	if ($("#contentlist").height() < $("table.mainlist#MailList").height()) {
 		if ($("#MailHeader tr th#forScroll").length < 1) {

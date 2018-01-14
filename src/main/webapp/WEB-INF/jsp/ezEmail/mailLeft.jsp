@@ -43,7 +43,6 @@
 	        
 	        //수정 수아 재은
 	        var xmlhttp;
-		    var MailQu
 	        
 	        window.onload = function () {
 		    	
@@ -120,7 +119,8 @@
 		    
 		    //수정 수아 재은
 		    function detailbox_info() { 
-		    	if(xmlhttp == null || xmlhttp.readyState != 4) return; 
+		    	if (xmlhttp == null || xmlhttp.readyState != 4) return;
+		    	
                 var result = xmlhttp.responseXML; 
                 var totalVolume = ""; 
                 var useVolume = "";
@@ -130,8 +130,7 @@
                 if (CrossYN()) { 
                     totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
                     useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
-                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;
-                    
+                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
                 } else { 
                     totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
                     useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
@@ -142,8 +141,7 @@
                 $("#myBar").css({
                 	"width" : percent + "%"
                 });
-                $(".volumes").text(useVolume + "(" + percent + "%)" + " / " + totalVolume);
-                
+                $(".volumes").text(useVolume + "(" + percent + "%)" + " / " + totalVolume);                
                 
                 //용량 체크(색깔로)
                 if (percent > 90) {
@@ -557,26 +555,26 @@
 	        	document.getElementById("progressPanel").style.display = "none";
 	        }
 	    </script>
-		 <style type="text/css" >
+		 <style type="text/css">
 				#myProgress {
 				  width: 80%;
 				  height:10px;
 				  background-color: #ddd;
 				  overflow:hidden;
 				}
-				.myBar_red{
+				.myBar_red {
 				  height: 10px;
 				  background-color: #ff1616;
 				}
-				.myBar_orange{
+				.myBar_orange {
 				  height: 10px;
 				  background-color: #ff7f00;
 				}
-				.myBar_yellow{
+				.myBar_yellow {
 				  height: 10px;
 				  background-color: #ffb600;
 				}
-				.myBar_green{
+				.myBar_green {
 				  height: 10px;
 				  background-color: #4CAF50;
 				}
