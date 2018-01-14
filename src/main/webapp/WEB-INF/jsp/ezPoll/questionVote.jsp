@@ -993,6 +993,7 @@
 							nameDiv.innerHTML = div2Cmt.firstElementChild.lastElementChild.innerHTML;	
 							nameDiv.setAttribute("style", "padding-left: 10px;");
 							nameDiv.setAttribute("_fileInfo", div2Cmt.firstElementChild.firstElementChild.getAttribute("_fileInfo"));
+							nameDiv.setAttribute("_orgName", div2Cmt.firstElementChild.lastElementChild.innerHTML);
 							innerDiv2.appendChild(nameDiv);
 		    			}
 		    			else if (fileType == "images") {
@@ -1028,7 +1029,9 @@
 	    				imgForInnerDiv2.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; height: 60px; width: 60px;");
 	    				imgForInnerDiv2.setAttribute("_type", "file");
 	    				var nameDiv = document.createElement("div");
-						nameDiv.innerHTML = div2Cmt.lastElementChild.lastElementChild.innerHTML;	
+						nameDiv.innerHTML = div2Cmt.lastElementChild.lastElementChild.innerHTML;
+						nameDiv.setAttribute("_fileInfo", div2Cmt.lastElementChild.firstElementChild.getAttribute("_fileInfo"));
+						nameDiv.setAttribute("_orgName", div2Cmt.lastElementChild.lastElementChild.innerHTML);
 						nameDiv.setAttribute("style", "padding-left: 10px;");
 						innerDiv2.appendChild(nameDiv);
 	    			}
