@@ -40,7 +40,18 @@
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px";
 	            }
 	        }
+	        
+	        //수정 수아 재은
+	        var xmlhttp;
+	        
 	        window.onload = function () {
+		    	
+		    	//수정 수아 재은
+		        xmlhttp = createXMLHttpRequest();
+                xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
+                xmlhttp.onreadystatechange = detailbox_info;
+                xmlhttp.send();
+	        	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -64,6 +75,8 @@
 	        
         	// 2017.12.27 단암 시스템 트리 열기 
             // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
+            // 환경설정에서 기존설정값과 신규설정값이 다르면 트리를 재호출하여 적용시킨다. 
+            // 편지함 관리에서도 닫기버튼을 누르면 트리를 재호출하여 적용시킨다.
 	        function previewSubTreeCall(type){
         		
         		if (typeof type != "undefined") {
@@ -103,6 +116,44 @@
 	            } 
 
 	        }
+		    
+		    //수정 수아 재은
+		    function detailbox_info() { 
+		    	if (xmlhttp == null || xmlhttp.readyState != 4) return;
+		    	
+                var result = xmlhttp.responseXML; 
+                var totalVolume = ""; 
+                var useVolume = "";
+                var percent = "";
+                var colorClass = "myBar_green";
+                
+                if (CrossYN()) { 
+                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
+                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
+                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
+                } else { 
+                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
+                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
+                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
+                }
+                                
+                //뿌려주기
+                $("#myBar").css({
+                	"width" : percent + "%"
+                });
+                $(".volumes").text(useVolume + "(" + percent + "%)" + " / " + totalVolume);                
+                
+                //용량 체크(색깔로)
+                if (percent > 90) {
+                	colorClass = "myBar_red";
+                } else if (percent > 70) {
+                	colorClass = "myBar_orange";
+                } else if (percent > 60) {
+                	colorClass = "myBar_yellow";
+                }
+                
+                $("#myBar").addClass(colorClass);
+		    }
 	        
 	        function write_Letter() {
 	            var pheight = window.screen.availHeight;
@@ -378,11 +429,7 @@
 	            frmSpam.submit();
 	        }
 	        function mail_export() {
-	            try {
-	                parent.frames["right"].mail_export();
-	            } catch (e) {
-	                alert("<spring:message code="ezEmail.t640" />");
-	            }
+	            parent.frames["right"].mail_export();
 	        }
 	        function mail_exportall() {
 	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
@@ -508,6 +555,30 @@
 	        	document.getElementById("progressPanel").style.display = "none";
 	        }
 	    </script>
+		 <style type="text/css">
+				#myProgress {
+				  width: 80%;
+				  height:10px;
+				  background-color: #ddd;
+				  overflow:hidden;
+				}
+				.myBar_red {
+				  height: 10px;
+				  background-color: #ff1616;
+				}
+				.myBar_orange {
+				  height: 10px;
+				  background-color: #ff7f00;
+				}
+				.myBar_yellow {
+				  height: 10px;
+				  background-color: #ffb600;
+				}
+				.myBar_green {
+				  height: 10px;
+				  background-color: #4CAF50;
+				}
+			</style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
@@ -536,7 +607,14 @@
 	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>
 	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
-	    </div>
+	        
+	    	<!-- 수정 수아 재은 -->
+		     <div id='myProgress' style='margin-left:20px;'>
+		    	<div id='myBar'></div>
+		    </div>
+		    <div style='text-align:center; margin-top:10px; font-weight:bold;' class="volumes"></div>
+		               
+		</div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>
