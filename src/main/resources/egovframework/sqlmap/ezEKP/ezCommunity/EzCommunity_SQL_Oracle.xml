@@ -1552,7 +1552,7 @@
 				AND
 					(showposition = ' ' OR showposition IS NULL)
 				AND
-					parentboardid != 'TOP'
+					(parentboardid != 'TOP' AND parentboardid != 'top')
 				AND
 					tenant_id = #tenantID#
 			]]>
