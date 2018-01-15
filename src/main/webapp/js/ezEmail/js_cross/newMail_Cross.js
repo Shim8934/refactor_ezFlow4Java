@@ -3464,6 +3464,7 @@ function deleteMailUser(email, iWhich) {
 var exportOption_cross_dialogArguments = new Array();
 
 function mailExportOption_onClick(type) {
+	
     if (!CrossYN()) {
         EzHTTPTrans.style.display = "none";
     }    

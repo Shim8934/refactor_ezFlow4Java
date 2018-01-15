@@ -151,9 +151,9 @@
 		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer'>";
 		                        
 		                        if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
-		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(3));
+		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0));
 		                        else
-		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(2));
+		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0));
 		                        
 		                        listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
 		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.gif' width='86' height='61' alt=''></dd>";
@@ -163,9 +163,9 @@
 		                        
 		                        for (var i = 1; i < RowCnt; i++) {
 		                            if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
-		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(3));
+		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0));
 		                            else
-		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(2));
+		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0));
 		                            
 		                            var STARTDATE = "";
                             		var WRITERNAME = "";
