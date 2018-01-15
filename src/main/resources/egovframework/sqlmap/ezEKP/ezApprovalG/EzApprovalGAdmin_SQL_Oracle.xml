@@ -411,7 +411,7 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					(	TRIM(processdeptcode) = #v_DEPTCODE#
+					(TRIM(processdeptcode) = #v_DEPTCODE#
 					OR
 						taskcode LIKE 'ZZ%'
 					OR
@@ -739,6 +739,8 @@
 				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
 			WHERE
 				(functiontype IS NOT NULL)
+			AND
+				 functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
 		]]>
@@ -1671,8 +1673,8 @@
 				formdescription,
 				formfilelocation,
 				formconnflag,
-				companyid,
-				tenant_id)
+				tenant_id,
+				companyid)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1682,8 +1684,8 @@
 				#v_PFORMDESCRIPT#,
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
-				#companyID#,
-				#tenantID#)
+				#tenantID#,
+				#companyID#)
 		]]>
 	</insert>
 
@@ -2512,6 +2514,30 @@
 		]]>
 	</update>
 	
+	<insert id="EzApprovalGAdmin.insertEditApproDoc" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO 
+			tbl_editapprdoc (
+				DOCID, 
+				BEFOREHTML, 
+				AFTERHTML, 
+				USERID, 
+				MODIFYDATE, 
+				TENANT_ID, 
+				COMPANYID
+				)
+		VALUES (
+				#v_DOCID#, 
+				#v_BEFOREHTML#, 
+				#v_AFTERHTML#, 
+				#v_USERID#, 
+				#v_MODIFYDATE#, 
+				#v_TENANTID#, 
+				#v_COMPANYID#
+				)
+		]]>				
+	</insert>
+	
 	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
 	<!-- parameterClass="Map"> -->
 	<!-- <![CDATA[ -->
@@ -3024,34 +3050,38 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_SEALINFO
-			(sealnum,
-			sealname,
-			sealpath,
-			sealwidth,
-			sealheight,
-			regdate,
-			deldate,
-			reguserid,
-			regusername,
-			regusername2,
-			companyid,
-			tenant_id)
-        VALUES
-			((SELECT
-				NVL(MAX(sealnum), 0) + 1
-			FROM
-				TBL_SEALINFO),
-			#v_SEALNAME#,
-			#v_SEALPATH#,
-			#v_SEALWIDTH#,
-			#v_SEALHEIGHT#,
-			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
-			NULL,
-			#v_REGUSERID#,
-			#v_REGUSERNAME#,
-			#v_REGUSERNAME2#,
-			#companyID#,
-			#tenantID#)
+				(sealnum,
+				sealname,
+				sealpath,
+				sealwidth,
+				sealheight,
+				regdate,
+				deldate,
+				reguserid,
+				regusername,
+				regusername2,
+				companyid,
+				tenant_id)
+       		 VALUES
+				((SELECT
+					NVL(MAX(sealnum), 0) + 1
+				FROM
+					TBL_SEALINFO
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#),
+				#v_SEALNAME#,
+				#v_SEALPATH#,
+				#v_SEALWIDTH#,
+				#v_SEALHEIGHT#,
+				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+				NULL,
+				#v_REGUSERID#,
+				#v_REGUSERNAME#,
+				#v_REGUSERNAME2#,
+				#companyID#,
+				#tenantID#)
 		]]>
 	</insert>
 
@@ -3904,7 +3934,124 @@
 		]]>
 	</select>
 	
-	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map">
+	<update id="EzApprovalGAdminDAO.moveAllDocListF" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				orgcontid = #sourceContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and	 
+				docid in (
+							select 
+								a.docid 
+							from 
+							  	tbl_endaprdocinfo a 
+							where
+							  	a.tenant_id = #tenantID#
+							and
+							  	a.companyid = #companyID#
+							and
+							  	a.containerid = #sourceContID# )
+		]]>	
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveAllDocListS" parameterClass="Map">
+		<![CDATA[
+			update tbl_endaprdocinfo 
+			set 
+				containerid = #targetContID#
+			where 
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				containerid = #sourceContID# 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveDocListF" parameterClass="Map">
+		<![CDATA[
+			update tbl_endaprdocinfo 
+			set 
+				containerid = #targetContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				containerid = #sourceContID#
+			and
+				docid in ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveDocListS" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo 
+			set 
+				orgcontid = #sourceContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				docid in ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteAllDocList" parameterClass="Map">
+		update tbl_expendaprdocinfo 
+		set 
+			delflag = 'Y'
+		where
+			tenant_id = #tenantID#
+		and
+			companyid = #companyID#
+		and	 
+			docid in ( 
+						select	
+							docid
+						from
+						  	tbl_endaprdocinfo
+						where
+							tenant_id = #tenantID#
+						and
+						  	companyid = #companyID#
+						and
+						  	containerid = #contID#
+						<isNotEmpty property="startPeriod">
+							<![CDATA[
+								and 
+									enddate >= #startDate# 
+								and 
+									enddate <= #endDate# 
+							]]>
+						</isNotEmpty> )
+		and
+			delflag is null
+		<isNotEmpty property="storagePeriod" prepend="AND">
+			storageperiod = #storagePeriod#
+		</isNotEmpty> 
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteDocList" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				delflag = 'Y'
+			where
+				tenant_id = #tenantID#
+		  	and
+		  		companyid = #companyID#
+		  	and
+		  		docid in ( $subQuery$ )
+		]]>
+	</update>
+	
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				count(*)

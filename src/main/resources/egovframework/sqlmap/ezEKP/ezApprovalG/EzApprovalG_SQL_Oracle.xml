@@ -6655,7 +6655,7 @@
 	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
-						SELECT 
+				SELECT 
 					code2,
 					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
 								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
