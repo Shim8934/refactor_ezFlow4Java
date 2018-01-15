@@ -1859,7 +1859,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 	if (approvalFlag.equals("S")) {
                 		rtnXML.append("<DATA6> </DATA6>");
                 	} else {
-                		rtnXML.append("<DATA6>" + commonUtil.cleanValue(makeListField(ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase(), "DisplayName", tenantID).toString())) + "</DATA6>");
+                		//ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase() -> toUpperCase() 삭제, 오라클 버전 개발 시 오라클은 mysql과 다르게 대소문자를 구분하기 때문
+                		rtnXML.append("<DATA6>" + commonUtil.cleanValue(makeListField(ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent(), "DisplayName", tenantID).toString())) + "</DATA6>");
                 	}
 				}
                 

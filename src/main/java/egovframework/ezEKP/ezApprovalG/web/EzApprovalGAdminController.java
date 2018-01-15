@@ -320,7 +320,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String contID = request.getParameter("fContID");
 		String companyID = request.getParameter("companyID");
-		
 		String result = ezApprovalGAdminService.getGroupDept(contID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), companyID, userInfo.getTenantId());
 		
 		logger.debug("getGroupDept ended.");

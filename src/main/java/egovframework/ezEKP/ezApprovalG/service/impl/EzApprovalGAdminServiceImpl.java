@@ -2104,13 +2104,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map2.put("contID", contID);
 			map2.put("companyID", companyID);
 			map2.put("tenantID", tenantID);
-			
 			for(String deptID : deptList.split(";")) {
 				map2.put("deptID", deptID);
 				
 				logger.debug("insertFormContainerGroup started.");
 				ezApprovalGAdminDAO.insertFormContainerGroup(map2);
-				logger.debug("insertFormContainerGroup started.");
+				logger.debug("insertFormContainerGroup ended.");
 			}
 		}
 		
