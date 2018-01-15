@@ -169,8 +169,7 @@
 		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage"
-		parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="G">
 			<![CDATA[
 				SELECT
@@ -218,7 +217,8 @@
 					keepingplace,
 					taskname,
 					taskname2,
-					subcategorycode,
+					C.subcategorycode,
+					C.NAME$lang$,
 					itemSecurity,
 					isPublic,
 					(SELECT
@@ -226,19 +226,27 @@
 				     FROM
 				     	TBL_CABINETCLASS A
 				     WHERE
-				     	TENANT_ID = #tenantID#
+				     	A.TENANT_ID = #tenantID#
 				     AND
-				     	COMPANYID = #companyID#
+				     	A.COMPANYID = #companyID#
 				     AND
 				     	A.TASKCODE = B.TASKCODE ) CABINETID 
 				FROM
 					TBL_TASKCODE B
+				JOIN
+					TBL_TASKSUBCATEGORY C
+				ON
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					B.COMPANYID = C.COMPANYID
+				AND
+					B.SUBCATEGORYCODE = C.SUBCATEGORYCODE
 				WHERE
-					tenant_id = #tenantID#
+					B.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					B.companyid = #companyID#
 				AND
-					subcategorycode = #v_SUBCATECODE#
+					B.subcategorycode = #v_SUBCATECODE#
 				AND
 					delflag = '0'
 				ORDER BY
@@ -411,7 +419,7 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					(	TRIM(processdeptcode) = #v_DEPTCODE#
+					(TRIM(processdeptcode) = #v_DEPTCODE#
 					OR
 						taskcode LIKE 'ZZ%'
 					OR
@@ -444,7 +452,7 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				companyid = #companyID#	
+				companyid = #companyID#
 			AND
 				taskcode = #v_TASKCODE#
 			AND
@@ -587,7 +595,7 @@
 					regusername,
 					regusername2
 				FROM
-					TBL_SEALDEPTINFO 
+					TBL_SEALDEPTINFO
 				WHERE
 					tenant_id = #tenantID#
 				AND
@@ -613,7 +621,7 @@
 					regusername,
 					regusername2
 				FROM
-					TBL_SEALDEPTINFO 
+					TBL_SEALDEPTINFO
 				WHERE
 					tenant_id = #tenantID#
 				AND
@@ -739,6 +747,8 @@
 				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
 			WHERE
 				(functiontype IS NOT NULL)
+			AND
+				functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
 		]]>
@@ -915,7 +925,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormContent" parameterClass="Map"
-		resultClass="ApprGFormVO">
+		resultClass="ApprGFormVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT
@@ -983,10 +993,12 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormRecvAdmin" parameterClass="Map"
-		resultClass="ApprGFormVO">
+		resultClass="ApprGFormVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
 		<![CDATA[
 			SELECT
-				deptid
+				deptid,
+				userid
 			FROM
 				TBL_FORMRECV
 			WHERE
@@ -998,6 +1010,23 @@
 			ORDER BY
 				deptsn
 		]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					deptid
+				FROM
+					TBL_FORMRECV
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_FORMID#
+				ORDER BY
+					deptsn
+			]]>
+		</isEqual>		
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskCategotyTree" -->
@@ -1093,7 +1122,7 @@
 					AND
 						mcategorycode = #v_PARENTID#
 					AND
-						subcategorycode = #v_PARENTID#
+						subcategorycode != #v_PARENTID#
 					AND
 						oldflag IS NULL
 				]]>
@@ -1129,8 +1158,7 @@
 		#v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true"
-		parameterClass="Map" resultClass="ApprGAdminReceiveVO">
+	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
 		<isEqual property="v_MODE" compareValue="ITEM">
 			<![CDATA[
 				SELECT
@@ -1702,9 +1730,9 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				formid = #v_PFORMID#
+				companyid = #companyID#				
 			AND
-				companyid = #companyID#
+				formid = #v_PFORMID#
 		]]>
 	</update>
 
@@ -1941,7 +1969,7 @@
 					AND
 						companyid = #companyID#
 					AND
-						mcategorycode != #v_CATECODE#
+						mcategorycode = #v_CATECODE#
 					AND
 						oldflag IS NULL
 				]]>
@@ -1957,7 +1985,7 @@
 					AND
 						companyid = #companyID#
 					AND
-						subcategorycode != #v_CATECODE#
+						subcategorycode = #v_CATECODE#
 					AND
 						delflag = '0'
 				]]>
@@ -2167,6 +2195,8 @@
 				TBL_APRDOCINFO.companyid = #companyID#
 			AND
 				(functiontype IS NOT NULL)
+			AND
+				 functiontype != '010'				
 			AND
 				(startdate IS NOT NULL)
 		]]>
