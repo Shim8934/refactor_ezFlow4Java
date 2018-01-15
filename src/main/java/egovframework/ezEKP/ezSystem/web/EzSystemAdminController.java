@@ -82,6 +82,7 @@ public class EzSystemAdminController {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
+		
 		return "/ezSystem/systemMain";
 	}
 
@@ -230,7 +231,6 @@ public class EzSystemAdminController {
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate);
-		
 		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate);
 		
 		int totalPage = itemCnt / maxItemPerPage ;

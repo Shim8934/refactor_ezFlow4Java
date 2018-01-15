@@ -1,4 +1,4 @@
-﻿ï»¿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/js_cross/search_mail.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -36,6 +37,8 @@
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
+		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
+
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -418,7 +421,7 @@
 		        }
 			}
 			function event_copyItemList() {
-			    if (g_copyItemHttp != null && g_copyItemHttp.readyState == 4) {
+			    if (g_copyItemHttp != null && g_copyItemHttp.readyState == 4) { 
 			        if (g_copyItemHttp.status < 200 || g_copyItemHttp.status > 300) {
 			            g_copyItemHttp = null;
 		
@@ -498,28 +501,55 @@
 				}
 			}
 			
+			var selcheck = new Array();
+			var checkMailCnt;
+			
 			function mail_export() {
-				var selcheck = new Array();
+				var exportType = "MAIL";
 				var mailcount = document.getElementById("maillist").childNodes[0].childNodes.length;
 				var count = 0;
-		        		
+	
 				for (var i = 0; i < mailcount; i++) {
-				    if (document.getElementById("checklol" + i + "").checked == true) {
+				    
+					if (document.getElementById("checklol" + i + "").checked == true) {
 				        selcheck[count++] = document.getElementById("checklol" + i + "");
+						checkMailCnt = count;
 				    }
+				    
 				}
-		
-				if (count == 0) {
-					alert('<spring:message code="ezEmail.t640" />');
+				
+				if (checkMailCnt == 0) {
+					alert("<spring:message code="ezEmail.t640" />");
 					return;
-				} else if (count == 1) { // 하나의 메일을 다운로드 할 경우
+				} else {
+					
+					if (useEncryptZipForEmail == "YES") {
+						mailExportOption_onClick(exportType);
+					} else {
+						mailExport_start();
+					}
+				
+				}
+				
+			}
+		
+			function mailExport_start(pwd) {
+				var encryptPw = "";
+				var folderIdAndMessageIdList = new Object();
+				
+				if (typeof pwd != "undefined") {
+					encryptPw = pwd;
+				}
+				
+				if (checkMailCnt == 1 && encryptPw == "") {
 					var parameters = "url=" + encodeURIComponent(selcheck[0].parentElement.parentElement.getAttribute("targetURL"));
 			    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
+
 			    	AttachDownFrame.location.href = fullpath;
 			        AttachDownFrame.target = "_blank";
-				} else { // 여러개의 메일을 다운로드 할 경우
-					var folderIdAndMessageIdList = new Object();
-			    	for (var i = 0; i < count; i++) {
+				} else {
+
+					for (var i = 0; i < checkMailCnt; i++) {
 			    		var folderIdAndMessageId = selcheck[i].parentElement.parentElement.getAttribute("targetURL").split("/");
 			    		
 			    		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
@@ -528,8 +558,8 @@
 			    			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
 			    		}
 			    	}
-			    	
-			    	ShowMailProgress();
+
+					ShowMailProgress();
 			    	
 			    	$.ajax({
 						type : "POST",
@@ -542,7 +572,7 @@
 						},
 						success: function(result){
 							if (result != "") {
-						    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=";
+						    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + encryptPw;
 						    	AttachDownFrame.location.href = fullpath;
 						        AttachDownFrame.target = "_blank";
 							} else {
@@ -551,8 +581,10 @@
 						}
 					});
 				}
+				
+				checkMailCnt = 0;
 			}
-		
+			
 			function window_onbeforeprint()
 			{
 				normalblock.style.display = "none";
@@ -711,6 +743,9 @@
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display:none"></iframe>
+		<div class="layerpopup"  style="z-index: 10000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </HTML>
 

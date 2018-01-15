@@ -6294,7 +6294,8 @@
    					C.DisplayName$v_pLang$, 
    					ContainerOwnDepID, 
    					COUNT(ContainerOwnDepID) AS TOTALCOUNT2 ,
-   					A.TENANT_ID
+   					A.TENANT_ID,
+                    A.COMPANYID
    			FROM 
    					TBL_ENDAPRDOCINFO A
    			INNER JOIN 
@@ -6303,36 +6304,48 @@
    					A.ContainerID = B.ContainerID
    			AND
    					A.TENANT_ID = B.TENANT_ID
+            AND
+                    A.COMPANYID = B.COMPANYID        
    			INNER JOIN 
    					TBL_Deptmaster C 
    			ON 
    					B.ContainerOwnDepID = C.CN
    			AND
-   					B.TENANT_ID = C.TENANT_ID		
+   					B.TENANT_ID = C.TENANT_ID
+            AND
+                    B.COMPANYID = C.EXTENSIONATTRIBUTE2         		
    			WHERE 
    					ContainerTypeID = '500' 
    			AND 
    					(A.StartDate >= TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS') AND A.StartDate <= TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS')
    			AND
-   					A.TENANT_ID = #v_TENANTID#)
+   					A.TENANT_ID = #v_TENANTID#
+            AND
+                    A.COMPANYID = #companyID#)
    			GROUP BY 
-   					B.ContainerOwnDepID, C.DisplayName$v_pLang$, A.TENANT_ID) B 
+   					B.ContainerOwnDepID, C.DisplayName$v_pLang$, A.TENANT_ID, A.COMPANYID) B 
    		ON 
    			A.WriterDeptID = B.ContainerOwnDepID
    		AND
    			A.TENANT_ID = B.TENANT_ID
+        AND
+            A.COMPANYID = B.COMPANYID    
    		INNER JOIN 
    				TBL_Deptmaster D 
    		ON 
    				A.WriterDeptID = D.CN
    		AND
    				A.TENANT_ID = D.TENANT_ID
+        AND
+                A.COMPANYID = D.EXTENSIONATTRIBUTE2        
    		AND 
    				(A.StartDate >=  TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS') AND A.StartDate <= TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS')) 
    		WHERE 
    				rownum <= 5 
    		AND
    				A.TENANT_ID = #v_TENANTID#
+        AND
+                A.COMPANYID = #companyID#        
    		GROUP BY 
    				D.DisplayName$v_pLang$, WRITERDEPTID, TOTALCOUNT2
    		ORDER BY 
@@ -6633,7 +6646,7 @@
 <!-- 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap"> -->
 <!-- 		{CALL EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
+	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 
@@ -18152,4 +18165,19 @@
 		WHERE 
 			A.DOCID = #pDocID#
    	</select>
+    
+    <select id ="EzApprovalG.getWhoKyulYN" parameterClass="map" resultClass="String">
+        SELECT
+            ISUSE
+        FROM
+            TBL_CODELIST
+        WHERE 
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            CODE1 = #v_CODE1#
+        AND
+            CODE2 = #v_CODE2#
+      </select>
 </sqlMap>

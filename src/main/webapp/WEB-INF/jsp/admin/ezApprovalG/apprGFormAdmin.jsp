@@ -90,7 +90,6 @@
 		    function select_onchange() {
 			    var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);	
-			
 			    ID = treeNode.GetNodeData("DATA1");
 			
 			    if (TreeIdx != "") {

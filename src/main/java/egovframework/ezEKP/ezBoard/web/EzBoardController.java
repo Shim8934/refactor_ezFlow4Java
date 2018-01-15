@@ -2503,7 +2503,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
 					}
-					
+
+					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardList.get(j).get("TITLE")) + "</TITLE>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -4624,9 +4625,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/checkPassWord.do")
 	public String checkPassWord(HttpServletRequest request, Model model) throws Exception {
 		logger.debug("checkPassWord started");
-
+		
 		String replyID = request.getParameter("replyID");
 		String itemID = request.getParameter("itemID");
+		String replyFlag = request.getParameter("replyFlag");
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
@@ -4636,7 +4638,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 
 		logger.debug("checkPassWord ended");
-		return "ezBoard/deleteCommentPopup";
+		
+		if (replyFlag != null && replyFlag.equals("true")) { // 강민수92 한줄댓글 삭제시 or 비번 체크시
+			return "ezBoard/deleteCommentPopup";
+		} else {
+			return "ezBoard/boardCheckPassWord";
+		}
 	}
 	
 	/**

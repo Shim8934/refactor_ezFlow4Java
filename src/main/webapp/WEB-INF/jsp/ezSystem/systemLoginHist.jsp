@@ -338,7 +338,6 @@
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
-			    				
 		   						if (res.itemCnt < 1) {
 		   							html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
 		   						} else {

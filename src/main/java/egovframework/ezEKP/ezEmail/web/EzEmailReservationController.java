@@ -313,8 +313,20 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
 		
         String displayNamePrintable = userInfo.getDisplayName();
-		String serverName = loginInfo.getServerName();
-		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
+		
+        // set serverName
+ 		String serverName = loginInfo.getServerName();
+ 		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", loginInfo.getTenantId());
+ 		
+ 		if (useMailLinkHostname.equals("YES")) {
+ 			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", loginInfo.getTenantId());
+ 			
+ 			if (!mailLinkHostname.equals("")) {
+ 				serverName = mailLinkHostname;
+ 			}
+ 		}
+ 		
+        logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
