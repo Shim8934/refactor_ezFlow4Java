@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -43,6 +46,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzWebFolderService")
+	private EzWebFolderService ezWebFolderService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);	
 	
@@ -82,7 +88,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderTest";
 	}
 	
-	@RequestMapping(value = "/ezWebFolder/uploadFile.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
 	@ResponseBody
 	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {		
 		logger.debug("Upload file is running!");		
@@ -93,17 +99,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String realPath = request.getServletContext().getRealPath("");
 		String[] pFileName = new String[cnt];
-        Long[] fileSize = new Long[cnt];        
-        String[] resultUpload = new String[cnt];
-        String[] sGUID = new String[cnt];
-        //String[] pUploadSN = new String[cnt];        
+        Long[] fileSize = new Long[cnt];
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", user.getTenantId());
-
-        for (int i = 0; i < cnt; i++) {
-            resultUpload[i] = "false";
-            sGUID[i] = UUID.randomUUID().toString();
-            //pUploadSN[i] = "{" + sGUID[i] + "}";
-        }
+        ObjectMapper om = new ObjectMapper();
 
         if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
             for (int i = 0; i < cnt; i++) {
@@ -117,7 +115,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
             }
         }      
         
-        String pDirPath = commonUtil.separator + "fileroot" + commonUtil.separator + user.getTenantId() + commonUtil.separator + "webfolder";        		
+        String pDirPath = getWebFolderDirPath(user.getTenantId());        		
         pDirPath = realPath + pDirPath;
         
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -130,23 +128,17 @@ public class EzWebFolderController extends EgovFileMngUtil {
         	file.mkdir();        
         }
 
-        StringBuffer strXML = new StringBuffer();
-        strXML.append("<ROOT><NODES>");
+        List<FileVO> list = new ArrayList<FileVO>();
         
         for (int i = 0; i < cnt; i++) {        	
         	fileSize[i] = multiFile.get(i).getSize();
-            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-            //String newFileName = pUploadSN[i] + "." + extend;
+            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);           
             
-            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
-				strXML.append("<DATA><![CDATA[" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[denied]]></DATA3>");
-            } 
-            else {
+            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {   	
             	try {
             		writeUploadedFile(multiFile.get(i), pFileName[i], pDirPath);
             		//Save to database
+            		String iconUrl = ezWebFolderService.getFileIconFromExt(extend, user.getTenantId());
             		Date date = new Date();
             		FileVO fileVO = new FileVO();
             		
@@ -155,11 +147,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
             		fileVO.setFileExt(extend);
             		fileVO.setFileName(pFileName[i]);
             		fileVO.setFileFavourite("0");
-            		fileVO.setFilePath(pDirPath + "." + extend);
+            		fileVO.setFilePath(getWebFolderDirPath(user.getTenantId()) + pFileName[i]);
             		fileVO.setFileSize(getFileSize(fileSize[i]));
             		fileVO.setFolderId(folderId);
             		fileVO.setTenantId(user.getTenantId());
-            		fileVO.setUploaderId(user.getId());
+            		fileVO.setUploaderId(user.getId());          		            		
+            		fileVO.setFileIconUrl(iconUrl);
+            		fileVO.setFileShareStatus("0");
             		
             		if (user.getPrimary().equals("1")) {
             			fileVO.setUploaderName(user.getDisplayName1());
@@ -168,26 +162,20 @@ public class EzWebFolderController extends EgovFileMngUtil {
             			fileVO.setUploaderName(user.getDisplayName2());
             		}
             		
+            		fileVO.setFileId(getMaxFileID(user.getTenantId()));
             		
-            		
-            		
-            		strXML.append("<DATA><![CDATA[" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
-    				strXML.append("<DATA2><![CDATA[]]></DATA2>");
-    				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
+            		ezWebFolderService.insertFile(fileVO);
+            		list.add(fileVO);            		
             	}
             	catch (Exception e) {
-            		e.printStackTrace();
-    				strXML.append("<DATA><![CDATA[" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
-    				strXML.append("<DATA2><![CDATA[]]></DATA2>");
-    				strXML.append("<DATA3><![CDATA[denied]]></DATA3>");
-            	}				
+            		e.printStackTrace();            		
+            	}			
             }
         }
-        strXML.append("</NODES></ROOT>");              
-        
-       
+
         logger.debug("Upload file finishes!");        
-        return strXML.toString();
+            
+        return om.writeValueAsString(list);
     }
 	
 	private String getFileSize(long fileSize) {
@@ -208,4 +196,28 @@ public class EzWebFolderController extends EgovFileMngUtil {
         return fileSize_;
 	}
 	
+	private String getMaxFileID(int tenantId) throws Exception {
+		int currentMaxFileId = -1;
+		String result = ezWebFolderService.getFileSequence(tenantId);
+		
+		if (result.equals("")) {
+			currentMaxFileId = 1;
+		} 
+		else {
+			currentMaxFileId = Integer.parseInt(result);			
+		}
+		
+		if (currentMaxFileId == -1) {
+			currentMaxFileId = 1;
+		}
+		else {
+			currentMaxFileId += 1;
+		}
+
+		return Integer.toString(currentMaxFileId);
+	}	
+
+	private String getWebFolderDirPath(int tenantId) {
+		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
+	}
 }

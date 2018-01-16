@@ -2,5 +2,105 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezWebFolder">
-
+	<typeAlias  alias="FileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
+	
+	<!-- File resultMap -->
+    <resultMap id="fileVO" class="FileVO">
+        <result property="fileId"               column="file_id"                columnIndex="1"  />              
+        <result property="fileName"         	column="file_name"              columnIndex="2"  />
+        <result property="filePath"         	column="file_path"              columnIndex="3"  />
+        <result property="fileSize"          	column="file_size"              columnIndex="4"  />
+        <result property="fileExt"           	column="file_ext"               columnIndex="5"	 />
+        <result property="fileFavourite"        column="file_favourite"         columnIndex="6"	 />
+        <result property="uploaderId"           column="uploader_id"            columnIndex="7"  />
+        <result property="uploaderName"         column="uploader_name"          columnIndex="8"  />
+        <result property="createdDate"          column="created_date"           columnIndex="9"	 />
+        <result property="updatedDate"          column="updated_date"           columnIndex="10" />
+        <result property="folderId"           	column="folder_id"              columnIndex="11" />
+        <result property="tenantId"         	column="tenant_id"              columnIndex="12" />
+    </resultMap>
+    
+    <insert id="EzWebFolderDAO.insertFile" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								FILE_ID,                               		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_WEBFOLDER_FILE 
+                         			WHERE
+                         				FILE_ID = #fileId#
+                                   	AND
+                                   		TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_WEBFOLDER_FILE (
+	                FILE_ID,        	FILE_NAME,         FILE_PATH,        	FILE_SIZE,          FILE_EXT,
+	                FILE_FAVOURITE,     UPLOADER_ID,       UPLOADER_NAME,       CREATED_DATE,       UPDATED_DATE,        
+	                FOLDER_ID,			TENANT_ID
+	            )
+	            VALUES(
+	                #fileId#,          	#fileName#,        #filePath#,          #fileSize#,         #fileExt#,
+	                #fileFavourite#,    #uploaderId#,      #uploaderName#,      #createdDate#,      #updatedDate#,
+	                #folderId#,		    #tenantId#
+            )
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_WEBFOLDER_FILE
+	            SET 
+	            	 FILE_ID 		= #fileId#,
+	            	 FILE_NAME 		= #fileName#,
+	            	 FILE_PATH		= #filePath#,
+	            	 FILE_SIZE		= #fileSize#,
+	            	 FILE_EXT		= #fileExt#, 
+	            	 FILE_FAVOURITE = #fileFavourite#, 
+	            	 UPLOADER_ID	= #uploaderId#,  
+	            	 UPLOADER_NAME	= #uploaderName#,
+	            	 CREATED_DATE	= #createdDate#,
+	            	 UPDATED_DATE	= #updatedDate#,
+	            	 FOLDER_ID		= #folderId#,
+	            	 TENANT_ID		= #tenantId#
+	            WHERE
+	            		FILE_ID		= #fileId#
+	            	AND
+	            		TENANT_ID	= #tenantId#
+            ]]> 
+        </isNotEqual>       
+    </insert>    
+    
+    <select id="EzWebFolderDAO.getFileSequence" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				IFNULL(MAX(CONVERT(FILE_ID, UNSIGNED INTEGER)),-1) as maxno
+			FROM 
+				TBL_WEBFOLDER_FILE
+			WHERE  
+				TENANT_ID = #tenantId#
+		]]>		
+    </select>  
+    
+    <select id="EzWebFolderDAO.getFileIconFromExt" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				FILE_ICON
+			FROM 
+				TBL_WEBFOLDER_FILEICON
+			WHERE
+				FILE_EXT  = #extension#
+			AND
+				TENANT_ID = #tenantId#				
+		]]>		
+    </select>  
+    
 </sqlMap>

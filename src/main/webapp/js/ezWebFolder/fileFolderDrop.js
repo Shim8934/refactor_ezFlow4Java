@@ -75,33 +75,8 @@ function onDrop(evt) {
     fileupload();
 }
 
-function uploadProgress(evt) {
-    if (evt.lengthComputable) {
-        var percentComplete = Math.round(evt.loaded * 100 / evt.total);
-        document.getElementById('prog_bar').style.width = percentComplete + "%";
-        document.getElementById('prog_num').innerHTML = percentComplete;
-    }
-}
-
-function uploadComplete(evt) {
-	xhr.removeEventListener("load", uploadComplete);
-    document.getElementById('prog_bar').style.width = "0%";
-    document.getElementById('prog_num').innerHTML = "0";
-    document.getElementById('progdiv').style.display = "none";   
-    setAttachFileInfo1(xhr.responseText);
-    isfileup = false;    
-}
-
-function uploadFailed(evt) {
-    alert(messageCode1);
-}
-
-function uploadCanceled(evt) {
-    alert(messageCode2);
-}
-
 function filedelete(r) {
-    var filecnt = document.getElementById("filelist").childNodes.length;
+/*    var filecnt = document.getElementById("filelist").childNodes.length;
     var pBoardID = window.parent.pBoardID;
     var strRet = "";
     var fileinfo = r.getAttribute("_path");    
@@ -113,101 +88,132 @@ function filedelete(r) {
     var fd = new FormData();
     fd.append("fileToDelete", fileinfo);
     xhr.open("POST", "/ezPoll/deleteFile.do");
-    xhr.send(fd);
+    xhr.send(fd);*/
 }
 
 function fileupload() {	
-    var fd = new FormData();
+	var progress_bar_id = '#progress-wrp';
+    var fd = new FormData();    
+    fd.append("folderId", currFolderId); //baonk 2018/01/16
 
     for (var i = 0; i < file.length; i++) {
         fd.append("fileToUpload", file[i]);
     }
-    
-    fd.append("folderId", currFolderId); //baonk 2018/01/16
-    fd.append("boardid", window.parent.pBoardID);
-    fd.append("maxsize", window.parent.AttachLimit * 1024 * 1024);
-    fd.append("mode", "ATT");   
-    isfileup = true;
-    xhr.upload.addEventListener("progress", uploadProgress, false);
-    xhr.addEventListener("load", uploadComplete, false);
-    xhr.addEventListener("error", uploadFailed, false);
-    xhr.addEventListener("abort", uploadCanceled, false);
-    xhr.open("POST", "/ezWebFolder/uploadFile.do");
-    xhr.send(fd);    
-    document.getElementById('progdiv').style.display = "inline-block";	
-}
 
-function setAttachFileInfo1(strXML) {
-    if (strXML == "ERROR") {    	
-        alert(strLang28);
-        return;
-    }     
-    
-    var xml = loadXMLString(strXML);  
-    
-    try {    	
-        var listtable = document.getElementById("tblFileList"); 
-        
-        for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
-            /*var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);         
-            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
-
-            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]) == "OK") {            	
-                objTr = document.createElement("TR");
-                objTr.setAttribute("fileinfo", fileinfo);
-                objTr.setAttribute("attid", attid);
-
-                var objTd = document.createElement("TD");                
-                objTd.style.paddingLeft  = "10px";
-                objTd.style.paddingRight = "0px";
-                objTd.style.paddingBottom = "0px";
-                objTd.style.paddingTop = "0px";
-                objTd.style.width = "24px";
-                objTd.style.height = "24px";
-                
-                var image_tag = document.createElement("img");
-                image_tag.setAttribute("_path", fileinfo);
-                image_tag.src = "/images/poll/pollAddFile_Delicon.png";
-                image_tag.setAttribute("height", "24");
-                image_tag.setAttribute("width", "20");
-                image_tag.setAttribute("style", "vertical-align: middle; cursor: pointer;");                
-                image_tag.onclick = function () { filedelete(this); };
-                objTd.appendChild(image_tag);
-                objTr.appendChild(objTd);
-
-                var objTd2 = document.createElement("TD");
-                objTd2.style.paddingBottom = "0px";
-                objTd2.style.paddingTop = "0px";
-                
-                var fileSize = parseInt(fileinfo.split("/")[2]);
-
-                if (fileSize / 1024 / 1024 > 1) {
-                    fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
-                }
-                else if (fileSize / 1024 > 1) {
-                    fileSize = parseInt(fileSize / 1024) + "KB";
-                }
-                else {
-                    fileSize = fileSize + "B";
-                }
-                
-                var strFileSize = fileinfo.split("/")[1] + "(" + fileSize + ")";
-                //objTd2.innerHTML = strFileSize;
-                objTd2.textContent = strFileSize;
-                objTr.appendChild(objTd2);
-                document.getElementById("filelist").appendChild(objTr);
+    $.ajax({
+        url : "/ezWebFolder/uploadFile.do",
+        type: "POST",
+        data : fd,
+        contentType: false,
+        dataType: "JSON",
+        cache: false,
+        processData:false,
+        xhr: function(){
+            //upload Progress
+            var xhr = $.ajaxSettings.xhr();
+            if (xhr.upload) {
+                xhr.upload.addEventListener('progress', function(event) {
+                    var percent = 0;
+                    var position = event.loaded || event.position;
+                    var total = event.total;
+                    if (event.lengthComputable) {
+                        percent = Math.ceil(position / total * 100);
+                    }
+                    //update progressbar
+                    $(progress_bar_id + " .progress-bar").css("width", + percent +"%");
+                    $(progress_bar_id + " .status").text(percent +"%");
+                }, true);
             }
-            else
-                extCheck = true;    */
-        }
+            return xhr;
+        },
+        mimeType:"multipart/form-data"
+    }).complete(function(res){
+    	console.log("Done!");
+    	
+    	$(progress_bar_id + " .progress-bar").css("width", "0%");        
+    	$(progress_bar_id + " .status").text("0%");
+        document.getElementById('progress-wrp').style.display = "none";
         
-        if (extCheck) {
-            alert(strLang267);
-        }
-    }
-    catch (e) { 
-    	alert("returnvalue :: " + e.description); 
-    }
+        renderResult(res.responseText);
+    });
+    
 }
 
-
+function renderResult(result) {	
+	if (!result) {
+		alert(strErr);
+		return;
+	}
+	
+	var jsonArr = JSON.parse(result);
+	var len = jsonArr.length;
+	var tblElmt = document.getElementById("tblFileList");
+	var rowsCnt = tblElmt.rows.length - 1;
+	
+	try { 
+		for (var i = 0; i < len; i++) {
+			var jsObj = jsonArr[i];			
+			var objTr = document.createElement("TR");	
+			var objTd1 = document.createElement("TD");
+			var objTd2 = document.createElement("TD");
+			var objTd3 = document.createElement("TD");
+			var objTd4 = document.createElement("TD");
+			var objTd5 = document.createElement("TD");
+			var objTd6 = document.createElement("TD");
+			var objTd7 = document.createElement("TD");
+			var objTd8 = document.createElement("TD");
+			
+			objTr.setAttribute("_fileId", jsObj["fileId"]);
+			objTr.setAttribute("_filePath", jsObj["filePath"]);
+			
+			var inputElmt = document.createElement("INPUT");
+			inputElmt.setAttribute("type", "checkbox");
+			inputElmt.setAttribute("value", jsObj["fileId"]);
+			inputElmt.setAttribute("class", "checkBnk");			
+			inputElmt.onchange = function(e){getChecked(this);};
+			objTd1.appendChild(inputElmt);
+			
+			var faImgElmt = document.createElement("IMG");
+			faImgElmt.setAttribute("class", "webFolderImg");
+			
+			if (jsObj["fileFavourite"] == "0") {
+				faImgElmt.src = "/images/webfolder/favourite.png";
+			}
+			else {
+				faImgElmt.src = "/images/webfolder/favourite2.png";
+			}
+			
+			var fileIconElmt = document.createElement("IMG");
+			fileIconElmt.setAttribute("class", "webFolderImg");
+			fileIconElmt.src = jsObj["fileIconUrl"];
+			
+			objTd2.appendChild(faImgElmt);
+			objTd3.appendChild(fileIconElmt);
+			objTd4.textContent = jsObj["fileName"];
+			objTd5.textContent = jsObj["fileSize"];
+			objTd6.textContent = jsObj["uploaderName"];
+			objTd7.textContent = jsObj["createdDate"];
+			
+			if (jsObj["fileShareStatus"] == "0") {
+				objTd8.textContent = strShared2;
+			}
+			else {
+				objTd8.textContent = strShared1;
+			}
+			
+			objTr.appendChild(objTd1);
+			objTr.appendChild(objTd2);
+			objTr.appendChild(objTd3);
+			objTr.appendChild(objTd4);
+			objTr.appendChild(objTd5);
+			objTr.appendChild(objTd6);
+			objTr.appendChild(objTd7);
+			objTr.appendChild(objTd8);
+			tblElmt.appendChild(objTr);			
+			rowsCnt = rowsCnt + 1;
+		}
+	}
+    catch (e) {
+    	alert("returnvalue :: " + e.description);
+    }
+}

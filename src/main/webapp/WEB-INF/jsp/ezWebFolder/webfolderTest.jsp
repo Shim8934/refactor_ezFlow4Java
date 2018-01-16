@@ -8,6 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	<script src="/js/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>	
@@ -15,6 +16,10 @@
    	   var xhr  		= new XMLHttpRequest();
    	   var file 		= new Array();
    	   var currFolderId = "opensol"; //Just for test
+   	   var strShared1	= "<spring:message code = 'ezWebFolder.t105'/>";
+   	   var strShared2	= "<spring:message code = 'ezWebFolder.t106'/>";
+   	   var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
+   	   var checkedArr	= [];
    	   
        function fileDownload() {
     	   
@@ -34,6 +39,37 @@
        
        function fileMove() {
     	   
+       }
+       
+       function getChecked(obj) {
+    	   var id = obj.getAttribute("value");
+    	   if (obj.checked == true) {
+    		   checkedArr.push(id);
+    	   }
+    	   else {
+    		   var pos = checkedArr.indexOf(id);
+	    		
+    		   if (pos != -1) {
+    			   checkedArr.splice(pos, 1);
+    		   }
+    	   }
+       }
+       
+       function getCheckAll(obj) {
+    	   var listInputs = document.getElementsByClassName("checkBnk");
+    	   
+    	   checkedArr = [];
+    	   if (obj.checked == true) {
+    		   for (var i = 0; i < listInputs.length; i++) {
+	    			listInputs[i].checked = true;
+	    			checkedArr.push(listInputs[i].value);	    		
+	    		}		    	
+    	   }
+    	   else {
+    		   for (var i = 0; i < listInputs.length; i++) {
+	    			listInputs[i].checked = false;	    				    		
+	    		}
+    	   } 
        }
     </script>
 </head>
@@ -57,23 +93,28 @@
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	</script>
 	
-	<div id="progdiv" class="progarea" style="display:none">
+<!-- 	<div id="progdiv" class="progarea" style="display:none">
     	<p class="prog_bar"><span id="prog_bar" style="width:0%"></span></p> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+    </div> -->
+    
+    <div id="progress-wrp">
+    	<div class="progress-bar"></div ><div class="status">0%</div>
     </div>
+    
 	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
 		<table class="mainlist" style="width: 100%;" id="tblFileList">
 			<tr>				
-				<th><input type="checkbox"></th>
-				<th>츨겨찾기</th>
-				<th>유형</th>
-				<th>이름</th>
-				<th>파일크기</th>
-				<th>게시자</th>
-				<th>등록일</th>
-				<th>공유여부</th>				
+				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);"></th>
+				<th width="25px">츨겨찾기</th>
+				<th width="25px">유형</th>
+				<th width="160px">이름</th>
+				<th width="40px">파일크기</th>
+				<th width="80px">게시자</th>
+				<th width="80px">등록일</th>
+				<th width="60px">공유여부</th>				
 			</tr>
 			<tr class="bnkWebFolder">
-				<td><input type="checkbox"></td>
+				<td><input type="checkbox" onchange="getChecked(this);" value="0" class="checkBnk"></td>
 				<td><img src="/images/webfolder/favourite.png" class="webFolderImg" /></td>
 				<td><img src="/images/webfolder/pdf.png" class="webFolderImg" /></td>
 				<td>Nghinlemotdem.pdf</td>

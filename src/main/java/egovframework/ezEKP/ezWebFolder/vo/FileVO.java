@@ -13,6 +13,8 @@ public class FileVO {
 	private String updatedDate;
 	private String folderId;
 	private int tenantId;
+	private String fileIconUrl;
+	private String fileShareStatus;
 	
 	public String getFileId() {
 		return fileId;
@@ -108,6 +110,21 @@ public class FileVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getFileIconUrl() {
+		return fileIconUrl;
+	}
+
+	public void setFileIconUrl(String fileIconUrl) {
+		this.fileIconUrl = fileIconUrl;
+	}
+
+	public String getFileShareStatus() {
+		return fileShareStatus;
+	}
+
+	public void setFileShareStatus(String fileShareStatus) {
+		this.fileShareStatus = fileShareStatus;
 	}	
-	
 }
