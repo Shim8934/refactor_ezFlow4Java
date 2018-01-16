@@ -4222,7 +4222,7 @@
 			SELECT 
 				A.APPRUSERID AS id, 
 				B.MAIL AS EMAIL, 
-				B.DisplayName$lang$ AS DISPLAYNAME, 
+				B.DisplayName$lang$ AS DISPLAYNAME
    			FROM 
    				TBL_BOARD_APPRLIST A 
    			INNER JOIN 

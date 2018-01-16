@@ -210,9 +210,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PWDINFO
-          		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID )
+          		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID, COMPANYID )
           	VALUES
-          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID# )
+          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID#, #companyID# )
 		]]>
 	</insert>
 		
