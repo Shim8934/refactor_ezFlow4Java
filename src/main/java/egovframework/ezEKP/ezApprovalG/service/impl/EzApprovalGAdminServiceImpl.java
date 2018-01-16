@@ -371,7 +371,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_CONTID", contID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-		System.out.println("");
 		List<ApprGContInfoVO> list = ezApprovalGAdminDAO.getContainerUseDeptInfo(map);
 		
 		sb.append("<PARAMETER>");
@@ -2460,7 +2459,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
 			map.put("v_PFORMID", result);
-			
+			System.out.println("v_PFORMID ///"+result +"companyID ///"+companyID);
 			logger.debug("setFormDataInsert1 started.");
 			ezApprovalGAdminDAO.setFormDataInsert1(map);
 			logger.debug("setFormDataInsert1 ended.");
@@ -2858,10 +2857,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp");
 			map.put("v_PFORMID", result);
 			
+			
 			logger.debug("setFormDataInsert1 started.");
 			ezApprovalGAdminDAO.setFormDataInsert1(map);
 			logger.debug("setFormDataInsert1 ended.");
-			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);
 				map.put("keepPeriodCode", keepPeriodCode);

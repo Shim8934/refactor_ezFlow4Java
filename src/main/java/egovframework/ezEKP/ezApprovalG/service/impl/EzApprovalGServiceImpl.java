@@ -1704,7 +1704,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < dlength; k++) {
 			String code2 = (String) docTypes.get(k).get("CODE2");
 			String name = (String) docTypes.get(k).get("NAME");
-			System.out.println("code2 ///"+code2 + "name //" + name + "slected//" + selected  );
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");
 			} else {
