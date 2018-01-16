@@ -54,6 +54,9 @@ public class IMAPAccess {
 	private int timeout = 10000; 
 	private int connectionTimeout = 10000; 
 	
+	private static final String DEFAULT_FOLDER_NAMES = "INBOX,보낸 편지함,임시 보관함,지운 편지함,개인 편지함,정크 메일,Sent Items,Drafts,Trash,Personal folder,Junk E-Mail,送信済み,下書き,ゴミ箱,パーソナル,迷惑メール";
+	private static final Set<String> DEFAULT_FOLDER_NAME_SET = new HashSet<>(Arrays.asList(DEFAULT_FOLDER_NAMES.split(",")));
+	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale) {
 		this.host = host;
 		this.port = port;
@@ -184,10 +187,10 @@ public class IMAPAccess {
 		logger.debug("makeTopLevelFolders ended.");
 	}
 	
-	public List<Folder> getTopLevelFolders(boolean isSubscribe) {
+	public List<Folder> getTopLevelFolders(boolean isSubscribe, boolean isUseDefaultFoldersForLangOnly) {
 		ArrayList<Folder> topLevelFolders = new ArrayList<Folder>();
 		
-		try{
+		try {
 			Folder rootFolder = getStore().getDefaultFolder();
 			
 			if (rootFolder.listSubscribed().length == 0) {
@@ -205,23 +208,29 @@ public class IMAPAccess {
 			if (!inbox.exists()) {
 				createFolder(inbox.getFullName());
 			}
+			
 			if (!sent.exists()) {
 				createFolder(sent.getFullName());
 			}
+			
 			if (!draft.exists()) {
 				createFolder(draft.getFullName());
 			}
+			
 			if (!trash.exists()) {
 				createFolder(trash.getFullName());
 			}
+			
 			if (!personal.exists()) {
 				createFolder(personal.getFullName());
 			}
+			
 			if (!junk.exists()) {
 				createFolder(junk.getFullName());
 			}
 			
 			Folder[] folderList = null;
+			
 			if (isSubscribe) {
 				//add subscribe folders and inbox folder into top-level folder list
 				topLevelFolders.add(inbox);
@@ -259,14 +268,21 @@ public class IMAPAccess {
 				for (Folder folder : folderList) {
 					if (folder.exists()) {
 						String folderName = folder.getName();
-						if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
-								) {
-							topLevelFolders.add(folder);
+						
+						if (!isUseDefaultFoldersForLangOnly) {
+							if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
+									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
+									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
+									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
+									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
+									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
+									) {
+								topLevelFolders.add(folder);
+							}
+						} else {						
+							if (!DEFAULT_FOLDER_NAME_SET.contains(folderName)) {
+								topLevelFolders.add(folder);
+							}
 						}
 					} else {
 						folder.setSubscribed(false);
@@ -287,19 +303,25 @@ public class IMAPAccess {
 				//add the other folders into top-level folder list
 				for (Folder folder : folderList) {
 					String folderName = folder.getName();
-					if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
-							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
-							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
-							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
-							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
-							&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
-							) {
-						topLevelFolders.add(folder);
+					
+					if (!isUseDefaultFoldersForLangOnly) {
+						if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
+								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
+								) {
+							topLevelFolders.add(folder);
+						}
+					} else {					
+						if (!DEFAULT_FOLDER_NAME_SET.contains(folderName)) {
+							topLevelFolders.add(folder);
+						}		
 					}
 				}
-			}
-			
-		} catch(MessagingException e){
+			}			
+		} catch (MessagingException e) {
 			logger.error("Error get default folder: " + e.getMessage());
 		}
 		
