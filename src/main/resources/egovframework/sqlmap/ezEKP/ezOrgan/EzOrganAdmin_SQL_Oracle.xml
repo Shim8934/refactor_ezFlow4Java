@@ -596,15 +596,15 @@
       <![CDATA[
         INSERT INTO
           TBL_PORTALPAGE_GENERAL
-            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+            ( UID_, PARENTUID, DEPTH, DISPLAYNAME, DISPLAYNAME2, CREATORID, CREATORNAME, CREATEDATE, MODIFYDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, GUBUNFLAG, USEFLAG, COMPANYID, BASETYPE, THEMEUID, DEFAULTPAGE, TABLEVIEWOPTION, TENANT_ID )
           VALUES
-            ( 'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6','top',1,'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6',null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'bd7d2263-939b-481e-ae95-7aa70e67c5c3','top',1,'표준포탈페이지 A 테마','en_표준포탈페이지 A 테마',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
-            ( 'd6e9c786-3af3-4c46-809d-267c2fd96976','top',1,'d6e9c786-3af3-4c46-809d-267c2fd96976',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'd8dc7da6-7572-4853-801a-14072d823c65','top',1,'d8dc7da6-7572-4853-801a-14072d823c65',null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c','top',1,'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c',null,#userID#,#userName#,#nowDate#,null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( '054a5b35-d8d5-4b07-9e47-d7820bf59435','top',1,'054a5b35-d8d5-4b07-9e47-d7820bf59435',null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
+            ( 'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6', 'top', 1, 'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6', null, #userID#, #userName#, #nowDate#, null, -1, 225, 0, 3, null, '250;250;9999;', '1', null, #companyID#, null, 'f2de22b9-9a3f-49a9-884b-2e179e564cbf', null, 'D', #tenantID# ),
+            ( 'bd7d2263-939b-481e-ae95-7aa70e67c5c3', 'top', 1, '표준포탈페이지 A 테마', 'en_표준포탈페이지 A 테마', #userID#, #userName#, #nowDate#, null, -1, 500, 0, 1, null, '9999;', '1', 'Y         ', #companyID#, null, 'f2de22b9-9a3f-49a9-884b-2e179e564cbf', 'Y', 'D', #tenantID# ),
+            ( 'd6e9c786-3af3-4c46-809d-267c2fd96976', 'top', 1, 'd6e9c786-3af3-4c46-809d-267c2fd96976', null, #userID#, #userName#, #nowDate#, null, -1, 110, 0, 1, null, '9999;', '1', null, #companyID#, null, 'f2de22b9-9a3f-49a9-884b-2e179e564cbf', null, 'D', #tenantID# ),
+            ( 'd8dc7da6-7572-4853-801a-14072d823c65', 'top', 1, 'd8dc7da6-7572-4853-801a-14072d823c65', null, #userID#, #userName#, #nowDate#, null, -1, 110, 0, 3, null, '250;250;9999;', '1', null, #companyID#, null, 'f2de22b9-9a3f-49a9-884b-2e179e564cbf', null, 'D', #tenantID# ),
+            ( 'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c', 'top', 1, 'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c', null, #userID#, #userName#, #nowDate#, null, -1, 110, 0, 2, null, '500;9999;', '1', null, #companyID#, null, 'f2de22b9-9a3f-49a9-884b-2e179e564cbf', null, 'D', #tenantID# ),
+            ( '054a5b35-d8d5-4b07-9e47-d7820bf59435', 'top', 1, '054a5b35-d8d5-4b07-9e47-d7820bf59435', null, #userID#, #userName#, #nowDate#, null, -1, 110, 0, 3, null, '250;250;9999;', '1', null, #companyID#, null, 'f2de22b9-9a3f-49a9-884b-2e179e564cbf', null, 'D', #tenantID# ),
+            ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9', 'top', 1, 'df178301-cfe4-46d9-8c0f-80e9f92673a9', null, #userID#, #userName#, #nowDate#, null, -1, 110, 0, 1, null, '9999;', '1', null, #companyID#, null, '69ae464d-e0ab-4558-b42b-4c9679474377', null, 'D', #tenantID# )
       ]]>
     </insert>
     
