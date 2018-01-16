@@ -371,7 +371,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_CONTID", contID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-		
+		System.out.println("");
 		List<ApprGContInfoVO> list = ezApprovalGAdminDAO.getContainerUseDeptInfo(map);
 		
 		sb.append("<PARAMETER>");
@@ -2217,7 +2217,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("approvalFlag", approvalFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-		
 		logger.debug("getFormContent started. formID = " + formID);
 		ApprGFormVO vo = ezApprovalGAdminDAO.getFormContent(map);
 		logger.debug("getFormContent ended.");
@@ -2559,7 +2558,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					if (approvalFlag.equals("S")) {
 						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						
 					}
-					
+
 					logger.debug("setFormDataInsert2 started.");
 					ezApprovalGAdminDAO.setFormDataInsert2(map);
 					logger.debug("setFormDataInsert2 ended.");
@@ -3022,7 +3021,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					map.put("formID", formID);
 					map.put("companyID", companyID);
 					map.put("tenantID", userInfo.getTenantId());
-
 					logger.debug("deleteAutoRuleLine started.");
 					ezApprovalGAdminDAO.deleteAutoRuleLine(map);
 					logger.debug("deleteAutoRuleLine ended.");
