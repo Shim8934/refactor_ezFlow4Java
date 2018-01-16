@@ -20,26 +20,6 @@
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
 	
-	<resultMap id="getThumbnailList" class="HashMap">
-		<result property="BOARDID" 					/>
-		<result property="ITEMID" 					/>
-		<result property="WRITERID" 				/>
-		<result property="WRITERNAME" 				/>
-		<result property="WRITERDEPTNAME" 			/>
-		<result property="WRITERCOMPANYNAME" 		/>
-		<result property="WRITEDATE" 				/>
-		<result property="TITLE" 					/>
-		<result property="READCOUNT" 				/>
-		<result property="WRITERNAME2" 				/>
-		<result property="WRITERDEPTNAME2" 			/>
-		<result property="WRITERCOMPANYNAME2" 		/>
-		<result property="ONELINECNT" 				/>
-		<result property="DOCNO" 					/>
-		<result property="MAINCONTENT" 				jdbcType="CLOB" javaType="String" nullValue=""/>
-		<result property="FILEPATH" 				/>
-		<result property="READFLAG" 				/>
-	</resultMap>
-	
 	<resultMap id="get_apprUserList" class="BoardVO">
 		<result property="boardId" 					column="BOARDID" 				columnIndex="1"/>
 		<result property="apprUserId" 				column="APPRUSERID" 			columnIndex="2"/>
@@ -69,75 +49,67 @@
 		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
         <result property="writerID" 				column="WRITERID" 				columnIndex="2"/>
         <result property="writerName" 				column="WRITERNAME" 			columnIndex="3"/>
-        <result property="writerName2" 				column="WRITERNAME2" 			columnIndex="4"/>
-        <result property="writerDeptName" 			column="WRITERDEPTNAME" 		columnIndex="5"/>
-        <result property="writerDeptName2" 			column="WRITERDEPTNAME2" 		columnIndex="6"/>
-        <result property="writerCompanyName" 		column="WRITERCOMPANYNAME" 		columnIndex="7"/>
-        <result property="writerCompanyName2" 		column="WRITERCOMPANYNAME2" 	columnIndex="8"/>
-        <result property="writeDate" 				column="WRITEDATE" 				columnIndex="9"/>
-        <result property="parentWriteDate" 			column="PARENTWRITEDATE" 		columnIndex="10"/>
-        <result property="importance" 				column="IMPORTANCE" 			columnIndex="11"/>
-        <result property="title" 					column="TITLE" 					columnIndex="12"/>
-        <result property="contentLocation" 			column="CONTENTLOCATION" 		columnIndex="13"/>
-        <result property="startDate" 				column="STARTDATE" 				columnIndex="14"/>
-        <result property="endDate" 					column="ENDDATE" 				columnIndex="15"/>
-        <result property="ABSTRACT" 				column="ABSTRACT" 				columnIndex="16"/>
-        <result property="attachments" 				column="ATTACHMENTS" 			columnIndex="17"/>
-        <result property="upperItemIDTree" 			column="UPPERITEMIDTREE" 		columnIndex="18" 	jdbcType="CLOB" javaType="String" nullValue=""/>
-        <result property="itemLevel" 				column="ITEMLEVEL" 				columnIndex="19"/>
-        <result property="copiedItem" 				column="COPIEDITEM" 			columnIndex="20"/>
-        <result property="extensionAttribute1" 		column="EXTENSIONATTRIBUTE1" 	columnIndex="21"/>
-        <result property="extensionAttribute2" 		column="EXTENSIONATTRIBUTE2" 	columnIndex="22"/>
-        <result property="extensionAttribute3" 		column="EXTENSIONATTRIBUTE3" 	columnIndex="23"/>
-        <result property="extensionAttribute32" 	column="EXTENSIONATTRIBUTE32" 	columnIndex="24"/>
-        <result property="extensionAttribute4" 		column="EXTENSIONATTRIBUTE4" 	columnIndex="25"/>
-        <result property="extensionAttribute5" 		column="EXTENSIONATTRIBUTE5" 	columnIndex="26"/>
-        <result property="mainContent" 				column="MAINCONTENT" 			columnIndex="27"	jdbcType="CLOB" javaType="String" nullValue=""/>
-        <result property="apprFlag" 				column="APPRFLAG" 				columnIndex="28"/>
-        <result property="guBun" 					column="GUBUN" 					columnIndex="29"/>
-        <result property="extensionAttribute6" 		column="EXTENSIONATTRIBUTE6" 	columnIndex="30"/>
-        <result property="extensionAttribute7" 		column="EXTENSIONATTRIBUTE7" 	columnIndex="31"/>
-        <result property="extensionAttribute8" 		column="EXTENSIONATTRIBUTE8" 	columnIndex="32"/>
-        <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="33"/>
-        <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="34"/>
-        <result property="boardID" 					column="BOARDID" 				columnIndex="35"/>
-        <result property="docNo"					column="DOCNO"					columnIndex="36"/>
+        <result property="writerDeptName" 			column="WRITERDEPTNAME" 		columnIndex="4"/>
+        <result property="writerCompanyName" 		column="WRITERCOMPANYNAME" 		columnIndex="5"/>
+        <result property="writeDate" 				column="WRITEDATE" 				columnIndex="6"/>
+        <result property="parentWriteDate" 			column="PARENTWRITEDATE" 		columnIndex="7"/>
+        <result property="importance" 				column="IMPORTANCE" 			columnIndex="8"/>
+        <result property="title" 					column="TITLE" 					columnIndex="9"/>
+        <result property="contentLocation" 			column="CONTENTLOCATION" 		columnIndex="10"/>
+        <result property="startDate" 				column="STARTDATE" 				columnIndex="11"/>
+        <result property="endDate" 					column="ENDDATE" 				columnIndex="12"/>
+        <result property="ABSTRACT" 				column="ABSTRACT" 				columnIndex="13"/>
+        <result property="attachments" 				column="ATTACHMENTS" 			columnIndex="14"/>
+        <result property="upperItemIDTree" 			column="UPPERITEMIDTREE" 		columnIndex="15" 	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="itemLevel" 				column="ITEMLEVEL" 				columnIndex="16"/>
+        <result property="copiedItem" 				column="COPIEDITEM" 			columnIndex="17"/>
+        <result property="extensionAttribute1" 		column="EXTENSIONATTRIBUTE1" 	columnIndex="18"/>
+        <result property="extensionAttribute2" 		column="EXTENSIONATTRIBUTE2" 	columnIndex="19"/>
+        <result property="extensionAttribute3" 		column="EXTENSIONATTRIBUTE3" 	columnIndex="20"/>
+        <result property="extensionAttribute4" 		column="EXTENSIONATTRIBUTE4" 	columnIndex="21"/>
+        <result property="extensionAttribute5" 		column="EXTENSIONATTRIBUTE5" 	columnIndex="22"/>
+        <result property="mainContent" 				column="MAINCONTENT" 			columnIndex="23"	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="apprFlag" 				column="APPRFLAG" 				columnIndex="24"/>
+        <result property="guBun" 					column="GUBUN" 					columnIndex="25"/>
+        <result property="extensionAttribute6" 		column="EXTENSIONATTRIBUTE6" 	columnIndex="26"/>
+        <result property="extensionAttribute7" 		column="EXTENSIONATTRIBUTE7" 	columnIndex="27"/>
+        <result property="extensionAttribute8" 		column="EXTENSIONATTRIBUTE8" 	columnIndex="28"/>
+        <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="29"/>
+        <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="30"/>
+        <result property="boardID" 					column="BOARDID" 				columnIndex="31"/>
+        <result property="docNo"					column="DOCNO"					columnIndex="32"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
 		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
         <result property="writerID" 				column="WRITERID" 				columnIndex="2"/>
         <result property="writerName" 				column="WRITERNAME" 			columnIndex="3"/>
-        <result property="writerName2" 				column="WRITERNAME2" 			columnIndex="4"/>
-        <result property="writerDeptName" 			column="WRITERDEPTNAME" 		columnIndex="5"/>
-        <result property="writerDeptName2" 			column="WRITERDEPTNAME2" 		columnIndex="6"/>
-        <result property="writerCompanyName" 		column="WRITERCOMPANYNAME" 		columnIndex="7"/>
-        <result property="writerCompanyName2" 		column="WRITERCOMPANYNAME2" 	columnIndex="8"/>
-        <result property="writeDate" 				column="WRITEDATE" 				columnIndex="9"/>
-        <result property="parentWriteDate" 			column="PARENTWRITEDATE" 		columnIndex="10"/>
-        <result property="importance" 				column="IMPORTANCE" 			columnIndex="11"/>
-        <result property="title" 					column="TITLE" 					columnIndex="12"/>
-        <result property="contentLocation" 			column="CONTENTLOCATION" 		columnIndex="13"/>
-        <result property="startDate" 				column="STARTDATE" 				columnIndex="14"/>
-        <result property="endDate" 					column="ENDDATE" 				columnIndex="15"/>
-        <result property="ABSTRACT" 				column="ABSTRACT" 				columnIndex="16"/>
-        <result property="attachments" 				column="ATTACHMENTS" 			columnIndex="17"/>
-        <result property="upperItemIDTree" 			column="UPPERITEMIDTREE" 		columnIndex="18" 	jdbcType="CLOB" javaType="String" nullValue=""/>
-        <result property="itemLevel" 				column="ITEMLEVEL" 				columnIndex="19"/>
-        <result property="copiedItem" 				column="COPIEDITEM" 			columnIndex="20"/>
-        <result property="extensionAttribute1" 		column="EXTENSIONATTRIBUTE1" 	columnIndex="21"/>
-        <result property="extensionAttribute2" 		column="EXTENSIONATTRIBUTE2" 	columnIndex="22"/>
-        <result property="extensionAttribute3" 		column="EXTENSIONATTRIBUTE3" 	columnIndex="23"/>
-        <result property="extensionAttribute32" 	column="EXTENSIONATTRIBUTE32" 	columnIndex="24"/>
-        <result property="extensionAttribute4" 		column="EXTENSIONATTRIBUTE4" 	columnIndex="25"/>
-        <result property="extensionAttribute5" 		column="EXTENSIONATTRIBUTE5" 	columnIndex="26"/>
-        <result property="mainContent" 				column="MAINCONTENT" 			columnIndex="27"	jdbcType="CLOB" javaType="String" nullValue=""/>
-        <result property="extensionAttribute6" 		column="EXTENSIONATTRIBUTE6" 	columnIndex="28"/>
-        <result property="extensionAttribute7" 		column="EXTENSIONATTRIBUTE7" 	columnIndex="29"/>
-        <result property="extensionAttribute8" 		column="EXTENSIONATTRIBUTE8" 	columnIndex="30"/>
-        <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="31"/>
-        <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="32"/>
-        <result property="docNo" 					column="DOCNO" 					columnIndex="33"/>        
+        <result property="writerDeptName" 			column="WRITERDEPTNAME" 		columnIndex="4"/>
+        <result property="writerCompanyName" 		column="WRITERCOMPANYNAME" 		columnIndex="5"/>
+        <result property="writeDate" 				column="WRITEDATE" 				columnIndex="6"/>
+        <result property="parentWriteDate" 			column="PARENTWRITEDATE" 		columnIndex="7"/>
+        <result property="importance" 				column="IMPORTANCE" 			columnIndex="8"/>
+        <result property="title" 					column="TITLE" 					columnIndex="9"/>
+        <result property="contentLocation" 			column="CONTENTLOCATION" 		columnIndex="10"/>
+        <result property="startDate" 				column="STARTDATE" 				columnIndex="11"/>
+        <result property="endDate" 					column="ENDDATE" 				columnIndex="12"/>
+        <result property="ABSTRACT" 				column="ABSTRACT" 				columnIndex="13"/>
+        <result property="attachments" 				column="ATTACHMENTS" 			columnIndex="14"/>
+        <result property="upperItemIDTree" 			column="UPPERITEMIDTREE" 		columnIndex="15" 	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="itemLevel" 				column="ITEMLEVEL" 				columnIndex="16"/>
+        <result property="copiedItem" 				column="COPIEDITEM" 			columnIndex="17"/>
+        <result property="extensionAttribute1" 		column="EXTENSIONATTRIBUTE1" 	columnIndex="18"/>
+        <result property="extensionAttribute2" 		column="EXTENSIONATTRIBUTE2" 	columnIndex="19"/>
+        <result property="extensionAttribute3" 		column="EXTENSIONATTRIBUTE3" 	columnIndex="20"/>
+        <result property="extensionAttribute4" 		column="EXTENSIONATTRIBUTE4" 	columnIndex="21"/>
+        <result property="extensionAttribute5" 		column="EXTENSIONATTRIBUTE5" 	columnIndex="22"/>
+        <result property="mainContent" 				column="MAINCONTENT" 			columnIndex="23"	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="extensionAttribute6" 		column="EXTENSIONATTRIBUTE6" 	columnIndex="24"/>
+        <result property="extensionAttribute7" 		column="EXTENSIONATTRIBUTE7" 	columnIndex="25"/>
+        <result property="extensionAttribute8" 		column="EXTENSIONATTRIBUTE8" 	columnIndex="26"/>
+        <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="27"/>
+        <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="28"/>
+        <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>        
 	</resultMap>
 	
 	<select id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
@@ -2229,11 +2201,8 @@
 				ITEMID ,
             	WRITERID ,
 	            WRITERNAME$lang$ WRITERNAME ,
-	            WRITERNAME2 ,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME ,
-	            WRITERDEPTNAME2 ,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
-	            WRITERCOMPANYNAME2 ,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
 	            IMPORTANCE ,
@@ -2249,7 +2218,6 @@
 	            EXTENSIONATTRIBUTE1 ,
 	            EXTENSIONATTRIBUTE2 ,
 	            EXTENSIONATTRIBUTE3$lang$ EXTENSIONATTRIBUTE3,
-	            EXTENSIONATTRIBUTE32 ,
 	            EXTENSIONATTRIBUTE4 ,
 	            EXTENSIONATTRIBUTE5 ,
 	            MAINCONTENT ,
@@ -2283,11 +2251,8 @@
 				ItemID ,
 	            WriterID ,
 	            WriterName$lang$ WriterName,
-	            WriterName2 ,
 	            WriterDeptName$lang$ WriterDeptName,
-	            WriterDeptName2 ,
 	            WriterCompanyName$lang$  WriterCompanyName,
-	            WriterCompanyName2 ,
 	            WriteDate ,
 	            ParentWriteDate ,
 	            Importance ,
@@ -2303,7 +2268,6 @@
 	            ExtensionAttribute1 ,
 	            ExtensionAttribute2 ,
 	            ExtensionAttribute3$lang$ ExtensionAttribute3 ,
-	            ExtensionAttribute32 ,
 	            ExtensionAttribute4 ,
 	            ExtensionAttribute5 ,
 	            MainContent ,
@@ -4222,7 +4186,7 @@
 			SELECT 
 				A.APPRUSERID AS id, 
 				B.MAIL AS EMAIL, 
-				B.DisplayName$lang$ AS DISPLAYNAME, 
+				B.DisplayName$lang$ AS DISPLAYNAME
    			FROM 
    				TBL_BOARD_APPRLIST A 
    			INNER JOIN 

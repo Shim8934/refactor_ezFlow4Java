@@ -2158,7 +2158,7 @@
 									AND
 										B.memberid = #memberID#	
 									AND
-										B.tenantid = #tenantID#) AS B)
+										B.tenantid = #tenantID#))
 			WHERE
 				circularid = #circularID#
 			AND

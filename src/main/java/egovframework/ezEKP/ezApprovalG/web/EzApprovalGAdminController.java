@@ -493,7 +493,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
-		System.out.println("docType////" + docType);
 		if (type != null && type.equals("HWP")) {
 			model.addAttribute("useEditor", "HWP");
 			model.addAttribute("realPath", commonUtil.getRealPath(request).replace("\\","/"));
@@ -1016,7 +1015,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docTypeID = request.getParameter("docTypeID");
 		String companyID = request.getParameter("comID");
-		
 		String result = ezApprovalGAdminService.deleteContainerType(docTypeID, companyID, userInfo.getTenantId());
 		
 		logger.debug("apprGDeleteContType ended.");
