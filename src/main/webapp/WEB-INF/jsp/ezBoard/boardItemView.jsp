@@ -82,8 +82,8 @@
 	                    return;
 	                }
 	                
-	                $(doc).find('p').css("MozTransform","scale(" + MozNowZoom + ")");
-	                $(doc).find('p').css("MozTransformOrigin","0 0");
+	                $(doc).find('.contentDiv').css("MozTransform","scale(" + MozNowZoom + ")");
+	                $(doc).find('.contentDiv').css("MozTransformOrigin","0 0");
 	            } else {
 	                if (nowZoom < maxZoom) {
 	                    nowZoom += 10;
@@ -91,7 +91,7 @@
 	                    return;
 	                }
 	                
-	                $(doc).find('p').css("zoom",nowZoom + "%");
+	                $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
 	            }
 	        }
 	        
@@ -102,17 +102,17 @@
 	                } else {
 	                    return;
 	                }
-	                
-	                $(doc).find('p').css("MozTransform","scale(" + MozNowZoom + ")");
-	                $(doc).find('p').css("MozTransformOrigin","0 0");
+
+	                $(doc).find('.contentDiv').css("MozTransform","scale(" + MozNowZoom + ")");
+	                $(doc).find('.contentDiv').css("MozTransformOrigin","0 0");
 	            } else {
 	                if (nowZoom > minZoom) {
 	                    nowZoom -= 10;
 	                } else {
 	                    return;
 	                }
-	                
-	                $(doc).find('p').css("zoom",nowZoom + "%");
+
+	                $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
 	            }
 	        }		    		    
 		    
@@ -136,7 +136,7 @@
 								 href   : strContentLocation 
 							   },
 						success: function(result){
-							html += result;
+							html += "<div class='contentDiv'>" + result + "<div>";
 						}        			
 					});
 
