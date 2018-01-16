@@ -297,7 +297,7 @@
 						FROM
 							$v_BNAME$
 						WHERE
-							CASE WHEN #primary# '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
+							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 	            			tenant_id = #tenantID#
 					]]>
@@ -2786,7 +2786,7 @@
 			JOIN
 				TBL_USERMASTER B
 			ON
-				A.c_id = B.cn
+				TRIM(A.c_id) = TRIM(B.cn)
 			AND
 				A.tenant_id = B.tenant_id
 			WHERE
@@ -4347,7 +4347,7 @@
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
 					<![CDATA[
 						SELECT
-							NVL(COUNT(CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username), 0) 
+							NVL(COUNT(CASE WHEN #primary# = '1' THEN username ELSE username2 END), 0) 
 						FROM
 							$v_BNAME$ 
 						WHERE
