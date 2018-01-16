@@ -64,10 +64,6 @@
 				B.commentStatus,
 				B.shareStatus,
 				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus
-	        
-	        
-				
-				
             FROM
                 TBL_CIRCULAR A
             JOIN
@@ -140,9 +136,9 @@
 		<isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate        
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')        
 	        ]]>
 	    </isNotEqual>
 	        
@@ -220,9 +216,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate       
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')       
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -567,9 +563,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	        ]]>
 	       
 	    </isNotEqual>
@@ -645,9 +641,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -693,9 +689,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -792,9 +788,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate    
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')    
 	        ]]>
 	    </isNotEqual>
         
@@ -888,9 +884,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate     
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')     
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -993,9 +989,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	        ]]>
 	    </isNotEqual>
         
@@ -1258,9 +1254,9 @@
         
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
-	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	            AND
-	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
 	        	AND
 	        ]]>
 	    </isNotEqual>
@@ -1373,9 +1369,9 @@
         
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
-            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= A.regdate
+            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
             AND
-            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > A.regdate
+            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
             AND
 	        ]]>
 	    </isNotEqual>
