@@ -50,4 +50,12 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		return ezWebFolderDAO.getFileIconFromExt(map);
 	}
 
+	@Override
+	public FileVO getFileByFileId(String fileId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getFileByFileId(map);
+	}
+
 }

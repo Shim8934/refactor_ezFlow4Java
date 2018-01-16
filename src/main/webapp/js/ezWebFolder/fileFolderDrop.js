@@ -110,6 +110,7 @@ function fileupload() {
         processData:false,
         xhr: function(){
             //upload Progress
+        	document.getElementById('progress-wrp').style.display = "";
             var xhr = $.ajaxSettings.xhr();
             if (xhr.upload) {
                 xhr.upload.addEventListener('progress', function(event) {

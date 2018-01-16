@@ -103,4 +103,17 @@
 		]]>		
     </select>  
     
+    <select id="EzWebFolderDAO.getFileByFileId" resultMap="fileVO">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_WEBFOLDER_FILE
+			WHERE  
+				FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#	
+		]]>				
+    </select> 
+    
 </sqlMap>

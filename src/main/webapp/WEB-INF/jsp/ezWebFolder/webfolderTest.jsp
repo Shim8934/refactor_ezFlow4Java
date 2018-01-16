@@ -22,6 +22,20 @@
    	   var checkedArr	= [];
    	   
        function fileDownload() {
+    	   if (checkedArr.length <= 0) {
+    		   alert("Please select at least one file!");
+    		   return;
+    	   }
+    	   
+	    	var checkedList = checkedArr[0];
+	    	
+    		for (var i = 1; i < checkedArr.length; i++) {
+    			checkedList = checkedList + "," + checkedArr[i];	    			
+    		}
+    		
+    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + checkedList;
+        	        	
+            AttachDownFrame.location.href = downloadUrl;
     	   
        }
        
@@ -69,7 +83,7 @@
     		   for (var i = 0; i < listInputs.length; i++) {
 	    			listInputs[i].checked = false;	    				    		
 	    		}
-    	   } 
+    	   }
        }
     </script>
 </head>
@@ -97,7 +111,7 @@
     	<p class="prog_bar"><span id="prog_bar" style="width:0%"></span></p> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
     </div> -->
     
-    <div id="progress-wrp">
+    <div id="progress-wrp" style="display: none;">
     	<div class="progress-bar"></div ><div class="status">0%</div>
     </div>
     
@@ -127,6 +141,6 @@
 	</div>
 	<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display:none" /> 
 	<input type="hidden" onclick="fileupload()"/>
-
+	<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
 </body>
 </html>

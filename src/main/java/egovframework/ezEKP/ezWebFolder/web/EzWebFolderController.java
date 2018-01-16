@@ -1,11 +1,16 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,6 +182,101 @@ public class EzWebFolderController extends EgovFileMngUtil {
             
         return om.writeValueAsString(list);
     }
+	
+	@RequestMapping(value="/ezWebFolder/downloadAttach.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("Download attach is running!");	
+		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String listFileId = request.getParameter("fileList");
+		
+		logger.debug("FileList: " + listFileId);
+		
+		String[] fileIDList = listFileId.split(",");	
+		List<File> fileList = new ArrayList<File>();
+	
+		logger.debug("FileList length: " + fileIDList.length);
+		
+		if (fileIDList.length <= 0) {
+			logger.debug("downloadAttach illegal arguments!");
+			return;
+		}
+				
+        //Get absolute path of the application       
+        String realPath = request.getServletContext().getRealPath("");
+		
+		for (int i = 0; i < fileIDList.length; i++) {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+			File f = new File(realPath + fileVO.getFilePath());
+			fileList.add(f);			
+		}
+		
+		String guid = UUID.randomUUID().toString();
+		String tempFileUploadPath = realPath + getWebFolderDirPath(loginSimpleVO.getTenantId()) + commonUtil.separator + "tempFileUpload";
+		
+		File tempF = new File(tempFileUploadPath);
+		if (!tempF.exists()) {
+			tempF.mkdirs();
+		}
+		
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		
+		ZipOutputStream zos = null;
+		FileInputStream fis = null;
+		
+		try {
+			
+			File tempFile = new File(pDirTempPath + ".zip");
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("UTF-8"));
+			
+			for (File file : fileList) {
+				if (!file.isDirectory()) {
+					fis = new FileInputStream(file);
+					
+					//String zipFilePath = file.getPath().substring(dirPath.length() + 1, file.getPath().length());
+					String zipFilePath = file.getName();			
+					ZipEntry zipEntry = new ZipEntry(zipFilePath);
+					zos.putNextEntry(zipEntry);
+
+					byte[] bytes = new byte[BUFF_SIZE];
+					int length;
+					
+					while ((length = fis.read(bytes)) >= 0) {
+						zos.write(bytes, 0, length);
+					}
+
+					zos.closeEntry();
+					fis.close();
+				}
+			}
+			
+			fis = null;
+			
+			zos.close();
+			zos = null;
+		} catch (Exception e) {
+			throw e;
+			
+		} finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
+			
+			if (zos != null) {
+				try { zos.closeEntry(); } catch (Exception e) {}
+				try { zos.close(); } catch (Exception e) {}
+			}
+			
+		}		
+		
+		downFile(request, response, pDirTempPath + ".zip", guid + ".zip");	
+		
+		logger.debug("Download attach finishes!");	
+	}
+	
 	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
