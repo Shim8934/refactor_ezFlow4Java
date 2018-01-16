@@ -118,13 +118,10 @@
 		    
 		    window.onload = function () {
 		        try {
-		            var html = "";
-		            /*
 		        	// 수정 수아 재은
 		        	var html = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />";
 						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-left: -4px;' />";
 						html += "<br><br>";
-						*/
 						
 					$.ajax({
 						type : "POST",
@@ -145,7 +142,6 @@
 					doc.write(html);
 					doc.close();
 					
-					/*
 					// 수정 수아 재은
 					doc.getElementById('smaller').onclick = function () {
 						Smaller(doc);
@@ -153,7 +149,6 @@
 					doc.getElementById('bigger').onclick = function () {
 						Bigger(doc);
 					}
-					*/
 					
 					$("#message").contents().find("body").css("word-wrap", "break-word");
 					
