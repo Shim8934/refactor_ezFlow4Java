@@ -141,7 +141,7 @@
                 $("#myBar").css({
                 	"width" : percent + "%"
                 });
-                $(".volumes").text(useVolume + "(" + percent + "%)" + " / " + totalVolume);                
+                $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
                 
                 //용량 체크(색깔로)
                 if (percent > 90) {
