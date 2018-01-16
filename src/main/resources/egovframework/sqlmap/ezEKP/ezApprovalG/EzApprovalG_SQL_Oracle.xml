@@ -6689,7 +6689,7 @@
 				FROM 
 					TBL_CODELIST 
 				WHERE 
-					code1 = 'A01' 
+					code1 = 'SA01' 
 				AND
 					tenant_id = #v_TENANTID#
 				AND
