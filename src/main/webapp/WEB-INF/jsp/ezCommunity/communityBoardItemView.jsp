@@ -59,8 +59,6 @@
 	    	var rsa = new RSAKey();
 	    	var commentCount = "<c:out value='${commentCount}' />";
 	    	
-	    	console.log("${boardInfo.gubun}");
-	    	
 	    	window.onload = function () {
 	    		$("#message").contents().find("body").css("word-wrap", "break-word");
 	    		$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
@@ -183,7 +181,6 @@
 		                        alert("<spring:message code = 'ezCommunity.t921' />");
 		                        return;
 		                    } else if (ret == "cancel") {
-		    	            	alert("<spring:message code='ezCommunity.t60'/>");
 		    	                return;
 		    	            }
 		                    
@@ -247,10 +244,8 @@
 	            }
 
 	            if (ret != "OK") {
-                    alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {
-	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 	            
@@ -354,7 +349,6 @@
 	            }
 	            
 	            if (ret != "OK") {
-	            	alert("<spring:message code='ezCommunity.t939'/>");
 	                return;
 	            }
 
