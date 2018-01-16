@@ -2344,27 +2344,30 @@
     		SET
     			deletestatus = 0,
     			updatestatus = (SELECT
-    								*
-    							FROM
-    								(SELECT
-    									decode(COUNT(circularID), 0, (SELECT
-   																		status
-   																	FROM
-   																		TBL_CIRCULAR_USER
-   																	WHERE
-   																		circularID = #circularID#
-   																	AND
-   																		memberid = #memberID#
-   																	AND
-   																		tenantid = #tenantID#), 3)
-    								FROM
-    									TBL_CIRCULAR_LINK
-    								WHERE
-    									circularid = #circularID#
-    								AND
-    									memberid = #memberID#
-    								AND
-    									tenantid = #tenantID#) AS A)
+                     			   *
+                   				 FROM
+                     			   (SELECT
+                         			   decode((SELECT
+                                      			  COUNT(circularID)
+			                                   FROM
+			                                      TBL_CIRCULAR_LINK
+			                                   WHERE
+			                                      circularid = #circularID#
+			                                   AND
+			                                      memberid = #memberID#
+			                                   AND
+			                                      tenantid = #tenantID#)
+                                    , 0, (SELECT
+                                            status
+                                          FROM
+                                            TBL_CIRCULAR_USER
+                                          WHERE
+                                            circularID = #circularID#
+                                          AND
+                                            memberid = #memberID#
+                                          AND
+                                            tenantid = #tenantID#), 3)
+                               from dual ))
     		WHERE
     			circularid = #circularID#
     		AND
