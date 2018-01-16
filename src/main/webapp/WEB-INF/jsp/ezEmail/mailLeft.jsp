@@ -215,10 +215,12 @@
 	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
+	        
 	        function selectnode() {
-	            var nodeIdx = PostTreeView.selectedIndex();
+	        	var nodeIdx = PostTreeView.selectedIndex();
 	            var href = PostTreeView.getvalue(nodeIdx, "href");
 	            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+	            
 	            try {
 	                if (typeof (parent.frames["right"]) != "undefined")
 	                    parent.frames["right"].Window_onunload();
@@ -450,7 +452,7 @@
 	            var OpenWin = window.open("/ezEmail/mailImport.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 400));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
-	        function mail_import_Complete() {
+	        /* function mail_import_Complete() {
 	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
 	                window.parent.frames["right"].MailListRefresh();
 	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
@@ -458,7 +460,43 @@
 	            if (PostTreeView.selectedIndex() == -1) {
 	                PostTreeView.select(1);
 	            }
+	        }  */
+	        // 수정 수아 재은
+	        function mail_import_Complete() {
+	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
+	                window.parent.frames["right"].MailListRefresh();
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	            PostTreeView.update();
+	            if (PostTreeView.selectedIndex() == -1) {
+	            	var allHref = mail_import_cross_dialogArguments[0]["href"];
+	            	
+	            	// 처음 선택한 메일함
+	            	if (allHref != null && allHref != "") {
+	            		var splitHref = allHref.split(".");
+	            		
+	            		// 하위메일함일 경우
+	            		if (splitHref.length > 1) {
+	            			var pStr = "";
+	            			
+	            			// select를 하기위해 상위 메일함의 하위메일함을 불러 열어줌
+	            			for (i = 0; i < splitHref.length-1; i++) {
+	            				pStr += splitHref[i];
+	            				var splitIndex = PostTreeView.findindex("href", pStr);
+	            				
+	            				requestdata({"nodeIdx": splitIndex});
+	            				pStr += ".";
+	            			}
+	            		}
+	            		
+		        		var getNowIndex= PostTreeView.findindex("href", allHref);
+		        		
+		                PostTreeView.select(getNowIndex);
+		        	} else {
+	                	PostTreeView.select(1);
+		        	}
+	            }
 	        }
+	        
 	        function mail_Config() {
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
 	        }
@@ -554,6 +592,7 @@
 	        function hideProgress() {
 	        	document.getElementById("progressPanel").style.display = "none";
 	        }
+	        
 	    </script>
 		 <style type="text/css">
 				#myProgress {
