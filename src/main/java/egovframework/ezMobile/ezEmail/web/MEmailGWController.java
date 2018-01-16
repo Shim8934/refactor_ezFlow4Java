@@ -199,7 +199,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			} else {
 				LOGGER.debug("getTopLevelFolders");
 				
-				subMailFolder = ia.getTopLevelFolders(true);
+				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", info.getTenantId());
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+				
+				subMailFolder = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 			}
 			
 			JSONObject folder = null;
