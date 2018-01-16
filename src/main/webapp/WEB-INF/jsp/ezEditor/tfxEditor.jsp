@@ -157,7 +157,7 @@
 		    		lang = "chinese_s";
 		    		break;
 		    	default :
-		    		lang = "korean";
+		    		lang = "english";
 		    		break;
 	    	}
 	    	
