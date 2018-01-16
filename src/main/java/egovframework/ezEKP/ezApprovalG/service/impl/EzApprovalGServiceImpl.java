@@ -1698,12 +1698,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("approvalFlag", approvalFlag);
+		logger.debug("map.toString() : " + map.toString());
 		List<HashMap<String, Object>> docTypes = ezApprovalGDAO.getDocType(map);
 		int dlength = docTypes.size();
+		logger.debug("docType.toString() : " + docTypes.toString());
+		logger.debug("dlength : " + dlength);
 		StringBuilder sb = new StringBuilder();
 		for (int k = 0; k < dlength; k++) {
 			String code2 = (String) docTypes.get(k).get("CODE2");
 			String name = (String) docTypes.get(k).get("NAME");
+
+			logger.debug("code2 ///"+code2 + "name //" + name + "slected//" + selected  );
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");
 			} else {
