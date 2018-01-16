@@ -442,6 +442,16 @@
 		    function Apprboard() {
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListAppr.do";
 		    }
+		    
+		    
+		    function goPage(idx) {
+		    	switch (idx) {
+		    		case 3:
+		    			var url = "/ezWebFolder/test.do";
+		    			window.parent.frames["right"].location.href = url;
+		    			break;		    		
+		    	}
+		    }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -451,48 +461,48 @@
   				<span style="display:inline-block;width:100%;">회사폴더</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(1, this)" >가온아이</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="goPage(2, this)" >하위폴더</span></li>		        
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >가온아이</span></li>
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >하위폴더</span></li>		        
 		    </ul>  	
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">부서폴더</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(3 , this)" >오픈솔루션팀</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="goPage(4 , this)" >ezEKP</span></li>		        
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(3)" >오픈솔루션팀</span></li>
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >ezEKP</span></li>		        
 		    </ul>  
 		    	
 		   	<h2>
   				<span style="display:inline-block;width:100%;">개인폴더</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(5 , this)" >영화</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="goPage(6 , this)" >문서</span></li>		        
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >영화</span></li>
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >문서</span></li>		        
 		    </ul>  
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">공유폴더</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(5 , this)" >공유받은 폴더</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="goPage(6 , this)" >공유한 폴더</span></li>		        
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >공유받은 폴더</span></li>
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >공유한 폴더</span></li>		        
 		    </ul>  
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">츨겨찾기</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(5 , this)" >테스트 5</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="goPage(6 , this)" >테스트 6</span></li>		        
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >테스트 5</span></li>
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >테스트 6</span></li>		        
 		    </ul>  	   
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">휴지통</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(5 , this)" >테스트  7</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="goPage(6 , this)" >테스트  8</span></li>		        
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >테스트  7</span></li>
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >테스트  8</span></li>		        
 		    </ul>       
 
 	    </div>
