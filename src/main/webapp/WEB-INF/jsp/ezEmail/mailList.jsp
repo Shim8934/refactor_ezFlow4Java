@@ -108,7 +108,6 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
-		    	
 		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
 		        if ('WebSocket' in window) {
 	           	} else if ('MozWebSocket' in window) {
@@ -251,7 +250,7 @@
 	                // 브라우저가 Page Visibility API를 지원할 때의 처리
 	                if ('hidden' in document) {
 	                    console.log('adding visibilitychange event handler');
-	                    
+
 	                    document.addEventListener('visibilitychange', onVisibilityChange);
 	                    recordNextMailListRefreshTime();
 	                }		            
@@ -262,13 +261,16 @@
 		        return new Date().getTime();		        
 		    }
 		    
-		    function setMailListRefreshTimer() {                  
+		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
 		            refreshIntervalTimerId = setInterval(function() {
-		                MailListRefresh();
-		                
-		                // 다음 자동 갱신 시간을 기록한다.
-		                recordNextMailListRefreshTime();
+		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
+		            	if (!searchMode) {
+			                MailListRefresh();
+			                
+			                // 다음 자동 갱신 시간을 기록한다.
+			                recordNextMailListRefreshTime();
+		            	}
 		            }, pSaveInterval);
 		        }
 		    }
@@ -281,7 +283,7 @@
 		    
 		    function onVisibilityChange() {
                 var remainingTime = nextMailListRefreshTime - getCurrentTime();
-                                
+                
 		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
  		        if (!document.hidden) { 		            
  		           console.log('remainingTime=' + remainingTime + ',showing...');
@@ -460,6 +462,7 @@
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
 		        	var obj = JSON.parse(message.data);
+		        	
 		        	if (obj.status == "transferStart") {
 		            	userkey = obj.userkey;
 			            ShowMailProgressNew();
@@ -498,9 +501,11 @@
 						});
 						
 		            } else if (obj.status == 'progress') {
+		            	
 		            	if (obj.percent <= 100) {
 			            	ShowPercent(obj.percent);
 		            	}
+		            	
 		            } else if (obj.status == 'end') {
 		            	webSocket.close();
 		            	HiddenMailProgressNew();
@@ -722,12 +727,12 @@
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span style="float:right;font-weight:normal;color:black;">
-	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t98" />
+	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code="ezEmail.t98" /></label>
 	          <c:if test="${isSentItems == true}">
-	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t66" />
+	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code="ezEmail.t66" /></label>
 	          </c:if>
 	          <c:if test="${isSentItems != true}">
-			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t161" />
+			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
 			  </c:if>
 			  &nbsp;
 			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 

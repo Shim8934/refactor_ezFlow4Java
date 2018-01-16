@@ -7,7 +7,7 @@
 	<typeAlias  alias="userInfo" 					type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 	<typeAlias  alias="BoardReadVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardReadVO"/>
-	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
+	<typeAlias  alias="BoardMyFavoriteVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
 	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
 	<typeAlias  alias="BoardAccessVO"	 			type="egovframework.ezEKP.ezBoard.vo.BoardAccessVO"/>
@@ -101,6 +101,7 @@
         <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="33"/>
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="34"/>
         <result property="boardID" 					column="BOARDID" 				columnIndex="35"/>
+        <result property="docNo"					column="DOCNO"					columnIndex="36"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -136,6 +137,7 @@
         <result property="extensionAttribute8" 		column="EXTENSIONATTRIBUTE8" 	columnIndex="30"/>
         <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="31"/>
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="32"/>
+        <result property="docNo" 					column="DOCNO" 					columnIndex="33"/>        
 	</resultMap>
 	
 	<select id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
@@ -151,7 +153,7 @@
 		]]>
 	</select>
 
-	<select id="EzBoardDAO.getBoardNewBoardOrder" parameterClass="Map" resultClass="MyFavoriteVO">
+	<select id="EzBoardDAO.getBoardNewBoardOrder" parameterClass="Map" resultClass="BoardMyFavoriteVO">
 		<![CDATA[
 			SELECT 
 				BOARDID, 
@@ -166,7 +168,7 @@
 		]]>
 	</select>
 	
-	<update id="EzBoardDAO.updateMyBoard" parameterClass="MyFavoriteVO">
+	<update id="EzBoardDAO.updateMyBoard" parameterClass="BoardMyFavoriteVO">
 		<![CDATA[
 			UPDATE TBL_Board_MyBoards
 			SET 
@@ -190,7 +192,7 @@
 		]]>
 	</insert>
 
-	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO" remapResults="true">
+	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="BoardMyFavoriteVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="ALL">
 			<![CDATA[
 				SELECT 
@@ -269,7 +271,7 @@
 			<![CDATA[
 				SELECT 
 					CASE
-						WHEN BOARDNAME2 IS NULL
+						WHEN (BOARDNAME2 = '' OR BOARDNAME2 IS NULL)
 						THEN BOARDNAME
 						ELSE BOARDNAME2
 					END BOARDNAME
@@ -495,7 +497,7 @@
                          	A.Attachments ,
                          	A.Importance ,
                          	B.BOARDID ,
-                         	CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                          	A.Abstract ,
                          	A.DocNo 
            			   FROM 
@@ -538,7 +540,7 @@
                          	A.Attachments ,
                          	A.Importance ,
                          	B.BOARDID ,
-                         	CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                          	A.Abstract ,
                          	A.DocNo 
            			   FROM 
@@ -564,7 +566,7 @@
 		               AND 
 		                	A.StartDate > #nowDate#
 		           	   ORDER BY 
-		           			$v_PSORTBY$ )
+		           			#v_PSORTBY# )
            		WHERE 
            			ROWNUM <= #v_PENDROW#
 			]]>		
@@ -597,21 +599,20 @@
            		P.TENANT_ID = B.TENANT_ID
            	AND
            		P.BoardID = B.boardid
-       		WHERE  
-       			( NOT EXISTS ( SELECT 
-       								userid 
-                               FROM 
-                               		TBL_Board_Item_Read 
-                               WHERE
-                               		tenant_id = #v_TENANTID#
-                               AND  
-                               		userid = #v_pUserID#
-                               AND 
-                               		itemid = A.itemid
-                               AND 
-                               		ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5 ) ) )
+       		LEFT JOIN
+                TBL_Board_Item_Read C  
+            ON 
+                A.itemid = C.itemid
+            AND
+                C.ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
+            AND
+                C.tenant_id = #v_TENANTID#
+            AND
+                C.userid = #v_pUserID#
+            WHERE  
+                C.itemid IS NULL  
             AND 
-            	A.StartDate < #nowDate#
+            	A.StartDate <= #nowDate#
             AND 
             	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
             AND 
@@ -658,49 +659,89 @@
 	</select>
 	
 	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO">
-		<isNotEmpty property="tempString">
-			<![CDATA[
-				SELECT 
-					A.TITLE TITLE ,
-                    B.GUBUN ,
-                    A.BOARDID BOARDID  ,
-                    B.BOARDNAME$lang$ BOARDNAME,
-                    A.WRITERNAME$lang$ WRITERNAME,
-                    A.CONTENTLOCATION,
-                    C.MAIL
-                FROM 
-                	TBL_Board_Item A
-                JOIN 
-                	TBL_Board_BoardInfo B   
-                ON 
-                	A.tenant_id = B.tenant_id
-                AND
-                	A.BoardID = B.BoardID
-                JOIN
-                	TBL_USERMASTER C
-                ON
-                	A.writerid = C.cn
-                AND
-                	A.tenant_id = C.tenant_id
-                WHERE
-                	A.tenant_id = #tenantID#
-                AND  
-                	A.ItemID = #itemID#
-			]]>
-		</isNotEmpty>
-		<isEmpty property="tempString">
-			<![CDATA[
-				SELECT 
-					BOARDID, 
-                    CONTENTLOCATION 
-              	FROM 
-              		TBL_Board_Item_temp 
-              	WHERE  
-              		TENANT_ID = #tenantID#
-              	AND
-              		ITEMID = #itemID#
+		<isEmpty property="mode">
+			<isNotEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						A.TITLE TITLE ,
+                	    B.GUBUN ,
+               	  		A.BOARDID BOARDID  ,
+                  	    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+              	        A.WRITERNAME$lang$ WRITERNAME,
+                    	A.CONTENTLOCATION,
+                    	C.MAIL
+                	FROM 
+                		TBL_Board_Item A
+                	JOIN 
+                		TBL_Board_BoardInfo B   
+                	ON 
+                		A.tenant_id = B.tenant_id
+                	AND
+                		A.BoardID = B.BoardID
+                	JOIN
+                		TBL_USERMASTER C
+                	ON
+                		A.writerid = C.cn
+                	AND
+                		A.tenant_id = C.tenant_id
+                	WHERE
+                		A.tenant_id = #tenantID#
+                	AND  
+                		A.ItemID = #itemID#
+				]]>
+			</isNotEmpty>		
+			<isEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						BOARDID, 
+                    	CONTENTLOCATION 
+              		FROM 
+              			TBL_Board_Item_temp 
+              		WHERE  
+              			TENANT_ID = #tenantID#
+              		AND
+              			ITEMID = #itemID#
 			]]>
 		</isEmpty>
+	</isEmpty>
+	<isNotEmpty property="mode">
+			<isNotEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						A.TITLE TITLE ,
+	                    B.GUBUN ,
+	                    A.BOARDID BOARDID  ,
+	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	                    A.WRITERNAME$lang$ WRITERNAME,
+	                    A.CONTENTLOCATION
+	                FROM 
+	                	TBL_Board_Item A
+	                JOIN 
+	                	TBL_Board_BoardInfo B   
+	                ON 
+	                	A.tenant_id = B.tenant_id
+	                AND
+	                	A.BoardID = B.BoardID
+	                WHERE
+	                	A.tenant_id = #tenantID#
+	                AND  
+	                	A.ItemID = #itemID#
+				]]>
+			</isNotEmpty>
+			<isEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						BOARDID, 
+	                    CONTENTLOCATION 
+	              	FROM 
+	              		TBL_Board_Item_temp 
+	              	WHERE  
+	              		TENANT_ID = #tenantID#
+	              	AND
+	              		ITEMID = #itemID#
+				]]>
+			</isEmpty>
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
@@ -732,7 +773,7 @@
 				   							TENANT_ID = #tenantID#
 				   						AND
 				   							ITEMID = #itemID# )
-				   	ORDER BY 
+				   	ORDER BY
 				   		ReadDate DESC
 			)
 			WHERE
@@ -1096,7 +1137,7 @@
 	   				A.ATTACHMENTS,
 	   				A.ITEMLEVEL,
 	   				A.ABSTRACT,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 	   				A.EXTENSIONATTRIBUTE5,
 	   				A.WRITERNAME2,
 	   				A.WRITERDEPTNAME2,
@@ -1161,7 +1202,7 @@
 					  	AND 
 					  		ENDDATE > #nowDate#
 					  	AND 
-					  		READFLAG = '0' ) T1 
+					  		D.TOTALCOUNT IS NULL ) T1 
 					]]>
 				  </isEqual>
 				  <isEqual property="type" compareValue="3">
@@ -1297,7 +1338,7 @@
 	                    A.UpperItemIDTree ,
 	                    A.DocNo ,
 	                    A.extensionAttribute2 NOTICE  ,
-	                    CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    B.GUBUN AS GUBUN,
 	                    A.APPRFLAG APPRFLAG  
 	            	 FROM 
@@ -1358,7 +1399,7 @@
                     A.UpperItemIDTree ,
                     A.DocNo ,
                     A.extensionAttribute2 NOTICE  ,
-                    CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                     A.APPRFLAG APPRFLAG  
                 FROM 
                 	TBL_Board_Item A
@@ -1424,7 +1465,7 @@
     					ITEMID = A.ItemID) ONELINECNT  ,
 	   				A.UPPERITEMIDTREE,
 	   				A.DOCNO,
-	   				CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	   				B.GUBUN  AS GUBUN,
 	   			    '' AS NOTICE,
 	   				A.APPRFLAG AS APPRFLAG
@@ -1495,7 +1536,7 @@
 	   				A.ATTACHMENTS,
 	   				A.ITEMLEVEL,
 	   				A.ABSTRACT,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 	   				A.EXTENSIONATTRIBUTE5,
 	   				A.WRITERNAME2,
 	   				A.WRITERDEPTNAME2,
@@ -1510,7 +1551,7 @@
     					ITEMID = A.ItemID) ONELINECNT  ,
 	   				A.UPPERITEMIDTREE,
 	   				A.DOCNO,
-	   				CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	   				B.GUBUN  AS GUBUN,
 	   			    '' AS NOTICE
    				  FROM 
@@ -1569,7 +1610,7 @@
 		   				A.ATTACHMENTS,
 		   				A.ITEMLEVEL,
 		   				A.ABSTRACT,
-		   				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 		   				A.EXTENSIONATTRIBUTE5,
 		   				A.WRITERNAME2,
 		   				A.WRITERDEPTNAME2,
@@ -1584,7 +1625,7 @@
 	    					ITEMID = A.ItemID) ONELINECNT  ,
 		   				A.UPPERITEMIDTREE,
 		   				A.DOCNO,
-		   				CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+		   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 		   				B.GUBUN  AS GUBUN,
 		   			    '' AS NOTICE
    				   FROM 
@@ -1656,7 +1697,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
+	<select id="EzBoardDAO.getThumbnailList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT 
 				* 
@@ -1739,7 +1780,7 @@
 					  	AND 
 					  		ENDDATE > #nowDate#
 					  	AND 
-					  		READFLAG = '0'  
+					  		D.TOTALCOUNT IS NULL  
 					]]>
 				  </isEqual>
 				  ORDER BY 
@@ -1748,7 +1789,7 @@
 					ROWNUM BETWEEN #startRow# AND #endRow#
 	</select>
 	
-	<select id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
+	<select id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT 
 				* 
@@ -1902,7 +1943,7 @@
    					A.ATTACHMENTS,
    					A.ITEMLEVEL,
    					A.ABSTRACT,
-   					CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+   					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
    					A.EXTENSIONATTRIBUTE5,
    					A.WRITERNAME2,
    					A.WRITERDEPTNAME2,
@@ -1918,7 +1959,8 @@
    					A.UPPERITEMIDTREE,
    					A.DOCNO,
    			    	'' AS NOTICE,
-   			    	CASE WHEN I.BOARDNAME$lang$ IS NULL THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+   				  	I.GUBUN
    				  FROM 
    				  	TBL_BOARD_ITEM A 
    				  LEFT OUTER JOIN 
@@ -1988,7 +2030,7 @@
    					A.ATTACHMENTS,
    					A.ITEMLEVEL,
    					A.ABSTRACT,
-   					CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+   					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
    					A.EXTENSIONATTRIBUTE5,
    					A.WRITERNAME2,
    					A.WRITERDEPTNAME2,
@@ -2004,7 +2046,7 @@
    					A.UPPERITEMIDTREE,
    					A.DOCNO,
    			    	'' AS NOTICE,
-   			    	CASE WHEN I.BOARDNAME$lang$ IS NULL THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
    					I.GUBUN AS GUBUN
    		     	  FROM 
    		     	  	TBL_BOARD_ITEM A 
@@ -2075,7 +2117,7 @@
    					A.ATTACHMENTS,
    					A.ITEMLEVEL,
    					A.ABSTRACT,
-   					CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+   					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
    					A.EXTENSIONATTRIBUTE5,
    					A.WRITERNAME2,
    					A.WRITERDEPTNAME2,
@@ -2091,7 +2133,7 @@
    					A.UPPERITEMIDTREE,
    					A.DOCNO,
    			    	'' AS NOTICE,
-   			    	CASE WHEN I.BOARDNAME$lang$ IS NULL THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
    					I.GUBUN AS GUBUN
    				FROM 
    					TBL_BOARD_ITEM_TEMP A 
@@ -2186,11 +2228,11 @@
 			SELECT
 				ITEMID ,
             	WRITERID ,
-	            WRITERNAME ,
+	            WRITERNAME$lang$ WRITERNAME ,
 	            WRITERNAME2 ,
-	            WRITERDEPTNAME ,
+	            WRITERDEPTNAME$lang$ WRITERDEPTNAME ,
 	            WRITERDEPTNAME2 ,
-	            WRITERCOMPANYNAME ,
+	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
 	            WRITERCOMPANYNAME2 ,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
@@ -2206,7 +2248,7 @@
 	            COPIEDITEM ,
 	            EXTENSIONATTRIBUTE1 ,
 	            EXTENSIONATTRIBUTE2 ,
-	            EXTENSIONATTRIBUTE3 ,
+	            EXTENSIONATTRIBUTE3$lang$ EXTENSIONATTRIBUTE3,
 	            EXTENSIONATTRIBUTE32 ,
 	            EXTENSIONATTRIBUTE4 ,
 	            EXTENSIONATTRIBUTE5 ,
@@ -2240,11 +2282,11 @@
 			SELECT 
 				ItemID ,
 	            WriterID ,
-	            WriterName ,
+	            WriterName$lang$ WriterName,
 	            WriterName2 ,
-	            WriterDeptName ,
+	            WriterDeptName$lang$ WriterDeptName,
 	            WriterDeptName2 ,
-	            WriterCompanyName ,
+	            WriterCompanyName$lang$  WriterCompanyName,
 	            WriterCompanyName2 ,
 	            WriteDate ,
 	            ParentWriteDate ,
@@ -2260,7 +2302,7 @@
 	            copiedItem ,
 	            ExtensionAttribute1 ,
 	            ExtensionAttribute2 ,
-	            ExtensionAttribute3 ,
+	            ExtensionAttribute3$lang$ ExtensionAttribute3 ,
 	            ExtensionAttribute32 ,
 	            ExtensionAttribute4 ,
 	            ExtensionAttribute5 ,
@@ -2330,7 +2372,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getBoardApprJoinItem" parameterClass="MyFavoriteVO" resultClass="String">
+	<select id="EzBoardDAO.getBoardApprJoinItem" parameterClass="BoardMyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
 				distinct B.boardid
@@ -2481,7 +2523,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getBrdTotalItemCount" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getBrdTotalItemCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -2559,7 +2601,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="EzBoardDAO.getBrdTotalItemCount2" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getBrdTotalItemCount2" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -2643,6 +2685,12 @@
 			AND
 				WRITERID = #v_PUSERID# 
 			AND 
+   				(
+   					(APPRFLAG <> 'C' AND APPRFLAG <> 'N')
+		        		OR 
+        		  	APPRFLAG IS NULL
+        		 )
+			AND 
 				StartDate < #nowDate# 
 			AND 
 				EndDate > #nowDate#
@@ -2661,7 +2709,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getBoardApprList" parameterClass="MyFavoriteVO" resultClass="String">
+	<select id="EzBoardDAO.getBoardApprList" parameterClass="BoardMyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
        			distinct B.BOARDID
@@ -2680,7 +2728,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getThumbNailCount" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getThumbNailCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -2754,7 +2802,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="EzBoardDAO.getThumbNailCount2" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getThumbNailCount2" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -3653,6 +3701,7 @@
 	          		WriterName = #writerName#,
 	          		WriterName2 = #writerName2#,
 	          	</isEqual>
+	          	ExtensionAttribute2 = #extensionAttribute2#,
 	          	ExtensionAttribute5 = #extensionAttribute5#,
 	          	DocPassWord = #docPassword#,
 	          	extensionAttribute6 = #extensionAttribute6#,
@@ -3837,7 +3886,8 @@
 	<select id="EzBoardDAO.getAdjacentItems1" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
 			SELECT 
-				itemid ,title 
+				itemid ,
+				title 
 	        FROM 
 	        	TBL_BOARD_ITEM 
 	        WHERE  
@@ -3894,7 +3944,8 @@
 				* 
 	        FROM 
 	        	(SELECT 
-	        		itemid ,title 
+	        		itemid ,
+	        		title 
 	             FROM 
 	             	TBL_BOARD_ITEM 
 	        	 WHERE  
@@ -4457,6 +4508,19 @@
 		]]>
   </select>
   
+  <select id="EzBoardDAO.getPhotoCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
+      <![CDATA[
+        SELECT 
+          COUNT(ITEMID)  TOTALCOUNT
+                FROM 
+                  TBL_Board_Item 
+              WHERE  
+                TENANT_ID = #tenantID#
+              AND
+                BOARDID = #boardId#
+      ]]>
+  </select>
+  
   <delete id="EzBoardDAO.deleteReservedBoardItem" parameterClass="BoardDeleteItemVO">
   		<![CDATA[
   			DELETE FROM TBL_BOARD_DELETERESERVEDITEM
@@ -4493,6 +4557,6 @@
             	ItemID = #itemID#
 		]]>
   </select>
-
+  
 </sqlMap>
 

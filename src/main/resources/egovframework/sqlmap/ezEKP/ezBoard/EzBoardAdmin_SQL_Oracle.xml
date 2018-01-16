@@ -156,7 +156,11 @@
 					SELECT 
 						DISTINCT A.boardid BoardID,
 	                    A.boardname BoardName,
-	                    A.boardname2 BoardName2,
+	                    CASE
+							WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname2
+						END BoardName2,
 	                    A.treevieworder TreeViewOrder,
 	                    A.boardcolor BoardColor,
 	                    A.gubun,
@@ -202,7 +206,11 @@
 					SELECT 
 						DISTINCT A.BoardID BoardID  ,
 	                    A.BoardName BoardName  ,
-	                    A.BoardName2 BoardName2  ,
+	                    CASE
+							WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname2
+						END BoardName2 ,
 	                    A.TreeViewOrder TreeViewOrder  ,
 	                    A.BoardColor BoardColor  ,
 	                    A.Gubun ,
@@ -251,7 +259,11 @@
 				SELECT 
 					DISTINCT A.BoardID ,
                     A.BoardName ,
-                    A.BoardName2 ,
+                    CASE
+						WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
+						THEN A.Boardname
+						ELSE A.Boardname2
+					END BoardName2 ,
                     A.TreeViewOrder ,
                     A.BoardColor BoardColor,
                     A.Gubun ,
@@ -590,6 +602,9 @@
       		AND  
       			BoardID = #v_pBoardID#
 		]]>
+		<isNotEmpty property="tempCopyList" prepend="AND">
+			ACCESSID IN ($tempCopyList$)
+		</isNotEmpty>
 	</delete>
 	
 	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
@@ -653,13 +668,13 @@
 			UPDATE TBL_Board_BoardInfo
       		SET 
       			BOARDDESCRIPTION = #v_PDESCRIPTION#,
-          		ITEMEXPIRES = #v_PEXPIRES#,
+          		ITEMEXPIRES = TO_NUMBER(#v_PEXPIRES#) ,
 	          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
 	          	URL = #v_PURL#,
-	          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
-	          	GUBUN = #v_PGUBUN#,
+	          	REPLYNOTIFY = TO_NUMBER(#v_PREPLYNOTIFY#),
+	          	GUBUN = (CASE WHEN (#v_PGUBUN# IS NULL OR #v_PGUBUN# = '') THEN 0 ELSE TO_NUMBER(#v_PGUBUN#) END) ,
 	          	BOARDNAME = #v_PBOARDNAME#,
-	          	DELETEAFTER = #v_PDELETEAFTER#,
+	          	DELETEAFTER = TO_NUMBER(#v_PDELETEAFTER#) ,
 	          	BOARDCOLOR = #v_PBOARDCOLOR#,
 	          	BOARDNAME2 = #v_PBOARDNAME2#,
 	          	PORTLET = #v_PPORTLET#,
@@ -1046,7 +1061,10 @@
           	  WHERE  
           	  	TENANT_ID = #v_TENANTID#
           	  AND
-          	  	BOARDID = #v_PDEFAULTBOARDID# )
+          	  	BOARDID = #v_PDEFAULTBOARDID# 
+          	  AND
+          	  	ACCESSID IN ($tempCopyList$) 	
+          	  )
 		]]>
 	</insert>
 	

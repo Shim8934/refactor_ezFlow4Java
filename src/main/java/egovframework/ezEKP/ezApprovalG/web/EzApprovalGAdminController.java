@@ -320,7 +320,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String contID = request.getParameter("fContID");
 		String companyID = request.getParameter("companyID");
-		
 		String result = ezApprovalGAdminService.getGroupDept(contID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), companyID, userInfo.getTenantId());
 		
 		logger.debug("getGroupDept ended.");
@@ -494,7 +493,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
-		
+		System.out.println("docType////" + docType);
 		if (type != null && type.equals("HWP")) {
 			model.addAttribute("useEditor", "HWP");
 			model.addAttribute("realPath", commonUtil.getRealPath(request).replace("\\","/"));
@@ -600,7 +599,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("formAutoRule = " + formAutoRule);
 		logger.debug("formAutoRuleLine = " + formAutoRuleLine);
-		
 		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag);
 		
 		logger.debug("formSave ended. result = " + result);

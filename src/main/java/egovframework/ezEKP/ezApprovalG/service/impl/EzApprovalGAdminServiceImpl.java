@@ -2104,13 +2104,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map2.put("contID", contID);
 			map2.put("companyID", companyID);
 			map2.put("tenantID", tenantID);
-			
 			for(String deptID : deptList.split(";")) {
 				map2.put("deptID", deptID);
 				
 				logger.debug("insertFormContainerGroup started.");
 				ezApprovalGAdminDAO.insertFormContainerGroup(map2);
-				logger.debug("insertFormContainerGroup started.");
+				logger.debug("insertFormContainerGroup ended.");
 			}
 		}
 		
@@ -2384,7 +2383,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
-		
 		if (approvalFlag.equals("S")) {
 			keepPeriod = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
 			keepPeriodCode = doc.getElementsByTagName("KEEPPERIODCODE").item(0).getTextContent();

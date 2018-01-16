@@ -2471,6 +2471,8 @@
            		FORMCONTPARENTS = #v_ID#
            AND
            		TENANT_ID = #v_TENANTID#
+           AND
+           		COMPANYID = #companyID#
 		</isEmpty>
 		<isNull property="v_DEPTID">
 			SELECT 
@@ -2486,6 +2488,8 @@
            		FORMCONTPARENTS = #v_ID#
            AND
            		TENANT_ID = #v_TENANTID#
+           AND
+           		COMPANYID = #companyID#
 		</isNull>
 		<isNotEmpty property="v_DEPTID">
 			SELECT 
@@ -2513,6 +2517,8 @@
 	        		( TBL_FormContUserGroup.FormContUserDepID = #v_DEPTID# ) )
 	        AND     
 	        		TBL_FormContainer.TENANT_ID = #v_TENANTID#
+	        AND
+	        	    TBL_FormContainer.COMPANYID = #companyID#
 		</isNotEmpty>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
@@ -6650,8 +6656,12 @@
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 
-					code2, 
-					name$v_LANGTYPE$ AS name
+					code2,
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 
@@ -6670,7 +6680,11 @@
 			<![CDATA[
 				SELECT 
 					code2, 
-					name$v_LANGTYPE$ AS name
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 

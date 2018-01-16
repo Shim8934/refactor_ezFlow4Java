@@ -339,7 +339,7 @@
        		<isEqual property="searchType" compareValue="userID">
        			<![CDATA[
 					AND
-						B.displayname LIKE '%'||#searchValue#),'%')
+						B.displayname LIKE '%'||#searchValue#||'%'
 				]]>
        		</isEqual>
 		</isNotEqual>
