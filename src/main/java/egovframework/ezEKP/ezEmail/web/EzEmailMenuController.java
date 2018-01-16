@@ -146,7 +146,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
-			List<Folder> rootMailFolderList = ia.getTopLevelFolders(true);
+			
+			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
+			boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+			
+			List<Folder> rootMailFolderList = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 			
 			for (int i=0,j=0; i<rootMailFolderList.size(); i++) {
 				Folder folder = rootMailFolderList.get(i);
@@ -374,7 +378,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					subFolderXML.append("></node>");
 				}
 			} else {
-				subMailFolder = ia.getTopLevelFolders(isSubscribe);
+				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+				
+				subMailFolder = ia.getTopLevelFolders(isSubscribe, isUseDefaultFoldersForLangOnly);
+				
 				for (int i=0,j=0; i<subMailFolder.size(); i++) {
 					Folder fd = subMailFolder.get(i);
 					subFolderXML.append("<node imgidx='1'");

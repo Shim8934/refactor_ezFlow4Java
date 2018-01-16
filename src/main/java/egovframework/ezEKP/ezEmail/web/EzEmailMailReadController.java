@@ -1441,6 +1441,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
+        String propertyValue = ezCommonService.getTenantConfig("UseShowEmailAddrOnPrint", loginInfo.getTenantId());
+        
 		String url = null;
 		long uid = 0;
 		String folderPath = null;
@@ -1490,8 +1492,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						 * 인쇄할 때 보낸 사람, 받는 사람, 참조에 메일 주소가 없는 경우(a@a.com)
 						 * 메일 주소가 나타나지 않도록 처리
 						 */
-						pSender = personName;												
-						pSender += fromAddress.getAddress() == null || ((InternetAddress)fromAddress).getAddress().equals("a@a.com") ? "" : "(" + fromAddress.getAddress() + ")";
+						
+                        if (propertyValue.equals("YES") || propertyValue.equals("")) {
+                            pSender = personName;                                  
+                            pSender += fromAddress.getAddress() == null || ((InternetAddress)fromAddress).getAddress().equals("a@a.com") ? "" : "(" + fromAddress.getAddress() + ")";
+	                    } else {
+	                    	pSender = personName;                                  
+	                    }						
 					}
 					logger.debug("From=" + pSender);
 					
@@ -1511,9 +1518,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								
 								personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
 							}
-							
-							pReciverTo += personName;
-							pReciverTo += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+
+                            if (propertyValue.equals("YES") || propertyValue.equals("")) {
+                                pReciverTo += personName;
+                                pReciverTo += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";                                                                      
+                            } else {
+                                pReciverTo += personName + "\t";
+                            }							
 						}
 					}
 					logger.debug("TO=" + pReciverTo);
@@ -1532,8 +1543,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
 							}
 							
-							pReciverCc += personName;
-							pReciverCc += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+							if (propertyValue.equals("YES") || propertyValue.equals("")) {
+								pReciverCc += personName;
+								pReciverCc += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+							} else {
+								pReciverCc += personName + "\t";								
+							}
 						}
 					}
 					logger.debug("CC=" + pReciverCc);

@@ -116,7 +116,10 @@ public class EzEmailMailSearchController {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 			
-			List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
+			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", userInfo.getTenantId());
+			boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+			
+			List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);		
 			
 			topLevelFolderNames = new ArrayList<String>();
 			int maxFolderCount = Math.min(5, topLevelFolders.size());
@@ -205,7 +208,10 @@ public class EzEmailMailSearchController {
 			Message[] messages = null;
 			
 			if (mailFolder.equals("ALL")) {
-				List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
+				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", userInfo.getTenantId());
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+				
+				List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);		
 				
 				List<String> topLevelFolderNames = new ArrayList<String>();
 				int maxFolderCount = Math.min(5, topLevelFolders.size());
