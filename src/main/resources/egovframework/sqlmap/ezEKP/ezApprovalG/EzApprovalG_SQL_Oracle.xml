@@ -1430,7 +1430,7 @@
 <!-- 	<procedure id="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETLINEINFO(#v_DOCID#, #v_MODE#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	<select id ="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 				TBL_APRLINEINFO.DOCID, 
@@ -1471,25 +1471,33 @@
             	TBL_APRLINEINFO.APRMEMBERSN = TBL_EXPAPRLINE.APRMEMBERSN
             AND
             	TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+            AND
+            	TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID            	
             WHERE 
             	TBL_APRLINEINFO.DOCID = #v_DOCID#  
             AND
             	TBL_APRLINEINFO.TENANT_ID =#v_TENANTID#   
+            AND
+            	TBL_APRLINEINFO.COMPANYID = #companyID#            	
             <isNotEmpty property="v_ORDEROPTION">
 	           <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		          <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY TBL_APRLINEINFO.$v_ORDEROPTION$ 
+		              	ORDER BY 
+		              		TBL_APRLINEINFO.$v_ORDEROPTION$ 
 		          </isEqual>
 		          <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	 ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+		              	 ORDER BY 
+		              	 	$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 		          </isNotEqual>
 	           </isGreaterEqual>
 	           <isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="10" >
-	               	ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+	               	ORDER BY 
+	               		$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 	           </isLessThan>
            </isNotEmpty>
            <isEmpty property="v_ORDEROPTION">
-				 ORDER BY TBL_APRLINEINFO.APRMEMBERSN DESC             
+				 ORDER BY 
+				 	TBL_APRLINEINFO.APRMEMBERSN DESC             
 			</isEmpty>
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="END">
@@ -1532,25 +1540,33 @@
               	TBL_ENDAPRLINEINFO.APRMEMBERSN = TBL_EXPENDAPRLINE.APRMEMBERSN
               AND 
               	TBL_ENDAPRLINEINFO.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID
+              AND
+              	TBL_ENDAPRLINEINFO.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID              	
               WHERE 
               	TBL_ENDAPRLINEINFO.DOCID = #v_DOCID#
               AND 
               	TBL_ENDAPRLINEINFO.TENANT_ID = #v_TENANTID#  
+              AND
+              	TBL_ENDAPRLINEINFO.COMPANYID = #companyID#              	
               <isNotEmpty property="v_ORDEROPTION">
 	              <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		              <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY TBL_ENDAPRLINEINFO.$v_ORDEROPTION$   
+		              	ORDER BY 
+		              		TBL_ENDAPRLINEINFO.$v_ORDEROPTION$   
 		              </isEqual>
 		              <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY $v_ORDEROPTION$ , TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+		              	ORDER BY 
+		              		$v_ORDEROPTION$ , TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
 		              </isNotEqual>
 	              </isGreaterEqual>
 	              <isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="10" >
-	               	ORDER BY $v_ORDEROPTION$, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC 
+	               	ORDER BY 
+	               		$v_ORDEROPTION$, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC 
 	              </isLessThan>
               </isNotEmpty>
               <isEmpty property="v_ORDEROPTION">
-              	 ORDER BY TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+              	 ORDER BY 
+              	 	TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
               </isEmpty>
               	  
 		</isEqual>
@@ -1594,25 +1610,33 @@
              	TBL_APRLINEINFO.APRMEMBERSN = TBL_EXPAPRLINE.APRMEMBERSN
              AND 
              	TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+             AND
+             	TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID             	
              WHERE 
              	TBL_APRLINEINFO.DOCID = #v_DOCID#    
              AND 
              	TBL_APRLINEINFO.TENANT_ID = #v_TENANTID#  
+             AND
+             	TBL_APRLINEINFO.COMPANYID = #companyID#             	
              <isNotEmpty property="v_ORDEROPTION">
 	           <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		          <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY TBL_APRLINEINFO.$v_ORDEROPTION$ 
+		              	ORDER BY 
+		              		TBL_APRLINEINFO.$v_ORDEROPTION$ 
 		          </isEqual>
 		          <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	 ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+		              	 ORDER BY 
+		              	 	$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 		          </isNotEqual>
 	           </isGreaterEqual>
 	           <isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="10" >
-	               	ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+	               	ORDER BY 
+	               		$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 	           </isLessThan>
            </isNotEmpty>
            <isEmpty property="v_ORDEROPTION">
-				 ORDER BY TBL_APRLINEINFO.APRMEMBERSN DESC             
+				 ORDER BY 
+				 	TBL_APRLINEINFO.APRMEMBERSN DESC             
 			</isEmpty>
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="TMP">
@@ -1645,7 +1669,8 @@
                     	B.PROXYUSERJOBTITLE, 
                     	B.PROXYUSERDEPTID, 
                     	B.PROXYUSERDEPTNAME ,
-                    	A.TENANT_ID
+                    	A.TENANT_ID,
+                    	A.COMPANYID
                     FROM 
                     	TBL_TMPAPRLINEINFO A 
                     INNER JOIN 
@@ -1658,11 +1683,15 @@
                     	A.APRMEMBERSN = B.APRMEMBERSN 
                     AND 
                     	A.TENANT_ID = B.TENANT_ID 
+                    AND
+                    	A.COMPANYID = B.COMPANYID                    	
                     ) A
                     WHERE 
                     	A.DOCID = #v_DOCID#   
                     AND
                     	A.TENANT_ID = #v_TENANTID#
+                    AND
+                    	A.COMPANYID = #companyID#                    	
                  <isNotEmpty property="v_ORDEROPTION">
 	              <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		              <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
@@ -1723,10 +1752,14 @@
             	TBL_APRLINEINFO.APRMEMBERSN = TBL_EXPAPRLINE.APRMEMBERSN
             AND 
             	TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+            AND
+            	TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID            	
             WHERE 
             	TBL_APRLINEINFO.DOCID = #v_DOCID#  
             AND
             	TBL_APRLINEINFO.TENANT_ID=#v_TENANTID#
+            AND
+            	TBL_APRLINEINFO.COMPANYID = #companyID#            	
             <isNotEmpty property="v_ORDEROPTION">
 	           <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		          <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
@@ -1753,13 +1786,10 @@
 <!-- 	<procedure id="EzApprovalG.getAttachInfoDB" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->
 <!-- 		{CALL EZSP_GETATTACHINFO(#v_DOCID#, #v_MODE#, #v_STRLANG#, #v_LANGFILE#, #v_LANGDOCUMENT#, #v_ORDERBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getAttachInfoDB" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+	<select id ="EzApprovalG.getAttachInfoDB" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
 		<!--결재할 문서-->
 		<isEqual property="v_MODE" compareValue="APR">
-			SELECT 
-				* 
-			FROM (
-				SELECT   
+			  SELECT   
 					#v_LANGFILE# AS ATTACHTYPE, 
 					'file' AS ATTACHTYPECODE, 
 					ATTACHFILESN AS ATTACHSN, 
@@ -1770,10 +1800,17 @@
       				ATTACHUSERDEPTNAME$v_STRLANG$ AS ATTACHUSERDEPTNAME, 
       				DOCID, 
       				ATTACHFILENAME AS REALATTACHNAME,
-      				TENANT_ID
+      				TENANT_ID, 
+      				COMPANYID
       			FROM 
       				TBL_APRATTACHINFO  
-      				
+      			WHERE
+      				DOCID = #v_DOCID# 
+      			AND
+            		TENANT_ID = #v_TENANTID# 
+            	AND
+            		COMPANYID = #companyID#	
+            		
       		UNION ALL 
       		
       			SELECT 
@@ -1787,13 +1824,16 @@
       				ATTACHUSERDEPTNAME$v_STRLANG$ AS ATTACHUSERDEPTNAME, 
       				DOCID , 
       				ATTACHDOCNAME AS REALATTACHNAME,
-      				TENANT_ID
+      				TENANT_ID,
+      				COMPANYID
       			FROM 
-      				TBL_APRDOCATTACHINFO ) A 
+      				TBL_APRDOCATTACHINFO
       			WHERE 
       				DOCID = #v_DOCID#
       			AND 
             		TENANT_ID = #v_TENANTID# 
+            	AND
+            		COMPANYID = #companyID# 
 		</isEqual>
 		<!-- 기안한 문서-->
 		<isEqual property="v_MODE" compareValue="END">
@@ -1811,9 +1851,14 @@
          				ATTACHUSERDEPTNAME$v_STRLANG$  AS ATTACHUSERDEPTNAME, 
          				DOCID, 
          				ATTACHFILENAME AS REALATTACHNAME,
-         				TENANT_ID 
+         				TENANT_ID,
+         				COMPANYID 
          			FROM 
          				TBL_ENDATTACHINFO  
+         			WHERE 
+	            		TENANT_ID = #v_TENANTID# 
+	            	AND
+	            		COMPANYID = #companyID#	         				
          				
          		UNION ALL 
          		
@@ -1828,13 +1873,16 @@
          			ATTACHUSERDEPTNAME$v_STRLANG$ AS ATTACHUSERDEPTNAME, 
          			DOCID, 
          			ATTACHDOCNAME AS REALATTACHNAME,
-         			TENANT_ID
+         			TENANT_ID,
+         			COMPANYID
          		FROM 
          			TBL_ENDAPRDOCATTACHINFO ) A 
          		WHERE 
          			DOCID = #v_DOCID#
          		AND 
             		TENANT_ID = #v_TENANTID#
+            	AND
+            		COMPANYID = #companyID#            		
 		</isEqual>
 		<!--서버저장문서 [중앙대 추가] -->
 		<isEqual property="v_MODE" compareValue="TMP">
@@ -1851,9 +1899,14 @@
             	ATTACHUSERDEPTNAME, 
             	OWNERID || '@' || CAST(SN AS VARCHAR(20)) AS DOCID, 
             	ATTACHFILENAME AS REALATTACHNAME,
-            	TENANT_ID
+            	TENANT_ID,
+            	COMPANYID
             FROM 
             	TBL_TMPATTACHINFO  
+            WHERE 
+           		TENANT_ID = #v_TENANTID# 
+           	AND
+           		COMPANYID = #companyID#            	
             
             UNION ALL 
             
@@ -1867,13 +1920,16 @@
             	ATTACHUSERDEPTNAME, 
             	OWNERID || '@'|| CAST(SN AS VARCHAR(20)) AS DOCID, 
             	ATTACHDOCNAME AS REALATTACHNAME,
-            	TENANT_ID
+            	TENANT_ID,
+            	COMPANYID
             FROM 
             	TBL_TMPAPRDOCATTACHINFO ) A 
             WHERE 
             	DOCID = #v_DOCID#
             AND 
             	TENANT_ID = #v_TENANTID#
+            AND
+            	COMPANYID = #companyID#            	
 		</isEqual>
 		<isNotEqual property="v_MODE" compareValue="APR">
 		<isNotEqual property="v_MODE" compareValue="END">
@@ -1892,9 +1948,14 @@
             		ATTACHUSERDEPTNAME$v_STRLANG$ AS ATTACHUSERDEPTNAME, 
             		DOCID , 
             		ATTACHFILENAME AS REALATTACHNAME,
-            		TENANT_ID
+            		TENANT_ID,
+            		COMPANYID
             	FROM 
             		TBL_APRATTACHINFO  
+            	WHERE 
+            		TENANT_ID = #v_TENANTID# 
+            	AND
+            		COMPANYID = #companyID#            		
             	
             	UNION ALL 
             	
@@ -1909,13 +1970,16 @@
             		ATTACHUSERDEPTNAME$v_STRLANG$ AS ATTACHUSERDEPTNAME, 
             		DOCID ,
             		ATTACHDOCNAME AS REALATTACHNAME,
-            		TENANT_ID
+            		TENANT_ID,
+            		COMPANYID
             	FROM 
             		TBL_APRDOCATTACHINFO ) A 
             	WHERE 
             		DOCID = #v_DOCID#
             	AND 
             		TENANT_ID = #v_TENANTID#
+            	AND
+            		COMPANYID = #companyID#
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -1935,10 +1999,7 @@
 		</isGreaterThan>
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0">
 				 ORDER BY ATTACHTYPE DESC
-		</isLessEqual>
-		
-		
-			
+		</isLessEqual>			
 	</select>
 <!-- 	<procedure id="EzApprovalG.checkPermission" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETAPRUSERAPPLINEINFO(#v_PDOCID#, #v_PAPRUSERID#, #v_PDEPTID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
