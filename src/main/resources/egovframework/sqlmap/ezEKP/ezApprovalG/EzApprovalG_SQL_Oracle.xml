@@ -1281,6 +1281,8 @@
            		TBL_RECORD.RecordID = TBSEPATT.RecordID
            AND
            		TBL_RECORD.TENANT_ID = TBSEPATT.TENANT_ID
+           AND
+           		TBL_RECORD.COMPANYID = TBSEPATT.COMPANYID           		
            LEFT JOIN 
            		TBL_AUDIO_VISUALRECEXINFO TBAV   
            ON 
@@ -1289,18 +1291,24 @@
            		TBSEPATT.SeperateAttachNo = TBAV.SeperateAttachNo
            AND
            		TBSEPATT.TENANT_ID = TBAV.TENANT_ID
+           AND
+           		TBSEPATT.COMPANYID = TBAV.COMPANYID           		
            LEFT JOIN 
            		TBL_OLDRECORDEXTRAINFO TBOLD   
            ON 
            		TBL_RECORD.RecordID = TBOLD.RecordID
            AND
            		TBL_RECORD.TENANT_ID = TBOLD.TENANT_ID
+           AND
+           		TBL_RECORD.COMPANYID = TBOLD.COMPANYID           		
            WHERE  
           		TBL_RECORD.RecordID = #v_RECORDID#
            AND 
            		TBSEPATT.SeperateAttachNo = #v_SEPATTNO#
            AND
            		TBL_RECORD.TENANT_ID = #v_TENANTID#
+           AND
+           		TBL_RECORD.COMPANYID = #companyID#           		
 		</isNotEqual>
 	</select>
 	
@@ -1308,6 +1316,7 @@
 <!-- 		{CALL EZSP_GETAPRLINEINFO(#v_DOCID#, #v_FLAG#, #v_USERID#, #v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_FLAG" compareValue="1">
 		<![CDATA[
 		SELECT 
@@ -1349,11 +1358,16 @@
            		TBL_APRLINEINFO.AprMemberSN = TBL_EXPAPRLINE.aprmemberSN
            AND 
            		TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+		   AND 
+				TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID           		
            WHERE  
            		TBL_APRLINEINFO.DocID = #v_DOCID#
            AND 
            		TBL_APRLINEINFO.TENANT_ID = #v_TENANTID#
-           ORDER BY TBL_APRLINEINFO.AprMemberSN DESC 
+		   AND 
+				TBL_APRLINEINFO.COMPANYID = #companyID#           		
+           ORDER BY 
+           		TBL_APRLINEINFO.AprMemberSN DESC 
            ]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="2">
@@ -1368,9 +1382,49 @@
              	FORMID = #v_FORMID#
              AND 
              	TENANT_ID = #v_TENANTID#
-             ORDER BY APRMEMBERSN DESC 
+	         AND
+	            COMPANYID = #companyID#             	
+             ORDER BY 
+             	APRMEMBERSN DESC 
              ]]>
 		</isEqual>
+		</isNotEqual>
+		
+		<isEqual property="isUsed" compareValue="reuse">
+			SELECT 
+				#v_DOCID#, 
+				APRMEMBERSN, 
+				APRTYPE ,
+				APRSTATE, 
+				APRMEMBERID, 
+				APRMEMBERISDEPTYN, 
+				APRMEMBERNAME, 
+				APRMEMBERJOBTITLE, 
+				APRMEMBERDEPTID, 
+				APRMEMBERDEPTNAME, 
+				APRMEMBERLDAPPATH,
+				'',
+				'',
+				ISPROPOSERYN,
+				ISBRIEFUSERYN,
+				REASONDONOTAPPROVAL,
+				APRMEMBERNAME2,
+				APRMEMBERJOBTITLE2,
+				APRMEMBERDEPTNAME2,
+				TENANT_ID,
+				COMPANYID
+			FROM 
+				TBL_ENDAPRLINEINFO
+            WHERE 
+            	DOCID = #beforeDocID#
+           	AND
+           		TENANT_ID = #v_TENANTID#
+	        AND
+	           	COMPANYID = #companyID#
+	        ORDER BY 
+	            APRMEMBERSN DESC 
+		</isEqual>		
+		
 	</select>
 
 <!-- 	<procedure id="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
