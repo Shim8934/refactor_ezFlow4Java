@@ -3206,6 +3206,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							}
 			            }
 			            
+			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl);
+			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
 			            if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
 			    			int index = orgUrl.lastIndexOf("/");			
