@@ -54,6 +54,16 @@
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            return getNodeText(XmlBodyDATA);
 			}
+			
+	        function EditorElementSetHtml(elementID, Html) {
+	            try {
+                    var ElementObj = kukudocsEditor.GetElement(elementID);
+                    if (ElementObj) {
+                        ElementObj.innerHTML = Html;
+                    }
+	            } catch (e) {
+	            }
+	        }
 		</script> 
 	</head>
 	<body>
@@ -74,7 +84,7 @@
 			
 			// 숨김 메뉴 설정
 			var hiddenMenu = ["new", "file_open", "save", "auto_save_load", "layout", "template", "all_select", "page_break", 
-							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "help"];
+							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "setting", "help"];
 			
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	        	//메일 부제중설정 시 이미지 업로드 아이콘 제거

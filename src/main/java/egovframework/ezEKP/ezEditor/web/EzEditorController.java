@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -686,7 +687,7 @@ public class EzEditorController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezEditor/kukudocsUpload.do")
 	@ResponseBody
-	public String kukudocsUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+	public String kukudocsUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model, Locale locale) throws Exception{
 		logger.debug("kukudocsUpload started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -695,60 +696,63 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		try {
 			MultipartFile multiFile = request.getFile("image_type");
-			String base64ImageData = request.getParameter("image_base64_type");
+			String fileData = request.getParameter("image_base64_type");
 			String type = request.getParameter("type");
 			
 			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
-			// TODO: setting msg
 			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) { 
-				msg = "";
+				msg = egovMessageSource.getMessage("ezEmail.lhm29", locale);
 				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
 				logger.debug("Cannot upload image. kukudocsUpload ended. type=" + type);
 				return result;
 			}
 			
-			// TODO: setting msg
-			// multiFile, base64ImageData 모두 null일 경우 에러를 낸다.
-			if (multiFile == null && base64ImageData == null) {
-				msg = "";
-				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
-				logger.debug("multiFile is null. kukudocsUpload ended.");
-				return result;
-			}
-			
-			// base64ImageData가 넘어왔을 경우의 처리
-			if (base64ImageData != null) {
-				// TODO
+			// fileData가 넘어왔을 경우의 처리
+			if (fileData != null) {
+				String[] fileDatas = fileData.split(",");
 				
-//				String[] fileDatas = fileData.split(",");
-//				if (fileDatas[0].indexOf("image") > -1) {
-//					fileData = fileDatas[1];
-//					
-//					FileOutputStream fileOuputStream = null;
-//					
-//					try {
-//						Decoder decoder = Base64.getDecoder();
-//						byte[] imageByte = decoder.decode(fileData);
-//						fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName); 
-//						fileOuputStream.write(imageByte);
-//						fileOuputStream.flush();
-//						
-//						logger.debug("rootId=" + rootId + ", sUploadedPath=" + filePath + commonUtil.separator + fileName);
-//						
-//						model.addAttribute("sRootId", rootId);
-//						model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
-//						
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//						
-//						resultCode = "1";
-//					} finally {
-//						try {
-//							fileOuputStream.close();
-//						} catch (Exception e2) {
-//						}
-//					}
-//				}
+				if (fileDatas[0].startsWith("data:image/")) {
+					String fileType = fileDatas[0].substring(fileDatas[0].indexOf("/") + 1, fileDatas[0].indexOf(";"));
+					fileData = fileDatas[1];
+					FileOutputStream fileOuputStream = null;
+					
+					try {
+						String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+						
+						if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+						}
+						
+						String realPath = commonUtil.getRealPath(request);
+						String today = EgovDateUtil.getToday("");
+						String fileName = UUID.randomUUID() + "." + fileType;
+						
+						filePath = filePath + commonUtil.separator + today;
+						File file = new File(realPath + filePath);
+						
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						
+						Decoder decoder = Base64.getDecoder();
+						byte[] imageByte = decoder.decode(fileData);
+						fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName); 
+						fileOuputStream.write(imageByte);
+						fileOuputStream.flush();
+						
+						msg = filePath + commonUtil.separator + fileName;
+						result = "{ \"url\" : \"" + msg + "\" }";
+						
+					} finally {
+						try {
+							fileOuputStream.close();
+						} catch (Exception e) {
+						}
+					}
+				} else {
+					msg = egovMessageSource.getMessage("main.t4000", locale);
+					result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				}
 				
 			// multiFile이 넘어왔을 경우의 처리
 			} else if (multiFile != null) {
@@ -773,13 +777,19 @@ public class EzEditorController extends EgovFileMngUtil{
 				writeUploadedFile(multiFile, fileName, realPath + filePath);
 				msg = filePath + commonUtil.separator + fileName;
 				result = "{ \"url\" : \"" + msg + "\" }";
-			}
 			
-				
+			//fileData, multiFile 모두 null일 경우
+			} else {
+				// 이미지가 너무 큰 경우 fileData가 null로 들어올 수 있다.(tomcat server.xml의 maxPostSize설정에 따라 이미지 최대 업로드 사이즈 조절 가능하다.)
+				msg = egovMessageSource.getMessage("ezBoard.hyj02", locale);
+				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				logger.debug("fileData and multiFile are null.");
+			}
 		} catch (Exception e) {
-			// TODO: setting msg
-			msg = "";
+			msg = egovMessageSource.getMessage("ezBoard.hyj02", locale);
 			result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+			
+			e.printStackTrace();
 		}
 		
 		logger.debug("kukudocsUpload ended.");
