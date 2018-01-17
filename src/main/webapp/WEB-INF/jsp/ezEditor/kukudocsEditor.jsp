@@ -83,7 +83,7 @@
 	        }
 			
 			// 숨김 메뉴 설정
-			var hiddenMenu = ["new", "file_open", "save", "auto_save_load", "layout", "template", "all_select", "page_break", 
+			var hiddenMenu = ["new", "file_open", "save", "auto_save_load", "layout", "template", "copy", "paste", "cut", "all_select", "page_break", 
 							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "setting", "help"];
 			
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
