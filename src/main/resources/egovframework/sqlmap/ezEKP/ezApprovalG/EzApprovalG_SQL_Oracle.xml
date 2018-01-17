@@ -970,9 +970,11 @@
 				            			AND	    
 											AprState != '001'
 							 </isEqual>  
+						<![CDATA[							 
 		                      		) 
 		                  	WHERE 
-		                  		rownum <= #v_PQUERYSIZESUB# 		    
+		                  		rownum <= #v_PQUERYSIZESUB# 	
+		                ]]>  			    
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
@@ -1208,6 +1210,8 @@
            		 TBL_RECORD.RecordID = TBSEPATT.RecordID
            AND
            		 TBL_RECORD.TENANT_ID = TBSEPATT.TENANT_ID
+           AND	
+           		  TBL_RECORD.COMPANYID = TBSEPATT.COMPANYID           		 
            LEFT JOIN 
            		 TBL_AUDIO_VISUALRECEXINFO TBAV   
            ON 
@@ -1216,18 +1220,24 @@
            		 TBSEPATT.SeperateAttachNo = TBAV.SeperateAttachNo
            AND
            		 TBSEPATT.TENANT_ID = TBAV.TENANT_ID
+           AND
+           		 TBSEPATT.COMPANYID = TBAV.COMPANYID           		 
            LEFT JOIN
            		 TBL_OLDRECORDEXTRAINFO TBOLD   
            ON 
            		 TBL_RECORD.RecordID = TBOLD.RecordID
            AND
            		 TBL_RECORD.TENANT_ID = TBOLD.TENANT_ID
+           AND
+           		 TBL_RECORD.COMPANYID = TBOLD.COMPANYID           		 
            WHERE  
            		 TBL_RECORD.RecordID = #v_RECORDID#
            AND 
            		 TBSEPATT.SeperateAttachNo = #v_SEPATTNO#
            AND
            		 TBL_RECORD.TENANT_ID = #v_TENANTID#
+           AND
+           		 TBL_RECORD.COMPANYID = #companyID#           		 
 		</isEqual>
 		<isNotEqual property="v_LANGTYPE" compareValue="1">
 			SELECT 
