@@ -149,8 +149,8 @@
 			SELECT 
 				containerid,
 				usedepid,
-				(SELECT displayname FROM TBL_DEPTMASTER AS T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
-				(SELECT displayname2 FROM TBL_DEPTMASTER AS T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
+				(SELECT displayname FROM TBL_DEPTMASTER T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
+				(SELECT displayname2 FROM TBL_DEPTMASTER T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
 			FROM
 				TBL_CONTAINERUSEDEP A
 			WHERE
