@@ -2020,7 +2020,9 @@
             AND 
             	( APRSTATE = '002' OR APRSTATE = '005' )
             AND
-				TENANT_ID = #v_TENANTID#            	
+				TENANT_ID = #v_TENANTID#  
+			AND
+				COMPANYID = #companyID# 				          	
 				]]>
 		</isEqual>
 		<isEqual property="v_PMODE" compareValue="VIE">
@@ -2037,7 +2039,9 @@
             AND 
             	APRMEMBERID = #v_PAPRUSERID#
             AND
-				TENANT_ID = #v_TENANTID#  
+				TENANT_ID = #v_TENANTID# 
+			AND
+				COMPANYID = #companyID#   				 
 				]]>
 		</isEqual>
 		<isEqual property="v_temp2" compareValue="1">
@@ -2053,7 +2057,9 @@
             AND 
             	PROCESSORID = #v_PAPRUSERID#
             AND
-				TENANT_ID = #v_TENANTID#  	
+				TENANT_ID = #v_TENANTID# 
+			AND
+				COMPANYID = #companyID# 				 	
 				]]>
 		</isEqual>
 		<isNotEqual property="v_temp2" compareValue="1">
@@ -2070,6 +2076,8 @@
             	RECEIVEDDEPTID = #v_PDEPTID#
             AND
 				TENANT_ID = #v_TENANTID#  
+			AND
+				COMPANYID = #companyID#  				
 				]]>
 		</isNotEqual>
 		</isEqual>
@@ -2090,6 +2098,8 @@
                 		PROCESSORID = #v_PAPRUSERID#
                 AND
 						TENANT_ID = #v_TENANTID#  
+				AND
+						COMPANYID = #companyID#   						
 						]]>
 			</isEqual>
 			<isNotEqual property="v_temp2" compareValue="1">
@@ -2105,7 +2115,9 @@
 	             AND 
 	             		RECEIVEDDEPTID = #v_PDEPTID#
 	             AND
-						TENANT_ID = #v_TENANTID#  	
+						TENANT_ID = #v_TENANTID#  
+				 AND
+						COMPANYID = #companyID#   							
 						]]>	
 			</isNotEqual>
 		    </isEqual>
@@ -2132,6 +2144,8 @@
                  		DOCID = #v_PDOCID#
                  AND
 						TENANT_ID = #v_TENANTID#	
+				 AND
+						COMPANYID = #companyID# 						
 						]]>	
 				</isGreaterThan>
 				<isLessEqual property="v_temp4" compareValue="0">
@@ -2147,7 +2161,9 @@
                       AND 
                       		APRMEMBERID = #v_PAPRUSERID#
                       AND
-							TENANT_ID = #v_TENANTID#	
+							TENANT_ID = #v_TENANTID#
+					  AND
+							COMPANYID = #companyID# 								
 							]]>	
 				</isLessEqual>
 			</isNotEqual>
@@ -2168,6 +2184,8 @@
             		APRMEMBERID = #v_PAPRUSERID#
             AND
 					TENANT_ID = #v_TENANTID#
+			AND
+					COMPANYID = #companyID# 					
 					]]>
 		</isEqual>
 		
@@ -2182,7 +2200,9 @@
         WHERE  
         	DOCID = #v_PDOCID# 
         AND
-			TENANT_ID = #v_TENANTID#	
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#					
 			]]>
 	</select>
 	
@@ -2198,6 +2218,8 @@
         	PROCESSORID = #v_PAPRUSERID#
         AND
 			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#				
 			]]>
 	</select>
 	
@@ -2210,7 +2232,9 @@
         WHERE  
         	DOCID = #v_PDOCID#
         AND
-			TENANT_ID = #v_TENANTID#	
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#					
 			]]>
 	</select>
 		
@@ -2226,6 +2250,8 @@
             	PROCESSORID = #v_PAPRUSERID#
             AND
 				TENANT_ID = #v_TENANTID#
+	   		AND
+				COMPANYID = #companyID#					
 				]]>
 	</select>
 			
@@ -2241,6 +2267,8 @@
             	DOCSTATE = '015'
             AND
 				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#					
 				]]>
 	</select>
 
@@ -2255,6 +2283,10 @@
 			 	TBL_RECEIPTPOINTINFO  
 			 WHERE 
 			 	DOCID = #v_DOCID#
+			 AND
+				TENANT_ID = #v_TENANTID#
+			 AND
+				COMPANYID = #companyID#				 	
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="END">
 			SELECT 
@@ -2263,6 +2295,10 @@
 				TBL_ENDRECEIPTPOINTINFO  
 			WHERE 
 				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#					
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="COD">
 			SELECT 
@@ -2271,6 +2307,10 @@
 				TBL_RECEIPTPOINTINFO  
 			WHERE 
 				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#					
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="TMP">
 			SELECT 
@@ -2284,6 +2324,10 @@
             			TBL_TMPRECEIPTPOINTINFO) TMP 
             WHERE 
             	DOCID = #v_DOCID#
+            AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#	            	
 		</isEqual>
 		<isNotEqual property="v_MODE" compareValue="APR">
 		<isNotEqual property="v_MODE" compareValue="END">
@@ -2295,6 +2339,10 @@
 				TBL_RECEIPTPOINTINFO  
 			WHERE 
 				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#					
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -2331,6 +2379,8 @@
 				DOCID = #v_DOCID#
 			AND 
 				TENANT_ID =#v_TENANTID#
+			AND
+				COMPANYID = #companyID#					
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="END">
 			SELECT 
@@ -2341,6 +2391,8 @@
 				DOCID = #v_DOCID#
 			AND 
 				TENANT_ID =#v_TENANTID#
+			AND
+				COMPANYID = #companyID#					
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="CAPR">
 			SELECT 
@@ -2351,6 +2403,8 @@
 				DOCID = #v_DOCID#
 			AND 
 				TENANT_ID =#v_TENANTID#
+			AND
+				COMPANYID = #companyID#				
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="CEND">
 			SELECT 
@@ -2361,6 +2415,8 @@
 				DOCID = #v_DOCID#
 			AND 
 				TENANT_ID =#v_TENANTID#
+			AND
+				COMPANYID = #companyID#					
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="TMP">
 			SELECT 
@@ -2376,6 +2432,8 @@
 						DOCID = #v_DOCID#
 					AND 
 						TENANT_ID =#v_TENANTID#
+					AND
+						COMPANYID = #companyID#							
 		</isEqual>
 		
 		<isNotEqual property="v_MODE" compareValue="APR">
@@ -2391,6 +2449,8 @@
 								DOCID = #v_DOCID#
 							AND 
 								TENANT_ID =#v_TENANTID#
+							AND
+								COMPANYID = #companyID#									
 						</isNotEqual>
 					</isNotEqual>
 				</isNotEqual>
@@ -2441,6 +2501,8 @@
       		WHERE 
       			TENANT_ID = #v_TENANTID#
       		AND
+      			COMPANYID = #companyID#      			
+      		AND
       			APRMEMBERID IN ($v_USERIDS$) 
       		AND 
       			ROWNUM <= #v_LISTCOUNT#
@@ -2461,6 +2523,8 @@
          		VAPRWILLDOCLIST 
          	WHERE 
          		TENANT_ID = #v_TENANTID#
+         	AND
+      			COMPANYID = #companyID#         		
       		AND
          		APRMEMBERID = #v_USERID# 
          	AND 
@@ -2487,6 +2551,8 @@
             	VAPRWILLDOCLIST 
             WHERE 
             	TENANT_ID = #v_TENANTID#
+            AND
+      			COMPANYID = #companyID#            	
       		AND
             	APRMEMBERID = #v_USERID# 
             AND 
@@ -2515,16 +2581,22 @@
             	TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
             AND
             	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+            AND
+            	TBL_APRRECEIPTPROCESSINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID            	
             INNER JOIN 
             	TBL_EXPAPRDOCINFO 
             ON 
             	TBL_EXPAPRDOCINFO.DOCID = TBL_APRDOCINFO.DOCID
             AND
             	TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+            AND
+            	TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID            	
             WHERE 
             	TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y' 
             AND
             	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+            AND
+            	TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#            	
             AND 
             	ROWNUM <= #v_LISTCOUNT#
             AND 
@@ -2560,16 +2632,22 @@
             	TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
             AND
             	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+            AND
+            	TBL_APRRECEIPTPROCESSINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID            	
             INNER JOIN 
             	TBL_EXPAPRDOCINFO 
             ON 
             	TBL_EXPAPRDOCINFO.DOCID = TBL_APRDOCINFO.DOCID
             AND
             	TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+            AND
+            	TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID            	
             WHERE 
             	(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
             AND
             	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+            AND
+            	TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#            	
             AND 
             	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '002' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '004')
             AND 
@@ -2605,6 +2683,8 @@
             	VAPRDOINGDOCLIST 
             WHERE 
             	TENANT_ID = #v_TENANTID#
+            AND
+            	COMPANYID = #companyID#            	
             AND
             	APRMEMBERID IN ($v_USERIDS$) 
             AND 
