@@ -34,6 +34,9 @@
 	<typeAlias  alias="ApprGDocInfoWebSrvVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO"/>
 	<typeAlias  alias="ApprGgetDeptStacticsVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO"/>
 	<typeAlias  alias="ApprGDeliveryListVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO"/>
+	<typeAlias  alias="ApprUserContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO"/>
+	<typeAlias  alias="ApprGContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
+	<typeAlias  alias="ApprGDeleteCabinetInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeleteCabinetInfoVO"/>
 	<typeAlias  alias="ApprGRelayVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO"/>
 	
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
@@ -50,6 +53,8 @@
 		      		TBL_LISTOPTION 
 		      	WHERE 
 		      		tenant_id = #v_TENANTID#
+		      	AND
+		      		COMPANYID = #companyID#
 		      	AND
 		      		listtype = #v_LISTTYPE#
 		      	AND 
@@ -68,7 +73,9 @@
 		      	WHERE 
 		      		tenant_id = #v_TENANTID#
 		      	AND
-		      		listtype = #v_LANGTYPE# 
+		      		COMPANYID = #companyID#
+		      	AND
+		      		listtype = #v_LISTTYPE# 
 		      	AND 
 		      		dtype IS NULL
 		      	ORDER BY sn 
@@ -101,7 +108,9 @@
 					      				AND 
 					      					aprtype <> '015'  
 					      				AND 
-					      					tenant_id = #v_TENANTID# 
+					      					tenant_id = #v_TENANTID#
+					      				AND
+					      					COMPANYID = #companyID# 
 	      		]]>
 				      		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		AND 
@@ -182,7 +191,9 @@
 		         					AND 
 		         						DocState <> '017'
 		         					AND 
-					      				TENANT_ID = #v_TENANTID# 
+					      				TENANT_ID = #v_TENANTID#
+					      			AND
+					      				COMPANYID = #companyID# 
          		]]>
 			         		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      			    AND 
@@ -238,8 +249,7 @@
 							)WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
-			<isEqual property="v_LISTTYPE" compareValue="3">
-			
+			<isEqual property="v_LISTTYPE" compareValue="3">			
 			<![CDATA[
 			SELECT 
 				* 
@@ -280,12 +290,22 @@
 			            			FROM 
 			            				VAPRWILLDOCLIST  
 			            			WHERE 
-			            				APRMEMBERID = #v_USERID# 
+			            				APRMEMBERID = #v_USERID#
+			            				 ]]>
+			            		<isEqual property="MineViewYN" compareValue="YES">
+			            			AND	    
+										AprState != '001'
+			            		</isEqual>
+			            			
+			            	<![CDATA[				            				  
 			            			AND 
 			            				AprType <> '015'
+							]]>			            				
 			            			AND 
-					      				TENANT_ID = #v_TENANTID# 	
-            ]]>
+					      				TENANT_ID = #v_TENANTID# 
+					      			AND
+					      				COMPANYID = #companyID#	
+            
 			                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -361,6 +381,8 @@
 		               				AND 
 					      				TENANT_ID = #v_TENANTID# 
               ]]>
+              						AND
+              							COMPANYID = #companyID#
 			               	<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -473,12 +495,16 @@
 		                  		TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID 
 		                    AND 
 		                  		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID  
+		                  	AND
+		                  		TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID  		                  		
 		                  	INNER JOIN 
 		                  		TBL_EXPAPRDOCINFO 
 		                  	ON 
 		                  		TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID
 		                  	AND 
-		                  		TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID  
+		                  		TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID 
+		                  	AND
+		                  		TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID 
 		                  	WHERE 
 		                  		TBL_APRLINEINFO.APRMEMBERID IN ($v_USERIDS$) 
 		                  	AND 
@@ -487,6 +513,8 @@
 		                  		TBL_APRLINEINFO.AprState = '010'
 		                  	AND 
 					      		TBL_APRLINEINFO.TENANT_ID = #v_TENANTID# 
+					      	AND
+					      		TBL_APRLINEINFO.COMPANYID = #companyID#					      		
                 ]]>
 		                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		    AND 
@@ -588,12 +616,16 @@
 		                         A.OWNERID=B.OWNERID
 		                     AND 
 		                     	 A.TENANT_ID = B.TENANT_ID
+		                     AND
+		                     	 A.COMPANYID = B.COMPANYID		                     	 
 		                     AND 
 		                     	 A.SN=B.SN 
 		                     WHERE 
 		                         A.OWNERID= #v_USERID#
 		                     AND 
 		                     	A.TENANT_ID = #v_TENANTID#
+		                     AND
+		                     	A.COMPANYID = #companyID#		                     	
                  ]]>
 		                 <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		 	AND 
@@ -673,6 +705,8 @@
 		                     							APRMEMBERID IN ($v_USERIDS$)
 		                     						AND 
 		                     							TENANT_ID = #v_TENANTID#
+		                     						AND
+		                     							COMPANYID = #companyID#		                     							
                      				]]>
 		                     						<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 										      		AND 
@@ -741,11 +775,49 @@
 			    SELECT * 		
 	   				FROM (
 						SELECT 
-							A.*  
+							A.aprMemberDeptID,
+							A.aprMemberDeptName,
+							A.aprMemberDeptName2,
+							A.aprMemberID,
+							A.aprMemberJobTitle,
+							A.aprMemberJobTitle2,
+							A.aprMemberName,
+  							A.aprMemberName2,
+  							A.aprMemberSN,
+  							A.aprState,
+  							A.aprType,
+  							A.companyID,
+  							A.docID,
+  							A.docNo,
+  							A.docState,
+  							A.docTitle,
+  							A.docType,
+  							A.formID,
+  							A.formName,
+  							A.formName2,
+  							A.functionType,
+  							A.hasAttachYn,
+  							A.hasOpinionYn,
+  							A.href,
+  							A.isPublic,
+  							A.orgDocID,
+  							A.receivedDate,
+  							A.starDate + $offsetMin$/(24*60) as startDate,
+  							A.urgentApproval,
+  							A.writerDeptID,
+  							A.writerDeptName,
+  							A.writerDeptName2,
+  							A.writerID,
+  							A.writerJobTitle,
+  							A.writerJobTitle2,
+  							A.writerName,
+  							A.writerName2
 						FROM 
 							VAPRDOINGDOCLIST A  
 						WHERE 
 							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#							
 			<![CDATA[
 						AND
 							rownum <= #v_PQUERYSIZESUB# 
@@ -754,6 +826,10 @@
 						AND 
 							APRTYPE <> '015' 
 		    ]]>
+		    <isEqual property="MineViewYN" compareValue="YES">
+            			AND	    
+							AprState != '001'
+			 </isEqual>		    
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 	    			AND #v_PSUBQUERY#
 	  		</isGreaterThan>
@@ -776,11 +852,48 @@
 		    SELECT * 		
 	   				FROM (
 						 SELECT 
-						 	A.*  
+						 	A.aprMemberDeptID,
+							A.aprMemberDeptName,
+							A.aprMemberDeptName2,
+							A.aprMemberID,
+							A.aprMemberJobTitle,
+							A.aprMemberJobTitle2,
+							A.aprMemberName,
+  							A.aprMemberName2,
+  							A.aprMemberSN,
+  							A.aprState,
+  							A.aprType,
+  							A.companyID,
+  							A.docID,
+  							A.docNo,
+  							A.docState,
+  							A.docTitle,
+  							A.docType,
+  							A.formID,
+  							A.formName,
+  							A.formName2,
+  							A.functionType,
+  							A.hasAttachYn,
+  							A.hasOpinionYn,
+  							A.href,
+  							A.isPublic,
+  							A.orgDocID,
+  							A.startDate + $offsetMin$/(24*60) as startDate,
+  							A.urgentApproval,
+  							A.writerDeptID,
+  							A.writerDeptName,
+  							A.writerDeptName2,
+  							A.writerID,
+  							A.writerJobTitle,
+  							A.writerJobTitle2,
+  							A.writerName,
+  							A.writerName2 
 						 FROM 
 							VAPRWILLDOCLIST A  
 						 WHERE 
 							TENANT_ID = #v_TENANTID#
+						 AND
+						 	COMPANYID = #companyID#
 						 AND 
 						 	rownum <= #v_PQUERYSIZESUB# 
 						 AND 
@@ -829,7 +942,7 @@
 		                      				 A.DOCNO,
 		                      				 A.HASATTACHYN, 
 		                      				 A.HASOPINIONYN,
-		                      				 A.STARTDATE,
+		                      				 A.STARTDATE + $offsetMin$/(24*60) as STARTDATE,
 		                      				 A.ENDDATE,
 		                      				 A.WRITERID,
 		                      				 A.WRITERNAME,
@@ -849,10 +962,17 @@
 		                      	WHERE 
 		                      		TENANT_ID = #v_TENANTID#
 		                      	AND
-		                      		APRMEMBERID = #v_PUSERID#) 
-		                  WHERE 
-		                  		rownum <= #v_PQUERYSIZESUB#   
-		    ]]>
+		                      		COMPANYID = #companyID#
+		                      	AND
+		                      		APRMEMBERID = #v_PUSERID#
+						]]>		                      		
+						    <isEqual property="MineViewYN" compareValue="YES">
+				            			AND	    
+											AprState != '001'
+							 </isEqual>  
+		                      		) 
+		                  	WHERE 
+		                  		rownum <= #v_PQUERYSIZESUB# 		    
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
@@ -876,11 +996,49 @@
 			   SELECT * 		
 	   				FROM (
 						SELECT 
-							A.*  
+							A.aprMemberDeptID,
+							A.aprMemberDeptName,
+							A.aprMemberDeptName2,
+							A.aprMemberID,
+							A.aprMemberJobTitle,
+							A.aprMemberJobTitle2,
+							A.aprMemberName,
+  							A.aprMemberName2,
+  							A.aprMemberSN,
+  							A.aprState,
+  							A.aprType,
+  							A.companyID,
+  							A.docID,
+  							A.docNo,
+  							A.docState,
+  							A.docTitle,
+  							A.docType,
+  							A.formID,
+  							A.formName,
+  							A.formName2,
+  							A.functionType,
+  							A.hasAttachYn,
+  							A.hasOpinionYn,
+  							A.href,
+  							A.isPublic,
+  							A.orgDocID,
+  							A.receivedDate,
+  							A.startDate + $offsetMin$/(24*60) as startDate,
+  							A.urgentApproval,
+  							A.writerDeptID,
+  							A.writerDeptName,
+  							A.writerDeptName2,
+  							A.writerID,
+  							A.writerJobTitle,
+  							A.writerJobTitle2,
+  							A.writerName,
+  							A.writerName2 
 						FROM 
 							VAPRDOINGDOCLIST A  
 						WHERE 
 		                    TENANT_ID = #v_TENANTID#
+		                AND
+		                	COMPANYID = #companyID#
 		                AND
 							rownum <= #v_PQUERYSIZESUB# 
 						AND 
@@ -888,6 +1046,10 @@
 						AND 
 							functiontype = '004' 
 			]]>
+			<isEqual property="MineViewYN" compareValue="YES">
+            			AND	    
+							AprState != '001'
+			 </isEqual>			
 			<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
@@ -914,13 +1076,51 @@
 						 SELECT * 		
 	   						FROM (
 								SELECT 
-									A.*  
+									A.aprMemberDeptID,
+									A.aprMemberDeptName,
+									A.aprMemberDeptName2,
+									A.aprMemberID,
+									A.aprMemberJobTitle,
+									A.aprMemberJobTitle2,
+									A.aprMemberName,
+		  							A.aprMemberName2,
+		  							A.aprMemberSN,
+		  							A.aprState,
+		  							A.aprType,
+		  							A.companyID,
+		  							A.docID,
+		  							A.docNo,
+		  							A.docState,
+		  							A.docTitle,
+		  							A.docType,
+		  							A.formID,
+		  							A.formName,
+		  							A.formName2,
+		  							A.functionType,
+		  							A.hasAttachYn,
+		  							A.hasOpinionYn,
+		  							A.href,
+		  							A.isPublic,
+		  							A.orgDocID,
+		  							A.receivedDate,
+		  							A.startDate + $offsetMin$/(24*60) as startDate,
+		  							A.urgentApproval,
+		  							A.writerDeptID,
+		  							A.writerDeptName,
+		  							A.writerDeptName2,
+		  							A.writerID,
+		  							A.writerJobTitle,
+		  							A.writerJobTitle2,
+		  							A.writerName,
+		  							A.writerName2 
 								FROM 
 									VAPRDOINGDOCLIST A  
 								WHERE 
 		                      		TENANT_ID = #v_TENANTID#
 		                      	AND
 									rownum <= #v_PQUERYSIZESUB# 
+								AND
+									COMPANYID = #companyID#
 								AND 
 									APRMEMBERID IN ($v_PUSERIDS$)  
 						]]>
@@ -959,6 +1159,8 @@
 	    		DOCID = #v_DOCID#
 	    AND
 	    		TENANT_ID = #v_TENANTID#
+	    AND
+	    		COMPANYID = #companyID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getRecordInfo" parameterClass="Map" resultClass="ApprGRecordVO" > -->
