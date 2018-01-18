@@ -9064,7 +9064,9 @@
 	                   							AND 
 	                   									RECEIVEDDEPTID = #v_DEPTID#
 	                   							AND
-	                   									TENANT_ID = #v_TENANTID#)
+	                   									TENANT_ID = #v_TENANTID#
+	                   							AND
+	                   									COMPANYID = #companyID#)
 	       			ELSE  (
 	       					SELECT 
 	       							AprState 
@@ -9075,7 +9077,9 @@
 	                   		AND 
 	                   				RECEIVEDDEPTID = #v_DEPTID#
 	                   		AND
-	                   				TENANT_ID = #v_TENANTID#)  END
+	                   				TENANT_ID = #v_TENANTID#
+	                   		AND
+	                   				COMPANYID = #companyID#)  END
 	       		  FROM (
 	       		  		 SELECT 
 	       		  		 		COUNT(DOCID)  DOCID
@@ -9086,7 +9090,9 @@
 	                     AND 
 	                     		RECEIVEDDEPTID = #v_DEPTID# 
 	                     AND
-	                   			TENANT_ID = #v_TENANTID#) )
+	                   			TENANT_ID = #v_TENANTID#
+	                   	 AND
+	                   	 		COMPANYID = #companyID#) )
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String"> -->
@@ -9101,6 +9107,8 @@
 	     		TRIM(CABINETCLASSNO) = #v_CABCLASSNO# 
 	     AND	
 	     		TENANT_ID = #v_TENANTID#
+	     AND	
+	     		COMPANYID = #companyID#	     		
 	</select>
 <!-- 	<procedure id="EzApprovalG.doSusinHesongSentDeptID" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_DOSUSINHESONG_SENTDEPTID(#v_DOCID#, #v_RECEIVESN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -9116,6 +9124,8 @@
         	DOCID = #v_DOCID#
         AND 
         	RECEIVESN = #v_RECEIVESN#
+        AND	
+	     	COMPANYID = #companyID#        	
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormConnFlag" parameterClass="Map" resultClass="String"> -->
@@ -9129,17 +9139,25 @@
         FROM 
         		TBL_FormInfo A
         JOIN ( SELECT 
-        				FORMID ,TENANT_ID
+        				FORMID ,TENANT_ID, COMPANYID
                 FROM 
                  		TBL_APRDOCINFO 
                 WHERE  
-                		DOCID = #v_DOCID# ) B   
+                		DOCID = #v_DOCID# 
+                AND
+                	TENANT_ID = #v_TENANTID#
+                AND
+                	COMPANYID = #companyID# ) B   
          ON 
-         		( A.FormID = B.FORMID )
+         		A.FormID = B.FORMID
          AND
          		A.TENANT_ID = B.TENANT_ID
+         AND
+         		A.COMPANYID = B.COMPANYID
          WHERE
-         		A.TENANT_ID=#v_TENANTID#
+         		A.TENANT_ID = #v_TENANTID#
+         AND
+         		A.COMPANYID = #companyID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="int"> -->
@@ -9159,6 +9177,8 @@
 					APRTYPE <> '015'
 			AND
 					TENANT_ID =#v_TENANTID#
+			AND
+					COMPANYID = #companyID#					
 		]]>
 		</isEqual>
 		<!-- 기안한 문서 -->
@@ -9178,6 +9198,8 @@
          			DocState <> '017' 
          	AND
 					TENANT_ID =#v_TENANTID#
+			AND
+					COMPANYID = #companyID#					
 		]]>
 		</isEqual>
 		
@@ -9192,9 +9214,15 @@
            			APRMEMBERID = #v_USERID# 
            	AND 
            			AprType <> '015'
-           	AND
-					TENANT_ID =#v_TENANTID#
 		]]>
+		  <isEqual property="MineViewYN" compareValue="YES">
+			AND	    
+				AprState != '001'
+		  </isEqual>
+           	AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
 		</isEqual>
 		<!-- 공람할 문서 -->
 		<isEqual property="v_LISTTYPE" compareValue="99">
@@ -9209,6 +9237,8 @@
 			 		APRTYPE = '015'
 			 AND
 					TENANT_ID =#v_TENANTID# 
+			 AND
+					COMPANYID = #companyID# 					
 		]]>
 		</isEqual>
 		<!-- 공람한 문서 -->
@@ -9224,12 +9254,16 @@
              		TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID
              AND
              		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID 
+             AND
+             		TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID              		
              INNER JOIN 
              		TBL_EXPAPRDOCINFO 
              ON 
              		TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID
              AND
              		TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID 
+             AND
+             		TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID              		
              WHERE 
              		TBL_APRLINEINFO.APRMEMBERID IN ($v_USERIDS$) 
              AND 
@@ -9238,6 +9272,8 @@
              		TBL_APRLINEINFO.AprState = '010'
              AND
 					TBL_APRDOCINFO.TENANT_ID =#v_TENANTID#
+			 AND	
+			 	TBL_APRDOCINFO.COMPANYID = #companyID#					
 		]]>
 		</isEqual>
 		<!-- 한양대 추가 사항 (서버저장문서) -->
@@ -9251,6 +9287,8 @@
              		OWNERID = #v_USERID#
              AND
 					TENANT_ID =#v_TENANTID#
+			 AND
+					COMPANYID = #companyID#					
 		]]>
 		</isEqual>
 		<isNotEqual property="v_LISTTYPE" compareValue="1">
@@ -9267,6 +9305,8 @@
 					APRMEMBERID IN ($v_USERIDS$)
 			AND
 					TENANT_ID = #v_TENANTID#
+			AND
+					COMPANYID = #companyID# 					
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -9292,6 +9332,8 @@
 	          		FORMCONTPARENTS = #v_PID#
 	          AND
 	          		TENANT_ID = #v_TENANTID#
+	          AND
+				COMPANYID = #companyID#	          		
 		</isEmpty>
 		<isNotEmpty property="v_PDEPTID">
 			 SELECT 
@@ -9304,6 +9346,8 @@
 	         		TBL_FormContainer.FormContID = TBL_FormContUserGroup.FormContID
 	         AND
 	         		TBL_FormContainer.TENANT_ID = TBL_FormContUserGroup.TENANT_ID
+	         AND
+	         		TBL_FormContainer.COMPANYID = TBL_FormContUserGroup.COMPANYID	         		
 	         WHERE  
 	          		( TBL_FormContainer.FormContParents = #v_PID# )
 	         AND 
@@ -9314,6 +9358,8 @@
 	         	 	( TBL_FormContUserGroup.FormContUserDepID = #v_PDEPTID# ) ) 
 	          AND
 	          		TBL_FormContainer.TENANT_ID = #v_TENANTID#
+	         AND
+	          		TBL_FormContainer.COMPANYID = #companyID#	          		
 		</isNotEmpty>
 	</select>
 	
@@ -9331,6 +9377,8 @@
 	        		USERID = #v_USERID#
 	       	AND
 	       			TENANT_ID = #v_TENANTID#
+	       	AND
+	       			COMPANYID = #companyID#	       			
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getReceiptTempletSN" parameterClass="Map" resultClass="int"> -->
@@ -9355,7 +9403,9 @@
 		            AND 
 		            		USERID = #v_USERID#
 		            AND
-		            		TENANT_ID =#v_TENANTID# )
+		            		TENANT_ID =#v_TENANTID#
+		            AND
+		            		COMPANYID = #companyID# )
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.updateHistoryForAttach_M" parameterClass="Map" resultClass="int"> -->
