@@ -2407,13 +2407,13 @@
 	                    MAIL ,
 	                    MAILNICKNAME ,
 	                    UPNNAME ,
-	                    DEPARTMENT ,
-	                    DESCRIPTION ,
-	                    DESCRIPTION2 ,
+	                    #v_PARENTCN# ,
+	                    (SELECT DISPLAYNAME FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
+	                    (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
 	                    DESCRIPTION3 ,
-	                    PHYSICALDELIVERYOFFICENAME ,
-	                    COMPANY ,
-	                    COMPANY2 ,
+	                    (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
+	                    (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
+	                    (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
 	                    TITLE ,
 	                    TITLE2 ,
 	                    TELEPHONENUMBER ,
@@ -2446,7 +2446,7 @@
 	                    MOBILE_PIN ,
 	                    SIPURI,
 	                    PASSWORD,
-	                    TENANT_ID
+	                    #v_TENANT_ID#
               			FROM
               				TBL_USERMASTER_RETIRE 
               			WHERE
