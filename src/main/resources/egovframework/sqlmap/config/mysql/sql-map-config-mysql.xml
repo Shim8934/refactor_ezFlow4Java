@@ -36,7 +36,7 @@
     <!-- 업무관리 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezTask/EzTask_SQL_Mysql.xml"/>
 	<!--업무일지 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Mysql.xml"/>
+<!--     <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Mysql.xml"/> -->
     
     <!-- 2.관리자 모듈관리 SQL쿼리 XML -->
     
@@ -61,7 +61,7 @@
     <!-- 시스템 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezSystem/EzSystemAdmin_SQL_Mysql.xml"/>
 	<!--업무일지 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournalAdmin_SQL_Mysql.xml"/>
+<!--     <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournalAdmin_SQL_Mysql.xml"/> -->
 	
     
     <!-- 3.모바일 모듈관리 SQL쿼리 XML -->
