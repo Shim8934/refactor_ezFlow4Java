@@ -594,7 +594,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_pPAGEUID", pUID);
 		map.put("pUID", pUID);
 		map.put("tenantID", tenantID);
-		map2.put("companyID", companyID);
+		map.put("companyID", companyID);
 		
 		List<String> result = ezPortalAdminDAO.deleteTopPage(map);
 		
