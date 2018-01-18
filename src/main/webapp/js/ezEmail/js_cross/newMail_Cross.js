@@ -844,7 +844,7 @@ function Save_onClick_Complete(ReturnValue) {
 
             if (m_rgParams4PostOption["SecurityMail"] == "Security")
                 pSecurity = "3";
-
+            
             var xmlDoc = createXmlDom();
             var rootNode;
             createNodeInsert(xmlDoc, rootNode, "DATA");
@@ -853,6 +853,7 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "CONNURL", "/exchange/" + g_szUserID);
             createNodeAndInsertText(xmlDoc, rootNode, "CMD", (Save_onClick_Complete.savemode == "sendsave" ? "SEND" : "SAVE"));
             createNodeAndInsertText(xmlDoc, rootNode, "MAILCMD", g_cmd);
+            createNodeAndInsertText(xmlDoc, rootNode, "ORGMAILCMD", gg_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
             createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject.replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
