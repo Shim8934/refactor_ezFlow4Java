@@ -14242,6 +14242,8 @@
             	code2 = #v_CODE2#
             AND 
             	TENANT_ID = #v_TENANTID#
+            AND
+            	COMPANYID = #companyID#
         ]]>
 	</select>
 	
