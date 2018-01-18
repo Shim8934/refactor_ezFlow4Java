@@ -26,6 +26,8 @@
 	        var lang = "${userinfo.lang}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var reloadRetryCount = 1;
+	      	var previewSubTree = "${previewSubTree}";
+	      	var usePreviewSubTree = "${usePreviewSubTree}";
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -38,7 +40,18 @@
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px";
 	            }
 	        }
+	        
+	        //수정 수아 재은
+	        var xmlhttp;
+	        
 	        window.onload = function () {
+		    	
+		    	//수정 수아 재은
+		        xmlhttp = createXMLHttpRequest();
+                xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
+                xmlhttp.onreadystatechange = detailbox_info;
+                xmlhttp.send();
+	        	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -57,7 +70,91 @@
 	            document.getElementById("mailexportall").style.display = "none";
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
+	            previewSubTreeCall();
 	        }
+	        
+        	// 2017.12.27 단암 시스템 트리 열기 
+            // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
+            // 환경설정에서 기존설정값과 신규설정값이 다르면 트리를 재호출하여 적용시킨다. 
+            // 편지함 관리에서도 닫기버튼을 누르면 트리를 재호출하여 적용시킨다.
+	        function previewSubTreeCall(type){
+        		
+        		if (typeof type != "undefined") {
+        			previewSubTree = type;
+
+            		if (usePreviewSubTree == "YES" && previewSubTree == "N") {
+    	            	var treeArrNum = $('.plusTreeImg').length;
+
+    		          	for (var i = 0; i < treeArrNum; i++) {
+    		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
+    		        	    var idx = getSubtree.split('PostTreeView_img_');
+    		        	    
+    		        	    if (typeof idx[1] != "undefined") {
+    			        	    	PostTreeView.toggle(idx[1]);
+    		        	    }
+    		        	    
+    	        	    	treeArrNum = $('.plusTreeImg').length;
+    		          	}
+    	            }
+        		}
+	           
+        		if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
+		            var treeArrNum = $('.plusTreeImg').length;
+
+		          	for (var i = 0; i < treeArrNum; i++) {
+		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
+		        	    var idx = getSubtree.split('PostTreeView_img_');
+		        	    
+		        	    if (typeof idx[1] != "undefined") {
+		        	    	var childxml = get_childXML(PostTreeView.getvalue(idx[1], "href"), false, true, false);
+		        	    	PostTreeView.putchildxml(idx[1], childxml);
+		        	    	$('#PostTreeView_img_' + idx[1]).attr("src", "/images/OrganTree_cross/minus.gif");
+		        	    }
+		        	    
+	        	    	treeArrNum = $('.plusTreeImg').length;
+		          	}
+	            } 
+
+	        }
+		    
+		    //수정 수아 재은
+		    function detailbox_info() { 
+		    	if (xmlhttp == null || xmlhttp.readyState != 4) return;
+		    	
+                var result = xmlhttp.responseXML; 
+                var totalVolume = ""; 
+                var useVolume = "";
+                var percent = "";
+                var colorClass = "myBar_green";
+                
+                if (CrossYN()) { 
+                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
+                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
+                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
+                } else { 
+                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
+                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
+                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
+                }
+                                
+                //뿌려주기
+                $("#myBar").css({
+                	"width" : percent + "%"
+                });
+                $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
+                
+                //용량 체크(색깔로)
+                if (percent > 90) {
+                	colorClass = "myBar_red";
+                } else if (percent > 70) {
+                	colorClass = "myBar_orange";
+                } else if (percent > 60) {
+                	colorClass = "myBar_yellow";
+                }
+                
+                $("#myBar").addClass(colorClass);
+		    }
+	        
 	        function write_Letter() {
 	            var pheight = window.screen.availHeight;
 	            var conHeight = pheight * 0.8;
@@ -88,7 +185,7 @@
 	            PostTreeView.attachEvent('dragdrop', email_dragdrop);
 	            PostTreeView.dragdrop(true);
 	            var xmlHTTP = createXMLHttpRequest();
-	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false); 
 	            xmlHTTP.send();
 	            var treeconfig;
 	            if (CrossYN()) {
@@ -100,12 +197,14 @@
 	            PostTreeView.config(treeconfig);
 	            PostTreeView.source("<tree><nodes>" + document.getElementById("RootFolderXML").innerHTML + "</nodes></tree>");
 	            PostTreeView.update();
+	            
 	            if (subCode != "1" && subCode != "") {
 	                PostTreeView.select(subCode);
-	                selectnode();
-	            }
-	            else
+	            } else {
 	                PostTreeView.select(1);
+	            }
+	            
+                selectnode();	            
 	        }
 	        function requestdata(event) {
 	            if (!event) event = window.event;
@@ -116,10 +215,12 @@
 	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
+	        
 	        function selectnode() {
-	            var nodeIdx = PostTreeView.selectedIndex();
+	        	var nodeIdx = PostTreeView.selectedIndex();
 	            var href = PostTreeView.getvalue(nodeIdx, "href");
 	            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+	            
 	            try {
 	                if (typeof (parent.frames["right"]) != "undefined")
 	                    parent.frames["right"].Window_onunload();
@@ -240,6 +341,7 @@
 	                    PostTreeView.select(1);
 	                }
 	                window.open(url, "right");
+	                previewSubTreeCall();
 	            }
 	        }
 	        function Function_Flag(v_data) {
@@ -329,11 +431,7 @@
 	            frmSpam.submit();
 	        }
 	        function mail_export() {
-	            try {
-	                parent.frames["right"].mail_export();
-	            } catch (e) {
-	                alert("<spring:message code="ezEmail.t640" />");
-	            }
+	            parent.frames["right"].mail_export();
 	        }
 	        function mail_exportall() {
 	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
@@ -354,7 +452,7 @@
 	            var OpenWin = window.open("/ezEmail/mailImport.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 400));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
-	        function mail_import_Complete() {
+	        /* function mail_import_Complete() {
 	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
 	                window.parent.frames["right"].MailListRefresh();
 	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
@@ -362,7 +460,43 @@
 	            if (PostTreeView.selectedIndex() == -1) {
 	                PostTreeView.select(1);
 	            }
+	        }  */
+	        // 수정 수아 재은
+	        function mail_import_Complete() {
+	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
+	                window.parent.frames["right"].MailListRefresh();
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	            PostTreeView.update();
+	            if (PostTreeView.selectedIndex() == -1) {
+	            	var allHref = mail_import_cross_dialogArguments[0]["href"];
+	            	
+	            	// 처음 선택한 메일함
+	            	if (allHref != null && allHref != "") {
+	            		var splitHref = allHref.split(".");
+	            		
+	            		// 하위메일함일 경우
+	            		if (splitHref.length > 1) {
+	            			var pStr = "";
+	            			
+	            			// select를 하기위해 상위 메일함의 하위메일함을 불러 열어줌
+	            			for (i = 0; i < splitHref.length-1; i++) {
+	            				pStr += splitHref[i];
+	            				var splitIndex = PostTreeView.findindex("href", pStr);
+	            				
+	            				requestdata({"nodeIdx": splitIndex});
+	            				pStr += ".";
+	            			}
+	            		}
+	            		
+		        		var getNowIndex= PostTreeView.findindex("href", allHref);
+		        		
+		                PostTreeView.select(getNowIndex);
+		        	} else {
+	                	PostTreeView.select(1);
+		        	}
+	            }
 	        }
+	        
 	        function mail_Config() {
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
 	        }
@@ -458,7 +592,32 @@
 	        function hideProgress() {
 	        	document.getElementById("progressPanel").style.display = "none";
 	        }
+	        
 	    </script>
+		 <style type="text/css">
+				#myProgress {
+				  width: 80%;
+				  height:10px;
+				  background-color: #ddd;
+				  overflow:hidden;
+				}
+				.myBar_red {
+				  height: 10px;
+				  background-color: #ff1616;
+				}
+				.myBar_orange {
+				  height: 10px;
+				  background-color: #ff7f00;
+				}
+				.myBar_yellow {
+				  height: 10px;
+				  background-color: #ffb600;
+				}
+				.myBar_green {
+				  height: 10px;
+				  background-color: #4CAF50;
+				}
+			</style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
@@ -487,7 +646,14 @@
 	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>
 	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
-	    </div>
+	        
+	    	<!-- 수정 수아 재은 -->
+		     <div id='myProgress' style='margin-left:20px;'>
+		    	<div id='myBar'></div>
+		    </div>
+		    <div style='text-align:center; margin-top:10px; font-weight:bold;' class="volumes"></div>
+		               
+		</div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>

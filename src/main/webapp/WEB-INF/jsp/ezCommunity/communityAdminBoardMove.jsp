@@ -234,11 +234,9 @@
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
+		</script>		
 		
-		
-		<div class="subtxt">
-		
+		<div class="subtxt" style="margin-top:15px">		
 			<c:choose>
 				<c:when test="">
 					<b class="point"><spring:message code = 'ezCommunity.t347' /></b> - <spring:message code = 'ezCommunity.t348' />
@@ -247,8 +245,7 @@
 				<c:otherwise>
 					<spring:message code = 'ezCommunity.t348' />
 				</c:otherwise>
-			</c:choose>
-			
+			</c:choose>			
 		</div>
 		
 		<table class="content" style="margin-top:5px">

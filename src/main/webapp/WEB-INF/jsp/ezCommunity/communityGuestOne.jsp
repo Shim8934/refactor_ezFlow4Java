@@ -25,7 +25,7 @@
 		</style>
 
 		<script type="text/javascript">
-			var CurPage = '<c:out value="${curpage}" />';
+			var CurPage = '<c:out value="${curPage}" />';
 			var totalPage = '<c:out value="${totalPage}" />';
 		    var totalCount = '<c:out value="${keywordCount}" />';
 		    var code = '<c:out value="${code}" />';
@@ -37,13 +37,13 @@
 		        makePageSelPage();
 		        
 		        var html = "";
-		        
+
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
-		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid none;border-right:1px solid none;\">";
-		        	html += "<tr style=\"border-left:1px solid none;border-right:1px solid none;\" >";
-		        	html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
-		        	html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>";
-		        	html += "<th style=\"width:100%; text-align:left;border-left:1px solid none;border-right:1px solid none;\" >";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:20px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" >";
+		        	html += "<th style=\"height:25px; border-left:1px solid #dddddd;border-right:0px; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
+		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
+		        	html += "<th style=\"width:100%; text-align:left;border-left:1px solid #ddd;border-right:1px solid #dddddd; font-weight:normal\" >";
 		        	
 		        	if(SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NEW") == 'NEW') {
 		        		html += "<img src=\"/images/i_new.gif\" border=\"0\" hspace=\"5\" align=\"absmiddle\">";
@@ -54,11 +54,17 @@
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += " " + "<spring:message code='ezCommunity.t588' /></th>";
 					html += "</tr>";
-					html += "<tr style=\"border-left:1px solid none;border-right:1px solid none;\">";
-					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid none;border-right:1px solid none;\">";
-					html += "<textarea style=\"height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</textarea></td>";
+					html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+					html += "<textarea style=\"padding:7px;height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</textarea></td>";
 					html += "</tr>";
 					html += "</table>";
+		        }
+		        
+		        if (SelectNodes(xmlDoc, "DATA/ROW").length == 0) {
+		        	var strstr = "<spring:message code='ezCommunity.t926' />";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;width:100%;height:130px;text-align:center\">";
+		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" ><td style='color:#777;background-color:#fafafa;border:1px solid #ddd !important'>" + strstr +"</td></tr></table>";
 		        }
 		        
 		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 
@@ -358,42 +364,41 @@
 	</head>
 	<body class="cmhome_body">
 		<h1 class="type1_h1"><spring:message code='ezCommunity.t570' /><span id="mailBoxInfo"></span></h1>
-			<div id="mainmenu" >
-				<ul>
-					<c:if test="${guest != '1' }">
-						<c:choose>
-							<c:when test="${disable == false }">
-								<li><span onClick="goPage(1)"><spring:message code='ezCommunity.t167' /></span></li>
-							</c:when>
-							
-							<c:otherwise>
-								<li><span onClick="alertMessage();"><spring:message code='ezCommunity.t167' /></span></li>
-							</c:otherwise>
-						</c:choose>
+		<div id="mainmenu" >
+			<ul>
+				<c:if test="${guest != '1' }">
+					<c:choose>
+						<c:when test="${disable == false }">
+							<li><span onClick="goPage(1)"><spring:message code='ezCommunity.t167' /></span></li>
+						</c:when>
 						
-						<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-						<li><span onClick="javascript:mo_onclick()"><spring:message code='ezCommunity.t6' /></span></li>
-						<li><span onClick="javascript:delete1()"><spring:message code='ezCommunity.t208' /></span></li>
-					</c:if>
-					<c:if test="${keyword != '' }">
-						<li><span onClick="goPage(2)" ><spring:message code='ezCommunity.t168' /></span></li>
-					</c:if>
-    			</ul>
-			</div>
-			
-			<script type="text/javascript">
-			    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			</script>
+						<c:otherwise>
+							<li><span onClick="alertMessage();"><spring:message code='ezCommunity.t167' /></span></li>
+						</c:otherwise>
+					</c:choose>
+					
+					<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+					<li><span onClick="javascript:mo_onclick()"><spring:message code='ezCommunity.t6' /></span></li>
+					<li><span onClick="javascript:delete1()"><spring:message code='ezCommunity.t208' /></span></li>
+				</c:if>
+				<c:if test="${keyword != '' }">
+					<li><span onClick="goPage(2)" ><spring:message code='ezCommunity.t168' /></span></li>
+				</c:if>
+   			</ul>
+		</div>
+		
+		<script type="text/javascript">
+		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
 
-		<table class="content"  >
-			<tr>          
-				<th><spring:message code='ezCommunity.t28' /></th>
-	  			<td>
-					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 20px;">
+		<table class="content" style="margin-bottom:15px;">
+			<tr>
+	  			<td style="background-color: #f8f8f8;border:1px solid #ddd">
+					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 20px;margin-left:2px;margin-top:1px">
 						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
 						<option value="writer"><spring:message code='ezCommunity.t445' /></option>
 					</select>
-					<input type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px">
+					<input class="inputText" type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px">
 					<a class="imgbtn"><span onClick="search();"><spring:message code='ezCommunity.t31' /></span></a>
 	  			</td>
 			</tr>
@@ -403,8 +408,7 @@
 			<input type=hidden name=code value="<c:out value='${code}' />">
 			<input type=hidden name=memo value="<c:out value='${memo}' />">
 			<input type=hidden name=mode value=delete>
-
 		</form>
-<div id="tblPageRayer"></div>
+		<div id="tblPageRayer" style="margin-top:10px"></div>
 	</body>
 </html>

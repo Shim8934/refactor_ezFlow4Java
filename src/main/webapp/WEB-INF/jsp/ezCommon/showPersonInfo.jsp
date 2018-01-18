@@ -13,8 +13,8 @@
 		<style type="text/css">
 			@MEDIA print {
 				#litrealInfo {
-					overflow: hidden;
-					height: 100%;
+					overflow: visible !important;
+					height: 100% !important;
 				}
 				
 				#menu, #close{

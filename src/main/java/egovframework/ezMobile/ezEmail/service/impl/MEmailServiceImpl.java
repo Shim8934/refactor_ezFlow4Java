@@ -95,7 +95,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	        if (filter.equals("isUnreadOnly")) {
 	        	LOGGER.debug("isUnreadOnly");
 	        	isUnreadOnly = true;
-	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
+	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false, true);
 	        	LOGGER.debug("isUnreadOnly unreadMessage : " + messages.length);
 	        } 
 	        
@@ -268,10 +268,8 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 //		List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
 		JSONArray malFolderList = new JSONArray();
 		
-		try {
-		
-			LOGGER.debug("folderId=" + folderId);
-		
+		try {		
+			LOGGER.debug("folderId=" + folderId);		
 	
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
@@ -285,7 +283,10 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			if (folderId != null && !folderId.equals("")) {
 				subMailFolder = ia.getSubFolders(folderId, true);
 			} else {
-				subMailFolder = ia.getTopLevelFolders(true);
+				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", info.getTenantId());
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+				
+				subMailFolder = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 			}
 			
 //			MEmailFolderVO folder = null;

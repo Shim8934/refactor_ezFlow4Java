@@ -280,7 +280,7 @@ function tableListControl_Week()
         var weekStartDatename = datanameweek(weekStartDate.getFullYear(), weekStartDate.getMonth() + 1, weekStartDate.getDate(), "HEARDER");
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
-        document.getElementById("divViewHeader").setAttribute("style", "color:#666;");
+        document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
         setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
@@ -324,12 +324,12 @@ function tableListControl_Week()
                 
                 if (DefaultView == 0) { //일요일시작
                 	if (countdayname == "0")
-                        _mth.style.color = "#0032cf"; //blue
+                        _mth.style.color = "rgb(0, 72, 149)"; //blue
                     else if (countdayname == "1")
                         _mth.style.color = "#ee1c25"; //red
                 } else { //월요일시작
                 	if (countdayname == "6")
-                        _mth.style.color = "#0032cf";
+                        _mth.style.color = "rgb(0, 72, 149)";
                     else if (countdayname == "0")
                         _mth.style.color = "#ee1c25";
                 }
@@ -410,12 +410,12 @@ function tableListControl_Week()
                 
                 if (DefaultView == 0) { //일요일시작
                 	if (countdayname == "0")
-                        _mth.style.color = "#0032cf";
+                        _mth.style.color = "rgb(0, 72, 149)";
                     else if (countdayname == "1")
                         _mth.style.color = "#ee1c25";
                 } else { //월요일시작
                 	if (countdayname == "6")
-                        _mth.style.color = "#0032cf";
+                        _mth.style.color = "rgb(0, 72, 149)";
                     else if (countdayname == "0")
                         _mth.style.color = "#ee1c25";
                 }
@@ -877,7 +877,7 @@ function tableListControl_today() {
 
         var current_day = new Date(TodayDatename);
         if (current_day.getDay() == "6")
-            document.getElementById("divViewHeader").style.color = "#0032cf";
+            document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
         else if (current_day.getDay() == "0")
             document.getElementById("divViewHeader").style.color = "#ee1c25";
         else

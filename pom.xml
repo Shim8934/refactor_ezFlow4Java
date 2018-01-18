@@ -267,6 +267,11 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>1.5.7</version>
         </dependency>  
+		<dependency>
+		    <groupId>net.htmlparser.jericho</groupId>
+		    <artifactId>jericho-html</artifactId>
+		    <version>3.4</version>
+		</dependency>        
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -291,7 +296,7 @@
             <groupId>com.sun.xml.security</groupId>
             <artifactId>xml-security-impl</artifactId>
             <version>1.0</version>
-        </dependency>   
+        </dependency>           
         <dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-aop</artifactId>
@@ -350,7 +355,6 @@
             <version>${spring.maven.artifact.version}</version>
         </dependency>
         <!-- 웹 소켓  - end -->
-             
         <!-- Azure Auth -->
         <dependency>
             <groupId>com.microsoft.azure</groupId>

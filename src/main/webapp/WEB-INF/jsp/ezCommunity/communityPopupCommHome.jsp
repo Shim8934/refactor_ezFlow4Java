@@ -221,7 +221,7 @@
 	            
 	            var _img = document.createElement("img");
 	            _img.id = "coplogo";
-	            _img.style.width = "894px";
+	            _img.style.width = "auto";
 	            _img.style.height = "100px";
 
 	            if (SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO").indexOf("default_logo_type") > -1) {
@@ -408,6 +408,10 @@
 		    
 		    var tempmenuid = "";
 		    function go_menu(btn) {
+		    	if (tempboard != "") {
+		    		document.getElementById(tempboard.getAttribute("TreeCtrl") + "obj").style.display = "none";
+		    	}
+		    	
 		        if (userLevel == "0" || userLevel == "9") {
 		            switch (btn.id) {
 		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
@@ -673,7 +677,7 @@
 		    }
 		    
 		    function open_admin(code) {
-		        var wWeight = "840";
+		        var wWeight = "860";
 		        var wHeight = "530";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
@@ -688,7 +692,7 @@
 		            alert(strLang4);
 		            return;
 		        }
-		        var wWeight = "840";
+		        var wWeight = "860";
 		        var wHeight = "510";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
@@ -752,7 +756,7 @@
 	<body class="cmhomebg_<c:out value='${copType }'/>">
 		<div id ="cmhome_<c:out value='${copType }'/>">
 			<div class="cmhome_top" onclick="reload()" style="cursor:pointer;">
-   	  			<div class="homeimg" id="homeimg" style="width:894px;height:100px;"></div>   	  
+   	  			<div class="homeimg" id="homeimg"></div>   	  
       			<h1 id="copname" class="homename"></h1>
 			</div>
 			<div class="cmhome_left">

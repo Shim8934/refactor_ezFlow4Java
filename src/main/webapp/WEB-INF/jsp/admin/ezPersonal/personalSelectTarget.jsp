@@ -311,15 +311,15 @@
 		                    pparsingXML = "";
 		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + existId + "</DATA1>";
-		                    pparsingXML = pparsingXML + "<DATA2>" + existName + "(" + strDeptNM.trim() + ")" + "</DATA2>";
-		                    pparsingXML = pparsingXML + "<DATA3>" + existName2 + "(" + strDeptNM2.trim() + ")" + "</DATA3>";
+		                    pparsingXML = pparsingXML + "<DATA2>" + existName + "(" + MakeXMLString(strDeptNM.trim()) + ")" + "</DATA2>";
+		                    pparsingXML = pparsingXML + "<DATA3>" + existName2 + "(" + MakeXMLString(strDeptNM2.trim()) + ")" + "</DATA3>";
 		                    pparsingXML = pparsingXML + "<DATA5>" + "Y" + "</DATA5>";
 		
 		
 		                    if (userLang == "")
-		                        pparsingXML = pparsingXML + "<VALUE>" + existName + "(" + strDeptNM.trim() + ")" + "</VALUE>";
+		                        pparsingXML = pparsingXML + "<VALUE>" + existName + "(" + MakeXMLString(strDeptNM.trim()) + ")" + "</VALUE>";
 		                    else
-		                        pparsingXML = pparsingXML + "<VALUE>" + existName2 + "(" + strDeptNM2.trim() + ")" + "</VALUE>";
+		                        pparsingXML = pparsingXML + "<VALUE>" + existName2 + "(" + MakeXMLString(strDeptNM2.trim()) + ")" + "</VALUE>";
 		                    pparsingXML = pparsingXML + "</CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		

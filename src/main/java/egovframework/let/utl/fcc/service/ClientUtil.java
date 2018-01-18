@@ -54,6 +54,7 @@ public class ClientUtil {
 	
 	public static String getClientInfo(HttpServletRequest request, String type) {
 	     String agent = request.getHeader("User-Agent");
+	     agent = agent != null ? agent : "";
 	     String result = "";
 	     
 	     if(type.equals("agent")){

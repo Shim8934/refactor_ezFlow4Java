@@ -89,6 +89,42 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	}
 	
 	/**
+	 * 모바일 G/W 환경설정 [post] 환경설정 생성
+	 */
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject optionCreate(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W OPTION [POST /mobile/ezoption/option/users/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+						
+			mOptionService.insertOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), tenantId);
+			
+			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
+
+			LOGGER.debug("opt: " + opt.toString());
+
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", opt);			
+		} catch (Exception e) {			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");			
+		}
+		
+		LOGGER.debug("MOBILE G/W OPTION [POST /mobile/ezoption/option/users/{userId}] ended.");	
+		
+		return result;
+	}
+    
+	/**
 	 * 모바일 G/W 환경설정 [put] 환경설정수정
 	 */
     @SuppressWarnings("unchecked")

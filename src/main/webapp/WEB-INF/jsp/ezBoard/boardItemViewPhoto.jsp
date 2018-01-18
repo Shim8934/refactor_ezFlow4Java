@@ -18,6 +18,7 @@
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
 		<style title="ezform_style_1">
 		P {
 				MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm
@@ -54,6 +55,7 @@
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
+				var commentCount = "${commentCount}";
 		        var ImageCount = "";
 		        var viewimage = "";
 		        var pListImage = "";
@@ -66,19 +68,25 @@
 		        var imgWidth = "55px";
 		        var imgHeight = "37px";
 		        var rsa = new RSAKey();
-		
+// 		        var itemID = pItemID;
+// 				var boardID = pBoardID;
+				
 		        window.onload = function () {
 		            imageViewInit();
 		            pageimageout();
-		            
-		            if (OneLineReplyFlag == "1") {
-		                getOneLineReply();
-		                if (CrossYN()) {
-		                	window.resizeTo(770, 990);
-		                } else {
-		                    window.resizeTo(770, 1010);
-		                }
-		            }
+		            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+	                    self.resizeTo(780, 860);
+	                } else {
+	                    self.resizeTo(780, 860);
+	                }
+// 		            if (OneLineReplyFlag == "1") {
+// 		                getOneLineReply();
+// 		                if (CrossYN()) {
+// 		                	window.resizeTo(770, 990);
+// 		                } else {
+// 		                    window.resizeTo(770, 1010);
+// 		                }
+// 		            }
             
 		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		
@@ -93,10 +101,17 @@
 		                pSIPUriList = null;
 		            }
 		            else {
-		                document.getElementById("WriteUserNM").innerHTML = "${boardItem.writerName}";
+		               // document.getElementById("WriteUserNM").innerHTML = "${boardItem.writerName}";
 		            }
 		        };
-		
+		        //강민수92 댓글 클릭 이벤트
+			    function btn_One_Line_Reply_Onclick() {
+			    	if (OneLineReplyFlag == "1") {
+			    		openBoardComment();
+			    		return;
+			    	} 
+			    }
+		        
 				//GUID 채번
 				function generateGuid() {
 				    var result = "";
@@ -428,146 +443,146 @@
 					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 				}
 		
-				function OneLineReply_onkeydown(e)
-				{
-				    if (e.keyCode == 13) {
-				        e.returnValue = false;
-				        e.cancelBubble = true;
-				        Save_OneLineReply(e);
-				    }
-				}
+// 				function OneLineReply_onkeydown(e)
+// 				{
+// 				    if (e.keyCode == 13) {
+// 				        e.returnValue = false;
+// 				        e.cancelBubble = true;
+// 				        Save_OneLineReply(e);
+// 				    }
+// 				}
 		
-				function Save_OneLineReply(e)
-				{
-					if (Reply_FG != "true") 
-					{
-						alert("<spring:message code='ezBoard.t303'/>");
-						return;
-					}
+// 				function Save_OneLineReply(e)
+// 				{
+// 					if (Reply_FG != "true") 
+// 					{
+// 						alert("<spring:message code='ezBoard.t303'/>");
+// 						return;
+// 					}
 					
-				    e.returnValue = false;
-				    e.cancelBubble = true;
+// 				    e.returnValue = false;
+// 				    e.cancelBubble = true;
 		
-					//event.returnValue = false;
-					//event.cancelBubble = true;
+// 					//event.returnValue = false;
+// 					//event.cancelBubble = true;
 					
-					//2011-04 : 한줄 답변 옵션 처리
-					if(OneLineReplyFlag == "1")
-					{
-					    if (document.getElementById("onelinereply").value == "") 
-					    {
-						    alert("<spring:message code='ezBoard.t307'/>");
-						    return;
-					    }
-					}
+// 					//2011-04 : 한줄 답변 옵션 처리
+// 					if(OneLineReplyFlag == "1")
+// 					{
+// 					    if (document.getElementById("onelinereply").value == "") 
+// 					    {
+// 						    alert("<spring:message code='ezBoard.t307'/>");
+// 						    return;
+// 					    }
+// 					}
 					
-					//2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가
-					if (gubun == "2" && trim(document.getElementById("txtPassWord").value) == "" )
-					{
-					    alert("<spring:message code='ezBoard.t391'/>");
-					    txtPassWord.focus();
-						return;
-					}
+// 					//2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가
+// 					if (gubun == "2" && trim(document.getElementById("txtPassWord").value) == "" )
+// 					{
+// 					    alert("<spring:message code='ezBoard.t391'/>");
+// 					    txtPassWord.focus();
+// 						return;
+// 					}
 					
-					var pReplyID = "";
-					pReplyID = generateGuid();
+// 					var pReplyID = "";
+// 					pReplyID = generateGuid();
 					
-					var content,password;
-					if (OneLineReplyFlag == "1"){
-						content = MakeXMLString(document.getElementById('onelinereply').value);
-					}else{
-						content = "";
-					}
-					if (gubun != "2") {
-					    password = "";
-					}
-					else {
-					    password = rsa.encrypt(document.getElementById("txtPassWord").value);
-					}
+// 					var content,password;
+// 					if (OneLineReplyFlag == "1"){
+// 						content = MakeXMLString(document.getElementById('onelinereply').value);
+// 					}else{
+// 						content = "";
+// 					}
+// 					if (gubun != "2") {
+// 					    password = "";
+// 					}
+// 					else {
+// 					    password = rsa.encrypt(document.getElementById("txtPassWord").value);
+// 					}
 					
-					$.ajax({
-						type : "POST",
-						dataType : "text",
-						async : false,
-						url : "/ezBoard/saveOneLineReply.do",
-						data : { boardID    : pBoardID, 
-								 itemID 	: pItemID,
-								 replyID	: pReplyID,
-								 content	: content,
-								 password	: password
+// 					$.ajax({
+// 						type : "POST",
+// 						dataType : "text",
+// 						async : false,
+// 						url : "/ezBoard/saveOneLineReply.do",
+// 						data : { boardID    : pBoardID, 
+// 								 itemID 	: pItemID,
+// 								 replyID	: pReplyID,
+// 								 content	: content,
+// 								 password	: password
 									 
-							   },
-						success: function(){
-							reloadOneline();
-						}
-					});
-				}
+// 							   },
+// 						success: function(){
+// 							reloadOneline();
+// 						}
+// 					});
+// 				}
 		
-				function reloadOneline(){
-				    if (OneLineReplyFlag == "1")
-				        document.getElementById('onelinereply').value = "";
-				    if (gubun == "2")
-				        document.getElementById('txtPassWord').value = "";
-				    getOneLineReply();
-				}
+// 				function reloadOneline(){
+// 				    if (OneLineReplyFlag == "1")
+// 				        document.getElementById('onelinereply').value = "";
+// 				    if (gubun == "2")
+// 				        document.getElementById('txtPassWord').value = "";
+// 				    getOneLineReply();
+// 				}
 				
-				function delete_onelinereply(pReplyID)
-				{
-				     var xmlhttp = createXMLHttpRequest();
+// 				function delete_onelinereply(pReplyID)
+// 				{
+// 				     var xmlhttp = createXMLHttpRequest();
 				    
-				    //게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
-					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") 
-					{
-					    xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
-					    xmlhttp.send();
+// 				    //게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
+// 					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") 
+// 					{
+// 					    xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
+// 					    xmlhttp.send();
 		        			
-					    if (xmlhttp.responseText.substr(0,2) != "OK")
-					    {
-						    alert("<spring:message code='ezBoard.t310'/>");
-						    return;
-					    }
+// 					    if (xmlhttp.responseText.substr(0,2) != "OK")
+// 					    {
+// 						    alert("<spring:message code='ezBoard.t310'/>");
+// 						    return;
+// 					    }
 		        			
-					    if (!confirm("<spring:message code='ezBoard.t311'/>")) 
-					    	return;
+// 					    if (!confirm("<spring:message code='ezBoard.t311'/>")) 
+// 					    	return;
 		
-					} else {
-						    if(!confirm("<spring:message code='ezBoard.t311'/>")) 
-						    	return;
-						}
+// 					} else {
+// 						    if(!confirm("<spring:message code='ezBoard.t311'/>")) 
+// 						    	return;
+// 						}
 					
-					xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID+"&guBun="+gubun, false);
-					xmlhttp.send();
-					getOneLineReply();			
-					xmlhttp = null;
-				}
+// 					xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID+"&guBun="+gubun, false);
+// 					xmlhttp.send();
+// 					getOneLineReply();			
+// 					xmlhttp = null;
+// 				}
 				
-			    function getOneLineReply()
-			    {
-			        var xmlhttp = createXMLHttpRequest();
-			        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
-			        xmlhttp.send();
-			        var xmldom = createXmlDom();
-			        //xmldom.loadXML(xmlhttp.responseText);
-			        xmldom = loadXMLString(xmlhttp.responseText);
-			        xmlhttp = null;
-			        strHTML = "";
-			        var temp;
-			        for (var i=0; i<xmldom.getElementsByTagName("REPLYID").length; i++)
-			        {
-			            temp = i+1;
-			            strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i))+ "\")'><p>";
-			        }
-			        if (i==0)
-			            strHTML = "<spring:message code='ezBoard.t312'/>";
+// 			    function getOneLineReply()
+// 			    {
+// 			        var xmlhttp = createXMLHttpRequest();
+// 			        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+// 			        xmlhttp.send();
+// 			        var xmldom = createXmlDom();
+// 			        //xmldom.loadXML(xmlhttp.responseText);
+// 			        xmldom = loadXMLString(xmlhttp.responseText);
+// 			        xmlhttp = null;
+// 			        strHTML = "";
+// 			        var temp;
+// 			        for (var i=0; i<xmldom.getElementsByTagName("REPLYID").length; i++)
+// 			        {
+// 			            temp = i+1;
+// 			            strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i))+ "\")'><p>";
+// 			        }
+// 			        if (i==0)
+// 			            strHTML = "<spring:message code='ezBoard.t312'/>";
 		            
-		            try
-		            {
-		                document.getElementById("onelinereplylist").innerHTML = strHTML;
-		            }
-		            catch(e)
-		            {
-		            }
-			    }
+// 		            try
+// 		            {
+// 		                document.getElementById("onelinereplylist").innerHTML = strHTML;
+// 		            }
+// 		            catch(e)
+// 		            {
+// 		            }
+// 			    }
 				
 				function ReplaceText( orgStr, findStr, replaceStr )
 				{
@@ -1168,6 +1183,11 @@
 		        		<c:when test="${apprFlag == 'N'}">
 			                <li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005'/></span></li>
 			                <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014'/></span></li>
+			                <!--		강민수92	   -->
+	        				<c:if test = "${oneLineReplyFlag == '1'}">
+	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
+	        				</c:if>
+								<!--		강민수92 end -->			                
 			                <c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
 			                    <li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
 			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
@@ -1180,6 +1200,11 @@
 			                <li><span onClick="btn_ReWrite()"><spring:message code='ezBoard.t999021'/></span></li>
 		        		</c:when>
 		        		<c:otherwise>
+		        			<!--		강민수92	   -->
+	        				<c:if test = "${oneLineReplyFlag == '1'}">
+	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
+	        				</c:if>
+							<!--		강민수92 end -->
 		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
 			                    <li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
 			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
@@ -1206,24 +1231,32 @@
 		  </tr>
 		  <tr>
 		     <td>
-		         <table class="content" style="border:0px">
+		         <table class="content" style="border:0px; width:100%">
 		            <tr>
-		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-		              <td style="width:100px; text-overflow:ellipsis; white-space:nowrap; cursor:pointer;" id="WriteUserNM" onclick='OpenUserInfo("${boardItem.writerID}")'><c:out value="${boardItem.writerName}"/></td>
-		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t289'/></th>
-		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM"><c:out value="${boardItem.writerDeptName}"/></td>
-		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t290'/></th>
-		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;" id="User_JobTitle">${boardItem.extensionAttribute3}</td>
-		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t224'/></th>
-		              <td style="width:125px; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate} </td>
+		              <th style="width:10%"><spring:message code='ezBoard.t223'/></th>
+			              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="WriteUserNM">
+			              	  <div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto">
+								 <span onclick='OpenUserInfo("${boardItem.writerID}")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
+							  </div>
+			              </td> 
+		              <th style="width:10%"><spring:message code='ezBoard.t289'/></th>
+		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM"><c:out value="${boardItem.writerDeptName}"/></td>
 		            </tr>
 		            <tr>
-		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t291'/></th>
-		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666"><c:out value="${boardItem.title}"/></div></td>
+		              <th style="width:10%"><spring:message code='ezBoard.t290'/></th>
+		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_JobTitle">${boardItem.extensionAttribute3}</td>
+		              <th style="width:10%"><spring:message code='ezBoard.t224'/></th>
+		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate} </td>
 		            </tr>
 		            <tr>
-		                <th ><spring:message code='ezBoard.t1008'/></th>
-		                <td id="cimagecontent" colspan="7">
+		              <th><spring:message code='ezBoard.t291'/></th>
+		              <td id="cTitle" colspan="3">
+			              <div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle;"><c:out value="${boardItem.title}"/></div>
+		              </td>
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezBoard.t1008'/></th>
+		                <td id="cimagecontent" colspan="3">
 		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
@@ -1287,60 +1320,60 @@
 		        </td>
 		    </tr>
 		  <%--2011-04 : 한줄 답변 옵션 처리--%>
-		  <c:choose>
-		  	<c:when test="${oneLineReplyFlag == '1'}">
-			  <tr>
-			    <td style="height:50px">
-			        <table>
-			            <tr>
-			                <td style="height:20px;"></td>
-			            </tr>
-			        </table>
-			        <table class="content">   
-			        <tr>
-			            <th><spring:message code='ezBoard.t486'/></th>
-			            <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown(event)"></td>
-			            <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply(event)"><spring:message code='ezBoard.t321'/></span></a></td>
-			        </tr>
-			        <tr>
-			            <td style="height:100px" colspan="4">
-			                <div id="onelinereplylist" style="OVERFLOW:auto; HEIGHT: 90px; background-color:white; padding:10px; text-align:left"></div>
-			            </td>
-			        </tr>
-			        </table>
-			      </td>
-			  </tr>
-			  <tr>
-			    <td style="DISPLAY:none; height:50px" class="pad1">
-			        <table class="file">
-			            <tr>
-			              <th><spring:message code='ezBoard.t292'/></th>
+<%-- 		  <c:choose> --%>
+<%-- 		  	<c:when test="${oneLineReplyFlag == '1'}"> --%>
+<!-- 			  <tr> -->
+<!-- 			    <td style="height:50px"> -->
+<!-- 			        <table> -->
+<!-- 			            <tr> -->
+<!-- 			                <td style="height:20px;"></td> -->
+<!-- 			            </tr> -->
+<!-- 			        </table> -->
+<!-- 			        <table class="content">    -->
+<!-- 			        <tr> -->
+<%-- 			            <th><spring:message code='ezBoard.t486'/></th> --%>
+<!-- 			            <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown(event)"></td> -->
+<%-- 			            <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply(event)"><spring:message code='ezBoard.t321'/></span></a></td> --%>
+<!-- 			        </tr> -->
+<!-- 			        <tr> -->
+<!-- 			            <td style="height:100px" colspan="4"> -->
+<!-- 			                <div id="onelinereplylist" style="OVERFLOW:auto; HEIGHT: 90px; background-color:white; padding:10px; text-align:left"></div> -->
+<!-- 			            </td> -->
+<!-- 			        </tr> -->
+<!-- 			        </table> -->
+<!-- 			      </td> -->
+<!-- 			  </tr> -->
+<!-- 			  <tr> -->
+<!-- 			    <td style="DISPLAY:none; height:50px" class="pad1"> -->
+<!-- 			        <table class="file"> -->
+<!-- 			            <tr> -->
+<%-- 			              <th><spring:message code='ezBoard.t292'/></th> --%>
 			
-			              <td class="pos1">
-			                  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div>
-			              </td>
-			              <td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325'/></span></a><a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98'/></span></a> </td>
-			              <td id="ItemLevel"></td>
-			            </tr>
-			      </table>
-			    </td>
-			  </tr>
-		  	</c:when>
-		  	<c:otherwise>
-		        <tr style="DISPLAY:none">
-				    <td class="pad1" style="height:20px">
-					    <table class="file">
-				     	   <tr>
-			        		<th><spring:message code='ezBoard.t292'/></th>
-				          	<td class="pos1"><div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td>
-				          	<td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325'/></span></a><a class="imgbtn"><span onClick="attach_Download()"> <spring:message code='ezBoard.t98'/></span></a></td>
-				          	<td id="ItemLevel"></td>
-				        	</tr>
-				        </table>
-				    </td>
-		 	 	</tr>
-		  	</c:otherwise>
-		  </c:choose>
+<!-- 			              <td class="pos1"> -->
+<!-- 			                  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div> -->
+<!-- 			              </td> -->
+<%-- 			              <td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325'/></span></a><a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98'/></span></a> </td> --%>
+<!-- 			              <td id="ItemLevel"></td> -->
+<!-- 			            </tr> -->
+<!-- 			      </table> -->
+<!-- 			    </td> -->
+<!-- 			  </tr> -->
+<%-- 		  	</c:when> --%>
+<%-- 		  	<c:otherwise> --%>
+<!-- 		        <tr style="DISPLAY:none"> -->
+<!-- 				    <td class="pad1" style="height:20px"> -->
+<!-- 					    <table class="file"> -->
+<!-- 				     	   <tr> -->
+<%-- 			        		<th><spring:message code='ezBoard.t292'/></th> --%>
+<!-- 				          	<td class="pos1"><div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td> -->
+<%-- 				          	<td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325'/></span></a><a class="imgbtn"><span onClick="attach_Download()"> <spring:message code='ezBoard.t98'/></span></a></td> --%>
+<!-- 				          	<td id="ItemLevel"></td> -->
+<!-- 				        	</tr> -->
+<!-- 				        </table> -->
+<!-- 				    </td> -->
+<!-- 		 	 	</tr> -->
+<%-- 		  	</c:otherwise> --%>
+<%-- 		  </c:choose> --%>
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
 			    <td style="height:20px">

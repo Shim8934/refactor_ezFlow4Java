@@ -61,7 +61,9 @@ import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -106,6 +108,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
 	// 웹소켓 커넥션은 인스턴스가 싱글톤이 아니기 때문에 힙에 생성되는 1개의 인스턴스 Map을 공유할 수 있도록 Static으로 선언하였다. 
 	private static Map<String, Session> sessionMap = new ConcurrentHashMap<>();
 	
@@ -123,8 +128,15 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", loginInfo.getTenantId());
+		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree);
 		
+		if (usePreviewSubTree.equals("YES")) {
+			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
+			String previewSubTree = mailGeneralVO.getPreviewSubTree();
+			model.addAttribute("previewSubTree", previewSubTree);
+		}
+
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		StringBuilder rootFolderXML = new StringBuilder();
@@ -134,7 +146,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
-			List<Folder> rootMailFolderList = ia.getTopLevelFolders(true);
+			
+			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
+			boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+			
+			List<Folder> rootMailFolderList = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 			
 			for (int i=0,j=0; i<rootMailFolderList.size(); i++) {
 				Folder folder = rootMailFolderList.get(i);
@@ -238,14 +254,23 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		
 		String funCode = "1";
+		
 		if (request.getParameter("funCode") != null) {
 			funCode = request.getParameter("funCode");
+		}
+
+		String subCode = "1";
+		
+		if (request.getParameter("subCode") != null) {
+			subCode = request.getParameter("subCode");
 		}
 		
 		model.addAttribute("mailServerAddress", mailServerAddress);
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		model.addAttribute("funCode", funCode);
+		model.addAttribute("subCode", subCode);
+		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
@@ -342,7 +367,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					subFolderXML.append("></node>");
 				}
 			} else {
-				subMailFolder = ia.getTopLevelFolders(isSubscribe);
+				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+				
+				subMailFolder = ia.getTopLevelFolders(isSubscribe, isUseDefaultFoldersForLangOnly);
+				
 				for (int i=0,j=0; i<subMailFolder.size(); i++) {
 					Folder fd = subMailFolder.get(i);
 					subFolderXML.append("<node imgidx='1'");

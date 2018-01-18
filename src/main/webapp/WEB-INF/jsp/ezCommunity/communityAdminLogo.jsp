@@ -269,7 +269,7 @@
 	        <div class="subtxt">
 	            <spring:message code = 'ezCommunity.t500' /><br>
 	        </div>
-	        <table class="content">
+	        <table class="content" style="margin-top:5px">
 	            <tr>
 	                <th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t498' /></th>
 	                <td>
@@ -337,7 +337,8 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <br/><br/>
+	    <div class="btnposition btnpositionNew">
 	            <a class="imgbtn" name="Submit" onclick="javascript:pre_onclick();" style="display: none"><span><spring:message code = 'ezCommunity.t502' /></span></a>
 	            <a class="imgbtn" name="Submit2" onclick="javascript:go();"><span><spring:message code = 'ezCommunity.t20' /></span></a>
 	            <a class="imgbtn" name="Submit3" onclick="javascript:cancle_onclick();"><span><spring:message code = 'ezCommunity.t109' /></span></a>

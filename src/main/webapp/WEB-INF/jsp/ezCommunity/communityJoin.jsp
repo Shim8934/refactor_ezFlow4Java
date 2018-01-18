@@ -253,6 +253,8 @@
 	</head>
 	<body class="popup" onLoad="return window_onload()">
 		<h1>Community <spring:message code = 'ezCommunity.t1066' /></h1>
+		<form method="post" name="join" id="join" action="/ezCommunity/joinOk.do">
+			<input type=hidden name=code value="<c:out value = '${code}' />">
 		<table class="content">
 		  	<tr>
 			    <th><spring:message code = 'ezCommunity.t9991' /></th>
@@ -262,16 +264,20 @@
 			    <th><spring:message code = 'ezCommunity.t1012' /></th>
 			    <td><c:out value = '${sysUserName}' />(<c:out value = '${clubVO.c_SysopID}' />)</td>
 		  	</tr>
-		</table>
 		
-		<form method="post" name="join" id="join" action="/ezCommunity/joinOk.do"  >
-			<input type=hidden name=code value="<c:out value = '${code}' />">
-		  	<table class="popuplist"  width="100%">
-		    	<tr>
-		      		<th><spring:message code = 'ezCommunity.t1067' /></th>
+		
+		
+		  	
+		  		<tr>
+		    		<th><spring:message code = 'ezCommunity.t1072' /></th>		    	
+		    		<td style="text-align:left;height:35px">
+			    		<input type ="radio" name = "gender" id = "gender1" value ="<spring:message code = 'ezCommunity.t1098' />" checked ><spring:message code = 'ezCommunity.t1098' />
+			    		<input type ="radio" name = "gender" id = "gender1" value ="<spring:message code = 'ezCommunity.t1099' />" ><spring:message code = 'ezCommunity.t1099' />
+		    		</td>
 		    	</tr>
 		    	<tr>
-		      		<td align="center" style="height:60px"><!-- 회원정보 display none 시킨 DIV 부분 -->
+		      		<th style="border-top:0px"><spring:message code = 'ezCommunity.t1067' /></th>		    	
+		      		<td style="height:60px;text-align:left"><!-- 회원정보 display none 시킨 DIV 부분 -->
 		        		<div style="display:none">
 		          			<input type="checkbox" name="openEmail" checked value="1" tabindex="1"><spring:message code = 'ezCommunity.t272' />
 		          			<input type="checkbox" name="openHp" checked value="1" tabindex="2"><spring:message code = 'ezCommunity.t1069' /><br>
@@ -289,44 +295,34 @@
 				        <input type="text" name="birthDay" id="birthDay" value="DD" size="3" maxlength="2" onFocus="return birthDay_onfocus()" onChange="return birthDay_onchange()" tabindex="9">
 				        <spring:message code = 'ezCommunity.t1074' /><br>
 				        
-				        <c:choose>
-				        	<c:when test="${userInfo.lang == '1' || userInfo.lang == '4' }">
-				        		<input type="radio" name="birthType" id="birthType1" value="+" checked>
-						        <spring:message code = 'ezCommunity.t1075' />
-						        <input type="radio" name="birthType" id="birthType2" value="-">
-						        <spring:message code = 'ezCommunity.t1076' />
-				        	</c:when>
-				        		
-				        	<c:otherwise>
-				        		<div style="display:none;">
-							        <input type="radio" name="birthType" id="birthType1" value="+" checked >
+				        <div style="margin-top:5px;"> 
+					        <c:choose>
+					        	<c:when test="${userInfo.lang == '1' || userInfo.lang == '4' }">
+					        		<input type="radio" name="birthType" id="birthType1" value="+" checked>
 							        <spring:message code = 'ezCommunity.t1075' />
 							        <input type="radio" name="birthType" id="birthType2" value="-">
 							        <spring:message code = 'ezCommunity.t1076' />
-						        </div>
-				        	</c:otherwise>
-				        </c:choose>
-				        
+					        	</c:when>
+					        		
+					        	<c:otherwise>
+					        		<div style="display:none;">
+								        <input type="radio" name="birthType" id="birthType1" value="+" checked >
+								        <spring:message code = 'ezCommunity.t1075' />
+								        <input type="radio" name="birthType" id="birthType2" value="-">
+								        <spring:message code = 'ezCommunity.t1076' />
+							        </div>
+					        	</c:otherwise>
+					        </c:choose>
+				        </div>
 		        	</td>
-		    	</tr>
+		    	</tr>		    	
 		    	<tr>
-		    		<th><spring:message code = 'ezCommunity.t1072' /></th>
-		    	</tr>
-		    	<tr>
-		    		<td align="center">
-			    		<input type ="radio" name = "gender" id = "gender1" value ="<spring:message code = 'ezCommunity.t1098' />" checked ><spring:message code = 'ezCommunity.t1098' />
-			    		<input type ="radio" name = "gender" id = "gender1" value ="<spring:message code = 'ezCommunity.t1099' />" ><spring:message code = 'ezCommunity.t1099' />
-		    		</td>
-		    	</tr>
-		    	<tr>
-		      		<th><spring:message code = 'ezCommunity.t527' /></th>
-		    	</tr>
-	    		<tr>
-		      		<td style="padding: 0px;"><textarea name="cIntro" id="c_intro" style="width:99.5%; height:110px; padding: 0px; outline: none; border: 0; overflow:hidden; resize : none;" tabindex="10"></textarea></td>
+		      		<th><spring:message code = 'ezCommunity.t527' /></th>		    	
+		      		<td style="padding:3px"><textarea name="cIntro" id="c_intro" style="width:99.5%; height:170px; padding: 0px; outline: none; border: 0; overflow:hidden; resize : none;" tabindex="10"></textarea></td>
 		    	</tr>
 		  	</table>
 		  	<!--커뮤니티 배너부분 -->
-		  	<div class="btnposition">
+		  	<div class="btnposition btnpositionNew">
 		    	<a class="imgbtn" name="Submit"  onclick="javascript:join_ok();"><span><spring:message code = 'ezCommunity.t245' /></span></a>
 				<a class="imgbtn" name="Submit2" onClick="javascript:self.close();"><span><spring:message code = 'ezCommunity.t246' /></span></a>
 		  	</div>

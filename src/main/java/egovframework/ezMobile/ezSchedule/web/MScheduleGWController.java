@@ -148,6 +148,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
+			String searchTitle = request.getParameter("searchTitle");
 			
 			if (startDate != null && !startDate.equals("")) {
 				String[] sDate = startDate.split("-");
@@ -178,7 +179,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, "");
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle);
 						
 			result.put("status", "ok");
 			result.put("code", 0);			

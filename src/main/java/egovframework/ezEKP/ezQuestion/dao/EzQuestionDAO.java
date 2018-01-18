@@ -250,7 +250,9 @@ public class EzQuestionDAO extends EgovAbstractDAO {
 	}
 	
 	public void callInsertPollResponseper(Map<String,Object> map) {
-		insert("EzQuestionDAO.callInsertPollResponseper", map);
+		try {
+			insert("EzQuestionDAO.callInsertPollResponseper", map);
+		} catch(Exception ex) {}
 	}
 	
 	public void insertQuestion(Map<String,Object> map) {

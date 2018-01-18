@@ -267,9 +267,9 @@
 		            }
 		            
 		            if(SIZE == "FULL")
-		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=1,resizable=1,height=" + screen.height + ",width=" + screen.width + ",top=0,left=0");
+		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + screen.height + ",width=" + screen.width + ",top=0,left=0");
 		            else
-		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=1,resizable=1,height=" + SIZE.split(':')[1] + ",width=" + SIZE.split(':')[0] + ",top=" + top + ",left = " + left);
+		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + SIZE.split(':')[1] + ",width=" + SIZE.split(':')[0] + ",top=" + top + ",left = " + left);
 
 		        } catch (e) {
 		            alert("openwindow :: " + e.description);
@@ -515,6 +515,7 @@
 			    for (var i=0; i<main_table.getElementsByTagName("td").length; i++) {
 			        if (main_table.getElementsByTagName("td").item(i).getAttribute("uid") == pUID) return true;
 				}
+			    
 				return false;
 			}
 
@@ -953,6 +954,7 @@
 				var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%; height:"+ret[2]+"px\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
 				newrow.innerHTML = strInnerHTML;
 				var pageuid = "";
+				
 				if (GetPageID(document.getElementById(subtdGetid)) == null)
 				    pageuid = pageid;
 				else
@@ -1106,6 +1108,7 @@
 				}
 	
 				var cell = eval(selectedSubCell);
+				
 				if (cell.getAttribute("canreplace") != 1) {
 					alert("<spring:message code='ezPortal.t303' />");
 					return;

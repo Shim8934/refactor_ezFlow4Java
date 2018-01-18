@@ -1105,7 +1105,9 @@ public class MBoardServiceImpl implements MBoardService {
 	    
         String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
         logger.debug("strHTML : " + strHTML);
-        
+
+        strHTML = strHTML.replace("/fileroot", scheme + domain + "/fileroot");
+
         Document doc = Jsoup.parse(strHTML);
         
         String bodyHTML = doc.getElementsByTag("BODY").html();
