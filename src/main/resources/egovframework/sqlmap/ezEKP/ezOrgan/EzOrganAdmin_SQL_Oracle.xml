@@ -48,12 +48,6 @@
 		<result property="cn" 									column="CN" 							columnIndex="1"/>	
 	</resultMap>
 	
-	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
-		]]>
-	</procedure> -->
-	
 	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
@@ -63,13 +57,6 @@
      			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 1, #v_CN#, #v_LDAPPATH#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_TENANT_ID# )
 		]]>
 	</insert>
-	
-	<!-- <procedure id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_INSERTDBDATA_DEPT(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, 
-												    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
-		]]>											    
-	</procedure> -->
 	
     <insert id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
         <![CDATA[
@@ -88,14 +75,6 @@
                  )
         ]]>
     </insert>
-		
-	<!-- <procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
-													#v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, 
-													#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#)}
-		]]>
-	</procedure> -->
 	
 	<insert id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
@@ -114,12 +93,6 @@
                 )
 		]]>
 	</insert>
-	
-	<!-- <procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
-		]]>	
-	</procedure> -->
 	
 	<delete id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
 		<![CDATA[
@@ -164,12 +137,6 @@
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-		
-	<!-- <procedure id="EzOrganAdminDAO.moveDBData" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_MOVEGROUPUSER(#v_PARENTCN#, #v_CN#, #v_CLASS#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.moveDBData_S" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
@@ -256,12 +223,6 @@
                     PHYSICALDELIVERYOFFICENAME = src.EXTENSIONATTRIBUTE2
 		]]>
 	</statement>
-	
-	<!-- <procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
-		<![CDATA[
-			{CALL EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.getUserInfo_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -496,12 +457,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
-		]]>
-	</procedure> -->
-	
 	<update id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
         <isEqual property="v_PROPNAME" compareValue="updateDT">
             <![CDATA[
@@ -555,12 +510,6 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</update>
-		
-	<!-- <procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_DB_SETRETIREUSER(#v_CN#)}
-		]]>
-	</procedure> -->
 		
 	<insert id="EzOrganAdminDAO.retireDBData_I" parameterClass="Map">
 		<![CDATA[
@@ -2115,12 +2064,6 @@
          		TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-			
-<!-- 	<procedure id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
@@ -2152,12 +2095,6 @@
         		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
-		<![CDATA[
-			{CALL EZSP_GETADDJOBLIST(#v_COMPANYID#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
@@ -2221,12 +2158,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
-		<![CDATA[
-			{CALL EZSP_GETPROXYUSERINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
 			SELECT
@@ -2239,12 +2170,6 @@
       			TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
-		<![CDATA[
-			{CALL EZSP_GETUSERADDJOBLIST(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
 		<![CDATA[
@@ -2311,12 +2236,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzOrganAdminDAO.setAddJob" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_SETADDJOB(#v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_DELFLAG#)}
-		]]>
-	</procedure> -->
-	
 	<delete id="EzOrganAdminDAO.setAddJob" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -2338,12 +2257,6 @@
 		]]>
 	</insert>
 	
-	<!-- <procedure id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			{CALL EZSP_GETPERMISSIONLISTCOUNT(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -2362,12 +2275,6 @@
       			EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
-		<![CDATA[
-			{CALL EZSP_GETPERMISSIONLIST(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
@@ -2441,12 +2348,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			{CALL EZSP_DB_GETRETIRELISTCOUNT(#v_PAGE#, #v_ROWPERPAGE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -2493,12 +2394,6 @@
            								TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_DB_RESTORE_RETIREUSER(#v_CN#, #v_PARENTCN#)}
-		]]>
-	</procedure> -->
 		
 	<insert id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
 		<![CDATA[
