@@ -802,7 +802,7 @@
   							A.isPublic,
   							A.orgDocID,
   							A.receivedDate,
-  							A.starDate + $offsetMin$/(24*60) as startDate,
+  							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
   							A.urgentApproval,
   							A.writerDeptID,
   							A.writerDeptName,
@@ -878,7 +878,7 @@
   							A.href,
   							A.isPublic,
   							A.orgDocID,
-  							A.startDate + $offsetMin$/(24*60) as startDate,
+  							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
   							A.urgentApproval,
   							A.writerDeptID,
   							A.writerDeptName,
@@ -942,7 +942,7 @@
 		                      				 A.DOCNO,
 		                      				 A.HASATTACHYN, 
 		                      				 A.HASOPINIONYN,
-		                      				 A.STARTDATE + $offsetMin$/(24*60) as STARTDATE,
+		                      				 to_date(A.STARTDATE,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
 		                      				 A.ENDDATE,
 		                      				 A.WRITERID,
 		                      				 A.WRITERNAME,
@@ -1025,7 +1025,7 @@
   							A.isPublic,
   							A.orgDocID,
   							A.receivedDate,
-  							A.startDate + $offsetMin$/(24*60) as startDate,
+  							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
   							A.urgentApproval,
   							A.writerDeptID,
   							A.writerDeptName,
@@ -1105,7 +1105,7 @@
 		  							A.isPublic,
 		  							A.orgDocID,
 		  							A.receivedDate,
-		  							A.startDate + $offsetMin$/(24*60) as startDate,
+		  							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
 		  							A.urgentApproval,
 		  							A.writerDeptID,
 		  							A.writerDeptName,
@@ -2715,6 +2715,8 @@
       				TBL_FORMINFO.FORMID = TBL_FORMUSERINFO.FORMID
       			AND
       				TBL_FORMINFO.TENANT_ID = TBL_FORMUSERINFO.TENANT_ID
+      			AND
+      				TBL_FORMINFO.COMPANYID = TBL_FORMUSERINFO.COMPANYID      				
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
       			<isEqual property="v_FORMKIND" compareValue="000">
@@ -2748,6 +2750,8 @@
       			</isEqual>
       				AND 
 						TBL_FORMINFO.TENANT_ID = #v_TENANTID#
+					AND
+						TBL_FORMINFO.COMPANYID = #companyID#						
 			</isNotEmpty>
 		</isEqual>
 		<isEqual property="v_FORMCONTID" compareValue="ALL">
@@ -2761,16 +2765,22 @@
          		TBL_FORMINFO.FORMCONTID = TBL_FORMCONTUSERGROUP.FORMCONTID
          	AND
          		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTUSERGROUP.TENANT_ID
+         	AND
+         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTUSERGROUP.COMPANYID         		
          	LEFT OUTER JOIN 
          		TBL_FORMCONTAINER
          	ON 
          		TBL_FORMINFO.FORMCONTID = TBL_FORMCONTAINER.FORMCONTID 
          	AND
-         		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID 
+         		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID
+         	AND
+         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID          		 
          	WHERE 
          		(1=1)
          	AND
          		TBL_FORMINFO.TENANT_ID = #v_TENANTID#
+         	AND
+         		TBL_FORMINFO.COMPANYID = #companyID#         		
          <isEqual property="v_FORMKIND" compareValue="000">
          
       	 </isEqual>
@@ -2812,7 +2822,11 @@
          									FROM 
          										 TBL_USERMASTER
          									WHERE 
-         										CN=#v_USERID#))
+         										CN=#v_USERID#
+         									AND
+         										TENANT_ID = #v_TENANTID#
+         									AND
+         										PHYSICALDELIVERYOFFICENAME = #companyID#))
 		</isEqual>
 		<isNotEqual property="v_FORMCONTID" compareValue="ROOT">
 		<isNotEqual property="v_FORMCONTID" compareValue="ALL">
@@ -2856,6 +2870,8 @@
          	</isEqual>
          		AND
          			TENANT_ID = #v_TENANTID#
+         		AND
+         			COMPANYID = #companyID#         			
 		</isNotEqual>
 		</isNotEqual>
 		ORDER BY FORMORDER
@@ -2915,6 +2931,8 @@
 	        		TBL_FormContainer.FormContID = TBL_FormContUserGroup.FormContID
 	        AND
 	        		TBL_FormContainer.TENANT_ID= TBL_FormContUserGroup.TENANT_ID
+	        AND
+	        		TBL_FormContainer.COMPANYID = TBL_FormContUserGroup.COMPANYID	        		
 	        WHERE  
 	        		( TBL_FormContainer.FormContParents = #v_ID# )
 	        AND 	
@@ -2934,17 +2952,25 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO">
 			SELECT  
-					CODE2, 
-					NAME$v_LANGTYPE$ AS NAME
+				CODE2, 
+			<isEqual property="v_LANGTYPE" compareValue="1">
+				NAME AS NAME
+			</isEqual>
+			<isNotEqual property="v_LANGTYPE" compareValue="1">
+				NAME$v_LANGTYPE$ AS NAME
+			</isNotEqual>
 		   	FROM 
-		   			TBL_CODELIST 
+		   		TBL_CODELIST 
 		   	WHERE 
-		   			CODE1 = 'A51' 
+		   		CODE1 = 'A51' 
 		   	AND  
-		   			ISUSE = 1
+		   		ISUSE = 1
 		   	AND
-		   			TENANT_ID = #v_TENANTID#
-		   	ORDER BY CODE2
+		   		TENANT_ID = #v_TENANTID#
+		   	AND
+		   		COMPANYID = #companyID#	
+		   	ORDER BY 
+		   		CODE2
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getAprType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
@@ -2991,6 +3017,8 @@
 		    		USERID = #v_USERID#
 		    AND
 		    		TENANT_ID= #v_TENANTID#
+	    	AND
+	    			COMPANYID = #companyID#		    		
 		    ORDER BY 
 		    		APRLINESN 
 	</select>
@@ -3007,7 +3035,8 @@
          	TENANT_ID = #v_TENANTID#
          AND  
          	MAINID = #v_MAINID#
-         
+         AND
+         	COMPANYID = #companyID#         
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getLineTempletInfo" parameterClass="Map" resultClass="ApprGLineTempletVO"> -->
@@ -3025,6 +3054,8 @@
 		    		USERID = #v_USERID#
 		    AND
 		    		TENANT_ID= #v_TENANTID#
+	    	AND
+         			COMPANYID = #companyID#		    		
 		    ORDER BY 
 		    		APRLINESN 
 	</select>
@@ -3044,6 +3075,8 @@
 		    		APRLINESN = #v_APRLINESN#
 		   	AND
 		   			TENANT_ID = #v_TENANTID#
+			AND
+		  			COMPANYID = #companyID#		   			
 		    ORDER BY 
 		    		APRMEMBERSN DESC 
 	</select>
@@ -3060,6 +3093,8 @@
         	TENANT_ID = #v_TENANTID#
         AND
         	FORMID = #v_FORMID#
+        AND
+         	COMPANYID = #companyID#        	
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
@@ -3076,7 +3111,10 @@
            		FORMID = #v_FORMID#
            AND
            		TENANT_ID = #v_TENANTID#
-           ORDER BY DEPTSN DESC 
+           AND
+         		COMPANYID = #companyID#           		
+           ORDER BY 
+           		DEPTSN DESC 
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="2">
 			SELECT 
@@ -3101,6 +3139,8 @@
              	   USERID = #v_USERID#
              AND
            		   TENANT_ID = #v_TENANTID#
+           	 AND
+         		   COMPANYID = #companyID#           		   
               ORDER BY DEPTMEMBERSN DESC 
 		</isEqual>
 	</select>
@@ -3138,6 +3178,8 @@
 		        	  APRLINESN = #v_APRLINESN#
 		        AND 
 		        	  TENANT_ID = #v_TENANTID#
+	        	AND
+        		 	  COMPANYID = #companyID#		        	  
 		        ORDER BY 
 		        	  APRMEMBERSN DESC 
 	</select>
@@ -3155,6 +3197,8 @@
 	     		USERID = #v_USERID#
 	     AND
 	     		TENANT_ID = #v_TENANTID#
+	     AND
+        		COMPANYID = #companyID#	     		
 	     ORDER BY 
 	     		APRDEPTSN
 	</select>
@@ -3175,6 +3219,8 @@
 		     		APRDEPTSN = #v_APRDEPTSN#
 		     AND
 		     		TENANT_ID =#v_TENANTID#
+	     	 AND
+       				COMPANYID = #companyID#		     		
 		     ORDER BY 
 		     		APRDEPTMEMBERSN DESC
 	</select>
@@ -3190,6 +3236,8 @@
            		TBL_ADMINRECEIPTGROUP_MAIN
            	WHERE
            		TENANT_ID = #v_TENANTID# 
+           	AND
+           		COMPANYID = #companyID#            		
            	ORDER BY 
              	MAINID
 		</isEqual>
@@ -3202,6 +3250,8 @@
             	MAINID = #v_MAINID#
             AND
             	TENANT_ID = #v_TENANTID# 
+            AND
+           		COMPANYID = #companyID#             	
             ORDER BY 
             	SUBID 
 		</isEqual>
@@ -3217,6 +3267,12 @@
 	         	TBL_ADMINRECEIPTGROUP_MAIN.MAINID = TBL_ADMINRECEIPTGROUP_SUB.MAINID
 	         AND
 	         	TBL_ADMINRECEIPTGROUP_MAIN.TENANT_ID = TBL_ADMINRECEIPTGROUP_SUB.TENANT_ID
+	         AND
+	         	TBL_ADMINRECEIPTGROUP_MAIN.COMPANYID = TBL_ADMINRECEIPTGROUP_SUB.COMPANYID
+	         WHERE 
+	         	TBL_ADMINRECEIPTGROUP_MAIN.TENANT_ID = #v_TENANTID#
+	         AND
+	         	TBL_ADMINRECEIPTGROUP_MAIN.COMPANYID = #companyID#	         	
 	         ORDER BY 
 	         	TBL_ADMINRECEIPTGROUP_MAIN.MAINID
 		</isEqual>
@@ -3229,6 +3285,8 @@
             	TBL_ADMINRECEIPTGROUP_MAIN 
             WHERE
             	TENANT_ID = #v_TENANTID#
+            AND
+            	COMPANYID = #companyID#            	
             ORDER BY 
             	MAINID 
 		</isNotEqual>
@@ -3265,6 +3323,8 @@
 		     		APRDEPTSN = #v_APRDEPTSN#
 		     AND
 		     		TENANT_ID = #v_TENANTID#
+		     AND
+		     		COMPANYID = #companyID#		     		
 		     ORDER BY 
 		     		APRDEPTMEMBERSN DESC
 	</select>
@@ -3272,7 +3332,8 @@
 <!-- 	<procedure id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKCATEGORY(#v_DEPTCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<isEmpty property="approvalFlag">
 			SELECT 
 					DISTINCT CATEGORYCODE ,
 		                     CNAME ,
@@ -3283,14 +3344,48 @@
 		                OR TASKCODE LIKE 'ZZ%'
 		                OR TASKCODE = '99999999' )
 		    AND
-		    		TENANT_ID = #v_TENANTID#
-		    ORDER BY CNAME ASC
+		    		TENANT_ID = #tenantID#
+		    AND
+		    		COMPANYID = #companyID#
+		    ORDER BY 
+		    		CNAME ASC
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
+			SELECT 
+					DISTINCT B.CATEGORYCODE,
+					CASE 
+                    	WHEN (B.CNAME$lang$ IS NULL OR B.CNAME$lang$ = '')  
+                    	THEN B.CNAME
+                    	ELSE B.CNAME$lang$
+                    END NAME,
+					( SELECT
+						COUNT(*)
+					  FROM
+					  	VTASKCLASS A
+					  WHERE
+					  	A.TENANT_ID = #tenantID#
+					  AND
+					  	A.COMPANYID = #companyID#
+					  AND
+					  	A.CATEGORYCODE = B.CATEGORYCODE 
+					  AND
+					  	A.MCATEGORYCODE != B.CATEGORYCODE ) as ISLEAF	
+		    FROM 
+		    		VTASKCLASS B
+		    WHERE  
+		    		B.TENANT_ID = #tenantID#
+		    AND
+		    		B.COMPANYID = #companyID#
+		    ORDER BY 
+		    		B.CNAME ASC
+		</isNotEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKMIDDLECATEGORY(#v_DEPTCODE#, #v_CATECODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<isEmpty property="approvalFlag">
 	 		SELECT 
 	 				DISTINCT MCATEGORYCODE ,
                       		 MCNAME ,
@@ -3304,51 +3399,116 @@
             AND 
             		CATEGORYCODE = #v_CATECODE#
             AND
-            		TENANT_ID = #v_TENANTID#
+            		TENANT_ID = #tenantID#
+            AND
+		    		COMPANYID = #companyID#
         	ORDER BY 
         			MCNAME ASC
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
+	 		SELECT 
+	 				DISTINCT B.MCATEGORYCODE CATEGORYCODE,
+                    CASE 
+                    	WHEN (B.MCNAME$lang$ IS NULL OR B.MCNAME$lang$ = '')  
+                    	THEN B.MCNAME
+                    	ELSE B.MCNAME$lang$
+                    END NAME,
+                    ( SELECT
+						COUNT(*)
+					  FROM
+					  	TBL_TASKSUBCATEGORY A
+					  WHERE
+					  	A.TENANT_ID = #tenantID#
+					  AND
+					  	A.COMPANYID = #companyID#
+					  AND
+					  	A.MCATEGORYCODE = B.MCATEGORYCODE 
+					  AND
+					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE ) as ISLEAF
+        	FROM 
+        			VTASKCLASS B
+       		WHERE  
+            		B.CATEGORYCODE = #categoryCode#
+            AND
+            		B.MCATEGORYCODE != #categoryCode#
+            AND
+            		B.TENANT_ID = #tenantID#
+            AND
+		    		B.COMPANYID = #companyID#
+        	ORDER BY 
+        			MCNAME ASC
+		</isNotEmpty>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKSUBCATEGORY(#v_DEPTCODE#, #v_CATECODE#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO">
-		<isEqual property="v_STRLANG" compareValue="1"> 
+	<select id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<isEmpty property="approvalFlag">
+			<isEqual property="v_STRLANG" compareValue="1"> 
+				SELECT 
+					DISTINCT SUBCATEGORYCODE ,
+	                         SCNAME 
+	           	FROM 
+	           		VTASKCLASS  
+	          	WHERE  ( 
+	          				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
+	                   	OR 
+	                   		TASKCODE LIKE 'ZZ%'
+	                   	OR 
+	                   		TASKCODE = '99999999' )
+	            AND 
+	            	MCATEGORYCODE = #v_CATECODE#
+	            AND
+	            	TENANT_ID = #tenantID#    
+	            AND	
+	            	COMPANYID = #companyID#   	
+	            ORDER BY 
+	           		SCNAME ASC
+			</isEqual>
+			<isNotEqual property="v_STRLANG" compareValue="1">
+			   SELECT 
+			   		DISTINCT SUBCATEGORYCODE ,
+	                IFNULL(SCNAME, SCNAME2) SCNAME  
+	           FROM 
+	           		VTASKCLASS 
+	           WHERE  ( 
+	           				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
+	                   OR 
+	                   		TASKCODE LIKE 'ZZ%'
+	                   OR 
+	                   		TASKCODE = '99999999' )
+	           AND 
+	               MCATEGORYCODE = #v_CATECODE#
+	           AND
+	               TENANT_ID = #tenantID#  
+	           AND	
+	               COMPANYID = #companyID#  
+	           ORDER BY 
+	           	   SCNAME ASC
+			</isNotEqual>
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
 			SELECT 
-				DISTINCT SUBCATEGORYCODE ,
-                         SCNAME 
+				DISTINCT SUBCATEGORYCODE CATEGORYCODE,
+                CASE 
+                   	WHEN (SCNAME$lang$ IS NULL OR SCNAME$lang$ = '')  
+                   	THEN SCNAME
+                   	ELSE SCNAME$lang$
+                END NAME,
+                0 as ISLEAF
            	FROM 
            		VTASKCLASS  
-          	WHERE  ( 
-          				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
-                   	OR 
-                   		TASKCODE LIKE 'ZZ%'
-                   	OR 
-                   		TASKCODE = '99999999' )
-            AND 
-            	MCATEGORYCODE = #v_CATECODE#
+          	WHERE  
+            	MCATEGORYCODE = #categoryCode#
             AND
-            	TENANT_ID = #v_TENANTID#       	
-           ORDER BY SCNAME ASC
-		</isEqual>
-		<isNotEqual property="v_STRLANG" compareValue="1">
-		   SELECT 
-		   		DISTINCT SUBCATEGORYCODE ,
-                NVL(SCNAME, SCNAME2) SCNAME  
-           FROM 
-           		VTASKCLASS 
-           WHERE  ( 
-           				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
-                   OR 
-                   		TASKCODE LIKE 'ZZ%'
-                   OR 
-                   		TASKCODE = '99999999' )
-           AND 
-               MCATEGORYCODE = #v_CATECODE#
-           AND
-               TENANT_ID = #v_TENANTID#   
-           ORDER BY SCNAME ASC
-		</isNotEqual>
-	
+            	SUBCATEGORYCODE != #categoryCode#
+            AND
+            	TENANT_ID = #tenantID#    
+            AND	
+            	COMPANYID = #companyID#   	
+            ORDER BY 
+           		SCNAME ASC
+		</isNotEmpty>		
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskInSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -3381,6 +3541,8 @@
 			       		TASKCODE = '99999999' )
 			 AND
 			 	TENANT_ID = #v_TENANTID#
+			 AND
+		 		COMPANYID = #companyID#			 	
 			ORDER BY TASKNAME ASC 
 	</select>
 		
@@ -3421,6 +3583,8 @@
 	   			TBL_CABINETCLASS.CABINETCLASSNO = TBL_CABINET.CABINETCLASSNO
 	   	AND
 	   			TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+	   	AND
+	   			TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID  	   			
 	   	WHERE 
 	   			TBL_CABINET.DELFLAG = '0'
 	   	AND 
@@ -3745,7 +3909,7 @@
 						TBL_RECORD.RecordID, 
 						TBL_RECORD.DocID, 
 						TBL_RECORD.RegisterNo, 
-						TBL_SEPERATEATTACH.CreateDate + $offsetMin$/(24*60) as CreateDate,
+						to_date(TBL_SEPERATEATTACH.CreateDate, 'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as CreateDate,
 	                	TBL_ENDAPRDOCINFO.DocType, 
 	                	TBL_SEPERATEATTACH.RegisterType, 
 	                	TBL_ENDAPRDOCINFO.DocState,  
@@ -3759,7 +3923,7 @@
 						TBL_CABINET.CabinetClassNo, 
 						TBL_CABINET.ProcessDeptCode AS CabDeptCode, 
 						TBL_CABINET.OwnerDeptID, 
-	                	TBL_RECORD.RegisterDate + $offsetMin$/(24*60) as RegisterDate, 
+						to_date(TBL_RECORD.RegisterDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as RegisterDate,
 	                	TBL_RECORD.AprMemberTitle$multiLang$ as AprMemberTitle, 
 	                	TBL_RECORD.DrafterName$multiLang$ as DrafterName, 
 	                	TBL_RECORD.AttachFlag,
