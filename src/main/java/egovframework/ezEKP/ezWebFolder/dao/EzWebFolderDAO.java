@@ -25,4 +25,12 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public FileTypeVO getFileTypeByFileExt(Map<String, Object> map) {
 		return (FileTypeVO)select("EzWebFolderDAO.getFileTypeByFileExt", map);
 	}
+
+	public void deleteFileByFileId(Map<String, Object> map) {		
+		delete("EzWebFolderDAO.deleteFileByFileId", map);
+	}
+
+	public void updateFileUseStatus(Map<String, Object> map) {		
+		update("EzWebFolderDAO.updateFileUseStatus", map);
+	}
 }

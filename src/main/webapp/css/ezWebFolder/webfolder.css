@@ -1,27 +1,10 @@
 .webFolderImg {height: 20px; width: 20px;}
 .bnkWebFolder:hover {background-color: #e9f1ff;}
 
-#progress-wrp {
-    border: 1px solid #0099CC;
-    padding: 1px;
-    position: relative;
-    border-radius: 3px;
-    margin: 10px;
-    text-align: left;
-    background: #fff;
-    box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
-}
-#progress-wrp .progress-bar{
-    height: 20px;
-    border-radius: 3px;
-    background-color: #f39ac7;
-    width: 0;
-    box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
-}
-#progress-wrp .status{
-    top:3px;
-    left:50%;
-    position:absolute;
-    display:inline-block;
-    color: #000000;
-}
+#progress-wrp {border: 1px solid #0099CC; padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff; box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);}
+#progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: #66b3ff; width: 0; box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11); }
+#progress-wrp .status {top:3px; left:50%; position:absolute; display:inline-block; color: #000000; }
+
+.webfolderBttn{white-space:nowrap; display:inline-block; cursor: pointer; height:25px; width: 60px; vertical-align:top; cursor:pointer; padding: 0px 5px;}
+.webfolderBttn span{display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px; width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
+.webfolderBttn span:hover{color: #FFF; background: #004896; border: 1px solid #004896;}

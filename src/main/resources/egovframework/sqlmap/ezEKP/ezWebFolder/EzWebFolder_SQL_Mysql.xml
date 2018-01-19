@@ -130,6 +130,29 @@
 			AND
 				TENANT_ID = #tenantId#	
 		]]>				
-    </select> 
+    </select>
     
+    <delete id="EzWebFolderDAO.deleteFileByFileId" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_FILE
+          	WHERE
+          		FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+   </delete>
+   
+   <update id="EzWebFolderDAO.updateFileUseStatus" parameterClass="Map">
+   	   	<![CDATA[
+				UPDATE 
+	            	TBL_WEBFOLDER_FILE
+	            SET 
+	            	USE_STATUS = "N"
+	            WHERE
+		          	FILE_ID = #fileId#
+				AND
+					TENANT_ID = #tenantId#
+		]]>
+   </update>   
 </sqlMap>

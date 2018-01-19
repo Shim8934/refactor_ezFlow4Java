@@ -1,13 +1,8 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-import java.io.BufferedInputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,28 +10,23 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -83,7 +73,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
-	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
         
@@ -92,7 +82,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/test.do")
-	public String webfolderTest(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+	public String webfolderTest(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
         
@@ -217,46 +207,118 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			fileList.add(new File(realPath + fileVO.getFilePath()));	
 		}
 		
-		ZipOutputStream zipOutputStream = null;
-		FileInputStream fileInputStream = null;
-		
-		try {
-			//Setting headers  
-		    response.setStatus(HttpServletResponse.SC_OK);
-		    response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");	
-		    zipOutputStream = new ZipOutputStream(response.getOutputStream());
-		    
-		    //Package files	    
-		    for (File file : fileList) {
-		        //New zip entry and copying inputstream with file to zipOutputStream, after all closing streams
-		        zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
-		        fileInputStream = new FileInputStream(file);
-	
-		        IOUtils.copy(fileInputStream, zipOutputStream);
-	
-		        fileInputStream.close();
-		        zipOutputStream.closeEntry();
-		    }    
-	
-		    zipOutputStream.close();
-		}
-		catch (Exception e) {
-			throw e;			
-		} 
-		finally {
-			if (fileInputStream != null) {
-				try { fileInputStream.close(); } catch (Exception e) {}
-			}
+		if (fileList.size() > 1) {
+			ZipOutputStream zipOutputStream = null;
+			FileInputStream fileInputStream = null;
 			
-			if (zipOutputStream != null) {
-				try { zipOutputStream.closeEntry(); } catch (Exception e) {}
-				try { zipOutputStream.close(); } catch (Exception e) {}
-			}			
+			try {
+				//Setting headers  
+			    response.setStatus(HttpServletResponse.SC_OK);
+			    response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");	
+			    zipOutputStream = new ZipOutputStream(response.getOutputStream());
+			    
+			    //Package files	    
+			    for (File file : fileList) {
+			        //New zip entry and copying inputstream with file to zipOutputStream, after all closing streams
+			        zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+			        fileInputStream = new FileInputStream(file);
+		
+			        IOUtils.copy(fileInputStream, zipOutputStream);
+		
+			        fileInputStream.close();
+			        zipOutputStream.closeEntry();
+			    }    
+		
+			    zipOutputStream.close();
+			}
+			catch (Exception e) {
+				throw e;			
+			} 
+			finally {
+				if (fileInputStream != null) {
+					try { fileInputStream.close(); } catch (Exception e) {}
+				}
+				
+				if (zipOutputStream != null) {
+					try { zipOutputStream.closeEntry(); } catch (Exception e) {}
+					try { zipOutputStream.close(); } catch (Exception e) {}
+				}			
+			}
+		}		
+		else if (fileList.size() == 1) {
+			String _fileName = fileList.get(0).getName();
+			String _filePath = fileList.get(0).getPath();
+			
+			downFile(request, response, _filePath, _fileName);
+		}
+		else {
+			logger.debug("downloadAttach fail!");
+			return;
 		}
 
 		logger.debug("Download attach finishes!");	
 	}
 	
+	@RequestMapping(value="/ezWebFolder/deleteConfirm.do")
+	public String deleteFileConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("Delete File Confirm is running!");		
+		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		
+		if (listFileId.equals("")) {
+			logger.debug("Delete File Confirm illegal arguments!");
+			return "cmm/error/egovError";
+		}
+		
+		model.addAttribute("fileList", listFileId);
+		logger.debug("Delete File Confirm finishes!");
+		
+		return "/ezWebFolder/fileDeleteTest";		
+	}
+	
+	@RequestMapping(value="/ezWebFolder/deleteFile.do", method = RequestMethod.POST)	
+	public void deleteFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("Delete File is running!");	
+		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";	
+		String[] fileIDList = listFileId.split(",");	
+		
+		if (fileIDList.length <= 0) {
+			logger.debug("Delete File illegal arguments!");
+			return ;
+		}
+		
+		logger.debug("Number of delete files: " + fileIDList.length);
+		
+		//Delete files in database
+		try {
+			for (int i = 0; i < fileIDList.length; i++) {
+				logger.debug("FileID: " + fileIDList[i] + " || TenantId: " + loginSimpleVO.getTenantId());
+				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+				ezWebFolderService.updateFileUseStatus(fileIDList[i], loginSimpleVO.getTenantId());
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("Delete File finishes!");		
+	}
+	
+	@RequestMapping(value="/ezWebFolder/fileRenameConfirm.do")
+	public String fileRenameConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("File Rename Confirm is running!");		
+		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		
+		if (fileId.equals("")) {
+			logger.debug("File Rename Confirm illegal arguments!");
+			return "cmm/error/egovError";
+		}
+		
+		model.addAttribute("fileList", fileId);
+		logger.debug("File Rename Confirm finishes!");
+		
+		return "/ezWebFolder/fileRenameTest";		
+	}
 	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";

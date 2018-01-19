@@ -62,4 +62,20 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		return ezWebFolderDAO.getFileTypeByFileExt(map);
 	}
 
+	@Override
+	public void deleteFileByFileId(String fileId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+		ezWebFolderDAO.deleteFileByFileId(map);	
+	}
+
+	@Override
+	public void updateFileUseStatus(String fileId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+		ezWebFolderDAO.updateFileUseStatus(map);	
+	}
+
 }

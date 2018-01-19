@@ -8,4 +8,6 @@ public interface EzWebFolderService {
 	void insertFile(FileVO fileVO) throws Exception;
 	FileVO getFileByFileId(String string, int tenantId) throws Exception;
 	FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception;
+	void deleteFileByFileId(String fileId, int tenantId) throws Exception;
+	void updateFileUseStatus(String fileId, int tenantId) throws Exception;
 }
