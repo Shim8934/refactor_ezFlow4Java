@@ -223,13 +223,15 @@ function SelectNodes(xmlDoc, elementPath) {
 function SelectSingleNode(node, tagName) {
     var objNode = null;
     if (CrossYN()) {
-        objNode = node.firstChild;
-        while (objNode) {
-            if (objNode.nodeType == 1 && objNode.tagName == tagName)
-                break;
-            else
-                objNode = objNode.nextSibling;
-        }
+    	if(node != null) {
+    		objNode = node.firstChild;
+            while (objNode) {
+                if (objNode.nodeType == 1 && objNode.tagName == tagName)
+                    break;
+                else
+                    objNode = objNode.nextSibling;
+            }
+    	}
     }
     else {
         if(node != null)
