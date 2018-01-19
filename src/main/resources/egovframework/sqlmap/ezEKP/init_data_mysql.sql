@@ -31,6 +31,8 @@ INSERT INTO `jmocha_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, '
 INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`,`WARN_STORAGE`) VALUES ('jtest.kaoni.com',1024,819.2);
 INSERT INTO `tbl_tenant` (`TENANT_ID`,`TENANT_NAME`,`TENANT_NAME2`) VALUES (0,'조직도','OrganizationChart');
 INSERT INTO `tbl_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, 'jtest.kaoni.com');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseShowEmailAddrOnPrint','YES','인쇄시 메일주소 출력 여부');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UseDefaultFoldersForLangOnly','NO','현재 언어에 해당하는 기본 폴더만 표시 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ExpirePassPeriod','0','비밀번호 만료 주기/0일때 사용안함');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ADJACENT_ITEMS_ENABLE','1',NULL);
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ApprovalFlag','S','전자결재 공공/일반 여부');

@@ -2067,6 +2067,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String orgUrl = "";
 		String cmd = "";
 		String mailCmd = "";
+		String orgMailCmd = "";
 		String eShowDisplayName = "";
 		String from = "";
 		String to = "";
@@ -2135,6 +2136,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("MAILCMD").item(0);
 			if (tempNode != null) {
 				mailCmd = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("ORGMAILCMD") != null) {
+			tempNode = root.getElementsByTagName("ORGMAILCMD").item(0);
+			if (tempNode != null) {
+				orgMailCmd = tempNode.getTextContent();
 			}
 		}
 		if (root.getElementsByTagName("AUTHOR") != null) {
@@ -3199,8 +3206,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							}
 			            }
 			            
+			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl);
+			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
-			            if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL") || mailCmd.equals("FORWARD")) {
+			            if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
 			    			int index = orgUrl.lastIndexOf("/");			
 			    			
 			    			if (index != -1) {
@@ -3214,13 +3223,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    				
 			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
 		    		        	
-			    		        if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL")) {
-			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-			    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-			    		        }
-			    		        else {
-			    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
-			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+			    		        if (orgMessage != null) {
+			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
+				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        }
+				    		        else {
+				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
+				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+				    		        }
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);
