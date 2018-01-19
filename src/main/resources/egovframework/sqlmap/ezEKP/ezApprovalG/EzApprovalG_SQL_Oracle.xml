@@ -20992,12 +20992,12 @@
       			CODE2
    		</isNotEqual>
    	</select>
-   	  	
-	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO">
+
+    	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO">
    		<isEqual property="v_LANGTYPE" compareValue="1">
    		<![CDATA[
    			SELECT 
-   				TASKNAME, KEEPINGPERIOD , tbl_taskcode.taskcode
+   				tbl_taskcode.TASKNAME, TBL_EXPENDAPRDOCINFO.taskcode , tbl_taskcode.taskcode
 			FROM 
 				TBl_ENDAPRDOCINFO
 			JOIN 
@@ -21037,7 +21037,7 @@
            AND
            		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
 		   GROUP BY 
-		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME
+		   		TBL_EXPENDAPRDOCINFO.taskcode, tbl_taskcode.TASKNAME, tbl_taskcode.taskcode
            ORDER BY 
            		TBL_EXPENDAPRDOCINFO.taskcode 
           ]]>
