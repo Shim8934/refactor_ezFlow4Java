@@ -3223,13 +3223,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    				
 			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
 		    		        	
-			    		        if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
-			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-			    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-			    		        }
-			    		        else {
-			    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
-			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+			    		        if (orgMessage != null) {
+			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
+				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        }
+				    		        else {
+				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
+				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+				    		        }
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);
