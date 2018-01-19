@@ -858,7 +858,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	UPPERITEMIDTREE NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -867,7 +867,7 @@
                       	ITEMID <>  #v_PREVIOUSITEMID# 
                       ORDER BY 
                       	PARENTWRITEDATE DESC,
-                        UPPERITEMIDTREE ASC,
+                        TO_CHAR(UPPERITEMIDTREE) ASC,
                         STARTDATE DESC )
                 WHERE ROWNUM <= 1
 			]]>
@@ -892,14 +892,14 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	UPPERITEMIDTREE NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
                       	ENDDATE > #nowDate#
                       ORDER BY 
                       	PARENTWRITEDATE DESC,
-                        UPPERITEMIDTREE ASC,
+                        TO_CHAR(UPPERITEMIDTREE) ASC,
                         STARTDATE DESC )
                 WHERE ROWNUM <= 1
 			]]>
@@ -2517,7 +2517,7 @@
        		WHERE  
        			tenant_id = #v_TENANTID#
        		AND
-       			UpperItemIDTree LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
+       			TO_CHAR(UpperItemIDTree) LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
             AND 
             	ItemID <> #v_pItemID#
 		]]>
@@ -3897,13 +3897,13 @@
             AND 
             	parentwritedate = #v_PPARENTWRITEDATE#
             AND 
-            	upperitemidtree LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+            	TO_CHAR(upperitemidtree) LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
             AND 
             	startdate <= #nowDate#
             AND 
             	enddate > #nowDate#
 	        ORDER BY 
-	        	upperitemidtree, 
+	        	TO_CHAR(upperitemidtree), 
 	        	startdate DESC
        	]]>
 	</select>
@@ -3930,7 +3930,7 @@
 	             	enddate > #nowDate#
 	        	 ORDER BY 
 	        	 	parentwritedate ASC,
-	                upperitemidtree ,
+	                TO_CHAR(upperitemidtree) ,
 	                startdate ASC 
 	             )
 	        WHERE 
@@ -3962,7 +3962,7 @@
 	             	parentwritedate DESC,
 	             	startdate DESC,
 	             	docno DESC,
-	             	upperitemidtree 
+	             	TO_CHAR(upperitemidtree) 
 	            )
 	        WHERE 
 	        	ROWNUM <= 20
@@ -3992,7 +3992,7 @@
         		  	 parentwritedate DESC,
                   	 startdate DESC,
                   	 docno DESC,
-                  	 upperitemidtree 
+                  	 TO_CHAR(upperitemidtree) 
                   )
         	WHERE 
         		ROWNUM <= 20
