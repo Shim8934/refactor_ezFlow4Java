@@ -20993,103 +20993,103 @@
    		</isNotEqual>
    	</select>
    	  	
-<!--    	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO"> 강민수1 -->
-<!--    		<isEqual property="v_LANGTYPE" compareValue="1"> -->
-<!--    		<![CDATA[ -->
-<!--    			SELECT  -->
-<!--    				TASKNAME, KEEPINGPERIOD , tbl_taskcode.taskcode -->
-<!-- 			FROM  -->
-<!-- 				TBl_ENDAPRDOCINFO -->
-<!-- 			JOIN  -->
-<!-- 				TBl_EXPENDAPRDOCINFO     -->
-<!-- 			ON  -->
-<!-- 				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID -->
-<!-- 			AND -->
-<!-- 				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID  -->
-<!-- 			AND -->
-<!-- 				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID   -->
-<!-- 			JOIN  -->
-<!-- 				tbl_taskcode             -->
-<!-- 			ON  -->
-<!-- 				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode  -->
-<!-- 			AND -->
-<!-- 				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID  -->
-<!-- 			AND -->
-<!-- 				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID  -->
-<!--  			AND  -->
-<!--  				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL ) -->
-<!--             AND  -->
-<!--             	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' ) -->
-<!-- 			AND  -->
-<!-- 				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT  -->
-<!-- 														tbL_Container.ContainerID  -->
-<!--                                                      FROM  -->
-<!--                                                      	tbL_Container  -->
-<!--                                                      WHERE   -->
-<!--                                                      	( tbL_Container.ContainerOwnDepID = #v_DEPTID# ) -->
+    	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO">
+   		<isEqual property="v_LANGTYPE" compareValue="1">
+   		<![CDATA[
+   			SELECT 
+   				tbl_taskcode.TASKNAME, TBL_EXPENDAPRDOCINFO.taskcode , tbl_taskcode.taskcode
+			FROM 
+				TBl_ENDAPRDOCINFO
+			JOIN 
+				TBl_EXPENDAPRDOCINFO    
+			ON 
+				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID
+			AND
+				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID 
+			AND
+				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID  
+			JOIN 
+				tbl_taskcode            
+			ON 
+				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode 
+			AND
+				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID 
+			AND
+				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID 
+ 			AND 
+ 				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL )
+            AND 
+            	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' )
+			AND 
+				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT 
+														tbL_Container.ContainerID 
+                                                     FROM 
+                                                     	tbL_Container 
+                                                     WHERE  
+                                                     	( tbL_Container.ContainerOwnDepID = #v_DEPTID# )
                                                     
-<!--                                                      AND -->
-<!--                                                      	tbL_Container.TENANT_ID = #v_TENANTID# -->
-<!--                                                      AND -->
-<!--                                                      	tbL_Container.COMPANYID = #companyID#)) -->
-<!--            AND -->
-<!--            		TBl_ENDAPRDOCINFO.TENANT_ID =#v_TENANTID# -->
-<!--            AND -->
-<!--            		TBl_ENDAPRDOCINFO.COMPANYID = #companyID# -->
-<!-- 		   GROUP BY  -->
-<!-- 		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME -->
-<!--            ORDER BY  -->
-<!--            		TBL_EXPENDAPRDOCINFO.taskcode  -->
-<!--           ]]> -->
-<!--    		</isEqual> -->
-<!--    	 	<isNotEqual property="v_LANGTYPE" compareValue="1"> -->
-<!--    	 	<![CDATA[ -->
-<!--    	 		SELECT  -->
-<!--    				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode -->
-<!-- 			FROM  -->
-<!-- 				TBl_ENDAPRDOCINFO -->
-<!-- 			JOIN  -->
-<!-- 				TBl_EXPENDAPRDOCINFO     -->
-<!-- 			ON  -->
-<!-- 				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID -->
-<!-- 			AND -->
-<!-- 				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID  -->
-<!-- 			AND -->
-<!-- 				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID   -->
-<!-- 			JOIN  -->
-<!-- 				tbl_taskcode             -->
-<!-- 			ON  -->
-<!-- 				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode  -->
-<!-- 			AND -->
-<!-- 				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID  -->
-<!-- 			AND -->
-<!-- 				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID   -->
-<!--  			AND  -->
-<!--  				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL ) -->
-<!--             AND  -->
-<!--             	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' ) -->
-<!-- 			AND  -->
-<!-- 				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT  -->
-<!-- 														tbL_Container.ContainerID  -->
-<!--                                                      FROM  -->
-<!--                                                      	tbL_Container  -->
-<!--                                                      WHERE   -->
-<!--                                                      	( tbL_Container.ContainerOwnDepID =  #v_DEPTID# ) -->
-<!--                                                      AND -->
-<!--                                                      	tbL_Container.TENANT_ID =  #v_TENANTID# -->
-<!--                                                      AND -->
-<!--                                                      	tbL_Container.COMPANYID =  #companyID#)) -->
-<!--            AND -->
-<!--            		TBl_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID# -->
-<!--            AND -->
-<!--            		TBl_ENDAPRDOCINFO.COMPANYID = #companyID# -->
-<!-- 		   GROUP BY  -->
-<!-- 		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME2 -->
-<!--            ORDER BY  -->
-<!--            		TBL_EXPENDAPRDOCINFO.taskcode  -->
-<!--            ]]>  -->
-<!--    	 	</isNotEqual> -->
-<!--    	</select> -->
+                                                     AND
+                                                     	tbL_Container.TENANT_ID = #v_TENANTID#
+                                                     AND
+                                                     	tbL_Container.COMPANYID = #companyID#))
+           AND
+           		TBl_ENDAPRDOCINFO.TENANT_ID =#v_TENANTID#
+           AND
+           		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
+		   GROUP BY 
+		   		TBL_EXPENDAPRDOCINFO.taskcode, tbl_taskcode.TASKNAME, tbl_taskcode.taskcode
+           ORDER BY 
+           		TBL_EXPENDAPRDOCINFO.taskcode 
+          ]]>
+   		</isEqual>
+   	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
+   	 	<![CDATA[
+   	 		SELECT 
+   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+			FROM 
+				TBl_ENDAPRDOCINFO
+			JOIN 
+				TBl_EXPENDAPRDOCINFO    
+			ON 
+				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID
+			AND
+				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID 
+			AND
+				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID  
+			JOIN 
+				tbl_taskcode            
+			ON 
+				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode 
+			AND
+				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID 
+			AND
+				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID  
+ 			AND 
+ 				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL )
+            AND 
+            	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' )
+			AND 
+				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT 
+														tbL_Container.ContainerID 
+                                                     FROM 
+                                                     	tbL_Container 
+                                                     WHERE  
+                                                     	( tbL_Container.ContainerOwnDepID =  #v_DEPTID# )
+                                                     AND
+                                                     	tbL_Container.TENANT_ID =  #v_TENANTID#
+                                                     AND
+                                                     	tbL_Container.COMPANYID =  #companyID#))
+           AND
+           		TBl_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+           AND
+           		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
+		   GROUP BY 
+		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME2
+           ORDER BY 
+           		TBL_EXPENDAPRDOCINFO.taskcode 
+           ]]> 
+   	 	</isNotEqual>
+   	</select>
    	    	
    	<select id="EzApprovalG.getUserContTree" parameterClass="Map" resultClass="ApprUserContInfoVO">
    	<![CDATA[
