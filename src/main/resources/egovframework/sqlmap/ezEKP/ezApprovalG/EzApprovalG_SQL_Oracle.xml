@@ -9849,8 +9849,7 @@
 				AND 
 					a.EXTENSIONATTRIBUTE1 like '%a=1%'
 				AND 
-					a.TENANT_ID = #v_TENANTID#
-			) as Z;	
+					a.TENANT_ID = #v_TENANTID#	
 		</select>
 	
 <!-- 	<procedure id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int"> -->
@@ -11499,7 +11498,7 @@
     					WHERE  Code = '4'), 
     					#v_CurSN#, 
     					1 ,
-    					v_TENANTID#,
+    					#v_TENANTID#,
     					#companyID#)
 	</insert>
 	
