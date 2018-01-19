@@ -20671,7 +20671,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID", companyID);
 		map.put("v_DEPTID", deptID);
-		
+		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"deptdi : "+deptID );
 		List<ApprGTaskVO> CodeContainerList = ezApprovalGDAO.getCodeContainer(map);
 		
 		return CodeContainerList;
