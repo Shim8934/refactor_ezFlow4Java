@@ -3,6 +3,7 @@
 
 <sqlMap namespace="ezWebFolder">
 	<typeAlias  alias="FileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
+	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
 	
 	<!-- File resultMap -->
     <resultMap id="fileVO" class="FileVO">
@@ -10,14 +11,26 @@
         <result property="fileName"         	column="file_name"              columnIndex="2"  />
         <result property="filePath"         	column="file_path"              columnIndex="3"  />
         <result property="fileSize"          	column="file_size"              columnIndex="4"  />
-        <result property="fileExt"           	column="file_ext"               columnIndex="5"	 />
-        <result property="fileFavourite"        column="file_favourite"         columnIndex="6"	 />
-        <result property="uploaderId"           column="uploader_id"            columnIndex="7"  />
-        <result property="uploaderName"         column="uploader_name"          columnIndex="8"  />
-        <result property="createdDate"          column="created_date"           columnIndex="9"	 />
-        <result property="updatedDate"          column="updated_date"           columnIndex="10" />
-        <result property="folderId"           	column="folder_id"              columnIndex="11" />
-        <result property="tenantId"         	column="tenant_id"              columnIndex="12" />
+        <result property="typeId"          		column="type_id"                columnIndex="5"  />
+        <result property="downloadCnt"          column="down_count"             columnIndex="6"  />
+        <result property="fileExt"           	column="file_ext"               columnIndex="7"	 />
+        <result property="folderId"           	column="folder_id"              columnIndex="8"  />
+        <result property="useStatus"        	column="use_status"         	columnIndex="9"	 />
+        <result property="createId"             column="create_id"            	columnIndex="10" />
+        <result property="createName"           column="create_name"          	columnIndex="11" />
+        <result property="createDate"           column="create_date"            columnIndex="12" />
+        <result property="updateId"             column="update_id"              columnIndex="13" />
+        <result property="updateDate"           column="update_date"            columnIndex="14" />        
+        <result property="tenantId"         	column="tenant_id"              columnIndex="15" />
+    </resultMap>
+    
+    <!-- FileType resultMap -->
+    <resultMap id="fileTypeVO" class="FileTypeVO">
+        <result property="typeId"               column="TYPE_ID"                columnIndex="1" />              
+        <result property="typeName"         	column="TYPE_NAME"              columnIndex="2" />
+        <result property="fileExt"         	    column="FILE_EXT"               columnIndex="3" />
+        <result property="typeIcon"          	column="TYPE_ICON"              columnIndex="4" />
+        <result property="tenantId"          	column="TENANT_ID"              columnIndex="5" />
     </resultMap>
     
     <insert id="EzWebFolderDAO.insertFile" parameterClass="Map">      	
@@ -43,14 +56,14 @@
 		<isEqual property="v_temp" compareValue="1">     
         	<![CDATA[
 	            INSERT INTO TBL_WEBFOLDER_FILE (
-	                FILE_ID,        	FILE_NAME,         FILE_PATH,        	FILE_SIZE,          FILE_EXT,
-	                FILE_FAVOURITE,     UPLOADER_ID,       UPLOADER_NAME,       CREATED_DATE,       UPDATED_DATE,        
-	                FOLDER_ID,			TENANT_ID
+	                FILE_ID,        	FILE_NAME,         FILE_PATH,        	FILE_SIZE,          TYPE_ID,
+	                DOWN_COUNT,			FILE_EXT,		   FOLDER_ID,			USE_STATUS,			CREATE_ID,       
+	                CREATE_NAME,        CREATE_DATE,       UPDATE_ID,			UPDATE_DATE,        TENANT_ID
 	            )
 	            VALUES(
-	                #fileId#,          	#fileName#,        #filePath#,          #fileSize#,         #fileExt#,
-	                #fileFavourite#,    #uploaderId#,      #uploaderName#,      #createdDate#,      #updatedDate#,
-	                #folderId#,		    #tenantId#
+	                #fileId#,          	#fileName#,        #filePath#,          #fileSize#,         #typeId#, 
+	                #downloadCnt#,		#fileExt#,		   #folderId#,			#useStatus#,		#createId#,
+	                #createName#,       #createDate#,      #updateId#,      	#updateDate#,       #tenantId#
             )
         	]]>
         </isEqual>
@@ -63,13 +76,16 @@
 	            	 FILE_NAME 		= #fileName#,
 	            	 FILE_PATH		= #filePath#,
 	            	 FILE_SIZE		= #fileSize#,
+	            	 TYPE_ID		= #typeId#,
+	            	 DOWN_COUNT		= #downloadCnt#,
 	            	 FILE_EXT		= #fileExt#, 
-	            	 FILE_FAVOURITE = #fileFavourite#, 
-	            	 UPLOADER_ID	= #uploaderId#,  
-	            	 UPLOADER_NAME	= #uploaderName#,
-	            	 CREATED_DATE	= #createdDate#,
-	            	 UPDATED_DATE	= #updatedDate#,
 	            	 FOLDER_ID		= #folderId#,
+	            	 USE_STATUS 	= #useStatus#, 
+	            	 CREATE_ID		= #createId#,  
+	            	 CREATE_NAME	= #createName#,
+	            	 CREATE_DATE	= #createDate#,
+	            	 UPDATE_ID		= #updateId#,
+	            	 UPDATE_DATE	= #updateDate#,	            	 
 	            	 TENANT_ID		= #tenantId#
 	            WHERE
 	            		FILE_ID		= #fileId#
@@ -90,18 +106,18 @@
 		]]>		
     </select>  
     
-    <select id="EzWebFolderDAO.getFileIconFromExt" resultClass="String">             
+    <select id="EzWebFolderDAO.getFileTypeByFileExt" resultMap="fileTypeVO">     
 		<![CDATA[
 			SELECT 
-				FILE_ICON
-			FROM 
-				TBL_WEBFOLDER_FILEICON
+				*
+			FROM
+				tbl_webfolder_filetype
 			WHERE
-				FILE_EXT  = #extension#
+				FILE_EXT = #extension#
 			AND
-				TENANT_ID = #tenantId#				
+				TENANT_ID = #tenantId#
 		]]>		
-    </select>  
+    </select>
     
     <select id="EzWebFolderDAO.getFileByFileId" resultMap="fileVO">   
 		<![CDATA[

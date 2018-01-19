@@ -134,7 +134,7 @@
 				<td>Nghinlemotdem.pdf</td>
 				<td>75MB</td>
 				<td>응웬바오</td>
-				<td>2018/01/15</td>
+				<td>2018-01-15</td>
 				<td>일반</td>		
 			</tr>
 		</table>

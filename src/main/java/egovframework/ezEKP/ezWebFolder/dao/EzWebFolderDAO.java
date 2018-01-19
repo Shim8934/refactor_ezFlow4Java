@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -17,11 +18,11 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		insert("EzWebFolderDAO.insertFile", map);
 	}
 
-	public String getFileIconFromExt(Map<String, Object> map) {		
-		return (String)select("EzWebFolderDAO.getFileIconFromExt", map);
-	}
-
 	public FileVO getFileByFileId(Map<String, Object> map) {		
 		return (FileVO)select("EzWebFolderDAO.getFileByFileId", map);
+	}
+
+	public FileTypeVO getFileTypeByFileExt(Map<String, Object> map) {
+		return (FileTypeVO)select("EzWebFolderDAO.getFileTypeByFileExt", map);
 	}
 }

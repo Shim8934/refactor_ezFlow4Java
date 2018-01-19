@@ -1,8 +1,12 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,12 +23,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +41,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -101,7 +108,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
 		String folderId = request.getParameter("folderId"); //baonk 2018/01/16
 		int cnt = multiFile.size();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String realPath = request.getServletContext().getRealPath("");
 		String[] pFileName = new String[cnt];
         Long[] fileSize = new Long[cnt];
@@ -137,34 +144,38 @@ public class EzWebFolderController extends EgovFileMngUtil {
         
         for (int i = 0; i < cnt; i++) {        	
         	fileSize[i] = multiFile.get(i).getSize();
-            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);           
+            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
             
             if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {   	
             	try {
             		writeUploadedFile(multiFile.get(i), pFileName[i], pDirPath);
-            		//Save to database
-            		String iconUrl = ezWebFolderService.getFileIconFromExt(extend, user.getTenantId());
+            		//Save to database           		
+            		FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(extend, user.getTenantId());
             		Date date = new Date();
             		FileVO fileVO = new FileVO();
             		
-            		fileVO.setCreatedDate(formatter.format(date));
-            		fileVO.setUpdatedDate(fileVO.getCreatedDate());
+            		fileVO.setCreateDate(formatter.format(date));
+            		fileVO.setUpdateDate(fileVO.getCreateDate());
             		fileVO.setFileExt(extend);
             		fileVO.setFileName(pFileName[i]);
-            		fileVO.setFileFavourite("0");
+            		fileVO.setDownloadCnt(0);
             		fileVO.setFilePath(getWebFolderDirPath(user.getTenantId()) + pFileName[i]);
             		fileVO.setFileSize(getFileSize(fileSize[i]));
             		fileVO.setFolderId(folderId);
             		fileVO.setTenantId(user.getTenantId());
-            		fileVO.setUploaderId(user.getId());          		            		
-            		fileVO.setFileIconUrl(iconUrl);
+            		fileVO.setCreateId(user.getId());    
+            		fileVO.setUpdateId(user.getId());
+            		fileVO.setFileIconUrl(fileType.getTypeIcon());
             		fileVO.setFileShareStatus("0");
+            		fileVO.setUseStatus("Y");
+            		fileVO.setTypeId(fileType.getTypeId());
+            		fileVO.setFavouriteStatus("0");
             		
             		if (user.getPrimary().equals("1")) {
-            			fileVO.setUploaderName(user.getDisplayName1());
+            			fileVO.setCreateName(user.getDisplayName1());            			
             		}
             		else {
-            			fileVO.setUploaderName(user.getDisplayName2());
+            			fileVO.setCreateName(user.getDisplayName2());
             		}
             		
             		fileVO.setFileId(getMaxFileID(user.getTenantId()));
@@ -183,97 +194,66 @@ public class EzWebFolderController extends EgovFileMngUtil {
         return om.writeValueAsString(list);
     }
 	
-	@RequestMapping(value="/ezWebFolder/downloadAttach.do")
+	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Download attach is running!");	
 		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
-		String listFileId = request.getParameter("fileList");
-		
-		logger.debug("FileList: " + listFileId);
-		
+		String listFileId = request.getParameter("fileList");	
 		String[] fileIDList = listFileId.split(",");	
 		List<File> fileList = new ArrayList<File>();
-	
-		logger.debug("FileList length: " + fileIDList.length);
 		
 		if (fileIDList.length <= 0) {
 			logger.debug("downloadAttach illegal arguments!");
 			return;
-		}
-				
-        //Get absolute path of the application       
-        String realPath = request.getServletContext().getRealPath("");
-		
-		for (int i = 0; i < fileIDList.length; i++) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-			File f = new File(realPath + fileVO.getFilePath());
-			fileList.add(f);			
-		}
-		
-		String guid = UUID.randomUUID().toString();
-		String tempFileUploadPath = realPath + getWebFolderDirPath(loginSimpleVO.getTenantId()) + commonUtil.separator + "tempFileUpload";
-		
-		File tempF = new File(tempFileUploadPath);
-		if (!tempF.exists()) {
-			tempF.mkdirs();
-		}
-		
-		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
-		
-		ZipOutputStream zos = null;
-		FileInputStream fis = null;
-		
-		try {
-			
-			File tempFile = new File(pDirTempPath + ".zip");
-			if (tempFile.exists()) {
-				tempFile.delete();
-			}
-			
-			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("UTF-8"));
-			
-			for (File file : fileList) {
-				if (!file.isDirectory()) {
-					fis = new FileInputStream(file);
-					
-					//String zipFilePath = file.getPath().substring(dirPath.length() + 1, file.getPath().length());
-					String zipFilePath = file.getName();			
-					ZipEntry zipEntry = new ZipEntry(zipFilePath);
-					zos.putNextEntry(zipEntry);
-
-					byte[] bytes = new byte[BUFF_SIZE];
-					int length;
-					
-					while ((length = fis.read(bytes)) >= 0) {
-						zos.write(bytes, 0, length);
-					}
-
-					zos.closeEntry();
-					fis.close();
-				}
-			}
-			
-			fis = null;
-			
-			zos.close();
-			zos = null;
-		} catch (Exception e) {
-			throw e;
-			
-		} finally {
-			if (fis != null) {
-				try { fis.close(); } catch (Exception e) {}
-			}
-			
-			if (zos != null) {
-				try { zos.closeEntry(); } catch (Exception e) {}
-				try { zos.close(); } catch (Exception e) {}
-			}
-			
 		}		
 		
-		downFile(request, response, pDirTempPath + ".zip", guid + ".zip");	
+        //Get absolute path of the application       
+        String realPath = request.getServletContext().getRealPath("");
+        String guid = UUID.randomUUID().toString();
+        String fileName = guid + ".zip";
 		
+		for (int i = 0; i < fileIDList.length; i++) {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());			
+			fileList.add(new File(realPath + fileVO.getFilePath()));	
+		}
+		
+		ZipOutputStream zipOutputStream = null;
+		FileInputStream fileInputStream = null;
+		
+		try {
+			//Setting headers  
+		    response.setStatus(HttpServletResponse.SC_OK);
+		    response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");	
+		    zipOutputStream = new ZipOutputStream(response.getOutputStream());
+		    
+		    //Package files	    
+		    for (File file : fileList) {
+		        //New zip entry and copying inputstream with file to zipOutputStream, after all closing streams
+		        zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+		        fileInputStream = new FileInputStream(file);
+	
+		        IOUtils.copy(fileInputStream, zipOutputStream);
+	
+		        fileInputStream.close();
+		        zipOutputStream.closeEntry();
+		    }    
+	
+		    zipOutputStream.close();
+		}
+		catch (Exception e) {
+			throw e;			
+		} 
+		finally {
+			if (fileInputStream != null) {
+				try { fileInputStream.close(); } catch (Exception e) {}
+			}
+			
+			if (zipOutputStream != null) {
+				try { zipOutputStream.closeEntry(); } catch (Exception e) {}
+				try { zipOutputStream.close(); } catch (Exception e) {}
+			}			
+		}
+
 		logger.debug("Download attach finishes!");	
 	}
 	

@@ -1,10 +1,11 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
+import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
 	void insertFile(FileVO fileVO) throws Exception;
-	String getFileIconFromExt(String ext, int tenantId) throws Exception;
 	FileVO getFileByFileId(String string, int tenantId) throws Exception;
+	FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception;
 }

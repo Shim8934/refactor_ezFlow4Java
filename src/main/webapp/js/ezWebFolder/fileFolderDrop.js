@@ -177,7 +177,7 @@ function renderResult(result) {
 			var faImgElmt = document.createElement("IMG");
 			faImgElmt.setAttribute("class", "webFolderImg");
 			
-			if (jsObj["fileFavourite"] == "0") {
+			if (jsObj["favouriteStatus"] == "0") {
 				faImgElmt.src = "/images/webfolder/favourite.png";
 			}
 			else {
@@ -192,8 +192,8 @@ function renderResult(result) {
 			objTd3.appendChild(fileIconElmt);
 			objTd4.textContent = jsObj["fileName"];
 			objTd5.textContent = jsObj["fileSize"];
-			objTd6.textContent = jsObj["uploaderName"];
-			objTd7.textContent = jsObj["createdDate"];
+			objTd6.textContent = jsObj["createName"];
+			objTd7.textContent = jsObj["createDate"].substring(0, 10);
 			
 			if (jsObj["fileShareStatus"] == "0") {
 				objTd8.textContent = strShared2;
