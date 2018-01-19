@@ -167,5 +167,19 @@
 				AND
 					TENANT_ID = #tenantId#
 		]]>
-   </update>   
+   </update>
+   
+   <update id="EzWebFolderDAO.moveFile" parameterClass="Map">
+   	   	<![CDATA[
+				UPDATE 
+	            	TBL_WEBFOLDER_FILE
+	            SET 
+	            	FOLDER_ID = #folderId#
+	            WHERE
+		          	FILE_ID = #fileId#
+				AND
+					TENANT_ID = #tenantId#
+		]]>
+   </update>
+   
 </sqlMap>

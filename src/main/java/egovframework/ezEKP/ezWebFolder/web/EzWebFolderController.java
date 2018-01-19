@@ -335,8 +335,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			return;
 		}
 		
-		//Pattern special = Pattern.compile("[\"\\?*:/\\\\<>]");
-		
 		//Update file in database
 		try {
 			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, loginSimpleVO.getTenantId());
@@ -348,6 +346,54 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("Rename File finishes!");		
+	}
+	
+	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do")
+	public String fileMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("File Move Confirm is running!");		
+		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		
+		if (fileId.equals("")) {
+			logger.debug("File Move Confirm illegal arguments!");
+			return "cmm/error/egovError";
+		}
+		
+		model.addAttribute("fileId", fileId);
+		logger.debug("File Move Confirm finishes!");
+		
+		return "/ezWebFolder/fileMoveTest";		
+	}
+	
+	@RequestMapping(value="/ezWebFolder/moveFile.do", method = RequestMethod.POST)	
+	public void moveFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("Move File is running!");	
+		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String fileId 	= request.getParameter("fileId")   != null ? request.getParameter("fileId")   : "";
+		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
+		String mode 	= request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
+		
+		if (fileId.equals("") || folderId.equals("") || mode.equals("")) {
+			logger.debug("Move File illegal arguments!");
+			return;
+		}
+		
+		//Update file in database
+		try {
+			if (mode.equals("move")) {
+				ezWebFolderService.moveFile(fileId, folderId, loginSimpleVO.getTenantId());
+			}
+			else {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, loginSimpleVO.getTenantId());
+				fileVO.setFolderId(folderId);				
+				fileVO.setFileId(getMaxFileID(loginSimpleVO.getTenantId()));
+				ezWebFolderService.insertFile(fileVO);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("Move File finishes!");		
 	}
 	
 	

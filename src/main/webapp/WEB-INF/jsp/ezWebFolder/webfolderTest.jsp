@@ -75,7 +75,19 @@
        }
        
        function fileMove() {
+    	   if (checkedArr.length <= 0) {
+    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
+    		   return;
+    	   }
     	   
+    	   if (checkedArr.length > 1) {
+    		   alert("<spring:message code = 'ezWebFolder.t115'/>");
+    		   return;
+    	   }
+    	   
+	       var fileId = checkedArr[0];
+    	   
+    	   DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
        }
        
        function getChecked(obj) {
