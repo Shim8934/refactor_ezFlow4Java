@@ -191,6 +191,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String listFileId = request.getParameter("fileList");	
 		String[] fileIDList = listFileId.split(",");	
 		List<File> fileList = new ArrayList<File>();
+		List<String> fileOrgNameList = new ArrayList<String>();
 		
 		if (fileIDList.length <= 0) {
 			logger.debug("downloadAttach illegal arguments!");
@@ -200,14 +201,15 @@ public class EzWebFolderController extends EgovFileMngUtil {
         //Get absolute path of the application       
         String realPath = request.getServletContext().getRealPath("");
         String guid = UUID.randomUUID().toString();
-        String fileName = guid + ".zip";
+        String fileName = guid + ".zip";	
 		
-		for (int i = 0; i < fileIDList.length; i++) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());			
-			fileList.add(new File(realPath + fileVO.getFilePath()));	
-		}
-		
-		if (fileList.size() > 1) {
+		if (fileIDList.length > 1) {			
+			for (int i = 0; i < fileIDList.length; i++) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());			
+				fileList.add(new File(realPath + fileVO.getFilePath()));
+				fileOrgNameList.add(fileVO.getFileName());
+			}
+			
 			ZipOutputStream zipOutputStream = null;
 			FileInputStream fileInputStream = null;
 			
@@ -217,17 +219,17 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			    response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");	
 			    zipOutputStream = new ZipOutputStream(response.getOutputStream());
 			    
-			    //Package files	    
-			    for (File file : fileList) {
-			        //New zip entry and copying inputstream with file to zipOutputStream, after all closing streams
-			        zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
-			        fileInputStream = new FileInputStream(file);
+			    //Package files
+			    for (int i = 0; i < fileList.size(); i++) {
+			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
+			        zipOutputStream.putNextEntry(new ZipEntry(fileOrgNameList.get(i)));
+			        fileInputStream = new FileInputStream(fileList.get(i));
 		
 			        IOUtils.copy(fileInputStream, zipOutputStream);
 		
 			        fileInputStream.close();
 			        zipOutputStream.closeEntry();
-			    }    
+			    }
 		
 			    zipOutputStream.close();
 			}
@@ -245,15 +247,12 @@ public class EzWebFolderController extends EgovFileMngUtil {
 				}			
 			}
 		}		
-		else if (fileList.size() == 1) {
-			String _fileName = fileList.get(0).getName();
-			String _filePath = fileList.get(0).getPath();
+		else if (fileIDList.length == 1) {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], loginSimpleVO.getTenantId());			
+			String _fileName = fileVO.getFileName();
+			String _filePath = realPath + fileVO.getFilePath();
 			
 			downFile(request, response, _filePath, _fileName);
-		}
-		else {
-			logger.debug("downloadAttach fail!");
-			return;
 		}
 
 		logger.debug("Download attach finishes!");	
