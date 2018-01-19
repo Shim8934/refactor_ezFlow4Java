@@ -278,6 +278,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             insertDBData_companyForLocal(map);
         // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
         } catch (Exception e) {
+        	logger.debug("insertDBData_company insert fail");
             e.printStackTrace();
             
             map.put("v_CLASS", "group");
