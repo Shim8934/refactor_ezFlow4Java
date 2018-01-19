@@ -298,12 +298,14 @@ var strLangLHM18 = "/blank_us.htm";
 var strLangLHM19 = "보안메일을 삭제하시면 수신자도 보안메일의 열람이 불가능합니다.\n그래도 삭제하시겠습니까?";
 var strLangLHM20 = "보안메일을 이동하시면 보안메일의 열람과 보안정보 확인이 불가능합니다.\n그래도 이동하시겠습니까?";
 var strLangKMS01 = "";
-var strLangKMS02 = "The total size of the attached files is ";
-var strLangKMS03 = "There is no mail.";
-var strLangKMS04 = "Individual sending can't be used because the number of recipients is larger than "; 
-var strLangKMS05 = " Would you like to send the mail without using individual sending?";
-var strLangKMS06 = "보안메일을 삭제하시면 수신자도 보안메일의 열람이 불가능합니다.\n그래도 삭제하시겠습니까?";
-var strLangKMS07 = "보안메일을 이동하시면 보안메일의 열람과 보안정보 확인이 불가능합니다.\n그래도 이동하시겠습니까?";
+var strLangKMS02 = "첨부파일 총 크기가 ";
+var strLangKMS03 = "No mail.";
+var strLangKMS04 = "수신자가 "; 
+var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다.\n개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
+var strLangKMS06 = "There was an error attempting to upload the file.";
+var strLangKMS07 = "The upload has been canceled by the user or the browser dropped the connection.";
+var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
+
 
 function GetLocalTime(Offset , pDateTime)
 {
