@@ -13,7 +13,8 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>	
     <script type="text/javascript">
-    	var fileList = "<c:out value="${fileList}" />";
+    	var fileId = "<c:out value="${fileId}" />";
+    	
 		function wClose() {
 	        parent.DivPopUpHidden();               
 	        window.close();
@@ -25,21 +26,33 @@
 	        window.close();
 		}
 		
-		function ok_Click() {
+		function isValid(str){
+		    var regex = /[*:"\\|<>\/?]/g;
+			return regex.test(str);
+		}
+		
+		function ok_Click() {			
+			var newName = document.getElementById("nameInput").value;
+			
+			if (isValid(newName) == true) {
+				alert("Please enter valid name!");
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
-				url: "/ezWebFolder/deleteFile.do",
+				url: "/ezWebFolder/renameFile.do",
 				data: {
-					"fileList" : fileList
+					"fileId"  : fileId,
+					"newName" : newName
 				},
 				dataType: "text",
 				async: true,
-				success : function(data, textStatus, jqXHR) {
-					alert("<spring:message code='ezWebFolder.t113' />");
+				success : function(data, textStatus, jqXHR) {					
 					afterDeleteSuccess();
 				},
  				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code='ezWebFolder.t114' />" + jqXHR.status + ", " + textStatus);
+					alert("Error: " + jqXHR.status + ", " + textStatus);
 				}
 			});
 		}
@@ -58,7 +71,7 @@
     <div style="margin: 10px;">
     	<div style="text-align: center;"><spring:message code='ezWebFolder.t119' /></div>
     	<div style="height: 40px; line-height: 40px; margin-top: 5px;">
-    		<input type="text" placeholder="파일의 명을 입력해주세요." style="margin-left: 15px; margin-right: 15px; width: 380px; height: 35px; line-height: 35px; font-size: 14px; padding: 0px 10px; border-radius: 5px; border: 1px solid #666666;">
+    		<input id="nameInput" type="text" placeholder="파일의 명을 입력해주세요." style="margin-left: 15px; margin-right: 15px; width: 380px; height: 35px; line-height: 35px; font-size: 14px; padding: 0px 10px; border-radius: 5px; border: 1px solid #666666;">
     	</div>
     </div>
 

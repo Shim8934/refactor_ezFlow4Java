@@ -10,4 +10,5 @@ public interface EzWebFolderService {
 	FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception;
 	void deleteFileByFileId(String fileId, int tenantId) throws Exception;
 	void updateFileUseStatus(String fileId, int tenantId) throws Exception;
+	void updateFileName(String fileId, String newName, int tenantId) throws Exception;
 }

@@ -78,4 +78,13 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		ezWebFolderDAO.updateFileUseStatus(map);	
 	}
 
+	@Override
+	public void updateFileName(String fileId, String newName, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);
+		map.put("name", newName);
+		map.put("tenantId", tenantId);
+		ezWebFolderDAO.updateFileName(map);		
+	}
+
 }

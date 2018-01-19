@@ -8,13 +8,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -290,8 +295,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		//Delete files in database
 		try {
-			for (int i = 0; i < fileIDList.length; i++) {
-				logger.debug("FileID: " + fileIDList[i] + " || TenantId: " + loginSimpleVO.getTenantId());
+			for (int i = 0; i < fileIDList.length; i++) {				
 				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
 				ezWebFolderService.updateFileUseStatus(fileIDList[i], loginSimpleVO.getTenantId());
 			}
@@ -313,11 +317,40 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			return "cmm/error/egovError";
 		}
 		
-		model.addAttribute("fileList", fileId);
+		model.addAttribute("fileId", fileId);
 		logger.debug("File Rename Confirm finishes!");
 		
 		return "/ezWebFolder/fileRenameTest";		
 	}
+	
+	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)	
+	public void renameFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("Rename File is running!");	
+		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		String newName = request.getParameter("newName") != null ? request.getParameter("newName") : "";
+		
+		if (fileId.equals("")) {
+			logger.debug("File Rename Confirm illegal arguments!");
+			return;
+		}
+		
+		//Pattern special = Pattern.compile("[\"\\?*:/\\\\<>]");
+		
+		//Update file in database
+		try {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, loginSimpleVO.getTenantId());
+			String fileExt = fileVO.getFileExt();
+			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, loginSimpleVO.getTenantId());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("Rename File finishes!");		
+	}
+	
+	
 	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
