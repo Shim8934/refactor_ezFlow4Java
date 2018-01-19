@@ -57,7 +57,7 @@
 					    var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
 					    if (entry.isFile) {
 					    } else if (entry.isDirectory) {
-					    	alert(strLangKMS08)
+					    	alert(strLangKMS08);
 					      return;
 					    }
 					  }
