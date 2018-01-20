@@ -713,7 +713,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
-		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());		
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -724,6 +729,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 				
 		logger.debug("userInfo ended");
 		

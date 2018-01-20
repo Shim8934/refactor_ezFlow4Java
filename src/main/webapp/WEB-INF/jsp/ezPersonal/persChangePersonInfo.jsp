@@ -364,12 +364,18 @@
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
             		<td colspan="3">
                 		<c:if test="${primaryLang == '1'}">
-                			<input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
-                			<a class="imgbtn"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
+                			<c:if test="${useZipCodeSearch == 'YES'}">
+                				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
+                				<a class="imgbtn"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
+                			</c:if>
+                			<c:if test="${useZipCodeSearch == 'NO'}">
+                				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}">
+                				<span><spring:message code='ezPersonal.t181'/></span>
+                			</c:if>
                 		</c:if>
                 		<c:if test="${primaryLang != '1'}">
                 			<input type="text" id="txtZipcode" size="10" value="${txtZipCode}">
-                				<span><spring:message code='ezPersonal.t181'/></span>
+                			<span><spring:message code='ezPersonal.t181'/></span>
                 		</c:if>
             		</td> 
         		</tr> 
