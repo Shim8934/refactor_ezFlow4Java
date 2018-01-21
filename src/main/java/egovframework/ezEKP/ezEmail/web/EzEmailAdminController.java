@@ -441,6 +441,8 @@ public class EzEmailAdminController {
 
 				String resultCode = (String) responseObj.get("resultCode");
 
+//				String resultCode = (String)responseObj.get("resultCode");
+//				
 				if (resultCode.equalsIgnoreCase("OK")) {
 					resultArray = (JSONArray) responseObj.get("result");
 				}
@@ -578,10 +580,10 @@ public class EzEmailAdminController {
 
 			logger.debug("inputParams=" + inputParams);
 
-			String requestURL = config.getProperty("config.JGwServerURL")
-					+ "/jMochaAccess/deleteDistribution";
-			String response = ezEmailUtil.getWebServiceResult(requestURL,
-					inputParams);
+//			String requestURL = config.getProperty("config.JGwServerURL")
+//					+ "/jMochaAccess/deleteDistribution";
+//			String response = ezEmailUtil.getWebServiceResult(requestURL,
+//					inputParams);
 
 			logger.debug("response=" + response);
 

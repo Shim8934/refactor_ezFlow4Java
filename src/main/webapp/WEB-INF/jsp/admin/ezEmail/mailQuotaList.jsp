@@ -256,19 +256,19 @@
 				    						html += "	<td>" + i[4] 			+ "</td>"; //총용량
 				    						if (result >= 90){				    							
 				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_red' style='width:"+result+"%'></div></div></td>";
+				    							html += "	<td><div id='myProgress'><div id='myBar_red' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
 				    						
 				    						} else if (result >= 70){ 
 				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_orange' style='width:"+result+"%'></div></div></td>";
+				    							html += "	<td><div id='myProgress'><div id='myBar_orange' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
 				    						
 				    						} else if (result >= 60){
 				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_yellow' style='width:"+result+"%'></div></div></td>";
+				    							html += "	<td><div id='myProgress'><div id='myBar_yellow' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
 				    						
 				    						} else {
 				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_green' style='width:"+result+"%'></div></div></td>";
+				    							html += "	<td><div id='myProgress'><div id='myBar_green' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
 		   									
 				    						}
 				    						html += "<td><a class='imgbtn'><span onClick=mod_quota('"+i[0]+"')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
@@ -323,10 +323,18 @@
 <!-- 	용량상태 Progress Bar -->
 		<style type="text/css" >
 			#myProgress {
-			  width: 80%;
+			  width: 82%;
 			  height:10px;
+			  float:left;
 			  background-color: #ddd;
 			  overflow:hidden;
+			}
+			#percentage {
+			  width: 15%;
+			  float:right;
+			  margin-left:2px;
+			  color: #828282;
+			  font-weight:bold;
 			}
 			#myBar_red{
 			  height: 10px;
