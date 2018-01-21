@@ -323,14 +323,14 @@
 <!-- 	용량상태 Progress Bar -->
 		<style type="text/css" >
 			#myProgress {
-			  width: 82%;
+			  width: 78%;
 			  height:10px;
 			  float:left;
 			  background-color: #ddd;
 			  overflow:hidden;
 			}
 			#percentage {
-			  width: 15%;
+			  width: 18%;
 			  float:right;
 			  margin-left:2px;
 			  color: #828282;
