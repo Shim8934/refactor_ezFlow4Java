@@ -249,11 +249,11 @@
 		   								var progress = Number(res1/res2)*100;
 		   								var result = Math.floor(progress);
 				    						html += "<tr>";
-				    						html += "   <td>" + j					+ "</td>";
+				    						html += "   <td>" + j						   + "</td>";
 				    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
-				    						html += "	<td>" + i[2] 			+ "</td>";
-				    						html += "	<td>" + i[3] 			+ "</td>"; //사용량
-				    						html += "	<td>" + i[4] 			+ "</td>"; //총용량
+				    						html += "	<td>" 		  + i[2] 			   + "</td>";
+				    						html += "	<td>"         + i[3] 			   + "</td>"; //사용량
+				    						html += "	<td>"         + i[4] 			   + "</td>"; //총용량 
 				    						if (result >= 90){				    							
 				    							
 				    							html += "	<td><div id='myProgress'><div id='myBar_red' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
@@ -389,10 +389,10 @@
 			<thead style="">
 				<tr>
 					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1068"></spring:message></th>
-					<th><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1022"></spring:message>(MB)</th>
-					<th><spring:message code="ezStatistics.t1024"></spring:message>(MB)</th>
+					<th width="15%;"><spring:message code="ezStatistics.t1068"></spring:message></th>
+					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
+					<th width="15%;"><spring:message code="ezStatistics.t1022"></spring:message>(MB)</th>
+					<th width="15%;"><spring:message code="ezStatistics.t1024"></spring:message>(MB)</th>
 					<th><spring:message code="main.t00011"></spring:message></th>
 					<th><spring:message code="ezOrgan.t92"></spring:message></th>
 				</tr>
