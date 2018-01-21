@@ -777,7 +777,6 @@ public class EzEmailAdminController {
 	public String statisticsList_view(@CookieValue("loginCookie")String loginCookie) throws Exception {
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
@@ -786,23 +785,16 @@ public class EzEmailAdminController {
 	}
 
 	@RequestMapping(value = "/admin/ezEmail/statistics_userList.do")
-	public String statisticsList(
-			@CookieValue("loginCookie") String loginCookie, Model model,
-			HttpServletRequest req,
-			@RequestParam(required = false) String searchKeycode,
-			@RequestParam(required = false) String searchKeyword)
-			throws Exception {
+	public String statisticsList( @CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,@RequestParam(required = false) String searchKeycode, @RequestParam(required = false) String searchKeyword) throws Exception {
 
 		logger.debug("started statisticsList controller.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
 		String currPage = req.getParameter("pageNum");
-
 		if (currPage == null || currPage.equals("")) {
 			currPage = "1";
 		}
@@ -815,8 +807,7 @@ public class EzEmailAdminController {
 			startRow = -1;
 		}
 
-		int itemCnt = ezEmailService.getMailUserCount(userInfo.getTenantId(),
-				searchKeycode, searchKeyword);
+		int itemCnt = ezEmailService.getMailUserCount(userInfo.getTenantId(),searchKeycode, searchKeyword);
 
 		int totalPage = itemCnt / maxItemPerPage;
 
@@ -824,8 +815,7 @@ public class EzEmailAdminController {
 			totalPage = 1;
 		}
 
-		if ((totalPage * maxItemPerPage) != itemCnt
-				&& (itemCnt % maxItemPerPage) != 0) {
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
 			totalPage = totalPage + 1;
 		}
 
@@ -834,9 +824,8 @@ public class EzEmailAdminController {
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 
 		// 모든 사용자의 목록을 가져온다.
-		List<OrganUserVO> userCnList = ezEmailService.getUserList(
-				userInfo.getTenantId(), startRow, maxItemPerPage,
-				searchKeycode, searchKeyword);
+		List<OrganUserVO> userCnList = ezEmailService.getUserList(userInfo.getTenantId(), startRow, maxItemPerPage, searchKeycode, searchKeyword);
+		
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
 		String password = jspw;
@@ -859,37 +848,31 @@ public class EzEmailAdminController {
 				quaList.add(1, displayname);
 				quaList.add(2, description);
 
-				email = userId
-						+ "@"
-						+ ezCommonService.getTenantConfig("DomainName",
-								userInfo.getTenantId());
-				ia = IMAPAccess.getInstance(
-						config.getProperty("config.MailServerAddress"),
-						config.getProperty("config.IMAPPort"), email, password,
-						egovMessageSource, locale);
+				email = userId + "@" + ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
+				ia = IMAPAccess.getInstance( config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), email, password, egovMessageSource, locale);
 
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
 				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
 				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
-				
 			
 				quaList.add(3, String.valueOf(mailboxUsage));
 				quaList.add(4, String.valueOf(mailboxQuota));
+				
 				userList.add((ArrayList<String>) quaList);
 
 				for (int i = 0; i < quaList.size(); i++ ){
-				logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
-						+ ",mailboxQuota=" + mailboxQuota);
-				if ( i == 20 ) 
-				break;   
+					logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+					
+					if ( i == 20 ) {
+						break;   
+					}
+					
 				}
 			}
 
 		} catch (Exception e) {
-
-			logger.debug(e.getMessage());
 			e.printStackTrace();
 
 		} finally {
@@ -897,6 +880,7 @@ public class EzEmailAdminController {
 			if (ia != null) {
 				ia.close();
 			}
+			
 		}
 
 		model.addAttribute("userList", userList);
@@ -916,11 +900,8 @@ public class EzEmailAdminController {
 	 */
 	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/admin/ezEmail/statisticsListExcelExport.do")
-	public void MailQuotaExcelExport(
-			@CookieValue("loginCookie") String loginCookie, Model model,
-			HttpServletRequest request, String searchKeycode,
-			String searchKeyword, HttpServletResponse response)
-			throws Exception {
+	public void MailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie,Model model,HttpServletRequest request,String searchKeycode,String searchKeyword,HttpServletResponse response)throws Exception {
+		
 		logger.debug("MailQuotaExcelExport controller started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -935,11 +916,9 @@ public class EzEmailAdminController {
 		}
 
 		// 모든 사용자의 목록을 가져온다.
-		List<OrganUserVO> userCnList = ezEmailService.getUserList(
-				Integer.valueOf(userInfo.getTenantId()), startRow,
-				maxItemPerPage, searchKeycode, searchKeyword);
-		int totalCount = ezEmailService.getMailUserCount(
-				userInfo.getTenantId(), searchKeycode, searchKeyword);
+		List<OrganUserVO> userCnList = ezEmailService.getUserList( Integer.valueOf(userInfo.getTenantId()), startRow, maxItemPerPage, searchKeycode, searchKeyword);
+		
+		int totalCount = ezEmailService.getMailUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
 
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 
@@ -960,39 +939,39 @@ public class EzEmailAdminController {
 				userId = organUser.getCn();
 				department = organUser.getDepartment();
 				displayname = organUser.getDisplayName();
+				
 				logger.debug("userId=" + userId);
+				
 				quaList.add(0, userId);
 				quaList.add(1, displayname);
 				quaList.add(2, department);
 
-				email = userId
-						+ "@"
-						+ ezCommonService.getTenantConfig("DomainName",
-								userInfo.getTenantId());
-				ia = IMAPAccess.getInstance(
-						config.getProperty("config.MailServerAddress"),
-						config.getProperty("config.IMAPPort"), email, password,
-						egovMessageSource, locale);
+				email = userId + "@" + ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+				
+				ia = IMAPAccess.getInstance( config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), email, password, egovMessageSource, locale);
 
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
 				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
 				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
+				
 				quaList.add(3, String.valueOf(mailboxUsage));
 				quaList.add(4, String.valueOf(mailboxQuota));
+				
 				userList.add((ArrayList<String>) quaList);
-				for (int i = 0; i < quaList.size(); i++ ){
-					logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage
-							+ ",mailboxQuota=" + mailboxQuota);
-					if ( i == 20 ) 
-						break;   
+				
+					for (int i = 0; i < quaList.size(); i++ ) {
+						logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+
+						if ( i == 20 ) {
+							break;   
+						}
+						
 				}
 			}
-
+			
 		} catch (Exception e) {
-
-			logger.debug(e.getMessage());
 			e.printStackTrace();
 
 		} finally {
@@ -1000,7 +979,9 @@ public class EzEmailAdminController {
 			if (ia != null) {
 				ia.close();
 			}
+			
 		}
+		
 		/* 엑셀 만들기 */
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("MailQuotaList");
@@ -1032,8 +1013,7 @@ public class EzEmailAdminController {
 
 		row = sheet.createRow(0);
 		cell = row.createCell(0);
-		cell.setCellValue(egovMessageSource.getMessage("main.t252") + " "
-				+ totalCount + egovMessageSource.getMessage("ezSystem.kyj2"));
+		cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2"));
 
 		row = sheet.createRow(1);
 		cell = row.createCell(0);
@@ -1071,8 +1051,7 @@ public class EzEmailAdminController {
 		}
 
 		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName="
-				+ fileName + ".xls");
+		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
 		response.setContentType("application/vnd.ms-excel");
 
 		workbook.write(response.getOutputStream());

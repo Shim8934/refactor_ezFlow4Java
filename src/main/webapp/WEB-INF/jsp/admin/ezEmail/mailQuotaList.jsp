@@ -34,7 +34,6 @@
 			var totalCount = "";
 			var BlockSize = 10;
 
-			
 			//**/ 화면 호출시 실행 함수
 			window.onload = function(){
 				getUserList(1);
@@ -54,7 +53,8 @@
 					search();
 					return false;
 				}
-				return true;
+				
+		        return true;
 			}
 		
 			//**/ 페이징처리
@@ -237,45 +237,43 @@
 			    				var html = "";
 
 		   						if (res.itemCnt < 1) {
-		   							
 		   							html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
+		   						
 		   						} else {
 		   							
 		   							var j = ((pageNum - 1) * 20) + 1 ;
+		   							
 		   							res.userList.forEach(function(i,v){
 		   								
 		   								var res1 = i[3];
 		   								var res2 = i[4];
 		   								var progress = Number(res1/res2)*100;
 		   								var result = Math.floor(progress);
-				    						html += "<tr>";
+				    						
+		   									html += "<tr>";
 				    						html += "   <td>" + j						   + "</td>";
 				    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
 				    						html += "	<td>" 		  + i[2] 			   + "</td>";
 				    						html += "	<td>"         + i[3] 			   + "</td>"; //사용량
 				    						html += "	<td>"         + i[4] 			   + "</td>"; //총용량 
-				    						if (result >= 90){				    							
-				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_red' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
 				    						
-				    						} else if (result >= 70){ 
-				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_orange' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
-				    						
-				    						} else if (result >= 60){
-				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_yellow' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
-				    						
+				    						if (result >= 90) {				    							
+				    							html += "<td><div id='myProgress'><div id='myBar_red' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
+				    						} else if (result >= 70) { 
+				    							html += "<td><div id='myProgress'><div id='myBar_orange' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
+				    						} else if (result >= 60) {
+				    							html += "<td><div id='myProgress'><div id='myBar_yellow' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
 				    						} else {
-				    							
-				    							html += "	<td><div id='myProgress'><div id='myBar_green' style='width:"+result+"%'></div></div><div id='percentage'>"+result+"%</div></td>";
-		   									
+				    							html += "<td><div id='myProgress'><div id='myBar_green' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
 				    						}
-				    						html += "<td><a class='imgbtn'><span onClick=mod_quota('"+i[0]+"')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
+				    						
+				    						html += "<td><a class='imgbtn'><span onClick=mod_quota('"+ i[0] +"')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
 											html += "</tr>";
-				    						j++;
+											
+											j++;
 									})
 		   					    }
+		   						
 			    				$('#userListBody').empty().append(html);
 			    				
 			    				CurPage = res.currPage;
@@ -307,7 +305,6 @@
 		    }
 		  	
 		  	//**/ 편지함 용량수정 이벤트 호출
-		  	
 		  	function mod_quota(res){
 		  		var width=450, height=200;
 		  		var left = (screen.availWidth - width)/2;
@@ -320,6 +317,7 @@
 		    }
 
 		</script>
+		
 <!-- 	용량상태 Progress Bar -->
 		<style type="text/css" >
 			#myProgress {
@@ -353,6 +351,7 @@
 			  background-color: #4CAF50;
 			}
 		</style>
+		
 	</head>
 	<body class="mainbody"> <%-- <spring:message code="ezSystem.x0021"> </spring:message>--%>
 		<h1>메일박스 용량관리<span id="listInfo"></span></h1>
