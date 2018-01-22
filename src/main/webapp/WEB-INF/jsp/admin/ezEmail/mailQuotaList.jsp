@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	
+pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
@@ -8,19 +8,13 @@
 		<title><spring:message code='ezSystem.x0021' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
-		<link rel="stylesheet" href="<spring:message code='main.e15'/>"
-			type="text/css">
+		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript"
-			src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript"
-			src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript"
-			src="/js/ezEmail/<spring:message code='ezEmail.e1' />">
-		</script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript">
-		
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";
 			var strLang2 = "<spring:message code='ezSystem.x0031'/>";
 			var strLang4 = "<spring:message code='ezSystem.x0034'/>";
@@ -28,19 +22,18 @@
 			var strLang6 = "<spring:message code='ezSystem.x0036'/>";
 			var strLang7 = "<spring:message code='main.t252'/>";
 			var strLang8 = "<spring:message code='ezSystem.kyj2'/>";
-			
 			var CurPage = "";
 			var totalPage = "";
 			var totalCount = "";
 			var BlockSize = 10;
 
-			//**/ 화면 호출시 실행 함수
+			// 화면 호출시 실행 함수
 			window.onload = function(){
 				getUserList(1);
 				makePageSelPage();
 			}
 			
-			//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
+			// 검색값 입력 후 엔터키 입력 시 검색 호출
 			function keyword_onkeydown(e) {
 				
 			    if (!window.ActiveXObject) {
@@ -57,7 +50,7 @@
 		        return true;
 			}
 		
-			//**/ 페이징처리
+			// 페이징처리
 			function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -80,13 +73,15 @@
 		        }
 		        
 		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
+		            
+		        	if (pageNum > BlockSize) {
 		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
 		                PagingHTML += strtext;
 		            } else {
 		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
 		                PagingHTML += strtext;
 		            }
+		        	
 		        } else {
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
 		            PagingHTML += strtext;
@@ -103,17 +98,20 @@
 		        }
 		        
 		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
+		            
+		        	if (i == pageNum) {
 		                strtext = "<span class='on'>" + i + "</span>";
 		                PagingHTML += strtext;
 		            } else {
 		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
 		                PagingHTML += strtext;
 		            }
+		        	
 		        }
 		        
 		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		           
+		        	if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang2 + "</span>";
 		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
@@ -122,6 +120,7 @@
 		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
+		        	
 		        } else {
 		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang2 + "</span>";
 		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
@@ -178,32 +177,31 @@
 		        }
 		    }
 		
-		    //**/ 새로고침 클릭시 이벤트
+		    // 새로고침 클릭시 이벤트
 		    function reload() {
 		    	goToPage(CurPage);
 		    }
 		    
-			//**/ 검색 버튼 클릭시 이벤트
+			// 검색 버튼 클릭시 이벤트
 		    function search() {
 				$(function() {
+					
 					if ($('#searchKeyword').val().trim() == "") {
-						
 						alert("<spring:message code='ezEmail.t349'></spring:message>");
-						 
 					}
+					
 		        	getUserList(1);
 				});
 		    }
 			
-			//**/ 초기화버튼
+			// 초기화버튼
 			function reset() {
 				$(function() {
 					$('#searchKeyword').val('');
-					
 				});
 			}
 		    
-		    //**/ 페이지네이션 클릭시
+		    // 페이지네이션 클릭시
 			function goToPage(page) {
 				getUserList(page);
 			}		
@@ -217,7 +215,7 @@
 					
 					 if (pageNum == "-1") {
 						var pageSize = "-1";
-						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword ;
+						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
 							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
 						var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
 		
@@ -238,39 +236,35 @@
 
 		   						if (res.itemCnt < 1) {
 		   							html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
-		   						
 		   						} else {
-		   							
 		   							var j = ((pageNum - 1) * 20) + 1 ;
 		   							
-		   							res.userList.forEach(function(i,v){
-		   								
+		   							res.userList.forEach(function(i, v) {
 		   								var res1 = i[3];
 		   								var res2 = i[4];
-		   								var progress = Number(res1/res2)*100;
+		   								var progress = Number(res1 / res2) * 100;
 		   								var result = Math.floor(progress);
 				    						
-		   									html += "<tr>";
-				    						html += "   <td>" + j						   + "</td>";
-				    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
-				    						html += "	<td>" 		  + i[2] 			   + "</td>";
-				    						html += "	<td>"         + i[3] 			   + "</td>"; //사용량
-				    						html += "	<td>"         + i[4] 			   + "</td>"; //총용량 
-				    						
-				    						if (result >= 90) {				    							
-				    							html += "<td><div id='myProgress'><div id='myBar_red' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
-				    						} else if (result >= 70) { 
-				    							html += "<td><div id='myProgress'><div id='myBar_orange' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
-				    						} else if (result >= 60) {
-				    							html += "<td><div id='myProgress'><div id='myBar_yellow' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
-				    						} else {
-				    							html += "<td><div id='myProgress'><div id='myBar_green' style='width:"+ result +"%'></div></div><div id='percentage'>"+ result +"%</div></td>";
-				    						}
-				    						
-				    						html += "<td><a class='imgbtn'><span onClick=mod_quota('"+ i[0] +"')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
-											html += "</tr>";
-											
-											j++;
+	   									html += "<tr>";
+			    						html += "   <td>" + j						   + "</td>";
+			    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
+			    						html += "	<td>" 		  + i[2] 			   + "</td>";
+			    						html += "	<td>"         + i[3] 			   + "</td>"; //사용량
+			    						html += "	<td>"         + i[4] 			   + "</td>"; //총용량 
+			    						
+			    						if (result >= 90) {				    							
+			    							html += "<td><div id='myProgress'><div id='myBar_red' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						} else if (result >= 70) { 
+			    							html += "<td><div id='myProgress'><div id='myBar_orange' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						} else if (result >= 60) {
+			    							html += "<td><div id='myProgress'><div id='myBar_yellow' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						} else {
+			    							html += "<td><div id='myProgress'><div id='myBar_green' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						}
+			    						
+			    						html += "<td><a class='imgbtn'><span onClick=mod_quota('" + i[0] + "')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
+										html += "</tr>";
+										j++;
 									})
 		   					    }
 		   						
@@ -281,7 +275,6 @@
 			    				totalCount = res.itemCnt;
 			    				
 			    				if (res.searchKeycode != null) {
-			    					
 			    					var idx = parseInt(searchKeycode) - 1;
 				    				$('#searchKeycode option:eq(' + idx + ')').attr('selected','selected');
 			    				}
@@ -293,32 +286,35 @@
 			    				alert(err);
 			    			}
 			    		})
+			    		
 			    		makePageSelPage();
 					 } 
+					 
 		    	});
 		    } 
 
-		  	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
+		  	// 엑셀내려받기 버튼 클릭시 이벤트 호출
 		    function excelExport() {
 				var pageNum = "-1";
 				getUserList(pageNum);
 		    }
 		  	
-		  	//**/ 편지함 용량수정 이벤트 호출
+		  	// 편지함 용량수정 이벤트 호출
 		  	function mod_quota(res){
 		  		var width=450, height=200;
-		  		var left = (screen.availWidth - width)/2;
-		  		var top = (screen.availHeight - height)/2;
+		  		var left = (screen.availWidth - width) / 2;
+		  		var top = (screen.availHeight - height) / 2;
 		  		var specs = "width=" + width;
+		  		
 		  		specs += ",height=" + height;
 		  		specs += ",left=" + left;
 		  		specs += ",top=" + top;
-			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res,"",specs);
+		  		
+			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res, "", specs);
 		    }
 
 		</script>
-		
-<!-- 	용량상태 Progress Bar -->
+		<!-- 용량상태 Progress Bar -->
 		<style type="text/css" >
 			#myProgress {
 			  width: 78%;
@@ -351,18 +347,16 @@
 			  background-color: #4CAF50;
 			}
 		</style>
-		
 	</head>
-	<body class="mainbody"> <%-- <spring:message code="ezSystem.x0021"> </spring:message>--%>
-		<h1>메일박스 용량관리<span id="listInfo"></span></h1>
+	<body class="mainbody">
+		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
 		<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-				
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; <!-- 검색조건 -->
 						<select id="searchKeycode"> 
 							<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
-							<option value="2"><spring:message code="ezStatistics.t113"></spring:message></option><!-- 부서 -->
+							<option value="2"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
 						</select>
 						<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
 						<a class="imgbtn" >
@@ -383,7 +377,6 @@
 				</td>
 			</tr>
 		</table>
-
 		<table class="mainlist" style="width:100%;">
 			<thead style="">
 				<tr>

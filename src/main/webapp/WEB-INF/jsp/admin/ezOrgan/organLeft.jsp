@@ -127,7 +127,7 @@
 			<!-- 편지지등록 끝 -->
 			<%-- <spring:message code='main.t58' /> --%>
 			<h2>
-  				<span onClick="goPage(22)" style="display:inline-block;width:100%;">메일박스용량관리</span>
+  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
     			<ul></ul>
   			</h2>
 			<h2>
