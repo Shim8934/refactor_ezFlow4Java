@@ -11433,7 +11433,8 @@
      				  RegSerialNo, 
      				  RollbackFlag,
      				  TENANT_ID,
-     				  COMPANYID )
+     				  COMPANYID,
+     				  IDX )
      		VALUES ( (
 		   				SELECT 
 		   					CASE WHEN ISUsed ='0' THEN '0' 
@@ -11507,7 +11508,8 @@
     					#v_CurSN#, 
     					1 ,
     					#v_TENANTID#,
-    					#companyID#)
+    					#companyID#,
+    					SEQ_TBL_SERIALNUMGEN.NEXTVAL)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
@@ -11779,8 +11781,8 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 	  INSERT INTO TBL_NOTIFICATION
-        ( USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
-       VALUES ( #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
+        (ITEMSEQ, USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
+       VALUES (SEQ_TBL_PS_NOTICE_ITEMSEQ.nextval, #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
 	</insert>
 	
 	<select id="EzApprovalG.notifiCationSeq" parameterClass="Map" resultClass="String">
