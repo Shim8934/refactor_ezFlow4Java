@@ -21333,7 +21333,41 @@
        		 tbl_Container.COMPANYID = #companyID#
    	</select>
    	
-   	  	
+   	<select id="EzApprovalG.getUserContDocListCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(TBL_ENDAPRDOCINFO.DOCID) 
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID   
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID 
+   		INNER JOIN 
+   			TBL_USERCONTLIST  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_USERCONTLIST.DOCID 
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID  
+   		WHERE 
+   			USERCONTID = #v_CONTID#  
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+   		AND 
+   			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL 
+   		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
+   		AND 
+   			$v_PSUBQUERY$
+   		</isGreaterThan>
+   	</select>
+   	   	
    	<select id="EzApprovalG.getUserContList" parameterClass="Map" resultClass="ApprGDocListVO"> <!-- 강민수1 -->
    	   	SELECT 
    			A.DOCID, 
