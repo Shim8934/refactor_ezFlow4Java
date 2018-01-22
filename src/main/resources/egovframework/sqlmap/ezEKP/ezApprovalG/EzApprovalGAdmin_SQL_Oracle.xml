@@ -956,11 +956,11 @@
 	            AND
 	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
 				WHERE
-					tenant_id = #tenantID#
+					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					TBL_FORMINFO.companyid = #companyID#
 				AND
-					formid = #v_PFORMID#
+					TBL_FORMINFO.formid = #v_PFORMID#
 			]]>
 		</isEqual>
 		<isEqual property="approvalFlag" compareValue="G">
@@ -2302,7 +2302,7 @@
              	condvaluedeptid,
              	doctype 
         	FROM 
-        		TBFORM_AUTORULE 
+        		TBL_FORM_AUTORULE 
        		WHERE  
        			TENANT_ID = #tenantID#
        		AND
@@ -2338,7 +2338,7 @@
              	ISPROPOSERYN,
              	ISBRIEFUSERYN
             FROM 
-            	TBFORM_AUTORULELINE 
+            	TBL_FORM_AUTORULELINE 
 	        WHERE  
 	        	TENANT_ID = #tenantID#
 	        AND
