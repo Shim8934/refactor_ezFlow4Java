@@ -205,19 +205,6 @@
 		{CALL EZEMAIL.EZSP_SETMAILCOLOR(#v_IMPORTANCE#, #v_INMAIL#, #v_OUTMAIL#)}
 	</procedure>
 	
-	<sql id="EzEmailDAO.searchQuery">
-		<isNotEmpty property="search_keycode" prepend="and">
-			<isNotEmpty property="search_keyword" >
-					<isEqual property="search_keycode" compareValue="1">
-						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
-					</isEqual>
-					<isEqual property="search_keycode" compareValue="2">
-						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
-					</isEqual>
-			</isNotEmpty>
-		</isNotEmpty>
-	</sql>
-	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
 		<![CDATA[
 			SELECT 
@@ -249,35 +236,4 @@
 			WHERE UserID=#v_USERID# AND POP3Server=#v_POP3SERVER# AND POP3UserID=#v_POP3USERID#
        	]]>
 	</delete>
-	
-		<select id="EzEmailDAO.userList" parameterClass="map" resultClass="OrganUserVO">
-
-			SELECT 
-				CN,
-				displayName,
-				department,
-				description
-			FROM 
-	    		TBL_USERMASTER	
-            WHERE 
-            	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
-				<include refid="EzEmailDAO.searchQuery"/>
-	    	ORDER BY 
-	    		displayName
-	    <isNotEqual property="v_start" compareValue="-1">
-	    	LIMIT
-				    #v_start#, #pageCount#	
-		</isNotEqual>
-				    
-	</select>
-	
-	<select id="EzEmailDAO.getMailUserCount" parameterClass="map" resultClass="int">
-	 	
-			SELECT 	COUNT(CN) 
-			FROM 
-                TBL_USERMASTER 
-			WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
-  				<include refid="EzEmailDAO.searchQuery"/>
-	</select>
- 	
 </sqlMap>

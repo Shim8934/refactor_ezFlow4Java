@@ -1945,4 +1945,15 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
     	logger.debug("changePasswordInAD started."); 
     }
+	
+	// 사용자 이름,부서 목록을 반환한다.
+    @SuppressWarnings("unchecked")
+	public List<OrganUserVO> getUserList(Map<String, Object> map) throws Exception {
+    	return (List<OrganUserVO>) list("EzOrganAdminDAO.userList", map);
+    }	
+    
+    // 사용자 이름,부서 목록개수를 반환한다.
+    public int getUserCount(Map<String, Object> map) throws Exception {
+    	return (int) select("EzOrganAdminDAO.getUserCount", map);        
+    }
 }
