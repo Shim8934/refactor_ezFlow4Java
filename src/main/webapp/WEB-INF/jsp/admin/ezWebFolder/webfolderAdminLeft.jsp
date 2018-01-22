@@ -32,10 +32,7 @@
 		    			break;
 		    		case 2:
 		    			window.open("/admin/ezWebFolder/webfolderAdminPersonal.do", "right");
-		    			break;
-		    		case 3:
-		    			window.open("/admin/ezWebFolder/webfolderAdminGroup.do", "right");
-		    			break;
+		    			break;	
 		    	}
 		    }
 	    </script>
@@ -45,22 +42,32 @@
 	        <div class="left_admin" title="<spring:message code='ezWebFolder.t10' />">
 	        	<img src="/images/admin/first.png" width="16px" height="16px">&nbsp;<spring:message code="main.t29" />
 	        </div>        
-<!--  			<h2>
-  				<span style="display:inline-block;width:100%;">기본설정</span>
-  			</h2>  
-   			<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="goPage(1, this)" >가온아이</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="goPage(2, this)" >하위폴더</span></li>		        
-		    </ul>  --> 	
-		    
+
 		    <h2>
   				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t101' /></span>
   			</h2>  
     		<ul>
     			<li><span id="company"  style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='ezWebFolder.t102' /></span></li>
-		        <li><span id="personal" style="width: 100%; display: inline-block;" onClick="goPage(2)" ><spring:message code='ezWebFolder.t103' /></span></li>
-		        <li><span id="group"    style="width: 100%; display: inline-block;" onClick="goPage(3)" ><spring:message code='ezWebFolder.t104' /></span></li>		        
+		        <li><span id="personal" style="width: 100%; display: inline-block;" onClick="goPage(2)" ><spring:message code='ezWebFolder.t103' /></span></li>		        	        
 		    </ul>
+		    
+		    <h2>
+  				<span style="display:inline-block;width:100%;">회사폴더 관리</span>
+  			</h2>
+  			<ul>
+  			</ul>
+  			    
+		   	<h2>
+  				<span style="display:inline-block;width:100%;">회사파일 관리</span>
+  			</h2> 
+  			<ul>
+  			</ul>
+			
+			<h2>
+  				<span style="display:inline-block;width:100%;">파일 이력관리</span>
+  			</h2>
+  			<ul>
+  			</ul> 
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

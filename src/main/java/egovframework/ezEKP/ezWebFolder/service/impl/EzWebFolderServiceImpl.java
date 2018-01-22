@@ -93,7 +93,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("fileId", fileId);
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
-		ezWebFolderDAO.moveFile(map);		
+		ezWebFolderDAO.moveFile(map);
 	}
 
 }

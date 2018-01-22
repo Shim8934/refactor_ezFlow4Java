@@ -396,8 +396,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("Move File finishes!");		
 	}
 	
-	
-	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		

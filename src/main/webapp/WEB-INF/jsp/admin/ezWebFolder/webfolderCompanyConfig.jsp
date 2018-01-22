@@ -22,8 +22,8 @@
 	<body class="mainbody">
 	   <h1><spring:message code='ezWebFolder.t102' /></h1>
 	   <div id="companySelect" style="margin: 10px 10px;">
-	   		<span style="font-size: 16px;"><b>회사 선택: </b></span>
-	   		<select id="companyList" style="font-size: 14px;">
+	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
+	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;">
 	   			<option>가온아이</option>
 	   			<option>리딩</option>
 	   			<option>아추 저죽은행</option>
@@ -35,7 +35,14 @@
 	   <div id="mainSetting" style="margin: 10px 10px;">
 		   <table class="content">
 		   		<tr style="height: 40px;">
-		   			<th>총용량</th>
+		   			<th>1회 업로드 용량</th>
+		   			<th>
+		   				<input type="text" style="height: 30px;" />
+		   				<span>GB</span>
+		   			</th>
+		   		</tr>
+		   		<tr style="height: 40px;">
+		   			<th>개인 기본 용량</th>
 		   			<th>
 		   				<input type="text" style="height: 30px;" />
 		   				<span>GB</span>
@@ -44,8 +51,8 @@
 		   </table>
 	   </div>
 	   <div style="margin: 10px 70px;">
-		   <a class="imgbtn"><span onclick="">저장</span></a>
-		   <a class="imgbtn"><span onclick="">취소</span></a>
+		   <a class="webfolderBttn"><span onclick="">저장</span></a>
+		   <a class="webfolderBttn"><span onclick="">취소</span></a>
 	   </div>
 	</body>
 </html>
