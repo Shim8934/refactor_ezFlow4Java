@@ -925,4 +925,20 @@ public class CommonUtil {
 		}
 		return xmlDoc;
 	}
+	
+	/**
+	 * globals.properties에 있는 
+	 * DataBaseType을 반환
+	 * */
+	public String getDatabaseType() throws Exception {
+		
+		String props = "Globals.DbType";
+		String dbType;
+		
+		dbType = globals.getProperty(props);
+		
+		logger.debug("getDatabase Type = " + dbType);
+		
+		return dbType;
+	}
 }
