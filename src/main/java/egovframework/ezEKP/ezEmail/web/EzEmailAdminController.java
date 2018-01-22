@@ -931,7 +931,7 @@ public class EzEmailAdminController {
 
 				List<String> quaList = new ArrayList<String>();
 				String userId = organUser.getCn();
-				String department = organUser.getDepartment();
+				String department = organUser.getDescription();
 				String displayname = organUser.getDisplayName();
 				
 				quaList.add(0, userId);
