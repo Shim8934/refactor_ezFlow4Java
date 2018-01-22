@@ -12543,8 +12543,8 @@
 		<insert id="EzApprovalG.trigerTbCabRoleInfo" parameterClass="Map">
 		INSERT INTO 
 			TBL_CABROLEINFO
-     	(     	( USER_ID, CabinetClassNo, UserName, UserName2, TENANT_ID, COMPANYID )
- SELECT 
+     	( USER_ID, CabinetClassNo, UserName, UserName2, TENANT_ID, COMPANYID )
+     	( SELECT 
      		  #v_DeptMID#,
               #v_CABINETCLASSNO#,
               #v_DeptMName#, 
