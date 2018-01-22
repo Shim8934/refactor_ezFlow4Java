@@ -4107,7 +4107,7 @@
            UPDATE 
                TBL_DEPTMASTER
            SET
-               updatedt = #nowDate#,
+               updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'),
                displayName = #v_DISPLAYNAME#,
                displayName2 = #v_DISPLAYNAME2#,
                EXTENSIONATTRIBUTE3 = #v_DISPLAYNAME#,
