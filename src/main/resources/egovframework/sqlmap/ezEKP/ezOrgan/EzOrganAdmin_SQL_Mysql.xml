@@ -63,7 +63,7 @@
 						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="2">
-						DEPARTMENT LIKE CONCAT('%', #search_keyword#,'%')
+						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
