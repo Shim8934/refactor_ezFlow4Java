@@ -2982,9 +2982,9 @@
 		<isEqual property="lang" compareValue="1">
 			NAME
 		</isEqual>
-<!-- 		<isNotEqual property="lang" compareValue="1"> -->
-<!-- 			NAME$lang$ as NAME -->
-<!-- 		</isNotEqual> -->
+ 		<isNotEqual property="lang" compareValue="1">
+			NAME$lang$ as NAME
+		</isNotEqual>
    		FROM 
    			TBL_CODELIST 
    		WHERE 
@@ -2996,9 +2996,9 @@
 		<isEqual property="approvalFlag" compareValue="G" prepend="AND">
    			CODE1 = 'A03' 
 		</isEqual>
-		<isNotEqual property="approvalFlag" compareValue="S" prepend="AND">
+		<isEqual property="approvalFlag" compareValue="S" prepend="AND">
    			CODE1 = 'SA03' 
-		</isNotEqual>
+		</isEqual>
    		ORDER BY 
    			CODE2
 	</select>
@@ -6603,7 +6603,7 @@
 			* 
 		FROM(
 				SELECT 
-					row_number() over($v_tmp$) as rnum, 
+					ROW_NUMBER() OVER($v_tmp$) as rnum, 
 					A.* FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
@@ -9820,26 +9820,29 @@
 <!-- 	</procedure> -->
 		<select id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int">
 		 		SELECT 
-		 				COUNT(CN)  
-		         FROM 
-		         		TBL_UserMaster
-		       	 WHERE  
-		       	 		Department = #v_DEPTID#
-		         AND 
-		         		extensionAttribute1 LIKE '%a=1%' 
-		         AND
-		         		TENANT_ID =#v_TENANTID#
-				 AND 
+				SUM(CN) count 
+			FROM (
+				SELECT 
+					count(cn) cn
+				FROM 
+					TBL_USERMASTER
+				WHERE 
+					DEPARTMENT = #v_DEPTID#
+				AND 
+					EXTENSIONATTRIBUTE1 like '%a=1%'
+				AND 
+					TENANT_ID = #v_TENANTID#
+				AND 
 					PHYSICALDELIVERYOFFICENAME = #companyID#
-				 
-            	UNION 
+			
+				UNION 
 			
 				SELECT 
-					count(a.cn) as cn
+					count(a.cn) cn
 				FROM 
-					TBL_USERMASTER as a
+					TBL_USERMASTER a
 				JOIN 
-					TBL_ADDJOBMASTER as b
+					TBL_ADDJOBMASTER b
 				ON 
 					a.CN = b.CN
 				AND 
@@ -9849,7 +9852,8 @@
 				AND 
 					a.EXTENSIONATTRIBUTE1 like '%a=1%'
 				AND 
-					a.TENANT_ID = #v_TENANTID#	
+					a.TENANT_ID = #v_TENANTID#
+			)	         	
 		</select>
 	
 <!-- 	<procedure id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int"> -->
@@ -10125,7 +10129,8 @@
         		  RegSerialNo, 
         		  RollbackFlag,
         		  TENANT_ID,
-				  COMPANYID )
+				  COMPANYID,
+				  IDX )
         	VALUES ( (
     					SELECT 
     						CASE WHEN ISUsed ='0' THEN '0' 
@@ -10201,7 +10206,8 @@
    		 						1, 
    		 						0,
    		 						#v_TENANTID#,
-								#companyID# )
+								#companyID#,
+								SEQ_TBL_SERIALNUMGEN.NEXTVAL )
 	</insert>
 	<select id="EzApprovalG.rollBackFlag" parameterClass="Map" resultClass="int">
 			SELECT 
@@ -13793,13 +13799,13 @@
 	<insert id="EzApprovalG.createNewDoc2" parameterClass="Map">
 		INSERT 
 	   		INTO TBL_EXPAPRDOCINFO
-        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID )
+        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
         		( 
         			SELECT 
         				#v_DOCID# ,
                  		FORMNAME ,
                  		FORMNAME2 ,
-		                #v_COMPANYID# ,
+		                #companyID# ,
 		                 'N' ,
 		                 999 ,
 		                 ' ' ,
