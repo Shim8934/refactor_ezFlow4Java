@@ -6603,7 +6603,9 @@
 			* 
 		FROM(
 				SELECT 
-					ROW_NUMBER() OVER($v_tmp$) as rnum, 
+
+					row_number() over(ORDER BY NULL) as rnum,  <!-- 임시 -->
+
 					A.* FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
