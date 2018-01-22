@@ -3623,7 +3623,7 @@
       	  	FROM (
       	  			SELECT 
       	  					CABINETCLASSNO, 
-      	  					MAX(VOLUMENO) AS VOLUMENO,
+      	  					MAX(VOLUMENO) VOLUMENO,
       	  					TENANT_ID ,
       	  					COMPANYID
       	  			FROM 
@@ -3632,8 +3632,8 @@
       	  					TENANT_ID = #v_TENANTID#
       	  			AND 
       	  					COMPANYID = #companyID#      	  					
-      	  			GROUP BY 
-      	  					CABINETCLASSNO,TENANT_ID ) TBMAXVOL 
+      	  			GROUP BY      	  					
+      	  					CABINETCLASSNO,TENANT_ID,COMPANYID ) TBMAXVOL 
       	  			INNER JOIN 
       	  					TBL_CABINET 
       	  			ON 
@@ -10441,9 +10441,9 @@
 		 								WHERE  
 		 										CodeType = '007' 
 		 								AND
-												TENANT_ID =#v_TENANTID#)
+												TENANT_ID =#v_TENANTID#
 										AND
-												COMPANYID = #companyID#
+												COMPANYID = #companyID#)
 	 						 WHERE  
 	 						 		Code = '3')
 	     AND 
@@ -12543,10 +12543,10 @@
 		<insert id="EzApprovalG.trigerTbCabRoleInfo" parameterClass="Map">
 		INSERT INTO 
 			TBL_CABROLEINFO
-     	( USER_ID, CabinetClassNo, UserName, UserName2, TENANT_ID. COMPANYID )
-     	( SELECT 
+     	(     	( USER_ID, CabinetClassNo, UserName, UserName2, TENANT_ID, COMPANYID )
+ SELECT 
      		  #v_DeptMID#,
-              #v_CABINETCLASSNO#  ,
+              #v_CABINETCLASSNO#,
               #v_DeptMName#, 
               #v_DeptMName2#,
               #v_TENANTID#,
@@ -17090,7 +17090,10 @@
        								AND
        									TENANT_ID = #v_TENANTID#
        								AND
-       									COMPANYID = #companyID#)))
+       									COMPANYID = #companyID#)
+       								GROUP BY 
+                                        DocState,FunctionType	
+       									))
        		]]>
    </select>
 
