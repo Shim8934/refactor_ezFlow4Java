@@ -3468,7 +3468,7 @@
 			<isNotEqual property="v_STRLANG" compareValue="1">
 			   SELECT 
 			   		DISTINCT SUBCATEGORYCODE ,
-	                IFNULL(SCNAME, SCNAME2) SCNAME  
+	                NVL(SCNAME, SCNAME2) SCNAME  
 	           FROM 
 	           		VTASKCLASS 
 	           WHERE  ( 
@@ -10860,7 +10860,7 @@
 							   			  OR 
 							   			  ( SELECT     
 										  		CASE 
-										  			WHEN IFNULL(COUNT(DocID), 0) > 0 
+										  			WHEN NVL(COUNT(DocID), 0) > 0 
 										  			THEN 'Y' 
 							             			ELSE 'N'
 							             		END AS RET
