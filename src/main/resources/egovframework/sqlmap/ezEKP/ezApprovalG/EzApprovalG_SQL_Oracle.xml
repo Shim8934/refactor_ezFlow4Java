@@ -6603,7 +6603,9 @@
 			* 
 		FROM(
 				SELECT 
+
 					row_number() over(ORDER BY NULL) as rnum,  <!-- 임시 -->
+
 					A.* FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
@@ -9820,26 +9822,29 @@
 <!-- 	</procedure> -->
 		<select id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int">
 		 		SELECT 
-		 				COUNT(CN)  
-		         FROM 
-		         		TBL_UserMaster
-		       	 WHERE  
-		       	 		Department = #v_DEPTID#
-		         AND 
-		         		extensionAttribute1 LIKE '%a=1%' 
-		         AND
-		         		TENANT_ID =#v_TENANTID#
-				 AND 
+				SUM(CN) count 
+			FROM (
+				SELECT 
+					count(cn) cn
+				FROM 
+					TBL_USERMASTER
+				WHERE 
+					DEPARTMENT = #v_DEPTID#
+				AND 
+					EXTENSIONATTRIBUTE1 like '%a=1%'
+				AND 
+					TENANT_ID = #v_TENANTID#
+				AND 
 					PHYSICALDELIVERYOFFICENAME = #companyID#
-				 
-            	UNION 
+			
+				UNION 
 			
 				SELECT 
-					count(a.cn) as cn
+					count(a.cn) cn
 				FROM 
-					TBL_USERMASTER as a
+					TBL_USERMASTER a
 				JOIN 
-					TBL_ADDJOBMASTER as b
+					TBL_ADDJOBMASTER b
 				ON 
 					a.CN = b.CN
 				AND 
@@ -9849,7 +9854,8 @@
 				AND 
 					a.EXTENSIONATTRIBUTE1 like '%a=1%'
 				AND 
-					a.TENANT_ID = #v_TENANTID#	
+					a.TENANT_ID = #v_TENANTID#
+			)	         	
 		</select>
 	
 <!-- 	<procedure id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int"> -->
@@ -10125,7 +10131,8 @@
         		  RegSerialNo, 
         		  RollbackFlag,
         		  TENANT_ID,
-				  COMPANYID )
+				  COMPANYID,
+				  IDX )
         	VALUES ( (
     					SELECT 
     						CASE WHEN ISUsed ='0' THEN '0' 
@@ -10201,7 +10208,8 @@
    		 						1, 
    		 						0,
    		 						#v_TENANTID#,
-								#companyID# )
+								#companyID#,
+								SEQ_TBL_SERIALNUMGEN.NEXTVAL )
 	</insert>
 	<select id="EzApprovalG.rollBackFlag" parameterClass="Map" resultClass="int">
 			SELECT 
@@ -10433,9 +10441,9 @@
 		 								WHERE  
 		 										CodeType = '007' 
 		 								AND
-												TENANT_ID =#v_TENANTID#)
+												TENANT_ID =#v_TENANTID#
 										AND
-												COMPANYID = #companyID#
+												COMPANYID = #companyID#)
 	 						 WHERE  
 	 						 		Code = '3')
 	     AND 
