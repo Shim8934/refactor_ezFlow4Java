@@ -17082,7 +17082,10 @@
        								AND
        									TENANT_ID = #v_TENANTID#
        								AND
-       									COMPANYID = #companyID#)))
+       									COMPANYID = #companyID#)
+       								GROUP BY 
+                                        DocState,FunctionType	
+       									))
        		]]>
    </select>
 
