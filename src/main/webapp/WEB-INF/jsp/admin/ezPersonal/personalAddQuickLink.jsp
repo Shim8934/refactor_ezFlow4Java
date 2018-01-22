@@ -518,7 +518,10 @@
 	                			 <tr class="primary">
 			                        <th><spring:message code = 'ezPersonal.s84' /></th>
 			                        <td>
-			                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"></td>
+			                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" value="" maxLength="50">
+			                            <input name="Input" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" value="" maxLength="50">
+			                            <input name="Input" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" value="" maxLength="50">
+			                        </td>
 			                    </tr>
 	                		</c:when>
 	                		<c:otherwise>
