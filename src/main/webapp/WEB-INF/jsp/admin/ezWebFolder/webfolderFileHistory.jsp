@@ -34,7 +34,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	   <h1><spring:message code='ezWebFolder.t103' /></h1>
+	   <h1><spring:message code='ezWebFolder.t128' /></h1>
 	   <div id="companySelect" style="margin: 10px 0px;">
 	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
 	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;">
@@ -46,7 +46,7 @@
 	   		</select>
 	   </div>
 	   
-	   <div style="position: relative; height: 27px; margin-bottom: 10px;">
+	   <div style="height: 27px; margin-bottom: 10px;">
 	   		<div style="position: relative;">
 	   			<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123' /></span></a>
 	   			<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 80px; width: 500px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
@@ -73,48 +73,26 @@
 		   				</table>
 	   				</div>
 	   			</div>
-	   		</div>	   		
-	   		<div style="position: absolute; top: 0px; right: 2px; height: 27px;">	   			
-   				<span style="height: 20px; line-height: 20px; display: inline; font-size: 14px;">용량 설정:</span>
-   				<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; margin-right: 3px; padding-left: 5px;"  placeholder="용량GB"/>
-   				<a id="btnChange" class="webfolderBttn2" onClick="changeStorageVal();"><span><spring:message code='ezWebFolder.t124' /></span></a>
-   				<a id="btnBack" class="webfolderBttn2" onClick="changeToDefault();"><span><spring:message code='ezWebFolder.t125' /></span></a>   						
-	   		</div>	   	 	
+	   		</div> 	 	
 	   </div>
 	   
 	   <div id="mainSetting" style="margin: 10px 0px;">
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
-	   			<tr>
-	   				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);"></th>
-					<th width="120px" style="text-align: center;">회사명</th>
-					<th width="120px" style="text-align: center;">부서명</th>
-					<th width="120px" style="text-align: center;">사용자</th>
-					<th width="40px" style="text-align: center;">직급</th>
-					<th width="80px" style="text-align: center;">사용량</th>
-					<th width="80px" style="text-align: center;">총용량</th>
-					<th width="60px" style="text-align: center;">사용률</th>
+	   			<tr>	   				
+					<th width="100px" style="text-align: center;">형태</th>
+					<th width="100px" style="text-align: center;">이름</th>
+					<th width="100px" style="text-align: center;">파일크기</th>
+					<th width="100px" style="text-align: center;">수행자</th>
+					<th width="100px" style="text-align: center;">수행사항</th>
+					<th width="100px" style="text-align: center;">날짜</th>					
 	   			</tr>
 	   			<tr class="bnkWebFolder">
-		   			<td><input type="checkbox" onchange="getChecked(this);" value="0" class="checkBnk"></td>
-					<td style="text-align: center;">가온아이</td>
-					<td style="text-align: center;">오픈솔루션팀</td>
+					<td style="text-align: center;">파일</td>
+					<td style="text-align: center;">간단파일.jsp</td>
+					<td style="text-align: center;">100.24KB</td>
 					<td style="text-align: center;">박예연</td>
-					<td style="text-align: center;">사원</td>
-					<td style="text-align: center;">200MB</td>
-					<td style="text-align: center;">1.5GB</td>
-					<td style="cursor:pointer; white-space:nowrap; text-align:center;">
-						<span class="workProgressBar">
-							<span class="bar" taskid="taskProgressBar0">
-								<div class="progressbar" style="width: 70%; background-color: rgb(238, 238, 238); border-radius: 10px; display: inline-table;">
-									<div class="proggress" style="background-color: rgb(52, 152, 219); height: 10px; border-radius: 10px; width: 20%;">
-									</div>
-								</div>
-								<div class="percentCount">20%</div>
-							</span>&nbsp;
-							<span style="display: inline-block;">
-							</span>
-						</span>
-					</td>
+					<td style="text-align: center;">파일 삭제</td>
+					<td style="text-align: center;">2018-01-12 12:10:45</td>
 	   			</tr>
 	   		</table>
 	   </div>

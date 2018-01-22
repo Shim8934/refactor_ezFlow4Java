@@ -35,6 +35,18 @@
 		    			break;	
 		    	}
 		    }
+		    
+		    function companyFolder() {		    	
+		    	window.open("/admin/ezWebFolder/webfolderAdminCompanyFolder.do", "right");
+		    }
+		    
+		    function companyFile() {
+		    	window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do", "right");
+		    }
+		    
+		    function fileTransactionHistory() {
+		    	window.open("/admin/ezWebFolder/webfolderAdminFileHistory.do", "right");
+		    }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -52,19 +64,19 @@
 		    </ul>
 		    
 		    <h2>
-  				<span style="display:inline-block;width:100%;">회사폴더 관리</span>
+  				<span style="display:inline-block;width:100%;" onClick="companyFolder();"><spring:message code='ezWebFolder.t126' /></span>
   			</h2>
   			<ul>
   			</ul>
   			    
 		   	<h2>
-  				<span style="display:inline-block;width:100%;">회사파일 관리</span>
+  				<span style="display:inline-block;width:100%;" onClick="companyFile();"><spring:message code='ezWebFolder.t127' /></span>
   			</h2> 
   			<ul>
   			</ul>
 			
 			<h2>
-  				<span style="display:inline-block;width:100%;">파일 이력관리</span>
+  				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128' /></span>
   			</h2>
   			<ul>
   			</ul> 

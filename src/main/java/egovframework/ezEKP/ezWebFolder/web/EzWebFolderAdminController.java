@@ -65,14 +65,35 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderPersonalConfig";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminGroup.do")
-	public String webfolderAdminGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFolder.do")
+	public String webfolderCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
         
         model.addAttribute("companyID", "S907000");
         
-		return "admin/ezWebFolder/webfolderGroupConfig";
+		return "admin/ezWebFolder/webfolderCompanyFolder";
 	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFile.do")
+	public String webfolderCompanyFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+        userInfo = commonUtil.userInfo(loginCookie);
+        //Add more function here
+        
+        model.addAttribute("companyID", "S907000");
+        
+		return "admin/ezWebFolder/webfolderCompanyFile";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminFileHistory.do")
+	public String webfolderFileHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+        userInfo = commonUtil.userInfo(loginCookie);
+        //Add more function here
+        
+        model.addAttribute("companyID", "S907000");
+        
+		return "admin/ezWebFolder/webfolderFileHistory";
+	}
+	
 	
 }
