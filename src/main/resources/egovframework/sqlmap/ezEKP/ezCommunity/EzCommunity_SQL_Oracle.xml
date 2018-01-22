@@ -63,7 +63,7 @@
 		<result property="endDate"						column="EndDate"					/>
 		<result property="absTract"						column="Abstract"					/>
 		<result property="attachments"					column="Attachments"				/>
-		<result property="upperItemIDTree"				column="UpperItemIDTree"			javaType="String" jdbcType="CLOB"/>
+		<result property="upperItemIDTree"				column="UpperItemIDTree"		javaType="String" jdbcType="CLOB"/>
 		<result property="itemLevel"					column="ItemLevel"					/>
 		<result property="copiedItem"					column="copiedItem"					/>
 		<result property="extensionAttribute1"			column="ExtensionAttribute1"		/>
@@ -352,7 +352,7 @@
 				re_level,
 				ref,
 				filename,
-				charfilename, 
+				charfilename,
 				readnum,
 				TO_DATE(writeday, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writeday,
 				username,
@@ -857,12 +857,12 @@
 		</isNotEqual>
 		
 		<![CDATA[
-				ORDER BY
-					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree)
+			ORDER BY
+				A.parentwritedate DESC,
+				TO_CHAR(A.upperitemidtree)
 				)
-			WHERE
-				ROWNUM <= #v_pEndRow#
+				WHERE
+					ROWNUM <= #v_pEndRow#
 		]]>
 	</select>
 	
@@ -963,9 +963,9 @@
 		</isNotEqual>
 		
 		<![CDATA[
-				ORDER BY
-					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree)
+			ORDER BY
+				A.parentwritedate DESC,
+				TO_CHAR(A.upperitemidtree)
 				)
 			WHERE
 				rownum <= #v_pEndRow#
@@ -1000,7 +1000,7 @@
 				extensionattribute3$v_strLang$ AS extensionattribute3,
 				extensionattribute4,
 				extensionattribute5 
-			FROM 
+			FROM
 				TBL_COMM_ITEM 
 			WHERE
 				itemid = #v_pItemID#
@@ -2031,7 +2031,7 @@
 		<![CDATA[
 			SELECT
 				A.c_clubgubun,
-				A.c_clubconfirmtype ,
+				A.c_clubconfirmtype,
 				B.permit 
 			FROM
 				TBL_C_CLUB A
@@ -3719,7 +3719,7 @@
                   	FROM 
                   		(SELECT
 							DISTINCT TBL_C_CLUBUSER.c_clubno,
-							MAX(writedate) WRITEDATE, 
+							MAX(writedate) WRITEDATE,
 							TBL_C_CLUBUSER.tenant_id
                        	FROM
                        		TBL_C_CLUBUSER 
@@ -3820,7 +3820,7 @@
 		]]>
 	</select>
 	
-	<!-- 	<procedure id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"> -->
+<!-- 	<procedure id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZSP_JOIN_GET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"	remapResults="true">
@@ -5232,7 +5232,7 @@
 		</selectKey>
 		INSERT INTO TBL_C_CLUBGUEST
        		(no,
-       		c_no,
+			c_no,
        		id,
        		username,
        		username2,
@@ -5708,9 +5708,9 @@
 	
 	<delete id="EzCommunityDAO.truncateCommTreeCache"				parameterClass="Integer">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_COMM_TREECACHE
-			WHERE 
+			WHERE
 				tenant_id = #tenantID#
 			
 		]]>
@@ -5828,9 +5828,9 @@
 	
 	<delete id="EzCommunityDAO.createBoardInsertDelete"			parameterClass="Integer">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_COMM_TREECACHE
-			WHERE 
+			WHERE
 				TENANT_ID = #tenantID#
 		]]>
 	</delete>
@@ -5883,7 +5883,7 @@
 	
 	<delete id="EzCommunityDAO.adminOuterOkNoSetDelete2"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -6003,7 +6003,7 @@
 	
 	<delete id="EzCommunityDAO.adminMemberListGoSEDelete1"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -6205,7 +6205,7 @@
 	
 	<delete id="EzCommunityDAO.okNoSetDelete"				parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -6237,7 +6237,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.pollDeleteDel2"					parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_C_POLLANSWER
 			WHERE
 				pollquestionid = #v_QUESTIONID#
@@ -6262,7 +6262,7 @@
 	
 	<delete id="EzCommunityDAO.pollDeleteDel4"					parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_C_POLLMANAGER
 			WHERE
 				managerid = #v_MANAGERID#
@@ -6276,7 +6276,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.brdDeleteBoardDelete1"			parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_COMM_BOARDMANAGE
 			WHERE
 				boardid = #v_pBoardID#
@@ -6287,7 +6287,7 @@
 	
 	<delete id="EzCommunityDAO.brdDeleteBoardDelete2"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_COMM_BOARDINFO
 			WHERE
       			boardid = #v_pBoardID#
@@ -6298,7 +6298,7 @@
 	
 	<delete id="EzCommunityDAO.brdDeleteBoardDelete3"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_COMM_MYBOARDS
 			WHERE
 				boardid = #v_pBoardID#
@@ -6339,7 +6339,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.newItemDel"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_COMM_ITEM_ATTACHMENTS
 			WHERE
 				itemid = #v_pItemID#
@@ -6363,7 +6363,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.deleteBoard"						parameterClass="Integer">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_COMM_TREECACHE
 			WHERE
 				tenant_id = #tenantID#
@@ -6671,7 +6671,7 @@
 	
 	<delete id="EzCommunityDAO.guestEditOkDelete"				parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
         		TBL_C_CLUBGUEST
         	WHERE
         		RTRIM(c_no) = #c_no#
@@ -6684,7 +6684,7 @@
 	
 	<delete id="EzCommunityDAO.deleteItem1"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
         		TBL_COMM_ITEM 
        		WHERE 
        			itemid = #itemID#
@@ -6706,7 +6706,7 @@
 	
 	<delete id="EzCommunityDAO.deleteItem3"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
         		TBL_COMM_ITEM_READ 
        		WHERE 
        			itemid = #itemID#
@@ -6798,29 +6798,7 @@
   				TBL_COMM_DELETERESERVEDITEM
 		]]>
   	</select>
-  
-  	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
-  		<![CDATA[
-  			DELETE FROM TBL_COMM_DELETERESERVEDITEM
-  			WHERE
-  				TENANT_ID = #tenantID#
-  			AND
-  				BOARDID = #boardID#
-  			AND
-  				itemID = #itemID#
-		]]>
-  	</delete>
-  
-  	<delete id="EzCommunityDAO.deleteReservedBoard" parameterClass="CommunityBoardDeleteItemVO">
-  		<![CDATA[
-  			DELETE FROM TBL_COMM_DELETERESERVEDBOARD
-  			WHERE
-  				TENANT_ID = #tenantID#
-  			AND
-  				BOARDID = #boardID#
-		]]>
-  	</delete>
-  
+  	
   	<select id="EzCommunityDAO.getCopyItemAttach" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -6833,16 +6811,6 @@
        			ITEMID = #itemID#
 		]]>
 	</select>
-	
-	<delete id="EzCommunityDAO.deleteBoardItemAttach" parameterClass="Map">
-		<![CDATA[
-			DELETE FROM TBL_COMM_Item_Attachments
-      		WHERE  
-      			TENANT_ID = #tenantID#
-      		AND
-      			ITEMID = #itemID#
-		]]>
-	</delete>
 	
 	<select id="EzCommunityDAO.sendPostNoticeMailGet1" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -6882,4 +6850,39 @@
 				itemID = #itemID#
 		]]>
 	</select>
+
+	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM 
+  				TBL_COMM_DELETERESERVEDITEM
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+  			AND
+  				itemID = #itemID#
+		]]>
+  	</delete>
+  
+  	<delete id="EzCommunityDAO.deleteReservedBoard" parameterClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM 
+  				TBL_COMM_DELETERESERVEDBOARD
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+		]]>
+  	</delete>
+	
+	<delete id="EzCommunityDAO.deleteBoardItemAttach" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_COMM_Item_Attachments
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			ITEMID = #itemID#
+		]]>
+	</delete>
 </sqlMap>
