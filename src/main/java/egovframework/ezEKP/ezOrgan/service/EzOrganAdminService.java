@@ -59,6 +59,8 @@ public interface EzOrganAdminService {
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception;
 
 	public void setPassword(String cn, String password, int tenantID) throws Exception;
+	
+	public void setPasswordExceptAD(String cn, String password, int tenantID) throws Exception;
 
 	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception;
 	

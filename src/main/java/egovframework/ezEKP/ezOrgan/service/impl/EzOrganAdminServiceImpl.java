@@ -380,6 +380,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
+	public void setPasswordExceptAD(String cn, String password, int tenantID) throws Exception {
+		String pwd = EgovFileScrty.encryptPassword(password, cn);
+		
+		LoginVO loginVO = new LoginVO();		
+		loginVO.setId(cn);
+		loginVO.setPassword(pwd);
+		loginVO.setTenantId(tenantID);
+		
+		loginDAO.updatePassword(loginVO);
+
+	}	
+	
+	@Override
 	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception {
 		logger.debug("setPasswordWithEmailSystem started");
 		logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID);
