@@ -1072,4 +1072,40 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
 	}
 	
+	// 사용자 이름,부서 목록을 반환한다.
+    @Override
+    public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
+    									 String keycode,String keyword) throws Exception {     
+    	logger.debug("getUserList started");
+    	
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		
+    	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
+    	
+    	logger.debug("getUserList ended");
+    	
+    	return list;
+    }
+
+    // 사용자 이름,부서 목록개수를 반환한다.
+    @Override
+    public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
+    	logger.debug("getUserCount started");
+    	
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		
+		logger.debug("getUserCount ended");
+    	
+		return ezOrganAdminDao.getUserCount(params);
+    }	
 }
