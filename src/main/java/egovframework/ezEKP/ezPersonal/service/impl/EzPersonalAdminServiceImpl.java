@@ -201,12 +201,22 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE>");
 			result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
 			
-			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
-			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
-			//result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
-			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
-			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
-			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
+			if (userInfo.getServerName().equals("jgw.cloud.kaoni.com")) {
+				//result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
+				//result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
+				//result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
+				result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
+				result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
+			} else {
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
+				//result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
+				result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
+				result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
+				
+			}
 			
 			if (vo.getModiDate() == null) {
 				result.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
