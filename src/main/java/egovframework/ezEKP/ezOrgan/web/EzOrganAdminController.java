@@ -266,7 +266,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						try {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
-							result = "OK";	
+							result = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
 							
@@ -1238,7 +1238,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	        ezOrganAdminService.updateDBData_user(vo);
 	        result = "OK";
 		// 새로운 사용자를 등록한다.
-		} else {		    
+		} else {
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String cn = vo.getCn();
 						

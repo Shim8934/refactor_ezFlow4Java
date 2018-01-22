@@ -2459,7 +2459,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
 			map.put("v_PFORMID", result);
-			System.out.println("v_PFORMID ///"+result +"companyID ///"+companyID);
 			logger.debug("setFormDataInsert1 started.");
 			ezApprovalGAdminDAO.setFormDataInsert1(map);
 			logger.debug("setFormDataInsert1 ended.");
