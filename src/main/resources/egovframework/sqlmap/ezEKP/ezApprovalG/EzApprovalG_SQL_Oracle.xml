@@ -10125,7 +10125,8 @@
         		  RegSerialNo, 
         		  RollbackFlag,
         		  TENANT_ID,
-				  COMPANYID )
+				  COMPANYID,
+				  IDX )
         	VALUES ( (
     					SELECT 
     						CASE WHEN ISUsed ='0' THEN '0' 
@@ -10201,7 +10202,8 @@
    		 						1, 
    		 						0,
    		 						#v_TENANTID#,
-								#companyID# )
+								#companyID#,
+								SEQ_TBL_SERIALNUMGEN.NEXTVAL )
 	</insert>
 	<select id="EzApprovalG.rollBackFlag" parameterClass="Map" resultClass="int">
 			SELECT 
@@ -10433,9 +10435,9 @@
 		 								WHERE  
 		 										CodeType = '007' 
 		 								AND
-												TENANT_ID =#v_TENANTID#)
+												TENANT_ID =#v_TENANTID#
 										AND
-												COMPANYID = #companyID#
+												COMPANYID = #companyID#)
 	 						 WHERE  
 	 						 		Code = '3')
 	     AND 
