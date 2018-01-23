@@ -3,13 +3,29 @@
 
 <sqlMap namespace="ezWebFolderAdmin">
 	<typeAlias  alias="WebfolderConfigVO"      		type="egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO"/>
+	<typeAlias  alias="UserCapacityVO"      		type="egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO"/>
 	
 	<!-- WebfolderConfig resultMap -->
     <resultMap id="webfolderConfigVO" class="WebfolderConfigVO">
-        <result property="tenantId"             column="TENANT_ID"                columnIndex="1" />              
-        <result property="companyId"         	column="COMPANY_ID"               columnIndex="2" />
-        <result property="uploadLimit"         	column="UPLOAD_LIMIT"             columnIndex="3" />
-        <result property="totalLimit"          	column="TOTAL_LIMIT"              columnIndex="4" />        
+        <result property="tenantId"             column="TENANT_ID"              columnIndex="1" />              
+        <result property="companyId"         	column="COMPANY_ID"             columnIndex="2" />
+        <result property="uploadLimit"         	column="UPLOAD_LIMIT"           columnIndex="3" />
+        <result property="totalLimit"          	column="TOTAL_LIMIT"            columnIndex="4" />        
+    </resultMap>
+    
+   	<!-- UserCapacity resultMap -->
+    <resultMap id="userCapacityVO" class="UserCapacityVO">
+        <result property="userId"               column="CN"                		columnIndex="1" />
+        <result property="userName"             column="DISPLAY_NAME"           columnIndex="2" />
+        <result property="departmentId"         column="DEPARTMENT_ID"          columnIndex="3" />
+        <result property="departmentName"       column="DEPARTMENT_NAME"        columnIndex="4" /> 
+        <result property="companyId"         	column="COMPANY_ID"             columnIndex="5" /> 
+        <result property="companyName"         	column="COMPANY_NAME"           columnIndex="6" />          
+        <result property="totalCapacity"        column="TOTAL_CAPACITY"         columnIndex="7" />
+        <result property="jobTitle"          	column="JOB_TITLE"              columnIndex="8" /> 
+        <result property="totalUsed"         	column="TOTAL_USED"             columnIndex="9" />
+        <result property="tenantId"          	column="TENANT_ID"              columnIndex="10" /> 
+           
     </resultMap>
     
     <insert id="EzWebFolderAdminDAO.saveConfig" parameterClass="Map">      	
@@ -70,9 +86,29 @@
 			AND
 				TENANT_ID  = #tenantId#
 		]]>		
-    </select> 
+    </select>
     
-    
+    <select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO">             
+		<![CDATA[
+			SELECT
+				U.CN AS CN,
+				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END AS DISPLAY_NAME,
+				U.DEPARTMENT AS DEPARTMENT_ID,
+				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END AS DEPARTMENT_NAME,				
+ 				U.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
+ 				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY_NAME,
+ 				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, C.TOTAL_LIMIT) AS TOTAL_CAPACITY,
+ 				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END AS JOB_TITLE,
+ 				IF(W.TOTAL_USED IS NOT NULL, W.TOTAL_USED, 0) AS TOTAL_USED,
+ 				U.TENANT_ID AS TENANT_ID
+			FROM TBL_USERMASTER U LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN
+								  LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID								  
+			WHERE 
+				u.TENANT_ID = #tenantId# 
+			AND
+				 u.PHYSICALDELIVERYOFFICENAME = #companyId#	
+		]]>		
+    </select>  
     
 </sqlMap>
 

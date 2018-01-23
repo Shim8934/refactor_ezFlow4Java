@@ -108,7 +108,7 @@
 	</head>
 	<body class="mainbody">
 	   <h1><spring:message code='ezWebFolder.t102' /></h1>
-	   <div id="companySelect" style="margin: 10px 10px;">
+	   <div id="companySelect" style="margin: 10px 0px;">
 	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129' /></b></span>
 	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">  			
 	   			<c:forEach var="item" items="${list}">
@@ -117,7 +117,7 @@
 	   		</select>
 	   </div>
 	   
-	   <div id="mainSetting" style="margin: 10px 10px;">
+	   <div id="mainSetting" style="margin: 10px 0px;">
 		   <table class="content">
 		   		<tr style="height: 40px;">
 		   			<th><spring:message code='ezWebFolder.t130' /></th>
