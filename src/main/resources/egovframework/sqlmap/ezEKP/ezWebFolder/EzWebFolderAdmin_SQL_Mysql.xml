@@ -2,7 +2,78 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezWebFolderAdmin">
-
+	<typeAlias  alias="WebfolderConfigVO"      		type="egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO"/>
+	
+	<!-- WebfolderConfig resultMap -->
+    <resultMap id="webfolderConfigVO" class="WebfolderConfigVO">
+        <result property="tenantId"             column="TENANT_ID"                columnIndex="1" />              
+        <result property="companyId"         	column="COMPANY_ID"               columnIndex="2" />
+        <result property="uploadLimit"         	column="UPLOAD_LIMIT"             columnIndex="3" />
+        <result property="totalLimit"          	column="TOTAL_LIMIT"              columnIndex="4" />        
+    </resultMap>
+    
+    <insert id="EzWebFolderAdminDAO.saveConfig" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								COMPANY_ID,                               		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_WEBFOLDER_CONFIG
+                         			WHERE
+                         				COMPANY_ID = #companyId#
+                                   	AND
+                                   		TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_WEBFOLDER_CONFIG (
+	                TENANT_ID,        	COMPANY_ID,        UPLOAD_LIMIT,        TOTAL_LIMIT
+	            )
+	            VALUES(
+	                #tenantId#,         #companyId#,       #uploadLimit#,       #personalLimit#
+            )
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_WEBFOLDER_CONFIG
+	            SET 
+	            	 TENANT_ID 		= #tenantId#,
+	            	 COMPANY_ID 	= #companyId#,
+	            	 UPLOAD_LIMIT	= #uploadLimit#,
+	            	 TOTAL_LIMIT	= #personalLimit#	            	 
+	            WHERE
+	            	 COMPANY_ID		= #companyId#
+	            AND
+	            	 TENANT_ID	    = #tenantId#
+            ]]> 
+        </isNotEqual>  
+    </insert>
+    
+    <select id="EzWebFolderAdminDAO.getWebfolderConfig" resultMap="webfolderConfigVO">             
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_WEBFOLDER_CONFIG
+			WHERE  
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID  = #tenantId#
+		]]>		
+    </select> 
+    
+    
+    
 </sqlMap>
 
 

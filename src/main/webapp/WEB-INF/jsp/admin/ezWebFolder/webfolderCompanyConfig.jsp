@@ -12,47 +12,132 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" >        		    
+		<script type="text/javascript" >
+			var currPersonalLimit = "<c:out value='${persLimit}'/>";
+			var currUploadLimit   = "<c:out value='${upLimit}'/>";
+		
 		    window.onload = function () {
-
+				
 		        
-		    };		    
+		    };
+		    
+		    function change() {
+		    	$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/getConfig.do",
+					data: {
+						"companyId" : document.getElementById("companyList").value
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {						
+						var result = data.webfolderConfig;
+						
+						if (!result) {
+							currPersonalLimit = "";
+							currUploadLimit   = "";
+						}
+						else {
+							currPersonalLimit = result["totalLimit"];
+							currUploadLimit   = result["uploadLimit"];
+						}
+						
+				    	document.getElementById("uploadLimit").value   = currUploadLimit;
+				    	document.getElementById("personalLimit").value = currPersonalLimit;
+						
+					},
+	 				error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});
+		    }
+		    
+		    function save() {
+		    	var uploadLimitVal = document.getElementById("uploadLimit").value;
+		    	
+		    	if (!isValid(uploadLimitVal)) {
+		    		alert("Please enter a valid numeric value!");
+		    		document.getElementById("uploadLimit").focus();
+		    		return;
+		    	}	    	
+		    	
+		    	var personalLimitVal = document.getElementById("personalLimit").value;
+		    	
+		    	if (!isValid(personalLimitVal)) {
+		    		alert("Please enter a valid numeric value!");
+		    		document.getElementById("personalLimit").focus();
+		    		return;
+		    	}
+		    	
+		    	$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/saveConfig.do",
+					data: {
+						"pLimitVal" : personalLimitVal,
+						"uLimitVal" : uploadLimitVal,
+						"companyId" : document.getElementById("companyList").value
+					},
+					dataType: "text",
+					async: true,
+					success : function(data) {					
+						alert("Save successfully!");
+						currPersonalLimit = personalLimitVal;
+						currUploadLimit   = uploadLimitVal;
+					},
+	 				error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});
+		    }
+		    
+		    function cancel() {
+		    	document.getElementById("uploadLimit").value   = currUploadLimit;
+		    	document.getElementById("personalLimit").value = currPersonalLimit;
+		    }
+		    
+		    function isValid(value) {
+		    	if (!isNaN(value) && parseFloat(value) > 0) {
+		    		return true;
+		    	}
+		    	else {
+		    		return false;
+		    	}
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
 	   <h1><spring:message code='ezWebFolder.t102' /></h1>
 	   <div id="companySelect" style="margin: 10px 10px;">
-	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
-	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;">
-	   			<option>가온아이</option>
-	   			<option>리딩</option>
-	   			<option>아추 저죽은행</option>
-	   			<option>테스트1</option>
-	   			<option>테스트2</option>
+	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129' /></b></span>
+	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">  			
+	   			<c:forEach var="item" items="${list}">
+		        	<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		        </c:forEach>
 	   		</select>
 	   </div>
 	   
 	   <div id="mainSetting" style="margin: 10px 10px;">
 		   <table class="content">
 		   		<tr style="height: 40px;">
-		   			<th>1회 업로드 용량</th>
+		   			<th><spring:message code='ezWebFolder.t130' /></th>
 		   			<th>
-		   				<input type="text" style="height: 30px;" />
-		   				<span>GB</span>
+		   				<input id="uploadLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${upLimit}'/>" />
+		   				<span><spring:message code='ezWebFolder.t132' /></span>
 		   			</th>
 		   		</tr>
 		   		<tr style="height: 40px;">
-		   			<th>개인 기본 용량</th>
+		   			<th><spring:message code='ezWebFolder.t131' /></th>
 		   			<th>
-		   				<input type="text" style="height: 30px;" />
-		   				<span>GB</span>
+		   				<input id="personalLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${persLimit}'/>" />
+		   				<span><spring:message code='ezWebFolder.t132' /></span>
 		   			</th>
 		   		</tr>
 		   </table>
 	   </div>
 	   <div style="margin: 10px 70px;">
-		   <a class="webfolderBttn"><span onclick="">저장</span></a>
-		   <a class="webfolderBttn"><span onclick="">취소</span></a>
+		   <a class="webfolderBttn"><span onclick="save();"><spring:message code='ezWebFolder.t133' /></span></a>
+		   <a class="webfolderBttn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112' /></span></a>
 	   </div>
 	</body>
 </html>
