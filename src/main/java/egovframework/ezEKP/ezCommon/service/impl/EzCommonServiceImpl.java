@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommonService")
@@ -85,57 +86,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             fileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
         }
         fileName = getProperFileName(fileName, fileExt, isUTF8);
-        boolean bAttachment = false;
-        
-        if (pAttachment) {
-            switch (fileExt) {
-                case ".eml":
-                case ".mht":
-                case ".xls":
-                case ".doc":
-                case ".pdf":
-                case ".hwp":
-                case ".ppt":
-                case ".docx":
-                case ".pptx":
-                case ".xlsx":
-                case ".rtf":
-                case ".jpg":
-                case ".gif":
-                case ".bmp":
-                case ".wmv":
-                case ".avi":
-                case ".mp4":
-                case ".mpeg":
-                    bAttachment = true;
-                    break;
-                default:
-                    bAttachment = false;
-                    break;
-            }
-            bAttachment = true;
-        }
         
         FileInputStream is = null;
-        String usebrowser = (request.getHeader("User-Agent")==null||request.getHeader("User-Agent").equals("")) ? "NONE" : request.getHeader("User-Agent").indexOf("MSIE") > -1 ?
-                            "IE" : request.getHeader("User-Agent").indexOf("Trident") > -1 ? "IE" : "NONE";
+        String userAgentHeader = request.getHeader("User-Agent");
+        String usebrowser = ClientUtil.getClientInfo(request, "browser");//(userAgentHeader == null || userAgentHeader.equals("")) ? "NONE" : userAgentHeader.contains("MSIE") ?
+                            //"IE" : userAgentHeader.contains("Trident") ? "IE" : userAgentHeader.contains("Firefox") ? "FIREFOX" : "NONE";
 
-        if (bAttachment) {
-            if (isUTF8.equals("0") && usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"),"UTF-8") + "\"");
-            } else if (isUTF8.equals("0") && !usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + (fileName) + "\"");
-            } else {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            }
+        if(userAgentHeader == null || userAgentHeader.equals("")) {
+        	usebrowser = "NONE";
+        }
+        
+        String type = pAttachment ? "attachment" : "inline";
+        
+        if (isUTF8.equals("0") && (usebrowser.equals("Firefox") || usebrowser.equals("Safari"))) {
+            response.addHeader("Content-Disposition", type + ";filename=\"" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\"");
         } else {
-            if (isUTF8.equals("0") && usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            } else if (isUTF8.equals("0") && !usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            } else {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            }
+            response.addHeader("Content-Disposition", type + ";filename=\"" + URLEncoder.encode((fileName), "UTF-8").replace("+", "%20") + "\"");
         }
 
         if (fileExt.equals(".pdf")) {
@@ -460,7 +426,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 배경화면추출 표출 Method
 	 */
-	private String[] extractBackgroundSource(String[] strHtml) throws Exception{
+	private String[] extractBackgroundSource(String[] strHtml) throws Exception {
+		logger.debug("extractBackgroundSource started.");
+		
         String strTempHtml = strHtml[0].toLowerCase();
         int npos = 0, nposStart = 0, nposEnd = 0;
         int nImgCount = 0;
@@ -471,29 +439,39 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         //<body 태그의 Background갯수를 알아낸다.
         while (true) {
             npos = strTempHtml.indexOf("<body", npos);
-            if (npos > 0) {
+            if (npos >= 0) {
                 nposStart = strTempHtml.indexOf(" background-image:", npos + 5);
-                if (nposStart > 0) {
-                	nposStart = strTempHtml.indexOf("url", nposStart) + 3;
+                if (nposStart >= 0) {
+                	nposStart = strTempHtml.indexOf("url", nposStart);
                 	
-                	//에디터별로 url 내용이 달라서 url을 찾아내자
-                	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
-                		nposStart += 1;
+                	if (nposStart != -1) {
+	                	nposStart += 3;
+	                	
+	                	//에디터별로 url 내용이 달라서 url을 찾아내자
+	                	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
+	                		nposStart += 1;
+	                	}
+	                	
+	                    nposEnd = strTempHtml.indexOf(");", nposStart);
+	                    
+	                    if (nposEnd != -1) {
+		                    while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
+		                    	nposEnd -= 1;
+		                	}
+		                    		                    
+		                    if ((nposEnd - nposStart) > 0) {
+		                        strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
+		                        L_BackImage.add(strImgsrc);
+		                        npos = nposEnd;
+		                    } else {
+		                        npos = npos + 5;
+		                    }
+	                    } else {
+	                    	npos = npos + 5;
+	                    }
+                	} else {
+                		 npos = npos + 5;
                 	}
-                	
-                    nposEnd = strTempHtml.indexOf(");", nposStart);
-                    
-                    while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
-                    	nposEnd -= 1;
-                	}
-                    
-                    if ((nposEnd - nposStart) > 0) {
-                        strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
-                        L_BackImage.add(strImgsrc);
-                        npos = nposEnd;
-                    } else {
-                        npos = npos + 5;
-                    }
                 } else {
                     npos = npos + 5;
                 }
@@ -507,29 +485,39 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         while (true) {
         	if (strTempHtml.indexOf("background", npos) > 0) {
         		npos = strTempHtml.indexOf("<table", npos);
-        		if (npos > 0) {
+        		if (npos >= 0) {
         			nposStart = strTempHtml.indexOf(" background-image:", npos + 6);
-        			if (nposStart > 0) {
-                    	nposStart = strTempHtml.indexOf("url", nposStart) + 3;
+        			if (nposStart >= 0) {
+                    	nposStart = strTempHtml.indexOf("url", nposStart);
                     	
-                    	//에디터별로 url 내용이 달라서 url을 찾아내자
-                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
-                    		nposStart += 1;
+                    	if (nposStart != -1) {
+	                    	nposStart += 3;
+	                    	
+	                    	//에디터별로 url 내용이 달라서 url을 찾아내자
+	                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
+	                    		nposStart += 1;
+	                    	}
+	                    	
+	                        nposEnd = strTempHtml.indexOf(");", nposStart);
+	                        
+	                        if (nposEnd != -1) {
+		                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
+		                        	nposEnd -= 1;
+		                    	}
+		                        
+		                        if ((nposEnd - nposStart) > 0) {
+		                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
+		                            L_BackImage.add(strImgsrc);
+		                            npos = nposEnd;
+		        				} else {
+		        					npos = npos + 6;
+		        				}
+	                        } else {
+	                        	npos = npos + 6;
+	                        }
+                    	} else {
+                    		npos = npos + 6;
                     	}
-                    	
-                        nposEnd = strTempHtml.indexOf(");", nposStart);
-                        
-                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
-                        	nposEnd -= 1;
-                    	}
-                        
-                        if ((nposEnd - nposStart) > 0) {
-                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
-                            L_BackImage.add(strImgsrc);
-                            npos = nposEnd;
-        				} else {
-        					npos = npos + 6;
-        				}
         			} else {
         				npos = npos + 6;
         			}
@@ -546,29 +534,39 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         while (true) {
         	if (strTempHtml.indexOf("background", npos) > 0) {
         		npos = strTempHtml.indexOf("<td", npos);
-        		if (npos > 0) {
+        		if (npos >= 0) {
         			nposStart = strTempHtml.indexOf(" background-image:", npos + 3);
-        			if (nposStart > 0) {
-                    	nposStart = strTempHtml.indexOf("url", nposStart) + 3;
+        			if (nposStart >= 0) {
+                    	nposStart = strTempHtml.indexOf("url", nposStart);
                     	
-                    	//에디터별로 url 내용이 달라서 url을 찾아내자
-                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
-                    		nposStart += 1;
+                    	if (nposStart != -1) {
+	                    	nposStart += 3;
+	                    	
+	                    	//에디터별로 url 내용이 달라서 url을 찾아내자
+	                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
+	                    		nposStart += 1;
+	                    	}
+	                    	
+	                        nposEnd = strTempHtml.indexOf(");", nposStart);
+	                        
+	                        if (nposEnd != -1) {
+		                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
+		                        	nposEnd -= 1;
+		                    	}
+		                        
+		                        if ((nposEnd - nposStart) > 0) {
+		                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
+		                            L_BackImage.add(strImgsrc);
+		                            npos = nposEnd;
+		        				} else {
+		        					npos = npos + 3;
+		        				}
+	                        } else {
+	                        	npos = npos + 3;
+	                        }
+                    	} else {
+                    		npos = npos + 3;
                     	}
-                    	
-                        nposEnd = strTempHtml.indexOf(");", nposStart);
-                        
-                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
-                        	nposEnd -= 1;
-                    	}
-                        
-                        if ((nposEnd - nposStart) > 0) {
-                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
-                            L_BackImage.add(strImgsrc);
-                            npos = nposEnd;
-        				} else {
-        					npos = npos + 3;
-        				}
         			} else {
         				npos = npos + 3;
         			}
@@ -627,6 +625,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 index++;
             }
         }
+        
+        logger.debug("extractBackgroundSource ended.");
         
         return m_BackImageList;
     }
@@ -757,6 +757,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 //                }
             	
             } else {
+            	realPath = realPath + commonUtil.separator;
+            	
             	File file = new File(realPath + m_BackImageList[i]);
             	in = new FileInputStream(file);
                 int len = 0;

@@ -53,9 +53,8 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezCommunity.t556' /></h1>
-		<br>
-		<br>
-		<table class="content" >
+		
+		<table class="content" style="margin-top:10px">
 			<form action=admin_notice_mail_ok.aspx method=post name=mail>
 				<input type="hidden" value="<c:out value = '${code}' />" name="code">
 		  		<tr> 
@@ -64,12 +63,12 @@
 				</tr>
 				<tr> 
 					<th><spring:message code='ezCommunity.t557' /></th>
-					<td><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:250px;resize:none;"></textarea></td>
+					<td style="padding:3px"><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:250px;resize:none;"></textarea></td>
 				</tr>
 			</form>
 		</table>
 		<br>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"  name="Submit" onClick="SendMail()"><span><spring:message code='ezCommunity.t108' /></span></a>
 			<a class="imgbtn"  name="Submit2" onClick="javascript:mail.reset();"><span><spring:message code='ezCommunity.t109' /></span></a>
 			<a class="imgbtn"  name="Submit3" onclick="parent.parent.window.close()" ><span><spring:message code='ezCommunity.t21' /></span></a>

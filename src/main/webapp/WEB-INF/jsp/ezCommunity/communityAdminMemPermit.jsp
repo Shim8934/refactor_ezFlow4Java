@@ -77,21 +77,19 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code = 'ezCommunity.t548' /></h1>
-		<br>
-		<br>
- 		<div class="subtxt">
+		<h1><spring:message code = 'ezCommunity.t548' /></h1>		
+ 		<div class="subtxt" style="margin-top:10px">
  			<spring:message code = 'ezCommunity.t549' />
  			<span class="point"><c:out value = '${postCount}' /></span>
  			<spring:message code = 'ezCommunity.t511' />
  		</div>
  		
-		<table class="mainlist" style="width:100%" >
+		<table class="mainlist" style="width:100%;margin-top:10px">
   			<tr>
-			    <th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
+			    <th style="width:50px"><spring:message code = 'ezCommunity.t32' /></th>
 			    <th ><spring:message code = 'ezCommunity.t10' /></th>
-			    <th style="width:60px;"><spring:message code = 'ezCommunity.t550' /></th>
-			    <th style="width:60px"><spring:message code = 'ezCommunity.t551' /></th>
+			    <th style="width:100px;"><spring:message code = 'ezCommunity.t550' /></th>
+			    <th style="width:100px"><spring:message code = 'ezCommunity.t551' /></th>
   			</tr>
 			<span id="idSpan">${idSpanValue }</span>
 		</table>

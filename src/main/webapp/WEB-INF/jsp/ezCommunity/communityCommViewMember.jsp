@@ -257,44 +257,36 @@
 	</head>
 	<body class="cmhome_body">
 		<h1 class="type1_h1"><spring:message code = 'ezCommunity.t723' /><span id="mailBoxInfo"></span></h1>
-		<table class="content"> 
-			<form name="page">
+		<form name="page">
+			<table class="content">			
 				<tr>
-      				<th><spring:message code = 'ezCommunity.t28' /></th>
-					<td>
-						<select id="s_radio" name="s_radio" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;">
+					<td style="background-color: #f8f8f8;border:1px solid #ddd">
+						<select id="s_radio" name="s_radio" style="font-size: 13px;vertical-align: middle;text-align: center;height: 21px;cursor: pointer;margin-left:2px">
 							<option value="id"><spring:message code = 'ezCommunity.t512' /></option>
 							<option selected value="name"><spring:message code = 'ezCommunity.t10' /></option>
-						</select>
-						
-						<input type="text" id="keyword" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px">
-						<a class="imgbtn"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
-						
+						</select>						
+						<input class="inputText" type="text" id="keyword" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px">
+						<a class="imgbtn"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>						
 						<c:if test="${keyword != '' }">
 							<a class="imgbtn"><span onClick="searchList()"><spring:message code = 'ezCommunity.t724' /></span></a>
-						</c:if>
-						
+						</c:if>						
 					</td>
-				</tr>
-			</form>
-		</table>
-		
-		<br>
-		
+				</tr>			
+			</table>
+		</form>	
+		<br>		
 		<table id="tblList" class="cmhomelist" width="100%">
 			<tr> 
-				<th style="width:55px"><spring:message code = 'ezCommunity.t32' /></th>
-				<th style="width:100px"><spring:message code = 'ezCommunity.t10' /></th>
+				<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
+				<th style="width:110px"><spring:message code = 'ezCommunity.t10' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.t241' /></th>
-				<th style="width:85px"><spring:message code = 'ezCommunity.t512' /></th>
+				<th style="width:100px"><spring:message code = 'ezCommunity.t512' /></th>
 				<th style="width:85px"><spring:message code = 'ezCommunity.t725' /></th>
 				<th style="width:85px"><spring:message code = 'ezCommunity.t726' /></th>
-				<th style="width:70px"><spring:message code = 'ezCommunity.t727' /></th>
+				<th style="width:60px"><spring:message code = 'ezCommunity.t727' /></th>
 			</tr>
 			${strXML}
-		</table>
-		
-		<div id="tblPageRayer"></div>
-
+		</table>		
+		<div id="tblPageRayer" style="margin-top:10px"></div>
 	</body>
 </html>

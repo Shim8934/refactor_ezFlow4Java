@@ -300,9 +300,9 @@
 		<h1 class="type1_h1">${boardName}<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
+				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987' /></span></li>
 			    <li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
-			    <li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>
-			    <li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987' /></span></li>
+			    <li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>		    
 			</ul>
 		</div>
 		
@@ -310,7 +310,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table class="cmhomelist" id ="tblList" style="width:100%">
+		<table class="cmhomelist" id ="tblList" style="width:100%;margin-top:13px">
 			<tr>
 				<th style="padding:0;width:20px; text-align:center;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
 				<c:choose>
@@ -373,9 +373,8 @@
 					</c:otherwise>
 				</c:choose>
 			</tr>
-		</table>
-		
-		<div id="tblPageRayer"></div>
+		</table>		
+		<div id="tblPageRayer" style="margin-top:10px"></div>
 		<div id="ListInfo" style="DISPLAY:none">${ListInfo}</div>
 	</body>
 </html>

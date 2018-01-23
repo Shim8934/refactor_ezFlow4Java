@@ -123,9 +123,11 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
 				
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
-        if (commonUtil.getPackageType(userInfo.getTenantId()).equals(CommonUtil.PT_BASIC)) {
+        if (packageType.equals(CommonUtil.PT_BASIC)
+        		|| packageType.equals(CommonUtil.PT_MAIL)) {
             return "redirect:/ezEmail/mailAloneMain.do";
         }
 		
@@ -459,12 +461,11 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getRenderedTopMenuHTML(parentPageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
 				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
-				logger.debug("strHTML=" + strHTML);
 			} else {
 				strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
 				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
-				logger.debug("strHTML=" + strHTML);
+
 			}
 		}
 		
@@ -704,14 +705,14 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
-				logger.debug("strHTML="+strHTML);
+//				logger.debug("strHTML="+strHTML);
 			} else {
 				logger.debug("no new_inherit");
 				strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
-				logger.debug("strHTML="+strHTML);
+//				logger.debug("strHTML="+strHTML);
 			}
 		}
 		
@@ -1467,6 +1468,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
 		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
 		
+		if (startDate != null && startDate.split("-")[1].equals("0")) {
+			startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
+		}
+		
+		if (endDate != null && endDate.split("-")[1].equals("0")) {
+			endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
+		}
+		
 		logger.debug("startDate="+startDate+", endDate="+endDate);
 		
 		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -1927,7 +1936,7 @@ public class EzPortalController extends EgovFileMngUtil {
             sb.append("</div>");
 		}
 		
-		logger.debug("strHTML="+sb.toString());
+//		logger.debug("strHTML="+sb.toString());
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strHTML", sb.toString());
 		
@@ -2121,14 +2130,14 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
-				logger.debug("strHTML="+strHTML);
+//				logger.debug("strHTML="+strHTML);
 			} else {
 				logger.debug("no new_inherit");
 				strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
-				logger.debug("strHTML="+strHTML);
+//				logger.debug("strHTML="+strHTML);
 			}
 		}
 		
@@ -2321,12 +2330,12 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getRenderedTopMenuHTML(parentPageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
 				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
-				logger.debug("strHTML=" + strHTML);
+//				logger.debug("strHTML=" + strHTML);
 			} else {
 				strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
 				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
-				logger.debug("strHTML=" + strHTML);
+//				logger.debug("strHTML=" + strHTML);
 			}
 		}
 		if ((width == null  || width.equals("")) || width.equals("-1") || width.equals("0")) {
@@ -2512,7 +2521,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pageID = "";
 		String gubunFlag = "";
 		String newMyPortalPage = "";
-		String newMyPortalPageList = "";
+		//String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
 		int recordCnt = 0;
 		int intPage = 1;
@@ -2561,7 +2570,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			sb.append("</DATA>");
-			newMyPortalPageList = sb.toString();
+			//newMyPortalPageList = sb.toString();
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
@@ -2620,6 +2629,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("resultHTML="+resultHTML);
+		
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);
@@ -2630,7 +2640,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalMyPortalPageList";
 	}
-	
 	
 	/**
 	 * 포탈 - 환경설정 초기 화면 호출 함수
@@ -3101,21 +3110,16 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 메인 화면 호출 함수
 	 */
+	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/help.do")
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("help started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		model.addAttribute("lang", userInfo.getLang());
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 		
 		logger.debug("help ended");
 		return "/ezPortal/help/help";
@@ -3130,14 +3134,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("top started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
@@ -3146,7 +3144,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 		model.addAttribute("firstScreen_Mail", firstScreenMail);
 		
 		logger.debug("top ended");
@@ -3314,16 +3312,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("leftEnv started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 
 		logger.debug("leftEnv ended");
 		return "/ezPortal/help/leftEnv";

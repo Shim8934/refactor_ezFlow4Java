@@ -1267,81 +1267,83 @@ function callMsgDlg(szContentClass, Href) {
 
 var PcSaveArrayList = new Array();
 
-function mail_export(pwd) {
+function mail_export() {
+	var type = "MAIL";
+	
 	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang42);
         return;
-    }
-    else {
+    } else {
         PcSaveArrayList = new Array();
+       
         for (var i = 0; i < listContentArry.length; i++) {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listContentArry[i]);
         }
+        
         for (var i = 0; i < listSubContentArry.length; i++) {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listSubContentArry[i]);
         }
     }
-// 특수문자 현상 때문에 임시로 닫아놓음.
-//    if (PcSaveArrayList.length == 1) { //하나의 메일을 다운로드 할 경우
-//    	var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
-//    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
-//    	AttachDownFrame.location.href = fullpath;
-//        AttachDownFrame.target = "_blank";
-//        
-//    } else { // 여러개의 메일을 다운로드 할 경우
-    	var type = "MAIL";
-    	
-    	if (useEncryptZipForEmail == "YES") { // 암호화 config 인 경우
-    		mailExportOption_onClick(type);
-    	} else { // 암호 적용 안할 경우
-    		mailExport_start();
-    	}
-//    }
+
+	if (useEncryptZipForEmail == "YES") {
+		mailExportOption_onClick(type);
+	} else {
+		mailExport_start();
+	}
     
 }
 
 function mailExport_start(pwd){
-	
 	var encryptPw = "";
+	var folderIdAndMessageIdList = new Object();
 	
 	if (typeof pwd != "undefined") {
 		encryptPw = pwd;
 	}
 	
-	var folderIdAndMessageIdList = new Object();
-	
-	for (var i = 0; i < PcSaveArrayList.length; i++) {
-		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
+	if (PcSaveArrayList.length == 1 && encryptPw == "") {
+		var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
+		var fullpath = "/ezEmail/mailExport.do?" + parameters;
 		
-		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
-			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
-		} else {
-			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
-		}
-	}
-	
-	ShowMailProgress();
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : true,
-		url : "/ezEmail/mailExportZip.do",
-		data : folderIdAndMessageIdList,
-		complete: function(){
-			HiddenMailProgress();
-		},
-		success: function(result){
-			if (result != "") {
-		    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" 
-		    		+ result + "&encryptPw=" + encryptPw;
-		    	AttachDownFrame.location.href = fullpath;
-		        AttachDownFrame.target = "_blank";
+		AttachDownFrame.location.href = fullpath;
+		AttachDownFrame.target = "_blank";
+		
+	} else {
+		
+		for (var i = 0; i < PcSaveArrayList.length; i++) {
+			var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
+			
+			if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
+				folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
 			} else {
-				alert(strLang104);
+				folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
 			}
 		}
-	});
+		
+		ShowMailProgress();
+		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezEmail/mailExportZip.do",
+			data : folderIdAndMessageIdList,
+			complete: function(){
+				HiddenMailProgress();
+			},
+			success: function(result){
+				
+				if (result != "") {
+					var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + encryptPw;
+					AttachDownFrame.location.href = fullpath;
+					AttachDownFrame.target = "_blank";
+				} else {
+					alert(strLang104);
+				}
+				
+			}
+		});
+	}
 	
 }
 

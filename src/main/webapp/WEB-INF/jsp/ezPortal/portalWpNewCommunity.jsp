@@ -22,9 +22,11 @@
 	            
 	            try { top.onresize() } catch (e) { }
 	        }
+	        
 	        function Copmore_btnClick() {
 	            window.open("/ezCommunity/communityMain.do?funCode=5", "main", "");
 	        }
+	        
 	        function go_best(idx, clubgubun) {
 	        	$.ajax({
 					type : "POST",
@@ -54,6 +56,7 @@
 	        }
 
 	        var ezapralert_cross_dialogArguments = new Array();
+	        
 	        function OpenAlertUI(NewWinContent, NewWinCallFunction, NewWinName) {
 	            var parameter = NewWinContent;
 

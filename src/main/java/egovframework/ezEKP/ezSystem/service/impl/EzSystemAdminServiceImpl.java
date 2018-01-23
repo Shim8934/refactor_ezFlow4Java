@@ -9,14 +9,23 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -185,7 +194,55 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return ezSystemAdminDAO.getLoginHistCount(params);
 	}
-	
+
+	/**
+	 * 서버 리스트 가져오기
+	 * */
+	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception {
+		
+		logger.debug("getSysIngo started.");
+		
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		ArrayList<String> serverList = new ArrayList<String>();
+		
+		headers.set("Accpet", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", serverName);
+
+		/**
+		 * 각 서버별 정보를 ArrayList에 저장.
+		 * 1. 자신의 정보 및 기타 서버 정보 저장.
+		 * 2. 기타 서버 정보는 getServerList에 저장된 정보를 바탕으로 RESTful로 받아오기.
+		 * */
+		for (String address : getServerList) {
+			logger.debug(address);
+			/**
+			 * 현재 서버와 serverList의 값이 같은 경우
+			 *               OR
+			 * config에 서버 정보를 저장하지 않은 경우(자신에 대한 작업만 하면 됨)
+			 * */
+			if (curServer == null || curServer.equalsIgnoreCase(address) || address.equalsIgnoreCase("EMPTY")) {
+ 				serverList.add(EzSystemUtil.getSysInfo(ip));					
+			} else {					
+				String sysInfoUrl = address + "/ezSystem/util/getSysInfo";
+				HttpEntity<?> entity = new HttpEntity<>(headers);
+				try {
+					ResponseEntity<String> sysInfo = rest.postForEntity(sysInfoUrl, entity, String.class);
+					serverList.add(sysInfo.getBody());
+					logger.debug("sysInfo : " + sysInfo.getBody());
+				} catch(ResourceAccessException e) {
+					String errorMsg = "{\"getSysInfo\":[{\"hostname\":\""+ address +" is Down\",\"memory\":\"NULL\",\"os\":\"NULL\",\"cpu\":\"NULL\",\"version\":\"NULL\"}]}";
+					serverList.add(errorMsg);
+					logger.debug("sysInfo : " + errorMsg);
+				}
+			}
+		}			
+			
+		logger.debug("getSysInfo ended.");
+		
+		return serverList;
+	}
+
 	@Override
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception {
 	    logger.debug("deleteLoginHist started. keepLogPeriod=" + keepLogPeriod + ",tenantID=" + tenantID);
@@ -200,4 +257,60 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
         logger.debug("deleteLoginHist ended.");
 	}	
 
+	/**
+	 * 시스템의 정보 가져오기
+	 * */
+	@SuppressWarnings("unchecked")
+	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception {
+		
+		logger.debug("getSysMonitorInfo started.");
+		
+		String result ="";
+
+		if (chkServer) {
+			
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			
+			String osInfo = EzSystemUtil.getSysInfo(ip);
+			String cpuInfo = EzSystemUtil.getCpuInfo(ip);
+			String memoryInfo = EzSystemUtil.getMemoryInfo(ip);
+			String fileSysInfoList  = EzSystemUtil.getFileSysInfo(ip);
+			String diskioInfo = EzSystemUtil.getDiskioInfo(ip);
+			String netTrafficList = EzSystemUtil.getNetDataInfo(ip);
+			
+			jArr.add(osInfo);
+			jArr.add(cpuInfo);
+			jArr.add(memoryInfo);
+			jArr.add(fileSysInfoList);
+			jArr.add(diskioInfo);
+			jArr.add(netTrafficList);
+			
+			jObj.put("getSysMonitorInfo", jArr);
+			
+			result = jObj.toString();
+		} else {
+			RestTemplate rest = new RestTemplate();
+			HttpHeaders headers = new HttpHeaders();	
+			
+			headers.set("Accpet", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", serverName);		
+			/**
+			 * ajax로 해당 div의 순번을 가져온다.
+			 * div순번 -> config에 저장된 순번
+			 * config에 저장된 서버 정보로 데이터 가져오기.
+			 * */
+			String sysInfoUrl = address + "/ezSystem/util/getSysMonitorInfo";
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			
+			ResponseEntity<String> sysMonitorInfo = rest.postForEntity(sysInfoUrl, entity, String.class);
+			logger.debug("<<<sysMonitorInfo : " + sysMonitorInfo.getBody());
+			
+			result = sysMonitorInfo.getBody();
+		}
+
+		logger.debug("getSysMonitorInfo started.");
+		
+		return result;
+	}
 }

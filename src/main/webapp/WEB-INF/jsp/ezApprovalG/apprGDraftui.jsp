@@ -477,6 +477,7 @@
 			    		url : "/ezApprovalG/getExtTotalAttachSize.do",
 			    		data : {
 			    			docID : pDocID
+			    			////////
 			    		},
 			    		success: function(text){
 			    			result = text;
@@ -562,6 +563,28 @@
 		            	OpenInformationUI(pAlertContent, check_ReUsed);	
 		            	return;
 		            }
+		            
+		            if (addLastKyulJeYN != "0") {
+			        	var hDocID ;
+						if (pDraftFlag == "HABYUI") {
+							hDocID = pOrgDocID;
+			        	} else {
+			        		hDocID = pDocID;
+			        	}
+			        	$.ajax({
+	                		type : "POST",
+	                		dataType : "text",
+	                		async : false,
+	                		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
+	                		data : {
+	                				docID     : hDocID,
+	                				flag      : "draft"
+	                				},
+	                		success : function(result){
+	                			totalMemSN = result;
+	                		}
+	                	});
+			        }
 		            
 		            setDrafterAddress();
 		            if (pDraftFlag == "REDRAFT")
@@ -741,6 +764,7 @@
 		                        return;
 		                    }
 		                    Gyuljedate = GetDocInfoData("END", "STARTDATE");
+		                  
 		                    SendMailToReceiveDept(pDocTitle, arr_userinfo[2], Gyuljedate, pDocID);
 		                } else {
 		                	Gyuljedate = GetDocInfoData("APR", "STARTDATE");
@@ -802,13 +826,19 @@
 		        }
 		        
 		        if (addLastKyulJeYN != "0") {
+		        	var hDocID ;
+					if (pDraftFlag == "HABYUI") {
+						hDocID = pOrgDocID;
+		        	} else {
+		        		hDocID = pDocID;
+		        	}
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",
                 		async : false,
                 		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
                 		data : {
-                				docID     : pDocID,
+                				docID     : hDocID,
                 				flag      : "draft"
                 				},
                 		success : function(result){

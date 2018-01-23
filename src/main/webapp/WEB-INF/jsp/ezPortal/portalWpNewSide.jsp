@@ -39,8 +39,9 @@
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript">
-		   document.onselectstart = function () { return false; };
-		    window.onload = window_onload_Newside;
+		   	document.onselectstart = function () { return false; };
+		   	
+			window.onload = window_onload_Newside;
 		    
 		    function window_onload_Newside() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {

@@ -669,8 +669,9 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
 
         if (trim_Cross(GetAttribute(AprDeptRow[i], "DATA2")) == "" || trim_Cross(GetAttribute(AprDeptRow[i], "DATA2")) == "null" || isUsed == "reuse") { // 재사용일 경우 추가
             GetXml += "<DATA name='DocID'>" + pDocID + "</DATA>";
-        }
-        else {
+        } else if (pDocID && pReDraftFlag == 'REDRAFT'){
+        	GetXml += "<DATA name='DocID'>" + pDocID + "</DATA>";
+        } else {
             GetXml += "<DATA name='DocID'>" + GetAttribute(AprDeptRow[i], "DATA2") + "</DATA>";
         }
         

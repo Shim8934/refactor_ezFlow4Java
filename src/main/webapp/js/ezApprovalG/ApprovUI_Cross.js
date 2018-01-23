@@ -3113,7 +3113,7 @@ function getHistory() {
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
 
-    DivPopUpShow(730, 450, URL);
+    DivPopUpShow(740, 450, URL);
 }
 
 function getHistory_Complete() {
@@ -3312,9 +3312,12 @@ function setRecevInfo(ret) {
                 }
             }
 
-        }
-        else {
-            precipent = strLang92;
+        } else {
+        	if (approvalFlag == "G") {
+        		precipent = strLang92;
+        	} else {
+        		precipent = strLangS68;
+        	}
 
             if (getNodeText(dataNodes[3]) == "Y")
                 precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
@@ -3339,8 +3342,17 @@ function setRecevInfo(ret) {
                 if (field)
                     field.textContent = strLang94;
             }
-        }
-        else {
+        } else if (precipent == strLangS68) {
+        	 field.textContent = precipent
+             var field = message.GetListItem(fields, "recipients");
+             if (field) {
+                 field.textContent = precipents
+                 var field = message.GetListItem(fields, "hrecipients");
+                 if (field) {
+                     field.textContent = strLang94;
+                 }
+             }
+        } else {
             field.textContent = precipent;
 
             if (precipents == "") {
@@ -3353,8 +3365,9 @@ function setRecevInfo(ret) {
                 var field = message.GetListItem(fields, "recipients");
                 if (field) {
                     field.textContent = " ";
-                    if (new RegExp(/Firefox/).test(navigator.userAgent))
+                    if (new RegExp(/Firefox/).test(navigator.userAgent)) {
                         field.innerHTML = "<br type='_moz'>";
+                    }
                 }
             }
         }

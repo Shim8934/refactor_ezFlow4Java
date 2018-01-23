@@ -2,10 +2,13 @@
 function GetFormInfo(ID, KIND, searchtype, searchname) {
     var xmlRtn = createXmlDom();
 
-    if (searchtype == undefined)
-        searchtype = "";
-    if (searchname == undefined)
-        searchname = "";
+    if (searchtype == undefined) {
+    	searchtype = "";
+    }
+    
+    if (searchname == undefined) {
+    	searchname = "";
+    }
 
     $.ajax({
 		type : "POST",

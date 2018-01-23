@@ -42,7 +42,7 @@ public class ADConnection {
     	logger.debug("=======AD Connection=======");
     	logger.debug(address);
     	logger.debug(security);
-    	logger.debug(passwd);
+    	//logger.debug(passwd);
     	logger.debug("===========================");
 
     	Hashtable<String, String> env = new Hashtable<String, String>();

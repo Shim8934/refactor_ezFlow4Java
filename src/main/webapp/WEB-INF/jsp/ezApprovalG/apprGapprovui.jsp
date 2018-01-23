@@ -633,13 +633,19 @@
 		        }
 		        
 		        if (addLastKyulJeYN != "0") {
+		        	var hDocID ;
+					if (pDraftFlag == "HABYUI") {
+						hDocID = pOrgDocID;
+		        	} else {
+		        		hDocID = pDocID;
+		        	}
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",
                 		async : false,
                 		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
                 		data : {
-                				docID     : pDocID,
+                				docID     : hDocID,
                 				flag      : "approvUi"
                 				},
                 		success : function(result){
@@ -737,7 +743,6 @@
 		            }
 		        }
 		        if (rtnVal) {
-		        	curDocNum = getCurDocNumber();
 		        	rtnVal = SaveApproveInfo("1");
 		        }
 
@@ -1559,10 +1564,8 @@
 		    			result = xml;
 		    		}
 		    	});
-		    	
-		    	   var dataNodes = GetChildNodes(loadXMLString(result));
-		           var SN = getNodeText(dataNodes[0]);
-		           
+		    	var dataNodes = GetChildNodes(loadXMLString(result));
+		        var SN = getNodeText(dataNodes[0]);
 		    	return SN;
 		    }
 		</script>

@@ -7,15 +7,19 @@
 	<head>
 		<title>mail_general</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
         <script src="/js/jquery/raphael.2.1.0.min.js"></script>
         <script src="/js/jquery/justgage.1.0.1.min.js"></script>
 		<script type='text/javascript'>
 		    var xmlhttp;
 		    document.onselectstart = function () { return false; };
 		    var MailQuater;
+		    var previewSubTree = "${previewSubTree}";
+		    var usePreviewSubTree = "${usePreviewSubTree}";
+		    
 		    window.onload = function()
 		    {
 		        MailQuater = new JustGage({
@@ -31,6 +35,15 @@
                 xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
                 xmlhttp.onreadystatechange = detailbox_after;
                 xmlhttp.send();
+                
+                if (usePreviewSubTree == "YES") {
+	                if (previewSubTree == "Y") {
+	                	$('#previewSubTreeSlb').val("Y").attr("selected", "selected");
+	                } else {
+	                	$('#previewSubTreeSlb').val("N").attr("selected", "selected");
+	                }
+                }
+
 		    }
 
 		    function detailbox_after()
@@ -96,19 +109,31 @@
 			    }
 
 				var xmlHTTP = createXMLHttpRequest();
-				xmlHTTP.open("POST", "/ezEmail/mailGeneralSave.do?MODE=ALL", false);
+				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
+			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
+			    var previewSubTreeStatus = window.parent.parent.frames["left"].previewSubTree;
+				var sendStr = "<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
+				                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
+				                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
+				                "<PREVIEWWLIST>" + document.getElementById("WListUser").value + "</PREVIEWWLIST>" +
+				                "<PREVIEWWCONTENT>" + document.getElementById("WPreUser").value + "</PREVIEWWCONTENT>" +
+				                "<PREVIEWHLIST>" + document.getElementById("HListUser").value + "</PREVIEWHLIST>" +
+				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
+				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>";
+				
+                if (usePreviewSubTree == "YES") {
+                	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
+                }
+				
+				xmlHTTP.open("POST", url, false);
 				xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-				xmlHTTP.send(
-				"<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
-                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
-                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
-                "<PREVIEWWLIST>" + document.getElementById("WListUser").value + "</PREVIEWWLIST>" +
-                "<PREVIEWWCONTENT>" + document.getElementById("WPreUser").value + "</PREVIEWWCONTENT>" +
-                "<PREVIEWHLIST>" + document.getElementById("HListUser").value + "</PREVIEWHLIST>" +
-                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
-                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
-                "</DATA>"
-				);
+                xmlHTTP.send(sendStr + "</DATA>");
+
+                if (previewSubTreeStatus != previewSubTreeSlb) {
+                	var type = previewSubTreeSlb;
+                	window.parent.parent.frames["left"].previewSubTreeCall(type);
+                }
+                
 				if (Gubun == "1") {
 				    if (xmlHTTP.status == 200)
 				        alert("<spring:message code='ezEmail.t42' />");
@@ -116,6 +141,7 @@
 				        alert("<spring:message code='ezEmail.t176' />" + xmlHTTP.statusText);
 				}
 			}
+			
 		    function MakeXMLString(pStr) {
 		        pStr = ReplaceText(pStr, "&", "&amp;");
 		        pStr = ReplaceText(pStr, "<", "&lt;");
@@ -386,6 +412,17 @@
 		          <a class="imgbtn" onclick="MailOutNameModify();"><span><spring:message code='ezEmail.t149' /></span></a>
 		      </td>
 		  </tr>
+		  <c:if test="${usePreviewSubTree eq 'YES' }">
+			  <tr>
+			  	<th><spring:message code="ezEmail.kyj18"/> </th>
+			  	<td>
+			  		<select id="previewSubTreeSlb">
+			  			<option value="Y"><spring:message code="ezEmail.t808"/> </option>
+			  			<option value="N"><spring:message code='ezEmail.t99000009' /></option>
+			  		</select>
+			  	</td>
+			  </tr>
+		  </c:if>
 		</table>  
 		<br />
 		<div align="center" style="width:623px;">

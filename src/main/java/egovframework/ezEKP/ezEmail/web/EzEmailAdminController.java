@@ -108,6 +108,8 @@ public class EzEmailAdminController {
 	public String mailDistributionList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailDistributionList started.");
+
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
@@ -129,7 +131,12 @@ public class EzEmailAdminController {
 
 		model.addAttribute("listCompany", listCompany);
 		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
+<<<<<<< HEAD
 
+=======
+		
+		logger.debug("mailDistributionList ended.");
+>>>>>>> origin/master
 		return "admin/ezEmail/mailDistributionList";
 	}
 
@@ -199,6 +206,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹 추가 화면 호출 함수
 	 */
+<<<<<<< HEAD
 	@RequestMapping(value = "/admin/ezEmail/mailAddDistributionList.do")
 	public String mailAddDistributionList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -209,6 +217,18 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 
+=======
+	@RequestMapping(value="/admin/ezEmail/mailAddDistributionList.do")
+	public String mailAddDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailAddDistributionList started.");
+		
+		//관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
+            return "cmm/error/adminDenied";
+        }
+		
+>>>>>>> origin/master
 		String deptID = auth.getDeptID();
 		String cn = request.getParameter("cn") == null ? "" : request
 				.getParameter("cn");
@@ -220,7 +240,12 @@ public class EzEmailAdminController {
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
+<<<<<<< HEAD
 
+=======
+		
+		logger.debug("mailAddDistributionList ended.");
+>>>>>>> origin/master
 		return "admin/ezEmail/mailAddDistributionList";
 	}
 
@@ -606,6 +631,7 @@ public class EzEmailAdminController {
 	/**
 	 * 메일 기본설정 (관리자) 화면 호출 함수
 	 */
+<<<<<<< HEAD
 	@RequestMapping(value = "/admin/ezEmail/mailConfigColor.do")
 	public String mailConfigColor(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -616,12 +642,25 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 
+=======
+	@RequestMapping(value="/admin/ezEmail/mailConfigColor.do")
+	public String mailConfigColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailConfigColor started.");
+        //관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
+            return "cmm/error/adminDenied";
+        }
+	    
+        logger.debug("mailConfigColor ended.");
+>>>>>>> origin/master
 		return "admin/ezEmail/mailConfigColor";
 	}
 
 	/**
 	 * 메일 색상설정 화면 호출 함수
 	 */
+<<<<<<< HEAD
 	@RequestMapping(value = "/admin/ezEmail/mailColor.do")
 	public String mailColor(@CookieValue("loginCookie") String loginCookie,
 			Locale locale, Model model, HttpServletRequest request)
@@ -632,6 +671,18 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 
+=======
+	@RequestMapping(value="/admin/ezEmail/mailColor.do")
+	public String mailColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailColor started.");
+		
+		//관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
+            return "cmm/error/adminDenied";
+        }
+	    
+>>>>>>> origin/master
 		String importanceColor = "#ff0000";
 		String inColor = "#808080";
 		String outColor = "#0080ff";
@@ -654,10 +705,17 @@ public class EzEmailAdminController {
 		model.addAttribute("importanceColor", importanceColor);
 		model.addAttribute("inColor", inColor);
 		model.addAttribute("outColor", outColor);
+<<<<<<< HEAD
 
 		logger.debug("importanceColor=" + importanceColor + ",inColor="
 				+ inColor + ",outColor=" + outColor);
 
+=======
+		
+		logger.debug("importanceColor=" + importanceColor + ",inColor=" + inColor + ",outColor=" + outColor);
+		
+		logger.debug("mailColor ended.");
+>>>>>>> origin/master
 		return "admin/ezEmail/mailColor";
 	}
 
@@ -1042,4 +1100,68 @@ public class EzEmailAdminController {
 
 		logger.debug("MailQuotaExcelExport controller ended.");
 	}
+<<<<<<< HEAD
+=======
+	
+    /**
+     * 메일 디폴트 Quota (관리자) 화면 호출 함수
+     */
+    @RequestMapping(value="/admin/ezEmail/mailDefaultQuota.do")
+    public String mailDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+    	logger.debug("mailDefaultQuota started.");
+    	
+    	//관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        
+        if (auth == null) {
+            return "cmm/error/adminDenied";
+        }
+        
+        String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+        
+        Double[] returnedData = ezEmailUtil.getDefaultQuota(domainName);
+        
+        model.addAttribute("defaultMax", returnedData[0]/1024);
+        model.addAttribute("defaultWarn", returnedData[1]/1024);
+        
+        logger.debug("mailDefaultQuota ended.");
+        return "admin/ezEmail/mailDefaultQuota";
+    }
+    
+    /**
+     * 메일 디폴트 Quota 설정 함수
+     */
+    @RequestMapping(value="/admin/ezEmail/mailSaveDefaultQuota.do")
+    @ResponseBody
+    public String mailSaveDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
+    	logger.debug("mailSaveDefaultQuota started.");
+    	
+    	//관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        
+        if (auth == null) {
+            return "Permission Denied";
+        }
+        
+        String returnValue = "True";
+        
+        try {        
+            String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+        
+            Document doc = commonUtil.convertStringToDocument(bodyData);            
+            String maxStorage = doc.getElementsByTagName("MAXSTORAGE").item(0).getTextContent();
+            String warnStorage = doc.getElementsByTagName("WARNSTORAGE").item(0).getTextContent();            
+                        
+            ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            returnValue = "ERROR";            
+        }
+        
+        logger.debug("mailSaveDefaultQuota ended.");
+        return returnValue;
+    }    
+    
+>>>>>>> origin/master
 }

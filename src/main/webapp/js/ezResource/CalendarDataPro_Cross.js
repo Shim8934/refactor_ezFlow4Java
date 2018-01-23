@@ -379,8 +379,10 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.odtendMinute = DataEDT.getMinutes();
     pTempData.o_start = DataSDT;
     pTempData.o_end = DataEDT;
-    pTempData.odtstartDisplay = mfFormatTime((DataSDT.getHours() * 60) + DataSDT.getMinutes());
-    pTempData.odtendDisplay = mfFormatTime((DataEDT.getHours() * 60) + DataEDT.getMinutes());
+//    pTempData.odtstartDisplay = mfFormatTime((DataSDT.getHours() * 60) + DataSDT.getMinutes());
+//    pTempData.odtendDisplay = mfFormatTime((DataEDT.getHours() * 60) + DataEDT.getMinutes());
+    pTempData.odtstartDisplay = sbFormatTime(DataSDT.getHours() , DataSDT.getMinutes());
+    pTempData.odtendDisplay = sbFormatTime(DataEDT.getHours() , DataEDT.getMinutes());
     pTempData.oAlldayevent = SelectSingleNodeValue(objNodes, "alldayevent");
     pTempData.oBusystatus = SelectSingleNodeValue(objNodes, "busystatus");
     pTempData.oGroupflag = SelectSingleNodeValue(objNodes, "groupflag");
@@ -400,6 +402,22 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     return pTempData;
 }
 
+function sbFormatTime(h,m){
+	var hour;
+	var min;
+	if (h<10){
+		hour = "0" + h ;
+	} else {
+		hour = h;
+	}
+	if (m==0){
+		min = m+"0";
+	} else {
+		min = m;
+	}
+	
+	return hour+":"+min;
+}
 
 function aheadDataCell(oAppointment, order) {
 
@@ -625,18 +643,19 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
         oTd.appendChild(oSpan);
 
         var pTime = "";
-        var pSubject;
+        var pSubject = document.createElement("p");
+        pSubject.setAttribute("style","margin:0; padding:0; display:inline-block;");
 
         if (oAppointment.oAlldayevent != 1) {
             if(oAppointment2 != "")
-                pTime = oAppointment2.oDtstart.replace('T', ' ').substring(0, 16) + " ~ " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
+                pTime = oAppointment2.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
             else
-                pTime = oAppointment.oDtstart.replace('T', ' ').substring(0, 16) + " ~ " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
-            pSubject = oAppointment.odtstartDisplay + " ~ " + oAppointment.odtendDisplay + " " + oAppointment.oSubject;
+                pTime = oAppointment.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
+            pSubject.innerHTML = oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + oAppointment.oSubject;
         }
         else {
             pTime = strLang126;
-            pSubject = oAppointment.oSubject;
+            pSubject.innerHTML = oAppointment.oSubject;
         }
 
         if (oAppointment.oImportance == 1) {
@@ -679,8 +698,8 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
 
         oTd.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
 
-        var oText = document.createTextNode(pSubject);
-        oTd.appendChild(oText);
+//        var oText = document.createTextNode(pSubject);
+        oTd.appendChild(pSubject);
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
     }
@@ -721,8 +740,8 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         var pTime = "";
         var pSubject;
         if (oAppointment.oAlldayevent != 1) {
-            //pTime = oAppointment.odtstartDisplay + " ~ " + oAppointment.odtendDisplay;
-            pTime = oAppointment2.oDtstart.replace('T', ' ').substring(0, 16) + " ~ " + oAppointment2.oDtend.replace('T', ' ').substring(0, 16);
+            //pTime = oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay;
+            pTime = oAppointment2.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment2.oDtend.replace('T', ' ').substring(0, 16);
             pSubject = oAppointment.oSubject;
         }
         else {
@@ -745,7 +764,7 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         oTr.appendChild(oTd);
         oTable.appendChild(oTr);
         oDiv.appendChild(oTable);
-        var oText = document.createTextNode(oAppointment2.odtstartDisplay + " ~ " + oAppointment2.odtendDisplay);
+        var oText = document.createTextNode(oAppointment2.odtstartDisplay + " - " + oAppointment2.odtendDisplay);
         oDiv.appendChild(oText);
 
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.oNumber);
@@ -829,8 +848,8 @@ function CalWeekAllDataBind(oAppointment, order) {
         var pTime = "";
         var pSubject;
         if (oAppointment.oAlldayevent != 1) {
-            //pTime = oAppointment.odtstartDisplay + " ~ " + oAppointment.odtendDisplay;
-            pTime = oAppointment.oDtstart.replace('T', ' ').substring(0, 16) + " ~ " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
+            //pTime = oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay;
+            pTime = oAppointment.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
             pSubject = oAppointment.oSubject;
         }
         else {
@@ -918,8 +937,8 @@ function CalDayDataBind(oAppointment, order, oAppointment2) {
         var pTime = "";
         var pSubject;
         if (oAppointment.oAlldayevent != 1) {
-            //pTime = oAppointment.odtstartDisplay + " ~ " + oAppointment.odtendDisplay;
-            pTime = oAppointment2.oDtstart.replace('T', ' ').substring(0, 16) + " ~ " + oAppointment2.oDtend.replace('T', ' ').substring(0, 16);
+            //pTime = oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay;
+            pTime = oAppointment2.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment2.oDtend.replace('T', ' ').substring(0, 16);
             pSubject = oAppointment.oSubject;
         }
         else {
@@ -943,7 +962,7 @@ function CalDayDataBind(oAppointment, order, oAppointment2) {
         oTable.appendChild(oTr);
 
         oDiv.appendChild(oTable);
-        var oText = document.createTextNode(oAppointment2.odtstartDisplay + " ~ " + oAppointment2.odtendDisplay);
+        var oText = document.createTextNode(oAppointment2.odtstartDisplay + " - " + oAppointment2.odtendDisplay);
         oDiv.appendChild(oText);
 
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.oNumber);
@@ -1029,8 +1048,8 @@ function CalDayAllDataBind(oAppointment, order) {
         var pTime = "";
         var pSubject;
         if (oAppointment.oAlldayevent != 1) {
-            //pTime = oAppointment.odtstartDisplay + " ~ " + oAppointment.odtendDisplay;
-            pTime = oAppointment.oDtstart.replace('T', ' ').substring(0, 16) + " ~ " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
+            //pTime = oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay;
+            pTime = oAppointment.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
             pSubject = oAppointment.oSubject;
         }
         else {
@@ -1613,12 +1632,12 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
 
         var cTime1 = "";
         try {
-            if (pTime.split(" ~ ")[0].split(" ").length > 1) {
-                cTime1 = ChangeTime(pTime.split(" ~ ")[0].split(" ")[1].split(":")[0], pTime.split(" ~ ")[0].split(" ")[1].split(":")[1]);
-                cTime1 = pTime.split(" ~ ")[0].split(" ")[0] + " " + cTime1;
+            if (pTime.split(" - ")[0].split(" ").length > 1) {
+                cTime1 = ChangeTime(pTime.split(" - ")[0].split(" ")[1].split(":")[0], pTime.split(" - ")[0].split(" ")[1].split(":")[1]);
+                cTime1 = pTime.split(" - ")[0].split(" ")[0] + " " + cTime1;
             }
         } catch (e) {
-            cTime1 = pTime.split(" ~ ")[0];
+            cTime1 = pTime.split(" - ")[0];
         }
 
         sTd.innerHTML += "[" + strLang569 + "]<br />" + cTime1 + reFlag;
@@ -1636,12 +1655,12 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
 
         var cTime2 = "";
         try {
-            if (pTime.split(" ~ ")[1].split(" ").length > 1) {
-                cTime2 = ChangeTime(pTime.split(" ~ ")[1].split(" ")[1].split(":")[0], pTime.split(" ~ ")[1].split(" ")[1].split(":")[1]);
-                cTime2 = pTime.split(" ~ ")[1].split(" ")[0] + " " + cTime2;
+            if (pTime.split(" - ")[1].split(" ").length > 1) {
+                cTime2 = ChangeTime(pTime.split(" - ")[1].split(" ")[1].split(":")[0], pTime.split(" - ")[1].split(" ")[1].split(":")[1]);
+                cTime2 = pTime.split(" - ")[1].split(" ")[0] + " " + cTime2;
             }
         } catch (e) {
-            cTime2 = pTime.split(" ~ ")[1];
+            cTime2 = pTime.split(" - ")[1];
         }
 
         sTd.innerHTML += "[" + strLang570 + "]<br />" + cTime2 + reFlag;

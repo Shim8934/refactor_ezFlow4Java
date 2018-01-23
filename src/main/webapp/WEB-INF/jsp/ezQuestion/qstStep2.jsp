@@ -93,12 +93,12 @@
             		frmCreate.selQues.options[0] = TmpOption;
         		}
     		}
-    		function fun_OK() {
-				$('.imgbtn').prop("onclick","");
+    		function fun_OK(button) {
+				$(button).attr("onclick", "");
     			
-    			setTimeout(function(){ 
-    					$('.imgbtn').prop("onclick","fun_OK()");
-    					},3000)
+    			setTimeout(function() { 
+   					$(button).attr("onclick", "fun_OK(this)");
+				}, 350);
 
     			
         		var Qlen = frmCreate.selQues.length;
@@ -315,12 +315,13 @@
         		}
     		}
     		function menuQst_List() {
-        		if(CrossYN()) {
+         		if(CrossYN()) {
         			var szUrl = "/ezQuestion/qstList.do?brdID=5"
         		} else {
         			var szUrl = "/ezQuestion/qstList.do?brdID=5"
         		}
-        		window.location.href = szUrl;	
+        		window.location.href = szUrl;
+    			window.parent.frames["left"].toggleQuestionList();
     		}
     		function menuQst_FileOpen() {
         		if (window.ActiveXObject && pNoneActiveX == "NO") {
@@ -827,7 +828,7 @@
         		<br>
         		<div class="btnposition">
             		<a class="imgbtn" name="Submit" onclick="javaScript:fun_Prev()"><span><spring:message code="ezQuestion.t483" /></span></a>
-            		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
+            		<a class="imgbtn" name="Submit2" onclick="fun_OK(this)"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
        		</div>

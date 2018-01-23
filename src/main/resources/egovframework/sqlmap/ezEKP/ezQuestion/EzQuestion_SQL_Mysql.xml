@@ -274,7 +274,9 @@
 							AND
 								DATE_ADD(DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL A.post_term DAY))
 						OR
-							(A.user_id = #v_PUSERID#)
+							(A.user_id = #v_PUSERID#
+							AND
+								A.tenant_id = #tenantID#)
 						)
 		]]>
 		
@@ -1579,7 +1581,9 @@
 					AND
 						B.TENANT_ID = #tenantID#		
 					OR
-						A.USER_ID = #v_PUSERID#
+						(A.USER_ID = #v_PUSERID#
+						AND
+							A.tenant_id = #tenantID#)
 					)
 		]]>
 		<isNotEmpty property="v_PTITLE">
