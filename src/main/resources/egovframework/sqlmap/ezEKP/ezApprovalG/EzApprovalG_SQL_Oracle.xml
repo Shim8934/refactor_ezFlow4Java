@@ -18244,7 +18244,7 @@
    			TBL_SEPERATEATTACH 
    		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
    		Values 
-   		(#v_RECID#, #v_SEPATTSN#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		(#v_RecordID#, #v_SepAttachNo#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
    </insert>
      
    <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">
