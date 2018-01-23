@@ -399,7 +399,7 @@
 		    
 		    function selbeforeBlock(){
 		        var pageNum = parseInt(currentPage);
-		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+		        pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
 		        goToPageByNum(pageNum);
 		    }
 		    
@@ -413,7 +413,7 @@
 		    
 		    function selafterBlock(){
 		        var pageNum = parseInt(currentPage);
-		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+		        pageNum = ((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1;
 		        goToPageByNum(pageNum);
 		    }
 		    
