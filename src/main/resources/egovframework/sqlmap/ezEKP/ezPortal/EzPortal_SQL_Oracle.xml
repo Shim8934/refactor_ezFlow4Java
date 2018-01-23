@@ -1496,7 +1496,9 @@
        		WHERE
        			UID_ = #v_pUID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
 		]]>
 	</select>
 	
