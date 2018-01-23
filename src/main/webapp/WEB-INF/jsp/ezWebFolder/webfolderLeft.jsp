@@ -256,9 +256,9 @@
 		            alert(e.description);
 		        }
 		    }
-		    function DisplayTopBoard() {
+		    function DisplayTopBoard() {// 이걸 지우면 topboard가 없다고 함
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=88762345-d399-0a3e-bc25-0aafe7936664&subFlag=0", false);
+		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=425f85f0-64d5-4f4d-f3d9-3ba51006473c&subFlag=1", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText != "ERROR") {
@@ -296,7 +296,7 @@
 						returnXML = xml;
 					}        			
 				});	
-//FreeT 요구사항 마이게시판 트리 없을때 안보여주기~
+//FreeT 요구사항 마이게시판 트리 없을때 안보여주기~getBoardList_NewPhoto_after
 //다시 메뉴 스펙이 바껴서 트리 안보여주기 없어도 안보여줄수있어서 재수정
 // 		    	if (returnXML == "<TREEVIEWDATA></TREEVIEWDATA>") {
 // 		    		$("#TreeCtrl_MyBoardTree").css("display", "none");
@@ -311,12 +311,12 @@
 		    
 		    function TopBoard_onclick(obj, ID) {
 		    	//leftcount refresh 때문에 주석중 사이드 이펙트 검사필수
-// 		        if (tempID == ID)
-// 		            clickFlag = true;
-// 		        else
-// 		            clickFlag = false;
+		        if (tempID == ID)
+		            clickFlag = true;
+		        else
+		            clickFlag = false;
 
-// 		        if (!clickFlag) {
+		        if (!clickFlag) {
 					$(".on").attr("class", "off");
 					
 		            var rootBoardID = ID;
@@ -330,7 +330,7 @@
 		            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 		            treeView.DataBind(obj + "obj");
 		            tempID = ID;		            
-// 		        }
+		        }
 		    }
 		    
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
@@ -477,10 +477,10 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 	    <div id="left" style="overflow: auto">
-	        <div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"></div>	        
-			<h2>
-  				<span style="display:inline-block;width:100%;">회사폴더</span>
-  			</h2>
+	        <div class="left_board" title="<spring:message code='ezWebFolder.t10' />"></div>	        
+<!-- 			<h2> -->
+<!--   				<span style="display:inline-block;width:100%;">회사폴더</span> -->
+<!--   			</h2> -->
   			
   			<c:if test="${MyBoardTopFlag == 'NO'}">
 		        <div class="fList" onclick="favoriteList()">
@@ -492,8 +492,6 @@
 	        	<ul></ul>
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>			 
-<!-- 		            {92f58ecd-45fe-ff87-ee3d-c18c90a778c5} -->
-		            
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group.gif" align="middle" />
 		            </h2>
@@ -511,42 +509,55 @@
 	        		parser = new DOMParser();
         		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
         			var i = 0;
-        			$(xmlDoc).find("NODE").each(function(){
+//         			$(xmlDoc).find("NODE").each(function(){
        			        document.write("<h2>");
-           				document.write("<div id='TreeCtr" + i + "' value='92f58ecd-45fe-ff87-ee3d-c18c90a778c5}' onclick='TopBoard_onclick(\"TreeCtrl10 \", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>");
+           				document.write("<div id='TreeCtr0' value='{425f85f0-64d5-4f4d-f3d9-3ba51006473c}' onclick='TopBoard_onclick(\"TreeCtrl0\", \"{425f85f0-64d5-4f4d-f3d9-3ba51006473c}\")'>회사폴더</div>");
+//            				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>");
+
            				document.write("</h2>\n");
            				document.write("<ul>\n");
-           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 200px; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
+           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl0obj' style='width: auto; height: 200px; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
-           				i++;
-        			});
+//            				i++;
+//         			});
 	        	</script>
 	        </div>
 	        
-		    <c:if test="${useQuestion == 'YES'}">
-		    	<div class="qst" onclick="Open_Func(1)"> 
-		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
-		    	</div>
-		    	<ul>
-	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
-	            	<c:if test="${questionAdmin == 'true' }">
-	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
-	            	</c:if>
-	        	</ul>
-		    </c:if>
-		    <c:if test="${applyFlag == 'OK'}">
-		        <h3 style="border-top:0px">
-		            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
-		        </h3>
-		    </c:if>
-		    </div>
-		    <script type="text/javascript">
-		        initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		        $(".on").attr("class", "off");
-		    </script> 
-  			<ul style="overflow-x:auto;overflow-y:200px;">
-	            <div class="tree" id="TreeView" style="height:auto;border:#b6b6b6 0px solid; background-color:#ffffff; vertical-align:top;padding-left:20px;background-color:#ffffff;" ></div>
-	        </ul>
+<%-- 	         <c:if test="${MyBoardTopFlag == 'NO'}"> --%>
+<!-- 		        <div class="fList" onclick="favoriteList()"> -->
+<!-- 	        		<h2> -->
+<%-- 	        			<span><spring:message code="ezBoard.t00010" /></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/ImgIcon/icon-flag.gif" /> --%>
+<!-- 	        			<h2 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span style="width: 100%; display: inline-block; font-weight: bold;" onclick="favoriteList()"></span></h2> -->
+<!-- 	        		</h2>	 -->
+<!-- 	        	</div> -->
+<!-- 	        	<ul></ul> -->
+<!-- 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()"> -->
+<!-- 		            <h2> -->
+<%-- 		            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
+<%-- 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group.gif" align="middle" /> --%>
+<!-- 		            </h2> -->
+<!-- 		        </div> -->
+<!-- 		        <ul id="TreeCtrl_MyBoardTree_ul"> -->
+<!-- 		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div> -->
+<%-- 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3> --%>
+<%-- 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3> --%>
+<%-- 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3> --%>
+<%-- 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3> --%>
+<!-- 		        </ul> -->
+<%-- 	        </c:if>  --%>
+<%-- 		    <c:if test="${useQuestion == 'YES'}"> --%>
+<!-- 		    	<div class="qst" onclick="Open_Func(1)">  -->
+<%-- 		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		         --%>
+<!-- 		    	</div> -->
+<!-- 		    	<ul> -->
+<%-- 	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li> --%>
+<%-- 	            	<c:if test="${questionAdmin == 'true' }"> --%>
+<%-- 	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li> --%>
+<%-- 	            	</c:if> --%>
+<!-- 	        	</ul> -->
+<%-- 		    </c:if> --%>
+		   
+		    
 <!--     		<ul> -->
 <!-- 		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >가온아이</span></li> -->
 <!-- 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >하위폴더</span></li>		         -->
@@ -592,6 +603,14 @@
 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >테스트  8</span></li>		        
 		    </ul>       
 
+			 <h3>
+		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
+		    </h3>
+		    <c:if test="${applyFlag == 'OK'}">
+		        <h3 style="border-top:0px">
+		            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
+		        </h3>
+		    </c:if>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");	        

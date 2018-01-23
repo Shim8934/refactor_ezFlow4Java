@@ -123,8 +123,8 @@ function initToggleList(ulEl, level1, level2, level3)
 		level3El.item(j).onmouseout = mouseOut_Sub;
 	}
 	
-	level2El.item(0).className = "on";
-	level1El.item(0).className = "on";
+//	level2El.item(0).className = "on";
+//	level1El.item(0).className = "on";
 }
 
 function toggleList() {

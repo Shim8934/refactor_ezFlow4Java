@@ -25,15 +25,20 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
@@ -57,6 +62,12 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
 	
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
+	
+	@Resource(name = "EzBoardAdminService")
+	private EzBoardAdminService ezBoardAdminService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);	
 	
 	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
@@ -78,10 +89,96 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
-	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
+	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
+        String redirectBoardID = "";
+        String redirectBoardGroupID = "";
+        String func = "";
+        String subFunc = "";
+        String photoType = "";
+        String applyFlag = "";
         
+        userInfo = commonUtil.userInfo(loginCookie);
+        
+        String strLang = userInfo.getLang();
+		String pUserID = userInfo.getId();
+		String pDeptID = userInfo.getDeptID();
+		String pCompanyID = userInfo.getCompanyID();
+		String pRollInfo = userInfo.getRollInfo();
+		int tenantID = userInfo.getTenantId();
+		
+		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
+			photoType  = request.getParameter("photoType");
+		}
+		
+		if (request.getParameter("boardID") != null && !request.getParameter("boardID").equals("")) {
+			redirectBoardID  = request.getParameter("boardID");
+
+			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, tenantID);
+			for (BoardVO i :  leftBoardList) {
+				redirectBoardGroupID += commonUtil.makeListField(i.getBoardGroupId()) + ",";
+			}
+
+			if (redirectBoardGroupID.length() != 0)
+				redirectBoardGroupID = redirectBoardGroupID.substring(0, redirectBoardGroupID.length() - 1);
+		}
+		
+		if (request.getParameter("func") != null) {
+			func = request.getParameter("func");
+		}
+		
+		if (request.getParameter("subFunc") != null) {
+			subFunc = request.getParameter("subFunc");
+		}
+		
+		int pSelectBy = 0;
+		String pRootBoardID = "top";
+		String pSubFlag = "0";
+        String pExcludeBoardID = " ";
+        String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, pUserID, pDeptID, pCompanyID, tenantID);
+        List<BoardVO> applyUserList = ezBoardAdminService.checkApplyUser(tenantID);
+        
+        for (BoardVO vo: applyUserList) {
+        	if (vo.getApprUserId().toLowerCase().indexOf(pUserID.toLowerCase()) > -1) {
+        		applyFlag = "OK";
+        	}
+        }
+        int pMode = 0;
+        
+        if (pRollInfo != null && (boardGroupAdmin_FG.equals("OK") || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1)) {
+        	pMode = 0;
+        } else {
+        	pMode = 1;
+        }
+        //Library 연결 부분 Method화
+        String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang, userInfo.getTenantId()), userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(resultXML);
+		int resultCount = doc.getElementsByTagName("NODE").getLength();
+		
+		String questionAdmin = "false";
+		if (userInfo.getRollInfo().toLowerCase().indexOf("l=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
+			questionAdmin = "true";
+		}
+		
+		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantID);
+		
+		if (useQuestion == null || useQuestion.equals("")) {
+			useQuestion = "YES";
+		}
+		
+        modelMap.addAttribute("userInfo", userInfo);
+        modelMap.addAttribute("resultCount", resultCount);
+        modelMap.addAttribute("resultXML", resultXML);
+        modelMap.addAttribute("func",func);
+        modelMap.addAttribute("subFunc",subFunc);
+        modelMap.addAttribute("photoType",photoType);
+        modelMap.addAttribute("redirectBoardID",redirectBoardID);
+        modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);
+        modelMap.addAttribute("applyFlag",applyFlag);
+        modelMap.addAttribute("questionAdmin", questionAdmin);
+        modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
+        modelMap.addAttribute("useQuestion", useQuestion);
         
 		return "ezWebFolder/webfolderLeft";
 	}
@@ -92,7 +189,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
         //Add more function here
         
         
-		return "ezWebFolder/webfolderTest";
+		return "ezWebFolder/webfolderLeft";
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
