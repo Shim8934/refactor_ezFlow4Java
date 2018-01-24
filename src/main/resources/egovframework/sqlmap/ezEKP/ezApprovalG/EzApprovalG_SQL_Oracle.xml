@@ -12211,7 +12211,7 @@
 	            AND 
 	            	Type3 = ( 
 	    						SELECT CASE WHEN ISUsed = 0 THEN '0'
-	    							   ELSE $v_numRows$
+	    							   ELSE TO_CHAR($v_numRows$)
 	    							   END 
 	    						FROM (
 			    						SELECT 
@@ -12255,7 +12255,7 @@
 			    						WHERE  
 			    							Code = '4')	)
 	            AND 
-	            	RollbackFlag = '0'
+	            	RollbackFlag = 0
 				AND 
 	            	TENANT_ID = #v_TENANTID#
 	            AND
@@ -12264,7 +12264,7 @@
 		<insert  id="EzApprovalG.insertTbSerialNumGen" parameterClass="Map">
 		INSERT INTO 
 			TBL_SERIALNUMGEN
-          		( Type1, 	  Type2, 	 Type3, 	TimeSep,  RegSerialNo, RollbackFlag, TENANT_ID, COMPANYID )
+          		( Type1, 	  Type2, 	 Type3, 	TimeSep,  RegSerialNo, RollbackFlag, TENANT_ID, COMPANYID, IDX )
         VALUES  ( (SELECT 
         			CASE WHEN ISUsed = 0 THEN '0'
     				ELSE '001'
@@ -12330,7 +12330,7 @@
 																								AND
 																									COMPANYID = #companyID# )
 															    								WHERE  
-															    									Code = '4')), $v_RtnSN$, 0 , #v_TENANTID#, #companyID#)
+															    									Code = '4')), $v_RtnSN$, 0 , #v_TENANTID#, #companyID#,SEQ_TBL_SERIALNUMGEN.nextval)
 		</insert>
 		<update id="EzApprovalG.updateTbSerialNumGen" parameterClass="Map">
 			UPDATE 
@@ -15543,7 +15543,7 @@
 		UPDATE 
 			TBL_RECORD
         SET 
-        	 REGISTERDATE = #v_REGDATE#,
+        	 REGISTERDATE = TO_DATE(#v_REGDATE#,'YYYY-MM-DD HH24:MI:SS'),
              APRMEMBERTITLE = #v_APRMEMTITLE#,
              APRMEMBERTITLE2 = #v_APRMEMTITLE2#,
              DRAFTERNAME = #v_DRAFTER#,
