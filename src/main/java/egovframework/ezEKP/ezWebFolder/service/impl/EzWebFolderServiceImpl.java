@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 
@@ -96,6 +97,13 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.moveFile(map);
+	}
+
+	@Override
+	public String getFileLogSequence(int tenantId) throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getFileLogSequence(map);
 	}
 
 }

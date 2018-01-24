@@ -140,7 +140,7 @@ function fileupload() {
     
 }
 
-function renderResult(result) {	
+function renderResult(result) {
 	if (!result) {
 		alert(strErr);
 		return;

@@ -221,6 +221,64 @@
 				TENANT_ID = #tenantId#
 		]]>			
     </select>
+    
+    <insert id="EzWebFolderAdminDAO.insertFileLog" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								LOG_ID,                               		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_WEBFOLDER_LOG 
+                         			WHERE
+                         				LOG_ID = #logId#
+                                   	AND
+                                   		TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_WEBFOLDER_LOG (
+	                LOG_ID,        	FILE_TYPE,         FILE_NAME,        	FILE_SIZE,          LOG_TYPE,
+	                CREATE_ID,		CREATE_NAME1,	   CREATE_NAME2,		CREATE_DATE,		COMPANY_ID,	                
+	                TENANT_ID
+	            )
+	            VALUES(
+	                #logId#,        #fileType#,        #fileName#,          #fileSize#,         #logType#, 
+	                #createId#,		#createName1#,	   #createName2#,		#createDate#,		#companyId#,
+	                #tenantId#
+            )
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_WEBFOLDER_LOG
+	            SET 
+	            	 LOG_ID 		= #logId#,
+	            	 FILE_TYPE 		= #fileType#,
+	            	 FILE_NAME		= #fileName#,
+	            	 FILE_SIZE		= #fileSize#,
+	            	 LOG_TYPE		= #logType#,
+	            	 CREATE_ID		= #createId#,
+	            	 CREATE_NAME1	= #createName1#, 
+	            	 CREATE_NAME2	= #createName2#,
+	            	 CREATE_DATE 	= #createDate#, 
+	            	 COMPANY_ID		= #companyId#,	            	 
+	            	 TENANT_ID		= #tenantId#
+	            WHERE
+	            		LOG_ID		= #logId#
+	            	AND
+	            		TENANT_ID	= #tenantId#
+            ]]> 
+        </isNotEqual>       
+    </insert>
  
 </sqlMap>
 

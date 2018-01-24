@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
@@ -8,17 +7,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -31,11 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -57,22 +53,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
 	
+	@Resource(name = "EzWebFolderAdminService")
+	private EzWebFolderAdminService ezWebFolderAdminService;	
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);	
 	
 	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
 	public String webfolderMain(HttpServletRequest req, Model model) {
-/*		String func = "";
-		String subFunc = "";
-
-		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
-			func = req.getParameter("func");	
-		}
-		if (req.getParameter("subFunc") != null && !req.getParameter("subFunc").equals("")) {
-			subFunc = req.getParameter("subFunc");	
-		}
-		
-		model.addAttribute("func", func);
-		model.addAttribute("subFunc", subFunc);*/
 		
 		return "ezWebFolder/webfolderMain";
 	}
@@ -172,7 +159,24 @@ public class EzWebFolderController extends EgovFileMngUtil {
             		fileVO.setFileId(getMaxFileID(user.getTenantId()));
             		
             		ezWebFolderService.insertFile(fileVO);
-            		list.add(fileVO);            		
+            		list.add(fileVO);
+            		
+            		//Save log to database
+            		FileLogVO fileLog = new FileLogVO();            		
+            		
+            		fileLog.setLogType("C");
+            		fileLog.setCompanyId(user.getCompanyID());
+            		fileLog.setCreateDate(timeUTC);
+            		fileLog.setCreateId(user.getId());
+            		fileLog.setCreateName1(user.getDisplayName1());
+            		fileLog.setCreateName2(user.getDisplayName2());
+            		fileLog.setFileName(pFileName[i]);
+            		fileLog.setFileSize(fileVO.getFileSize());
+            		fileLog.setFileType(fileType.getTypeId());
+            		fileLog.setLogId(getMaxLogID(user.getTenantId()));
+            		fileLog.setTenantId(user.getTenantId());
+            		
+            		ezWebFolderAdminService.insertFileLog(fileLog);
             	}
             	catch (Exception e) {
             		e.printStackTrace();            		
@@ -188,12 +192,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Download attach is running!");	
-		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
-		String offset = loginSimpleVO.getOffset();
+		LoginVO user = commonUtil.userInfo(loginCookie);	
+		String offset = user.getOffset();
 		String listFileId = request.getParameter("fileList");	
-		String[] fileIDList = listFileId.split(",");	
-		List<File> fileList = new ArrayList<File>();
-		List<String> fileOrgNameList = new ArrayList<String>();
+		String[] fileIDList = listFileId.split(",");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();	
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
 		
 		if (fileIDList.length <= 0) {
 			logger.debug("downloadAttach illegal arguments!");
@@ -203,15 +208,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
         //Get absolute path of the application       
         String realPath = request.getServletContext().getRealPath("");
         String guid = UUID.randomUUID().toString();
-        String fileName = guid + ".zip";	
+        String fileName = guid + ".zip";
 		
-		if (fileIDList.length > 1) {			
-			for (int i = 0; i < fileIDList.length; i++) {
-				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, loginSimpleVO.getTenantId());			
-				fileList.add(new File(realPath + fileVO.getFilePath()));
-				fileOrgNameList.add(fileVO.getFileName());
-			}
-			
+		if (fileIDList.length > 1) {
 			ZipOutputStream zipOutputStream = null;
 			FileInputStream fileInputStream = null;
 			
@@ -222,15 +221,34 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			    zipOutputStream = new ZipOutputStream(response.getOutputStream());
 			    
 			    //Package files
-			    for (int i = 0; i < fileList.size(); i++) {
+			    for (int i = 0; i < fileIDList.length; i++) {
 			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
-			        zipOutputStream.putNextEntry(new ZipEntry(fileOrgNameList.get(i)));
-			        fileInputStream = new FileInputStream(fileList.get(i));
+			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, user.getTenantId());
+			    	File file = new File(realPath + fileVO.getFilePath());
+			        zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
+			        fileInputStream = new FileInputStream(file);
 		
 			        IOUtils.copy(fileInputStream, zipOutputStream);
 		
 			        fileInputStream.close();
 			        zipOutputStream.closeEntry();
+			        
+					//Save log to database
+					FileLogVO fileLog = new FileLogVO();
+					
+					fileLog.setLogType("D");
+					fileLog.setCompanyId(user.getCompanyID());
+					fileLog.setCreateDate(timeUTC);
+					fileLog.setCreateId(user.getId());
+					fileLog.setCreateName1(user.getDisplayName1());
+					fileLog.setCreateName2(user.getDisplayName2());
+					fileLog.setFileName(fileVO.getFileName());
+					fileLog.setFileSize(fileVO.getFileSize());
+					fileLog.setFileType(fileVO.getTypeId());
+					fileLog.setLogId(getMaxLogID(user.getTenantId()));
+					fileLog.setTenantId(user.getTenantId());
+					
+					ezWebFolderAdminService.insertFileLog(fileLog);
 			    }
 		
 			    zipOutputStream.close();
@@ -250,13 +268,31 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			}
 		}		
 		else if (fileIDList.length == 1) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, loginSimpleVO.getTenantId());			
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, user.getTenantId());			
 			String _fileName = fileVO.getFileName();
 			String _filePath = realPath + fileVO.getFilePath();
 			
-			downFile(request, response, _filePath, _fileName);
+			downFile(request, response, _filePath, _fileName);			
+			
+			//Save log to database
+			FileLogVO fileLog = new FileLogVO();
+			
+			fileLog.setLogType("D");
+			fileLog.setCompanyId(user.getCompanyID());
+			fileLog.setCreateDate(timeUTC);
+			fileLog.setCreateId(user.getId());
+			fileLog.setCreateName1(user.getDisplayName1());
+			fileLog.setCreateName2(user.getDisplayName2());
+			fileLog.setFileName(_fileName);
+			fileLog.setFileSize(fileVO.getFileSize());
+			fileLog.setFileType(fileVO.getTypeId());
+			fileLog.setLogId(getMaxLogID(user.getTenantId()));
+			fileLog.setTenantId(user.getTenantId());
+			
+			ezWebFolderAdminService.insertFileLog(fileLog);
 		}
-
+		
+		
 		logger.debug("Download attach finishes!");	
 	}
 	
@@ -434,7 +470,28 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 
 		return Integer.toString(currentMaxFileId);
-	}	
+	}
+	
+	private String getMaxLogID(int tenantId) throws Exception {
+		int currentMaxLogId = -1;
+		String result = ezWebFolderService.getFileLogSequence(tenantId);
+		
+		if (result.equals("")) {
+			currentMaxLogId = 1;
+		} 
+		else {
+			currentMaxLogId = Integer.parseInt(result);			
+		}
+		
+		if (currentMaxLogId == -1) {
+			currentMaxLogId = 1;
+		}
+		else {
+			currentMaxLogId += 1;
+		}
+
+		return Integer.toString(currentMaxLogId);
+	}
 
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;

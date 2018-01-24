@@ -66,5 +66,23 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("tenantId", tenantId);		
 		return ezWebFolderAdminDAO.getListFileLogs(map);
 	}
+	
+	@Override
+	public void insertFileLog(FileLogVO fileLog) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("logId", fileLog.getLogId());		
+		map.put("fileType", fileLog.getFileType());
+		map.put("fileName", fileLog.getFileName());
+		map.put("fileSize", fileLog.getFileSize());
+		map.put("logType", fileLog.getLogType());
+		map.put("createId", fileLog.getCreateId());
+		map.put("createName1", fileLog.getCreateName1());
+		map.put("createName2", fileLog.getCreateName2());
+		map.put("createDate", fileLog.getCreateDate());
+		map.put("companyId", fileLog.getCompanyId());				
+		map.put("tenantId", fileLog.getTenantId());
+
+		ezWebFolderAdminDAO.insertFileLog(map);		
+	}
 
 }

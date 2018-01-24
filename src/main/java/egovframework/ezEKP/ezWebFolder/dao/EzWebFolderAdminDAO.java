@@ -35,4 +35,7 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 		return (List<FileLogVO>)select("EzWebFolderAdminDAO.getListFileLogs", map);
 	}
 
+	public void insertFileLog(Map<String, Object> map) {
+		insert("EzWebFolderAdminDAO.insertFileLog", map);
+	}
 }

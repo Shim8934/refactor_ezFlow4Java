@@ -108,7 +108,18 @@
 			WHERE  
 				TENANT_ID = #tenantId#
 		]]>		
-    </select>  
+    </select>
+    
+    <select id="EzWebFolderDAO.getFileLogSequence" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				IFNULL(MAX(CONVERT(LOG_ID, UNSIGNED INTEGER)),-1) as maxno
+			FROM 
+				TBL_WEBFOLDER_LOG
+			WHERE  
+				TENANT_ID = #tenantId#
+		]]>		
+    </select>    
     
     <select id="EzWebFolderDAO.getFileTypeByFileExt" resultMap="fileTypeVO">     
 		<![CDATA[

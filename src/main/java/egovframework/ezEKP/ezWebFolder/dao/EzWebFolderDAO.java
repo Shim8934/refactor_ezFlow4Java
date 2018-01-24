@@ -41,4 +41,8 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO.moveFile", map);		
 	}
+
+	public String getFileLogSequence(Map<String, Object> map) {
+		return (String)select("EzWebFolderDAO.getFileLogSequence", map);
+	}
 }

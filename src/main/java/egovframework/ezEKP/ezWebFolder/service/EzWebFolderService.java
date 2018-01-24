@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 
@@ -12,4 +13,5 @@ public interface EzWebFolderService {
 	void updateFileUseStatus(String fileId, int tenantId) throws Exception;
 	void updateFileName(String fileId, String newName, int tenantId) throws Exception;
 	void moveFile(String fileId, String folderId, int tenantId) throws Exception;
+	String getFileLogSequence(int tenantId) throws Exception;	
 }

@@ -12,4 +12,5 @@ public interface EzWebFolderAdminService {
 	List<UserCapacityVO> getListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception;
 	void updateNewAmount(String userId, String newStorageValue, String companyId, int tenantId) throws Exception;
 	List<FileLogVO> getListFileLogs(String companyId, String offset, int tenantId) throws Exception;
+	void insertFileLog(FileLogVO fileLog) throws Exception;
 }
