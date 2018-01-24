@@ -313,11 +313,11 @@
 	            }
 	
 	            if (document.getElementById("Title2").value.trim() == "") {
-	                document.getElementById("Title2").value = document.getElementById("Title1").value + "_en";
+	                document.getElementById("Title2").value = document.getElementById("Title1").value;
 	            }
 	            
 	            if (document.getElementById("Title3").value.trim() == "") {
-	                document.getElementById("Title3").value = document.getElementById("Title1").value + "_ja";
+	                document.getElementById("Title3").value = document.getElementById("Title1").value;
 	            }
 	
 	            SaveQuickLink();
