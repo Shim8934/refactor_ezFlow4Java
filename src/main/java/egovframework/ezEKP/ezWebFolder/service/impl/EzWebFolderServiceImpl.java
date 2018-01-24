@@ -37,7 +37,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("folderId", fileVO.getFolderId());
 		map.put("useStatus", fileVO.getUseStatus());
 		map.put("createId", fileVO.getCreateId());
-		map.put("createName", fileVO.getCreateName());
+		map.put("createName1", fileVO.getCreateName1());
+		map.put("createName2", fileVO.getCreateName2());
 		map.put("createDate", fileVO.getCreateDate());
 		map.put("updateId", fileVO.getUpdateId());
 		map.put("updateDate", fileVO.getUpdateDate());		
@@ -47,9 +48,10 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public FileVO getFileByFileId(String fileId, int tenantId) throws Exception {
+	public FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
+		map.put("offset", offset);
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFileByFileId(map);
 	}

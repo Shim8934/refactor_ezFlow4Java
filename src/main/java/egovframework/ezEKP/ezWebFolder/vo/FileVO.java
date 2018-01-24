@@ -11,7 +11,8 @@ public class FileVO {
 	private String folderId;
 	private String useStatus;
 	private String createId;
-	private String createName;
+	private String createName1;
+	private String createName2;
 	private String createDate;
 	private String updateId;
 	private String updateDate;	
@@ -108,14 +109,22 @@ public class FileVO {
 		this.createId = createId;
 	}
 	
-	public String getCreateName() {
-		return createName;
+	public String getCreateName1() {
+		return createName1;
 	}
-	
-	public void setCreateName(String createName) {
-		this.createName = createName;
+
+	public void setCreateName1(String createName1) {
+		this.createName1 = createName1;
 	}
-	
+
+	public String getCreateName2() {
+		return createName2;
+	}
+
+	public void setCreateName2(String createName2) {
+		this.createName2 = createName2;
+	}
+
 	public String getCreateDate() {
 		return createDate;
 	}

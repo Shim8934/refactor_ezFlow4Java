@@ -4,6 +4,7 @@
 <sqlMap namespace="ezWebFolderAdmin">
 	<typeAlias  alias="WebfolderConfigVO"      		type="egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO"/>
 	<typeAlias  alias="UserCapacityVO"      		type="egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO"/>
+	<typeAlias  alias="FileLogVO"      				type="egovframework.ezEKP.ezWebFolder.vo.FileLogVO"/>
 	
 	<!-- WebfolderConfig resultMap -->
     <resultMap id="webfolderConfigVO" class="WebfolderConfigVO">
@@ -24,8 +25,22 @@
         <result property="totalCapacity"        column="TOTAL_CAPACITY"         columnIndex="7" />
         <result property="jobTitle"          	column="JOB_TITLE"              columnIndex="8" /> 
         <result property="totalUsed"         	column="TOTAL_USED"             columnIndex="9" />
-        <result property="tenantId"          	column="TENANT_ID"              columnIndex="10" /> 
-           
+        <result property="tenantId"          	column="TENANT_ID"              columnIndex="10" />           
+    </resultMap>
+    
+    <!-- FileLog resultMap -->
+    <resultMap id="fileLogVO" class="FileLogVO">
+        <result property="logId"               column="LOG_ID"                  columnIndex="1" />
+        <result property="fileType"            column="FILE_TYPE"               columnIndex="2" />
+        <result property="fileName"            column="FILE_NAME"               columnIndex="3" />
+        <result property="fileSize"            column="FILE_SIZE"               columnIndex="4" />
+        <result property="logType"         	   column="LOG_TYPE"                columnIndex="5" />
+        <result property="createId"            column="CREATE_ID"               columnIndex="6" />
+        <result property="createName1"         column="CREATE_NAME1"            columnIndex="7" />
+        <result property="createName2"         column="CREATE_NAME2"            columnIndex="8" />
+        <result property="createDate"          column="CREATE_DATE"             columnIndex="9" />
+        <result property="companyId"           column="COMPANY_ID"              columnIndex="10" />
+        <result property="tenantId"            column="TENANT_ID"               columnIndex="11" />
     </resultMap>
     
     <insert id="EzWebFolderAdminDAO.saveConfig" parameterClass="Map">      	
@@ -183,6 +198,29 @@
             ]]> 
         </isNotEqual>  
     </insert>
+    
+    <select id="EzWebFolderAdminDAO.getListFileLogs" resultMap="fileLogVO">
+		<![CDATA[
+			SELECT
+				LOG_ID AS LOG_ID,
+				FILE_TYPE AS FILE_TYPE,
+				FILE_NAME AS FILE_NAME,
+				FILE_SIZE AS FILE_SIZE,
+				LOG_TYPE AS LOG_TYPE,
+				CREATE_ID AS CREATE_ID,
+				CREATE_NAME1 AS CREATE_NAME1,
+				CREATE_NAME2 AS CREATE_NAME2,
+				DATE_ADD(CREATE_DATE, INTERVAL +#offset# MINUTE) AS CREATE_DATE,			
+				COMPANY_ID AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID				
+			FROM 
+				TBL_WEBFOLDER_LOG						  
+			WHERE 
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>			
+    </select>
  
 </sqlMap>
 

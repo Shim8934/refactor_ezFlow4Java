@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -142,9 +145,23 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminFileHistory.do")
 	public String webfolderFileHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        //Add more function here
-        
-        model.addAttribute("companyID", "S907000");
+		
+		//Get list of companies
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}		
+
+		model.addAttribute("list", resultList);
+		model.addAttribute("primary", userInfo.getPrimary());
+		model.addAttribute("userCompany", userInfo.getCompanyID());
         
 		return "admin/ezWebFolder/webfolderFileHistory";
 	}
@@ -281,6 +298,53 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)	
+	public String getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int currPage  = Integer.parseInt(request.getParameter("currentPage"));
+		String companyId = request.getParameter("companyId");
+		String offset = userInfo.getOffset();
+		
+		int totalRows = 0;
+		int totalPages = 0;
+		int pageSize = 10;
+		
+		List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, offset, userInfo.getTenantId());
+		
+		//Paging
+		totalRows  = listFileLogs.size();
+		totalPages = (totalRows + pageSize - 1)/pageSize;
+		List<FileLogVO> renderList = new ArrayList<FileLogVO>();
+		
+		logger.debug("totalUsers: " + totalRows + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
+
+		if (totalPages == 0 || totalPages == 1) {
+			model.addAttribute("fileLogList", listFileLogs);
+		}
+		else {
+			if (currPage < totalPages) {				
+				int startPoint = (currPage - 1) * pageSize;
+				int endPoint = currPage * pageSize;
+				renderList = listFileLogs.subList(startPoint, endPoint);	
+				model.addAttribute("fileLogList", renderList);
+			}
+			else {
+				if (currPage > totalPages) {
+					currPage = totalPages;
+				}
+				int startPoint = (currPage - 1) * pageSize;
+				int endPoint = totalRows;				
+				
+				renderList = listFileLogs.subList(startPoint, endPoint);
+				model.addAttribute("fileLogList", renderList);
+			}
+		}
+		
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("totalRows", totalRows);
+		return "json";
 	}
 	
 	

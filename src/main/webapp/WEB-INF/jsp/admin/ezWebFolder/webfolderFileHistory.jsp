@@ -9,6 +9,8 @@
 	    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	    <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
+	   	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>	    
@@ -16,19 +18,272 @@
 	    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+	    <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" >
-			var topid = "<c:out value='${topid}'/>";
+			var blockSize   = 10;
+			var currentPage = null;
+			var totalRows	= null;
+			var totalPages  = null;
+			var primary	    = "<c:out value='${primary}'/>";
 			
-		 	document.onselectstart = function(){
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
-		            return false;
-		        }else{
-		            return true;
-		        }
-		    };
+			window.onload = function () {
+				$("#Sdatepicker").datepicker({
+		        	changeMonth: true,
+		        	changeYear: true,
+		        	autoSize: true,
+		        	showOn: "both",
+		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImageOnly: true
+		    	});
+				
+				$("#Edatepicker").datepicker({
+			        changeMonth: true,
+		    	    changeYear: true,
+		        	autoSize: true,
+		        	showOn: "both",
+		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImageOnly: true
+		    	});	
+		    }		    
 		    
 		    function openSearchPanel() {
 		    	$("#searchPanel").toggle("1000");
+		    	
+		        $("#Sdatepicker").datepicker('setDate', "");
+		        $("#Edatepicker").datepicker('setDate', "");
+		        document.getElementById("fileExtVal").value = "";
+		        document.getElementById("fileNameVal").value = "";
+		        document.getElementById("fileCreatorVal").value = "";
+		    }
+		    
+		    function makePageSelPage(){
+		        var strtext;
+		        var PagingHTML = "";
+		        document.getElementById("tblPageRayer").innerHTML = "";
+		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalRows + " </span>" + strLang42 + "]";
+		        strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+		        var pageNum = currentPage;
+		        
+		        if (totalPages > 1 && pageNum != 1) {
+		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPages > blockSize) {
+		            if (pageNum > blockSize) {
+		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                PagingHTML += strtext;
+		            }
+		            else {
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        var MaxNum;
+		        var i;
+		        var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+		        
+		        if (totalPages >= (startNum + parseInt(blockSize))) {
+		            MaxNum = (startNum + parseInt(blockSize)) - 1;
+		        }
+		        else {
+		            MaxNum = totalPages;
+		        }
+		        
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum) {
+		                strtext = "<span class='on'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		            else {
+						strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        
+		        if (totalPages > blockSize) {
+		        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
+		        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                PagingHTML += strtext;
+		        	}
+		        	else {
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                PagingHTML += strtext;
+		        	}
+		        }
+		        else {
+		            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
+		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        PagingHTML += "</div>";
+		        td_Create1(PagingHTML);
+		    }
+		    
+		    function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+		    }
+		    
+		    function goToPageByNum(Value){
+		    	currentPage = Value;
+		        makePageSelPage();
+		        search_Set(currentPage);
+		    }
+		    
+		    function selbeforeBlock(){
+		        var pageNum = parseInt(currentPage);
+		        pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selbeforeBlock_one(){
+		        var pageNum = parseInt(currentPage);
+		        if(parseInt(pageNum - 1) > 0)
+		            goToPageByNum(parseInt(pageNum - 1));
+		        else
+		            return;
+		    }
+		    
+		    function selafterBlock(){
+		        var pageNum = parseInt(currentPage);
+		        pageNum = ((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selafterBlock_one(){
+		        var pageNum = parseInt(currentPage);
+		        if(parseInt(pageNum + 1) <= totalPages)
+		            goToPageByNum(parseInt(pageNum + 1));
+		        else
+		            return;
+		    }	    
+		    
+		    function search_Set(pPage) {		    	
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/getFileLogs.do",
+					data: {
+						"currentPage" : pPage,
+						"companyId"   : document.getElementById("companyList").value
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {				
+						var result = data.fileLogList;		
+						totalRows  = data.totalRows;
+						totalPages = data.totalPages;
+						currentPage = pPage;
+						
+						makePageSelPage();							
+						renderData(result);						
+					},
+	 				error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});			
+			}
+		    
+		    function renderData(result) {
+				var tableList = document.getElementById("tblFileHistory");
+		    	
+		    	while (tableList.rows.length > 1) {
+		    		tableList.deleteRow(1);
+		    	}
+		    	
+		    	if (result.length == 0) {		    	
+		    		var trElmt = document.createElement("tr");
+		    		var tdElmt = document.createElement("td");
+		    		tdElmt.setAttribute("colspan", "8");
+		    		tdElmt.setAttribute("align", "center");
+		    		tdElmt.setAttribute("bgcolor", "#FFFFFF");
+		    		tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144' />";
+		    		
+		    		trElmt.appendChild(tdElmt);
+		    		tableList.appendChild(trElmt);
+		    	}
+		    	else {		    		
+		    		var len = result.length;
+		    		for (var i = 0; i < len; i++) {
+		    			var trElmt  = document.createElement("tr");
+		    			var tdElmt1 = document.createElement("td");
+		    			var tdElmt2 = document.createElement("td");
+		    			var tdElmt3 = document.createElement("td");
+		    			var tdElmt4 = document.createElement("td");
+		    			var tdElmt5 = document.createElement("td");
+		    			var tdElmt6 = document.createElement("td");		    			
+		    			
+		    			trElmt.setAttribute("class", "bnkWebFolder");
+
+		    			tdElmt1.textContent = result[i]["fileType"];
+		    			
+		    			tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt2.textContent = result[i]["fileName"];
+		    			
+		    			tdElmt3.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt3.textContent = result[i]["fileSize"];
+		    			
+		    			tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			
+		    			if (primary == "1") {
+		    				tdElmt4.textContent = result[i]["createName1"];
+		    			}
+		    			else {
+		    				tdElmt4.textContent = result[i]["createName2"];
+		    			}	    			
+		    			
+		    			tdElmt5.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			
+		    			switch(result[i]["logType"]) {
+		    				case "C":
+		    					tdElmt5.textContent = "<spring:message code='ezWebFolder.t160' />";
+		    					break;
+		    				case "D":
+		    					tdElmt5.textContent = "<spring:message code='ezWebFolder.t161' />";
+		    					break;
+		    				case "U":
+		    					tdElmt5.textContent = "<spring:message code='ezWebFolder.t162' />";
+		    					break;
+		    				case "R":
+		    					tdElmt5.textContent = "<spring:message code='ezWebFolder.t111' />";
+		    					break;
+		    			}
+		    			
+		    			tdElmt6.setAttribute("style","text-align: center;");
+		    			tdElmt6.textContent = result[i]["createDate"];
+
+				        trElmt.appendChild(tdElmt1);
+				        trElmt.appendChild(tdElmt2);
+				        trElmt.appendChild(tdElmt3);
+				        trElmt.appendChild(tdElmt4);
+				        trElmt.appendChild(tdElmt5);
+				        trElmt.appendChild(tdElmt6);
+				        tableList.appendChild(trElmt);
+		    		}
+		    	}
 		    }
 		    
 	    </script>
@@ -36,65 +291,79 @@
 	<body class="mainbody">
 	   <h1><spring:message code='ezWebFolder.t128' /></h1>
 	   <div id="companySelect" style="margin: 10px 0px;">
-	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
-	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;">
-	   			<option>가온아이</option>
-	   			<option>리딩</option>
-	   			<option>아추 저죽은행</option>
-	   			<option>테스트1</option>
-	   			<option>테스트2</option>
+	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129' /></b></span>
+	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+				<c:forEach var="item" items="${list}">
+		        	<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		        </c:forEach>
 	   		</select>
 	   </div>
 	   
 	   <div style="height: 27px; margin-bottom: 10px;">
 	   		<div style="position: relative;">
 	   			<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123' /></span></a>
-	   			<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 80px; width: 500px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
-	   				<div style="margin: 10px;">
-		   				<table style="border-collapse: collapse; width: 100%;">
+	   			<img src="/images/i_bar.gif" style="margin-left: 2px;" />
+	   			<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139' /></span></a>
+	   			<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 180px; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+					<div style="margin: 10px;">
+		   				<table class="content" style="border-collapse: collapse; width: 100%;">
 		   					<tr>
-		   						<th style="width: 100px; min-width: 100px;">검색대상</th>
-		   						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 358px; width: 358px;">
-		   							<select style="margin-left: 10px;">
-		   								<option>부서명</option>
-							   			<option>사용자</option>
-		   							</select>
-		   							<input type="text" style="width: 270px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ccc;">
+		   						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151' /></th>
+		   						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+		   							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+				                	~
+				               		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">				
 		   						</td>
 		   					</tr>
-		   					<tr>
-		   						<td colspan="2">
-		   							<div style="margin: 9px 50px 9px 160px;">
-		   								<a class="webfolderBttn"><span onclick="">검색</span></a>
-			   							<a class="webfolderBttn"><span onclick="">취소</span></a>
-		   							</div>
+							<tr>
+								<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t152' /></th>
+		   						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+									<input id="fileExtVal" type="text" style="height: 23px; width: 200px;">
 		   						</td>
-		   					</tr>
+							</tr>
+							<tr>
+								<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t153' /></th>
+		   						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+		   							<input id="fileNameVal" type="text" style="height: 23px; width: 200px;">
+		   						</td>
+							</tr>
+							<tr>
+								<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t154' /></th>
+		   						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+		   							<input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;">
+		   						</td>
+							</tr>
 		   				</table>
-	   				</div>
+	  					<div style="margin: 12px 50px 12px 180px;">
+							<a class="webfolderBttn"><span onclick=""><spring:message code='ezWebFolder.t123' /></span></a>
+	 						<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112' /></span></a>
+						</div>
+  					</div>
 	   			</div>
 	   		</div> 	 	
 	   </div>
 	   
 	   <div id="mainSetting" style="margin: 10px 0px;">
-	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
+	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 	   			<tr>	   				
-					<th width="100px" style="text-align: center;">형태</th>
-					<th width="100px" style="text-align: center;">이름</th>
-					<th width="100px" style="text-align: center;">파일크기</th>
-					<th width="100px" style="text-align: center;">수행자</th>
-					<th width="100px" style="text-align: center;">수행사항</th>
-					<th width="100px" style="text-align: center;">날짜</th>					
+					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t155' /></th>
+					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t156' /></th>
+					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
+					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t154' /></th>
+					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t158' /></th>
+					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t159' /></th>					
 	   			</tr>
-	   			<tr class="bnkWebFolder">
+<!-- 	   			<tr class="bnkWebFolder">
 					<td style="text-align: center;">파일</td>
 					<td style="text-align: center;">간단파일.jsp</td>
 					<td style="text-align: center;">100.24KB</td>
 					<td style="text-align: center;">박예연</td>
 					<td style="text-align: center;">파일 삭제</td>
 					<td style="text-align: center;">2018-01-12 12:10:45</td>
-	   			</tr>
+	   			</tr> -->
 	   		</table>
 	   </div>
+	   
+	   <div id="tblPageRayer"></div>
 	</body>
 </html>

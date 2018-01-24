@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 
@@ -55,6 +56,15 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("companyId", companyId);		
 		map.put("tenantId", tenantId);		
 		ezWebFolderAdminDAO.updateNewAmount(map);		
+	}
+
+	@Override
+	public List<FileLogVO> getListFileLogs(String companyId, String offset, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("offset", offset);
+		map.put("tenantId", tenantId);		
+		return ezWebFolderAdminDAO.getListFileLogs(map);
 	}
 
 }
