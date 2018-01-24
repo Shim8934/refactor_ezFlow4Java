@@ -88,7 +88,7 @@
 		]]>		
     </select>
     
-    <select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO">             
+    <select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
 		<![CDATA[
 			SELECT
 				U.CN AS CN,
@@ -97,17 +97,47 @@
 				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END AS DEPARTMENT_NAME,				
  				U.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
  				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY_NAME,
- 				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, C.TOTAL_LIMIT) AS TOTAL_CAPACITY,
+ 				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, IFNULL(C.TOTAL_LIMIT, 0)) AS TOTAL_CAPACITY,
  				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END AS JOB_TITLE,
  				IF(W.TOTAL_USED IS NOT NULL, W.TOTAL_USED, 0) AS TOTAL_USED,
  				U.TENANT_ID AS TENANT_ID
 			FROM TBL_USERMASTER U LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN
 								  LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID								  
 			WHERE 
-				u.TENANT_ID = #tenantId# 
+				U.TENANT_ID = #tenantId# 
 			AND
-				 u.PHYSICALDELIVERYOFFICENAME = #companyId#	
-		]]>		
+				 U.PHYSICALDELIVERYOFFICENAME = #companyId#	
+		]]>
+		
+		<isNotNull property="searchOpt">
+			<isEqual property="primary" compareValue="1" prepend="AND">
+				<isEqual property="searchOpt" compareValue="userName">
+					<![CDATA[
+						U.DISPLAYNAME LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+					]]>
+				</isEqual>
+				
+				<isEqual property="searchOpt" compareValue="deptName">				
+					<![CDATA[
+						U.DESCRIPTION LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+					]]>
+				</isEqual>
+			</isEqual>
+			
+			<isEqual property="primary" compareValue="2" prepend="AND">
+				<isEqual property="searchOpt" compareValue="userName">
+					<![CDATA[
+						U.DISPLAYNAME2 LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+					]]>
+				</isEqual>
+				
+				<isEqual property="searchOpt" compareValue="deptName">				
+					<![CDATA[
+						U.DESCRIPTION2 LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+					]]>
+				</isEqual>
+			</isEqual>
+		</isNotNull>		
     </select>  
     
 </sqlMap>

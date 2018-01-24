@@ -17,10 +17,9 @@
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 		<script type="text/javascript" >
-			//var currentPage = ${currPage};  		
-			//var totalPages  = ${totalPages};
 			var blockSize   = 10;
-			//var totalUsers	= ${totalUsers};
+			var searchStr   = "";
+	    	var searchOpt   = "";
 			var currentPage = null;
 			var totalUsers	= null;
 			var totalPages  = null;
@@ -43,27 +42,19 @@
 			
 			window.onload = function() {
 				search_Set("1");
-				preProcessing();
-				//makePageSelPage();				
+				preProcessing();								
 			}	
 			
 			function preProcessing() {
 				var divList = document.getElementById("mainSetting");
 				var reheight = document.documentElement.clientHeight - 190;
 				divList.style.height = reheight + "px";
-			}
-			
-		 	document.onselectstart = function(){
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
-		            return false;
-		        }else{
-		            return true;
-		        }
-		    };
+			}			
 		    
 		    function openSearchPanel() {
-		    	document.getElementById("inputSearch").value = "";	
-		    	$("#searchPanel").toggle("1000");		    		    	
+		    	$("#searchPanel").toggle("1000");
+		    	document.getElementById("inputSearch").value = "";
+		    	document.getElementById("searchOption").options[0].selected = 'selected';		    			    		    	
 		    }
 		    
 		    function makePageSelPage(){
@@ -190,13 +181,14 @@
 		            return;
 		    }	    
 		    
-		    function search_Set(pPage) {
-				//if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt(totalPages)) {
+		    function search_Set(pPage) {		    	
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getCapacities.do",
 					data: {
 						"currentPage" : pPage,
+						"searchStr"	  : searchStr,
+						"searchOpt"	  : searchOpt,
 						"companyId"   : document.getElementById("companyList").value
 					},
 					dataType: "JSON",
@@ -213,8 +205,7 @@
 	 				error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
-				});
-				//}
+				});			
 			}
 		    
 		    function renderData(result) {
@@ -222,17 +213,20 @@
 		    	
 		    	while (tableList.rows.length > 1) {
 		    		tableList.deleteRow(1);
-		    	}		    	
+		    	}
 		    	
-		    	if (!result) {
+		    	if (result.length == 0) {		    	
 		    		var trElmt = document.createElement("tr");
 		    		var tdElmt = document.createElement("td");
-		    		tdElmt.setAtribute("colspan", "8");
-		    		tdElmt.setAtribute("align", "center");
-		    		tdElmt.setAtribute("bgcolor", "#FFFFFF");
-		    		tdElmt.innerHTML = "File not found!";
+		    		tdElmt.setAttribute("colspan", "8");
+		    		tdElmt.setAttribute("align", "center");
+		    		tdElmt.setAttribute("bgcolor", "#FFFFFF");
+		    		tdElmt.innerHTML = "Data not found!";
+		    		
+		    		trElmt.appendChild(tdElmt);
+		    		tableList.appendChild(trElmt);
 		    	}
-		    	else {
+		    	else {		    		
 		    		var len = result.length;
 		    		for (var i = 0; i < len; i++) {		    			
 		    			var trElmt  = document.createElement("tr");
@@ -338,6 +332,28 @@
 				}
 			}
 		    
+		    function change() {
+		    	searchStr = "";
+		    	searchOpt = "";
+		    	search_Set("1");
+		    }
+		    
+		    function startSearch() {
+		    	var inputVal = document.getElementById("inputSearch").value;
+		    	
+		    	if (!inputVal.replace(/\s/g,'')) {
+		    		alert("입력하세요.");
+		    		document.getElementById("inputSearch").value = "";
+		    		document.getElementById("inputSearch").focus;
+		    		return;
+		    	}
+		    	
+		    	searchStr = inputVal;
+		    	searchOpt = document.getElementById("searchOption").value;
+		    	openSearchPanel();
+		    	search_Set("1");
+		    }
+
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -347,7 +363,7 @@
 	   </h1>
 	   <div id="companySelect" style="margin: 10px 0px;">
 	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
-	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;">
+	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
 	   			<c:forEach var="item" items="${list}">
 		        	<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 		        </c:forEach>
@@ -357,15 +373,17 @@
 	   <div style="position: relative; height: 27px; margin-bottom: 10px;">
 	   		<div style="position: relative;">
 	   			<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123' /></span></a>
+	   			<img src="/images/i_bar.gif" style="margin-left: 2px;" />
+	   			<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139' /></span></a>
 	   			<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 80px; width: 500px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
 	   				<div style="margin: 10px;">
 		   				<table style="border-collapse: collapse; width: 100%;">
 		   					<tr>
 		   						<th style="width: 100px; min-width: 100px;">검색대상</th>
 		   						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 358px; width: 358px;">
-		   							<select style="margin-left: 10px;">
-		   								<option>부서명</option>
-							   			<option>사용자</option>
+		   							<select id="searchOption" style="margin-left: 10px;">
+		   								<option value="deptName">부서명</option>
+							   			<option value="userName">사용자</option>
 		   							</select>
 		   							<input id="inputSearch" type="text" style="width: 270px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ccc;">
 		   						</td>
@@ -373,8 +391,8 @@
 		   					<tr>
 		   						<td colspan="2">
 		   							<div style="margin: 9px 50px 9px 160px;">
-		   								<a class="webfolderBttn"><span onclick="">검색</span></a>
-			   							<a class="webfolderBttn"><span onclick="">취소</span></a>
+		   								<a class="webfolderBttn"><span onclick="startSearch();">검색</span></a>
+			   							<a class="webfolderBttn"><span onclick="openSearchPanel();">취소</span></a>
 		   							</div>
 		   						</td>
 		   					</tr>
@@ -401,37 +419,7 @@
 					<th width="80px" style="text-align: center;">사용량</th>
 					<th width="80px" style="text-align: center;">총용량</th>
 					<th width="60px" style="text-align: center;">사용률</th>
-	   			</tr>
-	   			
-	   			<c:forEach var="list" items="${capacityList}"> 
-		   			<tr class="bnkWebFolder">
-		   				<td><input type="checkbox" onchange="getChecked(this);" value="0" class="checkBnk"></td>
-		   				<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;"><c:out value ="${list.companyName}"/></td>
-						<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;"><c:out value ="${list.departmentName}"/></td>
-						<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;"><c:out value ="${list.userName}"/></td>
-						<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;"><c:out value ="${list.jobTitle}"/></td>
-						<td style="text-align: center;"><c:out value ="${list.totalUsed}"/>KB</td>
-						<td style="text-align: center;"><c:out value ="${list.totalCapacity}"/>GB</td>
-						<td style="cursor:pointer; white-space:nowrap; text-align:center;">
-							<span class="workProgressBar">
-								<span class="bar" taskid="taskProgressBar0">
-									<div class="progressbar" style="width: 70%; background-color: rgb(238, 238, 238); border-radius: 10px; display: inline-table;">
-										<div class="proggress" style="background-color: rgb(52, 152, 219); height: 10px; border-radius: 10px; width: ${list.usedRate}%;">
-										</div>
-									</div>
-									<div class="percentCount">${list.usedRate}%</div>
-								</span>&nbsp;
-								<span style="display: inline-block;">
-								</span>
-							</span>
-						</td>
-					</tr>
-	   			</c:forEach>
-	   			<c:if test="${list.size() == 0}"> 
-			        <tr> 
-						<td colspan="9" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td>
-		       		</tr> 
-		        </c:if> 
+	   			</tr>	   			
 	   		</table>
 	   </div>
 	   

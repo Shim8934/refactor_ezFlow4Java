@@ -37,9 +37,11 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<UserCapacityVO> getListUserCapacity(String companyId, int tenantId, String primary) throws Exception {
+	public List<UserCapacityVO> getListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
+		map.put("searchStr", searchStr);
+		map.put("searchOpt", searchOpt);
 		map.put("tenantId", tenantId);
 		map.put("primary", primary);
 		return ezWebFolderAdminDAO.getListUserCapacity(map);

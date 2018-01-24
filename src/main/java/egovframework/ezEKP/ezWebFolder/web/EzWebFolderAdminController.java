@@ -100,19 +100,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminPersonal.do")
 	public String webfolderAdminPersonal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		/*int currPage = 1;
-		int pageSize = 10;
-		int totalPages = 0;
-		int totalUsers = 0;
-		
-		if (request.getParameter("currPage") != null) {
-			currPage = Integer.parseInt(request.getParameter("currPage"));
-		}
-		else {
-			if (request.getParameter("paging") != null) {
-				currPage = Integer.parseInt(request.getParameter("paging"));
-			}
-		}*/
 		
 		//Get list of companies
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -125,49 +112,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(j++, vo);
 			}
-		}
-		
-/*		String companyId = resultList.get(0).getCn();		
-		List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyId, userInfo.getTenantId(), userInfo.getPrimary());
-		
-		for(UserCapacityVO capacity: listUserCapacity) {
-			if (capacity.getTotalUsed().equals("0")) {
-				capacity.setUsedRate(0);
-			}
-			else {
-				double totalCapKB = Integer.parseInt(capacity.getTotalCapacity()) * 1048576.0;
-				capacity.setUsedRate(Integer.parseInt(capacity.getTotalUsed())/totalCapKB);
-			}
-		}
-		
-		//Paging
-		totalUsers = listUserCapacity.size();
-		totalPages = (totalUsers + pageSize - 1)/pageSize;
-		
-		if (totalPages == 0 || totalPages == 1) {
-			model.addAttribute("capacityList", listUserCapacity);
-		}
-		else {
-			if (currPage < totalPages) {				
-				int startPoint = (currPage - 1) * pageSize;
-				int endPoint = currPage*pageSize;
-				List<UserCapacityVO> renderList = listUserCapacity.subList(startPoint, endPoint);	
-				model.addAttribute("capacityList", renderList);
-			}
-			else {
-				if (currPage > totalPages) {
-					currPage = totalPages;
-				}
-				int startPoint = (currPage - 1) * pageSize;
-				int endPoint = totalUsers;
-				List<UserCapacityVO> renderList = listUserCapacity.subList(startPoint, endPoint);
-				model.addAttribute("capacityList", renderList);
-			}			
-		}			
-		
-		model.addAttribute("totalUsers", totalUsers);
-		model.addAttribute("totalPages", totalPages);		
-		model.addAttribute("currPage", currPage);*/
+		}		
+
 		model.addAttribute("list", resultList);
 
 		return "admin/ezWebFolder/webfolderPersonalConfig";
@@ -247,12 +193,14 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String getCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int currPage  = Integer.parseInt(request.getParameter("currentPage"));
+		String searchStr = request.getParameter("searchStr");
+		String searchOpt = request.getParameter("searchOpt");
 		String companyId = request.getParameter("companyId");
 		int totalUsers = 0;
 		int totalPages = 0;
 		int pageSize = 10;
 		
-		List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyId, userInfo.getTenantId(), userInfo.getPrimary());
+		List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyId, searchStr, searchOpt, userInfo.getTenantId(), userInfo.getPrimary());
 		
 		for(UserCapacityVO capacity: listUserCapacity) {
 			if (capacity.getTotalUsed().equals("0")) {
@@ -268,26 +216,33 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		totalUsers = listUserCapacity.size();
 		totalPages = (totalUsers + pageSize - 1)/pageSize;
 		List<UserCapacityVO> renderList = new ArrayList<UserCapacityVO>();
+		
+		logger.debug("totalUsers: " + totalUsers + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
 
-		if (currPage < totalPages) {				
-			int startPoint = (currPage - 1) * pageSize;
-			int endPoint = currPage * pageSize;
-			renderList = listUserCapacity.subList(startPoint, endPoint);	
-			model.addAttribute("capacityList", renderList);
+		if (totalPages == 0 || totalPages == 1) {
+			model.addAttribute("capacityList", listUserCapacity);
 		}
 		else {
-			if (currPage > totalPages) {
-				currPage = totalPages;
+			if (currPage < totalPages) {				
+				int startPoint = (currPage - 1) * pageSize;
+				int endPoint = currPage * pageSize;
+				renderList = listUserCapacity.subList(startPoint, endPoint);	
+				model.addAttribute("capacityList", renderList);
 			}
-			int startPoint = (currPage - 1) * pageSize;
-			int endPoint = totalUsers;
-			renderList = listUserCapacity.subList(startPoint, endPoint);
-			model.addAttribute("capacityList", renderList);
-		}	
+			else {
+				if (currPage > totalPages) {
+					currPage = totalPages;
+				}
+				int startPoint = (currPage - 1) * pageSize;
+				int endPoint = totalUsers;				
+				
+				renderList = listUserCapacity.subList(startPoint, endPoint);
+				model.addAttribute("capacityList", renderList);
+			}
+		}
 		
 		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("totalUsers", totalUsers);
-		model.addAttribute("capacityList", renderList);
+		model.addAttribute("totalUsers", totalUsers);		
 		return "json";
 	}
 	

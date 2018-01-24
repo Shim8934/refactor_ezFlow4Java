@@ -6,9 +6,9 @@
 #progress-wrp .status {top:3px; left:50%; position:absolute; display:inline-block; color: #000000; }
 
 .webfolderBttn{white-space:nowrap; display:inline-block; cursor: pointer; height:25px; width: 60px; vertical-align:top; padding: 0px 5px;}
-.webfolderBttn span{display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px; width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
+.webfolderBttn span{display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px; min-width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
 .webfolderBttn span:hover{color: #FFF; background: #004896; border: 1px solid #004896;}
 
 .webfolderBttn2{cursor: pointer; line-height: 27px;}
-.webfolderBttn2 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:25px; width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
+.webfolderBttn2 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:25px; min-width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
 .webfolderBttn2 span:hover{color: #004895; border: 1px solid #004895;}
