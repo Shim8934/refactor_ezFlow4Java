@@ -314,7 +314,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, offset, userInfo.getTenantId());
 		
 		//Paging
-		totalRows  = listFileLogs.size();
+		if (listFileLogs != null) {
+			totalRows  = listFileLogs.size();
+		}
+		
 		totalPages = (totalRows + pageSize - 1)/pageSize;
 		List<FileLogVO> renderList = new ArrayList<FileLogVO>();
 		

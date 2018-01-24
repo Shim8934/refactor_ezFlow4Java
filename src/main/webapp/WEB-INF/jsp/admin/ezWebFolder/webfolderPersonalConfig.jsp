@@ -216,7 +216,7 @@
 		    		tableList.deleteRow(1);
 		    	}
 		    	
-		    	if (result.length == 0) {		    	
+		    	if (result == null || result.length == 0) {		    	
 		    		var trElmt = document.createElement("tr");
 		    		var tdElmt = document.createElement("td");
 		    		tdElmt.setAttribute("colspan", "8");

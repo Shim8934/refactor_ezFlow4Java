@@ -27,6 +27,10 @@
 			var totalRows	= null;
 			var totalPages  = null;
 			var primary	    = "<c:out value='${primary}'/>";
+			var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
+			var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
+			var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
+			var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
 			
 			window.onload = function () {
 				$("#Sdatepicker").datepicker({
@@ -45,7 +49,9 @@
 		        	showOn: "both",
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
 		        	buttonImageOnly: true
-		    	});	
+		    	});
+				
+				search_Set("1");
 		    }		    
 		    
 		    function openSearchPanel() {
@@ -214,7 +220,7 @@
 		    		tableList.deleteRow(1);
 		    	}
 		    	
-		    	if (result.length == 0) {		    	
+		    	if (result == null || result.length == 0) {		    	
 		    		var trElmt = document.createElement("tr");
 		    		var tdElmt = document.createElement("td");
 		    		tdElmt.setAttribute("colspan", "8");
@@ -289,7 +295,10 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	   <h1><spring:message code='ezWebFolder.t128' /></h1>
+	   <h1>
+		   	<spring:message code='ezWebFolder.t128' />
+		   	<span id="mailBoxInfo"></span>
+	   </h1>
 	   <div id="companySelect" style="margin: 10px 0px;">
 	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129' /></b></span>
 	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
