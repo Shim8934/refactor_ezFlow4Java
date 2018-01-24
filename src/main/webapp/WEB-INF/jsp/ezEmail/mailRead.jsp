@@ -301,12 +301,14 @@
                 
                 NewItem_onclick_Complete(ret);
             });
+            </c:if>
 		    
 		    // 메일읽기창에서 '게시' 버튼을 누를 때 호출됨		    
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            		            		            
+		            		            		           
+		            <c:if test="${dotNetIntegration == 'YES'}">
 		            // IE가 window.postMessage를 Cross Origin에서 지원하지 않는 관계로 동일 사이트의 윈도우를
 		            // 띄운 후 그 안에서 iframe으로 처리해야 한다.
 		            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(345, 660));		            
