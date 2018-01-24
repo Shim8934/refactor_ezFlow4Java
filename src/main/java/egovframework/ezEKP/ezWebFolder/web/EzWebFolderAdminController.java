@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -93,6 +91,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("persLimit", personalLimit);
 		model.addAttribute("upLimit", uploadLimit);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
 		return "admin/ezWebFolder/webfolderCompanyConfig";
 	}
@@ -115,6 +114,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}		
 
 		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 
 		return "admin/ezWebFolder/webfolderPersonalConfig";
 	}
@@ -244,6 +244,43 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("totalUsers", totalUsers);		
 		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/updateCapacities.do", method = RequestMethod.POST)
+	public void updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList, HttpServletResponse response) throws Exception {       
+		LoginVO userInfo       = commonUtil.userInfo(loginCookie);        
+		String newStorageValue = request.getParameter("newStorage");
+		String companyId       = request.getParameter("companyId");
+		
+		try {
+			for (String userId : userList) {
+				ezWebFolderAdminService.updateNewAmount(userId, newStorageValue, companyId, userInfo.getTenantId());
+			}			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST)
+	public void restoreCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList, HttpServletResponse response) throws Exception {       
+		LoginVO userInfo       = commonUtil.userInfo(loginCookie);		
+		String companyId       = request.getParameter("companyId");
+		String totalAmount     = "0";
+		
+		try {
+			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, userInfo.getTenantId());
+			if (webfolderConfig != null) {
+				totalAmount = webfolderConfig.getTotalLimit();
+			}
+			
+			for (String userId : userList) {
+				ezWebFolderAdminService.updateNewAmount(userId, totalAmount, companyId, userInfo.getTenantId());
+			}			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

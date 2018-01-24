@@ -47,4 +47,14 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		return ezWebFolderAdminDAO.getListUserCapacity(map);
 	}
 
+	@Override
+	public void updateNewAmount(String userId, String newStorageValue, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("totalCapacity", newStorageValue);
+		map.put("companyId", companyId);		
+		map.put("tenantId", tenantId);		
+		ezWebFolderAdminDAO.updateNewAmount(map);		
+	}
+
 }

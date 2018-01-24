@@ -138,8 +138,52 @@
 				</isEqual>
 			</isEqual>
 		</isNotNull>		
-    </select>  
+    </select> 
     
+    <insert id="EzWebFolderAdminDAO.updateNewAmount" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								COMPANY_ID,                               		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_WEBFOLDER_USER
+                         			WHERE
+                         				CN 		  = #userId#
+                                   	AND
+                                   		TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_WEBFOLDER_USER (
+	                CN,        	TOTAL_CAPACITY,        TOTAL_USED,        COMPANY_ID, 		TENANT_ID
+	            )
+	            VALUES(
+	                #userId#,	#totalCapacity#,           0,       	  #companyId#,      #tenantId#
+            )
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_WEBFOLDER_USER
+	            SET 
+	            	 TOTAL_CAPACITY = #totalCapacity#	            	 
+	            WHERE
+	            	 CN 	        = #userId#
+                AND
+                   	 TENANT_ID      = #tenantId#
+            ]]> 
+        </isNotEqual>  
+    </insert>
+ 
 </sqlMap>
 
 

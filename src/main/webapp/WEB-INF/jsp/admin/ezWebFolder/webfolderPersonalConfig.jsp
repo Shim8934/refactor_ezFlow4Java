@@ -27,6 +27,7 @@
 			var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
 			var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
 			var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
+			var checkedArr	= [];
 			
         	window.onresize = function () {
 				var divList = document.getElementById("mainSetting");				
@@ -221,14 +222,14 @@
 		    		tdElmt.setAttribute("colspan", "8");
 		    		tdElmt.setAttribute("align", "center");
 		    		tdElmt.setAttribute("bgcolor", "#FFFFFF");
-		    		tdElmt.innerHTML = "Data not found!";
+		    		tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144' />";
 		    		
 		    		trElmt.appendChild(tdElmt);
 		    		tableList.appendChild(trElmt);
 		    	}
 		    	else {		    		
 		    		var len = result.length;
-		    		for (var i = 0; i < len; i++) {		    			
+		    		for (var i = 0; i < len; i++) {
 		    			var trElmt  = document.createElement("tr");
 		    			var tdElmt1 = document.createElement("td");
 		    			var tdElmt2 = document.createElement("td");
@@ -240,11 +241,18 @@
 		    			var tdElmt8 = document.createElement("td");
 		    			
 		    			trElmt.setAttribute("class", "bnkWebFolder");
+		    			trElmt.setAttribute("usedAmount", result[i]["totalUsed"]);
+		    			trElmt.setAttribute("userId", result[i]["userId"]);
+		    			trElmt.onclick = function(event) {clickRow(this, event);};
 		    			
 		    			var inputElmt = document.createElement("input");
 		    			inputElmt.setAttribute("type", "checkbox");
+		    			inputElmt.setAttribute("class", "checkBnk");
 		    			inputElmt.setAttribute("value", "0");
-		    			inputElmt.onchange = function() {getChecked(this);};		    			
+		    			inputElmt.setAttribute("usedAmount", result[i]["totalUsed"]);
+		    			inputElmt.setAttribute("userId", result[i]["userId"]);
+		    			inputElmt.onclick = function(evt) {getChecked(this, evt);};
+		    			
 		    			tdElmt1.appendChild(inputElmt);
 		    			
 		    			tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
@@ -342,7 +350,7 @@
 		    	var inputVal = document.getElementById("inputSearch").value;
 		    	
 		    	if (!inputVal.replace(/\s/g,'')) {
-		    		alert("입력하세요.");
+		    		alert("<spring:message code='ezWebFolder.t140' />");
 		    		document.getElementById("inputSearch").value = "";
 		    		document.getElementById("inputSearch").focus;
 		    		return;
@@ -353,6 +361,165 @@
 		    	openSearchPanel();
 		    	search_Set("1");
 		    }
+		    
+		    function clickRow(obj, e) {
+		        e.stopPropagation();
+		        e.preventDefault();
+		    	
+		    	var inputElmt = obj.firstElementChild.firstElementChild;
+		    	var newUser = {};
+			    newUser["userId"]      = obj.getAttribute("userId");
+			    newUser["usedAmount"]  = obj.getAttribute("usedAmount");
+		    	
+		    	if (inputElmt.checked == true) {
+		    		inputElmt.checked = false;
+		    		
+		    		var pos = null;
+	    		    checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
+
+	    		    if (pos != -1) {
+	    			   obj.setAttribute("style", "");
+	    			   checkedArr.splice(pos, 1);
+	    		    }		    		
+		    	}
+		    	else {
+		    		inputElmt.checked = true;
+		    		checkedArr.push(newUser);
+		    		obj.setAttribute("style", "background-color: #e9f1ff;");
+		    	}
+		    }
+		    
+		    function getChecked(obj, event) {		       
+		       event.stopPropagation();
+		       
+		       var newUser = {};
+		       newUser["userId"]      = obj.getAttribute("userId");
+		       newUser["usedAmount"]  = obj.getAttribute("usedAmount");		       
+		        	   
+	    	   if (obj.checked == true) {
+	    		   checkedArr.push(newUser);
+	    		   obj.parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
+	    	   }
+	    	   else {	    		   
+	    		   var pos = null;
+	    		   checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
+
+	    		   if (pos != -1) {
+	    			   obj.parentElement.parentElement.setAttribute("style", "");
+	    			   checkedArr.splice(pos, 1);
+	    		   }
+	    	   }
+	       }
+		    
+		   function getCheckAll(obj) {
+	    	   var listInputs = document.getElementsByClassName("checkBnk");
+	    	   
+	    	   checkedArr = [];
+	    	   if (obj.checked == true) {
+	    		   for (var i = 0; i < listInputs.length; i++) {
+		    			listInputs[i].checked = true;
+		    			var newUser = {};
+			 		    newUser["userId"]      = listInputs[i].getAttribute("userId");
+			 		    newUser["usedAmount"]  = listInputs[i].getAttribute("usedAmount");			 		    		
+			 		    listInputs[i].parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
+		    			checkedArr.push(newUser);	    		
+		    		}		    	
+	    	   }
+	    	   else {
+	    		   for (var i = 0; i < listInputs.length; i++) {
+	    			    listInputs[i].parentElement.parentElement.setAttribute("style", "");
+		    			listInputs[i].checked = false;	    				    		
+		    		}
+	    	   }
+		   }
+		   
+		   function changeStorageVal() {
+			   var newValue = document.getElementById("storageVal").value;
+			   var userList = [];
+			   
+			   if (!isValid(newValue)) {
+				   alert("Please enter a valid value!");
+				   document.getElementById("storageVal").value = "";
+		    	   document.getElementById("storageVal").focus();
+		    	   return;
+			   }
+			   
+			   if (checkedArr.length <= 0) {
+				   alert("사용자 선택하세요.");
+				   document.getElementById("storageVal").value = "";
+		    	   document.getElementById("storageVal").focus();
+		    	   return;
+			   }
+			   
+			   for (var i = 0; i < checkedArr.length; i++) {
+				   if (parseInt(checkedArr[i]["usedAmount"]) > parseInt(newValue)) {
+					   alert("Cannot set the new value less than used amount!");
+					   return;
+				   }
+				   
+				   userList.push(checkedArr[i]["userId"]);
+			   }
+			   
+			   $.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/updateCapacities.do",
+					data: {
+						"userListParam"  : userList.toString(),
+						"companyId"		 : document.getElementById("companyList").value,
+						"newStorage"     : newValue
+					},
+					dataType: "text",
+					async: true,
+					success : function(data) {
+						document.getElementById("storageVal").value = "";
+						search_Set(currentPage);
+						checkedArr = [];
+					},
+	 				error : function(error) {	 					
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});			   
+		   }
+		   
+		   function changeToDefault() {
+			   var userList = [];
+			   
+			   if (checkedArr.length <= 0) {
+				   alert("사용자 선택하세요.");			   
+		    	   return;
+			   }
+			   
+			   for (var i = 0; i < checkedArr.length; i++) {
+				   userList.push(checkedArr[i]["userId"]);
+			   }
+			   
+			   $.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/restoreCapacities.do",
+					data: {
+						"userListParam"  : userList.toString(),
+						"companyId"		 : document.getElementById("companyList").value						
+					},
+					dataType: "text",
+					async: true,
+					success : function(data) {					
+						search_Set(currentPage);
+						checkedArr = [];
+					},
+	 				error : function(error) {	 					
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});			   
+		   }
+		   
+		   function isValid(value) {
+		       if (!isNaN(value) && parseFloat(value) > 0) {
+		       		return true;
+		       }
+		       else {
+		    		return false;
+		       }
+		   }
 
 	    </script>
 	</head>
@@ -362,7 +529,7 @@
 	   		<span id="mailBoxInfo"></span>
 	   </h1>
 	   <div id="companySelect" style="margin: 10px 0px;">
-	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
+	   		<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129' /></b></span>
 	   		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
 	   			<c:forEach var="item" items="${list}">
 		        	<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
@@ -379,11 +546,11 @@
 	   				<div style="margin: 10px;">
 		   				<table style="border-collapse: collapse; width: 100%;">
 		   					<tr>
-		   						<th style="width: 100px; min-width: 100px;">검색대상</th>
+		   						<th style="width: 100px; min-width: 100px;"><spring:message code='ezWebFolder.t141' /></th>
 		   						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 358px; width: 358px;">
 		   							<select id="searchOption" style="margin-left: 10px;">
-		   								<option value="deptName">부서명</option>
-							   			<option value="userName">사용자</option>
+		   								<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
+							   			<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
 		   							</select>
 		   							<input id="inputSearch" type="text" style="width: 270px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ccc;">
 		   						</td>
@@ -391,8 +558,8 @@
 		   					<tr>
 		   						<td colspan="2">
 		   							<div style="margin: 9px 50px 9px 160px;">
-		   								<a class="webfolderBttn"><span onclick="startSearch();">검색</span></a>
-			   							<a class="webfolderBttn"><span onclick="openSearchPanel();">취소</span></a>
+		   								<a class="webfolderBttn"><span onclick="startSearch();"><spring:message code='ezWebFolder.t123' /></span></a>
+			   							<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112' /></span></a>
 		   							</div>
 		   						</td>
 		   					</tr>
@@ -401,8 +568,8 @@
 	   			</div>
 	   		</div>	   		
 	   		<div style="position: absolute; top: 0px; right: 2px; height: 27px;">	   			
-   				<span style="height: 20px; line-height: 20px; display: inline; font-size: 14px;">용량 설정:</span>
-   				<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; margin-right: 3px; padding-left: 5px;"  placeholder="용량GB"/>
+   				<span style="height: 20px; line-height: 20px; display: inline; font-size: 14px;"><spring:message code='ezWebFolder.t145' /></span>
+   				<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; margin-right: 3px; padding-left: 5px;"  placeholder="<spring:message code='ezWebFolder.t132' />"/>
    				<a id="btnChange" class="webfolderBttn2" onClick="changeStorageVal();"><span><spring:message code='ezWebFolder.t124' /></span></a>
    				<a id="btnBack" class="webfolderBttn2" onClick="changeToDefault();"><span><spring:message code='ezWebFolder.t125' /></span></a>   						
 	   		</div>	   	 	
@@ -412,13 +579,13 @@
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 	   			<tr>
 	   				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);"></th>
-					<th width="80px" style="">회사명</th>
-					<th width="80px" style="">부서명</th>
-					<th width="200px" style="">사용자</th>
-					<th width="40px" style="">직급</th>
-					<th width="80px" style="text-align: center;">사용량</th>
-					<th width="80px" style="text-align: center;">총용량</th>
-					<th width="60px" style="text-align: center;">사용률</th>
+					<th width="80px" style=""><spring:message code='ezWebFolder.t146' /></th>
+					<th width="80px" style=""><spring:message code='ezWebFolder.t142' /></th>
+					<th width="200px" style=""><spring:message code='ezWebFolder.t143' /></th>
+					<th width="40px" style=""><spring:message code='ezWebFolder.t147' /></th>
+					<th width="80px" style="text-align: center;"><spring:message code='ezWebFolder.t148' /></th>
+					<th width="80px" style="text-align: center;"><spring:message code='ezWebFolder.t149' /></th>
+					<th width="60px" style="text-align: center;"><spring:message code='ezWebFolder.t150' /></th>
 	   			</tr>	   			
 	   		</table>
 	   </div>

@@ -25,4 +25,8 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 		return (List<UserCapacityVO>) list("EzWebFolderAdminDAO.getListUserCapacity", map);
 	}
 
+	public void updateNewAmount(Map<String, Object> map) {		
+		insert("EzWebFolderAdminDAO.updateNewAmount", map);
+	}
+
 }

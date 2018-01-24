@@ -9,4 +9,5 @@ public interface EzWebFolderAdminService {
 	void saveConfig(String personalLimit, String uploadLimit, String companyId, int tenantId) throws Exception;
 	WebfolderConfigVO getWebfolderConfig(String companyId, int tenantId) throws Exception;
 	List<UserCapacityVO> getListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception;
+	void updateNewAmount(String userId, String newStorageValue, String companyId, int tenantId) throws Exception;
 }
