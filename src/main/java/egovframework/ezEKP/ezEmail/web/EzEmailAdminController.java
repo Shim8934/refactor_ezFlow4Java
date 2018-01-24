@@ -833,7 +833,7 @@ public class EzEmailAdminController {
 			startRow = -1;
 		}
 
-		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(),searchKeycode, searchKeyword);
+		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
 
 		int totalPage = itemCnt / maxItemPerPage;
 
@@ -861,24 +861,24 @@ public class EzEmailAdminController {
 		String iMAPPort = config.getProperty("config.IMAPPort");
 		
 		// 각 사용자별로 처리한다.
-		try {
+		for (OrganUserVO organUser : userCnList) {				
+			List<String> quaList = new ArrayList<String>();
+			String userId = organUser.getCn();
+			String department = organUser.getDescription();
+			String displayname = organUser.getDisplayName();
 
-			for (OrganUserVO organUser : userCnList) {
-				
-				List<String> quaList = new ArrayList<String>();
-				String userId = organUser.getCn();
-				String department = organUser.getDescription();
-				String displayname = organUser.getDisplayName();
+			quaList.add(0, userId);
+			quaList.add(1, displayname);
+			quaList.add(2, department);
 
-				quaList.add(0, userId);
-				quaList.add(1, displayname);
-				quaList.add(2, department);
-
+			try {
 				String email = userId + "@" + domain;
+				logger.debug("email=" + email);
+				
 				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
-
+	
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-
+	
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
 				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
 				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
@@ -886,18 +886,15 @@ public class EzEmailAdminController {
 				quaList.add(3, String.valueOf(mailboxUsage));
 				quaList.add(4, String.valueOf(mailboxQuota));
 				userList.add((ArrayList<String>) quaList);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		} finally {
-
-			if (ia != null) {
-				ia.close();
-			}
-			
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (ia != null) {
+                    ia.close();
+                }
+            }
 		}
+
 		model.addAttribute("userList", userList);
 		model.addAttribute("currPage", currentPage);
 		model.addAttribute("totalPage", totalPage);

@@ -1117,8 +1117,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		
-		logger.debug("getUserCount ended");
+		int userCount = ezOrganAdminDao.getUserCount(params);
+		
+		logger.debug("getUserCount ended. userCount=" + userCount);
     	
-		return ezOrganAdminDao.getUserCount(params);
+		return userCount;
     }	
 }
