@@ -203,7 +203,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     	ADConnection conn = new ADConnection();
     	
     	String address = config.getProperty("config.PROVIDER_URL");   	
-    	String security = uid + "@" + config.getProperty("config.Domain_Name");
+     	String security = uid + "@" + config.getProperty("config.Domain_Name");
     	
     	String chk = conn.setConnection(address, security, rpwd);
     	
@@ -217,7 +217,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     		String mailAddr = uid + "@" + domain;
 
     		ezEmailUserAdminService.updateUserPassword(mailAddr, rpwd);
-    		ezOrganAdminService.setPassword(uid, rpwd, tenantId);
+    		ezOrganAdminService.setPasswordExceptAD(uid, rpwd, tenantId);
     		
 //    		//email 비밀번호 변경 확인
 //    		IMAPAccess ia = null;

@@ -112,7 +112,7 @@
 		        
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "html",
+		        	dataType : "text",
 		        	url : "/admin/ezApprovalG/apprGMgetContGroup.do",
 		        	async : false,
 		        	data : {contID : Para[1], comID : P_companyID},
