@@ -3810,7 +3810,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<COMPANYNAME>" + item.getWriterCompanyName() + "</COMPANYNAME>");
         sb.append("<COMPANYNAME2>" + item.getWriterCompanyName2() + "</COMPANYNAME2>");
         sb.append("<IMPORTANCE>" + item.getImportance() + "</IMPORTANCE>");
-        sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8") + "</TITLE>");
+        sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8").replace('+', ' ') + "</TITLE>");
         sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");

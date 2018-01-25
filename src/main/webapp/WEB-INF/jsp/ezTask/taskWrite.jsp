@@ -828,25 +828,13 @@
 									</tr>
 								</c:if>
 								<!-- 메모  -->
-								<c:if test="${useTodoMemo == 'YES' }">
-									<c:choose>
-										<c:when test="${mode == ''}">				
-											<tr id="menuTaskMemo">
-												<th><spring:message code='ezTask.t170' /></th>
-												<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
-													<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
-												</td>
-											</tr>
-										</c:when>
-										<c:otherwise>
-											<tr id="menuTaskMemo" style="display: none;">
-												<th><spring:message code='ezTask.t170' /></th>
-												<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
-													<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
-												</td>
-											</tr>
-										</c:otherwise>
-									</c:choose>
+								<c:if test="${useTodoMemo == 'YES' && mode == ''}">	
+									<tr id="menuTaskMemo">
+										<th><spring:message code='ezTask.t170' /></th>
+										<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+											<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+										</td>
+									</tr>
 								</c:if>
 								<c:if test="${mode == '1' }">
 									<tr>
@@ -875,7 +863,8 @@
 										<th id="editorTitle" colspan="4" style="text-align: center;"><spring:message code = 'ezTask.t2011' /></th>
 									</tr>
 								</c:if>
-								<c:if test="${mode == '1' }">
+								<!-- 메모수정 -->
+								<c:if test="${useTodoMemo == 'YES' && mode == '1' }">
 									<tr>
 										<th><spring:message code='ezTask.t1701' /></th>
 										<td colspan="3" style="height: 40px;">

@@ -6,306 +6,306 @@
 	<typeAlias  alias="PortalGetRenderedTopMenuInsertVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO"/>
 	<typeAlias  alias="PortalTBLPortalPageGeneralVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO"/>
 	<typeAlias  alias="PortalTBLTopMenuGeneralVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO"/>
-	<typeAlias  alias="PortalTBLUserInfoVO" 									type="egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO"/>
+	<typeAlias  alias="PortalTBLUserInfoVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO"/>
 	<typeAlias  alias="PortalTopSearchTopMenu2VO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO"/>
-	<typeAlias  alias="PortalTBLThemeGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO"/>
-	<typeAlias  alias="PortalMenuItemItemsImageVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO"/>
+	<typeAlias  alias="PortalTBLThemeGeneralVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO"/>
+	<typeAlias  alias="PortalMenuItemItemsImageVO" 					    type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO"/>
 	<typeAlias  alias="PortalTopLoadGetParametersVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO"/>
-	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
-	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 			type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
+	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 				    type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
+	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 			    type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
 	<typeAlias  alias="PortalGetMainMenuHtmlVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO"/>
 	<typeAlias  alias="PortalTBLPortalPageItemsVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO"/>
-	<typeAlias  alias="PortalGetThemeListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO"/>
+	<typeAlias  alias="PortalGetThemeListVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO"/>
 	<typeAlias  alias="PortalTBLPortalPageCategoryVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO"/>
-	<typeAlias  alias="PortalUrlPortletVO" 										type="egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO"/>
-	<typeAlias  alias="PortalPortletGeneralVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO"/>
-	<typeAlias  alias="PortalTBLPortletURLVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletURLVO"/>
-	<typeAlias  alias="PortalTBLPortletBoardVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO"/>
+	<typeAlias  alias="PortalUrlPortletVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO"/>
+	<typeAlias  alias="PortalPortletGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO"/>
+	<typeAlias  alias="PortalTBLPortletURLVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletURLVO"/>
+	<typeAlias  alias="PortalTBLPortletBoardVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO"/>
 	<typeAlias  alias="PortalTBLPortletHtmlPageVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletHtmlPageVO"/>
-	<typeAlias  alias="PortalTBLPortletImageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO"/>
-	<typeAlias  alias="PortalGetPortletParametersVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO"/>
+	<typeAlias  alias="PortalTBLPortletImageVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO"/>
+	<typeAlias  alias="PortalGetPortletParametersVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO"/>
 	<typeAlias  alias="PortalSearchMyPortalPage3VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO"/>
-	<typeAlias  alias="PortalFirstMainListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO"/>
-	<typeAlias  alias="PortalSearchPortalPageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO"/>
-	<typeAlias  alias="PortalTBLPortalACLVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO"/>
+	<typeAlias  alias="PortalFirstMainListVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO"/>
+	<typeAlias  alias="PortalSearchPortalPageVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO"/>
+	<typeAlias  alias="PortalTBLPortalACLVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO"/>
 	<typeAlias  alias="PortalSearchMenuItemVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchMenuItemVO"/>
-	<typeAlias  alias="PortalImagePortletVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO"/>
-	<typeAlias  alias="PortalMyPortalListVO" 									type="egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO"/>
+	<typeAlias  alias="PortalImagePortletVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO"/>
+	<typeAlias  alias="PortalMyPortalListVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO"/>
 	<typeAlias  alias="PortalNewMyPortalPageListVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO"/>
 	<typeAlias  alias="PortalUseTopMenuID2VO" 							type="egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
 		<result property="pageUID"					column="PAGEUID"					columnIndex="2"/>
-		<result property="parentPageUID"			column="PARENTPAGEUID"		columnIndex="3"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"/>
-		<result property="menuItemType"			column="MENUITEMTYPE"		columnIndex="5"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="6"/>
-		<result property="width"						column="WIDTH"					columnIndex="7"/>
-		<result property="height"						column="HEIGHT"					columnIndex="8"/>
-		<result property="rowPos"						column="ROWPOS"					columnIndex="9"/>
-		<result property="columnPos"				column="COLUMNPOS"			columnIndex="10"/>
-		<result property="canRemove"				column="CANREMOVE"			columnIndex="11"			nullValue="0"/>
-		<result property="canResize"					column="CANRESIZE"				columnIndex="12"			nullValue="0"/>
-		<result property="canReplace"				column="CANREPLACE"			columnIndex="13"			nullValue="0"/>
-		<result property="align"						column="ALIGN"						columnIndex="14"			nullValue="middle"/>
-		<result property="valign"						column="VALIGN"					columnIndex="15"			nullValue="top"/>
-		<result property="topMargin"				column="TOPMARGIN"				columnIndex="16"			nullValue="0"/>
-		<result property="bottomMargin"			column="BOTTOMMARGIN"		columnIndex="17"			nullValue="0"/>
-		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="18"			nullValue="0"/>
-		<result property="rightMargin"				column="RIGHTMARGIN"			columnIndex="19"			nullValue="0"/>
+		<result property="parentPageUID"			column="PARENTPAGEUID"		        columnIndex="3"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="4"/>
+		<result property="menuItemType"			    column="MENUITEMTYPE"		        columnIndex="5"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="6"/>
+		<result property="width"					column="WIDTH"					    columnIndex="7"/>
+		<result property="height"					column="HEIGHT"					    columnIndex="8"/>
+		<result property="rowPos"					column="ROWPOS"					    columnIndex="9"/>
+		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="10"/>
+		<result property="canRemove"				column="CANREMOVE"			        columnIndex="11"			nullValue="0"/>
+		<result property="canResize"				column="CANRESIZE"				    columnIndex="12"			nullValue="0"/>
+		<result property="canReplace"				column="CANREPLACE"			        columnIndex="13"			nullValue="0"/>
+		<result property="align"					column="ALIGN"						columnIndex="14"			nullValue="middle"/>
+		<result property="valign"					column="VALIGN"					    columnIndex="15"			nullValue="top"/>
+		<result property="topMargin"				column="TOPMARGIN"				    columnIndex="16"			nullValue="0"/>
+		<result property="bottomMargin"			    column="BOTTOMMARGIN"		        columnIndex="17"			nullValue="0"/>
+		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="18"			nullValue="0"/>
+		<result property="rightMargin"				column="RIGHTMARGIN"			    columnIndex="19"			nullValue="0"/>
 	</resultMap>
 	
 	<resultMap class="PortalGetRenderedTopMenuInsertVO" id="portalGetRenderedTopMenuInsertVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="3"/>
-		<result property="width"						column="WIDTH"					columnIndex="4"/>
-		<result property="height"						column="HEIGHT"					columnIndex="5"/>
-		<result property="rowLength"				column="ROWLENGTH"			columnIndex="6"/>
-		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="7"/>
-		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="8"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="9"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="3"/>
+		<result property="width"					column="WIDTH"					    columnIndex="4"/>
+		<result property="height"					column="HEIGHT"					    columnIndex="5"/>
+		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="6"/>
+		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="7"/>
+		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="8"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortalPageGeneralVO" id="portalTBLPortalPageGeneralVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
-		<result property="depth"						column="DEPTH"					columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="6"/>
-		<result property="creatorName"				column="CREATORNAME"		columnIndex="7"/>
-		<result property="createDate"				column="CREATEDATE"			columnIndex="8"/>
-		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="9"/>
-		<result property="width"						column="WIDTH"					columnIndex="10"/>
-		<result property="height"						column="HEIGHT"					columnIndex="11"/>
-		<result property="rowLength"				column="ROWLENGTH"			columnIndex="12"/>
-		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13"/>
-		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
-		<result property="gubunFlag"				column="GUBUNFLAG"				columnIndex="16"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
+		<result property="depth"					column="DEPTH"					    columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="6"/>
+		<result property="creatorName"				column="CREATORNAME"		        columnIndex="7"/>
+		<result property="createDate"				column="CREATEDATE"			        columnIndex="8"/>
+		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="9"/>
+		<result property="width"					column="WIDTH"					    columnIndex="10"/>
+		<result property="height"					column="HEIGHT"					    columnIndex="11"/>
+		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="12"/>
+		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="13"/>
+		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="14"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="15"/>
+		<result property="gubunFlag"				column="GUBUNFLAG"				    columnIndex="16"/>
 		<result property="useFlag"					column="USEFLAG"					columnIndex="17"/>
-		<result property="companyID"				column="COMPANYID"			columnIndex="18"/>
-		<result property="baseType"					column="BASETYPE"				columnIndex="19"/>
-		<result property="themeUID"					column="THEMEUID"				columnIndex="20"/>
-		<result property="defaultPage"				column="DEFAULTPAGE"			columnIndex="21"/>
-		<result property="tableViewOption"		column="TABLEVIEWOPTION"	columnIndex="22"/>
+		<result property="companyID"				column="COMPANYID"			        columnIndex="18"/>
+		<result property="baseType"					column="BASETYPE"				    columnIndex="19"/>
+		<result property="themeUID"					column="THEMEUID"				    columnIndex="20"/>
+		<result property="defaultPage"				column="DEFAULTPAGE"			    columnIndex="21"/>
+		<result property="tableViewOption"		    column="TABLEVIEWOPTION"	        columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLTopMenuGeneralVO" id="portalTBLTopMenuGeneralVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
-		<result property="depth"						column="DEPTH"					columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="6"/>
-		<result property="createDate"				column="CREATEDATE"			columnIndex="8"/>
-		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="9"/>
-		<result property="width"						column="WIDTH"					columnIndex="10"/>
-		<result property="height"						column="HEIGHT"					columnIndex="11"/>
-		<result property="rowLength"				column="ROWLENGTH"			columnIndex="12"/>
-		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13"/>
-		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
+		<result property="depth"					column="DEPTH"					    columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="6"/>
+		<result property="createDate"				column="CREATEDATE"			        columnIndex="8"/>
+		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="9"/>
+		<result property="width"					column="WIDTH"					    columnIndex="10"/>
+		<result property="height"					column="HEIGHT"					    columnIndex="11"/>
+		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="12"/>
+		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="13"/>
+		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="14"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="15"/>
 		<result property="useFlag"					column="USEFLAG"					columnIndex="17"/>
-		<result property="companyID"				column="COMPANYID"			columnIndex="18"/>
-		<result property="lang"							column="LANG"						columnIndex="19"/>
-		<result property="topMnID"					column="TOPMNID"				columnIndex="20"/>
-		<result property="baseType"					column="BASETYPE"				columnIndex="21"/>
-		<result property="themeUID"					column="THEMEUID"				columnIndex="22"/>
+		<result property="companyID"				column="COMPANYID"			        columnIndex="18"/>
+		<result property="lang"						column="LANG"						columnIndex="19"/>
+		<result property="topMnID"					column="TOPMNID"				    columnIndex="20"/>
+		<result property="baseType"					column="BASETYPE"				    columnIndex="21"/>
+		<result property="themeUID"					column="THEMEUID"				    columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLUserInfoVO" id="portalTBLUserInfoVO">
-		<result property="userID"						column="USERID"					columnIndex="1"/>
-		<result property="uID"							column="UID_"						columnIndex="2"/>
-		<result property="skinNum"					column="SKINNUM"				columnIndex="3"/>
-		<result property="skinDefaultImage"		column="SKINDEFAULTIMAGE"	columnIndex="4"/>
-		<result property="skinDefaultColor"		column="SKINDEFAULTCOLOR"	columnIndex="5"/>
-		<result property="portalUID"					column="PORTAL_UID"				columnIndex="6"/>
-		<result property="portalSkinNum"			column="PORTAL_SKINNUM"	columnIndex="8"/>
-		<result property="lang"							column="LANG"						columnIndex="9"/>
+		<result property="userID"					column="USERID"					    columnIndex="1"/>
+		<result property="uID"						column="UID_"						columnIndex="2"/>
+		<result property="skinNum"					column="SKINNUM"				    columnIndex="3"/>
+		<result property="skinDefaultImage"		    column="SKINDEFAULTIMAGE"	        columnIndex="4"/>
+		<result property="skinDefaultColor"		    column="SKINDEFAULTCOLOR"	        columnIndex="5"/>
+		<result property="portalUID"				column="PORTAL_UID"				    columnIndex="6"/>
+		<result property="portalSkinNum"			column="PORTAL_SKINNUM"	            columnIndex="8"/>
+		<result property="lang"						column="LANG"						columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLThemeGeneralVO" id="portalTBLThemeGeneralVO">
-		<result property="uID"							column="UID_"						columnIndex="1"			nullValue=""/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"			nullValue=""/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"			nullValue=""/>
-		<result property="displayName3"			column="DISPLAYNAME3"		columnIndex="4"			nullValue=""/>
-		<result property="displayName4"			column="DISPLAYNAME4"		columnIndex="5"			nullValue=""/>
-		<result property="imageURL"					column="IMAGEURL"				columnIndex="6"			nullValue=""/>
-		<result property="topURL"						column="TOPURL"					columnIndex="8"			nullValue=""/>
+		<result property="uID"						column="UID_"						columnIndex="1"			nullValue=""/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"			nullValue=""/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="3"			nullValue=""/>
+		<result property="displayName3"			    column="DISPLAYNAME3"		        columnIndex="4"			nullValue=""/>
+		<result property="displayName4"			    column="DISPLAYNAME4"		        columnIndex="5"			nullValue=""/>
+		<result property="imageURL"					column="IMAGEURL"				    columnIndex="6"			nullValue=""/>
+		<result property="topURL"					column="TOPURL"					    columnIndex="8"			nullValue=""/>
 		<result property="mainURL"					column="MAINURL"					columnIndex="9"			nullValue=""/>
-		<result property="companayID"				column="COMPANAYID"			columnIndex="10"		nullValue=""/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="11"		nullValue=""/>
-		<result property="creatorNm"				column="CREATORNM"			columnIndex="12"		nullValue=""/>
-		<result property="createDate"				column="CREATEDATE"			columnIndex="13"		nullValue=""/>
-		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="14"		nullValue=""/>
-		<result property="topHeight"					column="TOPHEIGHT"				columnIndex="15"		nullValue=""/>
+		<result property="companayID"				column="COMPANAYID"			        columnIndex="10"		nullValue=""/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="11"		nullValue=""/>
+		<result property="creatorNm"				column="CREATORNM"			        columnIndex="12"		nullValue=""/>
+		<result property="createDate"				column="CREATEDATE"			        columnIndex="13"		nullValue=""/>
+		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="14"		nullValue=""/>
+		<result property="topHeight"				column="TOPHEIGHT"				    columnIndex="15"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="PortalGetThemeListVO" id="portalGetThemeListVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
-		<result property="displayName3"			column="DISPLAYNAME3"		columnIndex="4"/>
-		<result property="displayName4"			column="DISPLAYNAME4"		columnIndex="5"/>
-		<result property="imageURL"					column="IMAGEURL"				columnIndex="6"/>
-		<result property="topURL"						column="TOPURL"					columnIndex="8"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="3"/>
+		<result property="displayName3"			    column="DISPLAYNAME3"		        columnIndex="4"/>
+		<result property="displayName4"			    column="DISPLAYNAME4"		        columnIndex="5"/>
+		<result property="imageURL"					column="IMAGEURL"				    columnIndex="6"/>
+		<result property="topURL"					column="TOPURL"					    columnIndex="8"/>
 		<result property="mainURL"					column="MAINURL"					columnIndex="9"/>
-		<result property="companayID"				column="COMPANAYID"			columnIndex="10"/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="11"/>
-		<result property="creatorNm"				column="CREATORNM"			columnIndex="12"/>
-		<result property="createDate"				column="CREATEDATE"			columnIndex="13"/>
-		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="14"/>
+		<result property="companayID"				column="COMPANAYID"			        columnIndex="10"/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="11"/>
+		<result property="creatorNm"				column="CREATORNM"			        columnIndex="12"/>
+		<result property="createDate"				column="CREATEDATE"			        columnIndex="13"/>
+		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="14"/>
 	</resultMap>
 	
 	<resultMap class="PortalTopSearchTopMenu2VO" id="portalTopSearchTopMenu2VO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
-		<result property="depth"						column="DEPTH"					columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="6"/>
-		<result property="creatorName"				column="CREATORNAME"		columnIndex="7"/>
-		<result property="createDate"				column="CREATEDATE"			columnIndex="8"/>
-		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="9"/>
-		<result property="width"						column="WIDTH"					columnIndex="10"/>
-		<result property="height"						column="HEIGHT"					columnIndex="11"/>
-		<result property="rowLength"				column="ROWLENGTH"			columnIndex="12"/>
-		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13" 	nullValue="0"/>
-		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
+		<result property="depth"					column="DEPTH"					    columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="6"/>
+		<result property="creatorName"				column="CREATORNAME"		        columnIndex="7"/>
+		<result property="createDate"				column="CREATEDATE"			        columnIndex="8"/>
+		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="9"/>
+		<result property="width"					column="WIDTH"					    columnIndex="10"/>
+		<result property="height"					column="HEIGHT"					    columnIndex="11"/>
+		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="12"/>
+		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="13" 	   nullValue="0"/>
+		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="14"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="15"/>
 		<result property="useFlag"					column="USEFLAG"					columnIndex="16"/>
-		<result property="companyID"				column="COMPANYID"			columnIndex="17"/>
-		<result property="lang"							column="LANG"						columnIndex="18"/>
-		<result property="topMnID"					column="TOPMNID"				columnIndex="19"/>
-		<result property="baseType"					column="BASETYPE"				columnIndex="20"/>
-		<result property="themeUID"					column="THEMEUID"				columnIndex="21"/>
-		<result property="tenantID"					column="TENANT_ID"				columnIndex="22"/>
-		<result property="themeNm"					column="THEMENM"				columnIndex="23"/>
-		<result property="themeNm2"				column="THEMENM2"				columnIndex="24"/>
-		<result property="themeNm3"				column="THEMENM3"				columnIndex="25"/>
-		<result property="themeNm4"				column="THEMENM4"				columnIndex="26"/>
+		<result property="companyID"				column="COMPANYID"			        columnIndex="17"/>
+		<result property="lang"						column="LANG"						columnIndex="18"/>
+		<result property="topMnID"					column="TOPMNID"				    columnIndex="19"/>
+		<result property="baseType"					column="BASETYPE"				    columnIndex="20"/>
+		<result property="themeUID"					column="THEMEUID"				    columnIndex="21"/>
+		<result property="tenantID"					column="TENANT_ID"				    columnIndex="22"/>
+		<result property="themeNm"					column="THEMENM"				    columnIndex="23"/>
+		<result property="themeNm2"				    column="THEMENM2"				    columnIndex="24"/>
+		<result property="themeNm3"				    column="THEMENM3"				    columnIndex="25"/>
+		<result property="themeNm4"				    column="THEMENM4"				    columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="PortalTopLoadGetParametersVO" id="portalTopLoadGetParametersVO">
-		<result property="paramName"				column="PARAMNAME"			columnIndex="1"/>
-		<result property="paramValue"				column="PARAMVALUE"			columnIndex="2"/>
-		<result property="paramType"				column="PARAMTYPE"				columnIndex="3"/>
-		<result property="paramInfo"					column="PARAMINFO"				columnIndex="4"/>
+		<result property="paramName"				column="PARAMNAME"			        columnIndex="1"/>
+		<result property="paramValue"				column="PARAMVALUE"			        columnIndex="2"/>
+		<result property="paramType"				column="PARAMTYPE"				    columnIndex="3"/>
+		<result property="paramInfo"				column="PARAMINFO"				    columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="PortalMenuItemItemsMenuItemsVO" id="portalMenuItemItemsMenuItemsVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
-		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="3"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="5"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="6"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
+		<result property="parentMenuID"			    column="PARENTMENUID"		        columnIndex="3"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="4"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="5"/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="6"/>
 		<result property="subFlag"					column="SUBFLAG"					columnIndex="8"			nullValue="0"/>
-		<result property="columnPos"				column="COLUMNPOS"			columnIndex="9"			nullValue="0"/>
-		<result property="imageUId"					column="IMAGEUID"				columnIndex="10"/>
+		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="9"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				    columnIndex="10"/>
 		<result property="linkURL"					column="LINKURL"					columnIndex="11"/>
-		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
-		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="13"/>
-		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
-		<result property="tenantID"					column="TENANT_ID"		columnIndex="15"/>
+		<result property="linkLocation"				column="LINKLOCATION"			    columnIndex="12"/>
+		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="13"/>
+		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="14"/>
+		<result property="tenantID"					column="TENANT_ID"		            columnIndex="15"/>
 	</resultMap>
 	
 	<resultMap class="PortalGetMainMenuHtmlVO" id="portalGetMainMenuHtmlVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
-		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="3"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="5"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="6"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
+		<result property="parentMenuID"			    column="PARENTMENUID"		        columnIndex="3"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="4"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="5"/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="6"/>
 		<result property="subFlag"					column="SUBFLAG"					columnIndex="8"			nullValue="0"/>
-		<result property="columnPos"				column="COLUMNPOS"			columnIndex="9"			nullValue="0"/>
-		<result property="imageUId"					column="IMAGEUID"				columnIndex="10"/>
+		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="9"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				    columnIndex="10"/>
 		<result property="linkURL"					column="LINKURL"					columnIndex="11"/>
-		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
-		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="13"/>
-		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
-		<result property="normalImagePath"		column="NORMALIMAGEPATH"	columnIndex="15"/>
+		<result property="linkLocation"				column="LINKLOCATION"			    columnIndex="12"/>
+		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="13"/>
+		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="14"/>
+		<result property="normalImagePath"		    column="NORMALIMAGEPATH"	        columnIndex="15"/>
 	</resultMap>
 	
 	<resultMap class="PortalMenuItemItemsMenuItemsSVO" id="portalMenuItemItemsMenuItemsSVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="2"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
-		<result property="columnPos"				column="COLUMNPOS"			columnIndex="6"			nullValue="0"/>
-		<result property="imageUId"					column="IMAGEUID"				columnIndex="7"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="parentMenuID"			    column="PARENTMENUID"		        columnIndex="2"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
+		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
+		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="6"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				    columnIndex="7"/>
 		<result property="linkURL"					column="LINKURL"					columnIndex="8"/>
-		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="9"/>
-		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
+		<result property="linkLocation"				column="LINKLOCATION"			    columnIndex="9"/>
+		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortalPageCategoryVO" id="portalTBLPortalPageCategoryVO">
-		<result property="category"					column="CATEGORY"				columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
+		<result property="category"					column="CATEGORY"				    columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortalPageItemsVO" id="portalTBLPortalPageItemsVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
 		<result property="pageUID"					column="PAGEUID"					columnIndex="2"/>
-		<result property="parentPageUID"			column="PARENTPAGEUID"		columnIndex="3"/>
-		<result property="ownerPageUID"			column="OWNERPAGEUID"		columnIndex="4"/>
-		<result property="portletType"				column="PORTLETTYPE"			columnIndex="5"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="6"/>
-		<result property="width"						column="WIDTH"					columnIndex="7"/>
-		<result property="height"						column="HEIGHT"					columnIndex="8"			nullValue="0"/>
-		<result property="rowPos"						column="ROWPOS"					columnIndex="9"/>
-		<result property="columnPos"				column="COLUMNPOS"			columnIndex="10"/>
-		<result property="canRemove"				column="CANREMOVE"			columnIndex="11"/>
-		<result property="canResize"					column="CANRESIZE"				columnIndex="12"/>
-		<result property="canReplace"				column="CANREPLACE"			columnIndex="13"/>
-		<result property="align"						column="ALIGN"						columnIndex="14"		nullValue="middle"/>
-		<result property="vAlign"						column="VALIGN"					columnIndex="15"		nullValue="top"/>
-		<result property="topMargin"				column="TOPMARGIN"				columnIndex="16"		nullValue="0"/>
-		<result property="bottomMargin"			column="BOTTOMMARGIN"		columnIndex="17"		nullValue="0"/>
-		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="18"		nullValue="0"/>
-		<result property="rightMargin"				column="RIGHTMARGIN"			columnIndex="19"		nullValue="0"/>
-		<result property="mandatory"				column="MANDATORY"			columnIndex="20"/>
+		<result property="parentPageUID"			column="PARENTPAGEUID"		        columnIndex="3"/>
+		<result property="ownerPageUID"			    column="OWNERPAGEUID"		        columnIndex="4"/>
+		<result property="portletType"				column="PORTLETTYPE"			    columnIndex="5"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="6"/>
+		<result property="width"					column="WIDTH"					    columnIndex="7"/>
+		<result property="height"					column="HEIGHT"					    columnIndex="8"			nullValue="0"/>
+		<result property="rowPos"					column="ROWPOS"					    columnIndex="9"/>
+		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="10"/>
+		<result property="canRemove"				column="CANREMOVE"			        columnIndex="11"/>
+		<result property="canResize"				column="CANRESIZE"				    columnIndex="12"/>
+		<result property="canReplace"				column="CANREPLACE"			        columnIndex="13"/>
+		<result property="align"					column="ALIGN"						columnIndex="14"		nullValue="middle"/>
+		<result property="vAlign"					column="VALIGN"					    columnIndex="15"		nullValue="top"/>
+		<result property="topMargin"				column="TOPMARGIN"				    columnIndex="16"		nullValue="0"/>
+		<result property="bottomMargin"			    column="BOTTOMMARGIN"		        columnIndex="17"		nullValue="0"/>
+		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="18"		nullValue="0"/>
+		<result property="rightMargin"				column="RIGHTMARGIN"			    columnIndex="19"		nullValue="0"/>
+		<result property="mandatory"				column="MANDATORY"			        columnIndex="20"/>
 	</resultMap>
 	
 	<resultMap class="PortalUrlPortletVO" id="portalUrlPortletVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="2"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletURLVO" id="portalTBLPortletURLVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
-		<result property="userType"					column="USERTYPE"				columnIndex="3"/>
-		<result property="url"							column="URL"						columnIndex="4"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="2"/>
+		<result property="userType"					column="USERTYPE"				    columnIndex="3"/>
+		<result property="url"						column="URL"						columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletBoardVO" id="portalTBLPortletBoardVO">
-		<result property="uID"							column="UID_"						columnIndex="1"		nullValue=""/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
-		<result property="userType"					column="USERTYPE"				columnIndex="3"		nullValue=""/>
+		<result property="uID"						column="UID_"						columnIndex="1"		nullValue=""/>
+		<result property="creatorID"				column="CREATORID"				    columnIndex="2"/>
+		<result property="userType"					column="USERTYPE"				    columnIndex="3"		nullValue=""/>
 		<result property="boardID"					column="BOARDID"					columnIndex="4"/>
-		<result property="itemCount"				column="ITEMCOUNT"				columnIndex="5"/>
-		<result property="itemFields"					column="ITEMFIELDS"				columnIndex="6"/>
+		<result property="itemCount"				column="ITEMCOUNT"				    columnIndex="5"/>
+		<result property="itemFields"				column="ITEMFIELDS"				    columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletImageVO" id="portalTBLPortletImageVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="imagePath"				column="IMAGEPATH"				columnIndex="2"/>
-		<result property="imageWidth"				column="IMAGEWIDTH"			columnIndex="3"/>
-		<result property="imageHeight"				column="IMAGEHEIGHT"			columnIndex="4"/>
-		<result property="imageType"				column="IMAGETYPE"				columnIndex="5"/>
-		<result property="openMode"				column="OPENMODE"				columnIndex="6"/>
-		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="7"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="imagePath"				column="IMAGEPATH"				    columnIndex="2"/>
+		<result property="imageWidth"				column="IMAGEWIDTH"			        columnIndex="3"/>
+		<result property="imageHeight"				column="IMAGEHEIGHT"			    columnIndex="4"/>
+		<result property="imageType"				column="IMAGETYPE"				    columnIndex="5"/>
+		<result property="openMode"				    column="OPENMODE"				    columnIndex="6"/>
+		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="7"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletHtmlPageVO" id="portalTBLPortletHtmlPageVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
-		<result property="htmlData"					column="HTMLDATA"				columnIndex="3"/>
+		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"/>
+		<result property="htmlData"					column="HTMLDATA"				    columnIndex="3"/>
 	</resultMap>
 	
 	<select id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
@@ -1483,7 +1483,9 @@
                        		WHERE
                        			UID_ = #v_pUID#
                        		AND
-                       			TENANT_ID = #tenantID#	 )
+                       			TENANT_ID = #tenantID#
+                            AND
+                                COMPANYID = #companyID# )
 		]]>
 	</select>
 	
@@ -1496,7 +1498,9 @@
        		WHERE
        			UID_ = #v_pUID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
 		]]>
 	</select>
 	

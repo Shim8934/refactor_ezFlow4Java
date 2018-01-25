@@ -2020,13 +2020,13 @@
             AND 
             	( APRSTATE = '002' OR APRSTATE = '005' )
             AND
-				TENANT_ID = #v_TENANTID#  
+				TENANT_ID = #v_TENANTID#     
 			AND
-				COMPANYID = #companyID# 				          	
+				COMPANYID = #companyID#       	
 				]]>
 		</isEqual>
 		<isEqual property="v_PMODE" compareValue="VIE">
-		<isEqual property="v_temp" compareValue="1">
+		<isGreaterEqual property="v_temp" compareValue="1">
 		<![CDATA[
 			SELECT 
 				DOCID ,
@@ -2039,12 +2039,12 @@
             AND 
             	APRMEMBERID = #v_PAPRUSERID#
             AND
-				TENANT_ID = #v_TENANTID# 
+				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#   				 
+				COMPANYID = #companyID#   
 				]]>
-		</isEqual>
-		<isEqual property="v_temp2" compareValue="1">
+		</isGreaterEqual>
+		<isGreaterEqual property="v_temp2" compareValue="1">
 		<![CDATA[
 			SELECT 
 				DOCID ,
@@ -2059,10 +2059,10 @@
             AND
 				TENANT_ID = #v_TENANTID# 
 			AND
-				COMPANYID = #companyID# 				 	
+				COMPANYID = #companyID#  	
 				]]>
-		</isEqual>
-		<isNotEqual property="v_temp2" compareValue="1">
+		</isGreaterEqual>
+		<isLessThan property="v_temp2" compareValue="1">
 		<![CDATA[
 			 SELECT 
 			 	DOCID ,
@@ -2075,16 +2075,16 @@
             AND 
             	RECEIVEDDEPTID = #v_PDEPTID#
             AND
-				TENANT_ID = #v_TENANTID#  
+				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#  				
+				COMPANYID = #companyID#  
 				]]>
-		</isNotEqual>
+		</isLessThan>
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="REC">
-			<isEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp2" compareValue="1">
+			<isGreaterEqual property="v_temp" compareValue="1">
+			<isGreaterEqual property="v_temp2" compareValue="1">
 			<![CDATA[
 				SELECT 
 						DOCID ,
@@ -2097,12 +2097,12 @@
                 AND 
                 		PROCESSORID = #v_PAPRUSERID#
                 AND
-						TENANT_ID = #v_TENANTID#  
+						TENANT_ID = #v_TENANTID#
 				AND
-						COMPANYID = #companyID#   						
+						COMPANYID = #companyID#   
 						]]>
-			</isEqual>
-			<isNotEqual property="v_temp2" compareValue="1">
+			</isGreaterEqual>
+			<isLessThan property="v_temp2" compareValue="1">
 			<![CDATA[
 			     SELECT 
 			     		DOCID ,
@@ -2115,14 +2115,15 @@
 	             AND 
 	             		RECEIVEDDEPTID = #v_PDEPTID#
 	             AND
-						TENANT_ID = #v_TENANTID#  
+						TENANT_ID = #v_TENANTID#
 				 AND
-						COMPANYID = #companyID#   							
+						COMPANYID = #companyID#   	
 						]]>	
-			</isNotEqual>
-		    </isEqual>
-		<isNotEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp3" compareValue="0">
+			</isLessThan>
+		    </isGreaterEqual>
+		<isLessThan property="v_temp" compareValue="1">
+			<isNotEmpty property="v_temp3"> 
+			<isLessThan property="v_temp3" compareValue="1">
 			<![CDATA[
 				  SELECT 
 				  		'1' DOCID  ,
@@ -2130,8 +2131,9 @@
                         NULL RECEIVEDDEPTID  
                   FROM DUAL  
                   ]]>
-			</isEqual>
-			<isNotEqual property="v_temp3" compareValue="0">
+			</isLessThan>
+			<isGreaterEqual property="v_temp3" compareValue="1">
+				<isNotEmpty property="v_temp4">
 				<isGreaterThan property="v_temp4" compareValue="0" >
 				<![CDATA[
 				 SELECT 
@@ -2143,9 +2145,9 @@
                  WHERE  
                  		DOCID = #v_PDOCID#
                  AND
-						TENANT_ID = #v_TENANTID#	
+						TENANT_ID = #v_TENANTID#
 				 AND
-						COMPANYID = #companyID# 						
+						COMPANYID = #companyID# 	
 						]]>	
 				</isGreaterThan>
 				<isLessEqual property="v_temp4" compareValue="0">
@@ -2163,29 +2165,31 @@
                       AND
 							TENANT_ID = #v_TENANTID#
 					  AND
-							COMPANYID = #companyID# 								
+							COMPANYID = #companyID# 	
 							]]>	
 				</isLessEqual>
-			</isNotEqual>
-		</isNotEqual>
+				</isNotEmpty>
+			</isGreaterEqual>
+			</isNotEmpty>
+		</isLessThan>
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="TMP">
 		<![CDATA[
 		    SELECT 
-		    		OWNERID || '@' || SN DOCID  ,
+		    		CONCAT(OWNERID ,'@' ,SN ) DOCID  ,
                     'NULL' PROCESSORID  ,
                     'NULL' RECEIVEDDEPTID  
             FROM 
             		TBL_TMPAPRLINEINFO 
             WHERE  
-            		OWNERID || '@' || SN = #v_PDOCID#
+            		CONCAT(OWNERID ,'@' ,SN ) = #v_PDOCID#
             AND 
             		APRMEMBERID = #v_PAPRUSERID#
             AND
 					TENANT_ID = #v_TENANTID#
 			AND
-					COMPANYID = #companyID# 					
+					COMPANYID = #companyID# 
 					]]>
 		</isEqual>
 		
@@ -2982,7 +2986,7 @@
 		<isEqual property="lang" compareValue="1">
 			NAME
 		</isEqual>
-		<isNotEqual property="lang" compareValue="1">
+ 		<isNotEqual property="lang" compareValue="1">
 			NAME$lang$ as NAME
 		</isNotEqual>
    		FROM 
@@ -2992,13 +2996,13 @@
    		AND
    			COMPANYID = #companyID#
    		AND 
-   			ISUSE = 1
+   			ISUSE = '1'
 		<isEqual property="approvalFlag" compareValue="G" prepend="AND">
    			CODE1 = 'A03' 
 		</isEqual>
-		<isNotEqual property="approvalFlag" compareValue="S" prepend="AND">
+		<isEqual property="approvalFlag" compareValue="S" prepend="AND">
    			CODE1 = 'SA03' 
-		</isNotEqual>
+		</isEqual>
    		ORDER BY 
    			CODE2
 	</select>
@@ -3468,7 +3472,7 @@
 			<isNotEqual property="v_STRLANG" compareValue="1">
 			   SELECT 
 			   		DISTINCT SUBCATEGORYCODE ,
-	                IFNULL(SCNAME, SCNAME2) SCNAME  
+	                NVL(SCNAME, SCNAME2) SCNAME  
 	           FROM 
 	           		VTASKCLASS 
 	           WHERE  ( 
@@ -3623,7 +3627,7 @@
       	  	FROM (
       	  			SELECT 
       	  					CABINETCLASSNO, 
-      	  					MAX(VOLUMENO) AS VOLUMENO,
+      	  					MAX(VOLUMENO) VOLUMENO,
       	  					TENANT_ID ,
       	  					COMPANYID
       	  			FROM 
@@ -3632,8 +3636,8 @@
       	  					TENANT_ID = #v_TENANTID#
       	  			AND 
       	  					COMPANYID = #companyID#      	  					
-      	  			GROUP BY 
-      	  					CABINETCLASSNO,TENANT_ID ) TBMAXVOL 
+      	  			GROUP BY      	  					
+      	  					CABINETCLASSNO,TENANT_ID,COMPANYID ) TBMAXVOL 
       	  			INNER JOIN 
       	  					TBL_CABINET 
       	  			ON 
@@ -6321,7 +6325,7 @@
       	  												TBL_CABINET.TENANT_ID =#v_TENANTID#
       	  											AND
       	  												TBL_CABINET.COMPANYID = #companyID#      	  												
-      	  											GROUP BY CABINETCLASSNO,TENANT_ID ) TBMAXVOL 
+      	  											GROUP BY CABINETCLASSNO,TENANT_ID, COMPANYID ) TBMAXVOL 
       	  									INNER JOIN 
       	  										TBL_CABINET 
       	  									ON 
@@ -6603,7 +6607,9 @@
 			* 
 		FROM(
 				SELECT 
-					row_number() over($v_tmp$) as rnum, 
+
+					row_number() over(ORDER BY NULL) as rnum,  <!-- 임시 -->
+
 					A.* FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
@@ -9820,26 +9826,29 @@
 <!-- 	</procedure> -->
 		<select id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int">
 		 		SELECT 
-		 				COUNT(CN)  
-		         FROM 
-		         		TBL_UserMaster
-		       	 WHERE  
-		       	 		Department = #v_DEPTID#
-		         AND 
-		         		extensionAttribute1 LIKE '%a=1%' 
-		         AND
-		         		TENANT_ID =#v_TENANTID#
-				 AND 
+				SUM(CN) count 
+			FROM (
+				SELECT 
+					count(cn) cn
+				FROM 
+					TBL_USERMASTER
+				WHERE 
+					DEPARTMENT = #v_DEPTID#
+				AND 
+					EXTENSIONATTRIBUTE1 like '%a=1%'
+				AND 
+					TENANT_ID = #v_TENANTID#
+				AND 
 					PHYSICALDELIVERYOFFICENAME = #companyID#
-				 
-            	UNION 
+			
+				UNION 
 			
 				SELECT 
-					count(a.cn) as cn
+					count(a.cn) cn
 				FROM 
-					TBL_USERMASTER as a
+					TBL_USERMASTER a
 				JOIN 
-					TBL_ADDJOBMASTER as b
+					TBL_ADDJOBMASTER b
 				ON 
 					a.CN = b.CN
 				AND 
@@ -9849,7 +9858,8 @@
 				AND 
 					a.EXTENSIONATTRIBUTE1 like '%a=1%'
 				AND 
-					a.TENANT_ID = #v_TENANTID#	
+					a.TENANT_ID = #v_TENANTID#
+			)	         	
 		</select>
 	
 <!-- 	<procedure id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int"> -->
@@ -10125,7 +10135,8 @@
         		  RegSerialNo, 
         		  RollbackFlag,
         		  TENANT_ID,
-				  COMPANYID )
+				  COMPANYID,
+				  IDX )
         	VALUES ( (
     					SELECT 
     						CASE WHEN ISUsed ='0' THEN '0' 
@@ -10201,7 +10212,8 @@
    		 						1, 
    		 						0,
    		 						#v_TENANTID#,
-								#companyID# )
+								#companyID#,
+								SEQ_TBL_SERIALNUMGEN.NEXTVAL )
 	</insert>
 	<select id="EzApprovalG.rollBackFlag" parameterClass="Map" resultClass="int">
 			SELECT 
@@ -10433,9 +10445,9 @@
 		 								WHERE  
 		 										CodeType = '007' 
 		 								AND
-												TENANT_ID =#v_TENANTID#)
+												TENANT_ID =#v_TENANTID#
 										AND
-												COMPANYID = #companyID#
+												COMPANYID = #companyID#)
 	 						 WHERE  
 	 						 		Code = '3')
 	     AND 
@@ -10860,7 +10872,7 @@
 							   			  OR 
 							   			  ( SELECT     
 										  		CASE 
-										  			WHEN IFNULL(COUNT(DocID), 0) > 0 
+										  			WHEN NVL(COUNT(DocID), 0) > 0 
 										  			THEN 'Y' 
 							             			ELSE 'N'
 							             		END AS RET
@@ -11425,7 +11437,8 @@
      				  RegSerialNo, 
      				  RollbackFlag,
      				  TENANT_ID,
-     				  COMPANYID )
+     				  COMPANYID,
+     				  IDX )
      		VALUES ( (
 		   				SELECT 
 		   					CASE WHEN ISUsed ='0' THEN '0' 
@@ -11499,7 +11512,8 @@
     					#v_CurSN#, 
     					1 ,
     					#v_TENANTID#,
-    					#companyID#)
+    					#companyID#,
+    					SEQ_TBL_SERIALNUMGEN.NEXTVAL)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
@@ -11771,8 +11785,8 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 	  INSERT INTO TBL_NOTIFICATION
-        ( USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
-       VALUES ( #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
+        (ITEMSEQ, USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
+       VALUES (SEQ_TBL_PS_NOTICE_ITEMSEQ.nextval, #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
 	</insert>
 	
 	<select id="EzApprovalG.notifiCationSeq" parameterClass="Map" resultClass="String">
@@ -12201,7 +12215,7 @@
 	            AND 
 	            	Type3 = ( 
 	    						SELECT CASE WHEN ISUsed = 0 THEN '0'
-	    							   ELSE $v_numRows$
+	    							   ELSE TO_CHAR($v_numRows$)
 	    							   END 
 	    						FROM (
 			    						SELECT 
@@ -12245,7 +12259,7 @@
 			    						WHERE  
 			    							Code = '4')	)
 	            AND 
-	            	RollbackFlag = '0'
+	            	RollbackFlag = 0
 				AND 
 	            	TENANT_ID = #v_TENANTID#
 	            AND
@@ -12254,7 +12268,7 @@
 		<insert  id="EzApprovalG.insertTbSerialNumGen" parameterClass="Map">
 		INSERT INTO 
 			TBL_SERIALNUMGEN
-          		( Type1, 	  Type2, 	 Type3, 	TimeSep,  RegSerialNo, RollbackFlag, TENANT_ID, COMPANYID )
+          		( Type1, 	  Type2, 	 Type3, 	TimeSep,  RegSerialNo, RollbackFlag, TENANT_ID, COMPANYID, IDX )
         VALUES  ( (SELECT 
         			CASE WHEN ISUsed = 0 THEN '0'
     				ELSE '001'
@@ -12320,7 +12334,7 @@
 																								AND
 																									COMPANYID = #companyID# )
 															    								WHERE  
-															    									Code = '4')), $v_RtnSN$, 0 , #v_TENANTID#, #companyID#)
+															    									Code = '4')), $v_RtnSN$, 0 , #v_TENANTID#, #companyID#,SEQ_TBL_SERIALNUMGEN.nextval)
 		</insert>
 		<update id="EzApprovalG.updateTbSerialNumGen" parameterClass="Map">
 			UPDATE 
@@ -12535,10 +12549,10 @@
 		<insert id="EzApprovalG.trigerTbCabRoleInfo" parameterClass="Map">
 		INSERT INTO 
 			TBL_CABROLEINFO
-     	( USER_ID, CabinetClassNo, UserName, UserName2, TENANT_ID. COMPANYID )
+     	( USER_ID, CabinetClassNo, UserName, UserName2, TENANT_ID, COMPANYID )
      	( SELECT 
      		  #v_DeptMID#,
-              #v_CABINETCLASSNO#  ,
+              #v_CABINETCLASSNO#,
               #v_DeptMName#, 
               #v_DeptMName2#,
               #v_TENANTID#,
@@ -13793,13 +13807,13 @@
 	<insert id="EzApprovalG.createNewDoc2" parameterClass="Map">
 		INSERT 
 	   		INTO TBL_EXPAPRDOCINFO
-        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID )
+        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
         		( 
         			SELECT 
         				#v_DOCID# ,
                  		FORMNAME ,
                  		FORMNAME2 ,
-		                #v_COMPANYID# ,
+		                #companyID# ,
 		                 'N' ,
 		                 999 ,
 		                 ' ' ,
@@ -14192,7 +14206,7 @@
 		 			TBL_HISTORYLINEINFO
         			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG , TENANT_ID, COMPANYID)
         ( SELECT 
-        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, SYSDATE, (
+        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), (
         																																																																				SELECT 
         																																																																					NVL(MAX(MODIFYSN),0) + 1 
 																																																																					    FROM 
@@ -15533,7 +15547,7 @@
 		UPDATE 
 			TBL_RECORD
         SET 
-        	 REGISTERDATE = #v_REGDATE#,
+        	 REGISTERDATE = TO_DATE(#v_REGDATE#,'YYYY-MM-DD HH24:MI:SS'),
              APRMEMBERTITLE = #v_APRMEMTITLE#,
              APRMEMBERTITLE2 = #v_APRMEMTITLE2#,
              DRAFTERNAME = #v_DRAFTER#,
@@ -17082,7 +17096,10 @@
        								AND
        									TENANT_ID = #v_TENANTID#
        								AND
-       									COMPANYID = #companyID#)))
+       									COMPANYID = #companyID#)
+       								GROUP BY 
+                                        DocState,FunctionType	
+       									))
        		]]>
    </select>
 
@@ -18231,7 +18248,7 @@
    			TBL_SEPERATEATTACH 
    		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
    		Values 
-   		(#v_RECID#, #v_SEPATTSN#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		(#v_RecordID#, #v_SepAttachNo#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
    </insert>
      
    <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">
@@ -21111,7 +21128,7 @@
         	USERCONTNAME
      ]]>
    	</select>
-   	  	
+   	
     <select id="EzApprovalG.getUserContTreeLeaf" parameterClass="Map" resultClass="ApprUserContInfoVO">
    		SELECT 
    			USERCONTID ,
@@ -21300,7 +21317,41 @@
        		 tbl_Container.COMPANYID = #companyID#
    	</select>
    	
-   	  	
+   	<select id="EzApprovalG.getUserContDocListCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(TBL_ENDAPRDOCINFO.DOCID) 
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID   
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID 
+   		INNER JOIN 
+   			TBL_USERCONTLIST  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_USERCONTLIST.DOCID 
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID  
+   		WHERE 
+   			USERCONTID = #v_CONTID#  
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+   		AND 
+   			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL 
+   		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
+   		AND 
+   			$v_PSUBQUERY$
+   		</isGreaterThan>
+   	</select>
+   	   	  	
    	<select id="EzApprovalG.getUserContList" parameterClass="Map" resultClass="ApprGDocListVO"> <!-- 강민수1 -->
    	   	SELECT 
    			A.DOCID, 

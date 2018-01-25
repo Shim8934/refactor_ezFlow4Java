@@ -358,10 +358,10 @@
 		</isNotEqual>
 		
 		<![CDATA[
-						ORDER BY
-							c_regdate ASC) A
+					ORDER BY
+						c_regdate ASC) A
 					WHERE
-						ROWNUM <= #v_IQUERYCOUNT#)                                 
+						ROWNUM <= #v_IQUERYCOUNT#)
 				ORDER BY
 					c_regdate DESC)
 			WHERE
@@ -559,7 +559,7 @@
 	</select>
 	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -684,7 +684,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityAdminDAO.aspCommCloseAllDel"					parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE FROM
 				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
