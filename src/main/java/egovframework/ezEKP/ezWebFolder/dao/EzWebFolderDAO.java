@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezWebFolder.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzWebFolderDAO")
@@ -44,5 +48,18 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 
 	public String getFileLogSequence(Map<String, Object> map) {
 		return (String)select("EzWebFolderDAO.getFileLogSequence", map);
+	}
+
+	public FolderVO getFolderByFolderId(Map<String, Object> map) {		
+		return (FolderVO)select("EzWebFolderDAO.getFolderByFolderId", map);
+	}
+
+	public FolderSimpleVO getSimpleSubFolder(Map<String, Object> map) {
+		return (FolderSimpleVO)select("EzWebFolderDAO.getSimpleSubFolder", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FolderSimpleVO> getAllSimpleSubFolders(Map<String, Object> map) {		
+		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getAllSimpleSubFolders", map);
 	}
 }
