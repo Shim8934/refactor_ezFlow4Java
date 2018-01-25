@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
@@ -13,11 +14,15 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderAdminService")
 public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	@Resource(name = "EzWebFolderAdminDAO")
 	private EzWebFolderAdminDAO ezWebFolderAdminDAO;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Override
 	public void saveConfig(String personalLimit, String uploadLimit, String companyId, int tenantId) throws Exception {		
@@ -59,10 +64,17 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<FileLogVO> getListFileLogs(String companyId, String offset, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
+	public List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String primary, String offset, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
 		map.put("companyId", companyId);
-		map.put("offset", offset);
+		map.put("searchChk", searchChk);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("fileExt", fileExt);
+		map.put("fileName", fileName);
+		map.put("userName", userName);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
 		map.put("tenantId", tenantId);		
 		return ezWebFolderAdminDAO.getListFileLogs(map);
 	}
@@ -74,6 +86,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("fileType", fileLog.getFileType());
 		map.put("fileName", fileLog.getFileName());
 		map.put("fileSize", fileLog.getFileSize());
+		map.put("fileExt", fileLog.getFileExt());
 		map.put("logType", fileLog.getLogType());
 		map.put("createId", fileLog.getCreateId());
 		map.put("createName1", fileLog.getCreateName1());

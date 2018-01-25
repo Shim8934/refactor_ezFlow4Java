@@ -121,7 +121,7 @@
 		]]>		
     </select>    
     
-    <select id="EzWebFolderDAO.getFileTypeByFileExt" resultMap="fileTypeVO">     
+    <select id="EzWebFolderDAO.getFileTypeByFileExt" resultMap="fileTypeVO">
 		<![CDATA[
 			SELECT 
 				*

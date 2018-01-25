@@ -22,15 +22,32 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" >
-			var blockSize   = 10;
-			var currentPage = null;
-			var totalRows	= null;
-			var totalPages  = null;
-			var primary	    = "<c:out value='${primary}'/>";
-			var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
-			var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
-			var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
-			var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
+			var blockSize    = 10;
+			var currentPage  = null;
+			var totalRows	 = null;
+			var totalPages   = null;
+			var primary	     = "<c:out value='${primary}'/>";
+			var strLang39	 = "<spring:message code = 'ezWebFolder.t135'/>";
+			var strLang40 	 = "<spring:message code = 'ezWebFolder.t136'/>";
+			var strLang41    = "<spring:message code = 'ezWebFolder.t137'/>";
+			var strLang42    = "<spring:message code = 'ezWebFolder.t138'/>";
+			var startDateStr = "";
+			var endDateStr	 = "";
+			var fileExtStr	 = "";
+			var fileNameStr	 = "";
+			var userNameStr  = "";
+			
+        	window.onresize = function () {
+				var divList = document.getElementById("mainSetting");				
+				var reheight = document.documentElement.clientHeight - 170;	
+				
+				if (reheight < 500) {
+					divList.style.height = "500px";	
+				}
+				else {
+					divList.style.height = reheight + "px";		
+				}
+			};
 			
 			window.onload = function () {
 				$("#Sdatepicker").datepicker({
@@ -39,7 +56,8 @@
 		        	autoSize: true,
 		        	showOn: "both",
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
-		        	buttonImageOnly: true
+		        	buttonImageOnly: true,
+		        	dateFormat: "yy-mm-dd"
 		    	});
 				
 				$("#Edatepicker").datepicker({
@@ -48,11 +66,19 @@
 		        	autoSize: true,
 		        	showOn: "both",
 		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
-		        	buttonImageOnly: true
+		        	buttonImageOnly: true,
+		        	dateFormat: "yy-mm-dd"
 		    	});
 				
 				search_Set("1");
-		    }		    
+				preProcessing();
+		    }
+			
+			function preProcessing() {
+				var divList = document.getElementById("mainSetting");
+				var reheight = document.documentElement.clientHeight - 170;
+				divList.style.height = reheight + "px";
+			}	
 		    
 		    function openSearchPanel() {
 		    	$("#searchPanel").toggle("1000");
@@ -188,12 +214,17 @@
 		            return;
 		    }	    
 		    
-		    function search_Set(pPage) {		    	
+		    function search_Set(pPage) {	    	
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getFileLogs.do",
 					data: {
 						"currentPage" : pPage,
+						"startDate"   : startDateStr,
+						"endDate"     : endDateStr,
+						"fileExt"     : fileExtStr,
+						"fileName"    : fileNameStr,
+						"userName"    : userNameStr,
 						"companyId"   : document.getElementById("companyList").value
 					},
 					dataType: "JSON",
@@ -245,14 +276,15 @@
 		    			trElmt.setAttribute("class", "bnkWebFolder");
 
 		    			tdElmt1.textContent = result[i]["fileType"];
+		    			tdElmt1.setAttribute("style","text-align: center;");
 		    			
-		    			tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt2.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
 		    			tdElmt2.textContent = result[i]["fileName"];
 		    			
-		    			tdElmt3.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt3.setAttribute("style","text-align: center;");
 		    			tdElmt3.textContent = result[i]["fileSize"];
 		    			
-		    			tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt4.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
 		    			
 		    			if (primary == "1") {
 		    				tdElmt4.textContent = result[i]["createName1"];
@@ -261,7 +293,7 @@
 		    				tdElmt4.textContent = result[i]["createName2"];
 		    			}	    			
 		    			
-		    			tdElmt5.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt5.setAttribute("style","text-align: center;");
 		    			
 		    			switch(result[i]["logType"]) {
 		    				case "C":
@@ -278,8 +310,8 @@
 		    					break;
 		    			}
 		    			
-		    			tdElmt6.setAttribute("style","text-align: center;");
-		    			tdElmt6.textContent = result[i]["createDate"];
+		    			tdElmt6.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt6.textContent = result[i]["createDate"].substring(0, 19);
 
 				        trElmt.appendChild(tdElmt1);
 				        trElmt.appendChild(tdElmt2);
@@ -290,6 +322,49 @@
 				        tableList.appendChild(trElmt);
 		    		}
 		    	}
+		    }
+		    
+		    function startSearch() {
+		    	var sDateVal    = document.getElementById("Sdatepicker").value;
+		    	var eDateVal    = document.getElementById("Edatepicker").value;
+		    	var fileExtVal  = document.getElementById("fileExtVal").value;
+		    	var fileNameVal = document.getElementById("fileNameVal").value;
+		    	var userNameVal = document.getElementById("fileCreatorVal").value;
+		    	
+		    	if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
+		    		alert("<spring:message code='ezWebFolder.t163' />");					
+		    		return;
+		    	}
+		    	
+		    	if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {
+		    		alert("You must provide both start date and end date!");
+		    		return;
+		    	}
+		    	
+		    	if (sDateVal && eDateVal) {
+		    		if (sDateVal > eDateVal) {
+		    			alert("<spring:message code='ezWebFolder.t164' />");
+		    			return;
+		    		}
+		    	}
+		    	
+				startDateStr = sDateVal;
+			    endDateStr	 = eDateVal;
+				fileExtStr	 = fileExtVal;
+				fileNameStr	 = fileNameVal;
+				userNameStr  = userNameVal;
+		    	
+		    	openSearchPanel();
+		    	search_Set("1");
+		    }
+		    
+		    function change() {
+				startDateStr = "";
+			    endDateStr	 = "";
+				fileExtStr	 = "";
+				fileNameStr	 = "";
+				userNameStr  = "";
+		    	search_Set("1");
 		    }
 		    
 	    </script>
@@ -344,7 +419,7 @@
 							</tr>
 		   				</table>
 	  					<div style="margin: 12px 50px 12px 180px;">
-							<a class="webfolderBttn"><span onclick=""><spring:message code='ezWebFolder.t123' /></span></a>
+							<a class="webfolderBttn"><span onclick="startSearch();"><spring:message code='ezWebFolder.t123' /></span></a>
 	 						<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112' /></span></a>
 						</div>
   					</div>
@@ -355,21 +430,13 @@
 	   <div id="mainSetting" style="margin: 10px 0px;">
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 	   			<tr>	   				
-					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t155' /></th>
-					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t156' /></th>
-					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
-					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t154' /></th>
-					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t158' /></th>
-					<th width="100px" style="text-align: center;"><spring:message code='ezWebFolder.t159' /></th>					
+					<th width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t155' /></th>
+					<th width="160px" style="text-align: center;"><spring:message code='ezWebFolder.t156' /></th>
+					<th width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
+					<th width="160px" style="text-align: center;"><spring:message code='ezWebFolder.t154' /></th>
+					<th width="60px" style="text-align: center;"><spring:message code='ezWebFolder.t158' /></th>
+					<th width="140px" style="text-align: center;"><spring:message code='ezWebFolder.t159' /></th>					
 	   			</tr>
-<!-- 	   			<tr class="bnkWebFolder">
-					<td style="text-align: center;">파일</td>
-					<td style="text-align: center;">간단파일.jsp</td>
-					<td style="text-align: center;">100.24KB</td>
-					<td style="text-align: center;">박예연</td>
-					<td style="text-align: center;">파일 삭제</td>
-					<td style="text-align: center;">2018-01-12 12:10:45</td>
-	   			</tr> -->
 	   		</table>
 	   </div>
 	   

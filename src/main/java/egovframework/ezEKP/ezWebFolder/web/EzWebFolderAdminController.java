@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -22,6 +25,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -302,16 +306,51 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)	
 	public String getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int currPage  = Integer.parseInt(request.getParameter("currentPage"));
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String offset    = userInfo.getOffset();
+		String primary   = userInfo.getPrimary();
+		int currPage     = Integer.parseInt(request.getParameter("currentPage"));
 		String companyId = request.getParameter("companyId");
-		String offset = userInfo.getOffset();
-		
+		String startDate = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";	
+		String endDate   = request.getParameter("endDate")   != null ? request.getParameter("endDate")   : "";
+		String fileExt   = request.getParameter("fileExt")   != null ? request.getParameter("fileExt")   : "";
+		String fileName  = request.getParameter("fileName")  != null ? request.getParameter("fileName")  : "";
+		String userName  = request.getParameter("userName")  != null ? request.getParameter("userName")  : "";		
 		int totalRows = 0;
 		int totalPages = 0;
 		int pageSize = 10;
+		String searchChk = "1";
 		
-		List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, offset, userInfo.getTenantId());
+		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || Username: " + userName);
+		
+		if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("")) {
+			searchChk = "0";
+		}
+		
+		if (searchChk.equals("1")) {
+			if (startDate.equals("")) {
+				//Get logs in three months
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date now = new Date();						 
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(now);	
+				cal.add(Calendar.MONTH, -3);
+				
+				startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+				endDate = commonUtil.getDateStringInUTC(sdf.format(now), offset, true); 
+			}
+			else {
+				String startDateTmp = startDate + " 00:00:00";
+				String endDateTmp   = endDate + " 23:59:59";
+				
+				startDate = commonUtil.getDateStringInUTC(startDateTmp, userInfo.getOffset(), true);
+				endDate   = commonUtil.getDateStringInUTC(endDateTmp, userInfo.getOffset(), true);
+			}
+		}
+		
+		logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
+		
+		List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, primary, offset, userInfo.getTenantId());
 		
 		//Paging
 		if (listFileLogs != null) {

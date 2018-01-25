@@ -5,6 +5,7 @@ public class FileLogVO {
 	private String fileType;
 	private String fileName;
 	private String fileSize;
+	private String fileExt;
 	private String logType;
 	private String createId;
 	private String createName1;
@@ -99,6 +100,14 @@ public class FileLogVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
-	}	
+	}
+
+	public String getFileExt() {
+		return fileExt;
+	}
+
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
+	}
 	
 }

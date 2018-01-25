@@ -32,7 +32,7 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<FileLogVO> getListFileLogs(Map<String, Object> map) {
-		return (List<FileLogVO>)select("EzWebFolderAdminDAO.getListFileLogs", map);
+		return (List<FileLogVO>)list("EzWebFolderAdminDAO.getListFileLogs", map);
 	}
 
 	public void insertFileLog(Map<String, Object> map) {

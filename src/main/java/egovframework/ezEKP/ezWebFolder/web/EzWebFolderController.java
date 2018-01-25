@@ -34,7 +34,6 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
-import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -68,8 +67,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{       
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
-        
-        
+
 		return "ezWebFolder/webfolderLeft";
 	}
 	
@@ -172,7 +170,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
             		fileLog.setCreateName2(user.getDisplayName2());
             		fileLog.setFileName(pFileName[i]);
             		fileLog.setFileSize(fileVO.getFileSize());
-            		fileLog.setFileType(fileType.getTypeId());
+            		fileLog.setFileExt(fileVO.getFileExt());
+            		fileLog.setFileType(fileType.getTypeName());
             		fileLog.setLogId(getMaxLogID(user.getTenantId()));
             		fileLog.setTenantId(user.getTenantId());
             		
@@ -224,6 +223,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			    for (int i = 0; i < fileIDList.length; i++) {
 			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
 			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, user.getTenantId());
+			    	FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
 			    	File file = new File(realPath + fileVO.getFilePath());
 			        zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
 			        fileInputStream = new FileInputStream(file);
@@ -244,7 +244,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 					fileLog.setCreateName2(user.getDisplayName2());
 					fileLog.setFileName(fileVO.getFileName());
 					fileLog.setFileSize(fileVO.getFileSize());
-					fileLog.setFileType(fileVO.getTypeId());
+					fileLog.setFileExt(fileVO.getFileExt());
+					fileLog.setFileType(fileType.getTypeName());
 					fileLog.setLogId(getMaxLogID(user.getTenantId()));
 					fileLog.setTenantId(user.getTenantId());
 					
@@ -268,7 +269,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			}
 		}		
 		else if (fileIDList.length == 1) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, user.getTenantId());			
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, user.getTenantId());
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
 			String _fileName = fileVO.getFileName();
 			String _filePath = realPath + fileVO.getFilePath();
 			
@@ -285,7 +287,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			fileLog.setCreateName2(user.getDisplayName2());
 			fileLog.setFileName(_fileName);
 			fileLog.setFileSize(fileVO.getFileSize());
-			fileLog.setFileType(fileVO.getTypeId());
+			fileLog.setFileExt(fileVO.getFileExt());
+			fileLog.setFileType(fileType.getTypeName());
 			fileLog.setLogId(getMaxLogID(user.getTenantId()));
 			fileLog.setTenantId(user.getTenantId());
 			
@@ -315,9 +318,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/deleteFile.do", method = RequestMethod.POST)	
 	public void deleteFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Delete File is running!");	
-		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
-		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";	
-		String[] fileIDList = listFileId.split(",");	
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String offset = user.getOffset();
+		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String[] fileIDList = listFileId.split(",");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();	
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
 		
 		if (fileIDList.length <= 0) {
 			logger.debug("Delete File illegal arguments!");
@@ -328,9 +335,29 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		//Delete files in database
 		try {
-			for (int i = 0; i < fileIDList.length; i++) {				
+			for (int i = 0; i < fileIDList.length; i++) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, user.getTenantId());
+				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
 				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-				ezWebFolderService.updateFileUseStatus(fileIDList[i], loginSimpleVO.getTenantId());
+				ezWebFolderService.updateFileUseStatus(fileIDList[i], user.getTenantId());
+				
+				//Save log to database				
+				FileLogVO fileLog = new FileLogVO();
+				
+				fileLog.setLogType("R");
+				fileLog.setCompanyId(user.getCompanyID());
+				fileLog.setCreateDate(timeUTC);
+				fileLog.setCreateId(user.getId());
+				fileLog.setCreateName1(user.getDisplayName1());
+				fileLog.setCreateName2(user.getDisplayName2());
+				fileLog.setFileName(fileVO.getFileName());
+				fileLog.setFileSize(fileVO.getFileSize());
+				fileLog.setFileExt(fileVO.getFileExt());
+				fileLog.setFileType(fileType.getTypeName());
+				fileLog.setLogId(getMaxLogID(user.getTenantId()));
+				fileLog.setTenantId(user.getTenantId());
+				
+				ezWebFolderAdminService.insertFileLog(fileLog);
 			}
 		}
 		catch (Exception e) {
@@ -359,10 +386,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)	
 	public void renameFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Rename File is running!");	
-		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
-		String offset = loginSimpleVO.getOffset();
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String offset = user.getOffset();
 		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
 		String newName = request.getParameter("newName") != null ? request.getParameter("newName") : "";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();	
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
 		
 		if (fileId.equals("")) {
 			logger.debug("File Rename Confirm illegal arguments!");
@@ -371,9 +401,28 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		//Update file in database
 		try {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, loginSimpleVO.getTenantId());
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, user.getTenantId());
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
 			String fileExt = fileVO.getFileExt();
-			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, loginSimpleVO.getTenantId());
+			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, user.getTenantId());
+			
+			//Save log to database
+			FileLogVO fileLog = new FileLogVO();			
+			
+			fileLog.setLogType("U");
+			fileLog.setCompanyId(user.getCompanyID());
+			fileLog.setCreateDate(timeUTC);
+			fileLog.setCreateId(user.getId());
+			fileLog.setCreateName1(user.getDisplayName1());
+			fileLog.setCreateName2(user.getDisplayName2());
+			fileLog.setFileName(fileVO.getFileName());
+			fileLog.setFileSize(fileVO.getFileSize());
+			fileLog.setFileExt(fileVO.getFileExt());
+			fileLog.setFileType(fileType.getTypeName());
+			fileLog.setLogId(getMaxLogID(user.getTenantId()));
+			fileLog.setTenantId(user.getTenantId());
+			
+			ezWebFolderAdminService.insertFileLog(fileLog);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -401,11 +450,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/moveFile.do", method = RequestMethod.POST)	
 	public void moveFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Move File is running!");	
-		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
-		String offset = loginSimpleVO.getOffset();
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String offset = user.getOffset();
 		String fileId 	= request.getParameter("fileId")   != null ? request.getParameter("fileId")   : "";
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
 		String mode 	= request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();	
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
 		
 		if (fileId.equals("") || folderId.equals("") || mode.equals("")) {
 			logger.debug("Move File illegal arguments!");
@@ -414,17 +466,38 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		//Update file in database
 		try {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, user.getTenantId());
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
+			
 			if (mode.equals("move")) {
-				ezWebFolderService.moveFile(fileId, folderId, loginSimpleVO.getTenantId());
+				ezWebFolderService.moveFile(fileId, folderId, user.getTenantId());
 			}
-			else {
-				FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, loginSimpleVO.getTenantId());
+			else {				
 				fileVO.setFolderId(folderId);				
-				fileVO.setFileId(getMaxFileID(loginSimpleVO.getTenantId()));
+				fileVO.setFileId(getMaxFileID(user.getTenantId()));
 				fileVO.setCreateDate(commonUtil.getDateStringInUTC(fileVO.getCreateDate(), offset, true));
 				fileVO.setUpdateDate(commonUtil.getDateStringInUTC(fileVO.getUpdateDate(), offset, true));
 				ezWebFolderService.insertFile(fileVO);
 			}
+			
+			//Save log to database
+			FileLogVO fileLog = new FileLogVO();			
+			
+			fileLog.setLogType("U");
+			fileLog.setCompanyId(user.getCompanyID());
+			fileLog.setCreateDate(timeUTC);
+			fileLog.setCreateId(user.getId());
+			fileLog.setCreateName1(user.getDisplayName1());
+			fileLog.setCreateName2(user.getDisplayName2());
+			fileLog.setFileName(fileVO.getFileName());
+			fileLog.setFileSize(fileVO.getFileSize());
+			fileLog.setFileExt(fileVO.getFileExt());
+			fileLog.setFileType(fileType.getTypeName());
+			fileLog.setLogId(getMaxLogID(user.getTenantId()));
+			fileLog.setTenantId(user.getTenantId());
+			
+			ezWebFolderAdminService.insertFileLog(fileLog);
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();

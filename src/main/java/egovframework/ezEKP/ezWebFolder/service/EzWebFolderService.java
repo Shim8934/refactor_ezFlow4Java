@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
-import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 
