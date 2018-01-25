@@ -501,18 +501,32 @@
 			{CALL EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
 		]]>
 	</procedure> -->
-	
+
 	<update id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
-		<![CDATA[
+		<isEqual property="v_PROPNAME" compareValue="updateDT">
+			<![CDATA[
 			UPDATE
 				TBL_USERMASTER
-			SET
-				$v_PROPNAME$ = #v_PROPVALUE#
+			SET 
+			    $v_PROPNAME$ = TO_DATE(#v_PROPVALUE#, 'yyyy-MM-dd HH24:MI:SS')
 			WHERE
 				CN = #v_CN#
 			AND
-				TENANT_ID = #v_TENANT_ID#	
-		]]>
+				TENANT_ID = #v_TENANT_ID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PROPNAME" compareValue="updateDT">
+			<![CDATA[
+			UPDATE
+				TBL_USERMASTER
+			SET 
+			    $v_PROPNAME$ = #v_PROPVALUE#
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			]]>
+		</isNotEqual>
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateProperty_U" parameterClass="Map">
