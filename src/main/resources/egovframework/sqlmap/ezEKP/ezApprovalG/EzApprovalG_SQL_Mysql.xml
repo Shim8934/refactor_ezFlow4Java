@@ -139,7 +139,7 @@
 							</isEmpty>
 							<![CDATA[
 							LIMIT #v_PAGESIZE#
-							)C ) A 
+							)C  ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -2015,7 +2015,7 @@
             AND 
             	APRMEMBERID = #v_PAPRUSERID#
             AND 
-            	( APRSTATE = '002' OR APRSTATE = '005' )
+            	( APRSTATE = '002' OR APRSTATE = '005'  OR APRSTATE = '000' )
             AND
 				TENANT_ID = #v_TENANTID#     
 			AND
@@ -5004,7 +5004,7 @@
 		    AND 
 		    	APRMEMBERID = #v_USERID#
 		    AND 
-		    	( APRSTATE = '002' OR APRSTATE = '005' ) 
+		    	( APRSTATE = '002' OR APRSTATE = '005' OR APRSTATE = '000') 
 		    AND
 		    	TENANT_ID = #v_TENANTID#
 		    AND
@@ -5647,6 +5647,8 @@
           		TENANT_ID = #v_TENANTID#
           AND
               	COMPANYID = #companyID#
+          AND
+          		APRMEMBERID = #v_USERID#
         LIMIT 1
          ]]>
 	</select>
@@ -9856,7 +9858,9 @@
 	      		APRMEMBERID = #v_USERID#
 	      AND ( 	APRSTATE = '002'
 	            OR  
-	            	APRSTATE = '005' ) 
+	            	APRSTATE = '005'
+	            OR
+	            	APRSTATE = '000' ) 
 	      AND
 	      		TENANT_ID = #v_TENANTID#
 	      AND
@@ -23330,4 +23334,79 @@
 	  		AND
 	  			DOCID = #v_habDocID#
 	  </select>
+	  
+	  <select id="EzApprovalG.getChamJoLineList" parameterClass="Map" resultClass="ApprGAprLineVO">
+	  	SELECT
+			*
+		FROM
+			TBL_APRLINEINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #v_DOCID#
+		AND
+			APRTYPE = '007'
+	</select>
+	
+	<update id="EzApprovalG.updateChamJoLineState" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_APRSTATE#
+		WHERE 
+			DocID = #v_DOCID#
+		AND
+			APRTYPE = '007'
+		AND 
+			TENANT_ID= #v_TENANTID#
+		AND
+   		 	COMPANYID = #companyID#
+   </update>
+   
+   <select  id="EzApprovalG.getLineAprMode" parameterClass="Map" resultClass="int">
+		<isEqual property="v_APRSTATE" compareValue="APR">
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_DOCID#
+		</isEqual>
+		
+		<isEqual property="v_APRSTATE" compareValue="END">
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_ENDAPRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_DOCID#
+		</isEqual>
+	</select>
+	
+	<select id ="EzApprovalG.chamJoEndPerMission" parameterClass="Map" resultClass="ApprGAprLineVO">
+		SELECT 
+			DOCID ,
+            'NULL' PROCESSORID  ,
+            'NULL' RECEIVEDDEPTID  
+         FROM 
+           	TBL_ENDAPRLINEINFO 
+         WHERE  
+           	DOCID = #v_PDOCID#
+         AND 
+           	APRMEMBERID = #v_PAPRUSERID#
+         AND
+			TENANT_ID = #v_TENANTID#
+		 AND
+			COMPANYID = #companyID#   
+	</select>
 </sqlMap>

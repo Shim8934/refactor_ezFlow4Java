@@ -321,7 +321,7 @@ public interface EzApprovalGService {
 	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID, int tenantID) throws Exception; 
 	
-	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID) throws Exception;
+	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID, String docState) throws Exception;
 
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception;
 
@@ -520,5 +520,7 @@ public interface EzApprovalGService {
 	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
 
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
+
+	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
 
 }

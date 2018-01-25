@@ -525,6 +525,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String flag = request.getParameter("flag");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String docState = request.getParameter("docState");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -566,7 +567,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 							checkMode = "REC";
 						}
 						
-						Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId());
+						Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 						
 						if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 							return "NOTPERMISSION";
@@ -840,7 +841,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			if (checkPermission) {
-				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), tenantID);
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), tenantID, docState);
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 					return "main/warning";
@@ -2256,7 +2257,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						checkMode = "REC";
 					}
 					
-					Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId());
+					Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId(), "");
 					
 					if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 						result = "NOTPERMISSION";
@@ -3439,8 +3440,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
-		String mailchk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
+		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
+		String docState = request.getParameter("docState");
 		
+		if (mailChk == null) {
+			mailChk = "";
+		}
 
 		if (docDir.substring(0, 1).equals("0")) {
 			docDir = docDir.substring(docDir.length() - 2);
@@ -3493,10 +3498,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			if (checkPermission) {
-				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId());
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-					if(mailchk.equals("Y")) {
+					if(mailChk != null && mailChk.equals("Y")) {
 						model.addAttribute("chk", "no");
 					}
 					return "main/warning";
@@ -3529,6 +3534,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("agreeReturnType", agreeReturnType);
 		model.addAttribute("draftDeptID", draftDeptID);
+		model.addAttribute("docState", docState);
 		
 		logger.debug("approvui ended");
 		
@@ -4188,7 +4194,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (docID != null && !docID.equals("")) {
-			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId());
+			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId(), "");
 			
 			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 				return "main/warning";
@@ -4416,7 +4422,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (docID != null && !docID.equals("")) {
-			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId());
+			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId(), "");
 			
 			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 				return "main/warning";
@@ -4637,7 +4643,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
 			if (docID != null && !docID.equals("")) {
-				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId());
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 					return "main/warning";
@@ -6336,7 +6342,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
 		if (docID != null && docID.equals("")) {
-			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId());
+			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId(), "");
 			
 			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 				return "main/warning";

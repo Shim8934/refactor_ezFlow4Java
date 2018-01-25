@@ -150,6 +150,7 @@
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
 			
+			var docState = "${docState}";
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;

@@ -2931,4 +2931,22 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateDocNumber(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateDocNumber", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getChamJoLineList(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getChamJoLineList", map);
+	}
+
+	public void updateChamJoLineState(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateChamJoLineState", map);
+	}
+
+	public int getLineAprMode(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getLineAprMode", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> chamJoEndPerMission(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.chamJoEndPerMission", map);
+	}
 }

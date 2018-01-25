@@ -581,7 +581,21 @@ function getAprLine(tr) {
     } else {
     	pMode = "APR";
     }
-
+    if (GetAttribute(tr, "DATA12") == "017") {
+    	   $.ajax({
+    			type : "POST",
+    			dataType : "text",
+    			async : false,
+    			url : "/ezApprovalG/getLineMode.do",
+    			data : {
+    					docID : pDocID
+    					},
+    			success: function(xml){
+    				pMode = xml;
+    			}        			
+    		});
+    }
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -778,7 +792,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -1230,6 +1244,21 @@ function getAprDocAproveInfo(tr) {
         	pFlag = "APR";
         }
 
+        if (GetAttribute(tr, "DATA12") == "017") {
+       	   $.ajax({
+       			type : "POST",
+       			dataType : "text",
+       			async : false,
+       			url : "/ezApprovalG/getLineMode.do",
+       			data : {
+       					docID : pDocID
+       					},
+       			success: function(xml){
+       				pFlag = xml;
+       			}        			
+       	  });
+       }
+        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1256,6 +1285,21 @@ function getAprDocAproveInfo(tr) {
     		pFlag = "APR";
     	}
 
+        if (GetAttribute(tr, "DATA12") == "017") {
+      	   $.ajax({
+      			type : "POST",
+      			dataType : "text",
+      			async : false,
+      			url : "/ezApprovalG/getLineMode.do",
+      			data : {
+      					docID : pDocID
+      					},
+      			success: function(xml){
+      				pFlag = xml;
+      			}        			
+      	  });
+      }
+        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1282,6 +1326,21 @@ function getAprDocAproveInfo(tr) {
     		pFlag = "APR";
     	}
 
+        if (GetAttribute(tr, "DATA12") == "017") {
+     	   $.ajax({
+     			type : "POST",
+     			dataType : "text",
+     			async : false,
+     			url : "/ezApprovalG/getLineMode.do",
+     			data : {
+     					docID : pDocID
+     					},
+     			success: function(xml){
+     				pFlag = xml;
+     			}        			
+     	  });
+     }
+        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1304,6 +1363,21 @@ function getAprDocAproveInfo(tr) {
     		pFlag = "APR";
     	}
     	
+    	 if (GetAttribute(tr, "DATA12") == "017") {
+        	   $.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : false,
+        			url : "/ezApprovalG/getLineMode.do",
+        			data : {
+        					docID : pDocID
+        					},
+        			success: function(xml){
+        				pFlag = xml;
+        			}        			
+        	  });
+        }
+    	 
     	$.ajax({
     		type : "POST",
     		dataType : "text",

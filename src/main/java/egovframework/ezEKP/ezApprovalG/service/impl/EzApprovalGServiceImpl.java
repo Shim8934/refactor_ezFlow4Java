@@ -8862,6 +8862,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_DOCID", docID.trim());
+		map.put("v_USERID", userInfo.getId());
 		// 002(진행) || 005(보류) 문서 추출 -> 결재처리 안된 문서 추출
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getApproveDocInfo(map);
 		
@@ -9152,13 +9153,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(1).getTextContent());
 			
-			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul))) {
+			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul) || aprType.equals("007"))) {
 				rtnVal = false;
 			}
 			
 			String aprState = makeListField(docXML.getElementsByTagName("APRSTATE").item(1).getTextContent());
 			
-			if (!aprState.equals(staASJinHang)) {
+			if (!aprState.equals(staASJinHang) && !aprType.equals("007")) {
 				rtnVal = false;
 			}
 			
@@ -11567,32 +11568,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				break;
 			case "007":
-				lastState = staATChamJo;
-				
-				map3.put("v_APRSTATE", staASAprEND);
-				
-				ezApprovalGDAO.updateAprLineInfo2(map3);
-						
-				subSQL = doChamjo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent(), 
-					dirPath, staDSChamJo, companyID, userInfo.getTenantId());
-
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
-					whileFlag = false;							
-				} else {
-                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-                    k += 1;
-				}
-				
+//				lastState = staATChamJo;
+//				
+//				map3.put("v_APRSTATE", staASAprEND);
+//				
+//				ezApprovalGDAO.updateAprLineInfo2(map3);
+//						
+//				subSQL = doChamjo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent(), 
+//					dirPath, staDSChamJo, companyID, userInfo.getTenantId());
+//
+//				if (subSQL.toUpperCase().equals("FALSE")) {
+//					rtnVal = false;
+//					whileFlag = false;							
+//				} else {
+//                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
+//                    k += 1;
+//				}
+				k += 1;
 				break;
 			case "008":
 				lastState = staATSoonChaHyubJo;
@@ -11879,6 +11880,45 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnVal = false;
 			}
 		}
+		
+		List<ApprGAprLineVO> getChamJoLineList = ezApprovalGDAO.getChamJoLineList(map);
+
+		if (docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent().equals("1")) {
+			if (getChamJoLineList.size() > 0) {
+				for (int m = 0; m < getChamJoLineList.size(); m++) {
+					map.put("v_APRSTATE", staASmikyul);
+					
+					ezApprovalGDAO.updateChamJoLineState(map);
+					
+//					StringBuffer sb3 = new StringBuffer();
+//			        sb3.append("<DATA>");
+//			        
+//			        for (int i = 0; i < getChamJoLineList.size(); i++) {
+//						sb3.append(commonUtil.getQueryResult(getChamJoLineList.get(i)));
+//					}
+//					sb3.append("</DATA>");
+//					
+//					Document docXML3 = commonUtil.convertStringToDocument(sb3.toString());
+//					String rtn = doChamjo(docID, docXML3.getElementsByTagName("APRMEMBERID").item(m).getTextContent(), 
+//							docXML3.getElementsByTagName("APRMEMBERNAME").item(m).getTextContent(),
+//							docXML3.getElementsByTagName("APRMEMBERNAME2").item(m).getTextContent(), 
+//							docXML3.getElementsByTagName("APRMEMBERJOBTITLE").item(m).getTextContent(),
+//							docXML3.getElementsByTagName("APRMEMBERJOBTITLE2").item(m).getTextContent(), 
+//							docXML3.getElementsByTagName("APRMEMBERDEPTID").item(m).getTextContent(), 
+//							docXML3.getElementsByTagName("APRMEMBERDEPTNAME").item(m).getTextContent(),
+//							docXML3.getElementsByTagName("APRMEMBERDEPTNAME2").item(m).getTextContent(), 
+//							docXML3.getElementsByTagName("APRMEMBERISDEPTYN").item(m).getTextContent(), 
+//							docXML3.getElementsByTagName("APRMEMBERLDAPPATH").item(m).getTextContent(), 
+//						dirPath, staDSChamJo, companyID, userInfo.getTenantId());
+//					if (rtn.toUpperCase().equals("FALSE")) {
+//						rtnVal = false;
+//					} else {
+	                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
+//					}
+				}
+			}
+		}
+		
 		// 마지막 결재라인인 경우 || 더이상의 추가 작업이 필요없는 AprType인 경우. 문서를 종결
 		if (dlength < 1 || lastState.equals(staATAnHam) || lastState.equals(staATChamJo) || lastState.equals(staATGongram)) {
 				subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo, curDocNum);
@@ -17557,7 +17597,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID) throws Exception {
+	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID, String docState) throws Exception {
 		logger.debug("checkPermission started.");
 		
 		int v_temp = 0;
@@ -17604,6 +17644,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.checkPermission(map);
 		
+		if (apprGAprLineVOList.size() == 0) {
+			if (docState.equals("017")) {
+				apprGAprLineVOList = ezApprovalGDAO.chamJoEndPerMission(map);
+			}
+		}
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
@@ -24047,5 +24092,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("getOrgDraftDeptID ended.");
 		return draftDeptID;
+	}
+
+	@Override
+	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception {
+		logger.debug("getLineModeFlag started.");
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantId);
+		map.put("companyID", companyID);
+		map.put("v_APRSTATE", "APR");
+		
+		int getAprLineCnt = ezApprovalGDAO.getLineAprMode(map);
+		
+		if (getAprLineCnt <= 0) {
+			map.put("v_APRSTATE", "END");
+
+			int getEndLineCnt = ezApprovalGDAO.getLineAprMode(map);
+			
+			if (getEndLineCnt > 0) {
+				result = "END";
+			}
+		} else {
+			result = "APR";
+		}
+		logger.debug("getLineModeFlag ended.");
+		return result;
 	}
 }

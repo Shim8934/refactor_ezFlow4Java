@@ -139,6 +139,7 @@ function addAttach(DocID, pFlag) {
 }
 
 function addLineInfo(DocID, pFlag) {
+	alert(33);
     var rowidx, rtnString, colidx;
     var result = "";
     
