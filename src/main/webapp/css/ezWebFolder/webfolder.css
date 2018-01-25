@@ -1,5 +1,5 @@
 .webFolderImg {height: 20px; width: 20px;}
-.bnkWebFolder:hover {background-color: #e9f1ff;}
+.bnkWebFolder:hover {background-color: #f4f5f5;}
 
 #progress-wrp {border: 1px solid #0099CC; padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff; box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);}
 #progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: #66b3ff; width: 0; box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11); }

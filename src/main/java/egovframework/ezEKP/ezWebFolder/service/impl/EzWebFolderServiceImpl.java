@@ -2,20 +2,22 @@ package egovframework.ezEKP.ezWebFolder.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
 public class EzWebFolderServiceImpl implements EzWebFolderService {
 	@Resource(name = "EzWebFolderDAO")
 	private EzWebFolderDAO ezWebFolderDAO;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Override
 	public String getFileSequence(int tenantId) throws Exception {		
@@ -37,7 +39,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("folderId", fileVO.getFolderId());
 		map.put("useStatus", fileVO.getUseStatus());
 		map.put("createId", fileVO.getCreateId());
-		map.put("createName", fileVO.getCreateName());
+		map.put("createName1", fileVO.getCreateName1());
+		map.put("createName2", fileVO.getCreateName2());
 		map.put("createDate", fileVO.getCreateDate());
 		map.put("updateId", fileVO.getUpdateId());
 		map.put("updateDate", fileVO.getUpdateDate());		
@@ -47,9 +50,10 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public FileVO getFileByFileId(String fileId, int tenantId) throws Exception {
+	public FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFileByFileId(map);
 	}
@@ -94,6 +98,13 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.moveFile(map);
+	}
+
+	@Override
+	public String getFileLogSequence(int tenantId) throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getFileLogSequence(map);
 	}
 
 }

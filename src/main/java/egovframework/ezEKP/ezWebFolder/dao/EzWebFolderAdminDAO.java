@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -25,4 +26,16 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 		return (List<UserCapacityVO>) list("EzWebFolderAdminDAO.getListUserCapacity", map);
 	}
 
+	public void updateNewAmount(Map<String, Object> map) {		
+		insert("EzWebFolderAdminDAO.updateNewAmount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FileLogVO> getListFileLogs(Map<String, Object> map) {
+		return (List<FileLogVO>)list("EzWebFolderAdminDAO.getListFileLogs", map);
+	}
+
+	public void insertFileLog(Map<String, Object> map) {
+		insert("EzWebFolderAdminDAO.insertFileLog", map);
+	}
 }

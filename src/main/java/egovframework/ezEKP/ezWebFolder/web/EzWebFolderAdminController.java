@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,12 +18,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -93,6 +98,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("persLimit", personalLimit);
 		model.addAttribute("upLimit", uploadLimit);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
 		return "admin/ezWebFolder/webfolderCompanyConfig";
 	}
@@ -115,6 +121,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}		
 
 		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 
 		return "admin/ezWebFolder/webfolderPersonalConfig";
 	}
@@ -142,9 +149,23 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminFileHistory.do")
 	public String webfolderFileHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        //Add more function here
-        
-        model.addAttribute("companyID", "S907000");
+		
+		//Get list of companies
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}		
+
+		model.addAttribute("list", resultList);
+		model.addAttribute("primary", userInfo.getPrimary());
+		model.addAttribute("userCompany", userInfo.getCompanyID());
         
 		return "admin/ezWebFolder/webfolderFileHistory";
 	}
@@ -243,6 +264,128 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("totalUsers", totalUsers);		
+		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/updateCapacities.do", method = RequestMethod.POST)
+	public void updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList, HttpServletResponse response) throws Exception {       
+		LoginVO userInfo       = commonUtil.userInfo(loginCookie);        
+		String newStorageValue = request.getParameter("newStorage");
+		String companyId       = request.getParameter("companyId");
+		
+		try {
+			for (String userId : userList) {
+				ezWebFolderAdminService.updateNewAmount(userId, newStorageValue, companyId, userInfo.getTenantId());
+			}			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST)
+	public void restoreCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList, HttpServletResponse response) throws Exception {       
+		LoginVO userInfo       = commonUtil.userInfo(loginCookie);		
+		String companyId       = request.getParameter("companyId");
+		String totalAmount     = "0";
+		
+		try {
+			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, userInfo.getTenantId());
+			if (webfolderConfig != null) {
+				totalAmount = webfolderConfig.getTotalLimit();
+			}
+			
+			for (String userId : userList) {
+				ezWebFolderAdminService.updateNewAmount(userId, totalAmount, companyId, userInfo.getTenantId());
+			}			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)	
+	public String getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String offset    = userInfo.getOffset();
+		String primary   = userInfo.getPrimary();
+		int currPage     = Integer.parseInt(request.getParameter("currentPage"));
+		String companyId = request.getParameter("companyId");
+		String startDate = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";	
+		String endDate   = request.getParameter("endDate")   != null ? request.getParameter("endDate")   : "";
+		String fileExt   = request.getParameter("fileExt")   != null ? request.getParameter("fileExt")   : "";
+		String fileName  = request.getParameter("fileName")  != null ? request.getParameter("fileName")  : "";
+		String userName  = request.getParameter("userName")  != null ? request.getParameter("userName")  : "";		
+		int totalRows = 0;
+		int totalPages = 0;
+		int pageSize = 10;
+		String searchChk = "1";
+		
+		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || Username: " + userName);
+		
+		if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("")) {
+			searchChk = "0";
+		}
+		
+		if (searchChk.equals("1")) {
+			if (startDate.equals("")) {
+				//Get logs in three months
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date now = new Date();						 
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(now);	
+				cal.add(Calendar.MONTH, -3);
+				
+				startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+				endDate = commonUtil.getDateStringInUTC(sdf.format(now), offset, true); 
+			}
+			else {
+				String startDateTmp = startDate + " 00:00:00";
+				String endDateTmp   = endDate + " 23:59:59";
+				
+				startDate = commonUtil.getDateStringInUTC(startDateTmp, userInfo.getOffset(), true);
+				endDate   = commonUtil.getDateStringInUTC(endDateTmp, userInfo.getOffset(), true);
+			}
+		}
+		
+		logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
+		
+		List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, primary, offset, userInfo.getTenantId());
+		
+		//Paging
+		if (listFileLogs != null) {
+			totalRows  = listFileLogs.size();
+		}
+		
+		totalPages = (totalRows + pageSize - 1)/pageSize;
+		List<FileLogVO> renderList = new ArrayList<FileLogVO>();
+		
+		logger.debug("totalUsers: " + totalRows + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
+
+		if (totalPages == 0 || totalPages == 1) {
+			model.addAttribute("fileLogList", listFileLogs);
+		}
+		else {
+			if (currPage < totalPages) {				
+				int startPoint = (currPage - 1) * pageSize;
+				int endPoint = currPage * pageSize;
+				renderList = listFileLogs.subList(startPoint, endPoint);	
+				model.addAttribute("fileLogList", renderList);
+			}
+			else {
+				if (currPage > totalPages) {
+					currPage = totalPages;
+				}
+				int startPoint = (currPage - 1) * pageSize;
+				int endPoint = totalRows;				
+				
+				renderList = listFileLogs.subList(startPoint, endPoint);
+				model.addAttribute("fileLogList", renderList);
+			}
+		}
+		
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("totalRows", totalRows);
 		return "json";
 	}
 	

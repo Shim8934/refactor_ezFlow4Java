@@ -51,7 +51,7 @@ function onDragOver(evt) {
 }
 
 function onDrop(evt) {	
-    file = new Array;
+    file = new Array();
     
     if (evt != undefined) {    	
         evt.stopPropagation();
@@ -67,9 +67,12 @@ function onDrop(evt) {
         filelist = evt.dataTransfer.files;
     }
     
-    var filecnt = file.length;
+    if (filelist.length == 0) {
+    	return;
+    }
+   
     for (var i = 0; i < filelist.length; i++) {
-    	file[filecnt + i] = filelist[i];
+    	file[i] = filelist[i];
     }    
 
     fileupload();
@@ -140,7 +143,7 @@ function fileupload() {
     
 }
 
-function renderResult(result) {	
+function renderResult(result) {
 	if (!result) {
 		alert(strErr);
 		return;
