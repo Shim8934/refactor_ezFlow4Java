@@ -19,6 +19,8 @@
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
+	            var useAllowTextSelection = "${useAllowTextSelection}";
+	            
 	            try {
 	                if (obj.nodeName == "#text")
 	                    obj = obj.parentElement;
@@ -41,8 +43,13 @@
 	
 	                    }
 	                }
-	                else if (obj.nodeName == "P") {
-	                    ret = true;
+	                else if (obj.nodeName == "P" || obj.nodeName == "XMP") {
+	                	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
+	                		ret = true;
+	                	}
+	                	else { 
+	                		ret = false;	                		
+	                	}
 	                }
 	            } catch (e) { }
 	            return ret;
