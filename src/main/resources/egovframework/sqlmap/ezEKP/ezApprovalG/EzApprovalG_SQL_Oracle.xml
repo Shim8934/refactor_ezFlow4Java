@@ -16449,7 +16449,7 @@
     								 WHERE  
     								 	 CabinetID = #v_CABINETID#
     								 AND
-    								 	TBL_SEPERATEATTACH.TENANT_ID = #v_TENANTID#AND
+    								 	TBL_SEPERATEATTACH.TENANT_ID = #v_TENANTID#
     								 AND
     								 	TBL_SEPERATEATTACH.COMPANYID = #companyID#) A)
     					+
