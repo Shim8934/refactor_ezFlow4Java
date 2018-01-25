@@ -593,6 +593,53 @@
 	        	document.getElementById("progressPanel").style.display = "none";
 	        }
 	        
+		    function goPage(idx) {
+				var url = "";
+				
+				switch (idx) {
+				    case 1:
+				        url = "/admin/ezOrgan/organRight.do";
+						break;
+				    case 2:
+				        url = "/admin/ezEmail/mailDistributionList.do";
+						break;
+					case 3:
+						url = "/admin/ezEmail/mailDefaultQuota.do" ;
+						break;
+					case 4:
+						url = "/admin/ezEmail/mailConfigColor.do";
+						break;
+					case 5:
+						url = "/admin/ezOrgan/retireUserManage.do";
+						break;
+					case 6:
+						url = "/ezStatistics/statisticsMailMain.do";
+						break;
+				    case 7:
+				        url = "/ezStatistics/statisticsMailDept.do";
+					    break;
+			        case 8:
+			            url = "/ezStatistics/statisticsMailUser.do";
+			            break;
+			        case 9:
+			            url = "/ezStatistics/statisticsQuantityDept.do";
+			            break;
+			        case 10:
+			            url = "/ezStatistics/statisticsQuantityUser.do";
+			            break;
+			        case 11:
+			        	url = "/ezStatistics/statisticsMailRecieveLogList.do";
+			        	break;
+			        case 12:
+			        	url = "/ezStatistics/statisticsMailSendLogList.do";
+			        	break;			            
+			        case 13:
+			        	url = "/admin/ezSystem/systemMainMenu.do";
+			        	break;			            
+				}
+				
+				window.open(url, "right");
+			}	        
 	    </script>
 		 <style type="text/css">
 				#myProgress {
@@ -652,8 +699,44 @@
 		    	<div id='myBar'></div>
 		    </div>
 		    <div style='text-align:center; margin-top:10px; font-weight:bold;' class="volumes"></div>
-		               
-		</div>
+	        
+	        <c:if test="${isDotNetAdmin == true}">
+  			<h2>
+  				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
+    			<ul></ul>  				
+  			</h2>  
+  			<h2>
+  				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
+    			<ul></ul>    			
+  			</h2>  
+  			<h2>
+  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+    			<ul></ul>
+  			</h2>  			
+			<h2>
+				<span onClick="goPage(4)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
+			    <ul></ul>
+			</h2>
+			<h2>
+				<span onClick="goPage(5)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
+			    <ul></ul>
+			</h2>		
+            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(13)" ><spring:message code='main.kms1' /></span>
+            <ul class="on"></ul>
+            </h2>			
+      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezStatistics.t2' /></span></h2>
+		    <ul>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezStatistics.t1001' /></span></li>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='ezStatistics.t1012' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(8)"><spring:message code='ezStatistics.t1018' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(9)"><spring:message code='ezStatistics.t1023' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(10)"><spring:message code='ezStatistics.t1025' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(11)"><spring:message code='ezStatistics.kyj1' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(12)"><spring:message code='ezStatistics.kyj2' /></span></li>
+		    </ul>			
+			</c:if>		        
+	    </div>
+	        		               
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>

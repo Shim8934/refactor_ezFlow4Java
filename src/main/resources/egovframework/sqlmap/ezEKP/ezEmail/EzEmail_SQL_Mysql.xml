@@ -236,5 +236,4 @@
 			WHERE UserID=#v_USERID# AND POP3Server=#v_POP3SERVER# AND POP3UserID=#v_POP3USERID#
        	]]>
 	</delete>
-	
 </sqlMap>

@@ -1417,6 +1417,7 @@
 				</th>
 				<th style="width:80px;text-align:center" rowspan="3">
 					<table>
+						<c:if test="${dotNetIntegration != 'YES'}">
                         <tr id="companybutton3">
                             <td><a class="imgbtn"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></a></td>
                         </tr>     
@@ -1462,15 +1463,6 @@
 						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
 							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
 						</tr>
-						<%--<tr>
-							<td><a class="imgbtn" id="usermenu12"><span onClick="mod_deptsign()"><spring:message code='ezOrgan.t87' /></span></a></td>
-						</tr>
-						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
-						</tr>--%>
-						<%--<tr>
-							<td><a class="imgbtn" id="usermenu13"><span onClick="set_subtitle()"><spring:message code='ezOrgan.t88' /></span></a></td>
-						</tr>--%>                         
 						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
 							<td><a class="imgbtn" id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></a></td>
 						</tr>
@@ -1480,6 +1472,7 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu5"><span onClick="mod_password()"><spring:message code='ezOrgan.t90' /></span></a></td>
 						</tr>
+						</c:if>
 						<tr>
 							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
 						</tr>		
@@ -1527,14 +1520,21 @@
 		        </th>
 		        <th style="padding: 3px; text-align: left;vertical-align:top">
 		            <div class="listview">
+		            	<c:if test="${dotNetIntegration != 'YES'}">
 		                <div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 350px; Height: 480px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+		                </c:if>
+		                <c:if test="${dotNetIntegration == 'YES'}">
+		                <div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 350px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+		                </c:if>
 		            </div>
 		            <div style="height: 5px; overflow: hidden">&nbsp;</div>
+		            <c:if test="${dotNetIntegration != 'YES'}">
 		            <div style="width:100%; vertical-align:middle; text-align:center">
 		            	<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
 						<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
 		                <a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
 		            </div>
+		            </c:if>
 		        </th>
 		    </tr>
 		</table>

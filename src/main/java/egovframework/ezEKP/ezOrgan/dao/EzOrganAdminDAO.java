@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -130,11 +131,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
     	return getUserCnListForLocal(tenantID);       
     }	
-    
+   
     private int getUserCountForLocal(int tenantID) throws Exception {
         return (int) select("EzOrganAdminDAO.userCount", tenantID);
     }
-    
+    	
+
     // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
     public int getUserCount(int tenantID) throws Exception {
     	return getUserCountForLocal(tenantID);       
@@ -1943,5 +1945,16 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	ctx.modifyAttributes(getDN, mods);    
     	
     	logger.debug("changePasswordInAD started."); 
+    }
+	
+	// 사용자 이름,부서 목록을 반환한다.
+    @SuppressWarnings("unchecked")
+	public List<OrganUserVO> getUserList(Map<String, Object> map) throws Exception {
+    	return (List<OrganUserVO>) list("EzOrganAdminDAO.userList", map);
+    }	
+    
+    // 사용자 이름,부서 목록개수를 반환한다.
+    public int getUserCount(Map<String, Object> map) throws Exception {
+    	return (int) select("EzOrganAdminDAO.getUserCount", map);        
     }
 }

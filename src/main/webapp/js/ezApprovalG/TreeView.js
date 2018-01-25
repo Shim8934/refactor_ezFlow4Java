@@ -646,7 +646,9 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     var treeDiv = document.getElementById(pTreeID);
     var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
     
-    $("#descrip").text("");
+    if (document.getElementById("descript") != null) {
+    	document.getElementById("descript").textContent("");
+    }
     
     if (preSelectID != "" && preSelectID != "undefined" && preSelectID!= null) {
         var objSpan = document.getElementById("spn_" + preSelectID);

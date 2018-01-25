@@ -1,33 +1,20 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSystem.x0021'/></title>
+		<title><spring:message code='ezSystem.x0021' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
+		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"> </script>
-		
-		<style type="text/css">
-		<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
-		select {
-			height: auto;
-		}
-		table, td {
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		</style>
-		
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript">
-		
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";
 			var strLang2 = "<spring:message code='ezSystem.x0031'/>";
 			var strLang4 = "<spring:message code='ezSystem.x0034'/>";
@@ -35,22 +22,18 @@
 			var strLang6 = "<spring:message code='ezSystem.x0036'/>";
 			var strLang7 = "<spring:message code='main.t252'/>";
 			var strLang8 = "<spring:message code='ezSystem.kyj2'/>";
-			
 			var CurPage = "";
 			var totalPage = "";
 			var totalCount = "";
 			var BlockSize = 10;
-			var searchStartTime = "";
-			var searchEndTime = "";
-			
-			//**/ 화면 호출시 실행 함수
+
+			// 화면 호출시 실행 함수
 			window.onload = function(){
-				getTime();
-				getLoginHist(1, searchStartTime, searchEndTime);
+				getUserList(1);
 				makePageSelPage();
 			}
-				
-			//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
+			
+			// 검색값 입력 후 엔터키 입력 시 검색 호출
 			function keyword_onkeydown(e) {
 				
 			    if (!window.ActiveXObject) {
@@ -63,89 +46,11 @@
 					search();
 					return false;
 				}
-		        
-				return true;
+				
+		        return true;
 			}
 		
-			 //**/ 날짜 아이콘 적용 및 날짜 검색
-			 function getTime() {
-				
-				var dateObj = new Date();
-				var year = dateObj.getFullYear();
-				var month = dateObj.getMonth() + 1;
-				var date = dateObj.getDate();
-				
-				if (date<10) {
-					date = '0' + date;
-				}
-				if (month<10) {
-					month = '0' + month;
-				}
-				
-				dateObj = year +"-"+ month +"-" + date;
-				searchStartTime = dateObj;
-		    	searchEndTime = dateObj;
-		    	
-		    	$('#startDatepicker').val(dateObj);
-				$('#endDatepicker').val(dateObj);
-				
-			}
-			 
-		    $(function() {
-		    	$('#startDatepicker').datepicker({
-		    		changeMonth: true,
-		    		changeYear: true,
-		    		autoSize: true,
-		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-		    		buttonImageOnly: true,
-		    		maxDate: 0,
-		    		onSelect: function(selected) {
-		    			$('#endDatepicker').datepicker("option", "minDate", selected)
-		    		}
-		    	});
-		    	$('#endDatepicker').datepicker({
-		    		changeMonth: true,
-		    		changeYear: true,
-		    		autoSize: true,
-		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-		    		buttonImageOnly: true,
-		    		maxDate: 0,
-		    		onSelect: function(selected) {
-		    			$('#startDatepicker').datepicker("option", "maxDate", selected)
-		    		}
-		    	});    	    	
-		    });
-		    
-		    var dayMsg = "<spring:message code='main.kyj1'/>";
-		    var dayStr = dayMsg.split(";");
-		    var monthMsg = "<spring:message code='main.kyj2'/>";
-		    var monthStr = monthMsg.split(";");
-		   
-		    $(function() {
-		    	$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
-		    			closeText: "<spring:message code='main.t3'/>",
-		    			prevText: "<spring:message code='main.t0604'/>",
-		    			nextText: "<spring:message code='main.t0605'/>",
-		    			currentText: "<spring:message code='main.t0606' />",
-		    			monthNames: monthStr,
-						monthNamesShort: monthStr,
-		    			dayNames: dayStr,
-		    			dayNamesShort: dayStr,
-		    			dayNamesMin: dayStr,
-		    			weekHeader: 'Wk',
-		    			dateFormat: 'yy-mm-dd',
-		       			firstDay:0,
-		    			isRTL: false,
-		    			duration: 200,
-		    			showAnim: 'show',
-		    			showMonthAfterYear: true
-		    	};
-		    	$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);	
-		    });
-			
-			//**/ 페이징처리
+			// 페이징처리
 			function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -168,13 +73,15 @@
 		        }
 		        
 		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
+		            
+		        	if (pageNum > BlockSize) {
 		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
 		                PagingHTML += strtext;
 		            } else {
 		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
 		                PagingHTML += strtext;
 		            }
+		        	
 		        } else {
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
 		            PagingHTML += strtext;
@@ -191,17 +98,20 @@
 		        }
 		        
 		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
+		            
+		        	if (i == pageNum) {
 		                strtext = "<span class='on'>" + i + "</span>";
 		                PagingHTML += strtext;
 		            } else {
 		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
 		                PagingHTML += strtext;
 		            }
+		        	
 		        }
 		        
 		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		           
+		        	if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang2 + "</span>";
 		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
@@ -210,6 +120,7 @@
 		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
+		        	
 		        } else {
 		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang2 + "</span>";
 		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
@@ -266,113 +177,98 @@
 		        }
 		    }
 		
-		    //**/ 새로고침 클릭시 이벤트
+		    // 새로고침 클릭시 이벤트
 		    function reload() {
 		    	goToPage(CurPage);
 		    }
 		    
-			//**/ 검색 버튼 클릭시 이벤트
+			// 검색 버튼 클릭시 이벤트
 		    function search() {
 				$(function() {
 					
 					if ($('#searchKeyword').val().trim() == "") {
-						$('#searchKeyword').val('');
+						alert("<spring:message code='ezEmail.t349'></spring:message>");
 					}
 					
-					if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
-						alert(strLang5);
-						return false;
-					}
-					
-					if ($('#startDatepicker').val() == '' && $('#endDatepicker').val() != '') {
-						alert(strLang6);
-						return false;
-					}
-					
-					searchStartTime = $('#startDatepicker').datepicker({dateFormat: 'yyyymmdd'}).val();
-		        	searchEndTime = $('#endDatepicker').datepicker({dateFormat:'yyyymmdd'}).val();
-					getLoginHist(1, searchStartTime, searchEndTime);
-					
+		        	getUserList(1);
 				});
 		    }
 			
-			//**/ 초기화버튼
+			// 초기화버튼
 			function reset() {
 				$(function() {
 					$('#searchKeyword').val('');
-					getTime();
 				});
 			}
-			
-		    //**/ 페이지네이션 클릭시
+		    
+		    // 페이지네이션 클릭시
 			function goToPage(page) {
-				getLoginHist(page, searchStartTime, searchEndTime);
+				getUserList(page);
 			}		
-		
-		    function getLoginHist(pageNum, searchStartTime, searchEndTime){
+		    
+		    function getUserList(pageNum){
 		    	$(function() {
-		
-					var selectOption = document.getElementById("searchKeycode");
+		    		
+		    		var selectOption = document.getElementById("searchKeycode");
 					var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 					var searchKeyword = document.getElementById("searchKeyword").value;
-		
-					if (pageNum == "-1") {
+					
+					 if (pageNum == "-1") {
 						var pageSize = "-1";
-						var params = 'startDate=' + searchStartTime +'&endDate=' + searchEndTime;
-						 	params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword ; 
+						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
 							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
-						var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
+						var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
 		
 						saveExcel.location.href = pURL;
-					} else {
-			    		var pURL = "/admin/ezSystem/systemLoginHistList.do";
-			    		
+					} else { 
+			    		var pURL = "/admin/ezEmail/statistics_userList.do";
+			    		 
 			    		$.ajax({
 			    			 url: pURL
 			    			,type: "POST"
 			    			,async: false
 			    			,dataType: 'json'
-			    			,data: {  
-			    					  'startDate' : searchStartTime, 'endDate' : searchEndTime, 'searchKeycode' : searchKeycode
-			    					  ,'searchKeyword' : searchKeyword, 'pageNum' : pageNum 
+			    			,data: {
+			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum 
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
+
 		   						if (res.itemCnt < 1) {
 		   							html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
 		   						} else {
 		   							var j = ((pageNum - 1) * 20) + 1 ;
-			   						
-				    				if (res.lang == "primary") {
-				    					res.loginHistList.forEach(function(i,v){
-				    						html += "<tr>";
-				    						html += "   <td>" + j					+ "</td>";
-				    						html += "	<td title=\'" + i.usernm + "'>" + i.usernm + "</td>";
-				    						html += "	<td>" + i.deptnm 			+ "</td>";
-				    						html += "	<td>" + i.connectip 		+ "</td>";
-				    	    				html += "	<td>" + i.connecttime 		+ "</td>";
-				    	    				html += "	<td>" + i.connectbrowser 	+ "</td>";
-				    	    				html += "	<td>" + i.connectos 		+ "</td>";
-				    	    				html += "</tr>";
-				    						j++;
-				        				});
-									} else {
-										res.loginHistList.forEach(function(i,v){
-											html += "<tr>";
-											html += "   <td>" + j 					+ "</td>";
-											html += "	<td title=\'" + i.usernm2 + "'>" + i.usernm2 + "</td>";
-											html += "	<td>" + i.deptnm2 			+ "</td>";
-											html += "	<td>" + i.connectip 		+ "</td>";
-						    				html += "	<td>" + i.connecttime 		+ "</td>";
-						    				html += "	<td>" + i.connectbrowser 	+ "</td>";
-						    				html += "	<td>" + i.connectos 		+ "</td>";
-						    				html += "</tr>";
-						    				j++;
-					    				});
-									}
-		   						}
-			    				
-			    				$('#loginHistListBody').empty().append(html);
+		   							
+		   							res.userList.forEach(function(i, v) {
+		   								var res1 = i[3];
+		   								var res2 = i[4];
+		   								var progress = Number(res1 / res2) * 100;
+		   								var result = Math.floor(progress);
+				    						
+	   									html += "<tr>";
+			    						html += "   <td>" + j						   + "</td>";
+			    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
+			    						html += "	<td>" 		  + i[2] 			   + "</td>";
+			    						html += "	<td>"         + i[3] 			   + "</td>"; //사용량
+			    						html += "	<td>"         + i[4] 			   + "</td>"; //총용량 
+			    						
+			    						if (result >= 90) {				    							
+			    							html += "<td><div id='myProgress'><div id='myBar_red' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						} else if (result >= 70) { 
+			    							html += "<td><div id='myProgress'><div id='myBar_orange' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						} else if (result >= 60) {
+			    							html += "<td><div id='myProgress'><div id='myBar_yellow' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						} else {
+			    							html += "<td><div id='myProgress'><div id='myBar_green' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
+			    						}
+			    						
+			    						html += "<td><a class='imgbtn'><span onClick=mod_quota('" + i[0] + "')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
+										html += "</tr>";
+										j++;
+									})
+		   					    }
+		   						
+			    				$('#userListBody').empty().append(html);
 			    				
 			    				CurPage = res.currPage;
 			    				totalPage = res.totalPage;
@@ -384,56 +280,95 @@
 			    				}
 			    				
 			    				$('#searchKeyword').val(res.searchKeyword);
-			    				$('#startDatepicker').val(res.startDate);
-			    				$('#endDatepicker').val(res.endDate);
+			    				
 			    			}
 			    			,error: function(err) {
 			    				alert(err);
 			    			}
 			    		})
+			    		
 			    		makePageSelPage();
-					}
+					 } 
+					 
 		    	});
-		    }
-		    
-		  	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
+		    } 
+
+		  	// 엑셀내려받기 버튼 클릭시 이벤트 호출
 		    function excelExport() {
 				var pageNum = "-1";
-				getLoginHist(pageNum, searchStartTime, searchEndTime);
+				getUserList(pageNum);
 		    }
-		    
+		  	
+		  	// 편지함 용량수정 이벤트 호출
+		  	function mod_quota(res){
+		  		var width=450, height=200;
+		  		var left = (screen.availWidth - width) / 2;
+		  		var top = (screen.availHeight - height) / 2;
+		  		var specs = "width=" + width;
+		  		
+		  		specs += ",height=" + height;
+		  		specs += ",left=" + left;
+		  		specs += ",top=" + top;
+		  		
+			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res, "", specs);
+		    }
+
 		</script>
+		<!-- 용량상태 Progress Bar -->
+		<style type="text/css" >
+			#myProgress {
+			  width: 78%;
+			  height:10px;
+			  float:left;
+			  background-color: #ddd;
+			  overflow:hidden;
+			}
+			#percentage {
+			  width: 18%;
+			  float:right;
+			  margin-left:2px;
+			  color: #828282;
+			  font-weight:bold;
+			}
+			#myBar_red{
+			  height: 10px;
+			  background-color: #ff1616;
+			}
+			#myBar_orange{
+			  height: 10px;
+			  background-color: #ff7f00;
+			}
+			#myBar_yellow{
+			  height: 10px;
+			  background-color: #ffb600;
+			}
+			#myBar_green{
+			  height: 10px;
+			  background-color: #4CAF50;
+			}
+		</style>
 	</head>
 	<body class="mainbody">
-
-		<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
+		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
 		<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-					<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp; 
-						<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
-						<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
-					</span> 
-					&nbsp;&nbsp;
-					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; 
+					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; <!-- 검색조건 -->
 						<select id="searchKeycode"> 
-						<option value="1"><spring:message code="ezSystem.x0022"></spring:message></option>
-						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
-						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
-						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
-						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
-					</select>
+							<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
+							<option value="2"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
+						</select>
 						<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" >
-						<span onclick="javascript:search();"><spring:message code="ezSystem.x0029"></spring:message></span>
-					</a>
-					<a class="imgbtn" >
-						<span onclick="javascript:reset();"><spring:message code="ezSystem.x0033"></spring:message></span>
-					</a>
-					<a class="imgbtn" >
-						<span onclick="javascript:reload();"><spring:message code="ezSystem.x0037"></spring:message></span>
-					</a>
-				</span> 
+						<a class="imgbtn" >
+							<span onclick="javascript:search();"><spring:message code="ezStatistics.t36"></spring:message></span> <!-- 검색 -->
+						</a>
+						<a class="imgbtn" >
+							<span onclick="javascript:reset();"><spring:message code="ezStatistics.t1059"></spring:message></span> <!-- 재입력 -->
+						</a>
+						<a class="imgbtn" >
+							<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 -->
+						</a>
+					</span> 
 				</td>
 				<td width="5%">
 					<a class="imgbtn">
@@ -442,24 +377,19 @@
 				</td>
 			</tr>
 		</table>
-		<table style="margin: 10px 0px;">
-			<tr>
-				<td width="98%" style="font-weight: bold; color: gray;">※ ${mailLogKeepPeriodMessage} ※</td>
-			</tr>
-		</table>	
 		<table class="mainlist" style="width:100%;">
 			<thead style="">
 				<tr>
 					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1068"></spring:message></th>
-					<th><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th><spring:message code="ezSystem.x0024"></spring:message></th>
-					<th><spring:message code="ezSystem.x0025"></spring:message></th>
-					<th><spring:message code="ezSystem.x0026"></spring:message></th>
-					<th><spring:message code="ezSystem.x0027"></spring:message></th>
+					<th width="15%;"><spring:message code="ezStatistics.t1068"></spring:message></th>
+					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
+					<th width="15%;"><spring:message code="ezStatistics.t1022"></spring:message>(MB)</th>
+					<th width="15%;"><spring:message code="ezStatistics.t1024"></spring:message>(MB)</th>
+					<th><spring:message code="main.t00011"></spring:message></th>
+					<th><spring:message code="ezOrgan.t92"></spring:message></th>
 				</tr>
 			</thead>
-			<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
+			<tbody id="userListBody" style="overflow: auto;"></tbody>
 		</table>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
