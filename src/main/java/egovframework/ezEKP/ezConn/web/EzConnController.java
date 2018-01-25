@@ -231,7 +231,18 @@ public class EzConnController {
 		loginVO.setTenantId(tenantId);
 		loginVO.setDn("NOPASSWORD");		
 		
-		LoginVO resultVO = loginService.selectUser(loginVO);
+		LoginVO resultVO = null;
+		String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+		
+		if (useEmpNumberLogin.equals("YES")) {
+			logger.debug("calling loginService.selectUser");
+			
+			resultVO = loginService.selectUser(loginVO);			
+		} else {		
+			logger.debug("calling loginService.selectUserWithCnOnly");
+			
+			resultVO = loginService.selectUserWithCnOnly(loginVO);
+		}		
 		
 		logger.debug("resultVO=" + resultVO);
 		

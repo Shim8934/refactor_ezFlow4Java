@@ -80,6 +80,19 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         return loginVO;        
     }
 
+    @Override
+	public LoginVO selectUserWithCnOnly(LoginVO vo) throws Exception {
+        // 1. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
+        LoginVO loginVO = loginDAO.selectUserWithCnOnly(vo);
+        // 2. 결과를 리턴한다.
+        if (loginVO != null && !loginVO.getId().equals("") && !loginVO.getPassword().equals("")) {
+            return loginVO;
+        } else {
+            loginVO = new LoginVO();
+        }
+
+        return loginVO;        
+    }    
 
     /**
 	 * 아이디를 찾는다.
