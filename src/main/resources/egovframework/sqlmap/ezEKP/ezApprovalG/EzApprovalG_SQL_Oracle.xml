@@ -2020,13 +2020,13 @@
             AND 
             	( APRSTATE = '002' OR APRSTATE = '005' )
             AND
-				TENANT_ID = #v_TENANTID#  
+				TENANT_ID = #v_TENANTID#     
 			AND
-				COMPANYID = #companyID# 				          	
+				COMPANYID = #companyID#       	
 				]]>
 		</isEqual>
 		<isEqual property="v_PMODE" compareValue="VIE">
-		<isEqual property="v_temp" compareValue="1">
+		<isGreaterEqual property="v_temp" compareValue="1">
 		<![CDATA[
 			SELECT 
 				DOCID ,
@@ -2039,12 +2039,12 @@
             AND 
             	APRMEMBERID = #v_PAPRUSERID#
             AND
-				TENANT_ID = #v_TENANTID# 
+				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#   				 
+				COMPANYID = #companyID#   
 				]]>
-		</isEqual>
-		<isEqual property="v_temp2" compareValue="1">
+		</isGreaterEqual>
+		<isGreaterEqual property="v_temp2" compareValue="1">
 		<![CDATA[
 			SELECT 
 				DOCID ,
@@ -2059,10 +2059,10 @@
             AND
 				TENANT_ID = #v_TENANTID# 
 			AND
-				COMPANYID = #companyID# 				 	
+				COMPANYID = #companyID#  	
 				]]>
-		</isEqual>
-		<isNotEqual property="v_temp2" compareValue="1">
+		</isGreaterEqual>
+		<isLessThan property="v_temp2" compareValue="1">
 		<![CDATA[
 			 SELECT 
 			 	DOCID ,
@@ -2075,16 +2075,16 @@
             AND 
             	RECEIVEDDEPTID = #v_PDEPTID#
             AND
-				TENANT_ID = #v_TENANTID#  
+				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#  				
+				COMPANYID = #companyID#  
 				]]>
-		</isNotEqual>
+		</isLessThan>
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="REC">
-			<isEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp2" compareValue="1">
+			<isGreaterEqual property="v_temp" compareValue="1">
+			<isGreaterEqual property="v_temp2" compareValue="1">
 			<![CDATA[
 				SELECT 
 						DOCID ,
@@ -2097,12 +2097,12 @@
                 AND 
                 		PROCESSORID = #v_PAPRUSERID#
                 AND
-						TENANT_ID = #v_TENANTID#  
+						TENANT_ID = #v_TENANTID#
 				AND
-						COMPANYID = #companyID#   						
+						COMPANYID = #companyID#   
 						]]>
-			</isEqual>
-			<isNotEqual property="v_temp2" compareValue="1">
+			</isGreaterEqual>
+			<isLessThan property="v_temp2" compareValue="1">
 			<![CDATA[
 			     SELECT 
 			     		DOCID ,
@@ -2115,14 +2115,15 @@
 	             AND 
 	             		RECEIVEDDEPTID = #v_PDEPTID#
 	             AND
-						TENANT_ID = #v_TENANTID#  
+						TENANT_ID = #v_TENANTID#
 				 AND
-						COMPANYID = #companyID#   							
+						COMPANYID = #companyID#   	
 						]]>	
-			</isNotEqual>
-		    </isEqual>
-		<isNotEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp3" compareValue="0">
+			</isLessThan>
+		    </isGreaterEqual>
+		<isLessThan property="v_temp" compareValue="1">
+			<isNotEmpty property="v_temp3"> 
+			<isLessThan property="v_temp3" compareValue="1">
 			<![CDATA[
 				  SELECT 
 				  		'1' DOCID  ,
@@ -2130,8 +2131,9 @@
                         NULL RECEIVEDDEPTID  
                   FROM DUAL  
                   ]]>
-			</isEqual>
-			<isNotEqual property="v_temp3" compareValue="0">
+			</isLessThan>
+			<isGreaterEqual property="v_temp3" compareValue="1">
+				<isNotEmpty property="v_temp4">
 				<isGreaterThan property="v_temp4" compareValue="0" >
 				<![CDATA[
 				 SELECT 
@@ -2143,9 +2145,9 @@
                  WHERE  
                  		DOCID = #v_PDOCID#
                  AND
-						TENANT_ID = #v_TENANTID#	
+						TENANT_ID = #v_TENANTID#
 				 AND
-						COMPANYID = #companyID# 						
+						COMPANYID = #companyID# 	
 						]]>	
 				</isGreaterThan>
 				<isLessEqual property="v_temp4" compareValue="0">
@@ -2163,29 +2165,31 @@
                       AND
 							TENANT_ID = #v_TENANTID#
 					  AND
-							COMPANYID = #companyID# 								
+							COMPANYID = #companyID# 	
 							]]>	
 				</isLessEqual>
-			</isNotEqual>
-		</isNotEqual>
+				</isNotEmpty>
+			</isGreaterEqual>
+			</isNotEmpty>
+		</isLessThan>
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="TMP">
 		<![CDATA[
 		    SELECT 
-		    		OWNERID || '@' || SN DOCID  ,
+		    		CONCAT(OWNERID ,'@' ,SN ) DOCID  ,
                     'NULL' PROCESSORID  ,
                     'NULL' RECEIVEDDEPTID  
             FROM 
             		TBL_TMPAPRLINEINFO 
             WHERE  
-            		OWNERID || '@' || SN = #v_PDOCID#
+            		CONCAT(OWNERID ,'@' ,SN ) = #v_PDOCID#
             AND 
             		APRMEMBERID = #v_PAPRUSERID#
             AND
 					TENANT_ID = #v_TENANTID#
 			AND
-					COMPANYID = #companyID# 					
+					COMPANYID = #companyID# 
 					]]>
 		</isEqual>
 		
