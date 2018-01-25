@@ -442,9 +442,6 @@
 		        }
 		    }
 		    function Open_Func(idx) {
-		    	$(".on").attr("class", "off");
-		    	$(".qst h2").attr("class", "on");
-		    	$(".qst").next().attr("class", "on");
 		    	
 		        if (CrossYN()) {
 		            if (idx == 1) {
@@ -460,6 +457,13 @@
 						window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
 		            SetTreeviewUnSelect("");		            
 		        }		        
+		    }
+		    function toggleQuestionList() {
+		    	if( prevSelMenu != null )
+		    		prevSelMenu.className = "off";
+		    	
+		    	prevSelMenu = $(".qst").next().children().get(0);
+		    	prevSelMenu.className = "on";
 		    }
 		    function WebPartToggle(obj) {
 		        for (var i = 0; i < level1El.length; i++) {

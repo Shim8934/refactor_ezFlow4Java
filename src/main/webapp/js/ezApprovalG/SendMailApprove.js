@@ -78,11 +78,11 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
     }
 }
 
-function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
+function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method) {
     var dosend = GetNoticeMail(to, type);  
         if (!dosend && isCheck == undefined)
         return;
-        var id = to;
+    var id = to;
     var to = getmailaddress(id);
     var deptid = to.split(",")[2];
     to = to.split(",")[0] + "," + to.split(",")[1];
@@ -91,21 +91,21 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     var Content = "";
     //메일에서 문서 볼 수 있는 문서 생성 변수
     var Approv_a = "";
-    Content = "<span style='font-size:13pt;'>" + strLang1124 + "</span>  | " + eSubject + "<br>";
+    Content = "<span style='font-size:13pt;'>" + strLang1124 + "</span>: " + eSubject + "<br>";
     if (type == "SIHANG") {
-        Content += "<span style='font-size:13pt;'>" + strLang1107 + "</span> | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1107 + "</span>: " + Drafter + "<br>";
     }
     else if (type == "SIMSABANSONG") {
-        Content += "<span style='font-size:13pt;'>" + strLang1108 + "</span> | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1108 + "</span>: " + Drafter + "<br>";
     }
     else {
-        Content += "<span style='font-size:13pt;'>" + strLang1109 + "</span> | " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1109 + "</span>: " + Drafter + "<br>";
     }
     if (pDraftDate != "") {
     	if (pDraftDate.slice(-2) == ".0") {
     		pDraftDate = pDraftDate.substring(0, pDraftDate.length - 2);
     	}
-    	Content += "<span style='font-size:13pt;'>" + strLang332 + "</span> | " + pDraftDate + "<br>";
+    	Content += "<span style='font-size:13pt;'>" + strLang332 + "</span>: " + pDraftDate + "<br>";
     }
 
     if (type == "callback") Subject = strLang1111;
@@ -123,7 +123,9 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else Subject = strLang1122;
     
     if(Subject == strLang1122) {
-    	Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(this);' style='cursor: pointer; font-size: 15px; color: blue;'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>결재 요약 </span><br>";
+    	if (Method != "007") {
+    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(href.this); return false;' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    	}
     }
     
     Subject += " " + eSubject;
@@ -375,7 +377,7 @@ function sendNextMail(isDept, nextID, Method) {
         sendmailBusu(nextID, Method);
     }
     else {
-        sendmail(nextID, MDrafttitle, MdraftName, Mdraftdate, "", "");
+        sendmail(nextID, MDrafttitle, MdraftName, Mdraftdate, "", "", undefined, Method);
     }
 }
 

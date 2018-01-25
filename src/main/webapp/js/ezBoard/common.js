@@ -150,7 +150,7 @@ function delete_onelinereply_Complete(ret) {
 //강민수92
 function deleteBoardCommentPopup() {
 	DivPopUpShow2($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.3, "/ezBoard/checkPassWord.do?itemID=" 
-			+ pItemID + "&replyID=" + delpReplyID);
+			+ pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
 }
 //강민수92
 function closePopup2() {

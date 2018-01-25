@@ -144,9 +144,9 @@
         	}
         	L_SearchStartDt = L_SearchStartDt.substring(0, 10)
         	L_SearchEndDt = L_SearchEndDt.substring(0, 10)
-        	var m_PollStartDate = L_SearchStartDt;
-        	var m_PollEndDate = L_SearchEndDt;
-        	var tempS = m_PollStartDate.split("-");
+        	var m_PollStartDate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+        	var m_PollEndDate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+/*         	var tempS = m_PollStartDate.split("-");
         	var szSYear		= tempS[0];
         	var szSMonth	= tempS[1];
         	var szSDay		= tempS[2];
@@ -155,7 +155,7 @@
         	var szEMonth	= tempE[1];
         	var szEDay		= tempE[2];
         	m_PollStartDate = szSYear + szSMonth + szSDay;
-        	m_PollEndDate = szEYear + szEMonth + szEDay;
+        	m_PollEndDate = szEYear + szEMonth + szEDay; */
         	if (m_PollStartDate > m_PollEndDate ) {
             	alert("<spring:message code='ezQuestion.t420' />");
             	return false;

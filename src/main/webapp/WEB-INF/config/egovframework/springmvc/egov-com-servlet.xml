@@ -54,6 +54,7 @@
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
+            <mvc:exclude-mapping path="/ezEmail/downloadInlineDotNet.do"/>
             <mvc:exclude-mapping path="/ezEmail/readSecureMail.do"/>
             <mvc:exclude-mapping path="/ezEmail/readSecureMailContent.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadSecureAttach.do"/>
@@ -67,6 +68,11 @@
             <mvc:exclude-mapping path="/ezConn/**"/>      
             <mvc:exclude-mapping path="/ezUCMessenger/**"/>      
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
+        </mvc:interceptor>
+        
+        <mvc:interceptor>            
+            <mvc:mapping path="/mobile/**"/>
+		    <bean class="egovframework.com.cmm.interceptor.MAuthenticInterceptor" />
         </mvc:interceptor>    
 	</mvc:interceptors>
 

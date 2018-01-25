@@ -302,6 +302,10 @@ var strLangKMS02 = "첨부파일 총 크기가 ";
 var strLangKMS03 = "메일이 없습니다.";
 var strLangKMS04 = "수신자 수가 "; 
 var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다.\n개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
+var strLangKMS06 = "파일을 업로드하는 동안 오류가 발생했습니다.";
+var strLangKMS07 = "업로드가 사용자에 의해 취소되었거나 브라우저가 연결을 끊었습니다.";
+var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
+
 
 function GetLocalTime(Offset , pDateTime)
 {

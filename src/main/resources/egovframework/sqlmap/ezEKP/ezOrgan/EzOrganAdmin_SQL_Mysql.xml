@@ -7,6 +7,8 @@
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganProxyVO" type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
 	
+	
+	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
 		<result property="department" 							column="Deptid" 						columnIndex="2"/>
@@ -53,6 +55,19 @@
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
 		]]>
 	</procedure> -->
+	
+	<sql id="EzOrganAdminDAO.searchQuery">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+					<isEqual property="search_keycode" compareValue="1">
+						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
 	
 	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
@@ -3083,6 +3098,34 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
  
+ 	 <select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
+		SELECT 
+			CN,
+			displayName,
+			department,
+			description
+		FROM 
+	    	TBL_USERMASTER	
+        WHERE 
+            tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+	    ORDER BY 
+	    	displayName
+	    <isNotEqual property="v_start" compareValue="-1">
+	    LIMIT
+			#v_start#, #pageCount#	
+		</isNotEqual>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getUserCount" parameterClass="map" resultClass="int">
+		SELECT 	
+			COUNT(CN) 
+		FROM 
+            TBL_USERMASTER 
+		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+  		<include refid="EzOrganAdminDAO.searchQuery"/>
+	</select>
+ 	 
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>

@@ -206,6 +206,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String fileUploadType = "";
 		String newWindowId = "";
 		
+		String dotNetUrl = "";
+		
 		// check if parameter is valid
 		String tempStr = "";
 		if (request.getParameter("cmd") != null) {
@@ -215,7 +217,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
-				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND") || tempStr.equals("RESEND")
+				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
+				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET") || tempStr.equals("DOCSENDDOTNET")
+				|| tempStr.equals("COMMUNITYDOTNET")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -244,7 +248,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
 		
 		String displayNamePrintable = userInfo.getDisplayName();
+		
+		// set serverName
 		String serverName = loginInfo.getServerName();
+		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", loginInfo.getTenantId());
+		
+		if (useMailLinkHostname.equals("YES")) {
+			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", loginInfo.getTenantId());
+			
+			if (!mailLinkHostname.equals("")) {
+				serverName = mailLinkHostname;
+			}
+		}
+		
 		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
@@ -385,17 +401,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	to = msgto;
         }
         // in case of board/Community
-        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community"))) {
+        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community")
+        		|| _cmd.equals("boardDotNet") || _cmd.equals("CommunityDotNet"))) {
         	boardID = request.getParameter("boardID") == null ? "" : request.getParameter("boardID");
         	itemID = request.getParameter("itemID") == null ? "" : request.getParameter("itemID");
         	retransType = request.getParameter("retransType") == null ? "" : request.getParameter("retransType");
+        	
+        	if (_cmd.equals("boardDotNet") || _cmd.equals("CommunityDotNet")) {
+        		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
+        	}
         }
         // in case of approvalG
-        else if (_url.equals("") && _cmd.equals("docsend")) {
+        else if (_url.equals("") && (_cmd.equals("docsend") || _cmd.equals("docsendDotNet"))) {
     		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docHref = request.getParameter("docHref") == null ? "" : request.getParameter("docHref").trim();
     		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
     		docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
+    		
+        	if (_cmd.equals("docsendDotNet")) {
+        		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
+        	}
     		
     		/* 2017-01-26 이효민 : 필요하지 않아 주석처리
     		 * 현재 docHref가 IMAGE로만 오고있기 때문에 HolderDocSend는 항상 보이지 않는다(jsp페이지의 HolderDocSend도 주석처리해놓음)
@@ -994,6 +1019,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
+		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		response.setHeader("X-XSS-Protection", "0");
@@ -2055,6 +2081,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String orgUrl = "";
 		String cmd = "";
 		String mailCmd = "";
+		String orgMailCmd = "";
 		String eShowDisplayName = "";
 		String from = "";
 		String to = "";
@@ -2123,6 +2150,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("MAILCMD").item(0);
 			if (tempNode != null) {
 				mailCmd = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("ORGMAILCMD") != null) {
+			tempNode = root.getElementsByTagName("ORGMAILCMD").item(0);
+			if (tempNode != null) {
+				orgMailCmd = tempNode.getTextContent();
 			}
 		}
 		if (root.getElementsByTagName("AUTHOR") != null) {
@@ -2911,7 +2944,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    		        	message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadDate", secureReadDate);
-	    		        	message.setHeader("X-JMocha-Secure-Mail-ServerName", userInfo.getServerName());
+	    		        	
+	    		        	// set serverName
+	    		    		String serverName = userInfo.getServerName();
+	    		    		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+	    		    		
+	    		    		if (useMailLinkHostname.equals("YES")) {
+	    		    			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+	    		    			
+	    		    			if (!mailLinkHostname.equals("")) {
+	    		    				serverName = mailLinkHostname;
+	    		    			}
+	    		    		}
+	    		        	
+	    		        	message.setHeader("X-JMocha-Secure-Mail-ServerName", serverName);
 		            	}
 			        	
 			        	doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
@@ -3007,10 +3053,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureAttachPart.setHeader("Content-Type", "text/html");
 		    		        	
-		    		        	String serverName = userInfo.getServerName();
-		    		        	
 		    		        	String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId());
-		    		        	logger.debug("useHttps=" + useHttps);
+		    		        	
+		    		    		String serverName = userInfo.getServerName();
+		    		    		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+		    		    		
+		    		    		if (useMailLinkHostname.equals("YES")) {
+		    		    			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+		    		    			
+		    		    			if (!mailLinkHostname.equals("")) {
+		    		    				serverName = mailLinkHostname;
+		    		    			}
+		    		    		}
+		    		        	
+		    		        	logger.debug("useHttps=" + useHttps + ",serverName=" + serverName);
 		    		        	
 		    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
 		    		        	
@@ -3164,8 +3220,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							}
 			            }
 			            
+			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl);
+			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
-			            if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL") || mailCmd.equals("FORWARD")) {
+			            if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
 			    			int index = orgUrl.lastIndexOf("/");			
 			    			
 			    			if (index != -1) {
@@ -3179,13 +3237,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    				
 			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
 		    		        	
-			    		        if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL")) {
-			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-			    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-			    		        }
-			    		        else {
-			    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
-			    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+			    		        if (orgMessage != null) {
+			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
+				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        }
+				    		        else {
+				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
+				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+				    		        }
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);

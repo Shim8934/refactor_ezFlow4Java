@@ -123,9 +123,11 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
 				
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
-        if (commonUtil.getPackageType(userInfo.getTenantId()).equals(CommonUtil.PT_BASIC)) {
+        if (packageType.equals(CommonUtil.PT_BASIC)
+        		|| packageType.equals(CommonUtil.PT_MAIL)) {
             return "redirect:/ezEmail/mailAloneMain.do";
         }
 		
@@ -1465,6 +1467,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		Calendar cal = Calendar.getInstance();
 		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
 		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+		
+		if (startDate != null && startDate.split("-")[1].equals("0")) {
+			startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
+		}
+		
+		if (endDate != null && endDate.split("-")[1].equals("0")) {
+			endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
+		}
 		
 		logger.debug("startDate="+startDate+", endDate="+endDate);
 		
@@ -3106,16 +3116,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("help started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		model.addAttribute("lang", userInfo.getLang());
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 		
 		logger.debug("help ended");
 		return "/ezPortal/help/help";
@@ -3130,14 +3134,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("top started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
@@ -3146,7 +3144,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 		model.addAttribute("firstScreen_Mail", firstScreenMail);
 		
 		logger.debug("top ended");
@@ -3314,16 +3312,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("leftEnv started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 
 		logger.debug("leftEnv ended");
 		return "/ezPortal/help/leftEnv";

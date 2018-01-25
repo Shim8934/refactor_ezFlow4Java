@@ -255,7 +255,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(formatter.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false)).compareTo(sysDate)<0){
 			endPoll = true;
 		}
-		if(qstUserPermissionVO.getEndFlg().equals('1')){
+		if(qstUserPermissionVO.getEndFlg().equals("1")){
 			endPoll = true;
 		}
 		/**UserIDAdmin*/
@@ -483,7 +483,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO, userInfo.getTenantId());
 		
-		if(qstUserPermissionVO.getMultiResponseFlg().equals('1')){
+		if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 			multiResponseOK = true;
 		}else{
 			if(ezQuestionService.getResponseDateCnt(qstUserPermissionVO,userID, userInfo.getTenantId())!=0){
@@ -773,13 +773,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}else if(qstVO.getAnswerType() == 2){
 				/** EZSP_INSERTRESPONSE2*/
 				tmp = "txt" + qstVO.getQuestionNo();
-				answerSubjectivity = request.getParameter(tmp).trim();
+				answerSubjectivity = request.getParameter(tmp).trim().replaceAll("\r\n", " ");
 				qstResponseVO.setAnswerSubjectivity(answerSubjectivity);
 				ezQuestionService.insertResponse2(qstResponseVO, loginVO.getTenantId());    	
 			}else if(qstVO.getAnswerType() == 4){
 				/** EZSP_INSERTRESPONSE2*/
 				tmp = "txt" + qstVO.getQuestionNo();
-				answerSubjectivity = request.getParameter(tmp);
+				answerSubjectivity = request.getParameter(tmp).replaceAll("\r\n", " ");
 				qstResponseVO.setAnswerSubjectivity(answerSubjectivity);
 				ezQuestionService.insertResponse2(qstResponseVO, loginVO.getTenantId());
 			}else if(qstVO.getAnswerType() == 5){
@@ -981,9 +981,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("qstStep2 started");
 
 		StringBuilder pStep1DataXML = new StringBuilder();
+		
+		String content = commonUtil.cleanValue(req.getParameter("txtContent"));
+		
+		//목적에 줄바꿈있으면 스크립트에러나서, 애초에 줄바꿈이 필요없기때문에 띄워쓰기로 변경
+		content = content.replaceAll("\r\n", " ");
+		
 		pStep1DataXML.append("<PARAMETER>");
 		pStep1DataXML.append("<SUBJECT>" + commonUtil.cleanValue(req.getParameter("txtSubject")) + "</SUBJECT>");
-		pStep1DataXML.append("<CONTENT>" + commonUtil.cleanValue(req.getParameter("txtContent")) + "</CONTENT>");
+		pStep1DataXML.append("<CONTENT>" + content + "</CONTENT>");
 		pStep1DataXML.append("<STARTDATE>" + req.getParameter("hidStartDate")+"</STARTDATE>");
 		pStep1DataXML.append("<ENDDATE>" + req.getParameter("hidEndDate")+"</ENDDATE>");
 		pStep1DataXML.append("<EXPIREDATE>" + req.getParameter("txtExpiredate")+"</EXPIREDATE>");

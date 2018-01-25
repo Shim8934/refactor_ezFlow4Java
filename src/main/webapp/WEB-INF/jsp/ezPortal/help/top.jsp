@@ -104,8 +104,8 @@
 				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftAddr.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/addr_" + pUrl + "01", "bottom");
 				        break;
 				    case "menu06":
-				    	var pakageType = "${pakageType}";
-				    	if (pakageType == 'basic') {
+				    	var packageType = "${packageType}";
+				    	if (packageType != 'standard') {
 				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "02", "bottom");	
 				    	} else {
 				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "01", "bottom");	
@@ -141,7 +141,13 @@
 				<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 			  <tr>
 			  	  <c:choose>
-			  	  	<c:when test="${pakageType == 'basic'}">
+			  	  	<c:when test="${packageType == 'mail'}">
+						<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+		      			<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
+		      			<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
+			  			<td style="width:100%">&nbsp;</td>
+			  	  	</c:when>			  	  
+			  	  	<c:when test="${packageType == 'basic'}">
 						<c:choose>
 							<c:when test="${firstScreen_Mail == 'YES'}">
 								<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
@@ -194,7 +200,12 @@
 			<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 	  			<tr>
 	  				<c:choose>
-	  					<c:when test="${pakageType == 'basic'}">
+			  	  	<c:when test="${packageType == 'mail'}">
+					    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
+					    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
+			  			<td style="width:100%">&nbsp;</td>
+			  	  	</c:when>			  	  	  				
+	  					<c:when test="${packageType == 'basic'}">
 						    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
 						    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
 						    <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">日程管理</td>

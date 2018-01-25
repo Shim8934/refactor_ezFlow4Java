@@ -237,7 +237,7 @@
 			    var pStartDate = "";
 			    var pEndDate ="9999-12-30 23:59:59";
 			
-			    if (txtTitle.value == "")
+			    if (txtTitle.value == "" || trim(txtTitle.value) == "")
 			    {
 				    alert("<spring:message code='ezBoard.t390'/>");
 				    txtTitle.focus();

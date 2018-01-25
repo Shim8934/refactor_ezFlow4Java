@@ -1,7 +1,11 @@
 package egovframework.ezEKP.ezEmail.util;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,6 +66,8 @@ import javax.mail.search.SearchTerm;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -80,6 +86,9 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 
 /** 
  * @Description [Utility] 메일 관련 유틸리티
@@ -435,7 +444,7 @@ public class EzEmailUtil {
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
                         
-                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
+//                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
                         
                         subject = MimeUtility.decodeText(rawHeader);
                     }                        
@@ -1919,7 +1928,7 @@ public class EzEmailUtil {
 	
 				StringBuilder sb = new StringBuilder();
 				String output;
-	
+				
 				while ((output = br.readLine()) != null) {
 					sb.append(output);
 				}
@@ -2864,6 +2873,7 @@ public class EzEmailUtil {
 			String att = m.group(1);
 			
 			if (att.toLowerCase().indexOf("target=") < 0) {
+				att = att.replaceAll("'", "\"");
 				m.appendReplacement(result, Matcher.quoteReplacement("<a " + att + " target=\"_blank\">"));
 			}
 		}
@@ -2919,13 +2929,110 @@ public class EzEmailUtil {
 			if (sb.toString().toLowerCase().contains(searchValue.toLowerCase())) {
 				return true;
 			}
-		}
-
-		catch (MessagingException e) {					    		
-		}
+			
+		} catch (MessagingException e) {	}
 			
 		return false;
+	}
+	
+	// 2017.11.21 코린도 개발하면서 ZIP관련 메서드 생성 - 압축파일 풀기 
+	public void unzip( InputStream is, File destDir, String encoding) throws IOException {
+		ZipArchiveInputStream zis ;
+		ZipArchiveEntry entry ;
+		String name ;
+		File target ;
+		int nWritten = 0;
+		BufferedOutputStream bos ;
+		byte [] buf = new byte[1024 * 8];
+
+		ensureDestDir(destDir);
+		
+		zis = new ZipArchiveInputStream(is, encoding, false);
+		
+		while ((entry = zis.getNextZipEntry()) != null){
+			name = entry.getName();
+			target = new File (destDir, name);
+			
+			if (entry.isDirectory()) {
+				ensureDestDir(target);
+			} else {
+				target.createNewFile();
+				bos = new BufferedOutputStream(new FileOutputStream(target));
+				
+				while ((nWritten = zis.read(buf)) >= 0 ){
+					bos.write(buf, 0, nWritten);
+				}
+				
+				bos.close();
+			}
 		}
+		
+		zis.close();	
+	}
+	
+	// 디렉토리확인
+	private void ensureDestDir(File dir) throws IOException {
+		if ( ! dir.exists() ) {
+			dir.mkdirs(); 
+		}
+	}
+	
+	// 암호화된 zip파일에 파일들을 넣는 메서드
+	public String encryptZipFile(String filePath, String folderPath, String pwd) throws IOException {
+		unzip(new FileInputStream(filePath), new File(folderPath), "UTF-8");
+		
+		File zipFile = new File(filePath);
+		
+		if (zipFile.delete()) {
+			logger.debug(filePath + ".zip file is deleted.");
+		}
+		
+		String zipFileName = filePath + "_secure.zip";
+		
+		try {
+			File dir = new File(folderPath);
+			ArrayList<String> arrList = new ArrayList<>();
+			File[] fileList = dir.listFiles();
+			
+			for (int i = 0; i < fileList.length; i++) {
+				File file = fileList[i];
+				
+				if (file.isFile()) {
+					arrList.add(file.getAbsolutePath());
+				}
+			}
+		
+			ZipFile zipFiles = new ZipFile(zipFileName);
+			
+			ZipParameters params = new ZipParameters();
+			params.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+			params.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+			params.setEncryptFiles(true);
+			params.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+			params.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+			params.setPassword(pwd);
+			
+			for (int i = 0; i < arrList.size(); i++) {
+				zipFiles.addFile(new File(arrList.get(i)), params);
+			}
+			
+			if (dir.isDirectory()) {
+				File[] files = dir.listFiles();
+				
+				for (File file : files) {
+					file.delete();
+				}
+				
+				dir.delete();
+				
+				File dirFile = new File(folderPath + "_secure");
+				dirFile.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return zipFileName;
+	}
+	
 }
-
-

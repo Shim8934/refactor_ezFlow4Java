@@ -195,7 +195,7 @@
 					        <OPTION value="230|+09:00">(GMT+09:00) <spring:message code='ezPersonal.s66'/></OPTION>
 					        <OPTION value="240|+09:00">(GMT+09:00) <spring:message code='ezPersonal.s68'/></OPTION>
 					        <OPTION value="250|+09:30">(GMT+09:30) <spring:message code='ezPersonal.s70'/></OPTION>
-					        <OPTION value="245|+09:30">(GMT+09:30) <spring:message code='ezPersonal.s69'/></OPTION>
+					        <OPTION value="245|+09:30">(GMT+10:30) <spring:message code='ezPersonal.s69'/></OPTION>
 					        <OPTION value="265|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s73'/></OPTION>
 					        <OPTION value="255|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s71'/></OPTION>
 					        <OPTION value="255|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s924'/></OPTION>
