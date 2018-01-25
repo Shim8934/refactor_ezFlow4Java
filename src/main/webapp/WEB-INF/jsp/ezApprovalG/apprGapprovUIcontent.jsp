@@ -43,7 +43,7 @@
 	
 	                    }
 	                }
-	                else if (obj.nodeName == "P" || obj.nodeName == "XMP") {
+	                else if (obj.nodeName == "P") {
 	                	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
 	                		ret = true;
 	                	}
