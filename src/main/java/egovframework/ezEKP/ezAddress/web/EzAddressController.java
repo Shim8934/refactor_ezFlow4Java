@@ -379,6 +379,11 @@ public class EzAddressController{
 		}
 		
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
 		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
@@ -392,12 +397,13 @@ public class EzAddressController{
 		model.addAttribute("rootAddressSelection", rootAddressSelection);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
 				 + ",changeKey=" + changeKey + ",photoUrl=" + photoUrl + ",textEmail=" + textEmail + ",userNM=" + userNM
 				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI
-				 + ",primaryLang=" + primaryLang);
+				 + ",primaryLang=" + primaryLang + ",useZipCodeSearch=" + useZipCodeSearch);
 		
 		return "ezAddress/addressWrite";
 	}

@@ -34,7 +34,7 @@ public interface EzPersonalAdminService {
 	
 	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq, int tenantID) throws Exception;
 	
-	String getQuickLinkList(LoginVO loginVO) throws Exception;
+	String getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
 	
 	String getQuickLink(String quickLinkID, int tenantID) throws Exception;
 	

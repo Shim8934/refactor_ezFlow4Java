@@ -80,6 +80,19 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         return loginVO;        
     }
 
+    @Override
+	public LoginVO selectUserWithCnOnly(LoginVO vo) throws Exception {
+        // 1. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
+        LoginVO loginVO = loginDAO.selectUserWithCnOnly(vo);
+        // 2. 결과를 리턴한다.
+        if (loginVO != null && !loginVO.getId().equals("") && !loginVO.getPassword().equals("")) {
+            return loginVO;
+        } else {
+            loginVO = new LoginVO();
+        }
+
+        return loginVO;        
+    }    
 
     /**
 	 * 아이디를 찾는다.
@@ -203,7 +216,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     	ADConnection conn = new ADConnection();
     	
     	String address = config.getProperty("config.PROVIDER_URL");   	
-    	String security = uid + "@" + config.getProperty("config.Domain_Name");
+     	String security = uid + "@" + config.getProperty("config.Domain_Name");
     	
     	String chk = conn.setConnection(address, security, rpwd);
     	
@@ -217,7 +230,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     		String mailAddr = uid + "@" + domain;
 
     		ezEmailUserAdminService.updateUserPassword(mailAddr, rpwd);
-    		ezOrganAdminService.setPassword(uid, rpwd, tenantId);
+    		ezOrganAdminService.setPasswordExceptAD(uid, rpwd, tenantId);
     		
 //    		//email 비밀번호 변경 확인
 //    		IMAPAccess ia = null;

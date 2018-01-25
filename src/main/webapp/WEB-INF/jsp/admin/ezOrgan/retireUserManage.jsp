@@ -259,9 +259,13 @@
 		<h1><spring:message code='ezOrgan.t311'/></h1>
 		<div id="mainmenu">
 			<ul>
+				<c:if test="${dotNetIntegration != 'YES'}">
 		    	<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
+		    	</c:if>
 		        <li><span onClick="Delete_onclick()"><spring:message code='ezOrgan.t142'/></span></li>
+		        <c:if test="${dotNetIntegration != 'YES'}">
                 <li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
+                </c:if>
 		  	</ul>
 		</div>
 		<div class="page">

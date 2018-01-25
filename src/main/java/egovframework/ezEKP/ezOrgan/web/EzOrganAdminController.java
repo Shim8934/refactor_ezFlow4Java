@@ -5,6 +5,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +24,10 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -49,6 +56,8 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,6 +86,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzSystemAdminService ezSystemAdminService;
 		
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
@@ -104,7 +116,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
-    
+
+	
+
+
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
@@ -155,6 +170,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -713,7 +731,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
-		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());		
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -724,6 +747,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 				
 		logger.debug("userInfo ended");
 		
@@ -2147,6 +2171,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
    		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+   		
    		logger.debug("retireUserManage ended");
    		
 		return "admin/ezOrgan/retireUserManage";
@@ -2434,12 +2461,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
             return "cmm/error/adminDenied";
         }
-        
         int tenantID = userInfo.getTenantId();        
         logger.debug("tenantID=" + tenantID);
         
+//        String strCurrentUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+//        String caller = request.getHeader("referer").replace(strCurrentUrl, "");
+//        logger.debug("caller=" + caller);
+       
         String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));  
-
         String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
         String userEmail = userId + "@" + domainName;
                         
@@ -2460,6 +2489,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("userId", userId);
         model.addAttribute("userQuota", userQuota);
         model.addAttribute("userWarn", userWarn);
+//        model.addAttribute("caller", caller);
         
         logger.debug("configUserQuota ended.");
         

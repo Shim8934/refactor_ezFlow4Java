@@ -48,6 +48,10 @@ public class LoginDAO extends EgovAbstractDAO {
     	return selectUserForLocal(vo);       
     }
 
+    public LoginVO selectUserWithCnOnly(LoginVO vo) throws Exception {
+    	return (LoginVO)select("loginDAO.selectUserWithCnOnly", vo);       
+    }
+    
     /**
 	 * 아이디를 찾는다.
 	 * @param vo LoginVO
