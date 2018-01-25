@@ -76,7 +76,6 @@
         var xmlpara = createXmlDom();
         var xmlPara = createXmlDom();
         var objRoot, objNode, subNode;
-
         var objNode;
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "PARENTCN", "");
@@ -95,13 +94,27 @@
         xmlHTTP.send(xmlpara);
 
         if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-            alert("<spring:message code='ezOrgan.t173' />");
+            
+        	alert("<spring:message code='ezOrgan.t173' />");
         } else {
-            alert("<spring:message code='ezOrgan.t174' />");
-            window.close();
+        	
+        	alert("<spring:message code='ezOrgan.t174' />");
+        	var url = window.opener.document.location.href;
+        	var arrUrl = url.split(window.location.protocol + "//" + window.location.host);
+        		
+        		if(arrUrl[1]=="/admin/ezEmail/mailQuotaList.do"){
+        			
+        			opener.location.href = "javascript:reload()";
+        			window.close();
+        		
+        		} else {
+        			
+        			window.close();
+        		}
         }
     }	
-	</script>
+
+    </script>
 </head>
 <body class="popup" onload="javascript:window_onload()">
 <form name="Form1" method="post" action="ConfigQuota.aspx?id=dev01" id="Form1">

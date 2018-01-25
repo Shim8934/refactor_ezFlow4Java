@@ -773,13 +773,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}else if(qstVO.getAnswerType() == 2){
 				/** EZSP_INSERTRESPONSE2*/
 				tmp = "txt" + qstVO.getQuestionNo();
-				answerSubjectivity = request.getParameter(tmp).trim();
+				answerSubjectivity = request.getParameter(tmp).trim().replaceAll("\r\n", " ");
 				qstResponseVO.setAnswerSubjectivity(answerSubjectivity);
 				ezQuestionService.insertResponse2(qstResponseVO, loginVO.getTenantId());    	
 			}else if(qstVO.getAnswerType() == 4){
 				/** EZSP_INSERTRESPONSE2*/
 				tmp = "txt" + qstVO.getQuestionNo();
-				answerSubjectivity = request.getParameter(tmp);
+				answerSubjectivity = request.getParameter(tmp).replaceAll("\r\n", " ");
 				qstResponseVO.setAnswerSubjectivity(answerSubjectivity);
 				ezQuestionService.insertResponse2(qstResponseVO, loginVO.getTenantId());
 			}else if(qstVO.getAnswerType() == 5){
