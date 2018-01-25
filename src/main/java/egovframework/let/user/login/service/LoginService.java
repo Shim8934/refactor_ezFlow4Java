@@ -32,8 +32,6 @@ public interface LoginService {
 	 * @exception Exception Exception
 	 */
 	public LoginVO selectUser(LoginVO vo) throws Exception;
-
-	public LoginVO selectUserWithCnOnly(LoginVO vo) throws Exception;
 	
 	/**
 	 * 아이디를 찾는다.
