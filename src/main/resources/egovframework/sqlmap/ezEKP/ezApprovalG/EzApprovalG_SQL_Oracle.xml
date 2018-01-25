@@ -6325,7 +6325,7 @@
       	  												TBL_CABINET.TENANT_ID =#v_TENANTID#
       	  											AND
       	  												TBL_CABINET.COMPANYID = #companyID#      	  												
-      	  											GROUP BY CABINETCLASSNO,TENANT_ID ) TBMAXVOL 
+      	  											GROUP BY CABINETCLASSNO,TENANT_ID, COMPANYID ) TBMAXVOL 
       	  									INNER JOIN 
       	  										TBL_CABINET 
       	  									ON 
