@@ -153,7 +153,22 @@
 					]]>
 				</isEqual>
 			</isEqual>
-		</isNotNull>		
+		</isNotNull>
+		
+		<isEqual property="primary" compareValue="1" >
+			<![CDATA[
+				ORDER BY
+					U.DISPLAYNAME ASC
+			]]>
+		</isEqual>
+		
+		<isEqual property="primary" compareValue="2">
+			<![CDATA[
+				ORDER BY
+					U.DISPLAYNAME2 ASC
+			]]>
+		</isEqual>
+			
     </select> 
     
     <insert id="EzWebFolderAdminDAO.updateNewAmount" parameterClass="Map">      	
@@ -258,7 +273,7 @@
 		<![CDATA[
 			ORDER BY
 				CREATE_DATE DESC,
-				CAST(LOG_ID AS INT) DESC		
+				CAST(LOG_ID AS INT) DESC
 		]]>
     </select>
     

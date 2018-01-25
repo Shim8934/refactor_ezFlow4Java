@@ -4,6 +4,8 @@
 <sqlMap namespace="ezWebFolder">
 	<typeAlias  alias="FileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
+	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
+	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
 	
 	<!-- File resultMap -->
     <resultMap id="fileVO" class="FileVO">
@@ -26,6 +28,34 @@
     </resultMap>
     
     <!-- FileType resultMap -->
+    <resultMap id="folderSimpleVO" class="FolderSimpleVO">
+        <result property="folderId"             column="FOLDER_ID"               columnIndex="1" />              
+        <result property="folderName"         	column="FOLDER_NAME"             columnIndex="2" />
+
+    </resultMap>
+    
+    <!-- Folder resultMap -->
+    <resultMap id="folderVO" class="FolderVO">
+        <result property="folderId"             column="FOLDER_ID"                columnIndex="1"  />              
+        <result property="folderName"         	column="FOLDER_NAME"              columnIndex="2"  />
+        <result property="folderType"         	column="FOLDER_TYPE"              columnIndex="3"  />
+        <result property="folderPath"          	column="FOLDER_PATH"              columnIndex="4"  />
+        <result property="folderStep"           column="FOLDER_STEP"              columnIndex="5"  />
+        <result property="folderLevel"          column="FOLDER_LEVEL"             columnIndex="6"  />
+        <result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="7"	 />
+        <result property="useStatus"           	column="USE_STATUS"               columnIndex="8"  />
+        <result property="ownerId"        	    column="OWNER_ID"         	      columnIndex="9"	 />
+        <result property="createId"             column="CREATE_ID"            	  columnIndex="10" />
+        <result property="createDate"           column="CREATE_DATE"          	  columnIndex="11" />
+        <result property="createName1"          column="CREATE_NAME1"          	  columnIndex="12" />
+        <result property="createName2"          column="CREATE_NAME2"             columnIndex="13" />
+        <result property="updateId"             column="UPDATE_ID"                columnIndex="14" />
+        <result property="updateDate"           column="UPDATE_DATE"              columnIndex="15" />
+        <result property="companyId"            column="COMPANY_ID"               columnIndex="16" />      
+        <result property="tenantId"         	column="TENANT_ID"                columnIndex="17" />
+    </resultMap>
+    
+    <!-- FolderSimple resultMap -->
     <resultMap id="fileTypeVO" class="FileTypeVO">
         <result property="typeId"               column="TYPE_ID"                columnIndex="1" />              
         <result property="typeName"         	column="TYPE_NAME"              columnIndex="2" />
@@ -149,9 +179,9 @@
 				CREATE_ID AS CREATE_ID,
 				CREATE_NAME1 AS CREATE_NAME1,
 				CREATE_NAME2 AS CREATE_NAME2,
-				DATE_ADD(CREATE_DATE, INTERVAL +#offset# MINUTE) AS CREATE_DATE,				
+				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,				
 				UPDATE_ID AS UPDATE_ID,
-				DATE_ADD(UPDATE_DATE, INTERVAL +#offset# MINUTE) AS UPDATE_DATE,				
+				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,				
 				TENANT_ID AS TENANT_ID
 			FROM 
 				TBL_WEBFOLDER_FILE
@@ -161,6 +191,63 @@
 				TENANT_ID = #tenantId#	
 		]]>				
     </select>
+    
+    <select id="EzWebFolderDAO.getFolderByFolderId" resultMap="folderVO">   
+		<![CDATA[
+			SELECT 
+				FOLDER_ID AS FOLDER_ID,
+				FOLDER_NAME AS FOLDER_NAME,
+				FOLDER_TYPE AS FOLDER_TYPE,
+				FOLDER_PATH AS FOLDER_PATH,
+				FOLDER_STEP AS FOLDER_STEP,
+				FOLDER_LEVEL AS FOLDER_LEVEL,
+				FOLDER_UPPER AS FOLDER_UPPER,
+				USE_STATUS AS USE_STATUS,
+				OWNER_ID AS OWNER_ID,
+				CREATE_ID AS CREATE_ID,
+				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				CREATE_NAME1 AS CREATE_NAME1,
+				CREATE_NAME2 AS CREATE_NAME2,								
+				UPDATE_ID AS UPDATE_ID,
+				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				COMPANY_ID AS COMPANY_ID,						
+				TENANT_ID AS TENANT_ID
+			FROM 
+				TBL_WEBFOLDER_FOLDER
+			WHERE  
+				FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#	
+		]]>				
+    </select>
+    
+    <select id="EzWebFolderDAO.getSimpleSubFolder" resultMap="folderSimpleVO">   
+		<![CDATA[
+			SELECT 
+				FOLDER_ID AS FOLDER_ID,
+				FOLDER_NAME AS FOLDER_NAME			
+			FROM 
+				TBL_WEBFOLDER_FOLDER
+			WHERE  
+				FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#	
+		]]>				
+    </select>
+    
+    <select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO">   
+		<![CDATA[
+			SELECT 
+				FOLDER_ID AS FOLDER_ID,
+				FOLDER_NAME AS FOLDER_NAME			
+			FROM 
+				TBL_WEBFOLDER_FOLDER
+			WHERE  
+				FOLDER_UPPER = #folderUpper#
+			AND
+				TENANT_ID = #tenantId#
+		]]>				
+    </select>     
     
     <delete id="EzWebFolderDAO.deleteFileByFileId" parameterClass="Map">
    		<![CDATA[

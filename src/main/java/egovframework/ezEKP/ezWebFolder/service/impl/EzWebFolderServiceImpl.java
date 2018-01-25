@@ -1,14 +1,20 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
@@ -105,6 +111,32 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		Map<String,Object> map = new HashMap<String, Object>();		
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFileLogSequence(map);
+	}
+
+	@Override
+	public FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("offset", offset);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getFolderByFolderId(map);
+	}
+
+	@Override
+	public FolderSimpleVO getSimpleSubFolder(String folderId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);		
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getSimpleSubFolder(map);
+		
+	}
+
+	@Override
+	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderUpper", folderUpperId);		
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getAllSimpleSubFolders(map);		
 	}
 
 }
