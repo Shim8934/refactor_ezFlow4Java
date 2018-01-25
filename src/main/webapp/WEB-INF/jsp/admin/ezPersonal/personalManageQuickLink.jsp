@@ -146,12 +146,60 @@
 	</head>
 	<body class="mainbody">
 		<c:choose>
-			<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+			<c:when test="${lang == '1'}">
 				<xml id="listviewheader" style ="display:none">
 					<LISTVIEWDATA>
 						<HEADERS>
 					    	<HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					      	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+							<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					     	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME>URL</NAME>
+					        	<WIDTH>70</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					    </HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:when>
+			<c:when test="${lang == '2'}">
+				<xml id="listviewheader" style ="display:none">
+					<LISTVIEWDATA>
+						<HEADERS>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+							<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
 					     	<HEADER>
@@ -183,21 +231,17 @@
 					<LISTVIEWDATA>
 						<HEADERS>
 					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
-					      	<%-- <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s85' />)</NAME>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
 					        	<WIDTH>40</WIDTH>
-					      	</HEADER> --%>
+					      	</HEADER>
+							<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
 					     	<HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
 					        	<WIDTH>50</WIDTH>
