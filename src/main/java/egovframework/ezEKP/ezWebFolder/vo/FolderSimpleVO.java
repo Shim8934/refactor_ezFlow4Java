@@ -6,6 +6,7 @@ public class FolderSimpleVO {
 	private String folderId;
 	private String folderName;
 	private int hasSubFolder;
+	private int folderLevel;
 	private List<FolderSimpleVO> listSubFolders;
 	
 	public String getFolderId() {
@@ -39,5 +40,13 @@ public class FolderSimpleVO {
 	public void setListSubFolders(List<FolderSimpleVO> listSubFolders) {
 		this.listSubFolders = listSubFolders;
 	}
+
+	public int getFolderLevel() {
+		return folderLevel;
+	}
+
+	public void setFolderLevel(int folderLevel) {
+		this.folderLevel = folderLevel;
+	}	
 	
 }

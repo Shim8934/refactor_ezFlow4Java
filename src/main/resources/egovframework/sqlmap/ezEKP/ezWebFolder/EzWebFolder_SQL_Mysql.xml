@@ -31,7 +31,7 @@
     <resultMap id="folderSimpleVO" class="FolderSimpleVO">
         <result property="folderId"             column="FOLDER_ID"               columnIndex="1" />              
         <result property="folderName"         	column="FOLDER_NAME"             columnIndex="2" />
-
+		<result property="folderLevel"         	column="FOLDER_LEVEL"            columnIndex="3" />
     </resultMap>
     
     <!-- Folder resultMap -->
@@ -225,7 +225,8 @@
 		<![CDATA[
 			SELECT 
 				FOLDER_ID AS FOLDER_ID,
-				FOLDER_NAME AS FOLDER_NAME			
+				FOLDER_NAME AS FOLDER_NAME,
+				FOLDER_LEVEL AS FOLDER_LEVEL		
 			FROM 
 				TBL_WEBFOLDER_FOLDER
 			WHERE  
@@ -239,7 +240,8 @@
 		<![CDATA[
 			SELECT 
 				FOLDER_ID AS FOLDER_ID,
-				FOLDER_NAME AS FOLDER_NAME			
+				FOLDER_NAME AS FOLDER_NAME,
+				FOLDER_LEVEL AS FOLDER_LEVEL		
 			FROM 
 				TBL_WEBFOLDER_FOLDER
 			WHERE  
