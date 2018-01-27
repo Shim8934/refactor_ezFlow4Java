@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzEmailService {
@@ -71,4 +72,5 @@ public interface EzEmailService {
 	public MailSecureVO getSecureMailInfoWithPassword(String secureId) throws Exception;
 	public MailSecureVO getSecureMailInfoWithPassword(String userId, int tenantId, String url) throws Exception;
 	public List<MailSecureReaderVO> getSecureMailReaderInfo(String secureId) throws Exception;
+
 }
