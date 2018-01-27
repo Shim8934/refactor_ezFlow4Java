@@ -185,7 +185,6 @@
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "YES";
 
 		    function window_onload_total() {

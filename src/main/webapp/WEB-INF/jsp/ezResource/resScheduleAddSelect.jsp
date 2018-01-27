@@ -31,7 +31,6 @@
          var ReturnValue_NameEng = new Array();
          var boolfirstlist = true;
          var pUse_Editor = "${useEditor}";
-         var pUse_IE11Browser = "${useIE11Browser}";
          var pNoneActiveX = "${noneActiveX}";
          var ReturnFunction;
          var m_Arguments;

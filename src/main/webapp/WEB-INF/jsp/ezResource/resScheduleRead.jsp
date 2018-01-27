@@ -28,7 +28,6 @@
 	        var org_brdName = "${brdName}";
 	        var iReFlag = "${reFlagVal}";
 	        var pUse_Editor = "${useEditor}";
-	        var pUse_IE11Browser = "${useIE11Browser}";
 	        var typeVal = '${typeVal}';
 	        var startDateVal = '${startDateVal}';
 	        var endDateVal = '${endDateVal}';

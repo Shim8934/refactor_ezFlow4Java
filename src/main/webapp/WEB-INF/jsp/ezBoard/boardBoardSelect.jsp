@@ -53,7 +53,6 @@
 			var xmlDom_treeview = createXmlDom();
 			var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "${noneActiveX}";
-			var pUse_IE11Browser = "${useIE11Browser}";
 			var ReturnFunction;
 			
 		    function Select() {

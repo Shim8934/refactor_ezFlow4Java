@@ -74,7 +74,6 @@
 // 	        var ch_CommunityAdmin = "<c:out value = '${chCommunityAdmin}' />";
 	        var UserLevel = "<c:out value = '${userLevel}' />";
 	        var pUse_Editor = "<c:out value = '${useEditor}' />";
-	        var pUse_IE11Browser = "<c:out value = '${useIE11Browser}' />";
 	        
 	        $(function () {
     			var xmldoc = loadXMLString('${strXML}');

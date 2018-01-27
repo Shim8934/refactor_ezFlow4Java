@@ -93,7 +93,6 @@
 	        var pAdminType = "n";
 	        var pUse_Editor = "${useEditor}";
 	        var pNoneActiveX = "YES";
-	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";

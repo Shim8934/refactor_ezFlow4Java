@@ -14,7 +14,6 @@
 		
 		<script type="text/javascript">
 			var pUse_Editor = "<c:out value = '${useEditor}' />";
-	        var p_Use_IE11Browser = "<c:out value = '${useIE11Browser}' />";
 	        var xmlhttp = null;
 	
 	        var TotalCount;
@@ -124,13 +123,8 @@
 	                    rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
 	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                } else {
-	                    if (p_Use_IE11Browser == "CK") {
-	                        rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
+	                	rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
 	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    } else {
-	                        rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
-	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    }
 	                }
 	                
 	                if (typeof (rtnValue) != "undefined") {

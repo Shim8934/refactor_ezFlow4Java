@@ -36,7 +36,6 @@
 	        var strLang_2 = "<spring:message code='ezAddress.t316' />";
 	        var searchFlag = true;
 	        var pUse_Editor = "${useEditor}";
-	        var pUse_IE11Browser = "${useIE11Browser}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var AddressType = "<spring:message code='ezAddress.t145' />";
 	        var AddressType2 = "<spring:message code='ezAddress.t146' />";

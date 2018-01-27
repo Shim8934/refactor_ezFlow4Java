@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "YES";
 		    
 		    window.onload = function () {
@@ -549,18 +548,7 @@
 		                	var openLocation = "/ezApprovalG/draftui.do";
 		                }
 		                else {
-		                    if (pUse_IE11Browser == "CK")
-		                        //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
-		                    	var openLocation = "/ezApprovalG/draftui.do";
-		                    else {
-		                        if (pUse_Editor == "")
-		                            //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui.aspx";
-		                        	var openLocation = "/ezApprovalG/draftui.do";
-		                        else {
-		                            /* openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui_IE.aspx"; */
-		                        	var openLocation = "/ezApprovalG/draftui.do";
-		                        }
-		                    }
+		                	var openLocation = "/ezApprovalG/draftui.do";
 		                }
 		                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 		                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
