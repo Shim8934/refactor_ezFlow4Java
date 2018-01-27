@@ -225,17 +225,11 @@
 		                    var top = (heigth - wHeight) / 2;
 		                    if (CrossYN() || pNoneActiveX == "YES") {
 		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                        	"height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                    else {
-		                        if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                     "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
-		                        else {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
+	                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                }
 		                break;
@@ -466,11 +460,7 @@
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        } else {
-		            if (pUse_Editor == "") {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            } else {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            }
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        }
 		    }
 

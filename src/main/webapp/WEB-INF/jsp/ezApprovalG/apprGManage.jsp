@@ -697,10 +697,7 @@
 		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                    else {
-		                        if (pUse_Editor == "TAGFREE")
-		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_TFI.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                        else
-		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
+	                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                }
 		                openwindow(openLocation, "enforce", 880, 550);

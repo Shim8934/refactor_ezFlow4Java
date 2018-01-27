@@ -396,11 +396,7 @@
 	                                        openLocation = openLocation + "&isTmpDoc=";
 	                                    }
 	                                    else {
-	                                        if (pUse_Editor == "")
-	                                            openLocation = "/myoffice/ezApproval/DraftUI/Draftui.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                                        else {
-	                                            openLocation = "/myoffice/ezApproval/DraftUI/Draftui_IE.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                                        }
+                                            openLocation = "/myoffice/ezApproval/DraftUI/Draftui.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
 	                                        openLocation = openLocation + "&susinSN=" + escape(SusinSn) + "&DocState=" + escape(tempDocState) + "&ListType=1&AprState=" + escape(AprState);
 	                                        openLocation = openLocation + "&isTmpDoc=";
 	                                    }
@@ -425,11 +421,7 @@
 	                                    openLocation = openLocation + "&uDeptID=" + escape(pAprMemberDeptID);
 	                                }
 	                                else {
-	                                    if (pUse_Editor == "")
-	                                        var openLocation = "/myoffice/ezApproval/ApprovUI/Approvui.aspx?DocID=" + escape(pDocID);
-	                                    else {
-	                                        var openLocation = "/myoffice/ezApproval/ApprovUI/Approvui_IE.aspx?DocID=" + escape(pDocID);
-	                                    }
+                                        var openLocation = "/myoffice/ezApproval/ApprovUI/Approvui.aspx?DocID=" + escape(pDocID);
 	                                    openLocation = openLocation + "&uID=" + escape(pAprMemberID) + "&uName=" + escape(pAprMemberName);
 	                                    openLocation = openLocation + "&uDeptID=" + escape(pAprMemberDeptID);
 	                                }

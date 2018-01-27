@@ -57,11 +57,7 @@
 		        var Title = window.opener.document.getElementById('txtTitle').value;
 
 		        if (CrossYN()) {
-		            if (pUse_Editor == "TAGFREE") {
-		                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
-		            } else {
-		                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
-		            }
+	                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
 		        } else {
 		            try {
 		            	Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();

@@ -225,11 +225,7 @@
 			    if (CrossYN()) {
 			        window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
 			    } else {
-			        if (pUse_Editor == "" || pUse_Editor == "CK") {
-			            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
-			        } else {
-			            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
-			        }
+		            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
 			    }
 			}
 			

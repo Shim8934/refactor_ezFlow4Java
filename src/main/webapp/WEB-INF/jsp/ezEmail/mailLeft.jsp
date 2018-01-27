@@ -169,12 +169,7 @@
 	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	            }
 	            else {
-	                if (pUse_Editor == "")
-	                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
-	                else {
-	
-	                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
-	                }
+                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	            }          
 	        }
 	        function LoadEmailTree() {
