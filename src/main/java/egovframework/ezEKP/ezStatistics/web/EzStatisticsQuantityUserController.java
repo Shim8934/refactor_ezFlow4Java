@@ -49,6 +49,8 @@ public class EzStatisticsQuantityUserController {
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
+	
+	
 	/**
 	 * 개인별 사서함 용량 사용 현황 표시 함수
 	 */
@@ -81,16 +83,15 @@ public class EzStatisticsQuantityUserController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezStatistics/getQuantityUser.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
-	@ResponseBody
+	@ResponseBody																							
 	public String getQuantityUser(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("getQuantityUser started");		
 		logger.debug("bodyData=" + bodyData);
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
-		
-		Document doc = commonUtil.convertStringToDocument(bodyData);
+		Document doc = commonUtil.convertStringToDocument(bodyData); 
 		String sDate = doc.getElementsByTagName("SDATE").item(0).getTextContent();
-		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
+		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent(); 
 		String userId = doc.getElementsByTagName("USERID").item(0).getTextContent();
 		
 		String tenantIdParam = "tenantId=" + user.getTenantId();
@@ -98,7 +99,7 @@ public class EzStatisticsQuantityUserController {
 		String eDateParam = "eDate=" + eDate + "12";
 		String searchIdParam = "searchId=" + userId;
 		String typeParam = "type=5";
-		String userLangParam = "userLang=" + user.getPrimary();
+		String userLangParam = "userLang=" + user.getPrimary(); 
 		
 		String inputParams = tenantIdParam + "&" + sDateParam + "&" + eDateParam + "&" + searchIdParam
 								+ "&" + typeParam + "&" + userLangParam;
@@ -107,7 +108,7 @@ public class EzStatisticsQuantityUserController {
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/statMailAnalysis";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
+			
 		logger.debug("response=" + response);		
 		
 		JSONArray resultArray = null;
@@ -152,5 +153,7 @@ public class EzStatisticsQuantityUserController {
 		
 		return returnData;				
 	}
+	
+	
 	
 }

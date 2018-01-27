@@ -217,6 +217,7 @@
 		</xml>
 	    <div id="menu">
 	        <ul>
+				<li style="background-image: none;font-size:11pt;font-weight:bold;color:white;padding-top:6px;margin-right:12px;padding-left:0px"><spring:message code='ezApprovalG.t1429'/></li>	        
 	            <li><span onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	        </ul>
 	    </div>
@@ -251,7 +252,7 @@
 	        </tr>
 	    </table>
 	
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return bt_OK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 	        <a class="imgbtn"><span onclick="return bt_Cancle_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>

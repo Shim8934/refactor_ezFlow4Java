@@ -3110,7 +3110,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 메인 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/help.do")
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("help started");
@@ -3128,7 +3127,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 상단 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/top.do")
 	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("top started");
@@ -3306,7 +3304,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftEnv 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
