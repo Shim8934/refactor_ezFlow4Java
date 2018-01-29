@@ -1234,11 +1234,7 @@
 		                openLocation = "/myoffice/ezApproval/enforce/convEnforce_Cross.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
 		            }
 		            else {
-		                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-		                    openLocation = "/myoffice/ezApproval/enforce/convEnforce_TFI.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
-		                else {
-		                    openLocation = "/myoffice/ezApproval/enforce/convEnforce.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
-		                }
+	                    openLocation = "/myoffice/ezApproval/enforce/convEnforce.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
 		            }
 		        }
 		        else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
@@ -1248,21 +1244,14 @@
 		                return;
 		            }
 		            else {
-		                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-		                    openLocation = "/myoffice/ezApproval/enforce/convEnforce_TFI.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
-		                else {
-		                    openLocation = "/myoffice/ezApproval/enforce/convEnforce.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
-		                }
+	                    openLocation = "/myoffice/ezApproval/enforce/convEnforce.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
 		            }
 		        }
 		        else {
 		            if (CrossYN())
 		                openLocation = "/ezApprovalG/docReSend.do";
 		            else {
-		                if (pUse_Editor == "")
-		                    openLocation = "/myoffice/ezApproval/enforce/ezReSend.aspx";
-		                else
-		                    openLocation = "/myoffice/ezApproval/enforce/ezReSend_IE.aspx";
+	                    openLocation = "/myoffice/ezApproval/enforce/ezReSend.aspx";
 		            }
 		            openLocation = openLocation + "?docID=" + escape(DocID) + "&docHref=" + encodeURI(pURL);
 		        }

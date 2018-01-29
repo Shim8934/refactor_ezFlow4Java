@@ -1024,7 +1024,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String noneActiveX = "YES";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String mailAddress = "";
 		String displayName = "";
 		String department = "";
@@ -1035,10 +1034,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-		
-		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		
 		mailAddress = userInfo.getEmail();
 		
@@ -1087,7 +1082,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("companyNm", companyNm);
 		model.addAttribute("lastLogin", lastLogin);
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("mailAddress", mailAddress);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLang", userInfo.getLang());
@@ -1656,7 +1650,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String noneActiveX = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String mailAddress = "";
 		String displayName = "";
 		String department = "";
@@ -1668,10 +1661,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String userPhoto = "";
 		
 		noneActiveX = "YES";
-		
-		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		
 		mailAddress = userInfo.getEmail();
 		
@@ -1714,7 +1703,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("lastLogin", lastLogin);
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("mailAddress", mailAddress);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLang", userInfo.getLang());
@@ -1953,7 +1941,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useIE11Browser", ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()));
 		
 		logger.debug("theme1wpThemeComm ended");
 		return "/ezPortal/theme1/portalTheme1WpThemeComm";
@@ -3110,7 +3097,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 메인 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/help.do")
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("help started");
@@ -3128,7 +3114,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 상단 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/top.do")
 	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("top started");
@@ -3306,7 +3291,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftEnv 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");

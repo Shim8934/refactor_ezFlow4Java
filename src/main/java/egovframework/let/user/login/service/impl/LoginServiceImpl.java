@@ -80,7 +80,6 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         return loginVO;        
     }
 
-
     /**
 	 * 아이디를 찾는다.
 	 * @param vo LoginVO

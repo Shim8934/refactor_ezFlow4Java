@@ -12,7 +12,6 @@
     <script type="text/javascript">
         var pUse_Editor = "";
         var pNoneActiveX = "";
-        var p_Use_IE11Browser = "";
         window.onload = window_onload;
         document.onselectstart = function () { return false; };
         function window_onload() {

@@ -45,14 +45,7 @@
 						</ul>
 					</a>
 					
-					<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')">
-						</c:when>
-						<c:otherwise>
-							<a id="AprSign" onClick="btnSumming_click(this)">
-						</c:otherwise>
-					</c:choose>
+					<a id="AprSign" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal02.gif" alt="<spring:message code="main.t00018" />" /></li>
 								<li class="count">
@@ -139,9 +132,6 @@
     			<article class="writebanner">
         			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
         			<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />')"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
-						</c:when>
 						<c:when test="${host == 'gw.freet.co.kr'}">
 							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.jpg" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.jpg" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.jpg" width="56" height="85"></span></p>
 						</c:when>
@@ -195,7 +185,6 @@
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "YES";
 
 		    function window_onload_total() {
@@ -571,17 +560,11 @@
 		                    var top = (heigth - wHeight) / 2;
 		                    if (CrossYN() || pNoneActiveX == "YES") {
 		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                        	"height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                    else {
-		                        if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                     "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
-		                        else {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
+	                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                }
 		                break;
@@ -665,11 +648,7 @@
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        } else {
-		            if (pUse_Editor == "") {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            } else {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            }
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        }
 		    }
 
