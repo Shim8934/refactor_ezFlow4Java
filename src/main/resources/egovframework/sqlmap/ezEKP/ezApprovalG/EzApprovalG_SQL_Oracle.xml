@@ -12425,9 +12425,9 @@
 		<insert id="EzApprovalG.insertTbCabinetClass" parameterClass="Map">
 		INSERT INTO 
 			TBL_CABINETCLASS
-     ( CabinetClassNo, ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, TaskName, TaskName2, Title, Title2, ProductionYear, RegSerialNo, RecTypeCode, OwnerName, OwnerName2, OwnerID, ExpirationYear, TerminateFlag, KeepingPeriod, KeepingMethod, KeepingPlace, DisplayRecFlag, DisplayEndDate, DisplayReason, SpecialCatalogFlag, OldCabinetFlag, ModifyFlag, NumOfRec, PageOfRec, NumOfElectronicDoc, ConfirmFlag, CreateDate, ConfirmYear, TransDelayFlag, ExTransYear, TransDelayReason, OwnerDeptID, OwnerTask, DelFlag, TENANT_ID )
+     ( CabinetClassNo, ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, TaskName, TaskName2, Title, Title2, ProductionYear, RegSerialNo, RecTypeCode, OwnerName, OwnerName2, OwnerID, ExpirationYear, TerminateFlag, KeepingPeriod, KeepingMethod, KeepingPlace, DisplayRecFlag, DisplayEndDate, DisplayReason, SpecialCatalogFlag, OldCabinetFlag, ModifyFlag, NumOfRec, PageOfRec, NumOfElectronicDoc, ConfirmFlag, CreateDate, ConfirmYear, TransDelayFlag, ExTransYear, TransDelayReason, OwnerDeptID, OwnerTask, DelFlag, TENANT_ID,  COMPANYID )
      ( SELECT 
-			  CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#, #v_CNT#) ,
+			  (#v_DDeptCode#||#v_DTaskCode#||#v_YEAR#||#v_CNT#) ,
               #v_DDeptCode# ,
               #v_DDeptName# ,
               #v_DDeptName2# ,
@@ -12590,7 +12590,7 @@
     		WHERE 
     			TRIM(TBL_CABINETCLASS.CabinetClassNo) IN ( 
     											   SELECT 
-    													CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#,  #v_CNT#)  NewCabClsNo  
+    													(#v_DDeptCode#||#v_DTaskCode#||#v_YEAR#||#v_CNT#)  NewCabClsNo  
                                              	   FROM  (SELECT 
 											     			DISTINCT TBL_CABINETCLASS.CabinetClassNo ,
 											                     	 TBL_CABINETCLASS.ProcessDeptCode ,
@@ -12984,7 +12984,7 @@
 				TBL_OLDCABINETEXTRAINFO
      		( CabinetClassNo, CreateOrganName, CreateOrganName2, ClassificationNo, TENANT_ID, COMPANYID )
      		( SELECT 
-                 CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#,  #v_CNT#)   ,
+                 (#v_DDeptCode#||#v_DTaskCode#||#v_YEAR#||#v_CNT#)   ,
               	 CreateOrganName ,
               	 CreateOrganName2 ,
               	 ClassificationNo ,
@@ -13069,8 +13069,8 @@
 				TBL_CABINET
 	     ( CabinetID, CabinetClassNo, VolumeNo, CreateDate, DelFlag, CabinetTransferFlag, TCabinetID, TDeptCode, TTaskCode, TProduceYear, TRegSerialNo, TVolumeNo, TransferDate, TCabinetName, TCabinetName2, TDeptName, TDeptName2, TTaskName, TTaskName2, CatalogTransferFlag, CatalogTransferYear, DocTransferFlag, DocTransferYear, ProdReportFlag, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		  CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#,  #v_CNT#, VolumeNo) ,
-	              CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#,  #v_CNT#) ,
+	     		  (#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || #v_CNT# || VolumeNo) ,
+	              (#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || #v_CNT#) ,
 	              VolumeNo ,
 	              TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS') ,
 	              '0' ,
@@ -13194,7 +13194,7 @@
 				TBL_CABINET.ProdReportFlag
           	FROM ( 
           			SELECT 
-          				CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#,  #v_CNT#)  NCabClassNo  ,
+          				(#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || #v_CNT#)  NCabClassNo  ,
                  		tt_tmpClassInfo.ProcessDeptCode ,
                  		tt_tmpClassInfo.TaskCode ,
 		                tt_tmpClassInfo.ProductionYear ,
@@ -19212,20 +19212,20 @@
 	   		 COMPANYID = #companyID#
    </update>
    
-   <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo" parameterClass="Map"> <!--강민수1  --> <!--  ??? -->
+   <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo" parameterClass="Map">
    		<![CDATA[
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
    		(select 
-   			* 
+ 			   #v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID, COMPANYID 
    		 from 
-	   		(SELECT 
-	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID, COMPANYID 
+	   		(SELECT
+	   			* 
 	   		 FROM 
 	   		 	TBL_APRRECEIPTPROCESSINFO 
 	   		 WHERE 
-	   		 	ROWNUM <= 1 AND DocID = #v_DOCID#
+	   		 	 DocID = #v_DOCID#
 	   		 AND 
 	   		 	ReceiveSN = #v_RECEIVESN#
 	   		 AND 
@@ -19233,16 +19233,17 @@
 	   		 AND
 	   		 	companyid = #companyID# 
 	   		 ]]>
-	   		 <isNotEqual property="approvalFlag" compareValue="G">
-	   		 )
-	   		 </isNotEqual>
+	   		 
 	   		 <isEqual property="approvalFlag" compareValue="G">
 	   		 <![CDATA[
-	   		 order by ProcessDate desc
-	   		 ) where ROWNUM <= 1 )
+	   		 order by ProcessDate desc )
+	   		 where ROWNUM <= 1 )
 	   		 ]]>
 	   		 </isEqual>
-   		 	
+   		 	 <isNotEqual property="approvalFlag" compareValue="G">
+   		 	 	)
+   		 	 )
+   		 	 </isNotEqual>
    </insert>
    
    <select id="EzApprovalG.doSusinHesongDeptID" parameterClass="Map" resultClass="String">
