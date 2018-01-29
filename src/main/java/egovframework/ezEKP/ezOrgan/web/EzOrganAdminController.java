@@ -1658,7 +1658,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", tenantID);
-		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", tenantID);
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -1672,7 +1671,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("use_editor", use_editor);
-		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		
@@ -1971,7 +1969,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
-		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
@@ -1988,7 +1985,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		        	
 		model.addAttribute("use_editor", use_editor);
-		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	

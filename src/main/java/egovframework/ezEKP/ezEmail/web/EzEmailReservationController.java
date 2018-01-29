@@ -113,12 +113,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String draftUrl = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String noneActiveX = "YES";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-        	useIE11Browser = "CK";
-        }
 		
 		List<MailReservationVO> list = ezEmailService.getMailReserved(userInfo.getTenantId(), userInfo.getId());
 		
@@ -128,7 +123,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		model.addAttribute("draftUrl", draftUrl);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("list", list);
 		

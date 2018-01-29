@@ -117,17 +117,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userEditor = "";
-		String userIE11Browser = "";
 		String noneActiveX = "YES";
-		if ((request.getHeader("User-Agent").contains("rv:11") || request.getHeader("User-Agent").contains("Trident/7.0"))
-				&& ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			userIE11Browser = "CK";
-		}
 		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 
 		model.addAttribute("userEditor", userEditor);
-		model.addAttribute("userIE11Browser", userIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		

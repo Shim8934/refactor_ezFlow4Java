@@ -36,7 +36,6 @@
 	        var strLang_2 = "<spring:message code='ezAddress.t316' />";
 	        var searchFlag = true;
 	        var pUse_Editor = "${useEditor}";
-	        var pUse_IE11Browser = "${useIE11Browser}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var AddressType = "<spring:message code='ezAddress.t145' />";
 	        var AddressType2 = "<spring:message code='ezAddress.t146' />";
@@ -176,12 +175,8 @@
 	                    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
 	                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                else {
-	                    if (pUse_Editor == "")
-	                        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
-	                                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                    else
-	                        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
-	                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                }
 	            }
 	        }

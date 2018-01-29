@@ -31,7 +31,6 @@
          var ReturnValue_NameEng = new Array();
          var boolfirstlist = true;
          var pUse_Editor = "${useEditor}";
-         var pUse_IE11Browser = "${useIE11Browser}";
          var pNoneActiveX = "${noneActiveX}";
          var ReturnFunction;
          var m_Arguments;
@@ -459,11 +458,7 @@
                   strTitle = "scheduleAdd";
                   url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
               } else {
-                  if (pUse_Editor == "" || pUse_Editor == "CK") {
-                      url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
-                  } else {
-                      url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
-                  }
+                  url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
               }
 
               if (ReturnFunction != null) {

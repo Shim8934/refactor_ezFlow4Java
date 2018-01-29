@@ -57,7 +57,6 @@
 		    var commentCount = "${commentCount}";
 			var gubun = "${guBun}";
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 			var pNoneActiveX = "YES";
 		    //추가항목 유무
 		    var pAttributeYN = "${boardInfo.attributeYN}";

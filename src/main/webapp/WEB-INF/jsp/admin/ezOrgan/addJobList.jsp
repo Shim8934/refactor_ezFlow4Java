@@ -18,7 +18,6 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
 			var pUse_Editor = "<c:out value='${use_editor}'/>";
-	    	var pUse_IE11Browser = "<c:out value='${use_ie11Browser}'/>";
 	    	
 	    	document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
