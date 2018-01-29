@@ -46,6 +46,20 @@
 		        }
 		
 		        setpause(500);
+		        var pMode = "";
+	      	    $.ajax({
+	      			type : "POST",
+	      			dataType : "text",
+	      			async : false,
+	      			url : "/ezApprovalG/getLineMode.do",
+	      			data : {
+	      					docID : pDocID
+	      					},
+	      			success: function(xml){
+	      				pMode = xml;
+	      			}        			
+	      		});
+	      	    
 		        var xmlpara = createXmlDom();
 		        var objRoot, objNode, doc, objNode2, objNodes, objDocinfoNode;
 		        objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
@@ -58,6 +72,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", pCompanyID);
 		        createNodeAndInsertText(xmlpara, objNode, "PASSWD", "");
 		        createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", "${userInfo.lang}");
+		        createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		        var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
 		        if (parseInt(cnt) > 1) {
 		            for (var i = 0; i < parseInt(cnt) ; i++) {

@@ -4991,6 +4991,7 @@
 <!-- 		{CALL EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 				APRMEMBERSN ,
 		        APRTYPE ,
@@ -5009,6 +5010,29 @@
 		    	TENANT_ID = #v_TENANTID#
 		    AND
 		    	COMPANYID = #companyID#
+		</isEqual>
+		
+		<isEqual property="v_MODE" compareValue="END">
+			SELECT 
+				APRMEMBERSN ,
+		        APRTYPE ,
+		        APRSTATE ,
+		        PROCESSDATE ,
+		        RECEIVEDDATE 
+		    FROM 
+		    	TBL_ENDAPRLINEINFO 
+		    WHERE  
+		    	DOCID = #v_DOCID#
+		    AND 
+		    	APRMEMBERID = #v_USERID#
+		    AND 
+		    	( APRSTATE = '002' OR APRSTATE = '005' OR APRSTATE = '000') 
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+		</isEqual>
+			
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.doApproveLineList" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
@@ -17681,23 +17705,48 @@
    </update>
    
    <update id="EzApprovalG.updateAprLineInfo1" parameterClass="Map">
-   		UPDATE TBL_APRLINEINFO 
-   		SET 
-   			AprState = #aprState#, 
-   			ProcessDate = #nowDate#
-			<isEqual property="beforeAprMemberSN" compareValue="1">
-				, ReceivedDate = #nowDate#
-			</isEqual>
-		WHERE
-			TENANT_ID = #tenantID#
-		AND
-			COMPANYID = #companyID# 
-		AND
-			DocID = #docID# 
-		AND 
-			AprMemberID = #userID# 
-		AND 
-			AprMemberSN = #curAprMemberSN#
+   		<isEqual property="v_MODE" compareValue="APR">
+   			UPDATE 
+   				TBL_APRLINEINFO 
+	   		SET 
+	   			AprState = #aprState#, 
+	   			ProcessDate = #nowDate#
+				<isEqual property="beforeAprMemberSN" compareValue="1">
+					, ReceivedDate = #nowDate#
+				</isEqual>
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID# 
+			AND
+				DocID = #docID# 
+			AND 
+				AprMemberID = #userID# 
+			AND 
+				AprMemberSN = #curAprMemberSN#
+   		</isEqual>
+   		
+   		<isEqual property="v_MODE" compareValue="END">
+   			UPDATE 
+   				TBL_ENDAPRLINEINFO 
+   			SET 
+	   			AprState = #aprState#, 
+	   			ProcessDate = #nowDate#
+				<isEqual property="beforeAprMemberSN" compareValue="1">
+					, ReceivedDate = #nowDate#
+				</isEqual>
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID# 
+			AND
+				DocID = #docID# 
+			AND 
+				AprMemberID = #userID# 
+			AND 
+				AprMemberSN = #curAprMemberSN#
+   		</isEqual>
+   		
    </update>
    
    <delete id="EzApprovalG.deleteLastDeptLine" parameterClass="Map">
@@ -23408,5 +23457,21 @@
 			TENANT_ID = #v_TENANTID#
 		 AND
 			COMPANYID = #companyID#   
+	</select>
+	
+	<select id ="EzApprovalG.getChamJoDocID" parameterClass="Map" resultClass="String">
+		SELECT
+			DOCID
+		FROM
+			TBL_ENDAPRLINEINFO
+		WHERE 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			APRMEMBERID = #v_USERID#
+		AND
+			DOCID = #v_DOCID#
+		LIMIT 1
 	</select>
 </sqlMap>

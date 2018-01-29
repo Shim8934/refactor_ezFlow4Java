@@ -1159,9 +1159,26 @@ function getApprovInfo() {
         pOrgAprUserName = OrgAprUserName;
         pOrgAprUserName2 = OrgAprUserName2;
         pOrgAprUserDeptID = OrgAprUserDeptID;
-
+        var pMode = "";
     	var result = "";
     	
+ 	   $.ajax({
+ 			type : "POST",
+ 			dataType : "text",
+ 			async : false,
+ 			url : "/ezApprovalG/getLineMode.do",
+ 			data : {
+ 					docID : pDocID
+ 					},
+ 			success: function(xml){
+ 				if (xml == "END") {
+ 					pMode = "CHAMJOEND";
+ 				} else {
+ 					pMode = xml;
+ 				}
+ 			}        			
+ 		});
+        
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1170,7 +1187,8 @@ function getApprovInfo() {
     		data : {
     			docID : pDocID,
     			userID : pUserID,
-    			deptID : OrgAprUserDeptID
+    			deptID : OrgAprUserDeptID,
+    			mode : pMode
     		},
     		success: function(xml){
     			result = xml;
