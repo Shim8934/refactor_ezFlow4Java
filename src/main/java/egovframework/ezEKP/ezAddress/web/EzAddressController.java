@@ -185,12 +185,7 @@ public class EzAddressController{
 		String compAdmin = "";
 		String deptAdmin = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String noneActiveX = "YES";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-        	useIE11Browser = "CK";
-        }
 		
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
@@ -226,13 +221,12 @@ public class EzAddressController{
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("pListType", pListType);
 		
 		logger.debug("addressMainList ended.");
 		logger.debug("userInfo=" + userInfo + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType + ",pOwerId=" + pOwerId
-				 + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser
+				 + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",useEditor=" + useEditor
 				 + ",noneActiveX=" + noneActiveX + ",pListType=" + pListType);
 		
 		return "ezAddress/addressMainList";
@@ -574,14 +568,9 @@ public class EzAddressController{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		String compAdmin = "";
 		String deptAdmin = "";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-        	useIE11Browser = "CK";
-        }
 		
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
@@ -609,7 +598,6 @@ public class EzAddressController{
 		replaceMemo = addressInfo.getsMemo().replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&lt;br&gt;").replaceAll("/", "\\\\/");
 		
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("addressInfo", addressInfo);
@@ -622,7 +610,7 @@ public class EzAddressController{
 		model.addAttribute("getsMemo", replaceMemo);
 		
 		logger.debug("addressRead ended.");
-		logger.debug("useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
+		logger.debug("useEditor=" + useEditor + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
 				 + ",addressInfo=" + addressInfo + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",pAddressId=" + pAddressId
 				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType);
 		
@@ -774,12 +762,7 @@ public class EzAddressController{
 		String compAdmin = "";
 		String deptAdmin = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String noneActiveX = "YES";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-        	useIE11Browser = "CK";
-        }
 		
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			compAdmin = "Y";
@@ -826,13 +809,12 @@ public class EzAddressController{
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		
 		logger.debug("addressReadGroup ended.");
 		logger.debug("pFolderType=" + pFolderType + ",pAddressId=" + pAddressId + ",userInfo=" + userInfo + ",addressInfo=" + addressInfo
 				 + ",listMember=" + listMember.toString() + ",listMemberSize=" + listMemberSize + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin
-				 + ",useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX);
+				 + ",useEditor=" + useEditor + ",noneActiveX=" + noneActiveX);
 		
 		return "ezAddress/addressReadGroup";
 	}
@@ -1450,13 +1432,8 @@ public class EzAddressController{
 		String bAdmin = "";
 		String cAdmin = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		String pListType = "";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-        	useIE11Browser = "CK";
-        }
 		
 		if (request.getParameter("orderby") != null && !request.getParameter("orderby").equals("")) {
 			orderBy = request.getParameter("orderby");
@@ -1487,13 +1464,12 @@ public class EzAddressController{
 		model.addAttribute("cAdmin", cAdmin);
 		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("pListType", pListType);
 		
 		logger.debug("addressMainSearch ended.");
 		logger.debug("userInfo=" + userInfo + ",orderBy=" + orderBy + ",filter=" + filter + ",bAdmin=" + bAdmin
-				 + ",cAdmin=" + cAdmin + ",useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX
+				 + ",cAdmin=" + cAdmin + ",useEditor=" + useEditor + ",noneActiveX=" + noneActiveX
 				 + ",pListType=" + pListType);
 		
 		return "ezAddress/addressMainSearch";

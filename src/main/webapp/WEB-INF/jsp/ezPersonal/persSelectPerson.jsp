@@ -344,8 +344,10 @@
 		        }
 		        var selRow = tr[0];
 		        if ("${userInfo.id}" == selRow.getAttribute("DATA2")) {
-		        	alert("<spring:message code='ezPersonal.t16'/>");
-		        	return;
+					if ("${type}" != "EMP") {
+						alert("<spring:message code='ezPersonal.t16'/>");
+						return;
+					}
 		        }		        
 		        if (type == "Proxy") {
 		            if ("${userInfo.deptID}" != selRow.getAttribute("DATA3")) {

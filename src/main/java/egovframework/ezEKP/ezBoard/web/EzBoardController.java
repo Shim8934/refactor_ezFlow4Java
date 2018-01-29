@@ -560,7 +560,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
-		String use_IE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String use_oneLineCount = "";
 		String pBoardID = boardPropertyVO.getBoardID();
@@ -588,10 +587,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardType("");
 		} else {
 			boardInfo.setBoardType(boardPropertyVO.getBoardType());
-		}
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK")) {
-			use_IE11Browser = "CK";
 		}
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
@@ -625,7 +620,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("use_Editor", use_Editor);
-		model.addAttribute("use_IE11Browser", use_IE11Browser);
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		
 		logger.debug("boardItemList ended");
@@ -1862,9 +1856,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
 		
 		boardVO.setSubFlag("N");
-		//2018.01.25 김기하 수정
 		boardVO.setSearchQuery(boardVO.getSearchQuery().replace("&lt;", "<").replace("&gt;", ">"));
-		boardVO.setSearchQuery(boardVO.getSearchQuery().replace("<<", "&lt;<").replace("'", "&apos;").replace("&","&amp;").replace("#","##").replace("%","#%"));
 		
 		Document searchQueryDoc = commonUtil.convertStringToDocument(boardVO.getSearchQuery());
 		
@@ -1873,14 +1865,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
-			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent().replace("&amp;","&").replace("&lt;", "<").replace("&apos;", "''"));
-			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' escape '#' ";
+			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
+			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("WRITERNAME;") != -1) {
-			boardVO.setWriterName(searchQueryDoc.getElementsByTagName("WRITERNAME").item(0).getTextContent().replace("&amp;","&").replace("&lt;", "<").replace("&apos;", "''"));
-			returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' escape '#' ";
-			returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' escape '#' ) ";
+			boardVO.setWriterName(searchQueryDoc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+			returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' ";
+			returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' ) ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("STARTDATE;") != -1) {
@@ -1892,13 +1884,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ABSTRACT;") != -1) {
-			boardVO.setABSTRACT(searchQueryDoc.getElementsByTagName("ABSTRACT").item(0).getTextContent().replace("&amp;","&").replace("&lt;", "<").replace("&apos;", "''"));
-			returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' escape '#' ";
+			boardVO.setABSTRACT(searchQueryDoc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
+			returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' ";
 		}
 		
 		if (boardVO.getBoardType().equals("5") && boardInfo.getBoardAdmin_FG().equals("false")) {
 			returnQuery += " AND TOPWRITERID = '" + userInfo.getId() + "' ";
 		}
+		
 		boardVO.setSearchQuery(returnQuery);
 		String boardXML = "";
 		
@@ -2781,8 +2774,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
-					resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME")) + "</WRITERNAME>");
-					resultXML.append("<WRITERNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME2")) + "</WRITERNAME2>");
+					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
+					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
 					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
 					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
@@ -3002,13 +2995,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String location = "";
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		
 		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
 		String showAdjacent = request.getParameter("showAdjacent");
@@ -3127,7 +3115,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("location", location);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("boardID", boardID);
@@ -6348,12 +6335,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
-		
-		if (req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0 && useIE11Browser.equals("CK")) {
-			useIE11Browser = "CL";
-		}
 		
 		String pRootBoardID = "top";
 		String pSubFlag = "0";

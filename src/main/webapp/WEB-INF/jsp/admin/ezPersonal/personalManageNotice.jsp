@@ -14,7 +14,6 @@
 		
 		<script type="text/javascript">
 			var pUse_Editor = "<c:out value = '${useEditor}' />";
-	        var p_Use_IE11Browser = "<c:out value = '${useIE11Browser}' />";
 	        var xmlhttp = null;
 	
 	        var TotalCount;
@@ -104,34 +103,15 @@
 	        var AddNotice_dialogArguments = new Array();
 	        function add_notice() {
 	            if (CrossYN()) {
-	                if (pUse_Editor == "TAGFREE") {
-	                    //rtnValue = window.showModalDialog("AddNotice_TFX.aspx", document.getElementById("ListCompany").value,
-	                    //    "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
-	                    AddNotice_dialogArguments[1] = add_notice_Complete;
-	                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do", "AddNotice_TFX", GetOpenWindowfeature(800, 510));
-	                    try { OpenWin.focus(); } catch (e) { }
-	                } else {
-	                    //rtnValue = window.showModalDialog("AddNotice_CK.aspx", document.getElementById("ListCompany").value,
-	                    //"dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
-	                    AddNotice_dialogArguments[1] = add_notice_Complete;
-	                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do", "AddNoticeCK", GetOpenWindowfeature(800, 510));
-	                    try { OpenWin.focus(); } catch (e) { }
-	                }
+                    //rtnValue = window.showModalDialog("AddNotice_CK.aspx", document.getElementById("ListCompany").value,
+                    //"dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
+                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
+                    AddNotice_dialogArguments[1] = add_notice_Complete;
+                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do", "AddNoticeCK", GetOpenWindowfeature(800, 510));
+                    try { OpenWin.focus(); } catch (e) { }
 	            } else {
-	                if (pUse_Editor == "TAGFREE") {
-	                    rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
-	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                } else {
-	                    if (p_Use_IE11Browser == "CK") {
-	                        rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
-	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    } else {
-	                        rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
-	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    }
-	                }
+                	rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
+                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -169,27 +149,14 @@
 
 	        function mod_notice(notice_number) {
 	        	if (CrossYN()) {
-	                if (pUse_Editor == "TAGFREE") {
-	                    //rtnValue = window.showModalDialog("AddNotice_TFX.aspx", document.getElementById("ListCompany").value,
-	                    //    "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
-	                    AddNotice_dialogArguments[1] = add_notice_Complete;
-	                    var OpenWin = window.open("AddNotice_TFX.aspx", "AddNotice_TFX?itemSeq=" + notice_number, GetOpenWindowfeature(800, 510));
-	                    try { OpenWin.focus(); } catch (e) { }
-	                } else {
-	                    //rtnValue = window.showModalDialog("AddNotice_CK.aspx", document.getElementById("ListCompany").value,
-	                    //"dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
-	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
-	                    AddNotice_dialogArguments[1] = add_notice_Complete;
-	                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do?itemSeq=" + notice_number, "AddNoticeCK", GetOpenWindowfeature(800, 510));
-	                    try { OpenWin.focus(); } catch (e) { }
-	                }
+                    //rtnValue = window.showModalDialog("AddNotice_CK.aspx", document.getElementById("ListCompany").value,
+                    //"dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
+                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
+                    AddNotice_dialogArguments[1] = add_notice_Complete;
+                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do?itemSeq=" + notice_number, "AddNoticeCK", GetOpenWindowfeature(800, 510));
+                    try { OpenWin.focus(); } catch (e) { }
 	            } else {
-		            if (pUse_Editor == "TAGFREE") {
-		                rtnValue = window.showModalDialog("AddNotice_TFX.aspx?itemseq=" + notice_number, escape(document.getElementById("ListCompany").value), "dialogHeight:500px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 500));
-		            } else {
-		                rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do?itemSeq=" + notice_number, escape(document.getElementById("ListCompany").value), "dialogHeight:500px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 500));
-		            }
+	                rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do?itemSeq=" + notice_number, escape(document.getElementById("ListCompany").value), "dialogHeight:500px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 500));
 	            }
 	            
 	            if (typeof (rtnValue) != "undefined") {
