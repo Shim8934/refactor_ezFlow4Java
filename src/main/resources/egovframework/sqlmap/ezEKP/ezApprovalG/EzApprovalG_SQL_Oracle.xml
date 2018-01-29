@@ -15646,7 +15646,7 @@
 				   		$v_SUBQUERY$
 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
 				   			AND 
-				   				SN BETWEEN #v_PAGESIZE2#  AND  #v_PAGESIZE#
+				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
 				   		</isEqual>
 				   		<isNotEmpty property="v_MANAGEDEPTID" >
 				   		 	AND 
