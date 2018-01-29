@@ -93,7 +93,6 @@
 		        var pAdminType = "n";
 		        var pUse_Editor = "${useEditor}";
 		        var pNoneActiveX = "YES";
-		        var pUse_IE11Browser = "CK";
 		        var strListInfo = "";
 		        var g_bPrevShow = false;
 		        window.onunload = Window_onunload;

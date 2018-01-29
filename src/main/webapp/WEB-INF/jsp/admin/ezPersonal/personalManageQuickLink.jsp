@@ -74,15 +74,15 @@
 	              //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 673));	
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
 		            } else {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 625));
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 670));
 		            }
 	                
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
 	            } else {
-	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 625));
+	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 670));
 	                window.location.reload();
 	            }
 	        }

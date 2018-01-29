@@ -1222,7 +1222,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("tabID", tabID);		
-		model.addAttribute("use_IE11Browser", ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()));
 		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
 
 		logger.debug("boardConfig ended");

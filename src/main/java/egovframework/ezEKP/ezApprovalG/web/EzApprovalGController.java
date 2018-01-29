@@ -5162,8 +5162,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						
 						String mhtOrHwp = "MHT";
 						
-						if (href.substring(href.length() - 4).toUpperCase().equals(".HWP")) {
-							mhtOrHwp = "HWP";
+						if (href.length() > 0) {
+							if (href.substring(href.length() - 4).toUpperCase().equals(".HWP")) {
+								mhtOrHwp = "HWP";
+							}
 						}
 						// aprType -> 001(결재), 019(검토), 004(전결)
 						// 결재, 검토, 전결 제외 모두 제거
