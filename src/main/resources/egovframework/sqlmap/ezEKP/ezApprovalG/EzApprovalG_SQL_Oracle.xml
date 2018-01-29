@@ -2177,13 +2177,13 @@
 		<isEqual property="v_PMODE" compareValue="TMP">
 		<![CDATA[
 		    SELECT 
-		    		CONCAT(OWNERID ,'@' ,SN ) DOCID  ,
+		    		OWNERID || '@' || SN  DOCID  ,
                     'NULL' PROCESSORID  ,
                     'NULL' RECEIVEDDEPTID  
             FROM 
             		TBL_TMPAPRLINEINFO 
             WHERE  
-            		CONCAT(OWNERID ,'@' ,SN ) = #v_PDOCID#
+            		OWNERID || '@' || SN = #v_PDOCID#
             AND 
             		APRMEMBERID = #v_PAPRUSERID#
             AND
