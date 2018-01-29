@@ -1862,9 +1862,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
 		
 		boardVO.setSubFlag("N");
-		//2018.01.25 김기하 수정
 		boardVO.setSearchQuery(boardVO.getSearchQuery().replace("&lt;", "<").replace("&gt;", ">"));
-		boardVO.setSearchQuery(boardVO.getSearchQuery().replace("<<", "&lt;<").replace("'", "&apos;").replace("&","&amp;").replace("#","##").replace("%","#%"));
 		
 		Document searchQueryDoc = commonUtil.convertStringToDocument(boardVO.getSearchQuery());
 		
@@ -1873,14 +1871,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
-			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent().replace("&amp;","&").replace("&lt;", "<").replace("&apos;", "''"));
-			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' escape '#' ";
+			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
+			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("WRITERNAME;") != -1) {
-			boardVO.setWriterName(searchQueryDoc.getElementsByTagName("WRITERNAME").item(0).getTextContent().replace("&amp;","&").replace("&lt;", "<").replace("&apos;", "''"));
-			returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' escape '#' ";
-			returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' escape '#' ) ";
+			boardVO.setWriterName(searchQueryDoc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+			returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' ";
+			returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' ) ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("STARTDATE;") != -1) {
@@ -1892,13 +1890,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ABSTRACT;") != -1) {
-			boardVO.setABSTRACT(searchQueryDoc.getElementsByTagName("ABSTRACT").item(0).getTextContent().replace("&amp;","&").replace("&lt;", "<").replace("&apos;", "''"));
-			returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' escape '#' ";
+			boardVO.setABSTRACT(searchQueryDoc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
+			returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' ";
 		}
 		
 		if (boardVO.getBoardType().equals("5") && boardInfo.getBoardAdmin_FG().equals("false")) {
 			returnQuery += " AND TOPWRITERID = '" + userInfo.getId() + "' ";
 		}
+		
 		boardVO.setSearchQuery(returnQuery);
 		String boardXML = "";
 		
@@ -2781,8 +2780,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
-					resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME")) + "</WRITERNAME>");
-					resultXML.append("<WRITERNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME2")) + "</WRITERNAME2>");
+					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
+					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
 					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
 					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
