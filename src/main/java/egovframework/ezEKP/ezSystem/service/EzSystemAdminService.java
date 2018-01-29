@@ -8,6 +8,7 @@ import java.util.Map;
 import org.antlr.grammar.v3.ANTLRParser.exceptionGroup_return;
 import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 
@@ -21,4 +22,5 @@ public interface EzSystemAdminService {
 	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception;
 	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
+	
 }

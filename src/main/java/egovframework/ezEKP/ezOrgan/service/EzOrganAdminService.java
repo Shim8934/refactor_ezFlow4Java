@@ -22,7 +22,7 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID) throws Exception;
 	
 	public List<OrganUserVO> getUserCnList(int tenantID) throws Exception;
-	
+
 	public int getUserCount(int tenantID) throws Exception;
 	
 	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception;
@@ -59,6 +59,8 @@ public interface EzOrganAdminService {
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception;
 
 	public void setPassword(String cn, String password, int tenantID) throws Exception;
+	
+	public void setPasswordExceptAD(String cn, String password, int tenantID) throws Exception;
 
 	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception;
 	
@@ -77,5 +79,8 @@ public interface EzOrganAdminService {
 	public int userCountCheck(String cn, int tenantID) throws Exception;
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
-			
+	
+	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword) throws Exception;
+	
+	public int getUserCount(int tenantID,String keycode,String keyword) throws Exception;
 }

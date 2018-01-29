@@ -14,81 +14,81 @@
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
 	
-	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
-		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
-		<result property="brdNm"					column="BRD_NM"					columnIndex="2"/>
+	<resultMap class="ResGetAdmSubClsTreeVO"       id="resGetAdmSubClsTreeVO">
+		<result property="brdID"				column="BRD_ID"					columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
 		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
 		<result property="brdLevel"				column="BRD_LEVEL"				columnIndex="4" 		nullValue="0"/>
 		<result property="brdStep"				column="BRD_STEP"				columnIndex="5"/>
-		<result property="brdPostterm"			column="BRD_POSTTERM"		columnIndex="6"/>
+		<result property="brdPostterm"			column="BRD_POSTTERM"		    columnIndex="6"/>
 		<result property="brdUpper"				column="BRD_UPPER"				columnIndex="7"/>
-		<result property="brdGb"					column="BRD_GB"					columnIndex="8"/>
-		<result property="brdUrl"					column="BRD_URL"					columnIndex="9"/>
+		<result property="brdGb"				column="BRD_GB"					columnIndex="8"/>
+		<result property="brdUrl"				column="BRD_URL"				columnIndex="9"/>
 		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="10"/>
-		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="11"/>
-		<result property="attachSize"				column="ATTACH_SIZE"			columnIndex="12"/>
-		<result property="subClsCnt"				column="SUB_CLSCNT"			columnIndex="13"/>
-		<result property="subResCnt"			column="SUB_RESCNT"			columnIndex="14"/>
-		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="15"/>
+		<result property="brdAccess"			column="BRD_ACCESS"			    columnIndex="11"/>
+		<result property="attachSize"			column="ATTACH_SIZE"			columnIndex="12"/>
+		<result property="subClsCnt"			column="SUB_CLSCNT"			    columnIndex="13"/>
+		<result property="subResCnt"			column="SUB_RESCNT"			    columnIndex="14"/>
+		<result property="accessLvl"			column="ACCESS_LVL"			    columnIndex="15"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
 	</resultMap>
 	
-	<resultMap class="ResGetAdminFlagVO" 			id="resGetAdminFlagVO">
-		<result property="memberID"			column="MEMBER_ID"				columnIndex="1"/>
-		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="2"/>
+	<resultMap class="ResGetAdminFlagVO" 		    id="resGetAdminFlagVO">
+		<result property="memberID"			    column="MEMBER_ID"				columnIndex="1"/>
+		<result property="accessLvl"			column="ACCESS_LVL"			    columnIndex="2"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListVO">
-		<result property="num"					column="NUM"						columnIndex="1"/>
-		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+	<resultMap class="ResGetScheduleVO" 		    id="resGetScheduleListVO">
+		<result property="num"					column="NUM"					columnIndex="1"/>
+		<result property="pNum"					column="PNUM"					columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
-		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="title"				column="TITLE"					columnIndex="4"/>
 		<result property="location"				column="LOCATION"				columnIndex="5"/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
-		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="7"/>
 		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
-		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
-		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="alertTime"			column="ALERTTIME"				columnIndex="9"/>
+		<result property="reFlag"				column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writerID"				column="WRITERID"				columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			    columnIndex="13"/>
+		<result property="entryList"			column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"				column="ALLDAY"					columnIndex="15"/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
+		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="17"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
-		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="21"/>
+		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="21"/>
 		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
 		<result property="deptNm2"				column="DEPTNM2"				columnIndex="23"/>
-		<result property="jobTitle"					column="JOBTITLE"					columnIndex="24"/>
-		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="25"/>
+		<result property="jobTitle"				column="JOBTITLE"				columnIndex="24"/>
+		<result property="jobTitle2"			column="JOBTITLE2"				columnIndex="25"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleVO" id="resGetScheduleListMainVO">
-		<result property="num"					column="NUM"						columnIndex="1"/>
-		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+	<resultMap class="ResGetScheduleVO"            id="resGetScheduleListMainVO">
+		<result property="num"					column="NUM"					columnIndex="1"/>
+		<result property="pNum"					column="PNUM"					columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
-		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="title"				column="TITLE"					columnIndex="4"/>
 		<result property="location"				column="LOCATION"				columnIndex="5"			nullValue=""/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
-		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="7"/>
 		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
-		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"			nullValue=""/>
-		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="alertTime"			column="ALERTTIME"				columnIndex="9"			nullValue=""/>
+		<result property="reFlag"				column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writerID"				column="WRITERID"				columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			    columnIndex="13"/>
+		<result property="entryList"			column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"				column="ALLDAY"					columnIndex="15"/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
+		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="17"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"		nullValue="0"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
 		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="22"/>
+		<result property="companyID"			column="COMPANYID"			    columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
@@ -107,179 +107,175 @@
 		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue="" />
 	</resultMap>
 	
-	<resultMap class="ResBrdListVO" 				id="resBrdListVO">
-		<result property="attachSize"				column="ATTACH_SIZE"			columnIndex="1"/>
-		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="2" 		nullValue=""/>
-		<result property="brdCompany"			column="BRD_COMPANY"		columnIndex="3"/>
+	<resultMap class="ResBrdListVO" 			    id="resBrdListVO">
+		<result property="attachSize"			column="ATTACH_SIZE"			columnIndex="1"/>
+		<result property="brdAccess"			column="BRD_ACCESS"			    columnIndex="2" 		nullValue=""/>
+		<result property="brdCompany"			column="BRD_COMPANY"		    columnIndex="3"/>
 		<result property="brdCount"				column="BRD_COUNT"				columnIndex="4"/>
 		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="5"			nullValue=""/>
-		<result property="brdGb"					column="BRD_GB"					columnIndex="6"/>
+		<result property="brdGb"				column="BRD_GB"					columnIndex="6"/>
 		<result property="brdGroup"				column="BRD_GROUP"				columnIndex="7"/>
-		<result property="brdID"					column="BRD_ID"					columnIndex="8"/>
+		<result property="brdID"				column="BRD_ID"					columnIndex="8"/>
 		<result property="brdLevel"				column="BRD_LEVEL"				columnIndex="9"  		nullValue="0"/>
-		<result property="brdNm"					column="BRD_NM"					columnIndex="10"/>
-		<result property="brdPostterm"			column="BRD_POSTTERM"		columnIndex="11"/>
-		<result property="brdRef"					column="BRD_REF"					columnIndex="12" 		nullValue="0"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="10"/>
+		<result property="brdPostterm"			column="BRD_POSTTERM"		    columnIndex="11"/>
+		<result property="brdRef"				column="BRD_REF"				columnIndex="12" 		nullValue="0"/>
 		<result property="brdStep"				column="BRD_STEP"				columnIndex="13"/>
 		<result property="brdUpper"				column="BRD_UPPER"				columnIndex="14"/>
-		<result property="brdUrl"					column="BRD_URL"					columnIndex="15"		nullValue=""/>
+		<result property="brdUrl"				column="BRD_URL"				columnIndex="15"		nullValue=""/>
 		<result property="makeDate"				column="MAKEDATE"				columnIndex="16"/>
-		<result property="ownDeptID"			column="OWNDEPTID"			columnIndex="17"/>
-		<result property="ownDeptNm"			column="OWNDEPTNM"			columnIndex="18"/>
-		<result property="ownerCall"				column="OWNERCALL"			columnIndex="19"		nullValue=""/>
+		<result property="ownDeptID"			column="OWNDEPTID"			    columnIndex="17"/>
+		<result property="ownDeptNm"			column="OWNDEPTNM"			    columnIndex="18"/>
+		<result property="ownerCall"			column="OWNERCALL"			    columnIndex="19"		nullValue=""/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="22"/>
-		<result property="replyMailFg"			column="REPLY_MAIL_FG"		columnIndex="23"		nullValue="0"/>
+		<result property="ownerPosition"		column="OWNERPOSITION"		    columnIndex="22"/>
+		<result property="replyMailFg"			column="REPLY_MAIL_FG"		    columnIndex="23"		nullValue="0"/>
 		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue=""/>
 	</resultMap>
 	
-	<resultMap class="ResBrdVO" 					id="resBrdVO">
-		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
-		<result property="brdNm"					column="BRD_NM"					columnIndex="2"/>
+	<resultMap class="ResBrdVO" 				   id="resBrdVO">
+		<result property="brdID"				column="BRD_ID"					columnIndex="1"/>
+		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
 		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
 		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="4"/>
-		<result property="ownDeptID"			column="OWNDEPTID"			columnIndex="5"	/>
-		<result property="ownDeptNm"			column="OWNDEPTNM"			columnIndex="6"/>
-		<result property="ownDeptNm2"		column="OWNDEPTNM2"			columnIndex="7"/>
+		<result property="ownDeptID"			column="OWNDEPTID"			    columnIndex="5"	/>
+		<result property="ownDeptNm"			column="OWNDEPTNM"			    columnIndex="6"/>
+		<result property="ownDeptNm2"		    column="OWNDEPTNM2"			    columnIndex="7"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="8"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="9" />
-		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="10"/>
-		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="11"/>
-		<result property="ownerPosition2"		column="OWNERPOSITION2"	columnIndex="12" 		nullValue="NULL"/>
-		<result property="ownerCall"				column="OWNERCALL"			columnIndex="13"/>
+		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="10"/>
+		<result property="ownerPosition"		column="OWNERPOSITION"		    columnIndex="11"/>
+		<result property="ownerPosition2"		column="OWNERPOSITION2"	        columnIndex="12" 		nullValue="NULL"/>
+		<result property="ownerCall"			column="OWNERCALL"			    columnIndex="13"/>
 		<result property="resLocation"			column="RESLOCATION"			columnIndex="14"/>
 		<result property="makeDate"				column="MAKEDATE"				columnIndex="15"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
-		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="17"/>
+		<result property="brdAccess"			column="BRD_ACCESS"			    columnIndex="17"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
+	<resultMap class="ResGetScheduleVO" 		    id="resGetScheduleVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
-		<result property="num"					column="NUM"						columnIndex="2"/>
-		<result property="pNum"					column="PNUM"						columnIndex="3"  		nullValue="0"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="4"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="5"/>
+		<result property="num"					column="NUM"					columnIndex="2"/>
+		<result property="pNum"					column="PNUM"					columnIndex="3"  		nullValue="0"/>
+		<result property="companyID"			column="COMPANYID"			    columnIndex="4"/>
+		<result property="writerID"				column="WRITERID"				columnIndex="5"/>
 		<result property="deptNm"				column="DEPTNM"					columnIndex="6"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="7"/>
-		<result property="title"						column="TITLE"						columnIndex="8"/>
+		<result property="title"				column="TITLE"					columnIndex="8"/>
 		<result property="location"				column="LOCATION"				columnIndex="9" 		nullValue=""/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="10"/>
-		<result property="startDate"				column="STARTDATE"				columnIndex="11"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="11"/>
 		<result property="endDate"				column="ENDDATE"				columnIndex="12"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="13"/>
-		<result property="alertTime"				column="ALERTTIME"				columnIndex="14"		nullValue=""/>
+		<result property="allDay"				column="ALLDAY"					columnIndex="13"/>
+		<result property="alertTime"			column="ALERTTIME"				columnIndex="14"		nullValue=""/>
 		<result property="content"				column="CONTENT"				columnIndex="15"		nullValue=""/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="16"/>
-		<result property="reFlag"					column="REFLAG"					columnIndex="17"		nullValue=""/>
+		<result property="importance"			column="IMPORTANCE"			    columnIndex="16"/>
+		<result property="reFlag"				column="REFLAG"					columnIndex="17"		nullValue=""/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="18"		nullValue=""/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="19"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="20"/>
+		<result property="entryList"			column="ENTRYLIST"				columnIndex="20"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="21"		nullValue=""/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="22"/>
-		<result property="publicFlag"				column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
+		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="22"/>
+		<result property="publicFlag"			column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
-		<result property="scheduleID"			column="SCHEDULEID"			columnIndex="25"		nullValue=""/>
+		<result property="scheduleID"			column="SCHEDULEID"			    columnIndex="25"		nullValue=""/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleRepetitionVO" 		id="resGetScheduleRepetitionVO">
+	<resultMap class="ResGetScheduleRepetitionVO" 	 id="resGetScheduleRepetitionVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
-		<result property="num"					column="NUM"						columnIndex="2"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
-		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
+		<result property="num"					column="NUM"					columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"			    columnIndex="3"/>
+		<result property="startDateTime"		column="STARTDATETIME"		    columnIndex="4"/>
 		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
-		<result property="reWay"					column="REWAY"					columnIndex="6"/>
-		<result property="reNum"					column="RENUM"					columnIndex="7"/>
-		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue=""/>
-		<result property="reYoil"					column="REYOIL"					columnIndex="9" 		nullValue=""/>
+		<result property="reWay"				column="REWAY"					columnIndex="6"/>
+		<result property="reNum"				column="RENUM"					columnIndex="7"/>
+		<result property="reDay"				column="REDAY"					columnIndex="8" 		nullValue=""/>
+		<result property="reYoil"				column="REYOIL"					columnIndex="9" 		nullValue=""/>
 		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue=""/>
-		<result property="reOrd"					column="REORD"					columnIndex="11"		nullValue=""/>
-		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
+		<result property="reOrd"				column="REORD"					columnIndex="11"		nullValue=""/>
+		<result property="endFlag"				column="ENDFLAG"				columnIndex="12"/>
 		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
 	</resultMap>
 	
-	<resultMap class="ResSelectFormIDVO" 		id="resSelectFormIDVO">
-		<result property="resID"					column="RESID"						columnIndex="1"/>
-		<result property="brdNm"					column="BRDNM"					columnIndex="2"			nullValue=""/>
+	<resultMap class="ResSelectFormIDVO" 		      id="resSelectFormIDVO">
+		<result property="resID"				column="RESID"					columnIndex="1"/>
+		<result property="brdNm"				column="BRDNM"					columnIndex="2"			nullValue=""/>
 		<result property="formText"				column="FORMTEXT"				columnIndex="3"			nullValue=""   	jdbcType="CLOB" 		javaType="java.lang.String"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListRepetitionVO">
-		<result property="num"					column="NUM"						columnIndex="1"/>
-		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+	<resultMap class="ResGetScheduleVO" 		      id="resGetScheduleListRepetitionVO">
+		<result property="num"					column="NUM"					columnIndex="1"/>
+		<result property="pNum"					column="PNUM"					columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
-		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="title"				column="TITLE"					columnIndex="4"/>
 		<result property="location"				column="LOCATION"				columnIndex="5"/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
-		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="7"/>
 		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
-		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
-		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="alertTime"			column="ALERTTIME"				columnIndex="9"/>
+		<result property="reFlag"				column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writerID"				column="WRITERID"				columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			    columnIndex="13"/>
+		<result property="entryList"			column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"				column="ALLDAY"					columnIndex="15"/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="17"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
+		<result property="companyID"			column="COMPANYID"			    columnIndex="17"/>
+		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="18"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="22"/>
+		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="22"/>
 		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
 		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
-		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
-		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
+		<result property="jobTitle"				column="JOBTITLE"				columnIndex="25"/>
+		<result property="jobTitle2"			column="JOBTITLE2"				columnIndex="26"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleVO" 		id="resGetRepResourceVO">
+	<resultMap class="ResGetScheduleVO" 		    id="resGetRepResourceVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
-		<result property="num"					column="NUM"						columnIndex="2"/>
-		<result property="pNum"					column="PNUM"						columnIndex="3"  		nullValue="0"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="4"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="5"/>
+		<result property="num"					column="NUM"					columnIndex="2"/>
+		<result property="pNum"					column="PNUM"					columnIndex="3"  		nullValue="0"/>
+		<result property="companyID"			column="COMPANYID"			    columnIndex="4"/>
+		<result property="writerID"				column="WRITERID"				columnIndex="5"/>
 		<result property="deptNm"				column="DEPTNM"					columnIndex="6"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="7"/>
-		<result property="title"						column="TITLE"						columnIndex="8"/>
+		<result property="title"				column="TITLE"					columnIndex="8"/>
 		<result property="location"				column="LOCATION"				columnIndex="9" 		nullValue=""/>
 		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="10"/>
-		<result property="startDate"				column="STARTDATE"				columnIndex="11"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="11"/>
 		<result property="endDate"				column="ENDDATE"				columnIndex="12"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="13"/>
-		<result property="alertTime"				column="ALERTTIME"				columnIndex="14"		nullValue=""/>
+		<result property="allDay"				column="ALLDAY"					columnIndex="13"/>
+		<result property="alertTime"			column="ALERTTIME"				columnIndex="14"		nullValue=""/>
 		<result property="content"				column="CONTENT"				columnIndex="15"		nullValue=""/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="16"/>
-		<result property="reFlag"					column="REFLAG"					columnIndex="17"		nullValue=""/>
+		<result property="importance"			column="IMPORTANCE"			    columnIndex="16"/>
+		<result property="reFlag"				column="REFLAG"					columnIndex="17"		nullValue=""/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="18"		nullValue=""/>
 		<result property="writeDay"				column="WRITEDAY"				columnIndex="19"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="20"/>
+		<result property="entryList"			column="ENTRYLIST"				columnIndex="20"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="21"		nullValue="0"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="22"/>
-		<result property="publicFlag"				column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
+		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="22"/>
+		<result property="publicFlag"			column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleRepetitionVO" 		id="resGetRepResourceRepeatVO">
+	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepResourceRepeatVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
-		<result property="num"					column="NUM"						columnIndex="2"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
-		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
+		<result property="num"					column="NUM"					columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"			    columnIndex="3"/>
+		<result property="startDateTime"		column="STARTDATETIME"		    columnIndex="4"/>
 		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
-		<result property="reWay"					column="REWAY"					columnIndex="6"/>
-		<result property="reNum"					column="RENUM"					columnIndex="7"/>
-		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue=""/>
-		<result property="reYoil"					column="REYOIL"					columnIndex="9" 		nullValue=""/>
+		<result property="reWay"				column="REWAY"					columnIndex="6"/>
+		<result property="reNum"				column="RENUM"					columnIndex="7"/>
+		<result property="reDay"				column="REDAY"					columnIndex="8" 		nullValue=""/>
+		<result property="reYoil"				column="REYOIL"					columnIndex="9" 		nullValue=""/>
 		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue=""/>
-		<result property="reOrd"					column="REORD"					columnIndex="11"		nullValue=""/>
-		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
+		<result property="reOrd"				column="REORD"					columnIndex="11"		nullValue=""/>
+		<result property="endFlag"				column="ENDFLAG"				columnIndex="12"/>
 		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="14"		nullValue=""/>
+		<result property="allDay"				column="ALLDAY"					columnIndex="14"		nullValue=""/>
 	</resultMap>
-	
-	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
-		{CALL EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
 	
 	<select id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
@@ -390,12 +386,6 @@
 			</isNotEqual>	
 		</isNotEmpty>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
-		<![CDATA[
-			{CALL EZSP_GETSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #v_P_USERID#, #v_PCOMID#, #v_PDEPTID#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
@@ -560,12 +550,6 @@
 		</isNotEmpty>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.getBrdMainList" parameterClass="Map" resultClass="ResGetItemListVO">
-		<![CDATA[
-			{CALL EZSP_GETBRDMAINLIST(#v_BRD_ID#, #v_COMPANY#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzResourceDAO.getBrdMainList" parameterClass="Map" resultClass="ResGetItemListVO">
 		<![CDATA[
 			SELECT 
@@ -589,12 +573,7 @@
 				BRD_GB, BRD_STEP 
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULELIST(#v_POWNERID#, #v_PCOMPANYID#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_WRITERNAME#, #v_WRITERDEPT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
 		<![CDATA[
 			SELECT 
@@ -679,12 +658,7 @@
 				ENDDATE DESC
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULELIST_MAIN(#v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
 			SELECT
@@ -735,12 +709,7 @@
 				ENDDATE DESC
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULELISTREPETITI(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_PENDDATE#, #v_WRITERNAME#, #v_WRITERDEPT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
 		<![CDATA[
 			SELECT 
@@ -808,12 +777,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.getScheduleListRepetitim" parameterClass="Map" resultMap="resGetScheduleListMainVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULELISTREPETITIM(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzResourceDAO.getScheduleListRepetitim" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
 			SELECT
@@ -863,12 +826,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
-		<![CDATA[
-			{CALL EZSP_GETREPDATETIMES(#v_pOwnerID#, #v_pCompanyID#, #v_pNum#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
 		<![CDATA[
 			SELECT
@@ -898,12 +855,7 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
-		<![CDATA[
-			{CALL EZSP_GETBRDLIST(#v_PTOPCNT#, #v_PBRDID#, #v_PCOMPANYID#, #v_POWNDEPTNM#, #v_POWNERNM#, #v_POWNERPOSITION#, #v_PBRDNM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
 		<![CDATA[
 			SELECT
@@ -927,12 +879,7 @@
 				#v_PTOPCNT#
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			{CALL EZSP_GETBRDCNT(#v_PBRDID#, #v_PCOMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -949,12 +896,7 @@
             	TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzResourceDAO.getBrd" parameterClass="Map" resultMap="resBrdVO">
-		<![CDATA[
-			{CALL EZSP_GETBRD(#v_pBrdID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getBrd" parameterClass="Map" resultMap="resBrdVO">
 		<![CDATA[
 			SELECT
@@ -988,11 +930,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.delResData" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_DELRESDATA(#v_P_Brd_ID#, #v_P_CompanyID#)}
-		]]>
-	</procedure> -->
 	<delete id="EzResourceDAO.delResData" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -1061,12 +998,6 @@
 		]]>
 	</delete>
 	
-	<!-- <procedure id="EzResourceDAO.modifyResData" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_MODIFYRESDATA(#v_P_Brd_ID#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
-			#v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, #v_P_Approve#, #v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#)}
-		]]>
-	</procedure> -->
 	<update id="EzResourceDAO.modifyResData" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1094,13 +1025,6 @@
     			TENANT_ID = #tenantID#	
 		]]>
 	</update>
-	
-	<!-- <procedure id="EzResourceDAO.addResData" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_ADDRESDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
-			#v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, #v_P_Approve#, #v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzResourceDAO.addResData_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -1158,11 +1082,6 @@
 		]]>		
 	</insert>
 	
-	<!-- <procedure id="EzResourceDAO.updateSchedule" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_UPDATESCHEDULE(#v_PNUM#, #v_POWNERID#, #v_PCOMPANYID#, #v_PAPPROVE#)}
-		]]>
-	</procedure> -->
 	<update id="EzResourceDAO.updateSchedule" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
@@ -1179,12 +1098,7 @@
      			TENANT_ID = #tenantID#	
 		]]>
 	</update>
-	
-	<!-- <procedure id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_UPDATESCHEDULEDATETIME(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#)}
-		]]>
-	</procedure> -->
+
 	<update id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1202,13 +1116,7 @@
      			TENANT_ID = #tenantID#	
 		]]>
 	</update>
-	
-	<!-- <procedure id="EzResourceDAO.updateScheduleRepetition" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_UPDATESCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#, 
-			#v_pReYoil#, #v_pReMonth#, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#)}
-		]]>
-	</procedure> -->
+
 	<update id="EzResourceDAO.updateScheduleRepetition" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1235,11 +1143,6 @@
 		]]>
 	</update>
 	
-<!-- 	<procedure id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULE(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	<select id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
 		<![CDATA[
 			SELECT 
@@ -1282,13 +1185,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_INSERTSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#,
-			#v_pReYoil#, #v_pReMonth#, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#)}
-		]]>
-	</procedure> -->
-	
 	<insert id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO 
@@ -1299,12 +1195,7 @@
      			  #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#, #tenantID# )
 		]]>
 	</insert>
-	
-	<!-- <procedure id="EzResourceDAO.getScheduleInfo" parameterClass="Map" resultMap="resGetScheduleVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULEINFO(#v_pNum#, #v_pEntryID#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getScheduleInfo" parameterClass="Map" resultMap="resGetScheduleVO">
 		<![CDATA[
 			SELECT
@@ -1349,11 +1240,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.deleteRepetition" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_DELETEREPETITION(#v_pOwnerID#, #v_pNum#)}
-		]]>
-	</procedure> -->
 	<delete id="EzResourceDAO.deleteRepetition" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -1368,12 +1254,7 @@
    				TENANT_ID = #tenantID#	
 		]]>
 	</delete>
-	
-	<!-- <procedure id="EzResourceDAO.selectFormID" parameterClass="Map" resultMap="resSelectFormIDVO">
-		<![CDATA[
-			{CALL EZSP_SELECT_FORMID(#v_pRESID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.selectFormID" parameterClass="Map" resultMap="resSelectFormIDVO">
 		<![CDATA[
 			SELECT
@@ -1386,12 +1267,6 @@
        			TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getAclTBL_RS_BRD" parameterClass="Map" 	resultClass="String">
-		<![CDATA[
-			{CALL EZSP_GETACLTBL_RS_BRD(#v_PCOMPANYID#, #v_PBRDID#, #iv_PUSERID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> --> 
 	
 	<select id="EzResourceDAO.getAclTblBrd_S1" parameterClass="Map" 	resultClass="String">
 		<![CDATA[
@@ -1441,12 +1316,7 @@
             	TENANT_ID = #tenantID#	
 		]]>	
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			{CALL EZSP_GETBRDAPPROVEFLAG(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1463,13 +1333,7 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.insertForm" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_INSERT_FORM(#v_RESID#, #v_BRDNM#, #v_FORMTEXT#)}
-		]]>
-	</procedure> -->
-	
+
 	<select id="EzResourceDAO.insertForm_S" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -1507,11 +1371,6 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzResourceDAO.delFormID" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_DEL_FORMID(#v_DELCODE#)}
-		]]>
-	</procedure> -->
 	<delete id="EzResourceDAO.delFormID" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -1522,12 +1381,7 @@
    				TENANT_ID = #tenantID#	
 		]]>	
 	</delete>
-	
-	<!-- <procedure id="EzResourceDAO.delResSch" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_DELRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_sDate#, #v_P_eDate#, #v_P_insType#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.delResSch_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			 SELECT
@@ -1673,14 +1527,7 @@
             	TENANT_ID = #tenantID#	
 		]]>
 	</delete>
-	
-	<!-- <procedure id="EzResourceDAO.modifyResSch" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_MODIFYRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#
-			, #v_P_startDate#, #v_P_endDate#, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_characterID#,
-			#v_P_attachFlag#, #v_P_typeVal#, #v_P_Approve#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.modifyResSch_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1859,14 +1706,6 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzResourceDAO.addRessch" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_ADDRESSCH2(#v_P_ownerID#, #v_P_num#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#
-			, #v_P_endDate#, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_characterID#, #v_P_attachFlag#,
-			#v_P_deptNM#, #v_P_ownerNM#, #iv_P_Approve#, #v_P_ScheduleID#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzResourceDAO.addRessch_S1" parameterClass="Map" resultClass="String">
 		SELECT
 			APPROVEFLAG 
@@ -1917,18 +1756,7 @@
         AND
            	TENANT_ID = #tenantID#
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getSubCntOfCls" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			{CALL EZSP_GETSUBCNTOFCLS(#v_P_ResID#, #v_P_CompanyID#, #v_SubResCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_SubClsCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
-	<!-- <procedure id="EzResourceDAO.getScheduleRepetition" parameterClass="Map" resultMap="resGetScheduleRepetitionVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
+
 	<select id="EzResourceDAO.getScheduleRepetition" parameterClass="Map" resultMap="resGetScheduleRepetitionVO">
 		<![CDATA[
 			SELECT
@@ -1959,63 +1787,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.getRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
-		<![CDATA[
-			{CALL EZSP_GETREPRESOURCE(#v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
-	<select id="EzResourceDAO.getRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
-		<![CDATA[
-			SELECT
-				OWNERID ,
-             	NUM ,
-             	PNUM ,
-             	COMPANYID ,
-             	WRITERID ,
-             	DEPTNM ,
-             	OWNERNM ,
-             	TITLE ,
-             	LOCATION ,
-             	TIMEDISPLAY ,
-             	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-             	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-             	ALLDAY  ,
-             	ALERTTIME ,
-             	CONTENT ,
-             	IMPORTANCE ,
-             	REFLAG ,
-             	GRESFLAG ,
-             	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
-             	ENTRYLIST ,
-             	CHARACTERID ,
-             	ATTACHFLAG ,
-             	PUBLICFLAG ,
-             	APPROVEFLAG 
-			FROM
-				TBL_RS_SCHEDULE 
-       		WHERE
-       			CompanyID = #v_p_companyID#
-			AND
-				OwnerID = #v_p_ownerID#
-			AND
-				reFlag = 0
-			AND
-				Num <> ( CASE #v_p_cmd#
-						 	WHEN 'add' THEN -1
-						 	ELSE #v_p_num# 
-						 END )
-			AND
-				ApproveFlag = '1'
-			AND
-				TENANT_ID = #tenantID#
-		]]>
-	</select> -->
-	
-	<!-- <procedure id="EzResourceDAO.getRepResourceRepeat" parameterClass="Map" resultMap="resGetRepResourceRepeatVO">
-		<![CDATA[
-			{CALL EZSP_GETREPRESOURCEREPEAT(#v_rec_frequency#, #v_rec_selType#, #v_rec_endRecurType#, #v_rec_startDateTime#, #v_rec_endDateTime#, #v_rec_interval#, #v_rec_daysOfWeek#, #v_rec_instances#, #v_rec_byPosition#, #v_rec_daysOfMonth#, #v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	<select id="EzResourceDAO.getRepResourceRepeat" parameterClass="Map" resultMap="resGetRepResourceRepeatVO">
 		<![CDATA[
 			SELECT
@@ -2055,59 +1826,7 @@
 				B.TENANT_ID = #tenantID#
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceDAO.chkDeletedRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
-		<![CDATA[
-			{CALL EZSP_CHKDELETEDREPRESOURCE(#v_p_ownerID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
-	
-	<select id="EzResourceDAO.chkDeletedRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
-		<![CDATA[
-			SELECT
-				B.ownerID ,
-             	B.num ,
-             	B.pnum ,
-             	B.companyID ,
-             	B.writerID ,
-             	B.deptNM ,
-             	B.ownerNM ,
-             	B.title ,
-             	B.location ,
-             	B.timeDisplay ,
-             	DATE_FORMAT(B.startDate, '%Y-%m-%d %T') startDate ,
-             	DATE_FORMAT(B.endDate, '%Y-%m-%d %T') endDate ,
-             	B.allDay ,
-             	B.alertTime ,
-             	B.content ,
-	            B.importance ,
-	            B.reFlag ,
-	            B.gresFlag ,
-	            DATE_FORMAT(B.writeDay, '%Y-%m-%d %T') writeDay ,
-	            B.entryList ,
-	            B.characterID ,
-	            B.attachFlag ,
-	            B.publicFlag ,
-	            B.ApproveFlag 
-	        FROM
-	        	TBL_RS_SCHEDULE B
-			JOIN
-				TBL_RS_SCHEDULEREPETITION C 
-			ON
-				B.ownerID = C.ownerID
-			AND
-				B.TENANT_ID = C.TENANT_ID	
-			AND
-				( B.num = C.num OR ( B.pnum = C.num AND B.reFlag = 4 ) )
-			WHERE
-				B.ownerID = #v_p_ownerID#
-			AND
-				B.pnum <> 0
-			AND
-				B.TENANT_ID = #tenantID#				
-		]]>
-	</select> -->
-	
+
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
@@ -2199,6 +1918,4 @@
 				TENANT_ID = #tenantID# 
         ]]>
     </select>
-    	
 </sqlMap>
-

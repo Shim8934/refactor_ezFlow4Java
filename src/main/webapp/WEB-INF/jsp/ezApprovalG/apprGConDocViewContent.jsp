@@ -8,7 +8,17 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script language="javascript" type="text/javascript">
 		    var XmlBodyATT = createXmlDom();
-		    document.onselectstart = function () { return false; };
+		    document.onselectstart = function () { 
+				var useAllowTextSelection = "${useAllowTextSelection}";
+	        	
+	        	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
+            		ret = true;
+            	}
+            	else { 
+            		ret = false;	                		
+            	} 
+	        	return ret;
+		    };
 		    var BODYTag;
 		    var BODYHTML;
 		    var DocTitleObj;

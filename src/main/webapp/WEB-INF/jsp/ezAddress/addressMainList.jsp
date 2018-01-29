@@ -39,7 +39,6 @@
 	        var CardHeader3 = "<spring:message code='ezAddress.t264' />";
 	        var uLang = "${userInfo.lang}";
 	        var pUse_Editor = "${useEditor}";
-	        var pUse_IE11Browser = "${useIE11Browser}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var strLang_1 = "";
 	        var AddressType = "<spring:message code='ezAddress.t145' />";
