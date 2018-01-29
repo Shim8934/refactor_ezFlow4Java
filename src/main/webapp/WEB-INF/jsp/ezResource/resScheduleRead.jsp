@@ -28,7 +28,6 @@
 	        var org_brdName = "${brdName}";
 	        var iReFlag = "${reFlagVal}";
 	        var pUse_Editor = "${useEditor}";
-	        var pUse_IE11Browser = "${useIE11Browser}";
 	        var typeVal = '${typeVal}';
 	        var startDateVal = '${startDateVal}';
 	        var endDateVal = '${endDateVal}';
@@ -198,12 +197,7 @@
 	                filename = "/ezResource/scheduleAdd.do";
 	            }
 	            else {
-	                if (pUse_Editor == "" || pUse_Editor == "CK") {
-	                    filename = "/ezResource/scheduleAdd.do";
-	                }
-	                else {
-	                    filename = "/ezResource/scheduleAdd.do";
-	                }
+                    filename = "/ezResource/scheduleAdd.do";
 	            }
 
 	            window.location.href = filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);

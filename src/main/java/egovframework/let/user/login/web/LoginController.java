@@ -27,6 +27,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 
@@ -563,6 +564,29 @@ public class LoginController {
         }
     	
     	return "redirect:/user/login/login.do"; 
+    }
+    
+    @RequestMapping(value="/user/login/actionLogoutWithRedirectUri.do")
+	public void actionLogoutWithRedirectUri(
+					@RequestParam("redirectUri") String redirectUri,
+					HttpServletRequest request,
+					HttpServletResponse response
+					) throws Exception {
+    	logger.debug("redirectUri=" + redirectUri);
+    	
+    	Cookie[] cookies = request.getCookies();
+    	
+    	if (cookies != null) {
+    		for (Cookie cookie : cookies) {
+    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
+    				cookie.setMaxAge(0);
+    				cookie.setPath("/");
+    				response.addCookie(cookie);
+    			}
+    	    }
+    	}
+    	
+    	response.sendRedirect(redirectUri);
     }
     
     @RequestMapping(value = "/user/login/setPassword.do")

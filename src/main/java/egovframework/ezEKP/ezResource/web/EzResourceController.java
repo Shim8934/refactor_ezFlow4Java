@@ -1111,7 +1111,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("scheduleRead Start");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useIE11Browser = "";
 		String editor = config.getProperty("EDITOR");
 		String nonActiveX = "YES";
 		String resID = "";
@@ -1147,9 +1146,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		String startDateTimeRepeat = "";
 		String endDateTimeRepeat = "";
 		
-		if (ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		if (req.getParameter("ownerID") != null) {
 			resID = req.getParameter("ownerID");
 		}
@@ -1265,7 +1261,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("editor", editor);
 		model.addAttribute("nonActiveX", nonActiveX);
 		model.addAttribute("adminFg", adminFg);
@@ -1326,7 +1321,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/scheduleAdd.do")
 	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useIE11Browser = "";
 		String editor = config.getProperty("EDITOR");
 		String noneActiveX = "YES";
 		String resID = "";
@@ -1365,9 +1359,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		int pNum = 0;
 		int num = 0;
 		
-		if (ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		if (req.getParameter("ownerID") != null) {
 			resID = req.getParameter("ownerID");
 		}
@@ -1518,7 +1509,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("editor", editor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("adminFg", adminFg);
@@ -1776,12 +1766,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		//String accessCode = "";
 		String selectNo = "";
 		String useEditor = "";
-		String useIE11Browser = "";
 		String noneActiveX = "";
 		
 		noneActiveX = "YES";
 		useEditor = config.getProperty("EDITOR");
-		useIE11Browser = "CK";
 		
 		if (req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
@@ -1811,10 +1799,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("selectNo", selectNo);
 		model.addAttribute("accessCode", "0");
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
-			
-	
 				
 		return "/ezResource/resScheduleAddSelect";
 	}

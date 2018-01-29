@@ -130,26 +130,22 @@
 			
 			            if (pListTypeValue == "1") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
-			                document.getElementById('APPROVAL1').parentElement.onclick();
-			                document.getElementById('APPROVAL1').onclick();
+			                document.getElementById('APPROVAL1').click();
 			                //document.getElementById('APPROVAL1').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "2") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1748'/>");
-			                document.getElementById('APPROVAL3').parentElement.onclick();
-			                document.getElementById('APPROVAL3').onclick();
+			                document.getElementById('APPROVAL3').click();
 			                //document.getElementById('APPROVAL3').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "3") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1706'/>");
-			                document.getElementById('APPROVAL2').parentElement.onclick();
-			                document.getElementById('APPROVAL2').onclick();
+			                document.getElementById('APPROVAL2').click();
 			                //document.getElementById('APPROVAL2').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "4") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1749'/>");
-			                document.getElementById('APPROVAL4').parentElement.onclick();
-			                document.getElementById('APPROVAL4').onclick();
+			                document.getElementById('APPROVAL4').click();
 			                //document.getElementById('APPROVAL4').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "6") {
@@ -171,8 +167,7 @@
 			            }
 			            if (pListTypeValue == "99") {
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
-			                document.getElementById('APPROVAL99').parentElement.onclick();
-			                document.getElementById('APPROVAL99').onclick();
+			                document.getElementById('APPROVAL99').click();
 			            }
 			            
 		        }

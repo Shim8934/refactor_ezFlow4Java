@@ -108,7 +108,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 .personal_content ul li.count {position:absolute; right:12px; top:0px; z-index:5;}
 .personal_content ul li.count div{display:inline-block;  line-height:190%; color:#fff; padding:0px 0 0 8px;  font-size:11px; background:url(../images/kr/main/count_l.png) no-repeat left;}
-.personal_content ul li.count div span{display:inline-block;  color:#fff; padding:2px 9px 0 0px; font-size:11px; background:url(../images/kr/main/count_r.gif) no-repeat right;font-weight:bold;}
+.personal_content ul li.count div span{display:inline-block;  color:#fff; padding:0px 9px 0 0px; font-size:11px; background:url(../images/kr/main/count_r.gif) no-repeat right;font-weight:bold;}
 
 
 

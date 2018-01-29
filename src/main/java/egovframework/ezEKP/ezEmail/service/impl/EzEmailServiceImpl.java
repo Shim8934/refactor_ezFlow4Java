@@ -48,6 +48,7 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -65,6 +66,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -88,6 +90,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
+	
+	@Autowired
+	private EzEmailDAO ezEmailDAO;
 	
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
@@ -2065,5 +2070,4 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getSecureMailReaderInfo ended.");
 		return list;
 	}
-	
 }
