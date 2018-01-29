@@ -231,7 +231,7 @@ public class EzConnController {
 		loginVO.setTenantId(tenantId);
 		loginVO.setDn("NOPASSWORD");		
 		
-		LoginVO resultVO = loginService.selectUser(loginVO);
+		LoginVO	resultVO = loginService.selectUser(loginVO);			
 		
 		logger.debug("resultVO=" + resultVO);
 		

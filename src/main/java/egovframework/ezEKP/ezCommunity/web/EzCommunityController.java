@@ -1366,14 +1366,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String boardItemPreView(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useIE11Browser = "";
 		String gubun = request.getParameter("gubun");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String primary = userInfo.getPrimary();
-		
-		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-                useIE11Browser = "CK";
-		}
 		
 		model.addAttribute("displayName", primary.equals("2") ? userInfo.getDisplayName2() : userInfo.getDisplayName());
 		model.addAttribute("deptName", primary.equals("2") ? userInfo.getDeptName2() : userInfo.getDeptName());
@@ -1382,7 +1377,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gubun", gubun);
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("Use_Editor", useEditor);
-		model.addAttribute("Use_IE11Browser", useIE11Browser);
 		
 		return "ezCommunity/communityBoardItemPreview";
 	}
@@ -3459,11 +3453,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("mainPage started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		
 		int totalPage = ezCommunityService.mainPage(userInfo);
 		
-		model.addAttribute("useIE11Brower", useIE11Browser);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("primary", userInfo.getPrimary());
@@ -4013,13 +4005,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-		String useIE11Browser = "";
 		String userLevel = "0", pSortBy = "", showAdjacent = "", strXML = "";
 		int pPage = 1, totalPage = 1, totalCount = 0;
-		
-		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-            useIE11Browser = "CK";
-		}
 		
 		if (request.getParameter("sortBy") != null) {
 			pSortBy = request.getParameter("sortBy");
@@ -4083,7 +4070,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("code", code);
 		model.addAttribute("pSortBy", pSortBy);
 		model.addAttribute("userLevel", userLevel);
@@ -4240,15 +4226,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String oneLineReplyFlag = ezCommonService.getTenantConfig("ONELINE_REPLY_ENABLE", userInfo.getTenantId());
         String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
         
-        String useIE11Browser = "", showAdjacent = "", pReservedItem = "", itemID = "";
+        String showAdjacent = "", pReservedItem = "", itemID = "";
         String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "";
         String gImageUrl = "", gWidth = "", gHeight = "";
         
 		String boardID = request.getParameter("boardID");
-		
-		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-            useIE11Browser = "CK";
-		}
 		
 		if (request.getParameter("itemID") != null) {
 			itemID = request.getParameter("itemID");
@@ -4336,7 +4318,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
 		model.addAttribute("showAdjacent", showAdjacent);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("pReservedItem", pReservedItem);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);

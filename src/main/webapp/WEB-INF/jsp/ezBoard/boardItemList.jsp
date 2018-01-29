@@ -84,7 +84,6 @@
 		    var useRunTime = "${useRunTime}"
 		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var pUse_Editor = "${use_Editor}";
-		    var pUse_IE11Browser = "${use_IE11Browser}";
 		    var SQLPARADATA = "";
 		    var pAdminType = "${boardInfo.adminType}";
 		    var pButtonHidden = "${boardInfo.buttonHidden}";
