@@ -396,30 +396,30 @@
 		            var radiosearch = document.getElementsByName('searchCheck');
 		            if (radiosearch.item(0).checked) {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+		                DATA += "<TITLE>" + searchDataReplace(document.getElementById("txt_keyword").value) + "</TITLE>";
 		            }
 		            else if (radiosearch.item(1).checked) {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+		                DATA += "<WRITERNAME>" + searchDataReplace(document.getElementById("txt_keyword").value) + "</WRITERNAME>";
 		            }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
+		                DATA += "<TITLE>" + searchDataReplace(document.getElementById("txtTitle").value) + "</TITLE>";
 		            }
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
+		                DATA += "<WRITERNAME>" + searchDataReplace(document.getElementById("txtWriterName").value) + "</WRITERNAME>";
 		            }
 		
 		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 		            {
 		                TYPE += "ABSTRACT;";
-		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
+		                DATA += "<ABSTRACT>" + searchDataReplace(document.getElementById("txtAbstract").value) + "</ABSTRACT>";
 		            }
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
@@ -434,6 +434,7 @@
 		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
 		            }
 		        }
+		        /* 2018.01.29 김기하 수정 - 특수문자 검색 */
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		    function btn_PostDate_Clear() {
@@ -1069,6 +1070,18 @@
 		        else {
 		            alert("ERROR");
 		        }
+		    }
+		    /* 2018.01.29 김기하 - 검색 데이터 특수문자 변환*/
+		    function searchDataReplace(data){
+		    	var tempData = data;
+		    	tempData = tempData.replace(/&/g,"&amp;");
+		    	tempData = tempData.replace(/</g,"&lt;");
+		    	tempData = tempData.replace(/'/g,"&apos;");
+		    	tempData = tempData.replace(/#/g,"##");
+		    	tempData = tempData.replace(/%/g,"#%");
+		    	tempData = tempData.replace(/_/g,"#_");
+		    	
+		    	return tempData;
 		    }
 		</script>
 	</head>

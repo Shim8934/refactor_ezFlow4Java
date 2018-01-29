@@ -1440,7 +1440,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (tempString != null && !tempString.equals("")) {
 			ezBoardDAO.setAsRead(map);
-			
 			String tempWriterID = ezBoardDAO.getWriterID(map);
 			
 			if (tempWriterID == null || !tempWriterID.equals(userInfo.getId())) {
@@ -1486,7 +1485,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
 		}
-
 		logger.debug("getSearchBoardItemCount ended");
 		return ezBoardDAO.getSearchBoardItemCount(map);
 	}
@@ -3416,8 +3414,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
 		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
 		boardListVO.setTopWriterID(doc.getElementsByTagName("TOPWRITERID").item(0).getTextContent());
-		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
-		boardListVO.setWriterName2(doc.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
+		//2018.01.25 김기하
+		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent().replace("&amp;","&").replace("&lt;","<").replace("&gt;",">"));
+		boardListVO.setWriterName2(doc.getElementsByTagName("WRITERNAME2").item(0).getTextContent().replace("&amp;","&").replace("&lt;","<").replace("&gt;",">"));
 		boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
 		boardListVO.setWriterDeptName(doc.getElementsByTagName("DEPTNAME").item(0).getTextContent());
 		boardListVO.setWriterDeptName2(doc.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
@@ -3707,4 +3706,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getOneLineReplyCount ended");
 		return ezBoardDAO.getOneLineReplyCount(map);
 	}
+	
+	
+	
 }
