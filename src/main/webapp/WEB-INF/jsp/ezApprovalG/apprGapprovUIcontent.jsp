@@ -22,35 +22,34 @@
 	            var useAllowTextSelection = "${useAllowTextSelection}";
 	            
 	            try {
-	                if (obj.nodeName == "#text")
-	                    obj = obj.parentElement;
-	
-	                if (obj.nodeName == "TD") {
-	                    if (obj.getAttribute("free") != null)
-	                        ret = true;
-	                }
-	                else if (obj.nodeName == "DIV") {
-	                    var pParentNode = obj;
-	                    for (var i = 0; i < 3; i++) {
-	                        pParentNode = pParentNode.parentElement;
-	                        if (pParentNode.nodeName == "TD") {
-	                            if (pParentNode.getAttribute("free") != null) {
-	                                ret = true; break;
-	                            }
-	                        }
-	                        else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
-	                            break;
-	
-	                    }
-	                }
-	                else if (obj.nodeName == "P") {
-	                	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
-	                		ret = true;
-	                	}
-	                	else { 
-	                		ret = false;	                		
-	                	}
-	                }
+	            	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
+	            		ret = true;
+	            	} else {
+			                if (obj.nodeName == "#text")
+			                    obj = obj.parentElement;
+			
+			                if (obj.nodeName == "TD") {
+			                    if (obj.getAttribute("free") != null)
+			                        ret = true;
+			                }
+			                else if (obj.nodeName == "DIV") {
+			                    var pParentNode = obj;
+			                    for (var i = 0; i < 3; i++) {
+			                        pParentNode = pParentNode.parentElement;
+			                        if (pParentNode.nodeName == "TD") {
+			                            if (pParentNode.getAttribute("free") != null) {
+			                                ret = true; break;
+			                            }
+			                        }
+			                        else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
+			                            break;
+			
+			                    }
+			                }
+			                else if (obj.nodeName == "P") {
+			                		ret = false;	                		
+			                }
+	            	}
 	            } catch (e) { }
 	            return ret;
 	        };
