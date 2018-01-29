@@ -45,7 +45,6 @@
 		    var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 		    var gubun = "<c:out value='${gubun}' />";
 		    var pUse_Editor = "<c:out value='${Use_Editor}' />";
-		    var pUse_IE11Browser = "<c:out value='${Use_IE11Browser}' />";
 		    var ua = window.navigator.userAgent;
 		    
 		    window.onload = function () {
@@ -58,18 +57,10 @@
 		        var Title = window.opener.document.getElementById('txtTitle').value;
 
 		        if (CrossYN()) {
-		            if (pUse_Editor == "TAGFREE") {
-		                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
-		            } else {
-		                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
-		            }
+	                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
 		        } else {
 		            try {
-		                if (pUse_IE11Browser == "CK") {
-		                    Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
-		                } else {
-		                    Content = window.opener.pzFormProc.Editor.Dom.body.innerHTML;
-		                }
+		            	Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
 		            } catch (e) {
 		                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
 		            }

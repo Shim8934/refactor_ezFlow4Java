@@ -13,7 +13,6 @@
 			var xmlhttp = createXMLHttpRequest();
 	        var bestclick = false;
 	        var strlang = "${userInfo.lang}";
-	        var pUse_IE11Browser = "${useIE11Browser}";
 	
 	        window.onload = function () {
 	            getCommu();
@@ -141,7 +140,7 @@
 	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	            }
 	            else {
-	                if (CrossYN() || pUse_IE11Browser == "CK")
+	                if (CrossYN())
 	                    window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + copno + "&showAdjacent=" + 1, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=790,width=765,top=" + pTop + ",left=" + pLeft, "");
 	                else
 	                    window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + copno + "&showAdjacent=" + 1, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=790,width=765,top=" + pTop + ",left=" + pLeft, "");

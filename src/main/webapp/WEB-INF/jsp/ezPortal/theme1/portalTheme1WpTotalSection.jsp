@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "YES";
 		    
 		    window.onload = function () {
@@ -226,17 +225,11 @@
 		                    var top = (heigth - wHeight) / 2;
 		                    if (CrossYN() || pNoneActiveX == "YES") {
 		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                        	"height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                    else {
-		                        if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                     "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
-		                        else {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
+	                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                }
 		                break;
@@ -467,11 +460,7 @@
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        } else {
-		            if (pUse_Editor == "") {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            } else {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            }
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        }
 		    }
 
@@ -549,18 +538,7 @@
 		                	var openLocation = "/ezApprovalG/draftui.do";
 		                }
 		                else {
-		                    if (pUse_IE11Browser == "CK")
-		                        //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
-		                    	var openLocation = "/ezApprovalG/draftui.do";
-		                    else {
-		                        if (pUse_Editor == "")
-		                            //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui.aspx";
-		                        	var openLocation = "/ezApprovalG/draftui.do";
-		                        else {
-		                            /* openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui_IE.aspx"; */
-		                        	var openLocation = "/ezApprovalG/draftui.do";
-		                        }
-		                    }
+		                	var openLocation = "/ezApprovalG/draftui.do";
 		                }
 		                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 		                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
