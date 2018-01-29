@@ -50,7 +50,7 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		return (String)select("EzWebFolderDAO.getFileLogSequence", map);
 	}
 
-	public FolderVO getFolderByFolderId(Map<String, Object> map) {		
+	public FolderVO getFolderByFolderId(Map<String, Object> map) {
 		return (FolderVO)select("EzWebFolderDAO.getFolderByFolderId", map);
 	}
 
@@ -61,5 +61,9 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<FolderSimpleVO> getAllSimpleSubFolders(Map<String, Object> map) {		
 		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getAllSimpleSubFolders", map);
+	}
+
+	public FolderVO getCompanyFolderId(Map<String, Object> map) {		
+		return (FolderVO)select("EzWebFolderDAO.getCompanyFolderId", map);
 	}
 }

@@ -55,8 +55,7 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {				
-						var result = data.folderList;						
-						console.log(result);						
+						var result = data.folderList;												
 					},
 	 				error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);

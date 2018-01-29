@@ -117,7 +117,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFolderByFolderId(map);
 	}
@@ -137,6 +137,43 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("folderUpper", folderUpperId);		
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getAllSimpleSubFolders(map);		
+	}
+
+	@Override
+	public FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);		
+		map.put("tenantId", tenantId);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		return ezWebFolderDAO.getCompanyFolderId(map);
+	}
+
+	@Override
+	public void getAllSubDepts(FolderSimpleVO company, int tenantId, int mode) throws Exception {
+		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId);
+		
+		if (listSubSimpleFolders.size() > 0) {			
+			company.setListSubFolders(listSubSimpleFolders);
+			company.setHasSubFolder(1);
+			
+			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
+				if (mode == 0) {
+					getAllSubDepts(subFolder, tenantId, mode);
+				}
+				else {
+					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), tenantId);
+					if (subSimpleDepts.size() > 0) {
+						subFolder.setHasSubFolder(1);
+					}
+					else {
+						subFolder.setHasSubFolder(0);
+					}
+				}		
+			}
+		}
+		else {
+			company.setHasSubFolder(0);			
+		}		
 	}
 
 }
