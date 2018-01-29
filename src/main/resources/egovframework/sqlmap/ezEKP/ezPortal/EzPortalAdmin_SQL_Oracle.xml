@@ -1864,7 +1864,7 @@
 				* 
         	FROM
         		TBL_BUILTIN_PARAMETERS
-        	AND
+        	WHERE
         		TENANT_ID = #tenantID#	
 		]]>
 	</select>
