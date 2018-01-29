@@ -6731,31 +6731,31 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
+							   	 	 	   STARTDATE >= TO_DATE(#v_STARTDATE1#,'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 		   STARTDATE <= TO_DATE(SUBSTR(#v_STARTDATE2#,1,10),'YYYY-MM-DD HH24:MI:SS')
+							   	 		   STARTDATE <= TO_DATE(#v_STARTDATE2#,'YYYY-MM-DD HH24:MI:SS')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE1">
 							   	 	 AND 
-							   	 	       ENDDATE >= TO_DATE(SUBSTR(#v_ENDDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
+							   	 	       ENDDATE >= TO_DATE(#v_ENDDATE1#,'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 	 		ENDDATE <= TO_DATE(SUBSTR(#v_ENDDATE2#,1,10),'YYYY-MM-DD HH24:MI:SS')
+							   	 	 		ENDDATE <= TO_DATE(#v_ENDDATE2#,'YYYY-MM-DD HH24:MI:SS')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
+							   	 	 	   STARTDATE >= TO_DATE(#v_STARTDATE1#,'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE2">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
+							   	 	 	   STARTDATE >= TO_DATE(#v_STARTDATE1#,'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isEmpty property="v_CONTID" >
 							   	 	 AND 
@@ -10794,31 +10794,31 @@
    		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   
-			STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10), 'YYYY-MM-DD HH24:MI:SS')   
+			STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS')   
     		]]>  
    		</isNotEmpty>
    		<isNotEmpty property="v_STARTDATE2"> 
    		<![CDATA[
     		 AND  
-     		 	STARTDATE <= TO_DATE(SUBSTR(#v_STARTDATE2#  ,1,10), 'YYYY-MM-DD HH24:MI:SS')
+     		 	STARTDATE <= TO_DATE(#v_STARTDATE2#, 'YYYY-MM-DD HH24:MI:SS')
  		 ]]>  
 		</isNotEmpty> 
    		<isNotEmpty property="v_ENDDATE1"> 
    		<![CDATA[
   		 AND   
-    		  	ENDDATE >= TO_DATE(SUBSTR(#v_ENDDATE1#,1,10), 'YYYY-MM-DD HH24:MI:SS')
+    		  	ENDDATE >= TO_DATE(#v_ENDDATE1#, 'YYYY-MM-DD HH24:MI:SS')
     		 ]]> 
    		</isNotEmpty>
    		<isNotEmpty property="v_ENDDATE2">  
   		<![CDATA[
      		AND  
-   			ENDDATE <= TO_DATE(SUBSTR(#v_ENDDATE2# ,1,10), 'YYYY-MM-DD HH24:MI:SS')   
+   			ENDDATE <= TO_DATE(#v_ENDDATE2#, 'YYYY-MM-DD HH24:MI:SS')   
      		 ]]>  
   		</isNotEmpty>
    		<isNotEmpty property="v_PROCESSDATE1"> 
    		<![CDATA[ 
 			AND  
-   				PROCESSDATE >= TO_DATE(SUBSTR(#v_PROCESSDATE1#,1,10), 'YYYY-MM-DD HH24:MI:SS')   
+   				PROCESSDATE >= TO_DATE(#v_PROCESSDATE1#, 'YYYY-MM-DD HH24:MI:SS')   
     		AND  
     			TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
      		 ]]>  
@@ -10826,7 +10826,7 @@
    		<isNotEmpty property="v_PROCESSDATE2"> 
    		<![CDATA[
      		AND   
-    			PROCESSDATE <= TO_DATE(SUBSTR(#v_PROCESSDATE2#,1,10), 'YYYY-MM-DD HH24:MI:SS')    
+    			PROCESSDATE <= TO_DATE(#v_PROCESSDATE2#, 'YYYY-MM-DD HH24:MI:SS')    
      		AND   
    				TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#  
    		 ]]>  
